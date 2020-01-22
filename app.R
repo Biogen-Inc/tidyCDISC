@@ -28,7 +28,7 @@ ui <-
       ),
       tabPanel(
         title = "Table Generator",
-          chartUI("table_generator")
+          tableGeneratorUI("table_generator")
       )
     )
   )
@@ -44,7 +44,7 @@ server <- function(input, output, session) {
   output$table <- renderTable({ datafile() })
   
   # PASS datafile WITHOUT () INTO THE MODULE 
-  table_generator <- callModule(chart, "table_generator", datafile = datafile)
+  table_generator <- callModule(tableGenerator, "table_generator", datafile = datafile)
   # now we can render the plot as the chart module we called in the line above
   output$all_rows <- renderUI({ table_generator() })
 

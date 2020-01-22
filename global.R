@@ -7,9 +7,9 @@ source('R/hasField.R')
 source('modules/dataUpload.R')
 source('modules/dataUploadUI.R')
 
-source('modules/blocks.R')
-source('modules/chart.R')
-source('modules/chartUI.R')
+source('R/blocks.R')
+source('modules/tableGenerator.R')
+source('modules/tableGeneratorUI.R')
 
 
 
