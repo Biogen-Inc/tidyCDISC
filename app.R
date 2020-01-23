@@ -9,24 +9,27 @@ ui <-
   tagList(
     useShinyjs(),
     navbarPage(theme = "yeti.css",
-      title=div(id="logo-id", 
-                img(src="logo.svg", style="float:right; padding-right:3px; height:30px; width:100px")), id = "navbarID",
+               title = "IDEA",
+               id = "navbarID",
       tabPanel(
         title = "Data",
           dataUploadUI("datafile", "Import CSV")
       ),
       tabPanel(
-        tags$head(
-          tags$link(
-            rel = "stylesheet",
-            type = "text/css",
-            href = "styles.css"
-          )
-        ),
         title = "Table Generator",
           tableGeneratorUI("table_generator")
+      ),
+      tabPanel(
+        title = "Population Explorer"
+      ),
+      tabPanel(
+        title = "Individual Explorer"
       )
-    )
+    ),
+    # Custom styling to override theme
+    tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "styles.css")),
+    # Add logo to top right corner
+    tags$script(HTML("var header = $('.navbar > .container-fluid'); header.append('<div style=\"float:right\"><ahref=\"URL\"><img src=\"logo.svg\" alt=\"alt\" style=\"float:right;width:66px;height:41px;\"> </a>`</div>');"))
   )
 
 server <- function(input, output, session) {
