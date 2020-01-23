@@ -37,14 +37,12 @@ server <- function(input, output, session) {
   # Increase allowed file size to 800MB
   options(shiny.maxRequestSize = 800*1024^2)
   
-  # call the module with the function dataupload and the label we want to give it
+  # render the dataUpload module in Data tab
   datafile <- callModule(dataUpload, "datafile", stringsAsFactors = FALSE)
-  # now we can render the table as the module we called
   output$table <- renderTable({ datafile() })
   
-  # PASS datafile WITHOUT () INTO THE MODULE 
+  # render the tablegenerator module using the datafile from dataupload as an input
   table_generator <- callModule(tableGenerator, "table_generator", datafile = datafile)
-  # now we can render the plot as the chart module we called in the line above
   output$all_rows <- renderUI({ table_generator() })
 
 }
