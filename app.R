@@ -8,25 +8,21 @@ source("global.R")
 ui <- 
   tagList(
     useShinyjs(),
-     tags$head(
-       tags$link(
-         rel = "stylesheet",
-         type = "text/css",
-         href = "styles.css"
-       ),
-    tags$link(
-      rel = "stylesheet",
-      type = "text/css",
-      href = "https://use.fontawesome.com/releases/v5.8.1/css/all.css"
-      )
-    ),
-    navbarPage(
-      "TWO MODULES",
+    navbarPage(theme = "yeti.css",
+      title=div(id="logo-id", 
+                img(src="logo.svg", style="float:right; padding-right:3px; height:30px; width:100px")), id = "navbarID",
       tabPanel(
         title = "Data",
           dataUploadUI("datafile", "Import CSV")
       ),
       tabPanel(
+        tags$head(
+          tags$link(
+            rel = "stylesheet",
+            type = "text/css",
+            href = "styles.css"
+          )
+        ),
         title = "Table Generator",
           tableGeneratorUI("table_generator")
       )
