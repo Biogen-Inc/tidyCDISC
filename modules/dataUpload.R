@@ -4,9 +4,10 @@ dataUpload <- function(input, output, session, stringsAsFactors) {
   
   # initiate reactive values - list of uploaded data files
   # standard to imitate output of detectStandard.R
-  dd <- reactiveValues(data = preload_data_list$data,
-                       current = preload_data_list$current,
-                       standard = preload_data_list$standard)
+  dd <- reactiveValues()
+  # dd <- reactiveValues(data = preload_data_list$data,
+  #                      current = preload_data_list$current,
+  #                      standard = preload_data_list$standard)
   
   
   # modify reactive values when data is uploaded
@@ -83,10 +84,10 @@ dataUpload <- function(input, output, session, stringsAsFactors) {
     names <- lapply(names(data_choices()), HTML)
     
     prev_sel <- lapply(reactiveValuesToList(input), unclass)$select_file  # retain previous selection
-    updateRadioButtons(session, "select_file",
-                       choiceNames = names,
-                       choiceValues = vals,
-                       selected = prev_sel)
+    
+    output$radio_test <- renderUI(
+      radioButtons(session$ns("select_file"), label = "Inspect Uploaded Data",
+      choiceNames = names, choiceValues = vals, selected = prev_sel))
     
   })
   
