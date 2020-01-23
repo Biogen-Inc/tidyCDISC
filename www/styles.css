@@ -1,0 +1,105 @@
+#sortable_agg,
+#sortable1, 
+#blocks,
+#block {
+list-style-type: none;
+margin: 0;
+padding-bottom: 2px;
+}
+
+.droppable_blocks li {
+  padding-top:3px;
+  padding-bottom:7px;
+}
+
+ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+li {
+  list-style-type: none;
+  padding-bottom: 2px;
+}
+
+#sortable_agg li, 
+.all_blocks li,
+#block li,
+#row_blocks_2 li,
+.droppable_blocks li {
+border: 1px solid lightgray;
+border-radius: 15px;
+margin-bottom: 2px;
+padding-left: 3px;
+text-align: center;
+}
+
+#sortable_agg:hover,
+.all_blocks li:hover {
+cursor: grab;
+}
+
+#sortable_agg .ui-sortable-helper:hover, 
+.all_blocks .ui-sortable-helper:hover {
+background-color: #ddd;
+border-color: black;
+}
+
+#sortable_agg .ui-sortable-helper:hover, 
+.all_blocks .ui-sortable-helper:hover {
+cursor: grabbing;
+}
+
+.droppable_agg,
+.droppable_blocks {
+border: 2px dashed #466683;
+padding: 1em;
+min-height: 200px;
+}
+
+
+.droppable_blocks {
+border-right: none;
+}
+
+#droppable_agg.ui-droppable-hover {
+background: #bad4ed;
+}
+
+#droppable_blocks.ui-droppable-hover {
+background: #bad4ed;
+}
+
+#droppable_agg select {
+margin: 5px;
+}
+
+.drop_area {
+  border: 1px solid lightgray;
+  padding: 5px;
+  margin-bottom: 3px;
+  width: 100%;
+  height: 35px;
+}
+
+.delete {
+  background: none;
+  border: 0px;
+  color: #888;
+  font-size: 15px;
+  width: 60px;
+  margin: 0px 0 0;
+  font-family: Lato, sans-serif;
+  cursor: pointer;
+  float: right;
+  display: inline-block;
+}
+
+button:hover {
+  color: #CF2323;
+}
+
+.rowPallette {
+  max-height: 300px;
+  overflow-y: scroll;
+}
