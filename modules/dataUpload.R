@@ -25,7 +25,7 @@ dataUpload <- function(input, output, session, stringsAsFactors) {
       }
     }
     # names
-    names(data_list) <- input$file$name
+    names(data_list) <- toupper(str_remove(input$file$name, ".sas7bdat"))
     
     # append to existing reactiveValues list
     dd$data <- c(dd$data, data_list)
