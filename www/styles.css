@@ -98,3 +98,8 @@ margin: 5px;
 button:hover {
   color: #CF2323;
 }
+
+.rowPallette {
+  max-height: 300px;
+  overflow-y: scroll;
+}

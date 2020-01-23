@@ -16,9 +16,7 @@ dataUpload <- function(input, output, session, stringsAsFactors) {
     
     ## data list
     for (i in 1:nrow(input$file)){
-      if (length(grep(".csv", input$file$name[i], ignore.case = TRUE)) > 0){
-        data_list[[i]] <- data.frame(read.csv(input$file$datapath[i], na.strings=NA))
-      }else if(length(grep(".sas7bdat", input$file$name[i], ignore.case = TRUE)) > 0){
+      if(length(grep(".sas7bdat", input$file$name[i], ignore.case = TRUE)) > 0){
         data_list[[i]] <- haven::zap_formats(haven::read_sas(input$file$datapath[i]))
       }else{
         data_list[[i]] <- NULL
