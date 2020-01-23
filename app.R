@@ -7,8 +7,12 @@ source("global.R")
 
 ui <- 
   tagList(
+    tags$head(
+      tags$link(rel = "//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"),
+      tags$script(src = "https://code.jquery.com/ui/1.12.1/jquery-ui.js")
+    ),
     useShinyjs(),
-    navbarPage(theme = "yeti.css",
+    navbarPage(#theme = "yeti.css",
                title = "IDEA",
                id = "navbarID",
       tabPanel(
@@ -29,7 +33,9 @@ ui <-
     # Custom styling to override theme
     tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "styles.css")),
     # Add logo to top right corner
-    tags$script(HTML("var header = $('.navbar > .container-fluid'); header.append('<div style=\"float:right\"><ahref=\"URL\"><img src=\"logo.svg\" alt=\"alt\" style=\"float:right;width:66px;height:41px;\"> </a>`</div>');"))
+    tags$script(HTML("var header = $('.navbar > .container-fluid'); header.append('<div style=\"float:right\"><ahref=\"URL\"><img src=\"logo.svg\" alt=\"alt\" style=\"float:right;width:66px;height:41px;\"> </a>`</div>');")),
+    tags$script(src = "script.js"),
+    tags$script(src = "recipe.js")
   )
 
 server <- function(input, output, session) {
