@@ -2,6 +2,7 @@ library(shiny)
 library(shinyjs)
 library(tidyverse)
 library(tippy)
+library(rvest)
 
 source("global.R")
 
@@ -12,7 +13,7 @@ ui <-
       tags$script(src = "https://code.jquery.com/ui/1.12.1/jquery-ui.js")
     ),
     useShinyjs(),
-    navbarPage(#theme = "yeti.css",
+    navbarPage(theme = "yeti.css",
                title = "IDEA",
                id = "navbarID",
       tabPanel(
@@ -45,7 +46,6 @@ server <- function(input, output, session) {
   
   # render the dataUpload module in Data tab
   datafile <- callModule(dataUpload, "datafile", stringsAsFactors = FALSE)
-  output$table <- renderTable({ datafile() })
   
   # render the tablegenerator module using the datafile from dataupload as an input
   table_generator <- callModule(tableGenerator, "table_generator", datafile = datafile)
