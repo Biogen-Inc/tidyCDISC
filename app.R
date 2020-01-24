@@ -10,12 +10,14 @@ ui <-
   tagList(
     tags$head(
       tags$link(rel = "//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"),
+      tags$head(tags$link(rel="shortcut icon", href="IDEA_FAVICON.ico")),
       tags$script(src = "https://code.jquery.com/ui/1.12.1/jquery-ui.js")
     ),
     useShinyjs(),
     navbarPage(theme = "yeti.css",
-               title = "IDEA",
+               title = div(id="logo-id","IDEA", img(src="IDEA_ICON.png", style="float:left; padding-right:3px; height:25px; width:30px")), 
                id = "navbarID",
+               windowTitle = "IDEA",
       tabPanel(
         title = "Data",
           dataUploadUI("datafile", "Import CSV")
