@@ -3,7 +3,10 @@ $(function() {
   $("#sortable_agg").disableSelection();
   $(".all_blocks").sortable();
   $(".all_blocks").disableSelection();
-});
+  $('#all_rows').on('shiny:value', function() {
+	    setTimeout(() => $('#all_rows .all_blocks').sortable().disableSelection(), 1)
+	  })
+	});
 
 
 /* Functions needed to render ShinyInput from the drop zones */
@@ -21,6 +24,7 @@ function setUpShiny(id, outputID) {
     str += "<tr><td>" + txt + (val ? ": " + val : "") + "</td></tr>";
   })
   let str_to_table = '<table>' + str + '</table>'
+  console.log(str_to_table)
   Shiny.setInputValue(outputID, str_to_table)
 }
 

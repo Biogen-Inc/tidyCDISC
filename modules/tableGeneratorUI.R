@@ -5,9 +5,6 @@ tableGeneratorUI <- function(id, label = "Create Chart") {
     sidebarPanel(width = 6,
                  fluidRow(column(12, recipe
                  )),
-                 # how do I use this within JS to add 
-                 # a mean block to droppable di
-                 
                  fluidRow(
                    uiOutput("all_rows"),
                    dropArea("Drop Here", "d_blocks", "droppable_blocks", "ui-sortable-helper sortTxtbox droppable_blocks droppable_blocks", "padding-right:0.1px"),
@@ -19,7 +16,7 @@ tableGeneratorUI <- function(id, label = "Create Chart") {
                             id = "sortable_agg",
                             tags$li(
                               class = "ui-state-default agg", id = "ttest",
-                              div(tippy(div("T-TEST"), "Tooltip Text"))
+                              div(tippy(div("T-TEST"), "T-Test"))
                             ),
                             tags$li(
                               class = "ui-state-default agg", id = "chg",
@@ -40,8 +37,10 @@ tableGeneratorUI <- function(id, label = "Create Chart") {
     ),
     
     mainPanel(
-      fluidRow(tableOutput("all"))
+      fluidRow(tableOutput(ns("all")))
     ),
+    tags$script(src = "script.js"),
+    tags$script(src = "recipe.js")
   )
   
 }
