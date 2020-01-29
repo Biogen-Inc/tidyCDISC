@@ -17,7 +17,7 @@ $(function() {
 * @param {outputID} the name of the input we'll use in Shiny as in input$outputID
 */
 function setUpShiny(id, outputID) {
-  var str = "";
+      var str = "";
   $('#' + id).each(function() {
     const txt = $(this).text()
     const val = $(this).parent().find("select").children("option:selected").val()
@@ -25,6 +25,7 @@ function setUpShiny(id, outputID) {
   })
   let str_to_table = '<table>' + str + '</table>'
   console.log(str_to_table)
+  console.log('table_generator-' + outputID)
   Shiny.setInputValue(outputID, str_to_table)
 }
 
@@ -71,13 +72,13 @@ function domChange(id, inputID, outputID) {
   observer.observe(target, config);
 }
 
-domChange('droppable_agg', 'droppable_agg label', 'agg_drop_zone')
-deleteBlock("droppable_agg", 'droppable_agg label', 'agg_drop_zone')
-selectChange("droppable_agg", 'droppable_agg label', 'agg_drop_zone')
+domChange('droppable_agg', 'droppable_agg label', 'table_generator-agg_drop_zone')
+deleteBlock("droppable_agg", 'droppable_agg label', 'table_generator-agg_drop_zone')
+selectChange("droppable_agg", 'droppable_agg label', 'table_generator-agg_drop_zone')
 
-domChange('droppable_blocks', 'droppable_blocks label', 'block_drop_zone')
-deleteBlock("droppable_blocks", 'droppable_blocks label', 'block_drop_zone')
-selectChange("droppable_blocks", 'droppable_blocks label', 'block_drop_zone')
+domChange('droppable_blocks', 'droppable_blocks label', 'table_generator-block_drop_zone')
+deleteBlock("droppable_blocks", 'droppable_blocks label', 'table_generator-block_drop_zone')
+selectChange("droppable_blocks", 'droppable_blocks label', 'table_generator-block_drop_zone')
 
 
 /* Functions needed to render blocks in drop zone */

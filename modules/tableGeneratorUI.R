@@ -1,4 +1,5 @@
 tableGeneratorUI <- function(id, label = "Create Chart") {
+  
   ns <- NS(id)
   
   fluidPage(

@@ -1,6 +1,6 @@
 tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
   
-  test <- reactive({ print(input$agg_drop_zone )})
+  
   AGGREGATE <- reactive({
     req(length(input$agg_drop_zone) > 0 & !(is.na(input$agg_drop_zone)))
     as.data.frame(read_html(input$agg_drop_zone) %>% html_table(fill=TRUE)) %>%
@@ -23,13 +23,15 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
     t <- AGGREGATE()
     p <- ROWS()
     t$Row <- p$X1
-    return(t, tags$script("script.js"))
+    return(t)
   })
   
   output$all <- renderTable({
-    ALL()
+    ALL()$t
   })
   
-  p <- reactive({ rowArea(datafile()) })
+  p <- reactive({
+    rowArea(datafile())
+    })
   return(p)
 }
