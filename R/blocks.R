@@ -1,4 +1,4 @@
-recipe <- HTML('<select id="RECIPE"><option id="none">NONE</option><option id="mean">DEMOGRAPHY</option></select>')
+recipe <- HTML('<select id="RECIPE"><option id="none">NONE</option><option id="demography">DEMOGRAPHY</option></select>')
 
 rowBlock <- function(name) {
   tags$li(
