@@ -27,10 +27,14 @@ ui <-
           tableGeneratorUI("table_generator")
       ),
       tabPanel(
-        title = "Population Explorer"
+        title = "Population Explorer",
+		  selectDataUI(id = "popul"),
+		  PopuExplorUI(id = "popul")
       ),
       tabPanel(
-        title = "Individual Explorer"
+        title = "Individual Explorer",
+		  selectDataUI(id = "indvl"),
+		  IndvExplorUI(id = "indvl")
       )
     ),
     # Custom styling to override theme
@@ -52,6 +56,18 @@ server <- function(input, output, session) {
   # render the tablegenerator module using the datafile from dataupload as an input
   table_generator <- callModule(tableGenerator, "table_generator", datafile = datafile)
   output$all_rows <- renderUI({ table_generator() })
+  
+  # Individual Explorer
+  dataselected <- callModule(selectData, "indvl", datafile)
+ 
+  seltypes <- callModule(IndvExpl1Initial,   "indvl", datafile, dataselected)
+  usubjid  <- callModule(IndvExpl2SelPatno , "indvl", datafile, dataselected, seltypes = seltypes)
+  callModule(IndvExpl3CheckGroup,  "indvl", datafile, dataselected, usubjid = usubjid)
+  callModule(IndvExpl4ChartPlotly, "indvl", datafile, dataselected, seltypes = seltypes, usubjid = usubjid)
+  
+  # Population Explorer
+  dataselected <- callModule(selectData, "popul", datafile)
+  callModule(PopuExplor, id = "popul", datafile = datafile, dataselected = dataselected)
 
 }
 
