@@ -22,12 +22,14 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
            }))
     t <- AGGREGATE()
     p <- ROWS()
+    print(t)
+    print(p)
     t$Row <- p$X1
     return(t)
   })
   
   output$all <- renderTable({
-    ALL()$t
+    ALL()
   })
   
   p <- reactive({
