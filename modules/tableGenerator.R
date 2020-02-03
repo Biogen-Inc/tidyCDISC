@@ -1,5 +1,15 @@
 tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
   
+  observe({
+    req(input$recipe)
+    x <- input$recipe
+    print(x)
+    if (x == "DEMOGRAPHY") {
+      updateRadioButtons(session, "COLUMN", "Group Data By:", choices = c("A", "B", "C"), selected = "C")
+    } else {
+      updateRadioButtons(session, "COLUMN", "Group Data By:", choices = c("A", "B", "C"), selected = "B")
+    }
+  })
   
   AGGREGATE <- reactive({
     req(length(input$agg_drop_zone) > 0 & !(is.na(input$agg_drop_zone)))
@@ -22,8 +32,6 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
            }))
     t <- AGGREGATE()
     p <- ROWS()
-    print(t)
-    print(p)
     t$Row <- p$X1
     return(t)
   })

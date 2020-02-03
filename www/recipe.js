@@ -32,3 +32,9 @@ demography_agg = ["Mean", "FREQ", "FREQ", "FREQ", "Mean", "Mean", "Mean", "FREQ"
       document.getElementById("droppable_blocks").innerHTML = "";
     }
   });
+  
+$('select#RECIPE').change(function() {
+  var selectedDropdown = $(this).children('option:selected').val()
+  console.log(selectedDropdown)
+  Shiny.setInputValue('table_generator-recipe', selectedDropdown)
+})

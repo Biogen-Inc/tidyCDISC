@@ -24,8 +24,6 @@ function setUpShiny(id, outputID) {
     str += "<tr><td>" + txt + (val ? ": " + val : "") + "</td></tr>";
   })
   let str_to_table = '<table>' + str + '</table>'
-  console.log(str_to_table)
-  console.log('table_generator-' + outputID)
   Shiny.setInputValue(outputID, str_to_table)
 }
 

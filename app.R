@@ -3,6 +3,7 @@ library(shinyjs)
 library(tidyverse)
 library(tippy)
 library(rvest)
+library(shinyWidgets)
 
 source("global.R")
 
