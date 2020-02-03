@@ -5,7 +5,8 @@ tableGeneratorUI <- function(id, label = "Create Chart") {
   fluidPage(
     sidebarPanel(width = 6,
                  fluidRow(column(12, recipe)),
-                 fluidRow(radioButtons(inputId = ns("COLUMN"), "Group Data By:", choices = c("A", "B", "C"))),
+                 fluidRow(radioGroupButtons(
+                   inputId = ns("COLUMN"), "Group Data By:", choices = c("TRT01P", "SEX", "RACE", "none"))),
                  fluidRow(
                    uiOutput("all_rows"),
                    dropArea("Drop Here", "d_blocks", "droppable_blocks", "ui-sortable-helper sortTxtbox droppable_blocks droppable_blocks", "padding-right:0.1px"),

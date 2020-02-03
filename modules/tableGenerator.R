@@ -5,9 +5,9 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
     x <- input$recipe
     print(x)
     if (x == "DEMOGRAPHY") {
-      updateRadioButtons(session, "COLUMN", "Group Data By:", choices = c("A", "B", "C"), selected = "C")
+      updateRadioGroupButtons(session, "COLUMN", "Group Data By:", choices = c("TRT01P", "SEX", "RACE", "none"), selected = "TRT01P")
     } else {
-      updateRadioButtons(session, "COLUMN", "Group Data By:", choices = c("A", "B", "C"), selected = "B")
+      updateRadioGroupButtons(session, "COLUMN", "Group Data By:", choices = c("TRT01P", "SEX", "RACE", "none"), selected = "none")
     }
   })
   
