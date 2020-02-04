@@ -1,5 +1,10 @@
 selectData <- function(input, output, session, datafile) {
 
+  ns <- session$ns
+  
+  shinyjs::show(id="datalist")
+  shinyjs::show(id="done")
+  
   observe({
     
   sasdata <- toupper(names(datafile()))
@@ -16,8 +21,9 @@ selectData <- function(input, output, session, datafile) {
     inputId = "datalist",
     choices = sasdata
   )
+  
 })
-
+  
   # return reactive data on input button click, and hide the widgets
     return(eventReactive(input$done, { 
     # hide the helptext and datalist after clicking on done

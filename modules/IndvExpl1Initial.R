@@ -18,7 +18,7 @@ IndvExpl1Initial <- function(input, output, session, datafile, dataselected){
   
   observe({
     
-    req(!is.null(datafile()))
+    # req(!is.null(datafile()))
     
     # if ADCM or ADLB were selected, add to the seltypes selectInput list
     

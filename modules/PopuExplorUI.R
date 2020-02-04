@@ -13,7 +13,7 @@ sidebarLayout(
                                            "Box Plot" = 3,
                                            "Heat Map" = 4,
                                            "Histogram" = 5),
-                            selected = NULL),
+                            selected = character(0)),
                
                # below are all the possible subparameters
                tags$h4("Parameters:"),
