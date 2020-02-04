@@ -1,9 +1,3 @@
-recipe <- HTML('
-               <select id="RECIPE">
-                <option  id="none">NONE</option>
-                <option  id="demography">DEMOGRAPHY</option>
-               </select>')
-
 rowBlock <- function(name, lab) {
   tags$li(
     class = "block", id = name,
@@ -28,12 +22,13 @@ rowArea <- function(bins) {
   )
 }
 
-dropArea <- function(name, id, ulid, class, styles) {
-  column(5, offset = 0, style=styles,
-         h4(name),
-         id = id,
-         tags$ul(
-           id = ulid,
-           class = class
-         ))
+library(shiny)
+
+ui <- fluidPage(
+   
+)
+
+server <- function(input, output) {
 }
+shinyApp(ui = ui, server = server)
+
