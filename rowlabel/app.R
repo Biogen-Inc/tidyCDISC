@@ -1,4 +1,9 @@
-rowBlock <- function(name, lab) {
+data_for_blocks <- list("ONE" = c("A", "B", "C"),
+                        "TWO" = c("D", "E", "F"),
+                        "THREE" = c("G", "H", "I"))
+
+
+rowBlock <- function(name) {
   tags$li(
     class = "block", id = name,
     div(tippy(div(name), name))
@@ -11,7 +16,7 @@ rowPallete <- function(data) {
   Map(function(x, y) 
     div(h5(x), style="max-height:300px;overflow-y:scroll", 
         tags$ul(class = 'all_blocks', 
-                lapply(colnames(y), rowBlock))),
+                lapply(y, rowBlock))),
     names(data),
     data)
 }
@@ -25,7 +30,7 @@ rowArea <- function(bins) {
 library(shiny)
 
 ui <- fluidPage(
-   
+   rowArea(data_for_blocks)
 )
 
 server <- function(input, output) {

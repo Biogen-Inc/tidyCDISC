@@ -4,7 +4,7 @@ recipe <- HTML('
                 <option  id="demography">DEMOGRAPHY</option>
                </select>')
 
-rowBlock <- function(name, lab) {
+rowBlock <- function(name) {
   tags$li(
     class = "block", id = name,
     div(tippy(div(name), name))
@@ -17,7 +17,7 @@ rowPallete <- function(data) {
   Map(function(x, y) 
     div(h5(x), style="max-height:300px;overflow-y:scroll", 
         tags$ul(class = 'all_blocks', 
-                lapply(colnames(y), rowBlock))),
+                lapply(y, rowBlock))),
     names(data),
     data)
 }

@@ -41,19 +41,15 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
   })
   
   p <- reactive({
-    
-    # Loop over the dataframe list and keep non-parmcd files the same
-    # Then replace the dataframes containing paramcd
-    # This is ugly and takes a long time 
-    
+
     data_for_blocks <- list()
     for (i in 1:length(datafile())) {
       ifelse((length(grep("PARAMCD", names(datafile()[[i]]))) == 0) ,
-             data_for_blocks[[i]] <- datafile()[[i]],
-             data_for_blocks[[i]] <- pivot_paramcd(datafile()[[i]]))
+             data_for_blocks[[i]] <- names(datafile()[[i]]),
+             data_for_blocks[[i]] <- block_names(datafile()[[i]]))
     }
     names(data_for_blocks) <- names(datafile())
-    
+
     rowArea(data_for_blocks)
     })
   
