@@ -4,6 +4,10 @@ library(tidyverse)
 library(tippy)
 library(rvest)
 
+library(haven)
+library(DT)
+library(shinyWidgets)
+
 source("global.R")
 
 ui <- 
@@ -28,11 +32,13 @@ ui <-
       ),
       tabPanel(
         title = "Population Explorer",
+      dataUploadUI("popul", "Import CSV"),  
 		  selectDataUI(id = "popul"),
 		  PopuExplorUI(id = "popul")
       ),
       tabPanel(
         title = "Individual Explorer",
+      dataUploadUI("indvl", "Import CSV"),  
 		  selectDataUI(id = "indvl"),
 		  IndvExplorUI(id = "indvl")
       )
@@ -58,14 +64,15 @@ server <- function(input, output, session) {
   output$all_rows <- renderUI({ table_generator() })
   
   # Individual Explorer
+  datafile <- callModule(dataUpload, "indvl", stringsAsFactors = FALSE)
   dataselected <- callModule(selectData, "indvl", datafile)
- 
   seltypes <- callModule(IndvExpl1Initial,   "indvl", datafile, dataselected)
   usubjid  <- callModule(IndvExpl2SelPatno , "indvl", datafile, dataselected, seltypes = seltypes)
   callModule(IndvExpl3CheckGroup,  "indvl", datafile, dataselected, usubjid = usubjid)
   callModule(IndvExpl4ChartPlotly, "indvl", datafile, dataselected, seltypes = seltypes, usubjid = usubjid)
-  
+
   # Population Explorer
+  datafile <- callModule(dataUpload, "popul", stringsAsFactors = FALSE)
   dataselected <- callModule(selectData, "popul", datafile)
   callModule(PopuExplor, id = "popul", datafile = datafile, dataselected = dataselected)
 

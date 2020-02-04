@@ -5,10 +5,16 @@ PopuExplor <- function(input, output, session, datafile, dataselected){
 # show/hide checkboxes depending on radiobutton selection
 observeEvent(input$radio,{
   
+  req(!is.null(datafile()))
+  # print("in observeEvent for input$radio")
+  # print(paste("ns is",session$ns("")))
+  # print(paste(names(datafile()),collapse = " "))
+  
   # get numeric vs char data from ADSL  
   adsl.chrcols <- sort(names(datafile()[["ADSL"]][ , which(sapply(datafile()[["ADSL"]],is.character))])) # all chr columns
   adsl.numcols <- sort(names(datafile()[["ADSL"]][ , which(sapply(datafile()[["ADSL"]],is.numeric))]))   # all num columns
   
+  # print(adsl.chrcols)
   # Clear plotoutput
   output$PlotlyOut <- renderPlotly({
     NULL

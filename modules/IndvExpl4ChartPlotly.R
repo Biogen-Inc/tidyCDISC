@@ -1,6 +1,7 @@
 IndvExpl4ChartPlotly <- function(input, output, session, datafile, dataselected, seltypes, usubjid){
   
   ns <- session$ns
+  
 observeEvent(input$selType, {
   
   # make sure a subject has been selected

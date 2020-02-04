@@ -2,7 +2,7 @@ IndvExpl2SelPatno <- function(input, output, session, datafile, dataselected, se
   
 # observeEvent for inputselPatno 
   ns <- session$ns
-  
+
 observeEvent(input$selPatNo, {
   
   req(input$selPatNo != " ") # selPatNo cannot be blank
@@ -29,6 +29,17 @@ observeEvent(input$selPatNo, {
                   caption = "Selected Demographic variables from ADSL")
     
   })
+  
+  # if ADCM or ADLB were selected, add to the seltypes selectInput list
+  
+  if ("ADCM" %in% dataselected()) {
+    seltypes <- c(seltypes,"MEDS")
+  }
+  if ("ADLB" %in% dataselected()) {
+    seltypes <- c(seltypes,"LABS")
+  }
+  
+  # print(paste("Indv#2 seltypes is",paste(seltypes,collapse = " ")))
   
   # set default selection back to blank
   updateSelectInput(

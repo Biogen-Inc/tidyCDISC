@@ -3,10 +3,12 @@ IndvExpl1Initial <- function(input, output, session, datafile, dataselected){
   
   ns <- session$ns
   
-  seltypes <- c(" ","MEDS","LABS")  # initialize seltypes
+  # observe(print(dataselected()))
   
+  seltypes <- c(" ")  # initialize seltypes
+
   # Hide widgets until the input file has been selected
-  # shinyjs::hide(id = "selPatNo")
+  shinyjs::hide(id = "selPatNo")
   shinyjs::hide(id = "selType")
   shinyjs::hide(id = "selLabCode")
   shinyjs::hide(id = "checkGroup")
@@ -16,26 +18,31 @@ IndvExpl1Initial <- function(input, output, session, datafile, dataselected){
   
   observe({
     
-    if (!"ADCM" %in% dataselected()) {
-      seltypes <- seltypes[!seltypes == "MEDS"]
+    req(!is.null(datafile()))
+    
+    # if ADCM or ADLB were selected, add to the seltypes selectInput list
+    
+    if ("ADCM" %in% dataselected()) {
+      seltypes <- c(seltypes,"MEDS")
     }
-    if (!"ADLB" %in% dataselected()) {
-      seltypes <- seltypes[!seltypes == "LABS"]
+    if ("ADLB" %in% dataselected()) {
+      seltypes <- c(seltypes,"LABS")
     }
 
+    # print(paste("Indv#1 seltypes is",paste(seltypes,collapse = " ")))
+    
     updateSelectInput(
       session = session,
       inputId = "selType",
       choices = seltypes,
       selected = " "
     )
+    
   })
   
   observe({
-  subj <- unique(datafile()$ADSL[, "USUBJID"]) # get list of unique USUBJIDs
-  
   # The rest of the widgets will be shown after the USUBJID has been selected
-  shinyjs::show(id = "selPatNo")
+  subj <- unique(datafile()$ADSL[, "USUBJID"]) # get list of unique USUBJIDs
   
   updateSelectInput(
     session = session,
@@ -43,6 +50,7 @@ IndvExpl1Initial <- function(input, output, session, datafile, dataselected){
     choices = c(" ",subj),
     selected = " "
   )
+  shinyjs::show(id = "selPatNo")
   })
   return(seltypes)
   

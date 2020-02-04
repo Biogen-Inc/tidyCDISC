@@ -2,7 +2,7 @@ IndvExplorUI <- function(id, label = "Individual Explorer") {
   
   ns <- NS(id)
   
-  seltypes <- c(" ","MEDS","LABS")
+  # seltypes <- c(" ","MEDS","LABS")
   
   useShinyjs()
   
@@ -23,7 +23,7 @@ IndvExplorUI <- function(id, label = "Individual Explorer") {
     checkboxGroupInput(
       inputId = ns("checkGroup"),
       label = "Types of Events",
-      choices = c("DUMMY" = "ZZ"),
+      choices = c(" "),
       selected = NULL,
       inline = TRUE
     ),
@@ -37,7 +37,7 @@ IndvExplorUI <- function(id, label = "Individual Explorer") {
     selectInput(
       ns("selType"),
       label = tags$small("Type of Value:"),
-      choices = seltypes,
+      choices = c(" "),
       selected =  " "
     ),
     selectInput(
