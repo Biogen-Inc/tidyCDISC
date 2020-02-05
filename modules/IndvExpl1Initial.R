@@ -3,9 +3,10 @@ IndvExpl1Initial <- function(input, output, session, datafile, dataselected){
   
   ns <- session$ns
   
+  dataselected <- callModule(selectData, id = NULL, datafile)
   # observe(print(dataselected()))
   
-  seltypes <- c(" ")  # initialize seltypes
+  # seltypes <- c(" ")  # initialize seltypes
 
   # Hide widgets until the input file has been selected
   shinyjs::hide(id = "selPatNo")
@@ -15,30 +16,6 @@ IndvExpl1Initial <- function(input, output, session, datafile, dataselected){
   shinyjs::hide(id = "eventsTable")
   shinyjs::hide(id = "hr2")
   shinyjs::hide(id = "hr3")
-  
-  observe({
-    
-    # req(!is.null(datafile()))
-    
-    # if ADCM or ADLB were selected, add to the seltypes selectInput list
-    
-    if ("ADCM" %in% dataselected()) {
-      seltypes <- c(seltypes,"MEDS")
-    }
-    if ("ADLB" %in% dataselected()) {
-      seltypes <- c(seltypes,"LABS")
-    }
-
-    # print(paste("Indv#1 seltypes is",paste(seltypes,collapse = " ")))
-    
-    updateSelectInput(
-      session = session,
-      inputId = "selType",
-      choices = seltypes,
-      selected = " "
-    )
-    
-  })
   
   observe({
   # The rest of the widgets will be shown after the USUBJID has been selected
@@ -52,6 +29,6 @@ IndvExpl1Initial <- function(input, output, session, datafile, dataselected){
   )
   shinyjs::show(id = "selPatNo")
   })
-  return(seltypes)
+  return(dataselected)
   
 } # IndvExpl1Initial

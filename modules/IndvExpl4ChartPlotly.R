@@ -2,6 +2,27 @@ IndvExpl4ChartPlotly <- function(input, output, session, datafile, dataselected,
   
   ns <- session$ns
   
+  seltypes = c(" ")
+  # if ADCM or ADLB were selected, add to the seltypes selectInput list
+  
+  observe({
+    if ("ADCM" %in% dataselected()) {
+      seltypes <- c(seltypes,"MEDS")
+    }
+    if ("ADLB" %in% dataselected()) {
+      seltypes <- c(seltypes,"LABS")
+    }
+
+  # set default selection back to blank
+  updateSelectInput(
+    session = session,
+    inputId = "selType",
+    choices = seltypes,
+    selected =  " "
+  )
+  })
+  
+  
 observeEvent(input$selType, {
   
   # make sure a subject has been selected

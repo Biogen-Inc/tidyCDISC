@@ -2,6 +2,10 @@ PopuExplor <- function(input, output, session, datafile, dataselected){
   
   ns <- session$ns
   
+  dataselected <- callModule(selectData, id = NULL, datafile)
+  
+  observe(print(dataselected()))
+  
 # show/hide checkboxes depending on radiobutton selection
 observeEvent(input$radio,{
   

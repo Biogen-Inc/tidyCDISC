@@ -1,8 +1,8 @@
-IndvExpl2SelPatno <- function(input, output, session, datafile, dataselected, seltypes){
+IndvExpl2SelPatno <- function(input, output, session, datafile, dataselected){
   
-# observeEvent for inputselPatno 
   ns <- session$ns
 
+# observeEvent for inputselPatno 
 observeEvent(input$selPatNo, {
   
   req(input$selPatNo != " ") # selPatNo cannot be blank
@@ -29,25 +29,6 @@ observeEvent(input$selPatNo, {
                   caption = "Selected Demographic variables from ADSL")
     
   })
-  
-  # if ADCM or ADLB were selected, add to the seltypes selectInput list
-  
-  if ("ADCM" %in% dataselected()) {
-    seltypes <- c(seltypes,"MEDS")
-  }
-  if ("ADLB" %in% dataselected()) {
-    seltypes <- c(seltypes,"LABS")
-  }
-  
-  # print(paste("Indv#2 seltypes is",paste(seltypes,collapse = " ")))
-  
-  # set default selection back to blank
-  updateSelectInput(
-    session = session,
-    inputId = "selType",
-    choices = seltypes,
-    selected =  " "
-  )
   
   # Now show the rest of the widgets
   shinyjs::show(id = "hr2")
