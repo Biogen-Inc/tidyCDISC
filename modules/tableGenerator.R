@@ -35,6 +35,15 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
     return(t)
   })
   
+  
+  combined_data <- reactive({ bind_rows(datafile(), .id = "data_from") })
+  
+  total <- reactive ({  
+    combined_data %>% 
+      distinct(USUBJID) %>%
+      summarise(n = n()) 
+    })
+  
   output$all <- renderTable({
     
     combined_data <- bind_rows(datafile(), .id = "data_from")
