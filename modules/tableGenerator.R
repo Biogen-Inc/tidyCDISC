@@ -36,7 +36,14 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
   })
   
   output$all <- renderTable({
-    head(bind_rows(datafile(), .id = "data_from"))
+    
+    combined_data <- bind_rows(datafile(), .id = "data_from")
+    print(colnames(combined_data))
+    
+    combined_data %>% 
+      filter(PARAMCD == ALL()$Row[1]) %>%
+      summarise(test = mean(AVAL))
+    
   })
   
   p <- reactive({
