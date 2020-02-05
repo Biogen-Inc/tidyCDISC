@@ -7,6 +7,7 @@ library(rvest)
 library(haven)
 library(DT)
 library(shinyWidgets)
+library(plotly)
 
 source("global.R")
 

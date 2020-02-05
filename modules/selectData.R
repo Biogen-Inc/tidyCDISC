@@ -28,8 +28,8 @@ selectData <- function(input, output, session, datafile) {
     return(eventReactive(input$done, { 
     
     # hide the helptext and datalist after clicking on done
-    shinyjs::hide(id="datalist")
-    shinyjs::hide(id="done")
+    # shinyjs::hide(id="datalist")
+    # shinyjs::hide(id="done")
     
     if (is.null(input$datalist)) {
       c("ADSL") 
