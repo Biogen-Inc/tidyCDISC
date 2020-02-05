@@ -3,7 +3,6 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
   observe({
     req(input$recipe)
     x <- input$recipe
-    print(x)
     if (x == "DEMOGRAPHY") {
       updateRadioGroupButtons(session, "COLUMN", "Group Data By:", choices = c("TRT01P", "SEX", "RACE", "none"), selected = "TRT01P")
     } else {
@@ -37,11 +36,10 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
   })
   
   output$all <- renderTable({
-    ALL()
+    head(bind_rows(datafile(), .id = "data_from"))
   })
   
   p <- reactive({
-
     data_for_blocks <- list()
     for (i in 1:length(datafile())) {
       ifelse((length(grep("PARAMCD", names(datafile()[[i]]))) == 0) ,
@@ -49,7 +47,6 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
              data_for_blocks[[i]] <- block_names(datafile()[[i]]))
     }
     names(data_for_blocks) <- names(datafile())
-
     rowArea(data_for_blocks)
     })
   
