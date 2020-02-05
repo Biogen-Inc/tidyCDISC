@@ -5,6 +5,12 @@ library(tippy)
 library(rvest)
 library(shinyWidgets)
 
+library(haven)
+library(DT)
+library(shinyWidgets)
+library(plotly)
+library(RColorBrewer)
+
 source("global.R")
 
 ui <- 
@@ -28,10 +34,16 @@ ui <-
           tableGeneratorUI("table_generator")
       ),
       tabPanel(
-        title = "Population Explorer"
+        title = "Population Explorer",
+      # dataUploadUI("popul", "Import CSV"),  
+		  selectDataUI(id = "popul"),
+		  PopuExplorUI(id = "popul")
       ),
       tabPanel(
-        title = "Individual Explorer"
+        title = "Individual Explorer",
+      # dataUploadUI("indvl", "Import CSV"),  
+		  selectDataUI(id = "indvl"),
+		  IndvExplorUI(id = "indvl")
       )
     ),
     # Custom styling to override theme
@@ -44,8 +56,8 @@ ui <-
 
 server <- function(input, output, session) {
   
-  # Increase allowed file size to 800MB
-  options(shiny.maxRequestSize = 800*1024^2)
+  # Increase allowed file size to 4GB
+  options(shiny.maxRequestSize = 4096*1024^2)
   
   # render the dataUpload module in Data tab
   datafile <- callModule(dataUpload, "datafile", stringsAsFactors = FALSE)
@@ -53,6 +65,19 @@ server <- function(input, output, session) {
   # render the tablegenerator module using the datafile from dataupload as an input
   table_generator <- callModule(tableGenerator, "table_generator", datafile = datafile)
   output$all_rows <- renderUI({ table_generator() })
+  
+  # Individual Explorer
+  # datafile <- callModule(dataUpload, "indvl", stringsAsFactors = FALSE)
+  # dataselected <- callModule(selectData, "indvl", datafile)
+  dataselected <- callModule(IndvExpl1Initial,   "indvl", datafile)
+  usubjid  <- callModule(IndvExpl2SelPatno , "indvl", datafile, dataselected)
+  callModule(IndvExpl3CheckGroup,  "indvl", datafile, dataselected, usubjid = usubjid)
+  callModule(IndvExpl4ChartPlotly, "indvl", datafile, dataselected, seltypes = seltypes, usubjid = usubjid)
+
+  # Population Explorer
+  # datafile <- callModule(dataUpload, "popul", stringsAsFactors = FALSE)
+  # dataselected <- callModule(selectData, "indvl", datafile)
+  callModule(PopuExplor, id = "popul", datafile = datafile, dataselected = dataselected)
 
 }
 
