@@ -8,6 +8,7 @@ library(haven)
 library(DT)
 library(shinyWidgets)
 library(plotly)
+library(RColorBrewer)
 
 source("global.R")
 
