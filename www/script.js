@@ -106,10 +106,13 @@ function selectWeekBlock(newid, label) {
   return `<div class="form-group drop_area">
                         <label class="control-label" for="${newid}">${label}</label>
                         <select id="${newid}">
-                        <option value="week1" selected>Week 1</option>
-                        <option value="week2">Week 2</option>
-                        <option value="week3">Week 3</option>
-                        <option value="week4">Week 4</option></select>
+                        <option value="Week 12" selected>Week 12</option>
+                        <option value="Week 13">Week 13</option>
+                        <option value="Week 14">Week 14</option>
+                        <option value="Week 15">Week 15</option>
+                        <option value="Year 1">Year 1</option>
+                        <option value="Year 2">Year 2</option>
+                        </select>
                         <button class="delete">Delete</button>
                         </div>`
 }

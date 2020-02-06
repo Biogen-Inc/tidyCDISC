@@ -10,6 +10,7 @@ library(DT)
 library(shinyWidgets)
 library(plotly)
 library(RColorBrewer)
+library(broom)
 
 source("global.R")
 
