@@ -4,7 +4,7 @@ library(tidyverse)
 library(tippy)
 library(rvest)
 library(shinyWidgets)
-
+library(formattable)
 library(haven)
 library(DT)
 library(shinyWidgets)

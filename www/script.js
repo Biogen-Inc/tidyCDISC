@@ -158,7 +158,7 @@ $(function() {
         } else if (draggableId.includes("chg")) {
           $(this).append(selectWeekBlock(newid, "CHG"));
         } else if (draggableId.includes("mean")) {
-          $(this).append(selectWeekBlock(newid, "Mean"));
+          $(this).append(selectWeekBlock(newid, "MEAN"));
         } else {
           $(this).append(simpleBlock(newid));
         }

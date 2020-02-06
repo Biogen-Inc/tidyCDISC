@@ -36,24 +36,41 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
   })
   
   
-  combined_data <- reactive({ bind_rows(datafile(), .id = "data_from") })
+  ######################################################################
+  # Data Preperation
+  ######################################################################
   
-  total <- reactive ({  
-    combined_data %>% 
-      distinct(USUBJID) %>%
-      summarise(n = n()) 
+  all_data <- reactive({ 
+    # Seperate ADSL and the PArAMCD dataframes
+    ADSL <- datafile()$ADSL
+    PARAMCD_files <- datafile()[names(datafile()) != "ADSL" ]
+    
+    # The pancake method: binding all rows in an rbind 
+    all_PARAMCD <-
+      bind_rows(PARAMCD_files, .id = "data_from")  %>% 
+        arrange(SUBJID, AVISITN, PARAMCD) %>% 
+        select(USUBJID, SUBJID, AVISITN, AVISIT, PARAMCD, AVAL, CHG) %>% 
+        distinct(USUBJID, AVISITN, AVISIT, PARAMCD, .keep_all = TRUE) 
+    
+    inner_join(ADSL, all_PARAMCD, by = "USUBJID") 
+    
     })
   
-  output$all <- renderTable({
-    
-    combined_data <- bind_rows(datafile(), .id = "data_from")
-    print(colnames(combined_data))
-    
-    combined_data %>% 
-      filter(PARAMCD == ALL()$Row[1]) %>%
-      summarise(test = mean(AVAL))
-    
+  # get the list of PARAMCDs
+  PARAMCD_names <- reactive({
+    all_data() %>% 
+      select(PARAMCD) %>% 
+      distinct() %>%
+      pull(PARAMCD)
   })
+  
+  output$all <- renderTable({
+    head(all_data())
+  })
+  
+  #####################################################################
+  # Block Preperation
+  #####################################################################
   
   p <- reactive({
     data_for_blocks <- list()
