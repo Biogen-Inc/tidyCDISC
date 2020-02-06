@@ -51,18 +51,19 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
     ADSL <- datafile()$ADSL
     PARAMCD_files <- datafile()[names(datafile()) != "ADSL" ]
     
-    # do PARAMCD files include CHG?
-    ifelse(
-      "CHG" %in% colnames(PARAMCD_files),
-      values <- sym(c("CHG", "AVAL")),
-      values <- sym("AVAL")
-    )
+    PARAMCD_files <- lapply(PARAMCD_files, function(df) {
+      if (is.null(df[["need"]])) 
+        df[["need"]] <- NA
+      
+      df
+    })
+
     
     # The pancake method: binding all rows in an rbind 
     all_PARAMCD <-
       bind_rows(PARAMCD_files, .id = "data_from")  %>% 
         arrange(SUBJID, AVISITN, PARAMCD) %>% 
-        select(USUBJID, SUBJID, AVISITN, AVISIT, PARAMCD, !!values) %>% 
+        select(USUBJID, SUBJID, AVISITN, AVISIT, PARAMCD, AVAL, CHG) %>% 
         distinct(USUBJID, AVISITN, AVISIT, PARAMCD, .keep_all = TRUE) 
     
     inner_join(ADSL, all_PARAMCD, by = "USUBJID") 
@@ -319,14 +320,18 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
         # use the filtered dataset where we pivot CHG rather than AVAL
         # get the mean change from baseline given the selected row block
         # and filter based on week
+        print(all_data() %>%
+                filter(PARAMCD == ROW & AVISIT == WEEK) %>% select(CHG))
+        
         intermediate <- all_data() %>%
           filter(PARAMCD == ROW & AVISIT == WEEK) %>%
           summarise(mean = round(mean(CHG), 3))
-        
+        print(intermediate)
         # use the mean in wide format for table
         # add column name showing the total N
         d <- data.frame(CHG = intermediate$mean)
         colnames(d) <- paste0("Total (N  = ", total(), ")")
+        print(d)
         row.names(d) <- "Change from Baseline"
       } else {
         
@@ -348,7 +353,7 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
         ifelse(
           (nrow(intermediate) > 0),
           d <- data.frame(t(data.frame("X" = intermediate$mean))),
-          d <- data.frame(t(data.frame("X" = c(rep(" ", length(unique(dummy[[COLUMN]])))))))
+          d <- data.frame(t(data.frame("X" = c(rep(" ", length(unique(datafile()[[COLUMN]])))))))
         )
         
         # add proper rownames and column names
