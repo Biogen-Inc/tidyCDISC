@@ -6,6 +6,10 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
           sep="", collapse=" ")
   }
   
+  allowed_operators <- c(">", ">=", "==", "<=", "<", "!=") %>% 
+    set_names() %>% 
+    map(match.fun)
+  
   output$title <- renderText({ 
     # paste the title to the top of the table
     # paste reactive filtering expression as subheader
@@ -36,8 +40,25 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
     }
   })
   
+  filtering_expr <- function(input) {
+    column <- rlang::sym(input$filtering)
+    operator <- allowed_operators[[input$condition]]
+    if (is.null(operator)) {
+      rlang::abort(glue::glue("Can't use operator `{input$condition}`"))
+    }
+    
+    if (grepl("[A-Za-z]", datafile()$ADSL[[input$filtering]][1])) {
+      value <- input$filt_grp
+    } else {
+      value <- as.numeric(input$filt_grp)
+    }
+    
+    call <- rlang::call2(operator, column, value)
+    rlang::as_quosure(call, env = emptyenv())
+  }
+  
   output$filtering_by <- renderUI({
-    selectInput(session$ns("filtering"), "Filter By:", c(colnames(datafile()$ADSL)))
+    selectInput(session$ns("filtering"), "Filter By:", colnames(datafile()$ADSL))
   })
 
   observe({
@@ -88,7 +109,7 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
   # Data Preperation
   ######################################################################
   
-  all_data <- reactive({ 
+  processed_data <- reactive({ 
     # Seperate ADSL and the PArAMCD dataframes
     ADSL <- datafile()$ADSL
     PARAMCD_files <- datafile()[names(datafile()) != "ADSL" ]
@@ -117,6 +138,15 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
       select(PARAMCD) %>% 
       distinct() %>%
       pull(PARAMCD)
+  })
+  
+  all_data <- reactive({
+    if (input$to_filter == "No") {
+      processed_data()
+    } else {
+      processed_data() %>%
+        dplyr::filter(!!filtering_expr(input))
+    }
   })
   
   
