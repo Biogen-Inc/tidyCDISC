@@ -5,8 +5,27 @@ tableGeneratorUI <- function(id, label = "Create Chart") {
   fluidPage(
     sidebarPanel(width = 6,
                  fluidRow(column(12, recipe)),
+                 textInput(ns("table_title"), "Table Title", "Table Title "),
                  fluidRow(radioGroupButtons(
                    inputId = ns("COLUMN"), "Group Data By:", choices = c("TRT01P", "SEX", "RACE", "NONE"), selected = "NONE")),
+                 div(fluidRow(
+                   radioGroupButtons(ns("to_filter"), "Filter?", choices = c("No", "Yes"), status = "primary", selected = "No")
+                 ), style = "text-align: center;vertical-align: middle;"),
+                 
+                 conditionalPanel(condition = "input.to_filter == 'Yes'", ns = ns,
+                                  fluidRow(
+                                    column(4, uiOutput(ns("filtering_by"))),
+                                    column(4, selectInput(ns("condition"), "condition", 
+                                                          choices = c("Equals" = "==",
+                                                                      "Not Equal" = "!=",
+                                                                      "Less Than" = "<",
+                                                                      "Less Than or Equal" = "<=",
+                                                                      "Greater Than" = ">",
+                                                                      "Greater Than or Equal" = ">="))),
+                                    column(4, selectInput(ns("filt_grp"), "By:",
+                                                          character(0)))
+                                  )),
+                 
                  fluidRow(
                    uiOutput("all_rows"),
                    dropArea("Drop Here", "d_blocks", "droppable_blocks", "ui-sortable-helper sortTxtbox droppable_blocks droppable_blocks", "padding-right:0.1px"),
@@ -39,6 +58,7 @@ tableGeneratorUI <- function(id, label = "Create Chart") {
     ),
     
     mainPanel(
+      fluidRow(htmlOutput(ns("title"))),
       fluidRow(tableOutput(ns("all"))),
       fluidRow(tableOutput(ns("debug")))
     ),

@@ -6,13 +6,55 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
           sep="", collapse=" ")
   }
   
+  output$title <- renderText({ 
+    # paste the title to the top of the table
+    # paste reactive filtering expression as subheader
+    paste("<b>", input$table_title, "</b><br>", subheader()) 
+  })
+  
+  subheader <- reactive({
+    # change condition to word 
+    if (input$condition == "==") {
+      condition <- "Equals"
+    } else if (input$condition == "!=") {
+      condition <- "Not Equal To"
+    } else if (input$condition == "<") {
+      condition <- "Less Than"
+    } else if (input$condition == "<=") {
+      condition <- "Less Than or Equal To"
+    } else if (input$condition == ">") {
+      condition <- "Greater Than"
+    } else if (input$condition == ">=") {
+      condition <- "Greater Than or Equal To"
+    }
+    
+    if (input$to_filter == "No") {
+      subheader <- ""
+    } else {
+      subheader <- 
+        paste("Where", input$filtering, condition, input$filt_grp)
+    }
+  })
+  
+  output$filtering_by <- renderUI({
+    selectInput(session$ns("filtering"), "Filter By:", c(colnames(datafile()$ADSL)))
+  })
+
+  observe({
+    req(input$filtering)
+    x <- input$filtering
+    if (is.na(x)) x <- character(0)
+    t <- datafile()$ADSL %>% select(!!sym(input$filtering)) %>% distinct(!!sym(x))
+    updateSelectInput(session, "filt_grp", choices = t)
+  })
+  
   observe({
     req(input$recipe)
     x <- input$recipe
     if (x == "DEMOGRAPHY") {
-      updateRadioGroupButtons(session, "COLUMN", "Group Data By:", choices = c("TRT01P", "SEX", "RACE", "none"), selected = "TRT01P")
+      updateRadioGroupButtons(session, "COLUMN", "Group Data By:", choices = c("TRT01P", "SEX", "RACE", "NONE"), selected = "TRT01P")
     } else {
-      updateRadioGroupButtons(session, "COLUMN", "Group Data By:", choices = c("TRT01P", "SEX", "RACE", "none"), selected = "none")
+      updateRadioGroupButtons(session, "COLUMN", "Group Data By:", choices = c("TRT01P", "SEX", "RACE", "NONE"), selected = "none")
     }
   })
   
