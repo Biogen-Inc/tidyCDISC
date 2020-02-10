@@ -22,14 +22,14 @@ rowPallete <- function(data) {
     data)
 }
 
-rowArea <- function(bins) {
-  column(1, offset = 0, style='padding:0px;',
+rowArea <- function(bins, col) {
+  column(col, offset = 0, style='padding:0px;',
          rowPallete(bins)
   )
 }
 
-dropArea <- function(name, id, ulid, class, styles) {
-  column(5, offset = 0, style=styles,
+dropArea <- function(name, id, ulid, class, styles, col) {
+  column(col, offset = 0, style=styles,
          h4(name),
          id = id,
          tags$ul(

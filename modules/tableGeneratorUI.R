@@ -28,8 +28,8 @@ tableGeneratorUI <- function(id, label = "Create Chart") {
                  
                  fluidRow(
                    uiOutput("all_rows"),
-                   dropArea("Drop Here", "d_blocks", "droppable_blocks", "ui-sortable-helper sortTxtbox droppable_blocks droppable_blocks", "padding-right:0.1px"),
-                   dropArea("Drop Here", "d_agg", "droppable_agg", "ui-sortable-helper sortTxtbox droppable_agg", "padding-left:0.1px"),
+                   dropArea(col = 4, "Drop Here", "d_blocks", "droppable_blocks", "ui-sortable-helper sortTxtbox droppable_blocks droppable_blocks", "padding-right:0.1px"),
+                   dropArea(col = 5, "Drop Here", "d_agg", "droppable_agg", "ui-sortable-helper sortTxtbox droppable_agg", "padding-left:0.1px"),
                    
                    column(1, offset = 0, style='padding:0px;',
                           h5("Stats"),
@@ -59,8 +59,7 @@ tableGeneratorUI <- function(id, label = "Create Chart") {
     
     mainPanel(
       fluidRow(htmlOutput(ns("title"))),
-      fluidRow(tableOutput(ns("all"))),
-      fluidRow(tableOutput(ns("debug")))
+      fluidRow(tableOutput(ns("all")))
     ),
     tags$script(src = "script.js"),
     tags$script(src = "recipe.js")

@@ -461,10 +461,6 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
     dataFrame()
   })
   
-  output$debug <- renderTable({
-    blocks()
-  })
-  
   #####################################################################
   # Block Preperation
   #####################################################################
@@ -477,7 +473,7 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
              data_for_blocks[[i]] <- block_names(datafile()[[i]]))
     }
     names(data_for_blocks) <- names(datafile())
-    rowArea(data_for_blocks)
+    rowArea(col = 2, data_for_blocks)
     })
   
   return(p)
