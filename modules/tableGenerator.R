@@ -110,26 +110,26 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
   ######################################################################
   
   processed_data <- reactive({ 
+    
     # Seperate ADSL and the PArAMCD dataframes
     ADSL <- datafile()$ADSL
-    PARAMCD_files <- datafile()[names(datafile()) != "ADSL" ]
     
-    PARAMCD_files <- lapply(PARAMCD_files, function(df) {
-      if (is.null(df[["need"]])) 
-        df[["need"]] <- NA
-      
-      df
-    })
-
+    BDS <- datafile()[names(datafile()) != "ADSL" ]
+    PARAMCD <- map(BDS, ~ if(!"CHG" %in% names(.)) update_list(., CHG = NA) else .)
     
-    # The pancake method: binding all rows in an rbind 
-    all_PARAMCD <-
-      bind_rows(PARAMCD_files, .id = "data_from")  %>% 
+    if (!is_empty(PARAMCD)) {
+      # Bind all the PARAMCD files 
+      all_PARAMCD <- bind_rows(PARAMCD, .id = "data_from")  %>% 
         arrange(SUBJID, AVISITN, PARAMCD) %>% 
-        select(USUBJID, SUBJID, AVISITN, AVISIT, PARAMCD, AVAL, CHG) %>% 
+        select(USUBJID, SUBJID, AVISITN, AVISIT, PARAMCD, AVAL, CHG, data_from) %>% 
         distinct(USUBJID, AVISITN, AVISIT, PARAMCD, .keep_all = TRUE) 
-    
-    inner_join(ADSL, all_PARAMCD, by = "USUBJID") 
+      
+      # Join ADSL and all_PARAMCD
+      combined_data <- inner_join(ADSL, all_PARAMCD, by = "USUBJID")
+    } else {
+      combined_data <- ADSL %>%
+        mutate(data_from = "ADSL", PARAMCD = NA, AVAL = NA, CHG = NA)
+    }
     })
   
   # get the list of PARAMCDs
@@ -188,7 +188,8 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
     # we can't just search for mean because
     # the blocks have unique ids, mean.1, mean.2 etc.
     if (AGG == "MEAN") {
-
+      
+      print(as.character(ROW) %in% PARAMCD_names())
       
       if (as.character(ROW) %in% PARAMCD_names()) {
         
@@ -204,6 +205,7 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
                       `Q1 | Q3` = paste(round(quantile(AVAL, 0.25), 2) , "|", round(quantile(AVAL, 0.75), 2)),
                       `Min | Max` = paste(round(min(AVAL), 2), " | ", round(max(AVAL), 2)))
           tdf <- setNames(data.frame(t(df[,-1])), paste0("Total (N  = ", total(), ")"))
+          print(tdf)
         } else {
           df <- all_data() %>%
             filter(PARAMCD == ROW & AVISIT == WEEK) %>%
@@ -230,20 +232,24 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
         
         variables <- c(ROW, COLUMN, sym("USUBJID"))
         variables <- variables[variables != ""]
+        
         df <- all_data() %>%
-          filter(AVISIT == WEEK) %>%
+          # if it's not a PARAMCD, it's from ADSL
+          # which doesn't have an AVISIT column
+          # filter(AVISIT == WEEK) %>%
+          filter(!is.na(!!ROW)) %>%
           group_by(!!COLUMN) %>%
           summarise(N = n(),
-                    `Mean (SD)` = paste0(round(mean(AVAL), 2), " (", round(sd(AVAL), 2), ")"),
+                    `Mean (SD)` = paste0(round(mean(!!ROW), 2), " (", round(sd(!!ROW), 2), ")"),
                     Median = median(!!ROW),
-                    `Q1 | Q3` = paste(round(quantile(AVAL, 0.25),2) , "|", (round(quantile(AVAL, 0.75),2))),
-                    `Min | Max` = paste0(round(min(AVAL), 2), " | ", round(max(AVAL), 2)))
-        
+                    `Q1 | Q3` = paste(round(quantile(!!ROW, 0.25),2) , "|", (round(quantile(!!ROW, 0.75),2))),
+                    `Min | Max` = paste0(round(min(!!ROW), 2), " | ", round(max(!!ROW), 2)))
         if (COLUMN == "") {
           # if there's no grouping factor we set 
           # the single column name to Total (N = X)
           # where X was calculated as a reactive above
           tdf <- setNames(data.frame(t(df[,-1])), paste0("Total (N  = ", total(), ")"))
+          print(tdf)
         } else {
           # create a header_df where we group the data by COLUMN
           # to get their totals to be used within the column headers
