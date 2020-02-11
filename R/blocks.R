@@ -1,9 +1,18 @@
 recipe <- HTML('
                <select id="RECIPE">
-                <option  id="none">NONE</option>
-                <option  id="demography">DEMOGRAPHY</option>
+               <option  id="none">NONE</option>
+               <option  id="demography">DEMOGRAPHY</option>
                </select>')
 
+rowBlock <- function(name) {
+  apply(name,
+        1,
+        function(x){tippy(paste(x[1]), tooltip = div(paste(x[2]),
+                                                     style = "max-width:60px;"))
+        }) %>%
+    map(.,
+        ~tags$li(.x), class="block")
+}
 
 rowPallete <- function(data) {
   map2(names(data),
