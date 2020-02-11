@@ -7,11 +7,16 @@ recipe <- HTML('
 rowBlock <- function(name) {
   apply(name,
         1,
-        function(x){tippy(paste(x[1]), tooltip = div(paste(x[2]),
-                                                     style = "max-width:60px;"))
+        function(x){
+          tags$li(
+            class = "block", id = paste(x[1]),
+            tippy(paste(x[1]), tooltip = div(paste(x[2]),
+                                             style = "max-width:60px;"))
+          )
+          
+          
         }) %>%
-    map(.,
-        ~tags$li(.x), class="block")
+    map(., ~ .x)
 }
 
 rowPallete <- function(data) {

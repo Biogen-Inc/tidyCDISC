@@ -105,16 +105,37 @@ function simpleBlock(newid) {
 function selectWeekBlock(newid, label) { 
   return `<div class="form-group drop_area">
                         <label class="control-label" for="${newid}">${label}</label>
-                        <select id="${newid}">
-                        <option value="Week 12" selected>Week 12</option>
-                        <option value="Week 13">Week 13</option>
-                        <option value="Week 14">Week 14</option>
-                        <option value="Week 15">Week 15</option>
-                        <option value="Year 1">Year 1</option>
-                        <option value="Year 2">Year 2</option>
-                        </select>
-                        <button class="delete">Delete</button>
-                        </div>`
+                    <select id="${newid}">
+                    <option value="Baseline">Baseline</option>
+                    <option value="Day 1 : post-dose">Day 1 PD</option>
+                    <option value="Week 2">Week 2</option>
+                    <option value="Week 2 : post-dose">Week 2 PD</option>
+                    <option value="Week 4">Week 4</option>
+                    <option value="Week 4 : post-dose">Week 4 PD</option>
+                    <option value="Week 6">Week 6</option>
+                    <option value="Week 6 : post-dose">Week 6 PD</option>
+                    <option value="Week 12">Week 12</option>
+                    <option value="Week 24">Week 24</option>
+                    <option value="Week 36">Week 36</option>
+                    <option value="Week 48">Week 48</option>
+                    <option value="Week 48 : post-dose">Week 48 PD</option>
+                    <option value="Week 50">Week 50</option>
+                    <option value="Week 50 : post-dose">Week 50 PD</option>
+                    <option value="Week 52">Week 52</option>
+                    <option value="Week 52 : post-dose">Week 52 PD</option>
+                    <option value="Week 54">Week 54</option>
+                    <option value="Week 54 : post-dose">Week 54 PD</option>
+                    <option value="Week 60">Week 60</option>
+                    <option value="Week 60 : post-dose">Week 60 PD</option>
+                    <option value="Week 72">Week 72</option>
+                    <option value="Week 84">week 84</option>
+                    <option value="Week 96">Week 96</option>
+                    <option value="Week 100">Week 100</option>
+                    <option value="Year 1">Year 1</option>
+                    <option value="Year 2">Year 2</option>
+                    </select>
+                    <button class="delete">Delete</button>
+                      </div>`
 }
 
 

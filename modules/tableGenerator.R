@@ -1,5 +1,9 @@
 tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
   
+  output$debug <- renderTable({
+    blocks()
+  })
+  
   CapStr <- function(y) {
     c <- strsplit(y, " ")[[1]]
     paste(toupper(substring(c, 1,1)), substring(c, 2),
@@ -128,7 +132,7 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
       # Join ADSL and all_PARAMCD
       combined_data <- inner_join(ADSL(), all_PARAMCD, by = "USUBJID")
     } else {
-      combined_data <- ADSL %>%
+      combined_data <- ADSL() %>%
         mutate(data_from = "ADSL", PARAMCD = NA, AVAL = NA, CHG = NA)
     }
     })
