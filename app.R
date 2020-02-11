@@ -11,6 +11,7 @@ library(shinyWidgets)
 library(plotly)
 library(RColorBrewer)
 library(broom)
+library(data.table)
 
 source("global.R")
 

@@ -96,46 +96,58 @@ function simpleBlock(newid) {
   </div></div></div>`
 }
 
+/**
+* Create dropdown menu from the array of AVISIT values
+* @param {avisit} the text and value of the option
+*/
+function createOption(opt) {
+ return `<option value="${opt}">${opt}</option>`
+}
+
+Shiny.addCustomMessageHandler('my_data', function(df) {
+  // the dataframe column is imported as an array
+  my_array = Object.values(df)
+  select = `${my_array.map(createOption).join("")}`
+  
+  $(function() {
+  $(".draggable_agg").draggable();
+  $("#droppable_agg").droppable({
+    accept: ".agg",
+    drop: function(event, ui) {
+      var draggableId = ui.draggable.attr("id");
+      var newid = getNewId(draggableId);
+      if (draggableId.includes("ttest")) {
+          $(this).append(selectWeekBlock(newid, "T-TEST", select));
+        } else if (draggableId.includes("chg")) {
+          $(this).append(selectWeekBlock(newid, "CHG", select));
+        } else if (draggableId.includes("mean")) {
+          $(this).append(selectWeekBlock(newid, "MEAN", select));
+        } else {
+          $(this).append(simpleBlock(newid));
+        }
+    }
+  }).sortable({
+    revert: false
+  })
+});
+});
+
+console.log(select)
 
 /**
 * Create a block with a dropdown menu of weeks
 * @param {newid} the new, unique id of the dropped block
 * @param {label} the name of the new block
 */
-function selectWeekBlock(newid, label) { 
+function selectWeekBlock(newid, label, values) { 
   return `<div class="form-group drop_area">
                         <label class="control-label" for="${newid}">${label}</label>
                     <select id="${newid}">
-                    <option value="Baseline">Baseline</option>
-                    <option value="Day 1 : post-dose">Day 1 PD</option>
-                    <option value="Week 2">Week 2</option>
-                    <option value="Week 2 : post-dose">Week 2 PD</option>
-                    <option value="Week 4">Week 4</option>
-                    <option value="Week 4 : post-dose">Week 4 PD</option>
-                    <option value="Week 6">Week 6</option>
-                    <option value="Week 6 : post-dose">Week 6 PD</option>
-                    <option value="Week 12">Week 12</option>
-                    <option value="Week 24">Week 24</option>
-                    <option value="Week 36">Week 36</option>
-                    <option value="Week 48">Week 48</option>
-                    <option value="Week 48 : post-dose">Week 48 PD</option>
-                    <option value="Week 50">Week 50</option>
-                    <option value="Week 50 : post-dose">Week 50 PD</option>
-                    <option value="Week 52">Week 52</option>
-                    <option value="Week 52 : post-dose">Week 52 PD</option>
-                    <option value="Week 54">Week 54</option>
-                    <option value="Week 54 : post-dose">Week 54 PD</option>
-                    <option value="Week 60">Week 60</option>
-                    <option value="Week 60 : post-dose">Week 60 PD</option>
-                    <option value="Week 72">Week 72</option>
-                    <option value="Week 84">week 84</option>
-                    <option value="Week 96">Week 96</option>
-                    <option value="Week 100">Week 100</option>
-                    <option value="Year 1">Year 1</option>
-                    <option value="Year 2">Year 2</option>
+                    <option value="NONE">NONE</option>
+                    ${values}
                     </select>
                     <button class="delete">Delete</button>
-                      </div>`
+                    </div>`
 }
 
 
@@ -167,7 +179,7 @@ $(function() {
   })
 })
 
-
+/*
 // for agg blocks, 
 // create dropdowns specific to each block
 $(function() {
@@ -191,3 +203,4 @@ $(function() {
     revert: false
   })
 });
+*/

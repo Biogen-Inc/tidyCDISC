@@ -1,9 +1,5 @@
 tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
   
-  output$debug <- renderTable({
-    blocks()
-  })
-  
   CapStr <- function(y) {
     c <- strsplit(y, " ")[[1]]
     paste(toupper(substring(c, 1,1)), substring(c, 2),
@@ -137,6 +133,12 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
     }
     })
   
+  test <- data.frame(test = c("A", "B", "C", "A", "A"))
+  
+  observe({
+    session$sendCustomMessage("my_data", unique(test$test))
+  })
+    
   # get the list of PARAMCDs
   PARAMCD_names <- reactive({
     all_data() %>% 
@@ -194,8 +196,6 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
     # the blocks have unique ids, mean.1, mean.2 etc.
     if (AGG == "MEAN") {
       
-      print(as.character(ROW) %in% PARAMCD_names())
-      
       if (as.character(ROW) %in% PARAMCD_names()) {
         
         variables <- c(ROW, COLUMN, sym("USUBJID"))
@@ -210,7 +210,6 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
                       `Q1 | Q3` = paste(round(quantile(AVAL, 0.25), 2) , "|", round(quantile(AVAL, 0.75), 2)),
                       `Min | Max` = paste(round(min(AVAL), 2), " | ", round(max(AVAL), 2)))
           tdf <- setNames(data.frame(t(df[,-1])), paste0("Total (N  = ", total(), ")"))
-          print(tdf)
         } else {
           df <- all_data() %>%
             filter(PARAMCD == ROW & AVISIT == WEEK) %>%
@@ -254,7 +253,6 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
           # the single column name to Total (N = X)
           # where X was calculated as a reactive above
           tdf <- setNames(data.frame(t(df[,-1])), paste0("Total (N  = ", total(), ")"))
-          print(tdf)
         } else {
           # create a header_df where we group the data by COLUMN
           # to get their totals to be used within the column headers
@@ -403,18 +401,14 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
         # use the filtered dataset where we pivot CHG rather than AVAL
         # get the mean change from baseline given the selected row block
         # and filter based on week
-        print(all_data() %>%
-                filter(PARAMCD == ROW & AVISIT == WEEK) %>% select(CHG))
         
         intermediate <- all_data() %>%
           filter(PARAMCD == ROW & AVISIT == WEEK) %>%
           summarise(mean = round(mean(CHG), 3))
-        print(intermediate)
         # use the mean in wide format for table
         # add column name showing the total N
         d <- data.frame(CHG = intermediate$mean)
         colnames(d) <- paste0("Total (N  = ", total(), ")")
-        print(d)
         row.names(d) <- "Change from Baseline"
       } else {
         
@@ -462,31 +456,39 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
   })
   
   
+  
   output$all <- renderTable({
-    dataFrame()
+    metadata <- data.frame(rbindlist(block_data()))
+    metadata[] <- lapply(metadata, as.character)
+    colnames(metadata) <- c("long_name", "code")
+    print(str(metadata))
+    df <- dataFrame()
+    View(df)
+    df %>% mutate(row_name = pmax(row_name, metadata$long_name[match(row_name, metadata$code, nomatch = row_name)], na.rm = TRUE))
+    df
   })
   
   #####################################################################
   # Block Preperation
   #####################################################################
   
-  p <- reactive({
-  
+  block_data <- reactive({
     metadata <- data.frame(col_names = colnames(ADSL()))
     metadata$code <- NA
-    
+  
     for (i in 1:nrow(metadata)) {
       metadata$code[i] <- attr(ADSL()[[colnames(ADSL())[i]]], "label")
     }
-    
+  
     new_list <- lapply(BDS(), function(x) x %>% select(PARAMCD, PARAM) %>% distinct())
-    
+  
     new_list[[length(new_list) + 1 ]] <- metadata
     names(new_list)[length(new_list)] <- "ADSL"
-    
-    print(new_list)
-    
-    rowArea(col = 2, new_list)
+    return(new_list)
+  })
+  
+  p <- reactive({
+    rowArea(col = 2, block_data())
     })
   
   return(p)

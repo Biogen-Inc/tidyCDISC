@@ -59,8 +59,7 @@ tableGeneratorUI <- function(id, label = "Create Chart") {
     
     mainPanel(
       fluidRow(htmlOutput(ns("title"))),
-      fluidRow(tableOutput(ns("all"))),
-      fluidRow(tableOutput(ns("debug")))
+      fluidRow(tableOutput(ns("all")))
     ),
     tags$script(src = "script.js"),
     tags$script(src = "recipe.js")
