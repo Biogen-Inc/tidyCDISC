@@ -4,22 +4,14 @@ recipe <- HTML('
                 <option  id="demography">DEMOGRAPHY</option>
                </select>')
 
-rowBlock <- function(name) {
-  tags$li(
-    class = "block", id = name,
-    div(tippy(div(name), name))
-  )
-}
 
-# each dataframe should be its own list
-# and titled with the name of the df
 rowPallete <- function(data) {
-  Map(function(x, y) 
-    div(h5(x), style="max-height:300px;overflow-y:scroll", 
-        tags$ul(class = 'all_blocks', 
-                lapply(y, rowBlock))),
-    names(data),
-    data)
+  map2(names(data),
+       data,
+       ~div(h5(.x), style="max-height:300px;overflow-y:scroll",
+            tags$ul(rowBlock(.y), class = 'all_blocks'))) %>% 
+    map(.,
+        tagList)
 }
 
 rowArea <- function(bins, col) {

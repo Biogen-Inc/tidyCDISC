@@ -109,13 +109,14 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
   # Data Preperation
   ######################################################################
   
+  ADSL <- reactive({ datafile()$ADSL })
+  BDS <- reactive({ datafile()[names(datafile()) != "ADSL" ] })
+  
   processed_data <- reactive({ 
     
     # Seperate ADSL and the PArAMCD dataframes
-    ADSL <- datafile()$ADSL
     
-    BDS <- datafile()[names(datafile()) != "ADSL" ]
-    PARAMCD <- map(BDS, ~ if(!"CHG" %in% names(.)) update_list(., CHG = NA) else .)
+    PARAMCD <- map(BDS(), ~ if(!"CHG" %in% names(.)) update_list(., CHG = NA) else .)
     
     if (!is_empty(PARAMCD)) {
       # Bind all the PARAMCD files 
@@ -125,7 +126,7 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
         distinct(USUBJID, AVISITN, AVISIT, PARAMCD, .keep_all = TRUE) 
       
       # Join ADSL and all_PARAMCD
-      combined_data <- inner_join(ADSL, all_PARAMCD, by = "USUBJID")
+      combined_data <- inner_join(ADSL(), all_PARAMCD, by = "USUBJID")
     } else {
       combined_data <- ADSL %>%
         mutate(data_from = "ADSL", PARAMCD = NA, AVAL = NA, CHG = NA)
@@ -466,14 +467,22 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
   #####################################################################
   
   p <- reactive({
-    data_for_blocks <- list()
-    for (i in 1:length(datafile())) {
-      ifelse((length(grep("PARAMCD", names(datafile()[[i]]))) == 0) ,
-             data_for_blocks[[i]] <- names(datafile()[[i]]),
-             data_for_blocks[[i]] <- block_names(datafile()[[i]]))
+  
+    metadata <- data.frame(col_names = colnames(ADSL()))
+    metadata$code <- NA
+    
+    for (i in 1:nrow(metadata)) {
+      metadata$code[i] <- attr(ADSL()[[colnames(ADSL())[i]]], "label")
     }
-    names(data_for_blocks) <- names(datafile())
-    rowArea(col = 2, data_for_blocks)
+    
+    new_list <- lapply(BDS(), function(x) x %>% select(PARAMCD, PARAM) %>% distinct())
+    
+    new_list[[length(new_list) + 1 ]] <- metadata
+    names(new_list)[length(new_list)] <- "ADSL"
+    
+    print(new_list)
+    
+    rowArea(col = 2, new_list)
     })
   
   return(p)
