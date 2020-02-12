@@ -22,7 +22,7 @@ IndvExpl1Initial <- function(input, output, session, datafile, dataselected){
   req(!is.null(datafile()))
     
   # Guard against user forgetting to select an ADSL dataset
-  if (!"ADSL" %in% names(datakeep())) {
+  if (!"ADSL" %in% names(datafile())) {
       shinyjs::alert("An ADSL dataset is required.")
       return()
   } 

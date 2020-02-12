@@ -47,6 +47,8 @@ observeEvent(input$radio,{
   # get numeric vs char data   
   chrcols <- sort(names(all_data[ , which(sapply(all_data,is.character))])) # all chr columns
   numcols <- sort(names(all_data[ , which(sapply(all_data,is.numeric))]))   # all num columns
+  # remove data_from
+  chrcols <- chrcols[!(chrcols %in% "data_from")]
   
   # print(chrcols)
   # Clear plotoutput
