@@ -1,9 +1,36 @@
+customDownloadbutton <- function (outputId, label = "Download", class = NULL, ...) 
+{
+  aTag <- tags$a(id = outputId, class = paste("btn btn-default shiny-download-link", 
+                                              class), href = "", target = "_blank", download = NA, 
+                 NULL, label, ...)
+}
+
+
 tableGeneratorUI <- function(id, label = "Create Chart") {
   
   ns <- NS(id)
   
   fluidPage(
-    sidebarPanel(width = 6,
+    sidebarPanel(
+      div(class = "btn-group", style="",
+          id = "download_type",
+          tags$button(class = "btn btn-default dropdown-toggle", 
+                      `data-toggle` = "dropdown",
+                      `aria-haspopup` = "true",
+                      `aria-expanded` = "false",
+                      "Save Table",
+                      span(class = "caret")
+          ),
+          tags$ul(class = "dropdown-menu",
+                  tags$li(customDownloadbutton("downloadData", "CSV", class = "downloadButton"),
+                          customDownloadbutton("downloadXPT", "XPT", class = "downloadButton"),
+                          customDownloadbutton("downloadSAS", "SAS", class = "downloadButton"),
+                          customDownloadbutton("downloadRTF", "RTF", class = "downloadButton"),
+                          customDownloadbutton("downloadPDF", "PDF", class = "downloadButton")
+                  )
+          )
+      ),
+      
                  fluidRow(column(12, recipe)),
                  textInput(ns("table_title"), "Table Title", "Table Title "),
                  fluidRow(radioGroupButtons(
@@ -28,7 +55,7 @@ tableGeneratorUI <- function(id, label = "Create Chart") {
                  
                  fluidRow(
                    uiOutput("all_rows"),
-                   dropArea(col = 4, "Drop Here", "d_blocks", "droppable_blocks", "ui-sortable-helper sortTxtbox droppable_blocks droppable_blocks", "padding-right:0.1px"),
+                   dropArea(col = 3, "Drop Here", "d_blocks", "droppable_blocks", "ui-sortable-helper sortTxtbox droppable_blocks droppable_blocks", "padding-right:0.1px"),
                    dropArea(col = 5, "Drop Here", "d_agg", "droppable_agg", "ui-sortable-helper sortTxtbox droppable_agg", "padding-left:0.1px"),
                    
                    column(1, offset = 0, style='padding:0px;',
