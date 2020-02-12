@@ -1,0 +1,236 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\providecommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+
+  \title{}
+    \pretitle{\vspace{\droptitle}}
+  \posttitle{}
+    \author{}
+    \preauthor{}\postauthor{}
+    \date{}
+    \predate{}\postdate{}
+  
+
+\begin{document}
+
+\begin{table}
+
+\caption{\label{tab:unnamed-chunk-2}Table Title 
+}
+\centering
+\resizebox{\linewidth}{!}{
+\begin{tabular}[t]{l|l|l|l}
+\hline
+row\_name & BIIB017 125 Mcg Every 2 Weeks (N = 515) & BIIB017 125 Mcg Every 4 Weeks (N = 501) & Placebo (N = 500)\\
+\hline
+AGE &  &  & \\
+\hline
+N & 512 & 500 & 500\\
+\hline
+Mean (SD) & 36.94 (9.79) & 36.41 (9.87) & 36.28 (9.74)\\
+\hline
+Median & 37 & 36 & 37\\
+\hline
+Q1 | Q3 & 29 | 45 & 28 | 44 & 29 | 43.25\\
+\hline
+Min | Max & 18 | 60 & 18 | 61 & 18 | 61\\
+\hline
+AGEGRN &  &  & \\
+\hline
+2 & 10 (0.37) & 5 (0.19) & 12 (0.44)\\
+\hline
+3 & 121 (0.31) & 144 (0.37) & 122 (0.32)\\
+\hline
+4 & 189 (0.36) & 155 (0.3) & 176 (0.34)\\
+\hline
+5 & 128 (0.31) & 140 (0.34) & 139 (0.34)\\
+\hline
+6 & 63 (0.38) & 54 (0.33) & 48 (0.29)\\
+\hline
+7 & 1 (0.17) & 2 (0.33) & 3 (0.5)\\
+\hline
+99 & 3 (0.75) & 1 (0.25) & NA\\
+\hline
+SEX &  &  & \\
+\hline
+F & 363 (0.34) & 352 (0.33) & 358 (0.33)\\
+\hline
+M & 152 (0.34) & 149 (0.34) & 142 (0.32)\\
+\hline
+RACE &  &  & \\
+\hline
+ & 1 (0.33) & 2 (0.67) & NA\\
+\hline
+ASIAN & 59 (0.35) & 56 (0.33) & 56 (0.33)\\
+\hline
+BLACK & 3 (0.43) & 1 (0.14) & 3 (0.43)\\
+\hline
+OTHER & 33 (0.35) & 32 (0.34) & 29 (0.31)\\
+\hline
+WHITE & 419 (0.34) & 410 (0.33) & 412 (0.33)\\
+\hline
+HEIGHTBL &  &  & \\
+\hline
+N & 506 & 493 & 492\\
+\hline
+Mean (SD) & 167.78 (9.55) & 167.61 (9.17) & 167.47 (9.11)\\
+\hline
+Median & 167 & 167 & 167\\
+\hline
+Q1 | Q3 & 162 | 174 & 161 | 174 & 161 | 173\\
+\hline
+Min | Max & 140 | 201 & 144 | 192 & 142 | 194\\
+\hline
+WEIGHTBL &  &  & \\
+\hline
+N & 511 & 497 & 498\\
+\hline
+Mean (SD) & 69.57 (17.38) & 68.32 (14.63) & 69.19 (16.16)\\
+\hline
+Median & 65.6 & 67.0 & 66.0\\
+\hline
+Q1 | Q3 & 57 | 79 & 57 | 77.8 & 57.28 | 77.47\\
+\hline
+Min | Max & 36 | 176.9 & 38.5 | 147.4 & 42 | 139.2\\
+\hline
+BMIBL &  &  & \\
+\hline
+N & 506 & 493 & 492\\
+\hline
+Mean (SD) & 24.59 (5.1) & 24.25 (4.53) & 24.61 (4.9)\\
+\hline
+Median & 23.57724 & 23.99946 & 23.60323\\
+\hline
+Q1 | Q3 & 20.96 | 27.35 & 20.98 | 26.7 & 21.26 | 26.77\\
+\hline
+Min | Max & 14.79 | 45.12 & 15.59 | 57.58 & 16.61 | 54.94\\
+\hline
+COUNTRY &  &  & \\
+\hline
+BEL & 3 (0.27) & 4 (0.36) & 4 (0.36)\\
+\hline
+BGR & 24 (0.34) & 25 (0.36) & 21 (0.3)\\
+\hline
+CAN & 5 (0.42) & 3 (0.25) & 4 (0.33)\\
+\hline
+CHL & 1 (0.33) & 1 (0.33) & 1 (0.33)\\
+\hline
+COL & 7 (0.39) & 6 (0.33) & 5 (0.28)\\
+\hline
+CZE & 13 (0.34) & 13 (0.34) & 12 (0.32)\\
+\hline
+DEU & 14 (0.34) & 15 (0.37) & 12 (0.29)\\
+\hline
+ESP & 10 (0.4) & 8 (0.32) & 7 (0.28)\\
+\hline
+EST & 8 (0.35) & 7 (0.3) & 8 (0.35)\\
+\hline
+FRA & 7 (0.39) & 6 (0.33) & 5 (0.28)\\
+\hline
+GBR & 4 (0.29) & 4 (0.29) & 6 (0.43)\\
+\hline
+GEO & 6 (0.32) & 6 (0.32) & 7 (0.37)\\
+\hline
+GRC & 2 (0.22) & 3 (0.33) & 4 (0.44)\\
+\hline
+HRV & 4 (0.29) & 5 (0.36) & 5 (0.36)\\
+\hline
+IND & 58 (0.34) & 56 (0.33) & 56 (0.33)\\
+\hline
+LVA & 3 (0.33) & 3 (0.33) & 3 (0.33)\\
+\hline
+MEX & 9 (0.36) & 7 (0.28) & 9 (0.36)\\
+\hline
+NLD & 4 (0.36) & 3 (0.27) & 4 (0.36)\\
+\hline
+NZL & 6 (0.33) & 6 (0.33) & 6 (0.33)\\
+\hline
+PER & 10 (0.4) & 8 (0.32) & 7 (0.28)\\
+\hline
+POL & 129 (0.33) & 129 (0.33) & 128 (0.33)\\
+\hline
+ROU & 16 (0.33) & 16 (0.33) & 16 (0.33)\\
+\hline
+RUS & 50 (0.34) & 47 (0.32) & 48 (0.33)\\
+\hline
+SRB & 43 (0.32) & 45 (0.34) & 46 (0.34)\\
+\hline
+UKR & 64 (0.34) & 62 (0.33) & 63 (0.33)\\
+\hline
+USA & 15 (0.37) & 13 (0.32) & 13 (0.32)\\
+\hline
+\end{tabular}}
+\end{table}
+
+
+\end{document}

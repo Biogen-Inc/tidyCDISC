@@ -22,11 +22,11 @@ tableGeneratorUI <- function(id, label = "Create Chart") {
                       span(class = "caret")
           ),
           tags$ul(class = "dropdown-menu",
-                  tags$li(customDownloadbutton("downloadData", "CSV", class = "downloadButton"),
-                          customDownloadbutton("downloadXPT", "XPT", class = "downloadButton"),
-                          customDownloadbutton("downloadSAS", "SAS", class = "downloadButton"),
-                          customDownloadbutton("downloadRTF", "RTF", class = "downloadButton"),
-                          customDownloadbutton("downloadPDF", "PDF", class = "downloadButton")
+                  tags$li(customDownloadbutton(ns("downloadData"), "CSV", class = "downloadButton"),
+                          #customDownloadbutton(ns("downloadXPT"), "XPT", class = "downloadButton"),
+                          #customDownloadbutton(ns("downloadSAS"), "SAS", class = "downloadButton"),
+                          customDownloadbutton(ns("downloadRTF"), "RTF", class = "downloadButton"),
+                          customDownloadbutton(ns("downloadPDF"), "PDF", class = "downloadButton")
                   )
           )
       ),
