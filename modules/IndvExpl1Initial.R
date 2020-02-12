@@ -18,11 +18,14 @@ IndvExpl1Initial <- function(input, output, session, datafile, dataselected){
   shinyjs::hide(id = "hr3")
   
   observe({
+  
+  # make sure selectData has been run
+  req(!is.null(dataselected()))
     
-  req(!is.null(datafile()))
-    
+  datakeep <- reactive({ datafile()[dataselected()] })
+  
   # Guard against user forgetting to select an ADSL dataset
-  if (!"ADSL" %in% names(datafile())) {
+  if (!"ADSL" %in% names(datakeep())) {
       shinyjs::alert("An ADSL dataset is required.")
       return()
   } 

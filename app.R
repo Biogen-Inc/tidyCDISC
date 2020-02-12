@@ -9,6 +9,7 @@ library(DT)
 library(shinyWidgets)
 library(plotly)
 library(RColorBrewer)
+library(Hmisc)
 
 source("global.R")
 

@@ -7,7 +7,8 @@ PopuExplor <- function(input, output, session, datafile){
 # show/hide checkboxes depending on radiobutton selection
 observeEvent(input$radio,{
   
-  req(!is.null(datafile()))
+  # make sure selectData has been run
+  req(!is.null(dataselected()))
 
   datakeep <- reactive({ datafile()[dataselected()] })
   
@@ -27,7 +28,9 @@ observeEvent(input$radio,{
            RANDDT, RANDFL, RACE, RANDDT, RANDFL, SAFFL, SEX, SEXN, SITEID, TRT01P, WEIGHTBL)
   # Remove ADSL from list of data frames
   PARAMCD <- datakeep()[names(datakeep()) != "ADSL" ]
-  
+  # keep only BDS datasets -- one of the colnames has to be "PARAM" or "PARAMCD"
+  PARAMCD <- PARAMCD[which(sapply(PARAMCD, function(df) "PARAM" %in% colnames(df)))]
+
   if (!is_empty(PARAMCD)) {
     
     vars <- c("USUBJID","SUBJID","PARAMCD","AVISITN","AVISIT","AVAL","BASE","CHG","data_from")
