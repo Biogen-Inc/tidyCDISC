@@ -65,18 +65,14 @@ server <- function(input, output, session) {
   table_generator <- callModule(tableGenerator, "table_generator", datafile = datafile)
   output$all_rows <- renderUI({ table_generator() })
   
+  # Population Explorer
+  callModule(PopuExplor, id = "popul", datafile = datafile)
+  
   # Individual Explorer
-  # datafile <- callModule(dataUpload, "indvl", stringsAsFactors = FALSE)
-  # dataselected <- callModule(selectData, "indvl", datafile)
-  dataselected <- callModule(IndvExpl1Initial,   "indvl", datafile)
+  dataselected <- callModule(IndvExpl1Initial, "indvl", datafile)
   usubjid  <- callModule(IndvExpl2SelPatno , "indvl", datafile, dataselected)
   callModule(IndvExpl3CheckGroup,  "indvl", datafile, dataselected, usubjid = usubjid)
   callModule(IndvExpl4ChartPlotly, "indvl", datafile, dataselected, seltypes = seltypes, usubjid = usubjid)
-
-  # Population Explorer
-  # datafile <- callModule(dataUpload, "popul", stringsAsFactors = FALSE)
-  # dataselected <- callModule(selectData, "indvl", datafile)
-  callModule(PopuExplor, id = "popul", datafile = datafile, dataselected = dataselected)
 
 }
 

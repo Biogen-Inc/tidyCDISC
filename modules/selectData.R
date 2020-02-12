@@ -1,18 +1,23 @@
 selectData <- function(input, output, session, datafile) {
 
   ns <- session$ns
-  
-  # shinyjs::show(id="datalist")
-  # shinyjs::show(id="done")
-  
+
   observe({
-    
+
+  req(!is.null(datafile()))
+
   sasdata <- toupper(names(datafile()))
 
+  # Only select data that starts with AD followed by one or more alphanumerics
+  sasdata <- names(which(sapply(sasdata,function(df) { return(stringr::str_detect(toupper(df),"^AD[A-Z0-9]+")) })))
+
+  
   # remove ADSL from list
   if ("ADSL" %in% sasdata) {
-    # x[x != "F"]
+    adslsave <- "ADSL"
     sasdata <- sasdata[sasdata != "ADSL"]
+  } else {
+    adslsave = " "
   }
 
   # Update the picker input list
@@ -24,17 +29,30 @@ selectData <- function(input, output, session, datafile) {
   
 })
   
-  # return reactive data on input button click, and hide the widgets
+  # show action button done when selected
+  observeEvent(input$datalist,{
+    # print("input$datalist observed")
+    shinyjs::show(id="done")
+  })
+  
+  # hide action button done when clicked
+  observeEvent(input$done, {
+    # print("input$done observed")
+    shinyjs::hide(id="done")
+  })
+  
+  # return reactive data on input button click
     return(eventReactive(input$done, { 
-    
-    # hide the helptext and datalist after clicking on done
-    # shinyjs::hide(id="datalist")
-    # shinyjs::hide(id="done")
-    
+
     if (is.null(input$datalist)) {
       c("ADSL") 
     } else {
-      c("ADSL",input$datalist) 
+      if ("ADSL" %in% toupper(names(datafile()))) {
+        # add ADSL back only if it was already in datafile()
+        c("ADSL",input$datalist)
+      } else {
+        c(input$datalist)
+      }
     } 
     }))
 }

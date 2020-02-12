@@ -3,8 +3,6 @@ PopuExpl2Spag <- function(input, output, session, dataselected, df){
   ns <- session$ns
   
 # Spaghetti Plot
-shinyjs::show(id="advstagsem")
-shinyjs::hide(id="adsltagsem")
 shinyjs::show(id="selPrmCode")
 shinyjs::hide(id="bygroup")
 shinyjs::hide(id="groupbyvar")
@@ -27,18 +25,12 @@ updateSelectInput(
 # set checkbox to FALSE
 updateCheckboxInput(session = session, inputId = "animate", value = FALSE)
 
-# build subset ADVSX data if ADVS was selected
-if ("ADVS" %in% dataselected()) {
-  # ADVSX <- filter(dd$data[["ADVS"]], substr(SUBJID, 1, 3) == "310") # Subjects from SITEID 310
-  ADVSX <- filter(df(), substr(SUBJID, 1, 3) == "310") # Subjects from SITEID 310
-}    
-
 # find numeric and date variables
-numcols2 <- ADVSX[ , which(sapply(ADVSX,is.numeric))]
+numcols2 <- df()[ , which(sapply(df(),is.numeric))]
 is.date <- function(x) inherits(x, 'Date')
-datcols2 <- ADVSX[ , which(sapply(ADVSX,is.date))]
+datcols2 <- df()[ , which(sapply(df(),is.date))]
 # restrict seltimevar to AVISIT, AVISITN, VSDY
-seltime <- select(ADVSX, ends_with("DY"), starts_with("AVIS"))
+seltime <- select(df(), ends_with("DY"), starts_with("AVIS"))
 
 updateSelectInput(
   session = session,
@@ -59,9 +51,22 @@ updateSelectInput(
   selected = " ")
 
 # set default animateby var whenever seltimevar changes
-observeEvent(input$seltimevar,
-             updateSelectInput(session, "animateby", 
-                               selected = input$seltimevar))
+observeEvent(input$seltimevar, {
+  updateSelectInput(session, "animateby", selected = input$seltimevar)
+})
+
+# build subset of df() using subjects from SITEID 310
+# dfsubset <- filter(df(), substr(SUBJID, 1, 3) == "310") 
+# build subset of df() by randomly taking 25 subjects
+set.seed(101)
+dfsubjs <- inner_join(df(), dplyr::sample_n(distinct(df(), USUBJID), 25), by = "USUBJID")
+
+# dfsubset <- dplyr::sample_n(df(), 25)
+observeEvent(input$selPrmCode, {
+  
+  # subset data based on Parameter Code selection
+  req(input$selPrmCode != " ") # using ignoreInit = TRUE
+  dfsubset <- filter(dfsubjs,PARAMCD == input$selPrmCode)
 
 output$PlotlyOut <- renderPlotly({
   
@@ -69,10 +74,7 @@ output$PlotlyOut <- renderPlotly({
   req(input$seltimevar  != " ") 
   req(input$responsevar != " ")
   
-  # filter on paramcd
-  ADVSY <- filter(ADVSX, PARAMCD == input$selPrmCode)
-  
-  ggtitle <- paste("Plot of",input$responsevar,"over",input$seltimevar,"for PARAMCD:",unique(ADVSY$PARAMCD),"by SUBJID")
+  ggtitle <- paste("Plot of",input$responsevar,"over",input$seltimevar,"for PARAMCD:",unique(dfsubset$PARAMCD),"by SUBJID")
   
   if (input$animate == TRUE) {
     req(input$animateby != " ")
@@ -86,10 +88,10 @@ output$PlotlyOut <- renderPlotly({
       dplyr::bind_rows(dats)
     }
     
-    ADVSY2 <- ADVSY %>%
+    dfsubsetx <- dfsubset %>%
       accumulate_by(~get(input$seltimevar))
     
-    p <- ADVSY2 %>%
+    p <- dfsubsetx %>%
       plot_ly(
         x = ~get(input$seltimevar), 
         y = ~get(input$responsevar), 
@@ -122,7 +124,7 @@ output$PlotlyOut <- renderPlotly({
     
   } else {
     
-    p <- ggplot(ADVSY,
+    p <- ggplot(dfsubset,
                 aes(x = !!as.name(input$seltimevar), y = !!as.name(input$responsevar), group = SUBJID, fill = SUBJID, color = SUBJID )) +
       geom_line(na.rm = TRUE) 
     
@@ -135,7 +137,7 @@ output$PlotlyOut <- renderPlotly({
                                          ))) # aes, geom_point, suppressWarnings
     
     # https://www.datanovia.com/en/blog/easy-way-to-expand-color-palettes-in-r/
-    nlevs <- nlevels(factor(ADVSY$SUBJID))
+    nlevs <- nlevels(factor(dfsubset$SUBJID))
     mycolors <- colorRampPalette(brewer.pal(8, "Set2"))(nlevs)
     p <- p +
       labs(x = input$seltimevar, y = input$responsevar, title =  ggtitle) +
@@ -145,7 +147,7 @@ output$PlotlyOut <- renderPlotly({
     ggplotly(p, tooltip = "text")  %>%
       # ref https://plot.ly/r/reference/#layout-legend  {x,y} range from -2 to 3
       layout( legend = list(orientation = "h",  xanchor = "center", yanchor = "bottom", x=0.5, y=-0.35),
-              title = paste("Plot of",input$responsevar,"over",input$seltimevar,"for PARAMCD:",unique(ADVSY$PARAMCD),"grouped by SUBJID"))
+              title = paste("Plot of",input$responsevar,"over",input$seltimevar,"for PARAMCD:",unique(dfsubset$PARAMCD),"grouped by SUBJID"))
     
   }
   
@@ -159,10 +161,7 @@ output$DataTable <- DT::renderDataTable({
   x_var <- as.name(input$seltimevar)
   y_var <- as.name(input$responsevar)
   
-  # filter on paramcd
-  ADVSY <- filter(ADVSX, PARAMCD == input$selPrmCode)
-  
-  tableout <- ADVSY %>%
+  tableout <- dfsubset %>%
     dplyr::select(USUBJID, SUBJID, !!x_var, !!y_var)
   
   DT::datatable(tableout, 
@@ -172,4 +171,5 @@ output$DataTable <- DT::renderDataTable({
                 colnames = c('Row' = 1, 'USUBJID' = 2, 'Subject' = 3, 'Time Point (x)' = 4, 'Response (y)' = 5))
   
 })
+}, ignoreInit = TRUE)
 }

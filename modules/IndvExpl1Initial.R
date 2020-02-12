@@ -18,6 +18,15 @@ IndvExpl1Initial <- function(input, output, session, datafile, dataselected){
   shinyjs::hide(id = "hr3")
   
   observe({
+    
+  req(!is.null(datafile()))
+    
+  # Guard against user forgetting to select an ADSL dataset
+  if (!"ADSL" %in% names(datakeep())) {
+      shinyjs::alert("An ADSL dataset is required.")
+      return()
+  } 
+       
   # The rest of the widgets will be shown after the USUBJID has been selected
   subj <- unique(datafile()$ADSL[, "USUBJID"]) # get list of unique USUBJIDs
   
