@@ -152,7 +152,10 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
   
   AVISITN <- reactive({ 
     req(BDS())
-    sort(unique(unlist(lapply(BDS(), '[[', "AVISIT"))))
+    t <- sort(unique(unlist(lapply(BDS(), '[[', "AVISIT"))))
+    ifelse((length(t) == 0), t <- " ", t <- t)
+    print(str(t))
+    t
   })
   
   observe({
@@ -489,7 +492,7 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
       paste("TableGenerator.csv")
     },
     content = function(file) {
-      write.csv(dataFrame(), file, row.names = FALSE)
+      write.csv(dataFrame(), file)
     }
   )
   

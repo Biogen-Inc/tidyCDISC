@@ -8,6 +8,11 @@ library(DT)
 library(shinyWidgets)
 library(plotly)
 library(RColorBrewer)
+library(gridExtra)
+library(grid)
+library(rtf)
+library(shinythemes)
+library(rmarkdown)
 
 source("global.R")
 
