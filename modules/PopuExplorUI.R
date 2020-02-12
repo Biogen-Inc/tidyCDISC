@@ -4,8 +4,8 @@ ns <- NS(id)
   
 sidebarLayout(
   sidebarPanel(width = 2,
-               tags$em("Note: Sample adsl data has been pre-loaded.",id=ns("adsltagsem")),
-               tags$em("Note: Sample advs data has been pre-loaded.\nSelected 22 subjects from Siteid 310",id=ns("advstagsem")),
+               # tags$em("Note: Sample adsl data has been pre-loaded.",id=ns("adsltagsem")),
+               # tags$em("Note: Sample advs data has been pre-loaded.\nSelected 22 subjects from Siteid 310",id=ns("advstagsem")),
                # Copy the line below to make a set of radio buttons
                radioButtons(ns("radio"), label = h5("Type of Chart:"),
                             choices = list("Scatter Plot" = 1, 
@@ -53,6 +53,7 @@ sidebarLayout(
                
   ), # sidebarPanel
   mainPanel(width = 10,
+            verbatimTextOutput("text"),
             plotlyOutput(ns("PlotlyOut"), width = "100%", height = "600px"),
             DT::dataTableOutput(ns("DataTable"))
   ) # mainPanel

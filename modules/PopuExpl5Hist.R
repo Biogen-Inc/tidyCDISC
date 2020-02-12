@@ -3,9 +3,7 @@ PopuExpl5Hist <- function(input, output, session, df, numcols, chrcols){
   ns <- session$ns
   
 # Histogram
-shinyjs::hide(id="advstagsem")
-shinyjs::show(id="adsltagsem")
-shinyjs::hide(id="selPrmCode")
+shinyjs::show(id="selPrmCode")
 shinyjs::show(id="bygroup")
 shinyjs::show(id="groupbyvar")
 shinyjs::hide(id="selxvar")
@@ -31,7 +29,35 @@ bins <- reactive({
   input$numBins
 })
 
+updateSelectInput(
+  session = session,
+  inputId = "selPrmCode",
+  choices = c(" ",unique(df()$PARAMCD)),
+  selected = " ")
 
+observe({
+  if(input$bygroup == TRUE) {
+    shinyjs::show(id="groupbyvar")
+  } else {
+    shinyjs::hide(id="groupbyvar")
+  }
+})
+
+observeEvent(input$selPrmCode, {
+  
+  # subset data based on Parameter Code selection
+  req(input$selPrmCode != " ") # using ignoreInit = TRUE
+  dfsubset <- filter(df(),PARAMCD == input$selPrmCode)
+  
+  # restrict seltimevar to AVISIT, AVISITN, VSDY
+  seltime <- select(dfsubset, ends_with("DY"), starts_with("AVIS"))
+  
+  if (!input$selxvar %in% names(seltime)) {
+    dfsubset <- dfsubset %>%
+      filter(AVISIT == "Baseline") %>% # Take analysis baseline for now
+      distinct(USUBJID, .keep_all = TRUE)
+  }
+  
 output$PlotlyOut <- renderPlotly({
   
   req(input$responsevar != " ")
@@ -42,26 +68,23 @@ output$PlotlyOut <- renderPlotly({
     req(input$groupbyvar != " ")
     x_var <- as.name(input$groupbyvar)
     
-    ggtitle <- paste("Distribution of",input$responsevar,"Grouped by",input$groupbyvar)
-    
-    p <- ggplot(df(),
+    ggtitle <- paste("Distribution of",input$responsevar,"Grouped by",input$groupbyvar,"for PARAMCD:",unique(dfsubset$PARAMCD))
+    p <- ggplot(dfsubset,
                 aes(x = !!y_var, fill = !!x_var)) +
-      geom_histogram(bins = bins(), position = "dodge", na.rm = TRUE) +
-      scale_fill_discrete() +
-      ggtitle(ggtitle) +
       labs(x = input$responsevar, y = "Count", fill = input$groupbyvar )
     
   } else {
     
-    ggtitle <- paste("Distribution of",input$responsevar)
-    p <- ggplot(df(),
+    ggtitle <- paste("Distribution of",input$responsevar,"for PARAMCD:",unique(dfsubset$PARAMCD))
+    p <- ggplot(dfsubset,
                 aes(x = !!y_var )) +
-      geom_histogram(bins = bins(), position = "dodge", na.rm = TRUE) +
-      scale_fill_discrete() +
-      ggtitle(ggtitle) +
       labs(y = "Count" )
     
   }
+  p <- p +
+    geom_histogram(bins = bins(), position = "dodge", na.rm = TRUE) +
+    scale_fill_discrete() +
+    ggtitle(ggtitle) 
   
   ggplotly(p)
   
@@ -75,8 +98,11 @@ output$DataTable <- DT::renderDataTable({
     req(input$groupbyvar != " ")  
   }   
   
-  tableout <- fnsummtab(df(), input$bygroup, input$groupbyvar, input$responsevar)
+  tableout <- fnsummtab(dfsubset, input$bygroup, input$groupbyvar, input$responsevar)
   DT::datatable(tableout, options = list(dom = 'ftp', pageLength = 20))
   
 })
+
+}, ignoreInit = TRUE)
+
 }

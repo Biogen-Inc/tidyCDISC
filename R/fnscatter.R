@@ -32,7 +32,7 @@ fnscatter <- function(data, splitby, splitvar, selxvar, selyvar) {
       labs(x = selxvar, y = selyvar, title = ggtitle)
     
     p <- p +
-      suppressWarnings(geom_point(position = 'jitter', na.rm = TRUE, 
+      suppressWarnings(geom_point(position = 'identity', na.rm = TRUE, 
                                   aes(text = paste0(USUBJID,
                                       "<br>",selxvar,": ",get(selxvar),
                                       "<br>",selyvar,": ",get(selyvar) )
