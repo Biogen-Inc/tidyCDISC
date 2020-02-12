@@ -110,7 +110,7 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
   ######################################################################
   
   ADSL <- reactive({ datafile()$ADSL })
-  BDS <- reactive({ datafile()[names(datafile()) != "ADSL" ] })
+  BDS <- reactive({ datafile()[sapply(datafile(), function(x) "PARAMCD" %in% colnames(x))] })
   
   processed_data <- reactive({ 
     
