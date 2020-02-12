@@ -74,6 +74,12 @@ background: #bad4ed;
 margin: 5px;
 }
 
+#table_generator-COLUMN {
+   width: 100%; 
+   text-align:center; 
+   font-size: 30px;
+}
+
 .drop_area {
   border: 1px solid lightgray;
   padding: 5px;
@@ -102,4 +108,37 @@ button:hover {
 .rowPallette {
   max-height: 300px;
   overflow-y: scroll;
+}
+
+#RECIPE {
+  width: 100%;
+  text-align: center;
+}
+
+label[for=table_generator-COLUMN] {
+  text-align: center;
+  width: 100%;
+}
+
+#download_type {
+  margin: 0 auto;
+  display: block;
+}
+
+.downloadButton {
+border: none;
+text-align: center;
+}
+
+.control-label {
+font-size: 13px;
+}
+
+/* Button to upload new dataset. */
+#add_files { 
+float: right; 
+vertical-align: middle; 
+margin-top: 6px;
+font-size: 13px;
+font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }

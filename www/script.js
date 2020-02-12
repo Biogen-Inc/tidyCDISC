@@ -24,8 +24,6 @@ function setUpShiny(id, outputID) {
     str += "<tr><td>" + txt + (val ? ": " + val : "") + "</td></tr>";
   })
   let str_to_table = '<table>' + str + '</table>'
-  console.log(str_to_table)
-  console.log('table_generator-' + outputID)
   Shiny.setInputValue(outputID, str_to_table)
 }
 
@@ -98,22 +96,56 @@ function simpleBlock(newid) {
   </div></div></div>`
 }
 
+/**
+* Create dropdown menu from the array of AVISIT values
+* @param {avisit} the text and value of the option
+*/
+function createOption(opt) {
+ return `<option value="${opt}">${opt}</option>`
+}
+
+Shiny.addCustomMessageHandler('my_data', function(df) {
+  // the dataframe column is imported as an array
+  my_array = Object.values(df)
+  select = `${my_array.map(createOption).join("")}`
+  
+  $(function() {
+  $(".draggable_agg").draggable();
+  $("#droppable_agg").droppable({
+    accept: ".agg",
+    drop: function(event, ui) {
+      var draggableId = ui.draggable.attr("id");
+      var newid = getNewId(draggableId);
+      if (draggableId.includes("ttest")) {
+          $(this).append(selectWeekBlock(newid, "T-TEST", select));
+        } else if (draggableId.includes("chg")) {
+          $(this).append(selectWeekBlock(newid, "CHG", select));
+        } else if (draggableId.includes("mean")) {
+          $(this).append(selectWeekBlock(newid, "MEAN", select));
+        } else {
+          $(this).append(simpleBlock(newid));
+        }
+    }
+  }).sortable({
+    revert: false
+  })
+});
+});
 
 /**
 * Create a block with a dropdown menu of weeks
 * @param {newid} the new, unique id of the dropped block
 * @param {label} the name of the new block
 */
-function selectWeekBlock(newid, label) { 
+function selectWeekBlock(newid, label, values) { 
   return `<div class="form-group drop_area">
                         <label class="control-label" for="${newid}">${label}</label>
-                        <select id="${newid}">
-                        <option value="week1" selected>Week 1</option>
-                        <option value="week2">Week 2</option>
-                        <option value="week3">Week 3</option>
-                        <option value="week4">Week 4</option></select>
-                        <button class="delete">Delete</button>
-                        </div>`
+                    <select id="${newid}">
+                    <option value="NONE">NONE</option>
+                    ${values}
+                    </select>
+                    <button class="delete">Delete</button>
+                    </div>`
 }
 
 
@@ -126,7 +158,6 @@ function getNewId(type) {
   newId = $('#droppable').find('select').length
   return type + (newId + 1);
 }
-
 
 // on block dropdown create simple blocks 
 // with the block names from the droppable area
@@ -145,7 +176,7 @@ $(function() {
   })
 })
 
-
+/*
 // for agg blocks, 
 // create dropdowns specific to each block
 $(function() {
@@ -160,7 +191,7 @@ $(function() {
         } else if (draggableId.includes("chg")) {
           $(this).append(selectWeekBlock(newid, "CHG"));
         } else if (draggableId.includes("mean")) {
-          $(this).append(selectWeekBlock(newid, "Mean"));
+          $(this).append(selectWeekBlock(newid, "MEAN"));
         } else {
           $(this).append(simpleBlock(newid));
         }
@@ -169,3 +200,4 @@ $(function() {
     revert: false
   })
 });
+*/

@@ -8,6 +8,8 @@ source('modules/dataUpload.R')
 source('modules/dataUploadUI.R')
 
 source('R/blocks.R')
+
+source('R/pivot_paramcd.R')
 source('modules/tableGenerator.R')
 source('modules/tableGeneratorUI.R')
 

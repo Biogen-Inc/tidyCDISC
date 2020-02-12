@@ -1,29 +1,41 @@
-recipe <- HTML('<select id="RECIPE"><option id="none">NONE</option><option id="mean">MEAN</option></select>')
+recipe <- HTML('
+               <select id="RECIPE">
+               <option  id="none">NONE</option>
+               <option  id="demography">DEMOGRAPHY</option>
+               </select>')
 
 rowBlock <- function(name) {
-  tags$li(
-    class = "block", id = name,
-    div(tippy(div(name), name))
-  )
+  apply(name,
+        1,
+        function(x){
+          tags$li(
+            class = "block", id = paste(x[1]),
+            tippy(paste(x[1]), tooltip = div(paste(x[2]),
+                                             style = "max-width:60px;"))
+          )
+          
+          
+        }) %>%
+    map(., ~ .x)
 }
 
-# each dataframe should be its own list
-# and titled with the name of the df
 rowPallete <- function(data) {
-  Map(function(x, y) 
-    div(h5(x), style="max-height:300px;overflow-y:scroll", tags$ul(class = 'all_blocks', lapply(colnames(y), rowBlock))),
-    names(data),
-    data)
+  map2(names(data),
+       data,
+       ~div(h5(.x), style="max-height:300px;overflow-y:scroll",
+            tags$ul(rowBlock(.y), class = 'all_blocks'))) %>% 
+    map(.,
+        tagList)
 }
 
-rowArea <- function(bins) {
-  column(1, offset = 0, style='padding:0px;',
+rowArea <- function(bins, col) {
+  column(col, offset = 0, style='padding:0px;',
          rowPallete(bins)
   )
 }
 
-dropArea <- function(name, id, ulid, class, styles) {
-  column(5, offset = 0, style=styles,
+dropArea <- function(name, id, ulid, class, styles, col) {
+  column(col, offset = 0, style=styles,
          h4(name),
          id = id,
          tags$ul(

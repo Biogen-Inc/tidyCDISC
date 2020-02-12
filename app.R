@@ -3,12 +3,16 @@ library(shinyjs)
 library(tidyverse)
 library(tippy)
 library(rvest)
-
 library(haven)
 library(DT)
 library(shinyWidgets)
 library(plotly)
 library(RColorBrewer)
+library(gridExtra)
+library(grid)
+library(rtf)
+library(shinythemes)
+library(rmarkdown)
 
 source("global.R")
 
@@ -24,26 +28,26 @@ ui <-
                title = div(id="logo-id","IDEA", img(src="IDEA_ICON.png", style="float:left; padding-right:3px; height:25px; width:30px")), 
                id = "navbarID",
                windowTitle = "IDEA",
-      tabPanel(
-        title = "Data",
-          dataUploadUI("datafile", "Import CSV")
-      ),
-      tabPanel(
-        title = "Table Generator",
-          tableGeneratorUI("table_generator")
-      ),
-      tabPanel(
-        title = "Population Explorer",
-      # dataUploadUI("popul", "Import CSV"),  
-		  selectDataUI(id = "popul"),
-		  PopuExplorUI(id = "popul")
-      ),
-      tabPanel(
-        title = "Individual Explorer",
-      # dataUploadUI("indvl", "Import CSV"),  
-		  selectDataUI(id = "indvl"),
-		  IndvExplorUI(id = "indvl")
-      )
+               tabPanel(
+                 title = "Data",
+                 dataUploadUI("datafile", "Import CSV")
+               ),
+               tabPanel(
+                 title = "Table Generator",
+                 tableGeneratorUI("table_generator")
+               ),
+               tabPanel(
+                 title = "Population Explorer",
+                 # dataUploadUI("popul", "Import CSV"),  
+                 selectDataUI(id = "popul"),
+                 PopuExplorUI(id = "popul")
+               ),
+               tabPanel(
+                 title = "Individual Explorer",
+                 # dataUploadUI("indvl", "Import CSV"),  
+                 selectDataUI(id = "indvl"),
+                 IndvExplorUI(id = "indvl")
+               )
     ),
     # Custom styling to override theme
     tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "styles.css")),
@@ -73,7 +77,7 @@ server <- function(input, output, session) {
   usubjid  <- callModule(IndvExpl2SelPatno , "indvl", datafile, dataselected)
   callModule(IndvExpl3CheckGroup,  "indvl", datafile, dataselected, usubjid = usubjid)
   callModule(IndvExpl4ChartPlotly, "indvl", datafile, dataselected, seltypes = seltypes, usubjid = usubjid)
-
+  
 }
 
 shinyApp(ui, server)
