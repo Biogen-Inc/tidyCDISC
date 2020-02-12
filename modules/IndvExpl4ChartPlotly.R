@@ -88,8 +88,8 @@ observeEvent(input$selType, {
                    geom_histogram(position = "stack",
                                   alpha = 0.5,
                                   binwidth = 0.5) +
-                   ggtitle(paste("Medications by",label(cm_tab$CMSTDY),"grouped by",label(cm_tab$CMCAT))) +
-                   xlab(label(cm_tab$CMSTDY)) +
+                   ggtitle(paste("Medications by",cm_tab$CMSTDY,"grouped by",cm_tab$CMCAT)) +
+                   xlab(cm_tab$CMSTDY) +
                    ylab("Count") +
                    guides(fill = guide_legend(title = "Medication Class")) +
                    theme_classic()
@@ -188,7 +188,7 @@ observeEvent(input$selType, {
                      geom_point(na.rm = TRUE,
                                 (aes(text = paste("LBSTNRHI:",LBSTNRHI,"<br>LBSTRESN:",LBSTRESN,"<br>LBSTNRLO:",LBSTNRLO)))) +
                      scale_x_continuous(breaks = seq(0, max(lb_tab$LBDY), 30)) +
-                     labs(x = paste(label(lb_tab$LBDY),"for USUBJID:",unique(lb_tab$USUBJID)), y = label(lb_tab$LBSTRESN),
+                     labs(x = paste(lb_tab$LBDY,"for USUBJID:",unique(lb_tab$USUBJID)), y = lb_tab$LBSTRESN,
                           title = paste(prmcd,":",prm,"by Relative Study Day"))
                    
                    ggplotly(lb_plot, tooltip = "text") %>%
