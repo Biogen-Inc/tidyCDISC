@@ -154,7 +154,6 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
     req(BDS())
     t <- sort(unique(unlist(lapply(BDS(), '[[', "AVISIT"))))
     ifelse((length(t) == 0), t <- " ", t <- t)
-    print(str(t))
     t
   })
   
