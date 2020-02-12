@@ -484,6 +484,60 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
     return(new_list)
   })
   
+  output$downloadData <- downloadHandler(
+    filename = function() {
+      paste("TableGenerator.csv")
+    },
+    content = function(file) {
+      write.csv(dataFrame(), file, row.names = FALSE)
+    }
+  )
+  
+  output$downloadXPT <- downloadHandler(
+    filename = function() {
+      paste("TableGenerator.xpt")
+    },
+    content = function(file) {
+      # remove the spe
+      df_remove_special_char <- janitor::clean_names(dataFrame())
+      colnames(df_remove_special_char) <- 
+        janitor::make_clean_names(str_trunc(colnames(df_remove_special_char), 
+                                            8, side = "right"))
+      write_xpt(df_remove_special_char, file)
+    }
+  )
+  
+  output$downloadSAS <- downloadHandler(
+    filename = function() {
+      paste("TableGenerator_", Sys.Date(), ".sas7bdat", sep = "")
+    },
+    content = function(file) {
+      df_remove_special_char <- janitor::clean_names(dataFrame())
+      write_sas(df_remove_special_char, file)
+    }
+  )
+  
+  output$downloadRTF <- downloadHandler(
+    filename = function() {
+      paste("TableGenerator_", Sys.Date(), ".doc", sep = "")
+    },
+    content = function(file) {
+      df <- as.data.frame(dataFrame())
+      rtffile <- RTF(file)
+      addHeader(rtffile, title = input$table_title, subtitle = subheader())
+      addTable(rtffile, df)
+      done(rtffile)
+    }
+  )
+  
+  output$downloadPDF = downloadHandler(
+    filename = "Student-report.pdf",
+    content = function(file){
+      out <- rmarkdown::render("kable.Rmd", pdf_document())
+      file.rename(out, file)
+    }
+  )
+  
   p <- reactive({
     rowArea(col = 2, block_data())
     })

@@ -3,13 +3,11 @@ library(shinyjs)
 library(tidyverse)
 library(tippy)
 library(rvest)
-
 library(haven)
 library(DT)
 library(shinyWidgets)
 library(plotly)
 library(RColorBrewer)
-library(Hmisc)
 
 source("global.R")
 
