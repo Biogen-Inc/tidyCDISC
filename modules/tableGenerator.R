@@ -132,12 +132,6 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
         mutate(data_from = "ADSL", PARAMCD = NA, AVAL = NA, CHG = NA)
     }
     })
-  
-  test <- data.frame(test = c("A", "B", "C", "A", "A"))
-  
-  observe({
-    session$sendCustomMessage("my_data", unique(test$test))
-  })
     
   # get the list of PARAMCDs
   PARAMCD_names <- reactive({
@@ -154,6 +148,16 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
       processed_data() %>%
         dplyr::filter(!!filtering_expr(input))
     }
+  })
+  
+  AVISITN <- reactive({ 
+    req(BDS())
+    sort(unique(unlist(lapply(BDS(), '[[', "AVISIT"))))
+  })
+  
+  observe({
+    req(AVISITN())
+    session$sendCustomMessage("my_data", AVISITN())
   })
   
   
@@ -458,14 +462,7 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
   
   
   output$all <- renderTable({
-    metadata <- data.frame(rbindlist(block_data()))
-    metadata[] <- lapply(metadata, as.character)
-    colnames(metadata) <- c("long_name", "code")
-    print(str(metadata))
-    df <- dataFrame()
-    View(df)
-    df %>% mutate(row_name = pmax(row_name, metadata$long_name[match(row_name, metadata$code, nomatch = row_name)], na.rm = TRUE))
-    df
+    dataFrame()
   })
   
   #####################################################################

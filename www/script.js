@@ -132,8 +132,6 @@ Shiny.addCustomMessageHandler('my_data', function(df) {
 });
 });
 
-console.log(select)
-
 /**
 * Create a block with a dropdown menu of weeks
 * @param {newid} the new, unique id of the dropped block
@@ -160,7 +158,6 @@ function getNewId(type) {
   newId = $('#droppable').find('select').length
   return type + (newId + 1);
 }
-
 
 // on block dropdown create simple blocks 
 // with the block names from the droppable area
