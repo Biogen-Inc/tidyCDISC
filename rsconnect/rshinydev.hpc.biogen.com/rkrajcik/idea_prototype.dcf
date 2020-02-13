@@ -1,13 +1,13 @@
 name: idea_prototype
-title: IDEA (prototype)
+title:
 username: rkrajcik
 account: rkrajcik
 server: rshinydev.hpc.biogen.com
 hostUrl: https://rshinydev.hpc.biogen.com/__api__
 appId: 288
-bundleId: 1407
+bundleId: 1414
 url: https://rshinydev.hpc.biogen.com/content/288/
-when: 1581531311.39727
+when: 1581547362.98403
 asMultiple: FALSE
 asStatic: FALSE
 ignoredFiles: README.md
