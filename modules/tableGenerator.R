@@ -1,15 +1,5 @@
 tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
   
-  CapStr <- function(y) {
-    c <- strsplit(y, " ")[[1]]
-    paste(toupper(substring(c, 1,1)), substring(c, 2),
-          sep="", collapse=" ")
-  }
-  
-  allowed_operators <- c(">", ">=", "==", "<=", "<", "!=") %>% 
-    set_names() %>% 
-    map(match.fun)
-  
   output$title <- renderText({ 
     # paste the title to the top of the table
     # paste reactive filtering expression as subheader
@@ -81,12 +71,14 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
   
   AGGREGATE <- reactive({
     req(length(input$agg_drop_zone) > 0 & !(is.na(input$agg_drop_zone)))
+    print(input$agg_drop_zone)
     as.data.frame(read_html(input$agg_drop_zone) %>% html_table(fill=TRUE)) %>%
       separate(1, into = c("Aggregate", "Select"), sep=":")
   })
   
   ROWS <- reactive({
     req(length(input$block_drop_zone) > 0 & !(is.na(input$block_drop_zone)))
+    print(input$block_drop_zone)
     as.data.frame(read_html(input$block_drop_zone) %>% html_table(fill=TRUE))
   })
   

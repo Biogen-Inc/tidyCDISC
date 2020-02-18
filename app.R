@@ -14,6 +14,7 @@ library(janitor)
 library(rtf)
 library(shinythemes)
 library(rmarkdown)
+library(shinytest)
 
 source("global.R")
 
