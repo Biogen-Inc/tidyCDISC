@@ -92,7 +92,7 @@ function simpleBlock(newid) {
   <label class="control-label" for="${newid}">
   ${newid.replace(/[0-9]/g, '').toUpperCase()}
   </label>
-  <button class="delete">Delete</button>
+  <button class="delete">X</button>
   </div></div></div>`
 }
 
@@ -144,7 +144,7 @@ function selectWeekBlock(newid, label, values) {
                     <option value="NONE">NONE</option>
                     ${values}
                     </select>
-                    <button class="delete">Delete</button>
+                    <button class="delete">X</button>
                     </div>`
 }
 

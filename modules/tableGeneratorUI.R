@@ -18,7 +18,7 @@ tableGeneratorUI <- function(id, label = "Create Chart") {
                       `data-toggle` = "dropdown",
                       `aria-haspopup` = "true",
                       `aria-expanded` = "false",
-                      "Save Table",
+                      "Table Output Type",
                       span(class = "caret")
           ),
           tags$ul(class = "dropdown-menu",
@@ -31,7 +31,7 @@ tableGeneratorUI <- function(id, label = "Create Chart") {
           )
       ),
       
-                 fluidRow(column(12, recipe)),
+      fluidRow(column(12, "Commonly Used Tables", recipe)),
                  textInput(ns("table_title"), "Table Title", "Table Title "),
                  fluidRow(radioGroupButtons(
                    inputId = ns("COLUMN"), "Group Data By:", choices = c("TRT01P", "SEX", "RACE", "NONE"), selected = "NONE")),
@@ -42,21 +42,21 @@ tableGeneratorUI <- function(id, label = "Create Chart") {
                  conditionalPanel(condition = "input.to_filter == 'Yes'", ns = ns,
                                   fluidRow(
                                     column(4, uiOutput(ns("filtering_by"))),
-                                    column(4, selectInput(ns("condition"), "condition", 
+                                    column(4, selectInput(ns("condition"), "Filter Operator", 
                                                           choices = c("Equals" = "==",
                                                                       "Not Equal" = "!=",
                                                                       "Less Than" = "<",
                                                                       "Less Than or Equal" = "<=",
                                                                       "Greater Than" = ">",
                                                                       "Greater Than or Equal" = ">="))),
-                                    column(4, selectInput(ns("filt_grp"), "By:",
+                                    column(4, selectInput(ns("filt_grp"), "Value:",
                                                           character(0)))
                                   )),
                  
                  fluidRow(
                    uiOutput("all_rows"),
-                   dropArea(col = 3, "Drop Here", "d_blocks", "droppable_blocks", "ui-sortable-helper sortTxtbox droppable_blocks droppable_blocks", "padding-right:0.1px"),
-                   dropArea(col = 5, "Drop Here", "d_agg", "droppable_agg", "ui-sortable-helper sortTxtbox droppable_agg", "padding-left:0.1px"),
+                   dropArea(col = 3, "Variables", "d_blocks", "droppable_blocks", "ui-sortable-helper sortTxtbox droppable_blocks droppable_blocks", "padding-right:0.1px"),
+                   dropArea(col = 5, "Stats", "d_agg", "droppable_agg", "ui-sortable-helper sortTxtbox droppable_agg", "padding-left:0.1px"),
                    
                    column(1, offset = 0, style='padding:0px;',
                           h5("Stats"),
