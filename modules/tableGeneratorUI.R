@@ -11,7 +11,7 @@ tableGeneratorUI <- function(id, label = "Create Chart") {
   ns <- NS(id)
   
   fluidPage(
-    sidebarPanel(
+    sidebarPanel(style = "min-width: 750px;", width = 5,
       div(class = "btn-group", style="",
           id = "download_type",
           tags$button(class = "btn btn-default dropdown-toggle", 
@@ -31,7 +31,8 @@ tableGeneratorUI <- function(id, label = "Create Chart") {
           )
       ),
       
-      fluidRow(column(12, "Commonly Used Tables", recipe)),
+      fluidRow(style = "min-width: 750px;",
+        column(12, "Commonly Used Tables", recipe)),
                  textInput(ns("table_title"), "Table Title", "Table Title "),
                  fluidRow(radioGroupButtons(
                    inputId = ns("COLUMN"), "Group Data By:", choices = c("TRT01P", "SEX", "RACE", "NONE"), selected = "NONE")),
@@ -84,7 +85,7 @@ tableGeneratorUI <- function(id, label = "Create Chart") {
                  )
     ),
     
-    mainPanel(
+    mainPanel(style = "max-width: 500px;",
       fluidRow(htmlOutput(ns("title"))),
       fluidRow(tableOutput(ns("all")))
     ),
