@@ -3,7 +3,7 @@ function recipeRowBlock(text) {
   return (`
   <div><div><div class='form-group drop_area'>
   <label class='control-label' for='demography_recipe'>${text}</label>
-  <button class='delete'>Delete</button>
+  <button class='delete'>X</button>
   </div></div></div>`)
 }
 
