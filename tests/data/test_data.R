@@ -7,7 +7,7 @@ source("R/allowed_operators.R")
 # ADSL
 # ADVS
 # Taken from 
-dd <- readRDS("tests/data/data.RDS")
+dd <- readRDS("tests/data/test_data.RDS")
 
 ADSL <- dd$data$ADSL
 BDS <- dd$data[sapply(dd$data, function(x) "PARAMCD" %in% colnames(x))]
