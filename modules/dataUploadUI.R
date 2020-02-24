@@ -7,7 +7,8 @@ dataUploadUI <- function(id, label = "CSV file") {
       column(3,
              wellPanel(
                h3("Data upload"),
-               fileInput(ns("file"), "Upload a sas7bdat file",accept = c(".sas7bdat"), multiple = TRUE),
+               "Uploading an ADSL file is mandatory, all additional BDS files are optional",
+               fileInput(ns("file"), "Upload a sas7bdat files",accept = c(".sas7bdat"), multiple = TRUE),
                uiOutput(ns("radio_test"))
              )
       ),

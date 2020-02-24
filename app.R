@@ -16,6 +16,29 @@ library(shinythemes)
 library(rmarkdown)
 library(shinytest)
 
+jscode <- "
+shinyjs.disableTab = function() {
+    var tabs = $('.nav').find('li:not(.active) a');
+    tabs.bind('click.tab', function(e) {
+        e.preventDefault();
+        return false;
+    });
+    tabs.addClass('disabled');
+}
+shinyjs.enableTab = function(param) {
+    var tab = $('.nav').find('li:not(.active) a');
+    tab.unbind('click.tab');
+    tab.removeClass('disabled');
+}"
+
+css <- "
+.nav li a.disabled {
+background-color: #aaa !important;
+color: #333 !important;
+cursor: not-allowed !important;
+border-color: #aaa !important;
+}"
+
 source("global.R")
 
 ui <- 
@@ -26,6 +49,7 @@ ui <-
       tags$script(src = "https://code.jquery.com/ui/1.12.1/jquery-ui.js")
     ),
     useShinyjs(),
+    extendShinyjs(text = jscode),
     navbarPage(theme = "yeti.css",
                title = div(id="logo-id","IDEA", img(src="IDEA_ICON.png", style="float:left; padding-right:3px; height:25px; width:30px")), 
                id = "navbarID",
@@ -35,7 +59,7 @@ ui <-
                  dataUploadUI("datafile", "Import CSV")
                ),
                tabPanel(
-                 title = "Table Generator",
+                 title = "TableGenerator", id = 't_gen',
                  tableGeneratorUI("table_generator")
                ),
                tabPanel(
@@ -56,10 +80,19 @@ ui <-
     # Add logo to top right corner
     tags$script(HTML("var header = $('.navbar > .container-fluid'); header.append('<div style=\"float:right\"><ahref=\"URL\"><img src=\"logo.svg\" alt=\"alt\" style=\"float:right;width:66px;height:41px;\"> </a>`</div>');")),
     tags$script(src = "script.js"),
-    tags$script(src = "recipe.js")
+    tags$script(src = "recipe.js"),
+    inlineCSS(css)
   )
 
 server <- function(input, output, session) {
+  
+  # disable tab2 on page load
+  js$disableTab()
+  
+  observeEvent(datafile()$ADSL, {
+    # enable tab2 when clicking the button
+    js$enableTab()
+  })
   
   # Increase allowed file size to 4GB
   options(shiny.maxRequestSize = 4096*1024^2)

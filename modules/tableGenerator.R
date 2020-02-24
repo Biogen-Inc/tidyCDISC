@@ -48,7 +48,7 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
   }
   
   output$filtering_by <- renderUI({
-    selectInput(session$ns("filtering"), "Filter By:", colnames(datafile()$ADSL))
+    selectInput(session$ns("filtering"), "Filter Column:", colnames(datafile()$ADSL)[colnames(datafile()$ADSL) != "STUDYID"])
   })
 
   observe({
