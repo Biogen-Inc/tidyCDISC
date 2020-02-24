@@ -70,32 +70,31 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
   })
   
   AGGREGATE <- reactive({
-    req(length(input$agg_drop_zone) > 0 & !(is.na(input$agg_drop_zone)))
-    as.data.frame(read_html(input$agg_drop_zone) %>% html_table(fill=TRUE)) %>%
+    # req(length(input$agg_drop_zone) > 0 & !(is.na(input$agg_drop_zone)))
+    agg <- as.data.frame(read_html(input$agg_drop_zone) %>% html_table(fill=TRUE)) %>%
       separate(1, into = c("Aggregate", "Select"), sep=":")
+    agg
   })
   
   ROWS <- reactive({
     req(length(input$block_drop_zone) > 0 & !(is.na(input$block_drop_zone)))
+    print(input$block_drop_zone)
     as.data.frame(read_html(input$block_drop_zone) %>% html_table(fill=TRUE))
   })
   
   blocks <- reactive({
-
-    if (nrow(AGGREGATE()) != nrow(ROWS())) {
-      if (nrow(AGGREGATE()) < nrow(ROWS())) {
-        stop(call. = FALSE, "Missing statistic block")
-      } else {
-        stop(call. = FALSE, "Missing row block")
-      }
-    } else if (is.na(input$block_drop_zone & is.na(input$agg_drop_zone))) {
-      stop(call. = FALSE, "Add blocks to dropzone to create tables")
+    if (input$agg_drop_zone == "<table></table>") {
+      stop("Add blocks to dropzone to create table", call. = FALSE)
+    } else if (input$block_drop_zone == "<table></table>") {
+      stop("Add blocks to dropzone to create table", call. = FALSE)
     } else {
+      print(ROWS())
+      print(AGGREGATE())
       t <- AGGREGATE()
       p <- ROWS()
       t$Row <- p$X1
       return(t)
-    }
+    }    
   })
   
   
@@ -170,10 +169,14 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
   datalist <- list()
     
   dataFrame <- reactive({
-    
+
   COLUMN <- ifelse(input$COLUMN == "NONE", "", sym(input$COLUMN))
   # extract the row blocks and agg blocks
   # then convert to syms to be used within tidy pipelines
+  # if (is.na(nrow(blocks())) | is.null(nrow(blocks()))) {
+  #   stop("My error", call. = FALSE)
+  # } else {
+         
   for (i in 1:nrow(blocks())) {
     
     ROW <- sym(blocks()$Row[i])
@@ -458,7 +461,7 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
     }
   }
   big_data = do.call(rbind, datalist)
-  big_data
+  big_data 
   })
   
   
