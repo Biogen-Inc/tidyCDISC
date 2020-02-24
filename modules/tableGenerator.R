@@ -297,6 +297,7 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
         colnames(d) <- paste0("Total (N  = ", total(), ")")
         
       } else {
+        
         # as above create the same prop table
         # but also group by columns
         # turn n and prop into a single column with value "N (prop)"
@@ -322,10 +323,15 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
           summarise(count = n())
         
         # use the header_df to replace the column names to add the N
-        colnames(d) <- lapply(paste0(unlist(header_df[,1]),
-                                     " (N = ", 
-                                     unlist(header_df[,2]), ")"),
-                              CapStr)
+        
+        if (input$COLUMN %in% blocks()$Row) {
+          stop(call. = FALSE, "Cannot aggregate and group by ", paste(input$COLUMN))
+        } else {
+          colnames(d) <- lapply(paste0(unlist(header_df[,1]),
+                                       " (N = ", 
+                                       unlist(header_df[,2]), ")"),
+                                CapStr)
+        }
       }
       
       # add an empty row into the dataframe
