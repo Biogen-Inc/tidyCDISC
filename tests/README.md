@@ -1,4 +1,5 @@
 # TABLE GENERATOR UNIT TESTS
+All R data frames are created using `tests/data/test_data.RDS` and are compared to SAS files with corresponding numbers in `tests/data/test_outputs`
 
 ### DATA PROCESSING
 - [ ] 1)	Take ADVS and BDS [ADVS], pivot BDS by PARAMCD merge by USUBJID
