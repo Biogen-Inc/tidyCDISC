@@ -8,8 +8,11 @@ source('modules/dataUpload.R')
 source('modules/dataUploadUI.R')
 
 source('R/blocks.R')
+source('R/CapStr.R')
+source('R/allowed_operators.R')
 
 source('R/pivot_paramcd.R')
+source("R/mean_block.R")
 source('modules/tableGenerator.R')
 source('modules/tableGeneratorUI.R')
 

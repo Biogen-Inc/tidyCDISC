@@ -1,15 +1,5 @@
 tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
   
-  CapStr <- function(y) {
-    c <- strsplit(y, " ")[[1]]
-    paste(toupper(substring(c, 1,1)), substring(c, 2),
-          sep="", collapse=" ")
-  }
-  
-  allowed_operators <- c(">", ">=", "==", "<=", "<", "!=") %>% 
-    set_names() %>% 
-    map(match.fun)
-  
   output$title <- renderText({ 
     # paste the title to the top of the table
     # paste reactive filtering expression as subheader
@@ -80,28 +70,31 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
   })
   
   AGGREGATE <- reactive({
-    req(length(input$agg_drop_zone) > 0 & !(is.na(input$agg_drop_zone)))
-    as.data.frame(read_html(input$agg_drop_zone) %>% html_table(fill=TRUE)) %>%
+    # req(length(input$agg_drop_zone) > 0 & !(is.na(input$agg_drop_zone)))
+    agg <- as.data.frame(read_html(input$agg_drop_zone) %>% html_table(fill=TRUE)) %>%
       separate(1, into = c("Aggregate", "Select"), sep=":")
+    agg
   })
   
   ROWS <- reactive({
     req(length(input$block_drop_zone) > 0 & !(is.na(input$block_drop_zone)))
+    print(input$block_drop_zone)
     as.data.frame(read_html(input$block_drop_zone) %>% html_table(fill=TRUE))
   })
   
   blocks <- reactive({
-    # validate(
-    #   need(nrow(AGGREGATE()) == nrow(ROWS()),  
-    #        if (nrow(AGGREGATE()) < nrow(ROWS())) {
-    #          "Missing Aggregate Block"
-    #        } else {
-    #          "Missing Row Block"
-    #        }))
-    t <- AGGREGATE()
-    p <- ROWS()
-    t$Row <- p$X1
-    return(t)
+    if (input$agg_drop_zone == "<table></table>") {
+      stop("Add blocks to dropzone to create table", call. = FALSE)
+    } else if (input$block_drop_zone == "<table></table>") {
+      stop("Add blocks to dropzone to create table", call. = FALSE)
+    } else {
+      print(ROWS())
+      print(AGGREGATE())
+      t <- AGGREGATE()
+      p <- ROWS()
+      t$Row <- p$X1
+      return(t)
+    }    
   })
   
   
@@ -176,10 +169,14 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
   datalist <- list()
     
   dataFrame <- reactive({
-    
+
   COLUMN <- ifelse(input$COLUMN == "NONE", "", sym(input$COLUMN))
   # extract the row blocks and agg blocks
   # then convert to syms to be used within tidy pipelines
+  # if (is.na(nrow(blocks())) | is.null(nrow(blocks()))) {
+  #   stop("My error", call. = FALSE)
+  # } else {
+         
   for (i in 1:nrow(blocks())) {
     
     ROW <- sym(blocks()$Row[i])
@@ -305,6 +302,7 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
         colnames(d) <- paste0("Total (N  = ", total(), ")")
         
       } else {
+        
         # as above create the same prop table
         # but also group by columns
         # turn n and prop into a single column with value "N (prop)"
@@ -330,10 +328,15 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
           summarise(count = n())
         
         # use the header_df to replace the column names to add the N
-        colnames(d) <- lapply(paste0(unlist(header_df[,1]),
-                                     " (N = ", 
-                                     unlist(header_df[,2]), ")"),
-                              CapStr)
+        
+        if (input$COLUMN %in% blocks()$Row) {
+          stop(call. = FALSE, "Cannot aggregate and group by ", paste(input$COLUMN))
+        } else {
+          colnames(d) <- lapply(paste0(unlist(header_df[,1]),
+                                       " (N = ", 
+                                       unlist(header_df[,2]), ")"),
+                                CapStr)
+        }
       }
       
       # add an empty row into the dataframe
@@ -458,7 +461,7 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
     }
   }
   big_data = do.call(rbind, datalist)
-  big_data
+  big_data 
   })
   
   
