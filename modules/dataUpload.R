@@ -52,27 +52,7 @@ dataUpload <- function(input, output, session, stringsAsFactors) {
     for (i in 1:length(dd$data)){
       choices[[i]] <- names(dd$data)[i]
     }
-    
-    for (i in 1:length(dd$data)){
-      
-      temp_standard <- dd$standard[[i]]$standard
-      standard_label <- ifelse(temp_standard=="adam","AdAM",ifelse(temp_standard=="sdtm","SDTM",temp_standard))
-      if(temp_standard == "none") {
-        names(choices)[i] <- paste0("<p>", names(dd$data)[i], " - <em style='font-size:12px;'>No Standard Detected</em></p>")
-      } else if (dd$standard[[i]]$details[[temp_standard]]$match == "full") {
-        names(choices)[i] <- paste0("<p>", names(dd$data)[i], " - <em style='color:green; font-size:12px;'>", standard_label, "</em></p>")
-        # If partial data spec match - give the fraction of variables matched
-      } else {
-        
-        valid_count <- dd$standard[[i]]$details[[temp_standard]]$valid_count
-        total_count <- dd$standard[[i]]$details[[temp_standard]]$invalid_count + valid_count
-        
-        fraction_cols  <- paste0(valid_count, "/" ,total_count)
-        
-        names(choices)[i] <- paste0("<p>", names(dd$data)[i], " - <em style='color:green; font-size:12px;'>", "Partial ",
-                                    standard_label, " (", fraction_cols, " data settings)",  "</em></p>")
-      }
-    }
+
     return(choices)
   })
   
@@ -81,8 +61,9 @@ dataUpload <- function(input, output, session, stringsAsFactors) {
     req(data_choices())
     vals <- data_choices()
     names(vals) <- NULL
-    names <- lapply(names(data_choices()), HTML)
-    
+    names <- data_choices()
+    print(vals)
+    print(names)
     prev_sel <- lapply(reactiveValuesToList(input), unclass)$select_file  # retain previous selection
     
     output$radio_test <- renderUI(
