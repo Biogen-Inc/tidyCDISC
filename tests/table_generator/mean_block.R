@@ -9,18 +9,17 @@ context("Mean Block Functions")
 test_that("Mean PARAMCD", {
   
   ROW <- sym("DIABP")
-  AGGREGATE <- sym("MEAN")
   WEEK <- sym("Week 12")
   
   block_df <- test_data %>%
     filter(PARAMCD == ROW & AVISIT == WEEK) %>%
-    summarise(N = n(),
-              `Mean (SD)` = paste0(round(mean(AVAL), 2), " (", round(sd(AVAL), 2), ")"),
-              Median = median(AVAL),
-              `Q1 | Q3` = paste(round(quantile(AVAL, 0.25), 2) , "|", round(quantile(AVAL, 0.75), 2)),
-              `Min | Max` = paste(round(min(AVAL), 2), " | ", round(max(AVAL), 2)))
+    summarise(AVAL_N = n(),
+              AVAL_Mean = round(mean(AVAL), 2),
+              AVAL_StdDev = round(sd(AVAL), 2),
+              AVAL_Min = round(min(AVAL), 2),
+              AVAL_Max = round(max(AVAL), 2))
   
-  test_mean <- 
+  test_mean <- read_sas("tests/data/test_outputs/test6.sas7bdat")
     
     # ensure it matches the shiny output
     expect_identical(test_mean, block_df)

@@ -1,7 +1,9 @@
 library(haven)
 library(tidyverse)
 
-source("R/allowed_operators.R")
+allowed_operators <- c(">", ">=", "==", "<=", "<", "!=") %>% 
+  set_names() %>% 
+  map(match.fun)
 
 # This is a list of two dataframe
 # ADSL
