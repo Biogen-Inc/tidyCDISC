@@ -7,7 +7,7 @@ selectDataUI <- function(id, label = "Select Datasets") {
       column(3,div(style = "height:10px;"),
       pickerInput(ns("datalist"),label = h5("Select Datasets"), choices=NULL, multiple = TRUE, 
       options = list(`actions-box` = TRUE,
-      title = 'Select additional datasets below')) ),
+      title = NULL)) ),
       column(3,div(style = "height:50px;"),
               actionButton(ns("done"), "Click when done") )
     ) # fluidRow

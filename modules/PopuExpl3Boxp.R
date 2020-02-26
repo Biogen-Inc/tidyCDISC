@@ -1,11 +1,11 @@
-PopuExpl3Boxp <- function(input, output, session, df, numcols, chrcols){
+PopuExpl3Boxp <- function(input, output, session, df){
   
   ns <- session$ns
   
 # Box Plot
 shinyjs::show(id="selPrmCode")
-shinyjs::show(id="bygroup")
-shinyjs::show(id="groupbyvar")
+shinyjs::show(id="splitbox")
+shinyjs::show(id="splitbyvar")
 shinyjs::hide(id="selxvar")
 shinyjs::hide(id="selyvar")
 shinyjs::hide(id="selzvar")
@@ -15,66 +15,53 @@ shinyjs::show(id="AddPoints")
 shinyjs::hide(id="animate")
 shinyjs::hide(id="animateby")
 shinyjs::hide(id="numBins")
+shinyjs::hide(id="AddLine")
+shinyjs::hide(id="AddErrorBar")
+shinyjs::hide(id="DiscrXaxis")
+shinyjs::hide(id="UseCounts")
 
-updateSelectInput(
-  session = session,
-  inputId = "selPrmCode",
-  choices = c(" ",unique(df()$PARAMCD)),
-  selected = " ")
 
-# groupbyvar is loaded with all the character/factor columns
-updateSelectInput(session = session, inputId = "groupbyvar", choices = c(" ",sort(names(df())), selected = " "))
-
-# responsevar is loaded with all the numeric columns
-updateSelectInput(session = session, inputId = "responsevar", choices =  c(" ",numcols), selected = " ")
-
-# set checkbox to TRUE
-updateCheckboxInput(session = session, inputId = "bygroup", value = TRUE)
-
-observe({
-  if(input$bygroup == TRUE) {
-    shinyjs::show(id="groupbyvar")
-  } else {
-    shinyjs::hide(id="groupbyvar")
-  }
-})
-
+# update subsequent inputselects based on PARAM code selection
 observeEvent(input$selPrmCode, {
   
   # subset data based on Parameter Code selection
   req(input$selPrmCode != " ") # using ignoreInit = TRUE
 
-  dfsubset <- filter(df(),PARAMCD == input$selPrmCode)
+  dfsub <- filter(df(),PARAMCD == input$selPrmCode)
   
-  # restrict seltimevar to AVISIT, AVISITN, VSDY
-  seltime <- select(dfsubset, ends_with("DY"), starts_with("AVIS")) %>%
-    mutate(avisitceil = as.integer(ceiling(AVISITN)))
+  chr <- sort(names(df()[ , which(sapply(df(),is.character))])) # all chr
+  fac <- sort(names(df()[ , which(sapply(df(),is.factor   ))])) # all factors
+  num <- sort(names(df()[ , which(sapply(df(),is.numeric  ))])) # all num
   
-  if (!input$groupbyvar %in% names(seltime)) {
-    dfsubset <- dfsubset %>%
-      filter(AVISIT == "Baseline") %>% # Take analysis baseline for now
-      distinct(USUBJID, .keep_all = TRUE)
-  }
+  # splitbyvar is loaded with all the character/factor columns
+  updateSelectInput(session = session, inputId = "splitbyvar", choices = c(" ",sort(c(chr,fac))), selected = " ")
+
+  # responsevar is loaded with all the numeric columns
+  updateSelectInput(session = session, inputId = "responsevar", choices =  c(" ",num), selected = " ")
   
+  # set checkbox to TRUE
+  updateCheckboxInput(session = session, inputId = "splitbox", value = TRUE)
+  
+
 output$PlotlyOut <- renderPlotly({
   
   req(input$responsevar != " ")
   
-  p <- fnboxplot(data = dfsubset, input$bygroup, input$groupbyvar, input$responsevar )
+  p <- fnboxplot(data = dfsub, input$splitbox, input$splitbyvar, input$responsevar )
   
   if(input$AddPoints == TRUE) {
     p <- p +
       suppressWarnings(geom_point(position = 'jitter', alpha = 0.2,
                                   aes(text = 
                                         paste0(USUBJID,
-                                               "<br>",input$groupbyvar, ": ",get(input$groupbyvar),
-                                               "<br>",input$responsevar,": ",get(input$responsevar)
+                                        "<br>",input$splitbyvar, ": ",get(input$splitbyvar),
+                                        "<br>",input$responsevar,": ",get(input$responsevar)
                                         )
                                   ))) # aes, geom_point, suppressWarnings 
   }
   
   # update title
-  ggtitle <- paste("Plot of",input$responsevar,"Grouped by",input$groupbyvar,"for PARAMCD:",unique(dfsubset$PARAMCD))
+  ggtitle <- paste("Plot of",input$responsevar,"Grouped by",input$splitbyvar,"for PARAMCD:",unique(dfsub$PARAMCD))
   p <- p + labs(title = ggtitle)
   
   ggplotly(p, tooltip = "text")
@@ -84,11 +71,22 @@ output$DataTable <- DT::renderDataTable({
   
   req(input$responsevar != " ")
   
-  if(input$bygroup == TRUE) {
-    req(input$groupbyvar != " ")  
+  if(input$splitbox == TRUE) {
+    req(input$splitbyvar != " ")  
+    
+    # restrict seltimevar to AVISIT, AVISITN, VSDY
+    seltime <- select(dfsub, ends_with("DY"), starts_with("AVIS")) 
+    
+    if (!input$splitbyvar %in% names(seltime) & "AVISIT" %in% names(dfsub)) {
+      # print(paste("boxtable before",nrow(dfsub)))
+      dfsub <- dfsub %>%
+        filter(AVISIT == "Baseline") %>% # Take analysis baseline for now
+        distinct(USUBJID, .keep_all = TRUE)
+      # print(paste("boxtable after",nrow(dfsub)))
+    }
   }   
   
-  tableout <- fnsummtab(data = dfsubset, input$bygroup, input$groupbyvar, input$responsevar)
+  tableout <- fnsummtab(data = dfsub, input$splitbox, input$splitbyvar, input$responsevar)
   DT::datatable(tableout, options = list(dom = 'ftp', pageLength = 20))
   
 })

@@ -36,7 +36,7 @@ IndvExplorUI <- function(id, label = "Individual Explorer") {
     
     selectInput(
       ns("selType"),
-      label = tags$small("Type of Value:"),
+      label = HTML("Type of Value: MEDS or LABS<br/>Did you select ADCM or ADLB?"),
       choices = c(" "),
       selected =  " "
     ),

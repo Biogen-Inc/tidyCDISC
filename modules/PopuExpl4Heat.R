@@ -1,11 +1,11 @@
-PopuExpl4Heat <- function(input, output, session, df, numcols, chrcols){
+PopuExpl4Heat <- function(input, output, session, df){
   
   ns <- session$ns
   
 # Heatmap
 shinyjs::show(id="selPrmCode")
-shinyjs::hide(id="bygroup")
-shinyjs::hide(id="groupbyvar")
+shinyjs::hide(id="splitbox")
+shinyjs::hide(id="splitbyvar")
 shinyjs::show(id="selxvar")
 shinyjs::show(id="selyvar")
 shinyjs::show(id="selzvar")
@@ -15,62 +15,77 @@ shinyjs::hide(id="AddPoints")
 shinyjs::hide(id="animate")
 shinyjs::hide(id="animateby")
 shinyjs::hide(id="numBins")
+shinyjs::hide(id="AddLine")
+shinyjs::hide(id="AddErrorBar")
+shinyjs::hide(id="DiscrXaxis")
+shinyjs::show(id="UseCounts")
 
-  updateSelectInput(
-    session = session,
-    inputId = "selxvar",
-    choices = c(" ",sort(names(df()))),
-    selected = " ")
-  
-  updateSelectInput(
-    session = session,
-    inputId = "selyvar",
-    choices = c(" ",numcols),
-    selected = " ") 
-  
-  updateSelectInput(
-    session = session,
-    inputId = "selzvar",
-    choices = c(" ",numcols),
-    selected = " ") 
-  
-  updateSelectInput(
-    session = session,
-    inputId = "selPrmCode",
-    choices = c(" ",unique(df()$PARAMCD)),
-    selected = " ")
 
-  observeEvent(input$selPrmCode, {
+observeEvent(input$selPrmCode, {
     
     # subset data based on Parameter Code selection
     req(input$selPrmCode != " ") # using ignoreInit = TRUE
-    dfsubset <- filter(df(),PARAMCD == input$selPrmCode)
+    dfsub <- filter(df(),PARAMCD == input$selPrmCode)
     
     # restrict seltimevar to AVISIT, AVISITN, VSDY
-    seltime <- select(dfsubset, ends_with("DY"), starts_with("AVIS"))
+    seltime <- select(dfsub, ends_with("DY"), starts_with("AVIS")) 
     
-    if (!input$selxvar %in% names(seltime)) {
-      dfsubset <- dfsubset %>%
+    num <- sort(names(df()[ , which(sapply(df(),is.numeric  ))])) # all num
+    
+    updateSelectInput(
+      session = session,
+      inputId = "selxvar",
+      choices = c(" ",sort(names(df()))),
+      selected = " ")
+    
+    updateSelectInput(
+      session = session,
+      inputId = "selyvar",
+      choices = c(" ",sort(names(df()))),
+      selected = " ") 
+    
+    updateSelectInput(
+      session = session,
+      inputId = "selzvar",
+      choices = c(" ",sort(names(df()))),
+      selected = " ") 
+    
+    # restrict seltimevar to AVISIT, AVISITN, VSDY
+    seltime <- select(dfsub, ends_with("DY"), starts_with("AVIS"))
+   
+    if (!input$selxvar %in% names(seltime) & "AVISIT" %in% names(dfsub)) {
+      dfsub <- dfsub %>%
         filter(AVISIT == "Baseline") %>% # Take analysis baseline for now
         distinct(USUBJID, .keep_all = TRUE)
     }
     
 output$PlotlyOut <- renderPlotly({
   
-  # Wait for fill variable
-  req(input$selzvar != " ")
+  # Wait for variables
+  req(input$selxvar != " ")
+  req(input$selyvar != " ")
+  req(input$selzvar != " " | input$UseCounts == TRUE)
   
-  ggtitle <- glue::glue("Heatmap of {input$selzvar} - {input$selyvar} by {input$selxvar}, for PARAMCD: {unique(dfsubset$PARAMCD)}")
+  ggtitle <- glue::glue("Heatmap of {input$selzvar} - {input$selyvar} by {input$selxvar}, for PARAMCD: {unique(dfsub$PARAMCD)}")
 
-  pp <- ggplot(dfsubset, aes(x = !!as.name(input$selxvar), y = !!as.name(input$selyvar) )) +
-    geom_raster(aes(fill = !!as.name(input$selzvar)), colour = "white", na.rm = TRUE) +
-    ggtitle(ggtitle) +
-    # scale_fill_discrete() +
-    scale_fill_viridis_c(option = "D", direction = -1) +
-    labs(  x = input$selxvar, y = input$selyvar, fill = input$selzvar) +
-    theme_light()
+  p <- ggplot(data=subset(dfsub, input$selxvar != ""),
+              aes(x = !!as.name(input$selxvar), y = !!as.name(input$selyvar) ))
   
-  ggplotly(pp)
+  if (input$UseCounts == TRUE) {
+    p <- p +
+      geom_bin2d(na.rm = TRUE) +
+      scale_fill_gradient(low="yellow",high="red",na.value="white")
+      
+  } else {
+    p <- p +
+    geom_tile(aes(fill = !!as.name(input$selzvar))) +
+    scale_fill_viridis_c(option = "D", direction = -1) 
+  }
+    p <- p + 
+    ggtitle(ggtitle) +
+    labs(  x = input$selxvar, y = input$selyvar, fill = input$selzvar) 
+  
+  ggplotly(p)
   
 })
 
@@ -82,11 +97,12 @@ output$DataTable <- DT::renderDataTable({
   y_var <- as.name(input$selyvar)
   z_var <- as.name(input$selzvar)
   
-  tableout <- dfsubset %>%
-    dplyr::select(USUBJID, !!x_var, !!y_var, !!z_var)
+  tableout <- dfsub %>%
+    dplyr::select(!!x_var, !!y_var, !!z_var)
   DT::datatable(tableout, options = list(dom = 'ftp', pageLength = 10), colnames = c('PARAMCD' = 2))
   
 })
-  }, ignoreInit = TRUE)
-  
+
+}, ignoreInit = TRUE) # observeEvent(input$selPrmCode
+
 }
