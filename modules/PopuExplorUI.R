@@ -8,22 +8,26 @@ sidebarLayout(
                # tags$em("Note: Sample advs data has been pre-loaded.\nSelected 22 subjects from Siteid 310",id=ns("advstagsem")),
                # Copy the line below to make a set of radio buttons
                radioButtons(ns("radio"), label = h5("Type of Chart:"),
-                            choices = list("Scatter Plot" = 1, 
-                                           "Spaghetti Plot" = 2,
-                                           "Box Plot" = 3,
-                                           "Heat Map" = 4,
-                                           "Histogram" = 5),
-                            selected = character(0)),
+                            choices = list("Pick one:" = "0",
+                                           "Scatter Plot" = "1", 
+                                           "Spaghetti Plot" = "2",
+                                           "Box Plot" = "3",
+                                           "Heat Map" = "4",
+                                           "Histogram" = "5"),
+                            selected = "0"),
                
                # below are all the possible subparameters
                tags$h4("Parameters:"),
-               checkboxInput(ns("bygroup"),label="Split By Group",value = TRUE),
-               
                selectInput(ns("selPrmCode"), label = tags$small("Parameter Code:"),
                            choices = c(" "), selected = " "
                ),
-               selectInput(ns("groupbyvar"), label = tags$small("Split by:"), 
-                           c(" "), selected = " "
+               fluidRow( 
+                 column(width = 2,div(style = "height:25px;"),
+                 checkboxInput(ns("splitbox"),label = NULL, value = TRUE)
+                 ),
+                 column(width = 10,
+                 selectInput(ns("splitbyvar"), label = tags$small("Split by:"), c(" "), selected = " ")
+                 )
                ),
                selectInput(ns("selxvar"), label = tags$small("X Variable:"), 
                            c(" "), selected = " "
@@ -40,7 +44,20 @@ sidebarLayout(
                selectInput(ns("responsevar"), label = tags$small("Response Variable:"), 
                            c(" "), selected = " "
                ),
-               checkboxInput(ns("AddPoints"),label="Add points (jitter)",value = FALSE),
+               checkboxInput(ns("AddPoints"),label=tags$small("Add points (jitter)"),value = FALSE),
+               
+               checkboxInput(ns("UseCounts"),label=tags$small("Use Counts"),value = FALSE),
+               
+               fluidRow(
+                column(width=3, 
+               checkboxInput(ns("AddLine"), label = tags$small("Add Line"), value = FALSE)
+                ), 
+                column(width=3,
+                checkboxInput(ns("AddErrorBar"), label = tags$small("Add ErrorBar"), value = FALSE)
+                ),
+                column(width=5,
+                checkboxInput(ns("DiscrXaxis"), label = tags$small("Discrete\n x-axis"), value = FALSE))
+               ),
                
                sliderInput(ns("numBins"), "Number of bins:",
                            min = 20, max = 200, value = 40),

@@ -1,11 +1,11 @@
-PopuExpl1Scat <- function(input, output, session, df, numcols, chrcols){
+PopuExpl1Scat <- function(input, output, session, df){
   
   ns <- session$ns
   
 # Scatterplot
 shinyjs::show(id="selPrmCode")
-shinyjs::show(id="bygroup")
-shinyjs::show(id="groupbyvar")
+shinyjs::show(id="splitbox")
+shinyjs::show(id="splitbyvar")
 shinyjs::show(id="selxvar")
 shinyjs::show(id="selyvar")
 shinyjs::hide(id="selzvar")
@@ -15,62 +15,78 @@ shinyjs::hide(id="AddPoints")
 shinyjs::hide(id="animate")
 shinyjs::hide(id="animateby")
 shinyjs::hide(id="numBins")
+shinyjs::show(id="AddLine")
+shinyjs::show(id="AddErrorBar")
+shinyjs::show(id="DiscrXaxis")
+shinyjs::hide(id="UseCounts")
 
-updateSelectInput(
-  session = session,
-  inputId = "selPrmCode",
-  choices = c(" ",unique(df()$PARAMCD)),
-  selected = " ")
+# update subsequent inputselects based on PARAM code selection
+observeEvent(input$selPrmCode, {
+  
+  req(input$selPrmCode != " ") # using ignoreInit = TRUE
+  
+  dfsub <- filter(df(),PARAMCD == input$selPrmCode)
+  
+  seltime <- select(dfsub, ends_with("DY"), starts_with("AVIS"))
+  
+chr <- sort(names(df()[ , which(sapply(df(),is.character))])) # all chr
+fac <- sort(names(df()[ , which(sapply(df(),is.factor   ))])) # all factors
+num <- sort(names(df()[ , which(sapply(df(),is.numeric  ))])) # all num
 
-# groupbyvar is loaded with all the character/factor columns
-updateSelectInput(session = session, inputId = "groupbyvar", choices = c(" ",chrcols), selected = " ")
+
+# splitbyvar is loaded with all the character/factor columns
+updateSelectInput(session = session, inputId = "splitbyvar", choices = c(" ",sort(c(chr,fac))), selected = " ")
 
 # selxvar is loaded with all the numeric columns
-updateSelectInput(session = session, inputId = "selxvar", choices = c(" ",numcols),  selected = " ")
+updateSelectInput(session = session, inputId = "selxvar", choices = c(" ",sort(names(dfsub))),  selected = " ")
 
 # selyvar is loaded with all the numeric columns
-updateSelectInput(session = session, inputId = "selyvar", choices = c(" ",numcols), selected = " ")
+updateSelectInput(session = session, inputId = "selyvar", choices = c(" ",sort(names(dfsub))), selected = " ")
 
 # set checkbox to TRUE
-updateCheckboxInput(session = session, inputId = "bygroup", value = TRUE)
+updateCheckboxInput(session = session, inputId = "splitbox", value = TRUE)
 
-observe({
-  if(input$bygroup == TRUE) {
-    shinyjs::show(id="groupbyvar")
-  } else {
-    shinyjs::hide(id="groupbyvar")
-  }
-})
-
-observeEvent(input$selPrmCode, {
-
-# subset data based on Parameter Code selection
-req(input$selPrmCode != " ") # using ignoreInit = TRUE
-dfsubset <- filter(df(),PARAMCD == input$selPrmCode)
-
-# restrict seltimevar to AVISIT, AVISITN, VSDY
-seltime <- select(dfsubset, ends_with("DY"), starts_with("AVIS"))
-
-if (!input$selxvar %in% names(seltime)) {
-  dfsubset <- dfsubset %>%
-    filter(AVISIT == "Baseline") %>% # Take analysis baseline for now
-    distinct(USUBJID, .keep_all = TRUE)
-}
 
 output$PlotlyOut <- renderPlotly({
   
   req(input$selxvar != " ")
   req(input$selyvar != " ")
   
+  if (!input$selxvar %in% names(seltime) & "AVISIT" %in% names(dfsub)) {
+    # print(paste("before",nrow(dfsub)))
+    dfsub <- dfsub %>%
+      filter(AVISIT == "Baseline") %>% # Take analysis baseline for now
+      distinct(USUBJID, .keep_all = TRUE)
+    # print(paste("after",nrow(dfsub)))
+  }
+  
   # plot function
-  p <- fnscatter(data = dfsubset, input$bygroup, input$groupbyvar, input$selxvar, input$selyvar)
-  # update title
-  ggtitle <- paste("Plot of",input$selyvar,"by",input$selxvar,"Grouped by",input$groupbyvar,"for PARAMCD:",unique(dfsubset$PARAMCD))
+  p <- fnscatter(data = dfsub, input$splitbox, input$splitbyvar, input$selxvar, input$selyvar)
+
+  # add geom_line if checked
+  if (input$AddLine == TRUE) {
+    p <- p + geom_line() 
+  }
+  # add geom_errorbar if checked
+  if (input$AddErrorBar == TRUE) {
+    p <- p + geom_line() +
+             geom_errorbar(mapping=aes(ymin=ymin, ymax=ymax))
+  }
+  # Discrete x-axis
+  if (input$DiscrXaxis == TRUE) {
+   p <- p + scale_x_discrete(limits=c(sort(unique(dfsub[[input$selxvar]]))))
+  }
+
+  # update title -- if plottitle (and xlabel and ylabel provided, use it)
+  if ("plottitle" %in% colnames(dfsub)) {
+    p <- p + labs(x = unique(dfsub$xlabel), y = unique(dfsub$ylabel), title = unique(dfsub$plottitle))
+  } else {
+  ggtitle <- paste("Plot of",input$selyvar,"by",input$selxvar,"Grouped by",input$splitbyvar,"for PARAMCD:",unique(dfsub$PARAMCD))
   p <- p + labs(title = ggtitle)
+  }
   
   ggplotly(p, tooltip = "text")
-  
-  
+
 })
 
 output$DataTable <- DT::renderDataTable({
@@ -81,18 +97,29 @@ output$DataTable <- DT::renderDataTable({
   x_var <- as.name(input$selxvar)
   y_var <- as.name(input$selyvar)
   
-  if(input$bygroup == TRUE) {
-    req(input$groupbyvar != " ")
-    z_var <- as.name(input$groupbyvar)
-    tableout <- dfsubset %>%
-      dplyr::select(USUBJID, !!z_var, !!x_var, !!y_var)
+  if(input$splitbox == TRUE) {
+    req(input$splitbyvar != " ")
+    z_var <- as.name(input$splitbyvar)
+    if ("USUBJID" %in% colnames(dfsub)) {
+      tableout <- dfsub %>%
+        dplyr::select(USUBJID, !!z_var, !!x_var, !!y_var) 
+    } else {
+    tableout <- dfsub %>%
+      dplyr::select(!!z_var, !!x_var, !!y_var)
+    }
   } else {
-    tableout <- dfsubset %>%
-      dplyr::select(USUBJID, !!x_var, !!y_var)
+    if ("USUBJID" %in% colnames(dfsub)) {
+      tableout <- dfsub %>%
+        dplyr::select(USUBJID, !!x_var, !!y_var)
+    } else {
+    tableout <- dfsub %>%
+      dplyr::select(!!x_var, !!y_var)
+    }
   }
   DT::datatable(tableout, options = list(dom = 'ftp', pageLength = 10))
   
 })
-}, ignoreInit = TRUE)
+
+}, ignoreInit = TRUE) # observeEvent(input$selPrmCode
 
 }
