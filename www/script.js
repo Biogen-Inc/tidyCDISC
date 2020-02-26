@@ -90,7 +90,7 @@ function simpleBlock(newid) {
   return `
   <div><div><div class="form-group drop_area">
   <label class="control-label" for="${newid}">
-  ${newid.replace(/[0-9]/g, '').toUpperCase()}
+  ${newid.slice(0, -1).toUpperCase()}
   </label>
   <button class="delete">X</button>
   </div></div></div>`

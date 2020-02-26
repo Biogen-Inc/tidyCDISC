@@ -62,8 +62,6 @@ dataUpload <- function(input, output, session, stringsAsFactors) {
     vals <- data_choices()
     names(vals) <- NULL
     names <- data_choices()
-    print(vals)
-    print(names)
     prev_sel <- lapply(reactiveValuesToList(input), unclass)$select_file  # retain previous selection
     
     output$radio_test <- renderUI(
