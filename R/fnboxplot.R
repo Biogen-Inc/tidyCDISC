@@ -4,20 +4,32 @@
 #    returns: p for ggplotly
 fnboxplot <- function(data, splitby, splitvar, respvar) {
   
-  x_var <- as.name(splitvar)
   y_var <- as.name(respvar)
   
   if(splitby == TRUE) {
     req(splitvar != " ")
     
+    x_var <- as.name(splitvar)
+    
+    # restrict seltimevar to AVISIT, AVISITN, VSDY
+    seltime <- select(data, ends_with("DY"), starts_with("AVIS")) 
+    
+    if (!splitvar %in% names(seltime) & "AVISIT" %in% names(data)) {
+      # print(paste("fnboxplot before",nrow(data)))
+      data <- data %>%
+        filter(AVISIT == "Baseline") %>% # Take analysis baseline for now
+        distinct(USUBJID, .keep_all = TRUE)
+      # print(paste("fnboxplot after",nrow(data)))
+    }
+    
     ggtitle <- paste("Distribution of",respvar,"Grouped by",splitvar)
-    p <- ggplot(data,
+    p <- ggplot(data,na.rm = TRUE,
                 aes(x = !!x_var, y = !!y_var, fill = !!x_var)) +
       labs(x = splitvar, y = respvar)
     
   } else {
     ggtitle <- paste("Distribution of",respvar)
-    p <- ggplot(data,
+    p <- ggplot(data,na.rm=TRUE,
                 aes(x = " ", y = !!y_var )) +
       labs(x = "All", y = respvar)
   }

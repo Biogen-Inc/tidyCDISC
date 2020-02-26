@@ -8,17 +8,17 @@ selectData <- function(input, output, session, datafile) {
 
   sasdata <- toupper(names(datafile()))
 
-  # Only select data that starts with AD followed by one or more alphanumerics
-  sasdata <- names(which(sapply(sasdata,function(df) { return(stringr::str_detect(toupper(df),"^AD[A-Z0-9]+")) })))
+  # Only select data that starts with AD followed by one or more alphanumerics or underscore
+  sasdata <- names(which(sapply(sasdata,function(df) { return(stringr::str_detect(toupper(df),"^AD[A-Z0-9\\_]+")) })))
 
   
-  # remove ADSL from list
-  if ("ADSL" %in% sasdata) {
-    adslsave <- "ADSL"
-    sasdata <- sasdata[sasdata != "ADSL"]
-  } else {
-    adslsave = " "
-  }
+  # # remove ADSL from list
+  # if ("ADSL" %in% sasdata) {
+  #   adslsave <- "ADSL"
+  #   sasdata <- sasdata[sasdata != "ADSL"]
+  # } else {
+  #   adslsave = " "
+  # }
 
   # Update the picker input list
   updatePickerInput(
@@ -44,15 +44,17 @@ selectData <- function(input, output, session, datafile) {
   # return reactive data on input button click
     return(eventReactive(input$done, { 
 
-    if (is.null(input$datalist)) {
-      c("ADSL") 
-    } else {
-      if ("ADSL" %in% toupper(names(datafile()))) {
-        # add ADSL back only if it was already in datafile()
-        c("ADSL",input$datalist)
-      } else {
-        c(input$datalist)
-      }
-    } 
+     input$datalist
+      
+    # if (is.null(input$datalist)) {
+    #   c("ADSL") 
+    # } else {
+    #   if ("ADSL" %in% toupper(names(datafile()))) {
+    #     # add ADSL back only if it was already in datafile()
+    #     c("ADSL",input$datalist)
+    #   } else {
+    #     c(input$datalist)
+    #   }
+    # } 
     }))
 }
