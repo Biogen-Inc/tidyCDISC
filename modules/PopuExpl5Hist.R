@@ -1,11 +1,11 @@
-PopuExpl5Hist <- function(input, output, session, df, numcols, chrcols){
+PopuExpl5Hist <- function(input, output, session, df){
   
   ns <- session$ns
   
 # Histogram
 shinyjs::show(id="selPrmCode")
-shinyjs::show(id="bygroup")
-shinyjs::show(id="groupbyvar")
+shinyjs::show(id="splitbox")
+shinyjs::show(id="splitbyvar")
 shinyjs::hide(id="selxvar")
 shinyjs::hide(id="selyvar")
 shinyjs::hide(id="selzvar")
@@ -15,48 +15,34 @@ shinyjs::hide(id="AddPoints")
 shinyjs::hide(id="animate")
 shinyjs::hide(id="animateby")
 shinyjs::show(id="numBins")
+shinyjs::hide(id="AddLine")
+shinyjs::hide(id="AddErrorBar")
+shinyjs::hide(id="DiscrXaxis")
+shinyjs::hide(id="UseCounts")
 
-# groupbyvar is loaded with all the character/factor columns
-updateSelectInput(session = session, inputId = "groupbyvar", choices = c(" ",chrcols), selected = " ")
-
-# responsevar is loaded with all the numeric columns
-updateSelectInput(session = session, inputId = "responsevar", choices = c(" ",numcols), selected = " ")
-
-# set checkbox to TRUE
-updateCheckboxInput(session = session, inputId = "bygroup", value = TRUE)
 
 bins <- reactive({
   input$numBins
-})
-
-updateSelectInput(
-  session = session,
-  inputId = "selPrmCode",
-  choices = c(" ",unique(df()$PARAMCD)),
-  selected = " ")
-
-observe({
-  if(input$bygroup == TRUE) {
-    shinyjs::show(id="groupbyvar")
-  } else {
-    shinyjs::hide(id="groupbyvar")
-  }
 })
 
 observeEvent(input$selPrmCode, {
   
   # subset data based on Parameter Code selection
   req(input$selPrmCode != " ") # using ignoreInit = TRUE
-  dfsubset <- filter(df(),PARAMCD == input$selPrmCode)
+  dfsub <- filter(df(),PARAMCD == input$selPrmCode)
   
-  # restrict seltimevar to AVISIT, AVISITN, VSDY
-  seltime <- select(dfsubset, ends_with("DY"), starts_with("AVIS"))
+  chr <- sort(names(df()[ , which(sapply(df(),is.character))])) # all chr
+  fac <- sort(names(df()[ , which(sapply(df(),is.factor   ))])) # all factors
+  num <- sort(names(df()[ , which(sapply(df(),is.numeric  ))])) # all num
   
-  if (!input$selxvar %in% names(seltime)) {
-    dfsubset <- dfsubset %>%
-      filter(AVISIT == "Baseline") %>% # Take analysis baseline for now
-      distinct(USUBJID, .keep_all = TRUE)
-  }
+  # splitbyvar is loaded with all the character/factor columns
+  updateSelectInput(session = session, inputId = "splitbyvar", choices = c(" ",sort(c(chr,fac))), selected = " ")
+
+  # responsevar is loaded with all the numeric columns
+  updateSelectInput(session = session, inputId = "responsevar", choices = c(" ",num), selected = " ")
+  
+  # set checkbox to TRUE
+  updateCheckboxInput(session = session, inputId = "splitbox", value = TRUE)
   
 output$PlotlyOut <- renderPlotly({
   
@@ -64,25 +50,36 @@ output$PlotlyOut <- renderPlotly({
   
   y_var <- as.name(input$responsevar)
   
-  if(input$bygroup == TRUE) {
-    req(input$groupbyvar != " ")
-    x_var <- as.name(input$groupbyvar)
+  if(input$splitbox == TRUE) {
     
-    ggtitle <- paste("Distribution of",input$responsevar,"Grouped by",input$groupbyvar,"for PARAMCD:",unique(dfsubset$PARAMCD))
-    p <- ggplot(dfsubset,
+    req(input$splitbyvar != " ")
+    
+    x_var <- as.name(input$splitbyvar)
+    
+    # restrict seltimevar to AVISIT, AVISITN, VSDY
+    seltime <- select(dfsub, ends_with("DY"), starts_with("AVIS"))
+    
+    if (!input$splitbyvar %in% names(seltime) & "AVISIT" %in% names(dfsub)) {
+      dfsub <- dfsub %>%
+        filter(AVISIT == "Baseline") %>% # Take analysis baseline for now
+        distinct(USUBJID, .keep_all = TRUE)
+    }
+    
+    ggtitle <- paste("Distribution of",input$responsevar,"Grouped by",input$splitbyvar,"for PARAMCD:",unique(dfsub$PARAMCD))
+    p <- ggplot(dfsub,
                 aes(x = !!y_var, fill = !!x_var)) +
-      labs(x = input$responsevar, y = "Count", fill = input$groupbyvar )
+      labs(x = input$responsevar, y = "Count", fill = input$splitbyvar )
     
   } else {
     
-    ggtitle <- paste("Distribution of",input$responsevar,"for PARAMCD:",unique(dfsubset$PARAMCD))
-    p <- ggplot(dfsubset,
+    ggtitle <- paste("Distribution of",input$responsevar,"for PARAMCD:",unique(dfsub$PARAMCD))
+    p <- ggplot(dfsub,
                 aes(x = !!y_var )) +
       labs(y = "Count" )
     
   }
   p <- p +
-    geom_histogram(bins = bins(), position = "dodge", na.rm = TRUE) +
+    geom_histogram(bins = bins(), position = "stack", na.rm = TRUE) +
     scale_fill_discrete() +
     ggtitle(ggtitle) 
   
@@ -94,15 +91,15 @@ output$DataTable <- DT::renderDataTable({
   
   req(input$responsevar != " ")
   
-  if(input$bygroup == TRUE) {
-    req(input$groupbyvar != " ")  
+  if(input$splitbox == TRUE) {
+    req(input$splitbyvar != " ")  
   }   
   
-  tableout <- fnsummtab(dfsubset, input$bygroup, input$groupbyvar, input$responsevar)
+  tableout <- fnsummtab(dfsub, input$splitbox, input$splitbyvar, input$responsevar)
   DT::datatable(tableout, options = list(dom = 'ftp', pageLength = 20))
   
 })
 
-}, ignoreInit = TRUE)
+}, ignoreInit = TRUE) # observeEvent(input$selPrmCode
 
 }
