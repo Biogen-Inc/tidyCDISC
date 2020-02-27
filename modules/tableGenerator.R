@@ -248,6 +248,7 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
           # if it's not a PARAMCD, it's from ADSL
           # which doesn't have an AVISIT column
           # filter(AVISIT == WEEK) %>%
+          distinct(USUBJID, !!ROW, !!COLUMN) %>%
           filter(!is.na(!!ROW)) %>%
           group_by(!!COLUMN) %>%
           summarise(N = n(),
