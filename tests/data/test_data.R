@@ -51,3 +51,5 @@ filtering_expr <- function(input_filtering, input_condition, input_filt_grp) {
 
 test_data_filtered <- test_data %>% dplyr::filter(!!filtering_expr("COUNTRY", "==", "CAN"))
 
+saveRDS(test_data, "test_data.RDS")
+saveRDS(test_data_filtered, "test_data_filtered.RDS")
