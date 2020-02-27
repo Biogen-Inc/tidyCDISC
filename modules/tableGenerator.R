@@ -558,7 +558,7 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
   output$downloadPDF = downloadHandler(
     filename = "TableGenerator.pdf",
     content = function(file){
-      out <- rmarkdown::render("kable.Rmd", pdf_document())
+      out <- rmarkdown::render("Kable.Rmd", pdf_document())
       file.rename(out, file)
     }
   )
