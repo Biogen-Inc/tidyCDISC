@@ -60,10 +60,11 @@ test_that("mean block ADSL", {
               AGE_Min = min(!!ROW),
               AGE_Max = max(!!ROW))
   
-  sas_mean <- read_sas(zap_label("tests/data/test_outputs/test8.sas7bdat"))
+  sas_mean <- read_sas("tests/data/test_outputs/test8.sas7bdat")
   
   # ensure it matches the shiny output
-  expect_equal(sas_mean, tg_mean)
+  expect_equal(sas_mean, tg_mean, check.attributes = FALSE)
+ 
 })
 
 # 9
