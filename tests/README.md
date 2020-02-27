@@ -9,14 +9,14 @@ All R data frames are created using `tests/data/test_data.RDS` and are compared 
 - [X] 5)	Distinct number of USUBJID for total in header [GROUP BY TRT01P, COUNTRY == CANADA]
 
 ### MEAN BLOCK
-- [ ] 6)	Mean of PARAMCD (provide AVISIT) [ROW == DIABP,  AVISIT == Week 12]
+- [X] 6)	Mean of PARAMCD (provide AVISIT) [ROW == DIABP,  AVISIT == Week 12]
 - [X] 7)	Mean of PARAMCD (provide AVISIT) with filter [ROW == DIABP,  AVISIT == Week 12, COUNTRY == CANADA]
-- [ ] 8)	**passing but not identical** Mean of ADSL [ROW == AGE]
+- [X] 8)	Mean of ADSL [ROW == AGE]
 - [X] 9)	Mean of ADSL with Filter [ROW == AGE, COUNTRY == CANADA]
-- [ ] 10)	Mean of PARAMCD (provide AVISIT), group by COLUMN [ROW == DIABP, COLUMN == TRT01P]
-- [ ] 11)	**passing but not identical** Mean of PARAMCD (provide AVISIT), group by COLUMN with Filter [[ROW == DIABP, COLUMN == TRT01P, COUNTRY == CANADA]
-- [ ] 12)	**passing but not identical** Mean of ADSL, group by COLUMN [ROW == AGE, COLUMN == TRT01P]
-- [X] 13)	Mean of ADSL, group by COLUMN with filter [ROW == AGE, COLUMN == TRT01P, COUNTRY == CANADA]
+- [X] 10)	Mean of PARAMCD (provide AVISIT), group by COLUMN [ROW == DIABP, COLUMN == TRT01P]
+- [X] 11)	Mean of PARAMCD (provide AVISIT), group by COLUMN with Filter [[ROW == DIABP, COLUMN == TRT01P, COUNTRY == CANADA]
+- [X] 12)	Mean of ADSL, group by COLUMN [ROW == AGE, COLUMN == TRT01P]
+- [X] 13)	 Mean of ADSL, group by COLUMN with filter [ROW == AGE, COLUMN == TRT01P, COUNTRY == CANADA]
 
 ### FREQUENCY BLOCK
 - [ ] 14)	**off by 1** Frequency of ROW [ROW == SEX,]
@@ -31,7 +31,7 @@ All R data frames are created using `tests/data/test_data.RDS` and are compared 
 - [ ] 21)	ADSL with Filter [ROW == AGE, COLUMN == TRT01P, COUNTRY == CANADA]
 
 ### CHANGE FROM BASELINE
-- [ ] 22)	PARAMCD and AVISIT [ROW == DIABP, COLUMN == TRT01P]
+- [X] 22)	PARAMCD and AVISIT [ROW == DIABP, COLUMN == TRT01P]
 - [X] 23)	PARAMCD and AVISIT with Filter [ROW == DIABP, COLUMN == TRT01P]
-- [ ] 24)	PARAMCD and AVISIT and COLUMN [ROW == DIABP, COLUMN == TRT01P]
+- [X] 24)	PARAMCD and AVISIT and COLUMN [ROW == DIABP, COLUMN == TRT01P]
 - [X] 25)	PARAMCD and AVISIT and COLUMN with Filter [ROW == DIABP, COLUMN == TRT01P, COUNTRY == CANADA]

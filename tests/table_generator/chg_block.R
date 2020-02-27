@@ -1,4 +1,3 @@
-library(shinytest)
 library(testthat)
 library(rvest)
 
@@ -6,7 +5,6 @@ source("tests/data/test_data.R")
 
 context("Change from Baseline tests")
 
-app <- ShinyDriver$new(".")
 
 # 22
 test_that("Change from Baseline", {
@@ -16,18 +14,20 @@ test_that("Change from Baseline", {
   
   tg_chg <- test_data %>%
     filter(PARAMCD == ROW & AVISIT == WEEK) %>%
-    summarise(CHG_N = n(),
-              CHG_mean = mean(CHG),
-              CHG_StdDev = sd(CHG),
+    summarise(CHG_N = as.numeric(n()),
+              CHG_Mean = mean(CHG),
+              CHG_StdDev = round(sd(CHG), 4),
               CHG_Min = min(CHG),
-              CHG_Max = max(CHG))
+              CHG_Max = max(CHG),
+              CHG_Q1 = quantile(CHG, 0.25, type = 2),
+              CHG_Q3 = quantile(CHG, 0.75, type = 2))
   
-  sas_chg <- read_sas("tests/data/test_outputs/test22.sas7bdat")
+  sas_chg <- read_sas("tests/data/test_outputs/test22.sas7bdat") %>%
+    mutate(CHG_StdDev = round(CHG_StdDev, 4))
     
-  expect_identical(saS_chg, tg_chg)
+  expect_equal(sas_chg, tg_chg)
 })
 
-app$stop()
 
 # 23
 test_that("Change from Baseline  with filter", {
@@ -41,14 +41,14 @@ test_that("Change from Baseline  with filter", {
               CHG_Mean = mean(CHG),
               CHG_StdDev = sd(CHG),
               CHG_Min = min(CHG),
-              CHG_Max = max(CHG))
+              CHG_Max = max(CHG),
+              CHG_Q1 = quantile(CHG, 0.25, type = 2),
+              CHG_Q3 = quantile(CHG, 0.75, type = 2))
   
     sas_chg <- read_sas("tests/data/test_outputs/test23.sas7bdat")
   
   expect_equal(sas_chg, tg_chg)
 })
-
-app$stop()
 
 # 24
 test_that("Change from Baseline grouped", {
@@ -59,20 +59,22 @@ test_that("Change from Baseline grouped", {
   
   tg_chg <- test_data %>%
     group_by(!!COLUMN) %>% 
-    filter(AVISIT == WEEK & PARAMCD == ROW) %>%
-    summarise(CHG_N = n(),
-              CHG_mean = mean(CHG),
-              CHG_StdDev = sd(CHG),
+    filter(PARAMCD == ROW & AVISIT == WEEK) %>%
+    summarise(CHG_N = as.numeric(n()),
+              CHG_Mean = mean(CHG),
+              CHG_StdDev = round(sd(CHG), 4),
               CHG_Min = min(CHG),
-              CHG_Max = max(CHG))
+              CHG_Max = max(CHG),
+              CHG_Q1 = quantile(CHG, 0.25, type = 2),
+              CHG_Q3 = quantile(CHG, 0.75, type = 2))
   
-  sas_chg <- read_sas("tests/data/test_outputs/test24.sas7bdat") %>% 
-    select(-NObs)
+  sas_chg <- read_sas("tests/data/test_outputs/test24.sas7bdat") %>%
+    select(-NObs) %>%
+    mutate(CHG_StdDev = round(CHG_StdDev, 4))
   
-  expect_identical(tg_chg, sas_chg)
+  expect_equal(tg_chg, sas_chg)
 })
 
-app$stop()
 
 # 25
 test_that("Change from Baseline grouped and filtered", {
@@ -83,15 +85,18 @@ test_that("Change from Baseline grouped and filtered", {
   
   tg_chg <- test_data_filtered %>%
     group_by(!!COLUMN) %>% 
-    filter(AVISIT == WEEK & PARAMCD == ROW) %>%
+    filter(PARAMCD == ROW & AVISIT == WEEK) %>%
     summarise(CHG_N = as.numeric(n()),
               CHG_Mean = mean(CHG),
-              CHG_StdDev = sd(CHG),
+              CHG_StdDev = round(sd(CHG), 4),
               CHG_Min = min(CHG),
-              CHG_Max = max(CHG))
+              CHG_Max = max(CHG),
+              CHG_Q1 = quantile(CHG, 0.25, type = 2),
+              CHG_Q3 = quantile(CHG, 0.75, type = 2))
   
   sas_chg <- read_sas("tests/data/test_outputs/test25.sas7bdat") %>%
-    select(-NObs)
+    select(-NObs) %>%
+    mutate(CHG_StdDev = round(CHG_StdDev, 4))
   
   expect_equal(tg_chg, sas_chg)
 })

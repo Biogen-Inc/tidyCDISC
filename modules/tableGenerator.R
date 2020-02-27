@@ -213,7 +213,7 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
             summarise(N = n(),
                       `Mean (SD)` = paste0(round(mean(AVAL), 2), " (", round(sd(AVAL), 2), ")"),
                       Median = median(AVAL),
-                      `Q1 | Q3` = paste(round(quantile(AVAL, 0.25), 2) , "|", round(quantile(AVAL, 0.75), 2)),
+                      `Q1 | Q3` = paste(round(quantile(AVAL, 0.25, type = 2), 2) , "|", round(quantile(AVAL, 0.75, type = 2), 2)),
                       `Min | Max` = paste(round(min(AVAL), 2), " | ", round(max(AVAL), 2)))
           tdf <- setNames(data.frame(t(df[,-1])), paste0("Total (N  = ", total(), ")"))
         } else {
@@ -223,7 +223,7 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
             summarise(N = n(),
                       `Mean (SD)` = paste0(round(mean(AVAL), 2), " (", round(sd(AVAL), 2), ")"),
                       Median = median(AVAL),
-                      `Q1 | Q3` = paste(round(quantile(AVAL, 0.25), 2) , "|", round(quantile(AVAL, 0.75), 2)),
+                      `Q1 | Q3` = paste(round(quantile(AVAL, 0.25, type = 2), 2) , "|", round(quantile(AVAL, 0.75, type = 2), 2)),
                       `Min | Max` = paste(round(min(AVAL), 2), " | ", round(max(AVAL), 2)))
           
           header_df <- all_data() %>%
@@ -254,7 +254,7 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
           summarise(N = n(),
                     `Mean (SD)` = paste0(round(mean(!!ROW), 2), " (", round(sd(!!ROW), 2), ")"),
                     Median = median(!!ROW),
-                    `Q1 | Q3` = paste(round(quantile(!!ROW, 0.25),2) , "|", (round(quantile(!!ROW, 0.75),2))),
+                    `Q1 | Q3` = paste(round(quantile(!!ROW, 0.25, type = 2),2) , "|", (round(quantile(!!ROW, 0.75, type = 2),2))),
                     `Min | Max` = paste0(round(min(!!ROW), 2), " | ", round(max(!!ROW), 2)))
 
         if (COLUMN == "") {

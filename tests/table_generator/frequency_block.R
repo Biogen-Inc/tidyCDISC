@@ -6,7 +6,6 @@ source("tests/data/test_data.R")
 
 context("Frequency Block tests")
 
-app <- ShinyDriver$new(".")
 
 # 14
 test_that("Frequency of ADSL", {
@@ -64,7 +63,6 @@ test_that("Frequency of ADSL grouped", {
   sas_freq <- read_sas("tests/data/test_outputs/test16.sas7bdat") %>%
     select(SEX, TRT01P, Frequency, RowPercent)
   
-  sas_freq
   # ensure it matches the shiny output
   expect_equal(tg_freq, sas_freq)
 })
