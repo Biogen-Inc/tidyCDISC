@@ -32,17 +32,20 @@ app$stop()
 # 23
 test_that("Change from Baseline  with filter", {
   
+  ROW <- sym("DIABP")
+  WEEK <- "Week 12"
+  
   tg_chg <- test_data_filtered %>%
     filter(PARAMCD == ROW & AVISIT == WEEK) %>%
-    summarise(CHG_N = n(),
-              CHG_mean = mean(CHG),
+    summarise(CHG_N = as.numeric(n()),
+              CHG_Mean = mean(CHG),
               CHG_StdDev = sd(CHG),
               CHG_Min = min(CHG),
               CHG_Max = max(CHG))
   
-  sas_chg <- read_sas("tests/data/test_outputs/test23.sas7bdat")
+    sas_chg <- read_sas("tests/data/test_outputs/test23.sas7bdat")
   
-  expect_identical(saS_chg, tg_chg)
+  expect_equal(sas_chg, tg_chg)
 })
 
 app$stop()
@@ -54,15 +57,19 @@ test_that("Change from Baseline grouped", {
   WEEK <- "Week 12"
   COLUMN <- sym("TRT01P")
   
-  intermediate <- test_data %>%
+  tg_chg <- test_data %>%
     group_by(!!COLUMN) %>% 
     filter(AVISIT == WEEK & PARAMCD == ROW) %>%
-    summarise(mean = round(mean(CHG), 3))
-  d <- data.frame(CHG = intermediate$mean)
+    summarise(CHG_N = n(),
+              CHG_mean = mean(CHG),
+              CHG_StdDev = sd(CHG),
+              CHG_Min = min(CHG),
+              CHG_Max = max(CHG))
   
-  test_mean <- read_sas("tests/data/test_outputs/test18.sas7bdat")
+  sas_chg <- read_sas("tests/data/test_outputs/test24.sas7bdat") %>% 
+    select(-NObs)
   
-  expect_identical(test_mean, block_df)
+  expect_identical(tg_chg, sas_chg)
 })
 
 app$stop()
@@ -74,15 +81,17 @@ test_that("Change from Baseline grouped and filtered", {
   WEEK <- "Week 12"
   COLUMN <- sym("TRT01P")
   
-  intermediate <- test_data %>%
+  tg_chg <- test_data_filtered %>%
     group_by(!!COLUMN) %>% 
     filter(AVISIT == WEEK & PARAMCD == ROW) %>%
-    summarise(mean = round(mean(CHG), 3))
-  d <- data.frame(CHG = intermediate$mean)
+    summarise(CHG_N = as.numeric(n()),
+              CHG_Mean = mean(CHG),
+              CHG_StdDev = sd(CHG),
+              CHG_Min = min(CHG),
+              CHG_Max = max(CHG))
   
-  test_mean <- read_sas("tests/data/test_outputs/test18.sas7bdat")
+  sas_chg <- read_sas("tests/data/test_outputs/test25.sas7bdat") %>%
+    select(-NObs)
   
-  expect_identical(test_mean, block_df)
+  expect_equal(tg_chg, sas_chg)
 })
-
-app$stop()

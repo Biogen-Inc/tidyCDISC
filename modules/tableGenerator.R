@@ -272,7 +272,6 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
             summarise(count = n())
           
           header_df %>% mutate_if(is.factor, as.character) -> header_df
-          print(header_df)
           
           if (!nrow(df) == nrow(header_df)) {
             test <- data.frame(matrix(nrow = 1, ncol = ncol(df)))
@@ -282,7 +281,6 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
                                                                   " (N = ", 
                                                                   unlist(header_df[,2]), ")"),
                                                            CapStr))
-            print(tdf)
           } else {
             tdf <- setNames(data.frame(t(df[,-1])), lapply(paste0(unlist(header_df[,1]), 
                                                                   " (N = ", 
@@ -292,7 +290,6 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
         }
         
       }
-      print(tdf)
       insert <- data.frame(t(data.frame("X" = c(rep(" ", length(tdf))))))
       row.names(insert) <- paste(CapStr(as.character(ROW)))
       colnames(insert) <- colnames(tdf)
