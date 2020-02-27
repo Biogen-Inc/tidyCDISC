@@ -52,15 +52,15 @@ test_that("mean block ADSL", {
   COLUMN <- ""
   
   tg_mean <- test_data %>%
-    distinct(USUBJID, AGE, !!COLUMN) %>%
-    na.omit() %>%
+    distinct(USUBJID, !!ROW, !!COLUMN) %>%
+    filter(!is.na(!!ROW)) %>%
     summarise(AGE_N = as.numeric(n()),
               AGE_Mean = mean(!!ROW),
               AGE_StdDev = sd(!!ROW),
               AGE_Min = min(!!ROW),
               AGE_Max = max(!!ROW))
   
-  sas_mean <- read_sas("tests/data/test_outputs/test8.sas7bdat")
+  sas_mean <- read_sas(zap_label("tests/data/test_outputs/test8.sas7bdat"))
   
   # ensure it matches the shiny output
   expect_equal(sas_mean, tg_mean)
@@ -71,20 +71,21 @@ test_that("mean block ADSL filtered", {
   
   ROW <- sym("AGE")
   AGGREGATE <- sym("MEAN")
+  COLUMN <- ""
   
   tg_mean <- test_data_filtered %>%
+    distinct(USUBJID, !!ROW, !!COLUMN) %>%
     filter(!is.na(!!ROW)) %>%
-    group_by(!!COLUMN) %>%
-    summarise(N = n(),
-              `Mean (SD)` = paste0(round(mean(!!ROW), 2), " (", round(sd(!!ROW), 2), ")"),
-              Median = median(!!ROW),
-              `Q1 | Q3` = paste(round(quantile(!!ROW, 0.25),2) , "|", (round(quantile(!!ROW, 0.75),2))),
-              `Min | Max` = paste0(round(min(!!ROW), 2), " | ", round(max(!!ROW), 2)))
+    summarise(AGE_N = as.numeric(n()),
+              AGE_Mean = mean(!!ROW),
+              AGE_StdDev = sd(!!ROW),
+              AGE_Min = min(!!ROW),
+              AGE_Max = max(!!ROW))
   
-  sas_mean <- 
+  sas_mean <-  read_sas(zap_label("tests/data/test_outputs/test9.sas7bdat"))
     
     # ensure it matches the shiny output
-    expect_identical(sas_mean, tg_mean)
+    expect_equal(sas_mean, tg_mean)
 })
 
 
@@ -92,20 +93,19 @@ test_that("mean block ADSL filtered", {
 test_that("Mean PARAMCD grouped", {
   
   ROW <- sym("DIABP")
-  AGGREGATE <- sym("MEAN")
   WEEK <- sym("Week 12")
   COLUMN <- sym("TRT01P")
   
   tg_mean <- test_data %>%
     filter(PARAMCD == ROW & AVISIT == WEEK) %>%
-    group_by(COLUMN) %>%
-    summarise(N = n(),
-              `Mean (SD)` = paste0(round(mean(AVAL), 2), " (", round(sd(AVAL), 2), ")"),
-              Median = median(AVAL),
-              `Q1 | Q3` = paste(round(quantile(AVAL, 0.25), 2) , "|", round(quantile(AVAL, 0.75), 2)),
-              `Min | Max` = paste(round(min(AVAL), 2), " | ", round(max(AVAL), 2)))
+    group_by(!!COLUMN) %>%
+    summarise(AVAL_N = as.numeric(n()),
+              AVAL_Mean = mean(AVAL),
+              AVAL_StdDev = sd(AVAL),
+              AVAL_Min = min(AVAL),
+              AVAL_Max = max(AVAL))
   
-  sas_mean <- 
+  sas_mean <- read_sas(zap_label("tests/data/test_outputs/test10.sas7bdat"))
     
     # ensure it matches the shiny output
     expect_identical(sas_mean, tg_mean)
@@ -115,68 +115,69 @@ test_that("Mean PARAMCD grouped", {
 test_that("Mean PARAMCD grouped", {
   
   ROW <- sym("DIABP")
-  AGGREGATE <- sym("MEAN")
   WEEK <- sym("Week 12")
   COLUMN <- sym("TRT01P")
   
   tg_mean <- test_data_filtered %>%
     filter(PARAMCD == ROW & AVISIT == WEEK) %>%
-    group_by(COLUMN) %>%
-    summarise(N = n(),
-              `Mean (SD)` = paste0(round(mean(AVAL), 2), " (", round(sd(AVAL), 2), ")"),
-              Median = median(AVAL),
-              `Q1 | Q3` = paste(round(quantile(AVAL, 0.25), 2) , "|", round(quantile(AVAL, 0.75), 2)),
-              `Min | Max` = paste(round(min(AVAL), 2), " | ", round(max(AVAL), 2)))
+    group_by(!!COLUMN) %>%
+    summarise(AVAL_N = as.numeric(n()),
+              AVAL_Mean = mean(AVAL),
+              AVAL_StdDev = sd(AVAL),
+              AVAL_Min = min(AVAL),
+              AVAL_Max = max(AVAL))
   
-  sas_mean <- 
+  sas_mean <- read_sas(zap_label("tests/data/test_outputs/test11.sas7bdat")) %>%
+    select(-NObs)
     
     # ensure it matches the shiny output
-    expect_identical(sas_mean, tg_mean)
+    expect_equal(sas_mean, tg_mean)
 })
 
 # 12
 test_that("mean ADSL grouped", {
   
-  ROW <- sym("DIABP")
-  AGGREGATE <- sym("MEAN")
-  WEEK <- sym("Week 12")
+  ROW <- sym("AGE")
   COLUMN <- sym("TRT01P")
   
   
-  block_df <- test_data %>%
-    filter(PARAMCD == ROW & AVISIT == WEEK) %>%
-    group_by(COLUMN) %>%
-    summarise(N = n(),
-              `Mean (SD)` = paste0(round(mean(AVAL), 2), " (", round(sd(AVAL), 2), ")"),
-              Median = median(AVAL),
-              `Q1 | Q3` = paste(round(quantile(AVAL, 0.25), 2) , "|", round(quantile(AVAL, 0.75), 2)),
-              `Min | Max` = paste(round(min(AVAL), 2), " | ", round(max(AVAL), 2)))
+  tg_mean <- test_data %>%
+    distinct(USUBJID, !!ROW, !!COLUMN) %>%
+    filter(!is.na(!!ROW)) %>%
+    group_by(!!COLUMN) %>%
+    summarise(AGE_N = as.numeric(n()),
+              AGE_Mean = mean(!!ROW),
+              AGE_StdDev = sd(!!ROW),
+              AGE_Min = min(!!ROW),
+              AGE_Max = max(!!ROW))
   
-  test_mean <- 
-    
+  sas_mean <- read_sas(zap_label("tests/data/test_outputs/test12.sas7bdat")) %>%
+    select(-NObs)
+  
     # ensure it matches the shiny output
-    expect_identical(test_mean, block_df)
+    expect_equal(tg_mean, sas_mean)
 })
 
 # 13
 test_that("mean ADSL grouped and filtered", {
   
-  ROW <- sym("DIABP")
-  AGGREGATE <- sym("MEAN")
-  WEEK <- sym("Week 12")
+  ROW <- sym("AGE")
   COLUMN <- sym("TRT01P")
   
-  tg_mean <- test_data_filtered %>%
-    filter(PARAMCD == ROW & AVISIT == WEEK) %>%
-    group_by(COLUMN) %>%
-    summarise(N = n(),
-              `Mean (SD)` = paste0(round(mean(AVAL), 2), " (", round(sd(AVAL), 2), ")"),
-              Median = median(AVAL),
-              `Q1 | Q3` = paste(round(quantile(AVAL, 0.25), 2) , "|", round(quantile(AVAL, 0.75), 2)),
-              `Min | Max` = paste(round(min(AVAL), 2), " | ", round(max(AVAL), 2)))
   
-  sas_mean <- 
-    
-    # ensure it matches the shiny output
-    expect_identical(sas_mean, tg_mean)
+  tg_mean <- test_data_filtered %>%
+    distinct(USUBJID, !!ROW, !!COLUMN) %>%
+    filter(!is.na(!!ROW)) %>%
+    group_by(!!COLUMN) %>%
+    summarise(AGE_N = as.numeric(n()),
+              AGE_Mean = mean(!!ROW),
+              AGE_StdDev = sd(!!ROW),
+              AGE_Min = min(!!ROW),
+              AGE_Max = max(!!ROW))
+  
+  sas_mean <- read_sas(zap_label("tests/data/test_outputs/test13.sas7bdat")) %>%
+    select(-NObs)
+  
+  # ensure it matches the shiny output
+  expect_equal(tg_mean, sas_mean)
 })

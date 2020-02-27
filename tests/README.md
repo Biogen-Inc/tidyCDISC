@@ -10,13 +10,13 @@ All R data frames are created using `tests/data/test_data.RDS` and are compared 
 
 ### MEAN BLOCK
 - [ ] 6)	Mean of PARAMCD (provide AVISIT) [ROW == DIABP,  AVISIT == Week 12]
-- [ ] 7)	Mean of PARAMCD (provide AVISIT) with filter [ROW == DIABP,  AVISIT == Week 12, COUNTRY == CANADA]
-- [ ] 8)	Mean of ADSL [ROW == AGE]
-- [ ] 9)	Mean of ADSL with Filter [ROW == AGE, COUNTRY == CANADA]
+- [X] 7)	Mean of PARAMCD (provide AVISIT) with filter [ROW == DIABP,  AVISIT == Week 12, COUNTRY == CANADA]
+- [ ] 8)	**passing but not identical** Mean of ADSL [ROW == AGE]
+- [X] 9)	Mean of ADSL with Filter [ROW == AGE, COUNTRY == CANADA]
 - [ ] 10)	Mean of PARAMCD (provide AVISIT), group by COLUMN [ROW == DIABP, COLUMN == TRT01P]
-- [ ] 11)	Mean of PARAMCD (provide AVISIT), group by COLUMN with Filter [[ROW == DIABP, COLUMN == TRT01P, COUNTRY == CANADA]
-- [ ] 12)	Mean of ADSL, group by COLUMN [ROW == AGE, COLUMN == TRT01P]
-- [ ] 13)	Mean of ADSL, group by COLUMN with filter [ROW == AGE, COLUMN == TRT01P, COUNTRY == CANADA]
+- [ ] 11)	**passing but not identical** Mean of PARAMCD (provide AVISIT), group by COLUMN with Filter [[ROW == DIABP, COLUMN == TRT01P, COUNTRY == CANADA]
+- [ ] 12)	**passing but not identical** Mean of ADSL, group by COLUMN [ROW == AGE, COLUMN == TRT01P]
+- [X] 13)	Mean of ADSL, group by COLUMN with filter [ROW == AGE, COLUMN == TRT01P, COUNTRY == CANADA]
 
 ### FREQUENCY BLOCK
 - [ ] 14)	Frequency of ROW [ROW == SEX,]
