@@ -78,7 +78,6 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
   
   ROWS <- reactive({
     req(length(input$block_drop_zone) > 0 & !(is.na(input$block_drop_zone)))
-    print(input$block_drop_zone)
     as.data.frame(read_html(input$block_drop_zone) %>% html_table(fill=TRUE))
   })
   
@@ -88,8 +87,6 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
     } else if (input$block_drop_zone == "<table></table>") {
       stop("Add blocks to dropzone to create table", call. = FALSE)
     } else {
-      print(ROWS())
-      print(AGGREGATE())
       t <- AGGREGATE()
       p <- ROWS()
       t$Row <- p$X1
@@ -115,8 +112,8 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
       # Bind all the PARAMCD files 
       all_PARAMCD <- bind_rows(PARAMCD, .id = "data_from")  %>% 
         arrange(SUBJID, AVISITN, PARAMCD) %>% 
-        select(USUBJID, SUBJID, AVISITN, AVISIT, PARAMCD, AVAL, CHG, data_from) %>% 
-        distinct(USUBJID, AVISITN, AVISIT, PARAMCD, .keep_all = TRUE) 
+        select(USUBJID, SUBJID, AVISITN, AVISIT, PARAMCD, AVAL, CHG, data_from)
+        # distinct(USUBJID, AVISITN, AVISIT, PARAMCD, .keep_all = TRUE) 
       
       # Join ADSL and all_PARAMCD
       combined_data <- inner_join(ADSL(), all_PARAMCD, by = "USUBJID")
@@ -178,6 +175,7 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
   # } else {
          
   for (i in 1:nrow(blocks())) {
+      
     
     ROW <- sym(blocks()$Row[i])
     AGG <- sym(blocks()$Aggregate[i])
@@ -193,6 +191,11 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
     # if t-test block
     ### without column grouping
     ### with column grouping
+  
+    
+    if (!blocks()$Row[i] %in% c(colnames(all_data()),PARAMCD_names())) {
+      stop(call. = FALSE, paste0("Missing ", blocks()$Row[i], " from dataset. Remove ", blocks()$Row[i], " block and its summary statistic to see table."))
+    } else {
     
     # search for mean in the block name
     # we can't just search for mean because
@@ -229,6 +232,7 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
             summarise(count = n())
           
           header_df %>% mutate_if(is.factor, as.character) -> header_df
+          
           tdf <- setNames(data.frame(t(df[,-1])), lapply(paste0(unlist(header_df[,1]), 
                                                                 " (N = ", 
                                                                 unlist(header_df[,2]), ")"),
@@ -251,11 +255,13 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
                     Median = median(!!ROW),
                     `Q1 | Q3` = paste(round(quantile(!!ROW, 0.25),2) , "|", (round(quantile(!!ROW, 0.75),2))),
                     `Min | Max` = paste0(round(min(!!ROW), 2), " | ", round(max(!!ROW), 2)))
+
         if (COLUMN == "") {
           # if there's no grouping factor we set 
           # the single column name to Total (N = X)
           # where X was calculated as a reactive above
           tdf <- setNames(data.frame(t(df[,-1])), paste0("Total (N  = ", total(), ")"))
+
         } else {
           # create a header_df where we group the data by COLUMN
           # to get their totals to be used within the column headers
@@ -263,15 +269,29 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
             distinct(USUBJID, !!COLUMN) %>%
             group_by(!!COLUMN) %>%
             summarise(count = n())
+          
           header_df %>% mutate_if(is.factor, as.character) -> header_df
-          tdf <- setNames(data.frame(t(df[,-1])), lapply(paste0(unlist(header_df[,1]), 
-                                                                " (N = ", 
-                                                                unlist(header_df[,2]), ")"),
-                                                         CapStr))
+          print(header_df)
+          
+          if (!nrow(df) == nrow(header_df)) {
+            test <- data.frame(matrix(nrow = 1, ncol = ncol(df)))
+            colnames(test) <- colnames(df)
+            df <- rbind(test, df)
+            tdf <- setNames(data.frame(t(df)), lapply(paste0(unlist(header_df[,1]), 
+                                                                  " (N = ", 
+                                                                  unlist(header_df[,2]), ")"),
+                                                           CapStr))
+            print(tdf)
+          } else {
+            tdf <- setNames(data.frame(t(df[,-1])), lapply(paste0(unlist(header_df[,1]), 
+                                                                  " (N = ", 
+                                                                  unlist(header_df[,2]), ")"),
+                                                           CapStr))
+          }
         }
         
       }
-      
+      print(tdf)
       insert <- data.frame(t(data.frame("X" = c(rep(" ", length(tdf))))))
       row.names(insert) <- paste(CapStr(as.character(ROW)))
       colnames(insert) <- colnames(tdf)
@@ -461,7 +481,9 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
     }
   }
   big_data = do.call(rbind, datalist)
-  big_data 
+  big_data
+  }
+  big_data
   })
   
   
