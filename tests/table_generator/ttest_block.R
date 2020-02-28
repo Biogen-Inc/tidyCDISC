@@ -1,4 +1,3 @@
-library(shinytest)
 library(testthat)
 library(rvest)
 library(broom)

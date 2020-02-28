@@ -14,7 +14,6 @@ library(janitor)
 library(rtf)
 library(shinythemes)
 library(rmarkdown)
-library(shinytest)
 
 options(shiny.sanitize.errors = FALSE)
 
