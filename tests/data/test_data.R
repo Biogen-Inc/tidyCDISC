@@ -1,7 +1,9 @@
 library(haven)
 library(tidyverse)
 
-source("R/allowed_operators.R")
+allowed_operators <- c(">", ">=", "==", "<=", "<", "!=") %>% 
+  set_names() %>% 
+  map(match.fun)
 
 # This is a list of two dataframe
 # ADSL
@@ -17,8 +19,8 @@ PARAMCD <- map(BDS, ~ if(!"CHG" %in% names(.)) update_list(., CHG = NA) else .)
 # Bind all the PARAMCD files 
 all_PARAMCD <- bind_rows(PARAMCD, .id = "data_from")  %>% 
     arrange(SUBJID, AVISITN, PARAMCD) %>% 
-    select(USUBJID, SUBJID, AVISITN, AVISIT, PARAMCD, AVAL, CHG, data_from) %>% 
-    distinct(USUBJID, AVISITN, AVISIT, PARAMCD, .keep_all = TRUE) 
+    select(USUBJID, SUBJID, AVISITN, AVISIT, PARAMCD, AVAL, CHG, data_from)
+    #distinct(USUBJID, AVISITN, AVISIT, PARAMCD, .keep_all = TRUE) 
   
 # Join ADSL and all_PARAMCD
 test_data <- inner_join(ADSL, all_PARAMCD, by = "USUBJID")
@@ -51,5 +53,3 @@ filtering_expr <- function(input_filtering, input_condition, input_filt_grp) {
 
 test_data_filtered <- test_data %>% dplyr::filter(!!filtering_expr("COUNTRY", "==", "CAN"))
 
-saveRDS(test_data, "test_data.RDS")
-saveRDS(test_data_filtered, "test_data_filtered.RDS")

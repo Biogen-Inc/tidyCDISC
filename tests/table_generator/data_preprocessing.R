@@ -1,7 +1,7 @@
 library(testthat)
 library(rvest)
 
-source("test_data")
+source("tests/data/test_data.R")
 
 context("Data preprocessing")
 
@@ -24,7 +24,7 @@ test_that("Total in header generated correctly", {
       summarise(n = n()) %>%
     pull(n)
   
-  sas_total <- read_sas("tests/table_generator/data/test_outputs/test_2_unique_usub.sas7bdat") %>%
+    sas_total <- read_sas("tests/data/test_outputs/test_2_unique_usub.sas7bdat") %>%
     mutate_all(`attributes<-`, NULL) %>% 
     pull(NLevels)
   
@@ -44,7 +44,7 @@ test_that("Total in header generated correctly when filtered", {
       summarise(count = n()) %>%
     pull(count)
   
-  sas_total_filtered <- read_sas("tests/table_generator/data/test_outputs/test_3_unique_usub_can.sas7bdat") %>%
+  sas_total_filtered <- read_sas("tests/data/test_outputs/test_3_unique_usub_can.sas7bdat") %>%
     mutate_all(`attributes<-`, NULL) %>% 
     pull(NLevels)
     
@@ -64,7 +64,7 @@ test_that("Total in header generated correctly when grouped", {
     summarise(NLevels = n()) %>%
     mutate(NLevels = as.numeric(NLevels))
   
-  sas_total_grouped <- read_sas("tests/table_generator/data/test_outputs/test_4_unique_usub_trt.sas7bdat") %>%
+    sas_total_grouped <- read_sas("tests/data/test_outputs/test_4_unique_usub_trt.sas7bdat") %>%
     mutate_all(`attributes<-`, NULL) %>% 
     select(TRT01P, NLevels)
     
@@ -84,7 +84,7 @@ test_that("Total in header generated correctly when grouped and filtered", {
     summarise(NLevels = n()) %>%
     mutate(NLevels = as.numeric(NLevels))
   
-  sas_total_grouped_filtered <- read_sas("tests/table_generator/data/test_outputs/test_5_unique_usub_trt_can.sas7bdat") %>%
+  sas_total_grouped_filtered <- read_sas("tests/data/test_outputs/test_5_unique_usub_trt_can.sas7bdat") %>%
     mutate_all(`attributes<-`, NULL) %>% 
     select(TRT01P, NLevels)
     

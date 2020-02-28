@@ -1,4 +1,3 @@
-library(shinytest)
 library(testthat)
 library(rvest)
 
@@ -6,17 +5,19 @@ source("tests/data/test_data.R")
 
 context("Frequency Block tests")
 
-app <- ShinyDriver$new(".")
+
+adsl_ids <- dd$data$ADSL %>% select(USUBJID)
+test_ids <- test_data %>% select(USUBJID) %>% distinct()
 
 # 14
 test_that("Frequency of ADSL", {
   
   ROW <- sym("SEX")
   
-  tg_freq <- test_data %>% 
+  tg_freq <- dd$data$ADSL %>% 
     distinct(USUBJID, !!ROW) %>%
-    count(!!ROW) %>%
     group_by(!!ROW) %>%
+    count(!!ROW) %>%
     summarise(Frequency = as.numeric(sum(n))) %>%
     ungroup() %>%
     mutate(Percent = as.numeric(Frequency/sum(Frequency)*100))
@@ -64,7 +65,6 @@ test_that("Frequency of ADSL grouped", {
   sas_freq <- read_sas("tests/data/test_outputs/test16.sas7bdat") %>%
     select(SEX, TRT01P, Frequency, RowPercent)
   
-  sas_freq
   # ensure it matches the shiny output
   expect_equal(tg_freq, sas_freq)
 })
