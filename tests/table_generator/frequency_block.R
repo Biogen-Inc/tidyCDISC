@@ -6,24 +6,22 @@ source("tests/data/test_data.R")
 context("Frequency Block tests")
 
 
-adsl_ids <- dd$data$ADSL %>% select(USUBJID)
-test_ids <- test_data %>% select(USUBJID) %>% distinct()
-
 # 14
 test_that("Frequency of ADSL", {
   
   ROW <- sym("SEX")
   
-  tg_freq <- dd$data$ADSL %>% 
+  tg_freq <- test_data %>% 
     distinct(USUBJID, !!ROW) %>%
     group_by(!!ROW) %>%
     count(!!ROW) %>%
     summarise(Frequency = as.numeric(sum(n))) %>%
     ungroup() %>%
-    mutate(Percent = as.numeric(Frequency/sum(Frequency)*100))
+    mutate(Percent = round(as.numeric(Frequency/sum(Frequency)*100), 4))
   
   sas_freq <- read_sas("tests/data/test_outputs/test14.sas7bdat") %>%
-    select(SEX, Frequency, Percent)
+    select(SEX, Frequency, Percent) %>%
+    mutate(Percent = round(Percent, 4))
     
     # ensure it matches the shiny output
     expect_equal(tg_freq, sas_freq)
@@ -60,10 +58,13 @@ test_that("Frequency of ADSL grouped", {
     count(!!ROW, !!COLUMN) %>%
     group_by(!!ROW) %>%
     mutate(RowPercent = prop.table(n)) %>%
-    rename(Frequency = n)
+    rename(Frequency = n) %>%
+    mutate(Frequency = as.numeric(Frequency)) %>%
+    mutate(RowPercent = round(RowPercent*100, 4))
   
   sas_freq <- read_sas("tests/data/test_outputs/test16.sas7bdat") %>%
-    select(SEX, TRT01P, Frequency, RowPercent)
+    select(SEX, TRT01P, Frequency, RowPercent) %>%
+    mutate(RowPercent = round(RowPercent, 4))
   
   # ensure it matches the shiny output
   expect_equal(tg_freq, sas_freq)
@@ -79,14 +80,17 @@ test_that("Frequency of ADSL grouped and filtered", {
     distinct(USUBJID, !!ROW, !!COLUMN) %>%
     count(!!ROW, !!COLUMN) %>%
     group_by(!!ROW) %>%
-    mutate(RowPercent = prop.table(n)*100) %>%
+    mutate(RowPercent = prop.table(n)) %>%
     # make output look like sas, not in table gen pipeline
-    rename(Frequency = n)
+    rename(Frequency = n) %>%
+    mutate(Frequency = as.numeric(Frequency)) %>%
+    mutate(RowPercent = round(RowPercent*100, 4))
   
   sas_freq <- read_sas("tests/data/test_outputs/test17.sas7bdat") %>%
     select(SEX, TRT01P, Frequency, RowPercent) %>%
-    # these are replaced with NAs in table generator
-    filter(Frequency != 0)
+    # R doesnt include the 0 value
+    filter(RowPercent != 0) %>%
+    mutate(RowPercent = round(RowPercent, 4))
   
   # ensure it matches the shiny output
   expect_equal(tg_freq, sas_freq)

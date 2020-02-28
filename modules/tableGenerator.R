@@ -116,7 +116,7 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
         # distinct(USUBJID, AVISITN, AVISIT, PARAMCD, .keep_all = TRUE) 
       
       # Join ADSL and all_PARAMCD
-      combined_data <- inner_join(ADSL(), all_PARAMCD, by = "USUBJID")
+      combined_data <- full_join(ADSL(), all_PARAMCD, by = "USUBJID")
     } else {
       combined_data <- ADSL() %>%
         mutate(data_from = "ADSL", PARAMCD = NA, AVAL = NA, CHG = NA)

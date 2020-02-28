@@ -23,7 +23,7 @@ all_PARAMCD <- bind_rows(PARAMCD, .id = "data_from")  %>%
     #distinct(USUBJID, AVISITN, AVISIT, PARAMCD, .keep_all = TRUE) 
   
 # Join ADSL and all_PARAMCD
-test_data <- inner_join(ADSL, all_PARAMCD, by = "USUBJID")
+test_data <- full_join(ADSL, all_PARAMCD, by = "USUBJID")
 
 #########################################################################
 # Filtered Data
