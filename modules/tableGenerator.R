@@ -392,7 +392,7 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
           all_dat <- all_data() %>%  filter(PARAMCD == ROW & AVISIT == WEEK)
           ttest <- broom::tidy(aov(all_dat$AVAL ~ all_dat[[paste(COLUMN)]], data=all_dat))
         } else {
-          all_dat <- all_data() %>% filter(AVISIT == WEEK)
+          all_dat <- all_data() %>% distinct(!!ROW, !!COLUMN, USUBJID)
           ttest <- broom::tidy(aov(all_dat[[paste(ROW)]] ~ all_dat[[paste(COLUMN)]], data=all_dat))
         }
         

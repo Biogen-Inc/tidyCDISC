@@ -51,7 +51,7 @@ test_that("t-test of ADSL by group", {
   COLUMN <- sym("TRT01P")
   WEEK <- "Week 12"
   
-  all_dat <- test_data %>% filter(AVISIT == WEEK)
+  all_dat <- test_data %>% distinct(!!ROW, !!COLUMN, USUBJID)
   ttest <- broom::tidy(aov(all_dat[[paste(ROW)]] ~ all_dat[[paste(COLUMN)]], data=all_dat)) %>%
     pull(p.value[1])
   
@@ -69,7 +69,7 @@ test_that("t-test of ADSL by group filtered", {
   COLUMN <- sym("TRT01P")
   WEEK <- "Week 12"
   
-  all_dat <- test_data_filtered %>% filter(AVISIT == WEEK)
+  all_dat <- test_data %>% distinct(!!ROW, !!COLUMN, USUBJID)
   ttest <- broom::tidy(aov(all_dat[[paste(ROW)]] ~ all_dat[[paste(COLUMN)]], data=all_dat)) %>%
     pull(p.value[1])
   
