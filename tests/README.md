@@ -25,10 +25,10 @@ All R data frames are created using `tests/data/test_data.RDS` and are compared 
 - [ ] 17)	**off by 1** Frequency of ROW, group by COLUMN, with Filter [ROW == SEX, COLUMN == TRT01P,  FILTER == CANADA]
 
 ### T-TEST
-- [ ] 18)	PARAMCD [ROW == DIABP, COLUMN == TRT01P]
-- [ ] 19)	PARAMCD with Filter [ROW == DIABP, COLUMN == TRT01P, COUNTRY == CANADA]
-- [ ] 20)	ADSL [ROW == AGE, COLUMN == TRT01P]
-- [ ] 21)	ADSL with Filter [ROW == AGE, COLUMN == TRT01P, COUNTRY == CANADA]
+- [X] 18)	PARAMCD [ROW == DIABP, COLUMN == TRT01P]
+- [X] 19)	PARAMCD with Filter [ROW == DIABP, COLUMN == TRT01P, COUNTRY == CANADA]
+- [X] 20)	ADSL [ROW == AGE, COLUMN == TRT01P]
+- [X] 21)	ADSL with Filter [ROW == AGE, COLUMN == TRT01P, COUNTRY == CANADA]
 
 ### CHANGE FROM BASELINE
 - [X] 22)	PARAMCD and AVISIT [ROW == DIABP, COLUMN == TRT01P]
