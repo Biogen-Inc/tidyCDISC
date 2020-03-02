@@ -14,14 +14,17 @@ fnboxplot <- function(data, splitby, splitvar, respvar) {
     # restrict seltimevar to AVISIT, AVISITN, VSDY
     seltime <- select(data, ends_with("DY"), starts_with("AVIS")) 
     
-    if (!splitvar %in% names(seltime) & "AVISIT" %in% names(data)) {
-      # print(paste("fnboxplot before",nrow(data)))
-      data <- data %>%
+    # if not using AVISIT(n) then collapse to USUBJID level and set AVISIT to Baseline
+    print(paste("befor",nrow(data)))
+    if (!splitvar %in% names(seltime) & "AVISIT" %in% names(data) & "USUBJID" %in% names(data)) {
+      data.1 <- data %>%
         filter(AVISIT == "Baseline") %>% # Take analysis baseline for now
         distinct(USUBJID, .keep_all = TRUE)
-      # print(paste("fnboxplot after",nrow(data)))
+    } else {
+      data.1 <- data
     }
-    
+    print(paste("after",nrow(data.1)))
+ 
     ggtitle <- paste("Distribution of",respvar,"Grouped by",splitvar)
     p <- ggplot(data,na.rm = TRUE,
                 aes(x = !!x_var, y = !!y_var, fill = !!x_var)) +
@@ -29,7 +32,7 @@ fnboxplot <- function(data, splitby, splitvar, respvar) {
     
   } else {
     ggtitle <- paste("Distribution of",respvar)
-    p <- ggplot(data,na.rm=TRUE,
+    p <- ggplot(data.1,na.rm=TRUE,
                 aes(x = " ", y = !!y_var )) +
       labs(x = "All", y = respvar)
   }

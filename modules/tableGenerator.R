@@ -78,6 +78,7 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
   
   ROWS <- reactive({
     req(length(input$block_drop_zone) > 0 & !(is.na(input$block_drop_zone)))
+    print(input$block_drop_zone)
     as.data.frame(read_html(input$block_drop_zone) %>% html_table(fill=TRUE))
   })
   
@@ -87,6 +88,8 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
     } else if (input$block_drop_zone == "<table></table>") {
       stop("Add blocks to dropzone to create table", call. = FALSE)
     } else {
+      print(ROWS())
+      print(AGGREGATE())
       t <- AGGREGATE()
       p <- ROWS()
       t$Row <- p$X1
@@ -112,11 +115,11 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
       # Bind all the PARAMCD files 
       all_PARAMCD <- bind_rows(PARAMCD, .id = "data_from")  %>% 
         arrange(SUBJID, AVISITN, PARAMCD) %>% 
-        select(USUBJID, SUBJID, AVISITN, AVISIT, PARAMCD, AVAL, CHG, data_from)
-        # distinct(USUBJID, AVISITN, AVISIT, PARAMCD, .keep_all = TRUE) 
+        select(USUBJID, SUBJID, AVISITN, AVISIT, PARAMCD, AVAL, CHG, data_from) %>% 
+        distinct(USUBJID, AVISITN, AVISIT, PARAMCD, .keep_all = TRUE) 
       
       # Join ADSL and all_PARAMCD
-      combined_data <- full_join(ADSL(), all_PARAMCD, by = "USUBJID")
+      combined_data <- inner_join(ADSL(), all_PARAMCD, by = "USUBJID")
     } else {
       combined_data <- ADSL() %>%
         mutate(data_from = "ADSL", PARAMCD = NA, AVAL = NA, CHG = NA)
@@ -175,7 +178,6 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
   # } else {
          
   for (i in 1:nrow(blocks())) {
-      
     
     ROW <- sym(blocks()$Row[i])
     AGG <- sym(blocks()$Aggregate[i])
@@ -191,11 +193,6 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
     # if t-test block
     ### without column grouping
     ### with column grouping
-  
-    
-    if (!blocks()$Row[i] %in% c(colnames(all_data()),PARAMCD_names())) {
-      stop(call. = FALSE, paste0("Missing ", blocks()$Row[i], " from dataset. Remove ", blocks()$Row[i], " block and its summary statistic to see table."))
-    } else {
     
     # search for mean in the block name
     # we can't just search for mean because
@@ -213,7 +210,7 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
             summarise(N = n(),
                       `Mean (SD)` = paste0(round(mean(AVAL), 2), " (", round(sd(AVAL), 2), ")"),
                       Median = median(AVAL),
-                      `Q1 | Q3` = paste(round(quantile(AVAL, 0.25, type = 2), 2) , "|", round(quantile(AVAL, 0.75, type = 2), 2)),
+                      `Q1 | Q3` = paste(round(quantile(AVAL, 0.25), 2) , "|", round(quantile(AVAL, 0.75), 2)),
                       `Min | Max` = paste(round(min(AVAL), 2), " | ", round(max(AVAL), 2)))
           tdf <- setNames(data.frame(t(df[,-1])), paste0("Total (N  = ", total(), ")"))
         } else {
@@ -223,7 +220,7 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
             summarise(N = n(),
                       `Mean (SD)` = paste0(round(mean(AVAL), 2), " (", round(sd(AVAL), 2), ")"),
                       Median = median(AVAL),
-                      `Q1 | Q3` = paste(round(quantile(AVAL, 0.25, type = 2), 2) , "|", round(quantile(AVAL, 0.75, type = 2), 2)),
+                      `Q1 | Q3` = paste(round(quantile(AVAL, 0.25), 2) , "|", round(quantile(AVAL, 0.75), 2)),
                       `Min | Max` = paste(round(min(AVAL), 2), " | ", round(max(AVAL), 2)))
           
           header_df <- all_data() %>%
@@ -232,7 +229,6 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
             summarise(count = n())
           
           header_df %>% mutate_if(is.factor, as.character) -> header_df
-          
           tdf <- setNames(data.frame(t(df[,-1])), lapply(paste0(unlist(header_df[,1]), 
                                                                 " (N = ", 
                                                                 unlist(header_df[,2]), ")"),
@@ -248,21 +244,18 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
           # if it's not a PARAMCD, it's from ADSL
           # which doesn't have an AVISIT column
           # filter(AVISIT == WEEK) %>%
-          distinct(USUBJID, !!ROW, !!COLUMN) %>%
           filter(!is.na(!!ROW)) %>%
           group_by(!!COLUMN) %>%
           summarise(N = n(),
                     `Mean (SD)` = paste0(round(mean(!!ROW), 2), " (", round(sd(!!ROW), 2), ")"),
                     Median = median(!!ROW),
-                    `Q1 | Q3` = paste(round(quantile(!!ROW, 0.25, type = 2),2) , "|", (round(quantile(!!ROW, 0.75, type = 2),2))),
+                    `Q1 | Q3` = paste(round(quantile(!!ROW, 0.25),2) , "|", (round(quantile(!!ROW, 0.75),2))),
                     `Min | Max` = paste0(round(min(!!ROW), 2), " | ", round(max(!!ROW), 2)))
-
         if (COLUMN == "") {
           # if there's no grouping factor we set 
           # the single column name to Total (N = X)
           # where X was calculated as a reactive above
           tdf <- setNames(data.frame(t(df[,-1])), paste0("Total (N  = ", total(), ")"))
-
         } else {
           # create a header_df where we group the data by COLUMN
           # to get their totals to be used within the column headers
@@ -270,26 +263,15 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
             distinct(USUBJID, !!COLUMN) %>%
             group_by(!!COLUMN) %>%
             summarise(count = n())
-          
           header_df %>% mutate_if(is.factor, as.character) -> header_df
-          
-          if (!nrow(df) == nrow(header_df)) {
-            test <- data.frame(matrix(nrow = 1, ncol = ncol(df)))
-            colnames(test) <- colnames(df)
-            df <- rbind(test, df)
-            tdf <- setNames(data.frame(t(df)), lapply(paste0(unlist(header_df[,1]), 
-                                                                  " (N = ", 
-                                                                  unlist(header_df[,2]), ")"),
-                                                           CapStr))
-          } else {
-            tdf <- setNames(data.frame(t(df[,-1])), lapply(paste0(unlist(header_df[,1]), 
-                                                                  " (N = ", 
-                                                                  unlist(header_df[,2]), ")"),
-                                                           CapStr))
-          }
+          tdf <- setNames(data.frame(t(df[,-1])), lapply(paste0(unlist(header_df[,1]), 
+                                                                " (N = ", 
+                                                                unlist(header_df[,2]), ")"),
+                                                         CapStr))
         }
         
       }
+      
       insert <- data.frame(t(data.frame("X" = c(rep(" ", length(tdf))))))
       row.names(insert) <- paste(CapStr(as.character(ROW)))
       colnames(insert) <- colnames(tdf)
@@ -390,10 +372,10 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
         # by removing NAs and using only the week selected from dropdown
         if (as.character(ROW) %in% PARAMCD_names()) {
           all_dat <- all_data() %>%  filter(PARAMCD == ROW & AVISIT == WEEK)
-          ttest <- broom::tidy(aov(all_dat$AVAL ~ all_dat[[paste(COLUMN)]], data=all_dat))
+          ttest <- janitor::tidy(aov(all_dat$AVAL ~ all_dat[[paste(COLUMN)]], data=all_dat))
         } else {
-          all_dat <- all_data() %>% distinct(!!ROW, !!COLUMN, USUBJID)
-          ttest <- broom::tidy(aov(all_dat[[paste(ROW)]] ~ all_dat[[paste(COLUMN)]], data=all_dat))
+          all_dat <- all_data() %>% filter(AVISIT == WEEK)
+          ttest <- janitor::tidy(aov(all_dat[[paste(ROW)]] ~ all_dat[[paste(COLUMN)]], data=all_dat))
         }
         
         # use broom for an ANOVA
@@ -479,9 +461,7 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
     }
   }
   big_data = do.call(rbind, datalist)
-  big_data
-  }
-  big_data
+  big_data 
   })
   
   
@@ -558,7 +538,7 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
   output$downloadPDF = downloadHandler(
     filename = "TableGenerator.pdf",
     content = function(file){
-      out <- rmarkdown::render("Kable.Rmd", pdf_document())
+      out <- rmarkdown::render("kable.Rmd", pdf_document())
       file.rename(out, file)
     }
   )

@@ -100,6 +100,22 @@ PopuExplor <- function(input, output, session, datafile){
   # chrdat <- drop_na(chrdat)
   all_data <- cbind(othdat,chrdat)
   
+  # This is to create ordered factors of TRT01A, TRT01P if they exist, and if STUDYID 105MS301 is used
+  if ("STUDYID" %in% colnames(all_data)) {
+    if (unique(all_data$STUDYID) == "105MS301") {
+      if ("TRT01A" %in% colnames(all_data)) {
+        all_data <- all_data %>%
+        mutate(TRT01A = factor(TRT01A, ordered = TRUE,
+        levels = c("Placebo", "BIIB017 125 mcg every 4 weeks", "BIIB017 125 mcg every 2 weeks")))
+      } 
+      if ("TRT01P" %in% colnames(all_data)) {
+        all_data <- all_data %>%
+        mutate(TRT01P = factor(TRT01P, ordered = TRUE,
+        levels = c("Placebo", "BIIB017 125 mcg every 4 weeks", "BIIB017 125 mcg every 2 weeks")))
+      }
+    } 
+  }
+  
   # update the radio button to c("0")
   updateRadioButtons(
     session = session,
