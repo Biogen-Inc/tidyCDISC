@@ -59,15 +59,28 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
     updateSelectInput(session, "filt_grp", choices = t)
   })
   
-  observe({
-    req(input$recipe)
+  
+  output$col_ADSL <- renderUI({
     x <- input$recipe
-    if (x == "DEMOGRAPHY") {
-      updateRadioGroupButtons(session, "COLUMN", "Group Data By:", choices = c("TRT01P", "SEX", "RACE", "NONE"), selected = "TRT01P")
+    if (is.null(x) | length(x) == 0) {
+      selectInput(session$ns("COLUMN"), "Group Data By:", choices = c("NONE", colnames(ADSL())), selected = "NONE")
+    } else if (x == "NONE") {
+      selectInput(session$ns("COLUMN"), "Group Data By:", choices = c("NONE", colnames(ADSL())), selected = "NONE")
     } else {
-      updateRadioGroupButtons(session, "COLUMN", "Group Data By:", choices = c("TRT01P", "SEX", "RACE", "NONE"), selected = "none")
+      selectInput(session$ns("COLUMN"), "Group Data By:", choices = c("NONE", colnames(ADSL())), selected = "TRT01P")
     }
   })
+  
+  # observe({
+  #   req(input$recipe)
+  #   x <- input$recipe
+  #   print(x)
+  #   if (x == "DEMOGRAPHY") {
+  #     updateSelectInput(session, "COLUMN", "Group Data By:", choices = c("NONE", colnames(ADSL())), selected = "TRT01P")
+  #   } else {
+  #     updateSelectInput(session, "COLUMN", "Group Data By:", choices = c("NONE", colnames(ADSL())), selected = "NONE")
+  #   }
+  # })
   
   AGGREGATE <- reactive({
     # req(length(input$agg_drop_zone) > 0 & !(is.na(input$agg_drop_zone)))
@@ -164,9 +177,12 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
   })
   
   datalist <- list()
+  
+  column <- reactive({
+    input$COLUMN
+  })
     
   dataFrame <- reactive({
-
   COLUMN <- ifelse(input$COLUMN == "NONE", "", sym(input$COLUMN))
   # extract the row blocks and agg blocks
   # then convert to syms to be used within tidy pipelines
