@@ -35,8 +35,7 @@ tableGeneratorUI <- function(id, label = "Create Chart") {
       fluidRow(
         column(12, "Commonly Used Tables", recipe)),
                  textInput(ns("table_title"), "Table Title", "Table Title "),
-                 fluidRow(radioGroupButtons(
-                   inputId = ns("COLUMN"), "Group Data By:", choices = c("TRT01P", "SEX", "RACE", "NONE"), selected = "NONE")),
+                 fluidRow(uiOutput(ns("col_ADSL"))),
                  div(fluidRow(
                    radioGroupButtons(ns("to_filter"), "Filter?", choices = c("No", "Yes"), status = "primary", selected = "No")
                  ), style = "text-align: center;vertical-align: middle;"),
