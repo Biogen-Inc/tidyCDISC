@@ -48,8 +48,7 @@ ui <-
     tags$head(
       tags$link(rel = "//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"),
       tags$head(tags$link(rel="shortcut icon", href="IDEA_FAVICON.ico")),
-      tags$script(src = "https://code.jquery.com/ui/1.12.1/jquery-ui.js"),
-      tags$head(includeScript("matomo_analytics.js"))
+      tags$script(src = "https://code.jquery.com/ui/1.12.1/jquery-ui.js")
     ),
     useShinyjs(),
     extendShinyjs(text = jscode),
@@ -84,7 +83,8 @@ ui <-
     tags$script(HTML("var header = $('.navbar > .container-fluid'); header.append('<div style=\"float:right\"><ahref=\"URL\"><img src=\"logo.svg\" alt=\"alt\" style=\"float:right;width:66px;height:41px;\"> </a>`</div>');")),
     tags$script(src = "script.js"),
     tags$script(src = "recipe.js"),
-    inlineCSS(css)
+    inlineCSS(css),
+    tags$head(tags$script(src = "analytics.js"))
   )
 
 server <- function(input, output, session) {
