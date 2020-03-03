@@ -16,6 +16,8 @@ library(shinythemes)
 library(rmarkdown)
 library(shinytest)
 
+options(shiny.sanitize.errors = FALSE)
+
 jscode <- "
 shinyjs.disableTab = function() {
     var tabs = $('.nav').find('li:not(.active) a');
