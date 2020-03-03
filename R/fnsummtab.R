@@ -7,12 +7,22 @@ fnsummtab <- function(data, splitby, splitvar, respvar) {
   x_var <- as.name(splitvar)
   y_var <- as.name(respvar)
   
+  seltime <- select(data, ends_with("DY"), starts_with("AVIS")) 
+  
+  if (!splitvar %in% names(seltime) & "AVISIT" %in% names(data) & "USUBJID" %in% names(data)) {
+    data.1 <- data %>%
+      filter(AVISIT == "Baseline") %>% # Take analysis baseline for now
+      distinct(USUBJID, .keep_all = TRUE)
+  } else {
+    data.1 <- data
+  }
+  
   if (splitby == TRUE){
     req(splitvar != " ")
-    table1 <- data %>%
+    table1 <- data.1 %>%
       dplyr::group_by(!!x_var)
   } else {
-    table1 <- data
+    table1 <- data.1
   }
 
   # NOTE: use type=1 for quantile() definitions, to match SAS output

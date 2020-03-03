@@ -14,8 +14,7 @@ library(janitor)
 library(rtf)
 library(shinythemes)
 library(rmarkdown)
-
-options(shiny.sanitize.errors = FALSE)
+library(shinytest)
 
 jscode <- "
 shinyjs.disableTab = function() {

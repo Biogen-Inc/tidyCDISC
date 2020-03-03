@@ -59,6 +59,9 @@ output$PlotlyOut <- renderPlotly({
     # restrict seltimevar to AVISIT, AVISITN, VSDY
     seltime <- select(dfsub, ends_with("DY"), starts_with("AVIS"))
     
+    # correction for overplotting
+    # BDS records are usually by USUBJID, AVISIT, and PARAMCD
+    # if not using AVISIT(n) then collapse to USUBJID level and set AVISIT to Baseline
     if (!input$splitbyvar %in% names(seltime) & "AVISIT" %in% names(dfsub)) {
       dfsub <- dfsub %>%
         filter(AVISIT == "Baseline") %>% # Take analysis baseline for now
@@ -93,6 +96,14 @@ output$DataTable <- DT::renderDataTable({
   
   if(input$splitbox == TRUE) {
     req(input$splitbyvar != " ")  
+    # correction for overplotting
+    # BDS records are usually by USUBJID, AVISIT, and PARAMCD
+    # if not using AVISIT(n) then collapse to USUBJID level and set AVISIT to Baseline
+    if (!input$splitbyvar %in% names(seltime) & "AVISIT" %in% names(dfsub)) {
+      dfsub <- dfsub %>%
+        filter(AVISIT == "Baseline") %>% # Take analysis baseline for now
+        distinct(USUBJID, .keep_all = TRUE)
+    }
   }   
   
   tableout <- fnsummtab(dfsub, input$splitbox, input$splitbyvar, input$responsevar)

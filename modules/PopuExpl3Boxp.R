@@ -33,8 +33,10 @@ observeEvent(input$selPrmCode, {
   fac <- sort(names(df()[ , which(sapply(df(),is.factor   ))])) # all factors
   num <- sort(names(df()[ , which(sapply(df(),is.numeric  ))])) # all num
   
+  print(paste("factors:",paste(fac,collapse = )))
+  
   # splitbyvar is loaded with all the character/factor columns
-  updateSelectInput(session = session, inputId = "splitbyvar", choices = c(" ",sort(c(chr,fac))), selected = " ")
+  updateSelectInput(session = session, inputId = "splitbyvar", choices = c(" ",sort(names(dfsub))), selected = " ")
 
   # responsevar is loaded with all the numeric columns
   updateSelectInput(session = session, inputId = "responsevar", choices =  c(" ",num), selected = " ")
@@ -47,17 +49,18 @@ output$PlotlyOut <- renderPlotly({
   
   req(input$responsevar != " ")
   
+  # correction for overplotting in fnboxplot
   p <- fnboxplot(data = dfsub, input$splitbox, input$splitbyvar, input$responsevar )
   
   if(input$AddPoints == TRUE) {
     p <- p +
       suppressWarnings(geom_point(position = 'jitter', alpha = 0.2,
-                                  aes(text = 
-                                        paste0(USUBJID,
-                                        "<br>",input$splitbyvar, ": ",get(input$splitbyvar),
-                                        "<br>",input$responsevar,": ",get(input$responsevar)
-                                        )
-                                  ))) # aes, geom_point, suppressWarnings 
+                       aes(text = 
+                       paste0(USUBJID,
+                       "<br>",input$splitbyvar, ": ",get(input$splitbyvar),
+                       "<br>",input$responsevar,": ",get(input$responsevar)
+                       )
+                       ))) # aes, geom_point, suppressWarnings 
   }
   
   # update title
@@ -77,12 +80,13 @@ output$DataTable <- DT::renderDataTable({
     # restrict seltimevar to AVISIT, AVISITN, VSDY
     seltime <- select(dfsub, ends_with("DY"), starts_with("AVIS")) 
     
+    # correction for overplotting
+    # BDS records are usually by USUBJID, AVISIT, and PARAMCD
+    # if not using AVISIT(n) then collapse to USUBJID level and set AVISIT to Baseline
     if (!input$splitbyvar %in% names(seltime) & "AVISIT" %in% names(dfsub)) {
-      # print(paste("boxtable before",nrow(dfsub)))
       dfsub <- dfsub %>%
         filter(AVISIT == "Baseline") %>% # Take analysis baseline for now
         distinct(USUBJID, .keep_all = TRUE)
-      # print(paste("boxtable after",nrow(dfsub)))
     }
   }   
   

@@ -1,9 +1,7 @@
 library(haven)
 library(tidyverse)
 
-allowed_operators <- c(">", ">=", "==", "<=", "<", "!=") %>% 
-  set_names() %>% 
-  map(match.fun)
+source("R/allowed_operators.R")
 
 # This is a list of two dataframe
 # ADSL
@@ -19,11 +17,11 @@ PARAMCD <- map(BDS, ~ if(!"CHG" %in% names(.)) update_list(., CHG = NA) else .)
 # Bind all the PARAMCD files 
 all_PARAMCD <- bind_rows(PARAMCD, .id = "data_from")  %>% 
     arrange(SUBJID, AVISITN, PARAMCD) %>% 
-    select(USUBJID, SUBJID, AVISITN, AVISIT, PARAMCD, AVAL, CHG, data_from)
-    #distinct(USUBJID, AVISITN, AVISIT, PARAMCD, .keep_all = TRUE) 
+    select(USUBJID, SUBJID, AVISITN, AVISIT, PARAMCD, AVAL, CHG, data_from) %>% 
+    distinct(USUBJID, AVISITN, AVISIT, PARAMCD, .keep_all = TRUE) 
   
 # Join ADSL and all_PARAMCD
-test_data <- full_join(ADSL, all_PARAMCD, by = "USUBJID")
+test_data <- inner_join(ADSL, all_PARAMCD, by = "USUBJID")
 
 #########################################################################
 # Filtered Data
