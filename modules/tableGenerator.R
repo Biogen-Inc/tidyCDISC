@@ -303,8 +303,7 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
       # so rather than have two columns n and prop
       # we can have one column with the value "n (prop)"
       if (COLUMN == "") {
-        df <-
-          all_data() %>%
+        df <- all_data() %>%
           distinct(USUBJID, !!ROW) %>%
           count(!!ROW) %>%
           group_by(!!ROW) %>%
@@ -329,7 +328,7 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
           all_data() %>%
           distinct(USUBJID, !!ROW, !!COLUMN) %>%
           count(!!ROW, !!COLUMN) %>%
-          group_by(!!ROW) %>%
+          group_by(!!COLUMN) %>%
           mutate(prop = prop.table(n)) %>%
           mutate(v1 = paste0(n, ' (', round(prop, 2), ')')) %>%
           select(-n, -prop) %>% 
