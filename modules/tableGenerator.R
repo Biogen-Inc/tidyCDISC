@@ -594,13 +594,13 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
     }
   )
   
-  output$downloadPDF = downloadHandler(
-    filename = "TableGenerator.pdf",
-    content = function(file){
-      out <- rmarkdown::render("Kable.Rmd", pdf_document())
-      file.rename(out, file)
-    }
-  )
+  # output$downloadPDF = downloadHandler(
+  #   filename = "TableGenerator.pdf",
+  #   content = function(file){
+  #     out <- rmarkdown::render("Kable.Rmd", pdf_document())
+  #     file.rename(out, file)
+  #   }
+  # )
   
   p <- reactive({
     rowArea(col = 2, block_data())
