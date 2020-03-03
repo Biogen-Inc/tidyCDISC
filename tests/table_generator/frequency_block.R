@@ -50,7 +50,7 @@ test_that("Frequency of ADSL filtered", {
 # 16
 test_that("Frequency of ADSL grouped", {
   
-  ROW <- sym("SEX")
+  ROW <- sym("SAFFL")
   COLUMN <- sym("TRT01P")
   
   tg_freq <- test_data %>%
