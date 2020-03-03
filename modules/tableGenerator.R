@@ -291,7 +291,13 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
         
       }
       insert <- data.frame(t(data.frame("X" = c(rep(" ", length(tdf))))))
-      row.names(insert) <- paste(CapStr(as.character(ROW)))
+      
+      if (as.character(ROW) %in% PARAMCD_names()) {
+        row.names(insert) <- paste0(CapStr(as.character(ROW)), ": ", WEEK)
+      } else {
+        row.names(insert) <- paste0(CapStr(as.character(ROW)))
+      }
+      
       colnames(insert) <- colnames(tdf)
       data <- rbind(insert, tdf)
       datalist[[i]] <- rownames_to_column(data, "row_name")
@@ -415,7 +421,13 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
       # with the row block name as its value
       # append the rowname dataframe to actual data above
       insert <- data.frame(t(data.frame("X" = c(rep(" ", length(d))))))
-      row.names(insert) <- CapStr(as.character(ROW))
+      
+      if (as.character(ROW) %in% PARAMCD_names()) {
+        row.names(insert) <- paste0(CapStr(as.character(ROW)), ": ", WEEK)
+      } else {
+        row.names(insert) <- paste0(CapStr(as.character(ROW)))
+      }
+      
       colnames(insert) <- colnames(d)
       data <- rbind(insert, d)
       colnames(data) <- lapply(colnames(data), CapStr)
@@ -469,10 +481,22 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
       # append the rowname dataframe to actual data above
       # need to use rbind.fill instead of rbind here, not sure why...
       insert <- data.frame(t(data.frame("X" = c(rep(" ", length(d))))))
-      row.names(insert) <- CapStr(as.character(ROW))
+      
+      if (as.character(ROW) %in% PARAMCD_names()) {
+        row.names(insert) <- paste0(CapStr(as.character(ROW)), ": ", WEEK)
+      } else {
+        row.names(insert) <- paste0(CapStr(as.character(ROW)))
+      }
+      
       colnames(insert) <- colnames(d)
       data <- plyr::rbind.fill(insert, d)
-      rownames(data) <- c(ROW, "Change from Baseline")
+      
+      if (as.character(ROW) %in% PARAMCD_names()) {
+        row.names(data) <- c(paste0(CapStr(as.character(ROW)), ": ", WEEK), "Change from Baseline")
+      } else {
+        row.names(data) <- c(paste0(CapStr(as.character(ROW))), "Change from Baseline")
+      }
+      
       colnames(data) <- lapply(colnames(data), CapStr)
       datalist[[i]] <- rownames_to_column(data, var = "row_name")
     }
