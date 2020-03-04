@@ -524,9 +524,16 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
   })
   
   
+  paramcdcolumns <- reactive({ paste(PARAMCD_names(), collapse="|") })
   
-  output$all <- renderTable({
-    dataFrame()
+  output$all <- renderReactable({
+    reactable(dataFrame(), 
+     pagination = FALSE,
+      rowStyle = function(index) {
+        if (dataFrame()[index, "row_name"] %in% colnames(all_data())) list(background = "rgba(0, 0, 0, 0.05)")
+        else if (grepl(paste(paramcdcolumns(), collapse="|"), dataFrame()[index, "row_name"])) list(background = "rgba(0, 0, 0, 0.05)")
+      }
+    )
   })
   
   #####################################################################
