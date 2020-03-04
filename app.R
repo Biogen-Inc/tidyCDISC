@@ -15,6 +15,7 @@ library(rtf)
 library(shinythemes)
 library(rmarkdown)
 library(shinytest)
+library(reactable)
 
 options(shiny.sanitize.errors = FALSE)
 

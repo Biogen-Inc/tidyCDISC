@@ -457,6 +457,7 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
         # and filter based on week
         
         intermediate <- all_data() %>%
+          filter(!is.na(CHG)) %>%
           filter(PARAMCD == ROW & AVISIT == WEEK) %>%
           summarise(mean = round(mean(CHG), 3))
         # use the mean in wide format for table
@@ -469,6 +470,7 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
         # CHG from Baseline total
         # as above but now we group by the column block
         intermediate <- all_data() %>%
+          filter(!is.na(CHG)) %>%
           group_by(!!COLUMN) %>% 
           filter(AVISIT == WEEK & PARAMCD == ROW) %>%
           summarise(mean = round(mean(CHG), 3))
@@ -524,9 +526,17 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
   })
   
   
+  paramcdcolumns <- reactive({ paste(PARAMCD_names(), collapse="|") })
   
-  output$all <- renderTable({
-    dataFrame()
+  output$all <- renderReactable({
+    reactable(dataFrame(), 
+              columns = list(row_name = colDef(name = " ")),
+     pagination = FALSE,
+      rowStyle = function(index) {
+        if (dataFrame()[index, "row_name"] %in% colnames(all_data())) list(background = "rgba(0, 0, 0, 0.05)")
+        else if (grepl(paste(paramcdcolumns(), collapse="|"), dataFrame()[index, "row_name"])) list(background = "rgba(0, 0, 0, 0.05)")
+      }
+    )
   })
   
   #####################################################################
@@ -594,13 +604,13 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
     }
   )
   
-  output$downloadPDF = downloadHandler(
-    filename = "TableGenerator.pdf",
-    content = function(file){
-      out <- rmarkdown::render("Kable.Rmd", pdf_document())
-      file.rename(out, file)
-    }
-  )
+  # output$downloadPDF = downloadHandler(
+  #   filename = "TableGenerator.pdf",
+  #   content = function(file){
+  #     out <- rmarkdown::render("Kable.Rmd", pdf_document())
+  #     file.rename(out, file)
+  #   }
+  # )
   
   p <- reactive({
     rowArea(col = 2, block_data())
