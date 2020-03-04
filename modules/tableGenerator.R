@@ -528,6 +528,7 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
   
   output$all <- renderReactable({
     reactable(dataFrame(), 
+              columns = list(row_name = colDef(name = " ")),
      pagination = FALSE,
       rowStyle = function(index) {
         if (dataFrame()[index, "row_name"] %in% colnames(all_data())) list(background = "rgba(0, 0, 0, 0.05)")
