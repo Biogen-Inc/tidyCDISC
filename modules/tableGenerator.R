@@ -457,6 +457,7 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
         # and filter based on week
         
         intermediate <- all_data() %>%
+          filter(!is.na(CHG)) %>%
           filter(PARAMCD == ROW & AVISIT == WEEK) %>%
           summarise(mean = round(mean(CHG), 3))
         # use the mean in wide format for table
@@ -469,6 +470,7 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
         # CHG from Baseline total
         # as above but now we group by the column block
         intermediate <- all_data() %>%
+          filter(!is.na(CHG)) %>%
           group_by(!!COLUMN) %>% 
           filter(AVISIT == WEEK & PARAMCD == ROW) %>%
           summarise(mean = round(mean(CHG), 3))
