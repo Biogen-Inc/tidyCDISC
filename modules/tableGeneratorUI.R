@@ -26,8 +26,8 @@ tableGeneratorUI <- function(id, label = "Create Chart") {
                   tags$li(customDownloadbutton(ns("downloadData"), "CSV", class = "downloadButton"),
                           #customDownloadbutton(ns("downloadXPT"), "XPT", class = "downloadButton"),
                           #customDownloadbutton(ns("downloadSAS"), "SAS", class = "downloadButton"),
-                          customDownloadbutton(ns("downloadRTF"), "RTF", class = "downloadButton"),
-                          customDownloadbutton(ns("downloadPDF"), "PDF", class = "downloadButton")
+                          customDownloadbutton(ns("downloadRTF"), "RTF", class = "downloadButton")
+                          #customDownloadbutton(ns("downloadPDF"), "PDF", class = "downloadButton")
                   )
           )
       ),
@@ -35,8 +35,7 @@ tableGeneratorUI <- function(id, label = "Create Chart") {
       fluidRow(
         column(12, "Commonly Used Tables", recipe)),
                  textInput(ns("table_title"), "Table Title", "Table Title "),
-                 fluidRow(radioGroupButtons(
-                   inputId = ns("COLUMN"), "Group Data By:", choices = c("TRT01P", "SEX", "RACE", "NONE"), selected = "NONE")),
+                 fluidRow(uiOutput(ns("col_ADSL"))),
                  div(fluidRow(
                    radioGroupButtons(ns("to_filter"), "Filter?", choices = c("No", "Yes"), status = "primary", selected = "No")
                  ), style = "text-align: center;vertical-align: middle;"),
@@ -88,7 +87,7 @@ tableGeneratorUI <- function(id, label = "Create Chart") {
     
     mainPanel(style = "max-width: 500px;",
       fluidRow(htmlOutput(ns("title"))),
-      fluidRow(tableOutput(ns("all")))
+      fluidRow(reactableOutput(ns("all")))
     ),
     tags$script(src = "script.js"),
     tags$script(src = "recipe.js")

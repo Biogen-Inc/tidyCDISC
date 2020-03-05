@@ -76,6 +76,15 @@ dataUpload <- function(input, output, session, stringsAsFactors) {
     dd$data[[index]]
   })
   
+  studies <- reactive({ 
+    unique(unlist(lapply(dd$data, `[[`, "STUDYID"))) 
+    })
+  
+  output$multi_studies <- renderText({
+    req(length(studies()) > 1)
+    paste0("Warning: data uploaded from multiple studies: ", paste(studies(), collapse = " & "))
+  }) 
+  
   # upon a dataset being uploaded and selected, generate data preview
   output$datapreview_header <- renderUI({
     data_selected()

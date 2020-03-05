@@ -140,7 +140,7 @@ Shiny.addCustomMessageHandler('my_data', function(df) {
 function selectWeekBlock(newid, label, values) { 
   return `<div class="form-group drop_area">
                         <label class="control-label" for="${newid}">${label}</label>
-                    <select id="${newid}">
+                    <select id="${newid}" class="dropdown-select">
                     <option value="NONE">NONE</option>
                     ${values}
                     </select>
