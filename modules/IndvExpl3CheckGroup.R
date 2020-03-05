@@ -4,7 +4,7 @@ IndvExpl3CheckGroup <- function(input, output, session, datafile, dataselected, 
   
 observeEvent(input$checkGroup, {
   
-  req(usubjid() != " ") # selPatNo cannot be blank  
+  req(usubjid() != " ") # selPatNo cannot be blank - ac: not sure if Robert expects this to work like "validate(need())"
   
   # Clear eventsTable
   output$eventsTable <- DT::renderDataTable({
@@ -14,7 +14,7 @@ observeEvent(input$checkGroup, {
   # and then combine the ones selected in input$checkGroup
   # DOMAIN is used to match the input$checkGroup string
   
-  if ("ADAE" %in% names(datafile()) && "ADAE" %in% dataselected()) {
+  if ("ADAE" %in% names(datafile()) && "ADAE" %in% dataselected()) { # ac: first part not needed?
     ae_rec <- datafile()[["ADAE"]] %>%
       filter(USUBJID == usubjid()) %>%
       filter(!is.na(AESTDT)) %>%

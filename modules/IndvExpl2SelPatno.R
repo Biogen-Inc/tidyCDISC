@@ -7,10 +7,11 @@ observeEvent(input$selPatNo, {
   
   req(input$selPatNo != " ") # selPatNo cannot be blank
   
-  shinyjs::hide(id = "selType")
-  shinyjs::hide(id = "selLabCode")
+  shinyjs::hide(id = "selType") # ac: I don't think this code will ever be realized because it is tracking when selPatNo is changes, 
+  shinyjs::hide(id = "selLabCode") # and then later, shows the selType Anyway. Same is not true for selLabCode. I think this should
+                                   # be in a separate observer with a validate(need())
   
-  # Clear eventsTable
+  # Clear eventsTable - ac: do we really want to do this?
   output$eventsTable <- DT::renderDataTable({
     NULL
   })
@@ -30,18 +31,18 @@ observeEvent(input$selPatNo, {
     
   })
   
-  # Now show the rest of the widgets
+  # Show the rest of the widgets once a patient number was selected
   shinyjs::show(id = "hr2")
   shinyjs::show(id = "hr3")
   shinyjs::show(id = "checkGroup")
   shinyjs::show(id = "eventsTable")
   shinyjs::show(id = "selType")
   
-  # Clear datatable
+  # Clear datatable - ac: do we need to do this?
   output$DataTable<- DT::renderDataTable({
     NULL
   })
-  # Clear plotoutput
+  # Clear plotoutput- ac: do we need to do this?
   output$PlotChart <- renderPlotly({
     NULL
   })
@@ -51,7 +52,7 @@ observeEvent(input$selPatNo, {
   checked3 <- NULL
   checked4 <- NULL
   
-  # check for "adsl", "adae", "adcm", and "adlb"
+  # check for "adsl" (required), "adae" (adds to Events), "adcm" (adds to Events & Value), and "adlb" (adds to Events & Value)
   if ("ADSL" %in% dataselected()) {
     checked1 <- "DS"
   }
@@ -66,7 +67,7 @@ observeEvent(input$selPatNo, {
   }
   
   choices <- list(checked1,checked2,checked3,checked4)
-  names <- c("Disposition","Adverse Events","Concomitant Meds","Labs")
+  names <- c("Disposition","Adverse Events","Concomitant Meds","Labs") # ac: labels
   # build a named list
   choices <- setNames(choices,names)
   # Remove NULLs from the list

@@ -39,8 +39,9 @@ IndvExpl1Initial <- function(input, output, session, datafile, dataselected){
     choices = c(" ",subj),
     selected = " "
   )
-  shinyjs::show(id = "selPatNo")
+  shinyjs::show(id = "selPatNo") # ac: display the patient number dropdown
   })
-  return(dataselected)
+  
+  return(dataselected) # ac: I wonder why we need to return this again, nothing happened to it
   
 } # IndvExpl1Initial
