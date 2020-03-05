@@ -4,18 +4,19 @@ ns <- NS(id)
   
 sidebarLayout(
   sidebarPanel(width = 2,
-               # tags$em("Note: Sample adsl data has been pre-loaded.",id=ns("adsltagsem")),
-               # tags$em("Note: Sample advs data has been pre-loaded.\nSelected 22 subjects from Siteid 310",id=ns("advstagsem")),
-               # Copy the line below to make a set of radio buttons
-               radioButtons(ns("radio"), label = h5("Type of Chart:"),
-                            choices = list("Pick one:" = "0",
-                                           "Scatter Plot" = "1", 
-                                           "Spaghetti Plot" = "2",
-                                           "Box Plot" = "3",
-                                           "Heat Map" = "4",
-                                           "Histogram" = "5"),
-                            selected = "0"),
-               
+               prettyRadioButtons(
+                 inputId = ns("radio"),
+                 label = "Type of Chart:",
+                 choices = list("Select one:   " = "0",
+                                "Scatter Plot  " = "1",
+                                "Spaghetti Plot" = "2",
+                                "Box Plot      " = "3",
+                                "Heat Map      " = "4",
+                                "Histogram     " = "5"
+                                ),
+                 selected = "0",
+                 icon = icon("check")
+               ),
                # below are all the possible subparameters
                tags$h4("Parameters:"),
                selectInput(ns("selPrmCode"), label = tags$small("Parameter Code:"),

@@ -20,36 +20,34 @@ shinyjs::hide(id="AddErrorBar")
 shinyjs::hide(id="DiscrXaxis")
 shinyjs::hide(id="UseCounts")
 
+chr <- sort(names(df()[ , which(sapply(df(),is.character))])) # all chr
+fac <- sort(names(df()[ , which(sapply(df(),is.factor   ))])) # all factors
+num <- sort(names(df()[ , which(sapply(df(),is.numeric  ))])) # all num
+
+# splitbyvar is loaded with all the character/factor columns
+updateSelectInput(session = session, inputId = "splitbyvar", choices = c(" ",sort(names(df()))), selected = " ")
+
+# responsevar is loaded with all the numeric columns
+updateSelectInput(session = session, inputId = "responsevar", choices =  c(" ",num), selected = " ")
+
+# set checkbox to TRUE
+updateCheckboxInput(session = session, inputId = "splitbox", value = TRUE)
+
 
 # update subsequent inputselects based on PARAM code selection
 observeEvent(input$selPrmCode, {
   
+  req(input$selPrmCode != " ") 
+
   # subset data based on Parameter Code selection
-  req(input$selPrmCode != " ") # using ignoreInit = TRUE
-
   dfsub <- filter(df(),PARAMCD == input$selPrmCode)
-  
-  chr <- sort(names(df()[ , which(sapply(df(),is.character))])) # all chr
-  fac <- sort(names(df()[ , which(sapply(df(),is.factor   ))])) # all factors
-  num <- sort(names(df()[ , which(sapply(df(),is.numeric  ))])) # all num
-  
-  print(paste("factors:",paste(fac,collapse = )))
-  
-  # splitbyvar is loaded with all the character/factor columns
-  updateSelectInput(session = session, inputId = "splitbyvar", choices = c(" ",sort(names(dfsub))), selected = " ")
-
-  # responsevar is loaded with all the numeric columns
-  updateSelectInput(session = session, inputId = "responsevar", choices =  c(" ",num), selected = " ")
-  
-  # set checkbox to TRUE
-  updateCheckboxInput(session = session, inputId = "splitbox", value = TRUE)
   
 
 output$PlotlyOut <- renderPlotly({
   
   req(input$responsevar != " ")
   
-  # correction for overplotting in fnboxplot
+  # correction for overplotting is located in fnboxplot
   p <- fnboxplot(data = dfsub, input$splitbox, input$splitbyvar, input$responsevar )
   
   if(input$AddPoints == TRUE) {
@@ -64,10 +62,15 @@ output$PlotlyOut <- renderPlotly({
   }
   
   # update title
-  ggtitle <- paste("Plot of",input$responsevar,"Grouped by",input$splitbyvar,"for PARAMCD:",unique(dfsub$PARAMCD))
-  p <- p + labs(title = ggtitle)
+  if (input$splitbox == TRUE) {
+    ggtitle <- reactive({ paste("Plot of",input$responsevar,"Grouped by",input$splitbyvar,"for PARAMCD:",unique(dfsub$PARAMCD)) })
+  } else {
+    ggtitle <- reactive({ paste("Plot of",input$responsevar,"for PARAMCD:",unique(dfsub$PARAMCD)) })
+  }
+  p <- p + labs(title = ggtitle())
   
   ggplotly(p, tooltip = "text")
+  
 })
 
 output$DataTable <- DT::renderDataTable({
@@ -77,24 +80,15 @@ output$DataTable <- DT::renderDataTable({
   if(input$splitbox == TRUE) {
     req(input$splitbyvar != " ")  
     
-    # restrict seltimevar to AVISIT, AVISITN, VSDY
-    seltime <- select(dfsub, ends_with("DY"), starts_with("AVIS")) 
-    
     # correction for overplotting
-    # BDS records are usually by USUBJID, AVISIT, and PARAMCD
-    # if not using AVISIT(n) then collapse to USUBJID level and set AVISIT to Baseline
-    if (!input$splitbyvar %in% names(seltime) & "AVISIT" %in% names(dfsub)) {
-      dfsub <- dfsub %>%
-        filter(AVISIT == "Baseline") %>% # Take analysis baseline for now
-        distinct(USUBJID, .keep_all = TRUE)
-    }
-  }   
-  
+    dfsub <- fnoverplt(dfsub,input$splitbyvar)
+    
+  } 
   tableout <- fnsummtab(data = dfsub, input$splitbox, input$splitbyvar, input$responsevar)
   DT::datatable(tableout, options = list(dom = 'ftp', pageLength = 20))
   
 })
 
-}, ignoreInit = TRUE) # observeEvent(input$selPrmCode
+}, ignoreInit = FALSE) # observeEvent(input$selPrmCode
 
 }

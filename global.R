@@ -27,6 +27,7 @@ source('modules/PopuExplorUI.R')
 source('R/fnboxplot.R')
 source('R/fnscatter.R')
 source('R/fnsummtab.R')
+source('R/fnoverplot.R')
 
 # child modules called by PopuExplor
 source('modules/PopuExpl1Scat.R')

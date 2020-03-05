@@ -20,6 +20,39 @@ shinyjs::hide(id="AddErrorBar")
 shinyjs::hide(id="DiscrXaxis")
 shinyjs::hide(id="UseCounts")
 
+# find numeric and date variables
+num <- sort(names(df()[ , which(sapply(df(),is.numeric  ))])) # all num
+is.date <- function(x) inherits(x, 'Date')
+dat <- sort(names(df()[ , which(sapply(df(),is.date  ))])) # all date
+
+# restrict seltimevar to AVISIT, AVISITN, VSDY
+seltime <- select(df(), ends_with("DY"), starts_with("AVIS"))
+
+print(paste("seltime variables:",paste(unique(names(seltime)),collapse = ",")))
+
+updateSelectInput(
+  session = session,
+  inputId = "splitbyvar",
+  choices = c(" ",sort(names(select(df(),starts_with("TRT0"),one_of("SUBJID","USUBJID"))))),
+  selected = " ")
+
+updateSelectInput(
+  session = session,
+  inputId = "seltimevar",
+  choices = c(sort(names(seltime))),
+  selected = " ")
+
+updateSelectInput(
+  session = session,
+  inputId = "responsevar",
+  choices = c(num),
+  selected = " ")
+
+updateSelectInput(
+  session = session,
+  inputId = "animateby",
+  choices = c(sort(c(num,dat))),
+  selected = " ")
 
 # set checkbox to FALSE
 updateCheckboxInput(session = session, inputId = "animate", value = FALSE)
@@ -27,43 +60,11 @@ updateCheckboxInput(session = session, inputId = "animate", value = FALSE)
 # update subsequent inputselects based on PARAM code selection
 observeEvent(input$selPrmCode, {
   
+  req(input$selPrmCode != " ") 
+  
   # subset data based on Parameter Code selection
-  req(input$selPrmCode != " ") # using ignoreInit = TRUE
-  
   dfsub <- filter(df(),PARAMCD == input$selPrmCode)
-  
-  # find numeric and date variables
-  num <- sort(names(df()[ , which(sapply(df(),is.numeric  ))])) # all num
-  is.date <- function(x) inherits(x, 'Date')
-  dat <- sort(names(df()[ , which(sapply(df(),is.date  ))])) # all date
-  # restrict seltimevar to AVISIT, AVISITN, VSDY
-  seltime <- select(dfsub, ends_with("DY"), starts_with("AVIS"))
-  
-  # print(paste("spag seltime",paste(sort(names(seltime)),collapse = ",")))
-  
-updateSelectInput(
-  session = session,
-  inputId = "splitbyvar",
-  choices = c(" ",sort(names(select(dfsub,starts_with("TRT0"),one_of("SUBJID","USUBJID"))))),
-  selected = " ")
 
-updateSelectInput(
-  session = session,
-  inputId = "seltimevar",
-  choices = c(" ",sort(names(seltime))),
-  selected = " ")
-
-updateSelectInput(
-  session = session,
-  inputId = "responsevar",
-  choices = c(" ",num),
-  selected = " ")
-
-updateSelectInput(
-  session = session,
-  inputId = "animateby",
-  choices = c(" ",sort(c(num,dat))),
-  selected = " ")
 
 # set default animateby var whenever seltimevar changes
 observeEvent(input$seltimevar, {
@@ -78,13 +79,12 @@ output$PlotlyOut <- renderPlotly({
   
   # build subset of df() by randomly taking 25 subjects
   if (input$splitbyvar %in% c("SUBJID","USUBJID")) {
+    print("subsetting data for 25 subjects")
     set.seed(12345)
-    dfsubx <- inner_join(dfsub, dplyr::sample_n(distinct(dfsub, USUBJID), 25), by = "USUBJID") 
-  } else {
-    dfsubx <- dfsub
+    dfsub <- inner_join(dfsub, dplyr::sample_n(distinct(dfsub, USUBJID), 25), by = "USUBJID") 
   }
 
-  ggtitle <- paste("Plot of",input$responsevar,"over",input$seltimevar,"for PARAMCD:",unique(dfsub$PARAMCD),"by",input$splitbyvar)
+  ggtitle <- reactive({ paste("Plot of",input$responsevar,"over",input$seltimevar,"for PARAMCD:",unique(dfsub$PARAMCD),"by",input$splitbyvar) })
   
   if (input$animate == TRUE) {
     req(input$animateby != " ")
@@ -98,7 +98,7 @@ output$PlotlyOut <- renderPlotly({
       dplyr::bind_rows(dats)
     }
     
-    dfsuby <- dfsubx %>%
+    dfsuby <- dfsub %>%
       accumulate_by(~get(input$seltimevar))
     
     p <- dfsuby %>%
@@ -119,7 +119,7 @@ output$PlotlyOut <- renderPlotly({
         redraw = FALSE
       ) %>%
       layout(
-        title = ggtitle,
+        title = ggtitle(),
         xaxis = list(title = input$seltimevar), yaxis = list(title = input$responsevar), 
         showlegend = TRUE,
         legend = list(orientation = "h",   # show entries horizontally
@@ -140,10 +140,10 @@ output$PlotlyOut <- renderPlotly({
       geom_line(na.rm = TRUE) 
     
     p <- p + suppressWarnings(geom_point(na.rm = TRUE, 
-                                         aes(text =
-                                               paste0(USUBJID,
-                                                      "<br>",input$seltimevar,": ",get(input$seltimevar),
-                                                      "<br>",input$responsevar,": ",round(get(input$responsevar),2)
+                             aes(text =
+                             paste0(USUBJID,
+                            "<br>",input$seltimevar,": ",get(input$seltimevar),
+                            "<br>",input$responsevar,": ",round(get(input$responsevar),2)
                                                )
                                          ))) # aes, geom_point, suppressWarnings
     
@@ -151,7 +151,7 @@ output$PlotlyOut <- renderPlotly({
     nlevs <- nlevels(factor(dfsub[[input$splitbyvar]]))
     mycolors <- colorRampPalette(brewer.pal(8, "Set2"))(nlevs)
     p <- p +
-      labs(x = input$seltimevar, y = input$responsevar, title =  ggtitle) +
+      labs(x = input$seltimevar, y = input$responsevar, title =  ggtitle()) +
       scale_fill_manual(values = mycolors) +
       theme_classic()
     
@@ -184,6 +184,6 @@ output$DataTable <- DT::renderDataTable({
   
 })
 
-}, ignoreInit = TRUE) # observeEvent(input$selPrmCode
+}, ignoreInit = FALSE) # observeEvent(input$selPrmCode
 
 }

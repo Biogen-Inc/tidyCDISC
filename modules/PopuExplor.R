@@ -10,6 +10,13 @@ PopuExplor <- function(input, output, session, datafile){
   # make sure selectData has been run
   req(!is.null(dataselected()))
 
+    # Create a Progress object
+    progress <- shiny::Progress$new()
+    # Make sure it closes when we exit this reactive, even if there's an error
+    on.exit(progress$close())
+            
+    progress$set(message = "Merging data...", value = 0)   
+    
   datakeep <- reactive({ datafile()[dataselected()] })
   
   # The data used by the population explorer is going to be one of:
@@ -116,22 +123,18 @@ PopuExplor <- function(input, output, session, datafile){
     } 
   }
   
+  progress$set(message = "Done!", value = 1)   
+  
   # update the radio button to c("0")
-  updateRadioButtons(
+  updatePrettyRadioButtons(
     session = session,
     inputId = "radio",
+    prettyOptions =list(status = "success"),
     selected = "0"
   )
 
-  # Update Paramer Code choices
-  updateSelectInput(
-    session = session,
-    inputId = "selPrmCode",
-    choices = c(" ",sort(unique(all_data$PARAMCD))),
-    selected = " ")
-  
   observeEvent(input$radio,{
-    
+  
   # Clear plotoutput
   output$PlotlyOut <- renderPlotly({
     NULL
@@ -139,8 +142,15 @@ PopuExplor <- function(input, output, session, datafile){
   # Clear datatable
   output$DataTable <- DT::renderDataTable({
     NULL
-  })  
-  
+  }) 
+
+  # Update Paramer Code choices
+  updateSelectInput(
+    session = session,
+    inputId = "selPrmCode",
+    choices = c(" ",sort(unique(all_data$PARAMCD))),
+    selected = sort(unique(all_data$PARAMCD))[[1]])
+    
   switch(input$radio, # use swtich() instead of if/else
          "0" = {
            # pick one
@@ -161,9 +171,6 @@ PopuExplor <- function(input, output, session, datafile){
            shinyjs::hide(id="DiscrXaxis")
            shinyjs::hide(id="UseCounts")
            
-           
-           # print("look at all_data")
-           # print(paste(unique(all_data$data_from),collapse = " "))
          },
          "1" = {
            # scatter plot module
