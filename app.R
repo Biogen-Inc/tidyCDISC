@@ -18,6 +18,7 @@ library(shinytest)
 library(reactable)
 
 options(shiny.sanitize.errors = FALSE)
+options(bitmapType='cairo') 
 
 jscode <- "
 shinyjs.disableTab = function() {
