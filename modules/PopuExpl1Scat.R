@@ -20,49 +20,36 @@ shinyjs::show(id="AddErrorBar")
 shinyjs::show(id="DiscrXaxis")
 shinyjs::hide(id="UseCounts")
 
-# update subsequent inputselects based on PARAM code selection
-observeEvent(input$selPrmCode, {
-  
-  req(input$selPrmCode != " ") # using ignoreInit = TRUE
-  
-  dfsub <- filter(df(),PARAMCD == input$selPrmCode)
-  
-  seltime <- select(dfsub, ends_with("DY"), starts_with("AVIS"))
-  
 chr <- sort(names(df()[ , which(sapply(df(),is.character))])) # all chr
 fac <- sort(names(df()[ , which(sapply(df(),is.factor   ))])) # all factors
 num <- sort(names(df()[ , which(sapply(df(),is.numeric  ))])) # all num
 
 # splitbyvar is loaded with all the character/factor columns
-updateSelectInput(session = session, inputId = "splitbyvar", choices = c(" ",sort(names(dfsub))), selected = " ")
+updateSelectInput(session = session, inputId = "splitbyvar", choices = c(" ",sort(names(df()))), selected = " ")
 
 # selxvar is loaded with all the numeric columns
-updateSelectInput(session = session, inputId = "selxvar", choices = c(" ",sort(names(dfsub))),  selected = " ")
+updateSelectInput(session = session, inputId = "selxvar", choices = c(" ",sort(names(df()))),  selected = " ")
 
 # selyvar is loaded with all the numeric columns
-updateSelectInput(session = session, inputId = "selyvar", choices = c(" ",sort(names(dfsub))), selected = " ")
+updateSelectInput(session = session, inputId = "selyvar", choices = c(" ",sort(names(df()))), selected = " ")
 
 # set checkbox to TRUE
 updateCheckboxInput(session = session, inputId = "splitbox", value = TRUE)
 
 
+# update subsequent inputselects based on PARAM code selection
+observeEvent(input$selPrmCode, {
+  
+  req(input$selPrmCode != " ") 
+  
+  dfsub <- filter(df(),PARAMCD == input$selPrmCode)
+  
 output$PlotlyOut <- renderPlotly({
   
   req(input$selxvar != " ")
   req(input$selyvar != " ")
   
-  # correction for overplotting
-  # BDS records are usually by USUBJID, AVISIT, and PARAMCD
-  # if not using AVISIT(n) then collapse to USUBJID level and set AVISIT to Baseline
-  print(paste("befor",nrow(dfsub)))
-  if (!input$selxvar %in% names(seltime) & "AVISIT" %in% names(dfsub)) {
-    dfsub <- dfsub %>%
-      filter(AVISIT == "Baseline") %>% # Take analysis baseline for now
-      distinct(USUBJID, .keep_all = TRUE)
-  } 
-  print(paste("after",nrow(dfsub)))
-  
-  # plot function
+  # correction for overplotting is located in fnscatter
   p <- fnscatter(data = dfsub, input$splitbox, input$splitbyvar, input$selxvar, input$selyvar)
 
   # add geom_line if checked
@@ -82,16 +69,18 @@ output$PlotlyOut <- renderPlotly({
   if ("xlabel" %in% colnames(dfsub) && "ylabel" %in% colnames(dfsub) && "ggtitle" %in% colnames(dfsub)) {
     p <- p + labs(x = unique(dfsub$xlabel), y = unique(dfsub$ylabel), title = unique(dfsub$ggtitle))
   } else {
-  ggtitle <- paste("Plot of",input$selyvar,"by",input$selxvar,"Grouped by",input$splitbyvar,"for PARAMCD:",unique(dfsub$PARAMCD))
-  p <- p + labs(title = ggtitle)
+  if (input$splitbox == TRUE) {
+    ggtitle <- reactive({ paste("Plot of",input$selyvar,"by",input$selxvar,"Grouped by",input$splitbyvar,"for PARAMCD:",unique(dfsub$PARAMCD)) })
+  } else {
+    ggtitle <- reactive({ paste("Plot of",input$selyvar,"by",input$selxvar,"for PARAMCD:",unique(dfsub$PARAMCD)) })
+  }
+  p <- p + labs(title = ggtitle())
   }
 
   # any embedded graph instructions?
   graphinst <- suppressWarnings(unique(select(dfsub, one_of("geom_vline","geom_hline","geom_bar","geom_text","scale_x_cont","scale_y_cont"))))
-  for (i in 1:length(graphinst)) {
-    print(graphinst[[i]])
-    gr <- graphinst[[i]]
-    p <- p + eval(parse(text = gr))
+  if (length(graphinst) > 0) {
+     p <- p + sapply(graphinst, function(gr) {eval(parse(text = gr))})
   }
   ggplotly(p, tooltip = "text")
 
@@ -105,14 +94,12 @@ output$DataTable <- DT::renderDataTable({
   x_var <- as.name(input$selxvar)
   y_var <- as.name(input$selyvar)
   
-  if (!input$selxvar %in% names(seltime) & "AVISIT" %in% names(dfsub)) {
-    dfsub <- dfsub %>%
-      filter(AVISIT == "Baseline") %>% # Take analysis baseline for now
-      distinct(USUBJID, .keep_all = TRUE)
-  } 
+  # correction for overplotting
+  dfsub <- fnoverplt(dfsub,input$selxvar)
   
   if(input$splitbox == TRUE) {
     req(input$splitbyvar != " ")
+    
     z_var <- as.name(input$splitbyvar)
     if ("USUBJID" %in% colnames(dfsub)) {
       tableout <- dfsub %>%
@@ -134,6 +121,6 @@ output$DataTable <- DT::renderDataTable({
   
 })
 
-}, ignoreInit = TRUE) # observeEvent(input$selPrmCode
+}, ignoreInit = FALSE) # observeEvent(input$selPrmCode
 
 }
