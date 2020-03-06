@@ -1,4 +1,4 @@
-IndvExpl3CheckGroup <- function(input, output, session, datafile, usubjid){ #, dataselected
+IndvExpl3CheckGroup <- function(input, output, session, datafile, loaded_adams, usubjid){ #, dataselected
   
   ns <- session$ns
   
@@ -14,7 +14,7 @@ observeEvent(input$checkGroup, {
   # and then combine the ones selected in input$checkGroup
   # DOMAIN is used to match the input$checkGroup string
   
-  if ("ADAE" %in% names(datafile()) ) { # ac: first part not needed?
+  if ("ADAE" %in% loaded_adams() ) { # ac: first part not needed?
     ae_rec <- datafile()[["ADAE"]] %>%
       filter(USUBJID == usubjid()) %>%
       filter(!is.na(AESTDT)) %>%
@@ -30,7 +30,7 @@ observeEvent(input$checkGroup, {
     ae_rec <- NULL
   }
   
-  if ("ADSL" %in% names(datafile()) ) {
+  if ("ADSL" %in% loaded_adams() ) {
     ds_rec <- datafile()[["ADSL"]] %>%
       filter(USUBJID == usubjid()) %>%
       mutate(EVENTTYP = "Subject Status", DOMAIN = "DS") %>%
@@ -41,7 +41,7 @@ observeEvent(input$checkGroup, {
     ds_rec <- NULL
   }
   
-  if ("ADCM" %in% names(datafile()) ) {
+  if ("ADCM" %in% loaded_adams() ) {
     cm_rec <- datafile()[["ADCM"]] %>%
       filter(USUBJID == usubjid()) %>%
       filter(CMDECOD != "") %>%
@@ -54,7 +54,7 @@ observeEvent(input$checkGroup, {
     cm_rec <- NULL
   }
   
-  if ("ADLB" %in% names(datafile()) ) {
+  if ("ADLB" %in% loaded_adams() ) {
     lb_rec <- datafile()[["ADLB"]] %>%
       filter(USUBJID == usubjid()) %>%
       mutate(EVENTTYP = "Lab Results", DOMAIN = "LB") %>%
@@ -74,7 +74,7 @@ observeEvent(input$checkGroup, {
   
   # print some stuff
   # cat(paste("uni_list:", uni_list))
-  # cat(paste("\nADSL in datafile?", "ADSL" %in% names(datafile())))
+  # cat(paste("\nADSL in datafile?", "ADSL" %in% loaded_adams()))
   # cat(paste("\nChoices list:", choices))
   # cat(paste("\nChoices unlisted:", unlist(choices)))
   

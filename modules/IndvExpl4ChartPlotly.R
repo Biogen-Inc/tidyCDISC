@@ -1,4 +1,4 @@
-IndvExpl4ChartPlotly <- function(input, output, session, datafile, seltypes, usubjid){ #, dataselected
+IndvExpl4ChartPlotly <- function(input, output, session, datafile, loaded_adams, seltypes, usubjid){ #, dataselected
   
   ns <- session$ns
   
@@ -6,10 +6,10 @@ IndvExpl4ChartPlotly <- function(input, output, session, datafile, seltypes, usu
   # if ADCM or ADLB were selected, add to the seltypes selectInput list
   
   observe({
-    if ("ADCM" %in% names(datafile())) {
+    if ("ADCM" %in% loaded_adams()) {
       seltypes <- c(seltypes,"MEDS")
     }
-    if ("ADLB" %in% names(datafile())) {
+    if ("ADLB" %in% loaded_adams()) {
       seltypes <- c(seltypes,"LABS")
     }
 
@@ -45,7 +45,7 @@ observeEvent(input$selType, {
            shinyjs::show(id = "DataTable")
            shinyjs::show(id = "PlotChart")
            
-           if ("ADCM" %in% names(datafile()) ) {
+           if ("ADCM" %in% loaded_adams() ) {
              
              cm_tab <- as.data.frame(datafile()[["ADCM"]]) %>%
                filter(USUBJID == input$selPatNo) %>%
@@ -98,7 +98,7 @@ observeEvent(input$selType, {
                  
                }) # renderPlotly
              }) # else
-           } # if ("ADCM" %in% names(datafile()) && ("ADCM" %in% datafile()))
+           } # if ("ADCM" %in% loaded_adams() && ("ADCM" %in% datafile()))
            
          },
          
@@ -107,7 +107,7 @@ observeEvent(input$selType, {
            shinyjs::show(id = "DataTable")
            shinyjs::show(id = "PlotChart")
            
-           if ("ADLB" %in% names(datafile()) ) {
+           if ("ADLB" %in% loaded_adams() ) {
              
              lb_rec <- datafile()[["ADLB"]] %>% 
                filter(USUBJID == input$selPatNo)
@@ -202,7 +202,7 @@ observeEvent(input$selType, {
                  
                }) # renderPlotly
              }) # else
-           } #if ("ADLB" %in% names(datafile()) )
+           } #if ("ADLB" %in% loaded_adams() )
            
          },
          "select" = {
