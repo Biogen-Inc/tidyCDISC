@@ -7,14 +7,13 @@ sidebarLayout(
                prettyRadioButtons(
                  inputId = ns("radio"),
                  label = "Type of Chart:",
-                 choices = list("Select one:   " = "0",
-                                "Scatter Plot  " = "1",
+                 choices = list("Scatter Plot  " = "1",
                                 "Spaghetti Plot" = "2",
                                 "Box Plot      " = "3",
                                 "Heat Map      " = "4",
                                 "Histogram     " = "5"
                                 ),
-                 selected = "0",
+                 selected = character(0),
                  icon = icon("check")
                ),
                # below are all the possible subparameters
