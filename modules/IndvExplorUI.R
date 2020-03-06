@@ -7,13 +7,15 @@ IndvExplorUI <- function(id, label = "Individual Explorer") {
   useShinyjs()
   
   tagList(
+    
 
     selectInput(
       ns("selPatNo"),
-      label = tags$small("Patient Number: (select one to proceed)"),
+      label = "Please Select a Patient Number (USUBJID)",
       choices = " "
     ),
     
+    br(),
     fluidRow(
       column(12, DT::dataTableOutput(ns("demogInfo")))
     ),

@@ -1,7 +1,14 @@
-IndvExpl2SelPatno <- function(input, output, session, datafile, dataselected){
+IndvExpl2SelPatno <- function(input, output, session, datafile, loaded_adams){ #, dataselected
   
   ns <- session$ns
 
+  
+  
+    
+  
+  
+  
+  
 # observeEvent for inputselPatno 
 observeEvent(input$selPatNo, {
   
@@ -16,18 +23,21 @@ observeEvent(input$selPatNo, {
     NULL
   })
   
+
+  
   output$demogInfo <- DT::renderDataTable({
     
     adsl_rec <- datafile()[["ADSL"]] %>%
       filter(USUBJID == input$selPatNo) %>%
-      select(USUBJID, COUNTRYC, AGE, AGEGR, SEX, RACE, SITEID, TRT01P, RANDDT, TR01SDT, LAST2SDT)
+      select(COUNTRYC, AGE, AGEGR, SEX, RACE, SITEID, TRT01P, RANDDT, TR01SDT, LAST2SDT) #74 Removed USUBJID
     
     adsl_rec <- as.data.frame((adsl_rec)) # 'data' must be 2-dimensional (e.g. data frame or matrix)
     
     # Assuming we are only getting one record returned
     DT::datatable(adsl_rec, options = list(dom = 't'), rownames = FALSE, 
                   colnames = c('Planned Treatment Group' = 8),
-                  caption = "Selected Demographic variables from ADSL")
+                  caption = tags$caption(style = "font-size:20px;color:black;", paste0(input$selPatNo, ": Demographic Info from ADSL" ))
+                  )
     
   })
   
@@ -52,17 +62,18 @@ observeEvent(input$selPatNo, {
   checked3 <- NULL
   checked4 <- NULL
   
+  # Am I supposed to add more to this list?
   # check for "adsl" (required), "adae" (adds to Events), "adcm" (adds to Events & Value), and "adlb" (adds to Events & Value)
-  if ("ADSL" %in% dataselected()) {
+  if ("ADSL" %in% loaded_adams()) {
     checked1 <- "DS"
   }
-  if ("ADAE" %in% dataselected()) {
+  if ("ADAE" %in% loaded_adams()) {
     checked2 <- "AE"
   }
-  if ("ADCM" %in% dataselected())  {
+  if ("ADCM" %in% loaded_adams())  {
     checked3 <- "CM"
   }
-  if ("ADLB" %in% dataselected()) {
+  if ("ADLB" %in% loaded_adams()) {
     checked4 <- "LB"
   }
   
@@ -72,6 +83,10 @@ observeEvent(input$selPatNo, {
   choices <- setNames(choices,names)
   # Remove NULLs from the list
   choices <- choices[!sapply(choices,is.null)]
+  
+  
+  
+  
   
   # update the checkbox group
   updateCheckboxGroupInput(

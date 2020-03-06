@@ -77,7 +77,7 @@ ui <-
                tabPanel(
                  title = "Individual Explorer",
                  # dataUploadUI("indvl", "Import CSV"),  
-                 selectDataUI(id = "indvl"),
+                 # selectDataUI(id = "indvl"), # Removed - Issue 74
                  IndvExplorUI(id = "indvl")
                )
     ),
@@ -115,10 +115,10 @@ server <- function(input, output, session) {
   callModule(PopuExplor, id = "popul", datafile = datafile)
   
   # Individual Explorer
-  dataselected <- callModule(IndvExpl1Initial, "indvl", datafile)
-  usubjid  <- callModule(IndvExpl2SelPatno , "indvl", datafile, dataselected)
-  callModule(IndvExpl3CheckGroup,  "indvl", datafile, dataselected, usubjid = usubjid)
-  callModule(IndvExpl4ChartPlotly, "indvl", datafile, dataselected, seltypes = seltypes, usubjid = usubjid)
+  user_loaded_adams <- callModule(IndvExpl1Initial, "indvl", datafile = datafile)
+  usubjid  <- callModule(IndvExpl2SelPatno , "indvl", datafile = datafile,  loaded_adams = user_loaded_adams) #, dataselected
+  callModule(IndvExpl3CheckGroup,  "indvl", datafile,  loaded_adams = user_loaded_adams, usubjid = usubjid) #, dataselected
+  callModule(IndvExpl4ChartPlotly, "indvl", datafile,  loaded_adams = user_loaded_adams, seltypes = seltypes, usubjid = usubjid) #, dataselected
   
 }
 

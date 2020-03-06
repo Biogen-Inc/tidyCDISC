@@ -3,11 +3,7 @@ IndvExpl1Initial <- function(input, output, session, datafile, dataselected){
   
   ns <- session$ns
   
-  dataselected <- callModule(selectData, id = NULL, datafile)
-  # observe(print(dataselected()))
   
-  # seltypes <- c(" ")  # initialize seltypes
-
   # Hide widgets until the input file has been selected
   shinyjs::hide(id = "selPatNo")
   shinyjs::hide(id = "selType")
@@ -17,31 +13,35 @@ IndvExpl1Initial <- function(input, output, session, datafile, dataselected){
   shinyjs::hide(id = "hr2")
   shinyjs::hide(id = "hr3")
   
-  observe({
   
-  # make sure selectData has been run
-  req(!is.null(dataselected()))
-    
-  datakeep <- reactive({ datafile()[dataselected()] })
   
-  # Guard against user forgetting to select an ADSL dataset
-  if (!"ADSL" %in% names(datakeep())) {
-      shinyjs::alert("An ADSL dataset is required.")
-      return()
-  } 
-       
-  # The rest of the widgets will be shown after the USUBJID has been selected
-  subj <- unique(datafile()$ADSL[, "USUBJID"]) # get list of unique USUBJIDs
-  
-  updateSelectInput(
-    session = session,
-    inputId = "selPatNo",
-    choices = c(" ",subj),
-    selected = " "
-  )
-  shinyjs::show(id = "selPatNo") # ac: display the patient number dropdown
+  my_loaded_adams <- reactive({
+    # Only select data that starts with AD followed by one or more alphanumerics or underscore
+    req(!is.null(datafile()))
+    sasdata0 <- toupper(names(datafile()))
+    sasdata <- names(which(sapply(sasdata0,function(df) { return(stringr::str_detect(toupper(df),"^AD[A-Z0-9\\_]+")) })))
+    return(sasdata)
   })
   
-  return(dataselected) # ac: I wonder why we need to return this again, nothing happened to it
+  
+  observe({
+    # make sure selectData has been run
+    req(!is.null(datafile())) #74
+    
+    
+    # The rest of the widgets will be shown after the USUBJID has been selected
+    subj <- unique(datafile()$ADSL[, "USUBJID"]) # get list of unique USUBJIDs
+    
+    updateSelectInput(
+      session = session,
+      inputId = "selPatNo",
+      choices = c(" ",subj),
+      selected = " "
+    )
+    shinyjs::show(id = "selPatNo") # ac: display the patient number dropdown
+  })
+  
+  # return(dataselected) # #74
+  return(my_loaded_adams) #74
   
 } # IndvExpl1Initial
