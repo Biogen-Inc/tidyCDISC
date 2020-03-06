@@ -1,4 +1,4 @@
-IndvExpl4ChartPlotly <- function(input, output, session, datafile, dataselected, seltypes, usubjid){
+IndvExpl4ChartPlotly <- function(input, output, session, datafile, seltypes, usubjid){ #, dataselected
   
   ns <- session$ns
   
@@ -6,10 +6,10 @@ IndvExpl4ChartPlotly <- function(input, output, session, datafile, dataselected,
   # if ADCM or ADLB were selected, add to the seltypes selectInput list
   
   observe({
-    if ("ADCM" %in% dataselected()) {
+    if ("ADCM" %in% names(datafile())) {
       seltypes <- c(seltypes,"MEDS")
     }
-    if ("ADLB" %in% dataselected()) {
+    if ("ADLB" %in% names(datafile())) {
       seltypes <- c(seltypes,"LABS")
     }
 
@@ -45,7 +45,7 @@ observeEvent(input$selType, {
            shinyjs::show(id = "DataTable")
            shinyjs::show(id = "PlotChart")
            
-           if ("ADCM" %in% names(datafile()) && ("ADCM" %in% dataselected())) {
+           if ("ADCM" %in% names(datafile()) ) {
              
              cm_tab <- as.data.frame(datafile()[["ADCM"]]) %>%
                filter(USUBJID == input$selPatNo) %>%
@@ -98,7 +98,7 @@ observeEvent(input$selType, {
                  
                }) # renderPlotly
              }) # else
-           } # if ("ADCM" %in% names(datafile()) && ("ADCM" %in% dataselected()))
+           } # if ("ADCM" %in% names(datafile()) && ("ADCM" %in% datafile()))
            
          },
          
@@ -107,7 +107,7 @@ observeEvent(input$selType, {
            shinyjs::show(id = "DataTable")
            shinyjs::show(id = "PlotChart")
            
-           if ("ADLB" %in% names(datafile()) && ("ADLB" %in% dataselected())) {
+           if ("ADLB" %in% names(datafile()) ) {
              
              lb_rec <- datafile()[["ADLB"]] %>% 
                filter(USUBJID == input$selPatNo)
@@ -202,7 +202,7 @@ observeEvent(input$selType, {
                  
                }) # renderPlotly
              }) # else
-           } #if ("ADLB" %in% names(datafile()) && ("ADLB" %in% dataselected()))
+           } #if ("ADLB" %in% names(datafile()) )
            
          },
          "select" = {

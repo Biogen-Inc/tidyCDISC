@@ -39,7 +39,7 @@ source('modules/PopuExpl5Hist.R')
 # individual explorer
 source('modules/IndvExplorUI.R')
 # server code broken into four sections
-source('modules/IndvExpl1Initial.R')
+# source('modules/IndvExpl1Initial.R')
 source('modules/IndvExpl2SelPatno.R')
 source('modules/IndvExpl3CheckGroup.R')
 source('modules/IndvExpl4ChartPlotly.R')

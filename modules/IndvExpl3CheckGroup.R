@@ -1,4 +1,4 @@
-IndvExpl3CheckGroup <- function(input, output, session, datafile, dataselected, usubjid){
+IndvExpl3CheckGroup <- function(input, output, session, datafile, usubjid){ #, dataselected
   
   ns <- session$ns
   
@@ -14,7 +14,7 @@ observeEvent(input$checkGroup, {
   # and then combine the ones selected in input$checkGroup
   # DOMAIN is used to match the input$checkGroup string
   
-  if ("ADAE" %in% names(datafile()) && "ADAE" %in% dataselected()) { # ac: first part not needed?
+  if ("ADAE" %in% names(datafile()) ) { # ac: first part not needed?
     ae_rec <- datafile()[["ADAE"]] %>%
       filter(USUBJID == usubjid()) %>%
       filter(!is.na(AESTDT)) %>%
@@ -30,7 +30,7 @@ observeEvent(input$checkGroup, {
     ae_rec <- NULL
   }
   
-  if ("ADSL" %in% names(datafile()) && "ADSL" %in% dataselected()) {
+  if ("ADSL" %in% names(datafile()) ) {
     ds_rec <- datafile()[["ADSL"]] %>%
       filter(USUBJID == usubjid()) %>%
       mutate(EVENTTYP = "Subject Status", DOMAIN = "DS") %>%
@@ -41,7 +41,7 @@ observeEvent(input$checkGroup, {
     ds_rec <- NULL
   }
   
-  if ("ADCM" %in% names(datafile()) && "ADCM" %in% dataselected()) {
+  if ("ADCM" %in% names(datafile()) ) {
     cm_rec <- datafile()[["ADCM"]] %>%
       filter(USUBJID == usubjid()) %>%
       filter(CMDECOD != "") %>%
@@ -54,7 +54,7 @@ observeEvent(input$checkGroup, {
     cm_rec <- NULL
   }
   
-  if ("ADLB" %in% names(datafile()) && ("ADLB" %in% dataselected())) {
+  if ("ADLB" %in% names(datafile()) ) {
     lb_rec <- datafile()[["ADLB"]] %>%
       filter(USUBJID == usubjid()) %>%
       mutate(EVENTTYP = "Lab Results", DOMAIN = "LB") %>%
@@ -71,6 +71,12 @@ observeEvent(input$checkGroup, {
   # Remove NULLs from the list
   uni_list <- list(ds_rec, ae_rec, cm_rec, lb_rec)
   uni_list <- uni_list[!sapply(uni_list,is.null)]
+  
+  # print some stuff
+  # cat(paste("uni_list:", uni_list))
+  # cat(paste("\nADSL in datafile?", "ADSL" %in% names(datafile())))
+  # cat(paste("\nChoices list:", choices))
+  # cat(paste("\nChoices unlisted:", unlist(choices)))
   
   uni_rec <-
     do.call("rbind", uni_list) %>%
