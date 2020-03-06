@@ -2,6 +2,11 @@ PopuExplor <- function(input, output, session, datafile){
   
   ns <- session$ns
   
+  waiting_screen <- tagList(
+    spin_folding_cube(),
+    h4("Hold on a bit while we merge datasets...")
+  ) 
+  
   dataselected <- callModule(selectData, id = NULL, datafile)
 
 # show/hide checkboxes depending on radiobutton selection
@@ -10,14 +15,13 @@ PopuExplor <- function(input, output, session, datafile){
   # make sure selectData has been run
   req(!is.null(dataselected()))
 
-    # Create a Progress object
-    progress <- shiny::Progress$new()
-    # Make sure it closes when we exit this reactive, even if there's an error
-    on.exit(progress$close())
-            
-    progress$set(message = "Merging data...", value = 0)   
-    
+  waiter_show(html = waiting_screen, color = "lightblue")
+  
+  Sys.sleep(1) # wait 1 second
   datakeep <- reactive({ datafile()[dataselected()] })
+  
+  # idsn <- showNotification("Reading data...", duration = NULL, closeButton = FALSE)
+  # on.exit(removeNotification(idsn), add = TRUE)
   
   # The data used by the population explorer is going to be one of:
   # (1) one or more BDS datasets joined ("pancaked") together (with or without ADSL data)
@@ -108,31 +112,49 @@ PopuExplor <- function(input, output, session, datafile){
   all_data <- cbind(othdat,chrdat)
   
   # This is to create ordered factors of TRT01A, TRT01P if they exist, and if STUDYID 105MS301 is used
-  if ("STUDYID" %in% colnames(all_data)) {
-    if (unique(all_data$STUDYID) == "105MS301") {
-      if ("TRT01A" %in% colnames(all_data)) {
-        all_data <- all_data %>%
-        mutate(TRT01A = factor(TRT01A, ordered = TRUE,
-        levels = c("Placebo", "BIIB017 125 mcg every 4 weeks", "BIIB017 125 mcg every 2 weeks")))
-      } 
-      if ("TRT01P" %in% colnames(all_data)) {
-        all_data <- all_data %>%
-        mutate(TRT01P = factor(TRT01P, ordered = TRUE,
-        levels = c("Placebo", "BIIB017 125 mcg every 4 weeks", "BIIB017 125 mcg every 2 weeks")))
-      }
-    } 
-  }
+  # if ("STUDYID" %in% colnames(all_data)) {
+  #   if (unique(all_data$STUDYID) == "105MS301") {
+  #     if ("TRT01A" %in% colnames(all_data)) {
+  #       all_data <- all_data %>%
+  #       mutate(TRT01A = factor(TRT01A, ordered = TRUE,
+  #       levels = c("Placebo", "BIIB017 125 mcg every 4 weeks", "BIIB017 125 mcg every 2 weeks")))
+  #     } 
+  #     if ("TRT01P" %in% colnames(all_data)) {
+  #       all_data <- all_data %>%
+  #       mutate(TRT01P = factor(TRT01P, ordered = TRUE,
+  #       levels = c("Placebo", "BIIB017 125 mcg every 4 weeks", "BIIB017 125 mcg every 2 weeks")))
+  #     }
+  #   } 
+  # }
   
-  progress$set(message = "Done!", value = 1)   
+  waiter_hide()
   
-  # update the radio button to c("0")
+  print("updating the radio buttons...")
+  # update the radio button to character(0)
   updatePrettyRadioButtons(
     session = session,
     inputId = "radio",
-    prettyOptions =list(status = "success"),
-    selected = "0"
+    selected = character(0)
   )
 
+  # hide all the widgets
+  shinyjs::hide(id="selPrmCode")
+  shinyjs::hide(id="splitbox")
+  shinyjs::hide(id="splitbyvar")
+  shinyjs::hide(id="selxvar")
+  shinyjs::hide(id="selyvar")
+  shinyjs::hide(id="selzvar")
+  shinyjs::hide(id="seltimevar")
+  shinyjs::hide(id="responsevar")
+  shinyjs::hide(id="AddPoints")
+  shinyjs::hide(id="animate")
+  shinyjs::hide(id="animateby")
+  shinyjs::hide(id="numBins")
+  shinyjs::hide(id="AddLine")
+  shinyjs::hide(id="AddErrorBar")
+  shinyjs::hide(id="DiscrXaxis")
+  shinyjs::hide(id="UseCounts")
+  
   observeEvent(input$radio,{
   
   # Clear plotoutput
@@ -152,26 +174,6 @@ PopuExplor <- function(input, output, session, datafile){
     selected = sort(unique(all_data$PARAMCD))[[1]])
     
   switch(input$radio, # use swtich() instead of if/else
-         "0" = {
-           # pick one
-           shinyjs::hide(id="selPrmCode")
-           shinyjs::hide(id="splitbox")
-           shinyjs::hide(id="splitbyvar")
-           shinyjs::hide(id="selxvar")
-           shinyjs::hide(id="selyvar")
-           shinyjs::hide(id="selzvar")
-           shinyjs::hide(id="seltimevar")
-           shinyjs::hide(id="responsevar")
-           shinyjs::hide(id="AddPoints")
-           shinyjs::hide(id="animate")
-           shinyjs::hide(id="animateby")
-           shinyjs::hide(id="numBins")
-           shinyjs::hide(id="AddLine")
-           shinyjs::hide(id="AddErrorBar")
-           shinyjs::hide(id="DiscrXaxis")
-           shinyjs::hide(id="UseCounts")
-           
-         },
          "1" = {
            # scatter plot module
            dataset <- reactive({ all_data })
@@ -203,7 +205,7 @@ PopuExplor <- function(input, output, session, datafile){
            callModule(PopuExpl5Hist, id = NULL, dataset)
          },
          # This should not happen
-         stop("invalid",input$radio,"value")
+         stop("invalid radio button: ",input$radio)
          )
   
 })

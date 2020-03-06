@@ -16,6 +16,7 @@ library(shinythemes)
 library(rmarkdown)
 library(shinytest)
 library(reactable)
+library(waiter)
 
 options(shiny.sanitize.errors = FALSE)
 options(bitmapType='cairo') 
@@ -53,6 +54,7 @@ ui <-
       tags$script(src = "https://code.jquery.com/ui/1.12.1/jquery-ui.js")
     ),
     useShinyjs(),
+    use_waiter(), # include dependencies
     extendShinyjs(text = jscode),
     navbarPage(theme = "yeti.css",
                title = div(id="logo-id","IDEA", img(src="IDEA_ICON.png", style="float:left; padding-right:3px; height:25px; width:30px")), 
