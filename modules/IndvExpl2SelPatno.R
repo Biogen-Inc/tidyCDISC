@@ -27,15 +27,22 @@ observeEvent(input$selPatNo, {
   
   output$demogInfo <- DT::renderDataTable({
     
+    # grab demographic variables of interest. Notice if COUNTRYC doesn't exist, we'll grab country. If neither exists, one_of() will throw a
+    # warning, but it the select() will still execute
+    adsl <- datafile()[["ADSL"]]
     adsl_rec <- datafile()[["ADSL"]] %>%
       filter(USUBJID == input$selPatNo) %>%
-      select(COUNTRYC, AGE, AGEGR, SEX, RACE, SITEID, TRT01P) #79 removed dates due to redundancy, RANDDT, TR01SDT, LAST2SDT) #74 Removed USUBJID
+      select(one_of(ifelse("COUNTRYC" %in% colnames(adsl),"COUNTRYC","COUNTRY"))
+             , AGE
+             , one_of(ifelse("AGEGR" %in% colnames(adsl),"AGEGR","AGEGR1"))
+             , SEX, RACE, SITEID, TRT01P) #79 removed dates due to redundancy, RANDDT, TR01SDT, LAST2SDT) #74 Removed USUBJID
     
     adsl_rec <- as.data.frame((adsl_rec)) # 'data' must be 2-dimensional (e.g. data frame or matrix)
     
     # Assuming we are only getting one record returned
+    # col position below depends on if country exists in ADSL (it is not required to exist)
     DT::datatable(adsl_rec, options = list(dom = 't'), rownames = FALSE,
-                  colnames = c('Planned Treatment Group' = 7),
+                  colnames = c('Planned Treatment Group' = ncol(adsl_rec)),
                   caption = tags$caption(style = "font-size:20px;color:black;", paste0(input$selPatNo, ": Demographic Info from ADSL" ))
                   )
     
