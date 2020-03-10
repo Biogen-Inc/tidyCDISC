@@ -10,6 +10,7 @@ observeEvent(input$checkGroup, {
   output$eventsTable <- DT::renderDataTable({
     NULL
   })
+  
   # Here we collect data for adae, ds (from adsl), adcm and adlb
   # and then combine the ones selected in input$checkGroup
   # DOMAIN is used to match the input$checkGroup string
@@ -31,11 +32,23 @@ observeEvent(input$checkGroup, {
   }
   
   if ("ADSL" %in% loaded_adams() ) {
-    ds_rec <- datafile()[["ADSL"]] %>%
+    
+    # organizing our ADSL labels for merging below
+    adsl <- data.frame(datafile()[["ADSL"]])
+    n <- ncol(adsl)
+    labs <- data.frame(  event_var = colnames(adsl)
+                         , DECODE = map_chr(1:n, function(x) attr(adsl[[x]], "label") )
+    )
+    
+    ds_rec <- adsl %>%
       filter(USUBJID == usubjid()) %>%
-      mutate(EVENTTYP = "Subject Status", DOMAIN = "DS") %>%
-      select(USUBJID, EVENTTYP, LAST1SDT, STUREA1, DOMAIN) %>%
-      rename(START = LAST1SDT, DECODE = STUREA1) %>%
+      select(USUBJID,ends_with("DT")) %>%
+      pivot_longer(-USUBJID, names_to = "event_var", values_to = "START") %>%
+      subset(!is.na(START)) %>%
+      left_join(labs) %>% #DECODE variable exists in here
+      arrange(START)%>%
+      mutate(EVENTTYP = "Milestones", DOMAIN = "DS") %>%
+      select(USUBJID, EVENTTYP, START, DECODE, DOMAIN)%>%
       select(-starts_with("DS"))
   } else {
     ds_rec <- NULL
@@ -89,7 +102,7 @@ observeEvent(input$checkGroup, {
   if (!is.null(uni_rec) && nrow(uni_rec) > 0)
   {
     output$eventsTable <- DT::renderDataTable({
-      DT::datatable(uni_rec, colnames = c("Type of Event","Date of Event","Comments"),options = list(dom = 'ftp', pageLength = 15))
+      DT::datatable(uni_rec, colnames = c("Type of Event","Date of Event","Event Description"),options = list(dom = 'ftp', pageLength = 15))
     })
   } else {
     if (!is.null(input$checkGroup)) {

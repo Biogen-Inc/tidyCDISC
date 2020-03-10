@@ -20,11 +20,13 @@ IndvExplorUI <- function(id, label = "Individual Explorer") {
       column(12, DT::dataTableOutput(ns("demogInfo")))
     ),
     
+    br(),
     hr(id = ns("hr2"), style = "border-color: darkblue;"),
+    br(),
     
     checkboxGroupInput(
       inputId = ns("checkGroup"),
-      label = "Types of Events",
+      label = h4(strong("Patient Events")),
       choices = c(" "),
       selected = NULL,
       inline = TRUE
@@ -34,7 +36,9 @@ IndvExplorUI <- function(id, label = "Individual Explorer") {
       column(8, DT::dataTableOutput(ns("eventsTable")))
     ),
     
+    br(),
     hr(id = ns("hr3"), style = "border-color: darkblue;"),
+    br(),
     
     selectInput(
       ns("selType"),

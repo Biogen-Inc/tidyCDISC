@@ -23,19 +23,19 @@ observeEvent(input$selPatNo, {
     NULL
   })
   
-
+  
   
   output$demogInfo <- DT::renderDataTable({
     
     adsl_rec <- datafile()[["ADSL"]] %>%
       filter(USUBJID == input$selPatNo) %>%
-      select(COUNTRYC, AGE, AGEGR, SEX, RACE, SITEID, TRT01P, RANDDT, TR01SDT, LAST2SDT) #74 Removed USUBJID
+      select(COUNTRYC, AGE, AGEGR, SEX, RACE, SITEID, TRT01P) #79 removed dates due to redundancy, RANDDT, TR01SDT, LAST2SDT) #74 Removed USUBJID
     
     adsl_rec <- as.data.frame((adsl_rec)) # 'data' must be 2-dimensional (e.g. data frame or matrix)
     
     # Assuming we are only getting one record returned
-    DT::datatable(adsl_rec, options = list(dom = 't'), rownames = FALSE, 
-                  colnames = c('Planned Treatment Group' = 8),
+    DT::datatable(adsl_rec, options = list(dom = 't'), rownames = FALSE,
+                  colnames = c('Planned Treatment Group' = 7),
                   caption = tags$caption(style = "font-size:20px;color:black;", paste0(input$selPatNo, ": Demographic Info from ADSL" ))
                   )
     
@@ -78,7 +78,7 @@ observeEvent(input$selPatNo, {
   }
   
   choices <- list(checked1,checked2,checked3,checked4)
-  names <- c("Disposition","Adverse Events","Concomitant Meds","Labs") # ac: labels
+  names <- c("Milestones","Adverse Events","Concomitant Meds","Labs") # ac: labels
   # build a named list
   choices <- setNames(choices,names)
   # Remove NULLs from the list
