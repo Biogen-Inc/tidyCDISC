@@ -2,6 +2,13 @@ IndvExpl3CheckGroup <- function(input, output, session, datafile, loaded_adams, 
   
   ns <- session$ns
   
+  
+  
+output$events_header <- renderText({
+  req(!is.null(datafile()))
+  paste0("Patient '", usubjid(), "' Events by Date")
+})
+  
 observeEvent(input$checkGroup, {
   
   req(usubjid() != " ") # selPatNo cannot be blank - ac: not sure if Robert expects this to work like "validate(need())"
@@ -38,14 +45,15 @@ observeEvent(input$checkGroup, {
     n <- ncol(adsl)
     labs <- data.frame(  event_var = colnames(adsl)
                          , DECODE = map_chr(1:n, function(x) attr(adsl[[x]], "label") )
-    )
+    ) %>%
+      mutate(event_var = as.character(event_var))
     
     ds_rec <- adsl %>%
       filter(USUBJID == usubjid()) %>%
       select(USUBJID,ends_with("DT")) %>%
       pivot_longer(-USUBJID, names_to = "event_var", values_to = "START") %>%
       subset(!is.na(START)) %>%
-      left_join(labs) %>% #DECODE variable exists in here
+      left_join(labs, by = "event_var") %>% #DECODE variable exists in here
       arrange(START)%>%
       mutate(EVENTTYP = "Milestones", DOMAIN = "DS") %>%
       select(USUBJID, EVENTTYP, START, DECODE, DOMAIN)%>%
@@ -102,7 +110,12 @@ observeEvent(input$checkGroup, {
   if (!is.null(uni_rec) && nrow(uni_rec) > 0)
   {
     output$eventsTable <- DT::renderDataTable({
-      DT::datatable(uni_rec, colnames = c("Type of Event","Date of Event","Event Description"),options = list(dom = 'ftp', pageLength = 15))
+      DT::datatable(uni_rec, colnames = c("Type of Event","Date of Event","Event Description")
+                    ,options = list(  dom = 'lftpr'
+                                    , pageLength = 15
+                                    , lengthMenu = list(c(15, 50, 100, -1),c('15', '50', '100', "All"))
+                                   )
+                    )
     })
   } else {
     if (!is.null(input$checkGroup)) {

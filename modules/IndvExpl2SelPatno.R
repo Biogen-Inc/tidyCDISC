@@ -40,19 +40,21 @@ observeEvent(input$selPatNo, {
     adsl_rec <- as.data.frame((adsl_rec)) # 'data' must be 2-dimensional (e.g. data frame or matrix)
     
     # Assuming we are only getting one record returned
-    # col position below depends on if country exists in ADSL (it is not required to exist)
+    # col position below depends on if country exists in ADSL (it is not required to exist), but it is always the last column
     DT::datatable(adsl_rec, options = list(dom = 't'), rownames = FALSE,
                   colnames = c('Planned Treatment Group' = ncol(adsl_rec)),
-                  caption = tags$caption(style = "font-size:20px;color:black;", paste0(input$selPatNo, ": Demographic Info from ADSL" ))
+                  caption = tags$caption(style = "font-weight:bold;font-size:20px;color:black;", paste0("Patient '", input$selPatNo, "' Demographic Info" ))
                   )
     
   })
   
   # Show the rest of the widgets once a patient number was selected
   shinyjs::show(id = "hr2")
-  shinyjs::show(id = "hr3")
+  shinyjs::show(id = "events_header")
   shinyjs::show(id = "checkGroup")
   shinyjs::show(id = "eventsTable")
+  shinyjs::show(id = "hr3")
+  shinyjs::show(id = "plot_header")
   shinyjs::show(id = "selType")
   
   # Clear datatable - ac: do we need to do this?

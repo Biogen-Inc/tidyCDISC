@@ -2,8 +2,6 @@ IndvExplorUI <- function(id, label = "Individual Explorer") {
   
   ns <- NS(id)
   
-  # seltypes <- c(" ","MEDS","LABS")
-  
   useShinyjs()
   
   tagList(
@@ -17,32 +15,35 @@ IndvExplorUI <- function(id, label = "Individual Explorer") {
     
     br(),
     fluidRow(
-      column(12, DT::dataTableOutput(ns("demogInfo")))
+      column(10, DT::dataTableOutput(ns("demogInfo")))
     ),
     
     br(),
     hr(id = ns("hr2"), style = "border-color: darkblue;"),
     br(),
     
+    
+    h4(strong(textOutput(ns("events_header")))),
     checkboxGroupInput(
       inputId = ns("checkGroup"),
-      label = h4(strong("Patient Events")),
+      label = "For additional events, load a AE, LB, or CM",
       choices = c(" "),
       selected = NULL,
       inline = TRUE
     ),
     
     fluidRow(
-      column(8, DT::dataTableOutput(ns("eventsTable")))
+      column(10, DT::dataTableOutput(ns("eventsTable")))
     ),
     
     br(),
     hr(id = ns("hr3"), style = "border-color: darkblue;"),
     br(),
     
+    h4(strong(textOutput(ns("plot_header")))),
     selectInput(
       ns("selType"),
-      label = HTML("Type of Value: MEDS or LABS<br/>Did you select ADCM or ADLB?"),
+      label = HTML("Select a loaded ADaM with columns 'PARAM' &<br/>'AVAL', plus either 'AVISIT', 'AVISITN, or 'VISITDY'"),
       choices = c(" "),
       selected =  " "
     ),

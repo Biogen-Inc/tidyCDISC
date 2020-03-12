@@ -1,10 +1,31 @@
-IndvExpl4ChartPlotly <- function(input, output, session, datafile, loaded_adams, seltypes, usubjid){ #, dataselected
+IndvExpl4ChartPlotly <- function(input, output, session, datafile, loaded_adams, usubjid){ #, dataselected
   
   ns <- session$ns
+  
+  
+  # We can only plot ADaM datasets that have the variables we need for plotting. Those include:
+  #   req: "PARAM", 
+  #   req at least 1: "AVISIT", "AVISITN", "VISITDY"
+  #   req: "AVAL"
+  plotable_adams <- reactive({
+    # Only select data that starts with AD followed by one or more alphanumerics or underscore
+    req(!is.null(datafile()))
+    needed_cols_exists <- names(which(sapply(datafile(), FUN = function(x) all(c("PARAM","AVAL") %in% colnames(x)))) > 0)
+    one_visit_exists <- names(which(sapply(datafile(), FUN = function(x) any(c("AVISIT","AVISITN","VISITDY") %in% colnames(x)))) > 0)
+    return(intersect(needed_cols_exists,one_visit_exists))
+  })
+  
+  
+  output$plot_header <- renderText({
+    req(!is.null(datafile()))
+    paste0("Plot Patient '", usubjid(), "' Metrics by Visit")
+  })
   
   seltypes = c(" ")
   # if ADCM or ADLB were selected, add to the seltypes selectInput list
   
+  # ac: maybe we want to search the loaded_adams for data sets that have the columns we
+  # need for graphing? USUBJID, PARAM, AVISIT, AVISITN, AVAL... maybe VISITDY
   observe({
     if ("ADCM" %in% loaded_adams()) {
       seltypes <- c(seltypes,"MEDS")
@@ -101,6 +122,10 @@ observeEvent(input$selType, {
            } # if ("ADCM" %in% loaded_adams() && ("ADCM" %in% datafile()))
            
          },
+         
+         
+         
+         
          
          "LABS" = {
            shinyjs::show(id = "selLabCode")
