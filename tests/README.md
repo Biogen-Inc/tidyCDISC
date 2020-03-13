@@ -19,10 +19,10 @@ All R data frames are created using `tests/data/test_data.RDS` and are compared 
 - [X] 13)	 Mean of ADSL, group by COLUMN with filter [ROW == AGE, COLUMN == TRT01P, COUNTRY == CANADA]
 
 ### FREQUENCY BLOCK
-- [X] 14)	**off by 1** Frequency of ROW [ROW == SEX,]
-- [X] 15)	**off by 1** Frequency of ROW with filter [ROW == SEX, COUNTRY == CANADA]
-- [X] 16)	**off by 1** Frequency of ROW, group by COLUMN [ROW == SEX, COLUMN == TRT01P]
-- [X] 17)	**off by 1** Frequency of ROW, group by COLUMN, with Filter [ROW == SEX, COLUMN == TRT01P,  FILTER == CANADA]
+- [X] 14)	Frequency of ROW [ROW == SEX,]
+- [X] 15)	Frequency of ROW with filter [ROW == SEX, COUNTRY == CANADA]
+- [X] 16)	Frequency of ROW, group by COLUMN [ROW == SEX, COLUMN == TRT01P]
+- [X] 17)	Frequency of ROW, group by COLUMN, with Filter [ROW == SEX, COLUMN == TRT01P,  FILTER == CANADA]
 
 ### T-TEST
 - [X] 18)	PARAMCD [ROW == DIABP, COLUMN == TRT01P]
