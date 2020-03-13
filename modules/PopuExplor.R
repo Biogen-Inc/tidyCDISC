@@ -6,22 +6,51 @@ PopuExplor <- function(input, output, session, datafile){
     spin_folding_cube(),
     h4("Hold on a bit while we merge datasets...")
   ) 
-  
+
   dataselected <- callModule(selectData, id = NULL, datafile)
 
 # show/hide checkboxes depending on radiobutton selection
   observeEvent(input$done,{
-  
-  # make sure selectData has been run
-  req(!is.null(dataselected()))
+    
+    # make sure selectData has been run
+    req(!is.null(dataselected()))    
+    
+    waiter_show(html = waiting_screen, color = "lightblue")
+    Sys.sleep(0.5) # wait 1/2 second
+    
+    updateSelectInput(session = session, inputId = "responsevar", choices = " ", selected = " ")
+    updateSelectInput(session = session, inputId = "selyvar", choices = " ", selected = " ")
+    
+    # I think what we are up against here is the UI design principle that 
+    # there shouldn't be such a thing as radio buttons with nothing selected. 
+    # To represent that state you need to add an option called 'None selected' as one of the buttons. 
+    #
+    updatePrettyRadioButtons(
+      session = session,
+      inputId = "radio",
+      choices = list("Scatter Plot  " = "1",
+                     "Spaghetti Plot" = "2",
+                     "Box Plot      " = "3",
+                     "Heat Map      " = "4",
+                     "Histogram     " = "5",
+                     "None selected " = "0"
+      ),
+      selected = "0"
+    )
 
-  waiter_show(html = waiting_screen, color = "lightblue")
-  
-  Sys.sleep(1) # wait 1 second
+    updatePrettyRadioButtons(
+      session = session,
+      inputId = "radio",
+      choices = list("Scatter Plot  " = "1",
+                     "Spaghetti Plot" = "2",
+                     "Box Plot      " = "3",
+                     "Heat Map      " = "4",
+                     "Histogram     " = "5"
+      ),
+      selected = character(0)
+    )
+
   datakeep <- reactive({ datafile()[dataselected()] })
-  
-  # idsn <- showNotification("Reading data...", duration = NULL, closeButton = FALSE)
-  # on.exit(removeNotification(idsn), add = TRUE)
   
   # The data used by the population explorer is going to be one of:
   # (1) one or more BDS datasets joined ("pancaked") together (with or without ADSL data)
@@ -29,7 +58,6 @@ PopuExplor <- function(input, output, session, datafile){
   # (3) A custom dataset (with a PARAMCD but without a USUBJID)
   # 
   # Also, build fake PARAMCDs for ADAE and ADCM, if you want to look at them here.
-  all_data <- NULL
   
   # Isolate ADSL 
   if ("ADSL" %in% names(datakeep())) {
@@ -112,30 +140,24 @@ PopuExplor <- function(input, output, session, datafile){
   all_data <- cbind(othdat,chrdat)
   
   # This is to create ordered factors of TRT01A, TRT01P if they exist, and if STUDYID 105MS301 is used
-  # if ("STUDYID" %in% colnames(all_data)) {
-  #   if (unique(all_data$STUDYID) == "105MS301") {
-  #     if ("TRT01A" %in% colnames(all_data)) {
-  #       all_data <- all_data %>%
-  #       mutate(TRT01A = factor(TRT01A, ordered = TRUE,
-  #       levels = c("Placebo", "BIIB017 125 mcg every 4 weeks", "BIIB017 125 mcg every 2 weeks")))
-  #     } 
-  #     if ("TRT01P" %in% colnames(all_data)) {
-  #       all_data <- all_data %>%
-  #       mutate(TRT01P = factor(TRT01P, ordered = TRUE,
-  #       levels = c("Placebo", "BIIB017 125 mcg every 4 weeks", "BIIB017 125 mcg every 2 weeks")))
-  #     }
-  #   } 
-  # }
+  if ("STUDYID" %in% colnames(all_data)) {
+    if (unique(all_data$STUDYID) == "105MS301") {
+      if ("TRT01A" %in% colnames(all_data)) {
+        all_data <- all_data %>%
+        mutate(TRT01A = factor(TRT01A, ordered = TRUE,
+        levels = c("Placebo", "BIIB017 125 mcg every 4 weeks", "BIIB017 125 mcg every 2 weeks")))
+      }
+      if ("TRT01P" %in% colnames(all_data)) {
+        all_data <- all_data %>%
+        mutate(TRT01P = factor(TRT01P, ordered = TRUE,
+        levels = c("Placebo", "BIIB017 125 mcg every 4 weeks", "BIIB017 125 mcg every 2 weeks")))
+      }
+    }
+  }
+  
+  assign("all_data", all_data, envir = .GlobalEnv)
   
   waiter_hide()
-  
-  print("updating the radio buttons...")
-  # update the radio button to character(0)
-  updatePrettyRadioButtons(
-    session = session,
-    inputId = "radio",
-    selected = character(0)
-  )
 
   # hide all the widgets
   shinyjs::hide(id="selPrmCode")
@@ -151,63 +173,86 @@ PopuExplor <- function(input, output, session, datafile){
   shinyjs::hide(id="animateby")
   shinyjs::hide(id="numBins")
   shinyjs::hide(id="AddLine")
-  shinyjs::hide(id="AddErrorBar")
+  shinyjs::hide(id="AddSmooth")
   shinyjs::hide(id="DiscrXaxis")
   shinyjs::hide(id="UseCounts")
   
-  observeEvent(input$radio,{
-  
-  # Clear plotoutput
-  output$PlotlyOut <- renderPlotly({
-    NULL
-  })
-  # Clear datatable
-  output$DataTable <- DT::renderDataTable({
-    NULL
-  }) 
+}, ignoreNULL = FALSE) # observeEvent input$done
 
-  # Update Paramer Code choices
-  updateSelectInput(
-    session = session,
-    inputId = "selPrmCode",
-    choices = c(" ",sort(unique(all_data$PARAMCD))),
-    selected = sort(unique(all_data$PARAMCD))[[1]])
+  observeEvent(input$radio,{
     
-  switch(input$radio, # use swtich() instead of if/else
-         "1" = {
-           # scatter plot module
-           dataset <- reactive({ all_data })
-           callModule(PopuExpl1Scat, id = NULL, dataset)
-         },
-         "2" = {
-           # spaghetti plot module
-           # if ADSL is in data_from then no BDS datasets were selected
-           if (!"ADSL" %in% unique(all_data$data_from)) {
-             dataset <- reactive({ all_data }) 
-             callModule(PopuExpl2Spag, id = NULL, dataselected, dataset)
-           } else {
-             shinyjs::alert("An ADaM BDS dataset is required for spaghetti plot")
-           }
-         },
-         "3" = {
-           # box plot module
-           dataset <- reactive({ all_data })
-           callModule(PopuExpl3Boxp, id = NULL, dataset)
-         }, 
-         "4" = {
-           # heat map module
-           dataset <- reactive({ all_data })
-           callModule(PopuExpl4Heat, id = NULL, dataset)
-         },
-         "5" = {
-           # histogram module
-           dataset <- reactive({ all_data })
-           callModule(PopuExpl5Hist, id = NULL, dataset)
-         },
-         # This should not happen
-         stop("invalid radio button: ",input$radio)
-         )
+    # Clear plotoutput
+    output$PlotlyOut <- renderPlotly({
+      NULL
+    })
+    # Clear datatable
+    output$DataTable <- DT::renderDataTable({
+      NULL
+    }) 
+    
+    # Update Paramer Code choices
+    updateSelectInput(
+      session = session,
+      inputId = "selPrmCode",
+      choices = c(" ",sort(unique(all_data$PARAMCD))),
+      selected = sort(unique(all_data$PARAMCD))[[1]])
+    
+    switch(input$radio, # use swtich() instead of if/else
+           "0" = {
+             # hide all the widgets
+             shinyjs::hide(id="selPrmCode")
+             shinyjs::hide(id="splitbox")
+             shinyjs::hide(id="splitbyvar")
+             shinyjs::hide(id="selxvar")
+             shinyjs::hide(id="selyvar")
+             shinyjs::hide(id="selzvar")
+             shinyjs::hide(id="seltimevar")
+             shinyjs::hide(id="responsevar")
+             shinyjs::hide(id="AddPoints")
+             shinyjs::hide(id="animate")
+             shinyjs::hide(id="animateby")
+             shinyjs::hide(id="numBins")
+             shinyjs::hide(id="AddLine")
+             shinyjs::hide(id="AddSmooth")
+             shinyjs::hide(id="DiscrXaxis")
+             shinyjs::hide(id="UseCounts")
+           },
+           "1" = {
+             # scatter plot module
+             dataset <- reactive({ all_data })
+             callModule(PopuExpl1Scat, id = NULL, dataset)
+           },
+           "2" = {
+             # spaghetti plot module
+             # if ADSL is in data_from then no BDS datasets were selected
+             if (!"ADSL" %in% unique(all_data$data_from)) {
+               message("Running Spaghetti Plot")
+               dataset <- reactive({ all_data }) 
+               callModule(PopuExpl2Spag, id = NULL, dataselected, dataset)
+             } else {
+               message("Spaghetti Plot needs a BDS dataset, not ADSL")
+               shinyjs::alert("An ADaM BDS dataset is required for spaghetti plot")
+             }
+           },
+           "3" = {
+             # box plot module
+             dataset <- reactive({ all_data })
+             callModule(PopuExpl3Boxp, id = NULL, dataset)
+           }, 
+           "4" = {
+             # heat map module
+             dataset <- reactive({ all_data })
+             callModule(PopuExpl4Heat, id = NULL, dataset)
+           },
+           "5" = {
+             # histogram module
+             dataset <- reactive({ all_data })
+             callModule(PopuExpl5Hist, id = NULL, dataset)
+           },
+           # This should not happen
+           stop("invalid radio button: ",input$radio)
+    )
+    
+  }, ignoreNULL = FALSE, ignoreInit = TRUE) # observeEvent input$radio
   
-})
-}, ignoreNULL = FALSE) # observeEvent
 }   # PopuExplor
