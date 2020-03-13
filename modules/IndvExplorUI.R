@@ -41,19 +41,31 @@ IndvExplorUI <- function(id, label = "Individual Explorer") {
     br(),
     
     h4(strong(textOutput(ns("plot_header")))),
-    selectInput(
-      ns("selType"),
-      label = HTML("Select a loaded ADaM with columns 'PARAM' &<br/>'AVAL', plus either 'AVISIT', 'AVISITN, or 'VISITDY'"),
-      choices = c(" "),
-      selected =  " "
-    ),
-    selectInput(
-      ns("selLabCode"),
-      label = tags$small("Lab Code:"),
-      choices = c(" "),selected = " "
+    # fixedPage(
+      fixedRow(
+      column(4,
+        selectInput(
+        ns("selType"),
+        label = HTML("Select a loaded ADaM with columns 'PARAM' &<br/>'AVAL', plus either 'AVISIT', 'AVISITN, or 'VISITDY'"),
+        choices = c(" "),
+        selected =  " "
+        )
+      ),
+      # column(1,""),
+      column(3,
+        selectInput(
+          ns("selLabCode"),
+          label = HTML("<br/>Select a Parameter / Metric:"),
+          choices = c(" "),selected = " "
+        )
+      )
+    # )
     ),
     
-    fluidRow(column(6, DT::dataTableOutput(ns("DataTable"))),
-             column(6, plotlyOutput(ns("PlotChart"), width = "100%", height = "600px")))
+    # fluidRow(column(6, DT::dataTableOutput(ns("DataTable"))),
+    #          column(6, plotlyOutput(ns("PlotChart"), width = "100%", height = "600px")))
+    fluidRow(column(8,plotlyOutput(ns("PlotChart"), width = "100%", height = "600px"))),
+    fluidRow(column(6, DT::dataTableOutput(ns("DataTable"))))
+    
   ) # taglist        
 } # IndvExplorUI

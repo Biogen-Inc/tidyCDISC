@@ -14,8 +14,8 @@ observeEvent(input$selPatNo, {
   
   req(input$selPatNo != " ") # selPatNo cannot be blank
   
-  shinyjs::hide(id = "selType") # ac: I don't think this code will ever be realized because it is tracking when selPatNo is changes, 
-  shinyjs::hide(id = "selLabCode") # and then later, shows the selType Anyway. Same is not true for selLabCode. I think this should
+  # shinyjs::hide(id = "selType") # ac: I don't think this code will ever be realized because it is tracking when selPatNo is changes, 
+  # shinyjs::hide(id = "selLabCode") # and then later, shows the selType Anyway. Same is not true for selLabCode. I think this should
                                    # be in a separate observer with a validate(need())
   
   # Clear eventsTable - ac: do we really want to do this?
