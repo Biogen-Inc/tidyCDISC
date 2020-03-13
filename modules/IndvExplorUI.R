@@ -41,7 +41,6 @@ IndvExplorUI <- function(id, label = "Individual Explorer") {
     br(),
     
     h4(strong(textOutput(ns("plot_header")))),
-    # fixedPage(
       fixedRow(
       column(4,
         selectInput(
@@ -51,15 +50,20 @@ IndvExplorUI <- function(id, label = "Individual Explorer") {
         selected =  " "
         )
       ),
-      # column(1,""),
       column(3,
         selectInput(
           ns("selLabCode"),
           label = HTML("<br/>Select a Parameter / Metric:"),
           choices = c(" "),selected = " "
         )
+      ),
+      column(3,
+       selectInput(
+         ns("visit_var"),
+         label = HTML("<br/>Select a Visit Variable"),
+         choices = c("AVISITN"),selected = "AVISITN"
+       )
       )
-    # )
     ),
     
     # fluidRow(column(6, DT::dataTableOutput(ns("DataTable"))),

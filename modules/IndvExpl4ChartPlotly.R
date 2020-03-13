@@ -72,6 +72,7 @@ observeEvent(input$selType, {
      shinyjs::alert(paste("No PARAMs exist for this ADaM data set & subject!"))  
      
      shinyjs::hide(id = "selLabCode")
+     shinyjs::hide(id = "visit_var")
      
      # # ac: Let's not drop it yet
      # seltypes <- plotable_adams()[!plotable_adams() == input$selType] # drops labs from the list
@@ -85,59 +86,76 @@ observeEvent(input$selType, {
    } else { 
      
      shinyjs::show(id = "selLabCode")
+     shinyjs::show(id = "visit_var")
      shinyjs::show(id = "DataTable")
      shinyjs::show(id = "PlotChart")
      
-     # update array of lab codes
+     # update params list
      updateSelectInput (
        session = session,
        inputId = "selLabCode",
        choices = c(" ",lbcodes),
        selected = " "
      )
+     
+     # update visit variable to display by
+     possible_vst_vars <- c("AVISITN","VISITNUM")
+     my_vst_vars <- possible_vst_vars[which(possible_vst_vars %in% colnames(lb_data))]
+     
+     updateSelectInput (
+       session = session,
+       inputId = "visit_var",
+       choices = my_vst_vars #,
+       # selected = "AVISITN"
+     )
+     
    }
   }) # observe      
        
-
-  observeEvent(input$selLabCode, {
+  # If either param or visit var are updated, run code below
+  observeEvent(list(input$selLabCode, input$visit_var), {
     
+    # don't run until a patient and ADAM are selected
     req(usubjid() != " " & input$selType != " ") # selPatNo cannot be blank
     
+    # create data
     lb_data <- datafile()[[input$selType]] %>%  #ac: "ADLB" #lb_rec
       filter(USUBJID == usubjid()) # ac: input$selPatNo
+    
+    
+    INPUT_visit_var <- sym(input$visit_var)
+    
     
      output$PlotChart <- renderPlotly({
        
        # In the labs, label what the blue lines are in the legend or hover text.
        # make sure a LabCode has been selected
        req(input$selLabCode != " ")
-       
-       # ac: changed from above. Note this is slightly different from table data
-       lb_tab <- lb_data %>%
-         filter(!(is.na(VISITNUM)) & PARAMCD == input$selLabCode) # make sure VISITNUM is not missing
 
        
-       if (nrow(lb_tab) > 0) {
+       # ac: changed from above. Note this is slightly different from table data
+       plot_dat <- lb_data %>%
+         filter(!(is.na(!!INPUT_visit_var)) & PARAMCD == input$selLabCode) # make sure AVISITN is not missing
+       
+       if (nrow(plot_dat) > 0) {
          
-         prmcd <- unique(lb_tab$PARAMCD)
-         prm   <- unique(lb_tab$PARAM)
+         # prmcd <- unique(plot_dat$PARAMCD)
+         prm   <- unique(plot_dat$PARAM)
          
-         lb_plot <- ggplot(lb_tab, aes(x = VISITNUM, y = AVAL)) + 
+         lb_plot <- ggplot(plot_dat, aes(x = !!INPUT_visit_var, y = AVAL)) + 
            geom_line() +
            geom_point(na.rm = TRUE ) +
-           scale_x_continuous(breaks = seq(0, max(lb_tab$VISITNUM), 30)) +
-           labs(x = paste(lb_tab$VISITNUM,"for USUBJID:",unique(lb_tab$USUBJID)),
-                y = lb_tab$AVAL,
-                title = paste(prmcd,":",prm,"by Relative Study Day"),
-                subtitle = paste("USUBJID:",unique(lb_tab$USUBJID))
-                  )
+           scale_x_continuous(breaks = seq(0, max(plot_dat[,input$visit_var]), 30)) +
+           labs(x = "Study Visit",
+                y = "Metric / Parameter",
+                title = paste(prm,"by Relative Study Day"),
+                subtitle = paste("USUBJID:",usubjid())
+           )
          
-         ggplotly(
-           lb_plot
-           , tooltip = "text") #%>%
-           # layout(title = list(text = paste(prmcd,":",prm,"by Study Visit"))) 
+         ggplotly(lb_plot, tooltip = "text") %>%
+           layout(title = list(text = paste0(prm," by Study Visit<br><sup>USUBJID: ",usubjid(),"</sup>")))
          
-       } # if (nrow(lb_tab) > 0)
+       } # if (nrow(plot_dat) > 0)
      }) # renderPlotly
        
        
@@ -148,7 +166,7 @@ observeEvent(input$selType, {
        
        lb_tab <- lb_data %>%
          filter(PARAMCD == input$selLabCode) %>%
-         arrange(VISITNUM) %>% #ac: LBDY
+         arrange(!!INPUT_visit_var) %>% #ac: LBDY
          select(one_of(
                "VISITNUM",
                "VISIT",
@@ -162,6 +180,8 @@ observeEvent(input$selType, {
        if (nrow(lb_tab) > 0) {
          DT::datatable(lb_tab, options = list(dom = 'ftp', pageLength = 20))
        }
+       
+       # DT::datatable(plot_dat, options = list(dom = 'ftp', pageLength = 20))
      }) #renderDataTable
   
   }) # observe
