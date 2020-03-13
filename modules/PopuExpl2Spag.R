@@ -28,8 +28,6 @@ dat <- sort(names(df()[ , which(sapply(df(),is.date  ))])) # all date
 # restrict seltimevar to AVISIT, AVISITN, VSDY
 seltime <- select(df(), ends_with("DY"), starts_with("AVIS"))
 
-print(paste("seltime variables:",paste(unique(names(seltime)),collapse = ",")))
-
 updateSelectInput(
   session = session,
   inputId = "splitbyvar",
@@ -73,13 +71,14 @@ observeEvent(input$seltimevar, {
 
 output$PlotlyOut <- renderPlotly({
   
-  req(input$selPrmCode  != " ")
+  req(dfsub$PARAMCD == input$selPrmCode)
+  req(input$radio != "0")
   req(input$seltimevar  != " ") 
   req(input$responsevar != " ")
   
   # build subset of df() by randomly taking 25 subjects
   if (input$splitbyvar %in% c("SUBJID","USUBJID")) {
-    print("subsetting data for 25 subjects")
+    message("Spaghetti plot module subsetting data for 25 subjects")
     set.seed(12345)
     dfsub <- inner_join(dfsub, dplyr::sample_n(distinct(dfsub, USUBJID), 25), by = "USUBJID") 
   }
