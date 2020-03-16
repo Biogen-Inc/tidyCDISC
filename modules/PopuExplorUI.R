@@ -4,9 +4,26 @@ ns <- NS(id)
   
 sidebarLayout(
   sidebarPanel(width = 2,
+               # prettyCheckboxGroup(
+               #   inputId = ns("radio"),
+               #   label  = "Type of Chart:",
+               #   choices = list("Scatter Plot  " = "1",
+               #                  "Spaghetti Plot" = "2",
+               #                  "Box Plot      " = "3",
+               #                  "Heat Map      " = "4",
+               #                  "Histogram     " = "5"
+               #   ),
+               #   selected = NULL,
+               #   status = "default",
+               #   shape = "round",
+               #   outline = FALSE,
+               #   icon = icon("check"),
+               #   inline = FALSE
+               # ),
                prettyRadioButtons(
                  inputId = ns("radio"),
                  label = "Type of Chart:",
+                 shape = "square",
                  choices = list("Scatter Plot  " = "1",
                                 "Spaghetti Plot" = "2",
                                 "Box Plot      " = "3",
@@ -53,7 +70,7 @@ sidebarLayout(
                checkboxInput(ns("AddLine"), label = tags$small("Add Line"), value = FALSE)
                 ), 
                 column(width=3,
-                checkboxInput(ns("AddErrorBar"), label = tags$small("Add ErrorBar"), value = FALSE)
+                checkboxInput(ns("AddSmooth"), label = tags$small("Add Loess"), value = FALSE)
                 ),
                 column(width=5,
                 checkboxInput(ns("DiscrXaxis"), label = tags$small("Discrete\n x-axis"), value = FALSE))

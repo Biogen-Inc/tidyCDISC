@@ -16,7 +16,7 @@ shinyjs::hide(id="animate")
 shinyjs::hide(id="animateby")
 shinyjs::hide(id="numBins")
 shinyjs::show(id="AddLine")
-shinyjs::show(id="AddErrorBar")
+shinyjs::show(id="AddSmooth")
 shinyjs::show(id="DiscrXaxis")
 shinyjs::hide(id="UseCounts")
 
@@ -46,19 +46,23 @@ observeEvent(input$selPrmCode, {
   
 output$PlotlyOut <- renderPlotly({
   
+  req(dfsub$PARAMCD == input$selPrmCode)
+  req(input$radio != "0")
   req(input$selxvar != " ")
   req(input$selyvar != " ")
   
   # correction for overplotting is located in fnscatter
   p <- fnscatter(data = dfsub, input$splitbox, input$splitbyvar, input$selxvar, input$selyvar)
 
+  p <- p +   scale_color_brewer(palette="Spectral")
+  
   # add geom_line if checked
   if (input$AddLine == TRUE) {
-    p <- p + geom_line() 
+    p <- p + geom_line()
   }
-  # add geom_errorbar if checked
-  if (input$AddErrorBar == TRUE) {
-    p <- p + geom_errorbar(aes(ymin=ymin, ymax=ymax))
+  # add geom_smooth if checked
+  if (input$AddSmooth == TRUE) {
+    p <- p + geom_smooth(method="loess", se=FALSE)
   }
   # Discrete x-axis
   if (input$DiscrXaxis == TRUE) {
@@ -77,17 +81,31 @@ output$PlotlyOut <- renderPlotly({
   p <- p + labs(title = ggtitle())
   }
 
+  ggcmd <- c("geom_point","geom_line","geom_vline","geom_hline","geom_errorbar","geom_bar","geom_text","geom_text2","coord_flip","geom_pointrange","theme",
+             "scale_shape","scale_x_cont","scale_y_cont","scale_x_discr","scale_y_discr","scale_y_log10","scale_x_log10")
   # any embedded graph instructions?
-  graphinst <- suppressWarnings(unique(select(dfsub, one_of("geom_vline","geom_hline","geom_bar","geom_text","scale_x_cont","scale_y_cont"))))
+  graphinst <- suppressWarnings(unique(select(dfsub, one_of(ggcmd))))
+  
+  graphinst <- unname(graphinst)
+  
+  # display graph instructions for now
   if (length(graphinst) > 0) {
+    # for (i in 1:length(graphinst)) {
+    #   print(graphinst[i])
+    # }
      p <- p + sapply(graphinst, function(gr) {eval(parse(text = gr))})
   }
-  ggplotly(p, tooltip = "text")
+  ggplotly(p, tooltip = "text") %>%
+    layout(legend = list(
+      orientation = "h", x = 0, y = 0   #bottom left
+      ))
 
 })
 
 output$DataTable <- DT::renderDataTable({
   
+  req(dfsub$PARAMCD == input$selPrmCode)
+  req(input$radio != "0")
   req(input$selxvar != " ")
   req(input$selyvar != " ")
   
