@@ -14,10 +14,6 @@ observeEvent(input$selPatNo, {
   
   req(input$selPatNo != " ") # selPatNo cannot be blank
   
-  shinyjs::hide(id = "selType") # ac: I don't think this code will ever be realized because it is tracking when selPatNo is changes, 
-  shinyjs::hide(id = "selLabCode") # and then later, shows the selType Anyway. Same is not true for selLabCode. I think this should
-                                   # be in a separate observer with a validate(need())
-  
   # Clear eventsTable - ac: do we really want to do this?
   output$eventsTable <- DT::renderDataTable({
     NULL
@@ -40,20 +36,22 @@ observeEvent(input$selPatNo, {
     adsl_rec <- as.data.frame((adsl_rec)) # 'data' must be 2-dimensional (e.g. data frame or matrix)
     
     # Assuming we are only getting one record returned
-    # col position below depends on if country exists in ADSL (it is not required to exist)
+    # col position below depends on if country exists in ADSL (it is not required to exist), but it is always the last column
     DT::datatable(adsl_rec, options = list(dom = 't'), rownames = FALSE,
                   colnames = c('Planned Treatment Group' = ncol(adsl_rec)),
-                  caption = tags$caption(style = "font-size:20px;color:black;", paste0(input$selPatNo, ": Demographic Info from ADSL" ))
+                  caption = tags$caption(style = "font-weight:bold;font-size:20px;color:black;", paste0("Patient '", input$selPatNo, "' Demographic Info" ))
                   )
     
   })
   
   # Show the rest of the widgets once a patient number was selected
   shinyjs::show(id = "hr2")
-  shinyjs::show(id = "hr3")
+  shinyjs::show(id = "events_header")
   shinyjs::show(id = "checkGroup")
   shinyjs::show(id = "eventsTable")
-  shinyjs::show(id = "selType")
+  shinyjs::show(id = "hr3")
+  shinyjs::show(id = "plot_header")
+  shinyjs::show(id = "plot_adam")
   
   # Clear datatable - ac: do we need to do this?
   output$DataTable<- DT::renderDataTable({

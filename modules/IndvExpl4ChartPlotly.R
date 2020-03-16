@@ -1,29 +1,51 @@
-IndvExpl4ChartPlotly <- function(input, output, session, datafile, loaded_adams, seltypes, usubjid){ #, dataselected
+IndvExpl4ChartPlotly <- function(input, output, session, datafile, loaded_adams, usubjid){ #, dataselected
   
   ns <- session$ns
   
-  seltypes = c(" ")
-  # if ADCM or ADLB were selected, add to the seltypes selectInput list
-  
-  observe({
-    if ("ADCM" %in% loaded_adams()) {
-      seltypes <- c(seltypes,"MEDS")
-    }
-    if ("ADLB" %in% loaded_adams()) {
-      seltypes <- c(seltypes,"LABS")
-    }
-
-  # set default selection back to blank
-  updateSelectInput(
-    session = session,
-    inputId = "selType",
-    choices = seltypes,
-    selected =  " "
-  )
+  # We can only plot ADaM datasets that have the variables we need for plotting. Those include:
+  #   req: "PARAM", 
+  #   req at least 1: "AVISIT", "AVISITN", "VISITDY"
+  #   req: "AVAL"
+  plotable_adams <- reactive({
+    # Only select data that starts with AD followed by one or more alphanumerics or underscore
+    req(!is.null(datafile()))
+    needed_cols_exists <- names(which(sapply(datafile(), FUN = function(x) all(c("PARAMCD","AVAL") %in% colnames(x)))) > 0)
+    one_visit_exists <- names(which(sapply(datafile(), FUN = function(x) any(c("AVISIT","AVISITN","VISITDY","VISITNUM","VISIT") %in% colnames(x)))) > 0)
+    return(intersect(needed_cols_exists,one_visit_exists))
   })
   
   
-observeEvent(input$selType, {
+  output$plot_header <- renderText({
+    req(!is.null(datafile()))
+    paste0("Plot Patient '", usubjid(), "' Metrics by Visit")
+  })
+  
+
+  # Need to refresh these every time a new subject is selected
+  observeEvent(usubjid(), {
+  
+    # If a plotable adam is loaded, include it in the dropdown choices
+    # & set default selection back to blank
+    updateSelectInput(
+      session = session,
+      inputId = "plot_adam",
+      choices = plotable_adams(), #  plot_adams ................. does this need to update/ depend on usubjid selected? Because RK was backing out datasets
+                                  #                             that didn't have any PARAMs for a patient
+      selected =  " "
+    )
+    
+    # update array of params
+    updateSelectInput (
+      session = session,
+      inputId = "plot_param",
+      # choices = c(" "),
+      selected = " "
+    )
+    
+  })
+  
+  
+observeEvent(input$plot_adam, {
   
   # make sure a subject has been selected
   req(usubjid() != " ") # selPatNo cannot be blank
@@ -36,180 +58,133 @@ observeEvent(input$selType, {
   output$PlotChart <- renderPlotly({
     NULL
   })
-  
-  switch(input$selType,
-         # use swtich() instead of if/else
          
-         "MEDS" = {
-           shinyjs::hide(id = "selLabCode")
-           shinyjs::show(id = "DataTable")
-           shinyjs::show(id = "PlotChart")
-           
-           if ("ADCM" %in% loaded_adams() ) {
-             
-             cm_tab <- as.data.frame(datafile()[["ADCM"]]) %>%
-               filter(USUBJID == input$selPatNo) %>%
-               filter(CMDECOD != "") %>%
-               mutate(CMDECOD = ifelse(CMDECOD == "UNCODED", CMTRT, CMDECOD)) %>%
-               mutate(CMSTDY = ifelse(CMSTDY < 0, 0, CMSTDY)) %>%
-               arrange(CMSTDY, CMDECOD) %>%
-               select(CMSTDY, CMSTDTC, CMDECOD, CMINDC, CMDOSFRQ)
-             
-             if ((nrow(cm_tab) == 0)) {
-               shinyjs::alert(paste("No Concomitant Meds available for this subject!"))  
-               
-               seltypes <- seltypes[!seltypes == "MEDS"] # drops MEDS from the list
-               updateSelectInput(
-                 session = session,
-                 inputId = "selType",
-                 choices = seltypes,
-                 selected = " "
-               )
-               
-             } else ({
-               output$DataTable <- DT::renderDataTable({
-                 DT::datatable(cm_tab, options = list(dom = 'ftp', pageLength = 20))
-               })
-               
-               output$PlotChart <- renderPlotly({
-                 
-                 cm_tab <- datafile()[["ADCM"]] %>% 
-                   filter(USUBJID == input$selPatNo) %>%
-                   filter(CMDECOD != "") %>%
-                   mutate(CMSTDY = ifelse(CMSTDY < 0, 0, CMSTDY))
-                 
-                 cm_plot <-
-                   ggplot(cm_tab,
-                          aes(
-                            x = CMSTDY,
-                            fill = as.factor(CMCAT),
-                            group = CMCAT
-                          )) +
-                   geom_histogram(position = "stack",
-                                  alpha = 0.5,
-                                  binwidth = 0.5) +
-                   ggtitle(paste("Medications by",cm_tab$CMSTDY,"grouped by",cm_tab$CMCAT)) +
-                   xlab(cm_tab$CMSTDY) +
-                   ylab("Count") +
-                   guides(fill = guide_legend(title = "Medication Class")) +
-                   theme_classic()
-                 
-                 ggplotly(cm_plot)
-                 
-               }) # renderPlotly
-             }) # else
-           } # if ("ADCM" %in% loaded_adams() && ("ADCM" %in% datafile()))
-           
-         },
+
+   lb_data <- datafile()[[input$plot_adam]] %>%  #ac: "ADLB" #lb_rec
+     filter(USUBJID == usubjid()) # ac: input$selPatNo
+   
+   lbcodes <- lb_data %>%
+              filter(!is.na(AVAL) & AVAL != "") %>% # if all the numeric AVAL exists
+              distinct(PARAMCD) %>% #ac: PARAM and PARAMCD are both req fields. PARAM cd would be better for a dropdown
+              pull()
+   
+   if ((length(lbcodes) == 0)) {
+     shinyjs::alert(paste("No PARAMs exist for this ADaM data set & subject!"))  
+     
+     shinyjs::hide(id = "plot_param")
+     shinyjs::hide(id = "visit_var")
+     
+     # # ac: Let's not drop it yet
+     # plot_adams <- plotable_adams()[!plotable_adams() == input$plot_adam] # drops labs from the list
+     # updateSelectInput(
+     #   session = session,
+     #   inputId = "plot_adam",
+     #   choices = plot_adams,
+     #   selected = " "
+     # )
+     
+   } else { 
+     
+     shinyjs::show(id = "plot_param")
+     shinyjs::show(id = "visit_var")
+     shinyjs::show(id = "DataTable")
+     shinyjs::show(id = "PlotChart")
+     
+     # update params list
+     updateSelectInput (
+       session = session,
+       inputId = "plot_param",
+       choices = c(" ",lbcodes),
+       selected = " "
+     )
+     
+     # update visit variable to display by
+     possible_vst_vars <- c("AVISITN","VISITNUM")
+     my_vst_vars <- possible_vst_vars[which(possible_vst_vars %in% colnames(lb_data))]
+     
+     updateSelectInput (
+       session = session,
+       inputId = "visit_var",
+       choices = my_vst_vars #,
+       # selected = "AVISITN"
+     )
+     
+   }
+  }) # observe      
+       
+  # If either param or visit var are updated, run code below
+  observeEvent(list(input$plot_param, input$visit_var), {
+    
+    # don't run until a patient and ADAM are selected
+    req(usubjid() != " " & input$plot_adam != " ") # selPatNo cannot be blank
+    
+    # create data
+    lb_data <- datafile()[[input$plot_adam]] %>%  #ac: "ADLB" #lb_rec
+      filter(USUBJID == usubjid()) # ac: input$selPatNo
+    
+    
+    INPUT_visit_var <- sym(input$visit_var)
+    
+    
+     output$PlotChart <- renderPlotly({
+       
+       # In the labs, label what the blue lines are in the legend or hover text.
+       # make sure a LabCode has been selected
+       req(input$plot_param != " ")
+
+       
+       # ac: changed from above. Note this is slightly different from table data
+       plot_dat <- lb_data %>%
+         filter(!(is.na(!!INPUT_visit_var)) & PARAMCD == input$plot_param) # make sure AVISITN is not missing
+       
+       if (nrow(plot_dat) > 0) {
          
-         "LABS" = {
-           shinyjs::show(id = "selLabCode")
-           shinyjs::show(id = "DataTable")
-           shinyjs::show(id = "PlotChart")
-           
-           if ("ADLB" %in% loaded_adams() ) {
-             
-             lb_rec <- datafile()[["ADLB"]] %>% 
-               filter(USUBJID == input$selPatNo)
-             
-             lbcodes <- unique(lb_rec$PARAMCD)
-             
-             if ((length(lbcodes) == 0)) {
-               shinyjs::alert(paste("No lab codes available for this subject!"))  
-               
-               shinyjs::hide(id = "selLabCode")
-               
-               seltypes <- seltypes[!seltypes == "LABS"] # drops labs from the list
-               updateSelectInput(
-                 session = session,
-                 inputId = "selType",
-                 choices = seltypes,
-                 selected = " "
-               )
-               
-             } else ({ 
-               # update array of lab codes
-               updateSelectInput (
-                 session = session,
-                 inputId = "selLabCode",
-                 choices = c(" ",lbcodes),
-                 selected = " "
-               )                 
-               
-               output$DataTable <- DT::renderDataTable({
-                 
-                 lb_data <- datafile()[["ADLB"]] %>%
-                   filter(USUBJID == input$selPatNo) 
-                 
-                 # make sure a LabCode has been selected
-                 req(input$selLabCode != " ")
-                 
-                 lb_tab <- lb_data %>%
-                   filter(PARAMCD == input$selLabCode) %>%
-                   arrange(LBDY) %>%
-                   select(VISITNUM,
-                          VISIT,
-                          LBDT,
-                          LBDY,
-                          LBSTNRLO,
-                          LBSTRESN,
-                          LBSTNRHI,
-                          LBNRIND)
-                 
-                 if (nrow(lb_tab) > 0) {
-                   DT::datatable(lb_tab, options = list(dom = 'ftp', pageLength = 20))
-                 }
-               })
-               
-               output$PlotChart <- renderPlotly({
-                 
-                 lb_data <- datafile()[["ADLB"]] %>%
-                   filter(USUBJID == input$selPatNo) %>%
-                   filter(!(is.na(VISITNUM))) # make sure VISITNUM is not missing
-                 
-                 # In the labs, label what the blue lines are in the legend or hover text.
-                 # make sure a LabCode has been selected
-                 req(input$selLabCode != " ")
-                 
-                 lb_tab <- lb_data %>%
-                   filter(PARAMCD == input$selLabCode) 
-                 
-                 if (nrow(lb_tab) > 0) {
-                   
-                   prmcd <- unique(lb_tab$PARAMCD)
-                   prm   <- unique(lb_tab$PARAM)
-                   
-                   lohi = paste("LO:",unique(lb_tab$LBSTNRLO),"HI:",unique(lb_tab$LBSTNRHI))
-                   
-                   lb_plot <- ggplot(lb_tab, aes(x = LBDY, y = LBSTRESN)) +
-                     geom_line() +
-                     geom_hline(aes(yintercept = mean(LBSTNRLO)), colour = "blue") +
-                     geom_hline(aes(yintercept = mean(LBSTNRHI)), colour = "blue") +
-                     geom_point(na.rm = TRUE,
-                                (aes(text = paste("LBSTNRHI:",LBSTNRHI,"<br>LBSTRESN:",LBSTRESN,"<br>LBSTNRLO:",LBSTNRLO)))) +
-                     scale_x_continuous(breaks = seq(0, max(lb_tab$LBDY), 30)) +
-                     labs(x = paste(lb_tab$LBDY,"for USUBJID:",unique(lb_tab$USUBJID)), y = lb_tab$LBSTRESN,
-                          title = paste(prmcd,":",prm,"by Relative Study Day"))
-                   
-                   ggplotly(lb_plot, tooltip = "text") %>%
-                     layout(title = list(text = paste(prmcd,":",prm,"by Relative Study Day",
-                                                      '<br>',
-                                                      '<sup>',
-                                                      "Normal Range values shown in",'<em style="color:blue">',"blue",'</em>',lohi,
-                                                      '</sup>'))) 
-                   
-                 } # if (nrow(lb_tab) > 0)
-                 
-               }) # renderPlotly
-             }) # else
-           } #if ("ADLB" %in% loaded_adams() )
-           
-         },
-         "select" = {
-           shinyjs::hide(id = "selLabCode")
-           shinyjs::hide(id = "DataTable")
-           shinyjs::hide(id = "PlotChart")
-         })
+         # prmcd <- unique(plot_dat$PARAMCD)
+         prm   <- unique(plot_dat$PARAM)
+         
+         lb_plot <- ggplot(plot_dat, aes(x = !!INPUT_visit_var, y = AVAL)) + 
+           geom_line() +
+           geom_point(na.rm = TRUE ) +
+           scale_x_continuous(breaks = seq(0, max(plot_dat[,input$visit_var]), 30)) +
+           labs(x = paste0("Study Visit (",input$visit_var,")"),
+                y = prm,
+                title = paste(prm,"by Relative Study Day"),
+                subtitle = paste("USUBJID:",usubjid())
+           )
+         
+         ggplotly(lb_plot, tooltip = "text") %>%
+           layout(title = list(text = paste0(prm," by Study Visit<br><sup>USUBJID: ",usubjid(),"</sup>")))
+         
+       } # if (nrow(plot_dat) > 0)
+     }) # renderPlotly
+       
+       
+     output$DataTable <- DT::renderDataTable({
+       
+       # make sure a LabCode has been selected
+       req(input$plot_param != " ")
+       
+       lb_tab <- lb_data %>%
+         filter(PARAMCD == input$plot_param) %>%
+         mutate(avisit_sort = ifelse(is.na(AVISITN), -1000, AVISITN)) %>%
+         arrange_(ifelse(input$visit_var == "AVISITN", "avisit_sort", input$visit_var)) %>% #ac: LBDY
+         select(one_of(
+               "VISITNUM",
+               "VISIT",
+               "VISITDY", #ac: ADDED
+               "AVISIT", "AVISITN"), #ac: ADDED 
+                # avisit_sort, # temporary VIEWING purposes only
+                PARAMCD,     #ac: ADDED
+                PARAM,   #ac: ADDED
+                AVAL       #ac: ADDED
+         )
+       
+       if (nrow(lb_tab) > 0) {
+         DT::datatable(lb_tab, options = list(dom = 'ftp', pageLength = 20))
+       }
+       
+       # DT::datatable(plot_dat, options = list(dom = 'ftp', pageLength = 20))
+     }) #renderDataTable
   
-}) # observe
+  }) # observe
 } # IndvExpl4ChartPlotly

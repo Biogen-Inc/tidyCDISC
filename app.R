@@ -117,8 +117,8 @@ server <- function(input, output, session) {
   # Individual Explorer
   user_loaded_adams <- callModule(IndvExpl1Initial, "indvl", datafile = datafile)
   usubjid  <- callModule(IndvExpl2SelPatno , "indvl", datafile = datafile,  loaded_adams = user_loaded_adams) #, dataselected
-  callModule(IndvExpl3CheckGroup,  "indvl", datafile,  loaded_adams = user_loaded_adams, usubjid = usubjid) #, dataselected
-  callModule(IndvExpl4ChartPlotly, "indvl", datafile,  loaded_adams = user_loaded_adams, seltypes = seltypes, usubjid = usubjid) #, dataselected
+  callModule(IndvExpl3CheckGroup,  "indvl", datafile,  loaded_adams = user_loaded_adams, usubjid = usubjid)   #, dataselected
+  callModule(IndvExpl4ChartPlotly, "indvl", datafile,  loaded_adams = user_loaded_adams, usubjid = usubjid)   #, dataselected
   
 }
 

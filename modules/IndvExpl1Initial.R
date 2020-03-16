@@ -6,12 +6,15 @@ IndvExpl1Initial <- function(input, output, session, datafile, dataselected){
   
   # Hide widgets until the input file has been selected
   shinyjs::hide(id = "selPatNo")
-  shinyjs::hide(id = "selType")
-  shinyjs::hide(id = "selLabCode")
+  shinyjs::hide(id = "hr2")
+  shinyjs::hide(id = "events_header")
   shinyjs::hide(id = "checkGroup")
   shinyjs::hide(id = "eventsTable")
-  shinyjs::hide(id = "hr2")
   shinyjs::hide(id = "hr3")
+  shinyjs::hide(id = "plot_header")
+  shinyjs::hide(id = "plot_adam")
+  shinyjs::hide(id = "plot_param")
+  shinyjs::hide(id = "visit_var")
   
   
   
