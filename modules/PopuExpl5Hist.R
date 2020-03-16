@@ -16,7 +16,7 @@ shinyjs::hide(id="animate")
 shinyjs::hide(id="animateby")
 shinyjs::show(id="numBins")
 shinyjs::hide(id="AddLine")
-shinyjs::hide(id="AddErrorBar")
+shinyjs::hide(id="AddSmooth")
 shinyjs::hide(id="DiscrXaxis")
 shinyjs::hide(id="UseCounts")
 
