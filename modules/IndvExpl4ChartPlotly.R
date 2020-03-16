@@ -28,8 +28,8 @@ IndvExpl4ChartPlotly <- function(input, output, session, datafile, loaded_adams,
     # & set default selection back to blank
     updateSelectInput(
       session = session,
-      inputId = "selType",
-      choices = plotable_adams(), #  seltypes ................. does this need to update/ depend on usubjid selected? Because RK was backing out datasets
+      inputId = "plot_adam",
+      choices = plotable_adams(), #  plot_adams ................. does this need to update/ depend on usubjid selected? Because RK was backing out datasets
                                   #                             that didn't have any PARAMs for a patient
       selected =  " "
     )
@@ -37,7 +37,7 @@ IndvExpl4ChartPlotly <- function(input, output, session, datafile, loaded_adams,
     # update array of params
     updateSelectInput (
       session = session,
-      inputId = "selLabCode",
+      inputId = "plot_param",
       # choices = c(" "),
       selected = " "
     )
@@ -45,7 +45,7 @@ IndvExpl4ChartPlotly <- function(input, output, session, datafile, loaded_adams,
   })
   
   
-observeEvent(input$selType, {
+observeEvent(input$plot_adam, {
   
   # make sure a subject has been selected
   req(usubjid() != " ") # selPatNo cannot be blank
@@ -60,7 +60,7 @@ observeEvent(input$selType, {
   })
          
 
-   lb_data <- datafile()[[input$selType]] %>%  #ac: "ADLB" #lb_rec
+   lb_data <- datafile()[[input$plot_adam]] %>%  #ac: "ADLB" #lb_rec
      filter(USUBJID == usubjid()) # ac: input$selPatNo
    
    lbcodes <- lb_data %>%
@@ -71,21 +71,21 @@ observeEvent(input$selType, {
    if ((length(lbcodes) == 0)) {
      shinyjs::alert(paste("No PARAMs exist for this ADaM data set & subject!"))  
      
-     shinyjs::hide(id = "selLabCode")
+     shinyjs::hide(id = "plot_param")
      shinyjs::hide(id = "visit_var")
      
      # # ac: Let's not drop it yet
-     # seltypes <- plotable_adams()[!plotable_adams() == input$selType] # drops labs from the list
+     # plot_adams <- plotable_adams()[!plotable_adams() == input$plot_adam] # drops labs from the list
      # updateSelectInput(
      #   session = session,
-     #   inputId = "selType",
-     #   choices = seltypes,
+     #   inputId = "plot_adam",
+     #   choices = plot_adams,
      #   selected = " "
      # )
      
    } else { 
      
-     shinyjs::show(id = "selLabCode")
+     shinyjs::show(id = "plot_param")
      shinyjs::show(id = "visit_var")
      shinyjs::show(id = "DataTable")
      shinyjs::show(id = "PlotChart")
@@ -93,7 +93,7 @@ observeEvent(input$selType, {
      # update params list
      updateSelectInput (
        session = session,
-       inputId = "selLabCode",
+       inputId = "plot_param",
        choices = c(" ",lbcodes),
        selected = " "
      )
@@ -113,13 +113,13 @@ observeEvent(input$selType, {
   }) # observe      
        
   # If either param or visit var are updated, run code below
-  observeEvent(list(input$selLabCode, input$visit_var), {
+  observeEvent(list(input$plot_param, input$visit_var), {
     
     # don't run until a patient and ADAM are selected
-    req(usubjid() != " " & input$selType != " ") # selPatNo cannot be blank
+    req(usubjid() != " " & input$plot_adam != " ") # selPatNo cannot be blank
     
     # create data
-    lb_data <- datafile()[[input$selType]] %>%  #ac: "ADLB" #lb_rec
+    lb_data <- datafile()[[input$plot_adam]] %>%  #ac: "ADLB" #lb_rec
       filter(USUBJID == usubjid()) # ac: input$selPatNo
     
     
@@ -130,12 +130,12 @@ observeEvent(input$selType, {
        
        # In the labs, label what the blue lines are in the legend or hover text.
        # make sure a LabCode has been selected
-       req(input$selLabCode != " ")
+       req(input$plot_param != " ")
 
        
        # ac: changed from above. Note this is slightly different from table data
        plot_dat <- lb_data %>%
-         filter(!(is.na(!!INPUT_visit_var)) & PARAMCD == input$selLabCode) # make sure AVISITN is not missing
+         filter(!(is.na(!!INPUT_visit_var)) & PARAMCD == input$plot_param) # make sure AVISITN is not missing
        
        if (nrow(plot_dat) > 0) {
          
@@ -146,8 +146,8 @@ observeEvent(input$selType, {
            geom_line() +
            geom_point(na.rm = TRUE ) +
            scale_x_continuous(breaks = seq(0, max(plot_dat[,input$visit_var]), 30)) +
-           labs(x = "Study Visit",
-                y = "Metric / Parameter",
+           labs(x = paste0("Study Visit (",input$visit_var,")"),
+                y = prm,
                 title = paste(prm,"by Relative Study Day"),
                 subtitle = paste("USUBJID:",usubjid())
            )
@@ -162,16 +162,18 @@ observeEvent(input$selType, {
      output$DataTable <- DT::renderDataTable({
        
        # make sure a LabCode has been selected
-       req(input$selLabCode != " ")
+       req(input$plot_param != " ")
        
        lb_tab <- lb_data %>%
-         filter(PARAMCD == input$selLabCode) %>%
-         arrange(!!INPUT_visit_var) %>% #ac: LBDY
+         filter(PARAMCD == input$plot_param) %>%
+         mutate(avisit_sort = ifelse(is.na(AVISITN), -1000, AVISITN)) %>%
+         arrange_(ifelse(input$visit_var == "AVISITN", "avisit_sort", input$visit_var)) %>% #ac: LBDY
          select(one_of(
                "VISITNUM",
                "VISIT",
                "VISITDY", #ac: ADDED
                "AVISIT", "AVISITN"), #ac: ADDED 
+                # avisit_sort, # temporary VIEWING purposes only
                 PARAMCD,     #ac: ADDED
                 PARAM,   #ac: ADDED
                 AVAL       #ac: ADDED

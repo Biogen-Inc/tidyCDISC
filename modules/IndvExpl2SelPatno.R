@@ -51,7 +51,7 @@ observeEvent(input$selPatNo, {
   shinyjs::show(id = "eventsTable")
   shinyjs::show(id = "hr3")
   shinyjs::show(id = "plot_header")
-  shinyjs::show(id = "selType")
+  shinyjs::show(id = "plot_adam")
   
   # Clear datatable - ac: do we need to do this?
   output$DataTable<- DT::renderDataTable({

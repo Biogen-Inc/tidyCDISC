@@ -44,7 +44,7 @@ IndvExplorUI <- function(id, label = "Individual Explorer") {
       fixedRow(
       column(4,
         selectInput(
-        ns("selType"),
+        ns("plot_adam"),
         label = HTML("Select a loaded ADaM with columns 'PARAM' &<br/>'AVAL', plus either 'AVISIT', 'AVISITN, or 'VISITDY'"),
         choices = c(" "),
         selected =  " "
@@ -52,7 +52,7 @@ IndvExplorUI <- function(id, label = "Individual Explorer") {
       ),
       column(3,
         selectInput(
-          ns("selLabCode"),
+          ns("plot_param"),
           label = HTML("<br/>Select a Parameter / Metric:"),
           choices = c(" "),selected = " "
         )
