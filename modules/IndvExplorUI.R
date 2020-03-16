@@ -45,7 +45,7 @@ IndvExplorUI <- function(id, label = "Individual Explorer") {
       column(4,
         selectInput(
         ns("plot_adam"),
-        label = HTML("Select a loaded ADaM with columns 'PARAM' &<br/>'AVAL', plus either 'AVISIT', 'AVISITN, or 'VISITDY'"),
+        label = HTML("Select a loaded ADaM with columns 'PARAM' &<br/>'AVAL', plus either 'AVISITN, or 'VISITNUM'"),
         choices = c(" "),
         selected =  " "
         )
