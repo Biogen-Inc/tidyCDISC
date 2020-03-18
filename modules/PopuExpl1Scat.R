@@ -20,18 +20,25 @@ shinyjs::show(id="AddSmooth")
 shinyjs::show(id="DiscrXaxis")
 shinyjs::hide(id="UseCounts")
 
-chr <- sort(names(df()[ , which(sapply(df(),is.character))])) # all chr
-fac <- sort(names(df()[ , which(sapply(df(),is.factor   ))])) # all factors
-num <- sort(names(df()[ , which(sapply(df(),is.numeric  ))])) # all num
+# remove any graphics instructions from the lists
+dfsel <- suppressWarnings(select(df(),-starts_with("geom_"),-starts_with("scale_"),-one_of("theme","ggtitle","xlabel","ylabel")))
+
+chr <- names(which(sapply(dfsel,is.character))) # all chr
+fac <- names(which(sapply(dfsel,is.factor   ))) # all factors
+num <- names(which(sapply(dfsel,is.numeric  ))) # all num
+
+# print(paste("factors:",paste(fac,collapse = ",")))
+# print(paste("numeric:",paste(num,collapse = ",")))
+# print(paste("character:",paste(chr,collapse = ",")))
 
 # splitbyvar is loaded with all the character/factor columns
-updateSelectInput(session = session, inputId = "splitbyvar", choices = c(" ",sort(names(df()))), selected = " ")
+updateSelectInput(session = session, inputId = "splitbyvar", choices = c(" ",sort(c(chr,fac))), selected = " ")
 
-# selxvar is loaded with all the numeric columns
-updateSelectInput(session = session, inputId = "selxvar", choices = c(" ",sort(names(df()))),  selected = " ")
+# selxvar is loaded with all the columns
+updateSelectInput(session = session, inputId = "selxvar", choices = c(" ",sort(names(dfsel))),  selected = " ")
 
 # selyvar is loaded with all the numeric columns
-updateSelectInput(session = session, inputId = "selyvar", choices = c(" ",sort(names(df()))), selected = " ")
+updateSelectInput(session = session, inputId = "selyvar", choices = c(" ",sort(num)), selected = " ")
 
 # set checkbox to TRUE
 updateCheckboxInput(session = session, inputId = "splitbox", value = TRUE)
@@ -54,8 +61,12 @@ output$PlotlyOut <- renderPlotly({
   # correction for overplotting is located in fnscatter
   p <- fnscatter(data = dfsub, input$splitbox, input$splitbyvar, input$selxvar, input$selyvar)
 
-  p <- p +   scale_color_brewer(palette="Spectral")
-  
+  # expand the color palette
+  nb.cols <- length(unique(dfsub[[splitbyvar]]))
+  mycolors <- colorRampPalette(brewer.pal(9, "Set1"))(nb.cols)
+  # use scale_fill_manual
+  p <- p + scale_fill_manual(values = mycolors)
+
   # add geom_line if checked
   if (input$AddLine == TRUE) {
     p <- p + geom_line()
