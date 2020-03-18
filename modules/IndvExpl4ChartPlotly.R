@@ -10,7 +10,7 @@ IndvExpl4ChartPlotly <- function(input, output, session, datafile, loaded_adams,
     # Only select data that starts with AD followed by one or more alphanumerics or underscore
     req(!is.null(datafile()))
     needed_cols_exists <- names(which(sapply(datafile(), FUN = function(x) all(c("PARAMCD","AVAL") %in% colnames(x)))) > 0)
-    one_visit_exists <- names(which(sapply(datafile(), FUN = function(x) any(c("AVISIT","AVISITN","VISITDY","VISITNUM","VISIT") %in% colnames(x)))) > 0)
+    one_visit_exists <- names(which(sapply(datafile(), FUN = function(x) any(c("AVISIT","AVISITN","VISIT") %in% colnames(x)))) > 0)
     return(intersect(needed_cols_exists,one_visit_exists))
   })
   
@@ -99,14 +99,14 @@ observeEvent(input$plot_adam, {
      )
      
      # update visit variable to display by
-     possible_vst_vars <- c("AVISITN","VISITNUM")
-     my_vst_vars <- possible_vst_vars[which(possible_vst_vars %in% colnames(lb_data))]
+     my_vst_vars <- lb_data %>% select(one_of("AVISITN", "VISITNUM"), ends_with("DY")) %>% colnames()
+     sel_vst_var <- lb_data %>% select(ends_with("DY")) %>% colnames()
      
      updateSelectInput (
        session = session,
        inputId = "visit_var",
-       choices = my_vst_vars #,
-       # selected = "AVISITN"
+       choices = my_vst_vars ,
+       selected = ifelse(length(sel_vst_var) > 0, sel_vst_var, character(0))
      )
      
    }
@@ -144,7 +144,12 @@ observeEvent(input$plot_adam, {
          
          lb_plot <- ggplot(plot_dat, aes(x = !!INPUT_visit_var, y = AVAL)) + 
            geom_line() +
-           geom_point(na.rm = TRUE ) +
+           geom_point(na.rm = TRUE, 
+                      aes(text =
+                            paste0(input$visit_var, ": ",!!INPUT_visit_var,
+                                   "<br>",input$plot_param ,": ",AVAL
+                            )
+                      )) +
            scale_x_continuous(breaks = seq(0, max(plot_dat[,input$visit_var]), 30)) +
            labs(x = paste0("Study Visit (",input$visit_var,")"),
                 y = prm,
@@ -166,13 +171,13 @@ observeEvent(input$plot_adam, {
        
        lb_tab <- lb_data %>%
          filter(PARAMCD == input$plot_param) %>%
-         mutate(avisit_sort = ifelse(is.na(AVISITN), -1000, AVISITN)) %>%
+         mutate(avisit_sort = ifelse(is.na(AVISITN), -9000000000, AVISITN)) %>%
          arrange_(ifelse(input$visit_var == "AVISITN", "avisit_sort", input$visit_var)) %>% #ac: LBDY
-         select(one_of(
+         select(ends_with("DY"), one_of(
                "VISITNUM",
+               "AVISITN",
                "VISIT",
-               "VISITDY", #ac: ADDED
-               "AVISIT", "AVISITN"), #ac: ADDED 
+               "AVISIT"), #ac: ADDED 
                 # avisit_sort, # temporary VIEWING purposes only
                 PARAMCD,     #ac: ADDED
                 PARAM,   #ac: ADDED
