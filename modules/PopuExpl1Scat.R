@@ -62,7 +62,7 @@ output$PlotlyOut <- renderPlotly({
   p <- fnscatter(data = dfsub, input$splitbox, input$splitbyvar, input$selxvar, input$selyvar)
 
   # expand the color palette
-  nb.cols <- length(unique(dfsub[[splitbyvar]]))
+  nb.cols <- length(unique(dfsub[[input$splitbyvar]]))
   mycolors <- colorRampPalette(brewer.pal(9, "Set1"))(nb.cols)
   # use scale_fill_manual
   p <- p + scale_fill_manual(values = mycolors)
