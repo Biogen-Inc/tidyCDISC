@@ -5,9 +5,9 @@ account: rkrajcik
 server: rshinydev.hpc.biogen.com
 hostUrl: https://rshinydev.hpc.biogen.com/__api__
 appId: 288
-bundleId: 1484
+bundleId: 1496
 url: https://rshinydev.hpc.biogen.com/content/288/
-when: 1584106383.65756
+when: 1584566180.0766
 asMultiple: FALSE
 asStatic: FALSE
 ignoredFiles: README.md

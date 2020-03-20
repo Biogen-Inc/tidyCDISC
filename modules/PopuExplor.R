@@ -59,6 +59,7 @@ PopuExplor <- function(input, output, session, datafile){
   # 
   # Also, build fake PARAMCDs for ADAE and ADCM, if you want to look at them here.
   
+  all_data <- NULL
   # Isolate ADSL 
   if ("ADSL" %in% names(datakeep())) {
   ADSL <- zap_label(datakeep()$ADSL) %>%
@@ -159,24 +160,6 @@ PopuExplor <- function(input, output, session, datafile){
   
   waiter_hide()
 
-  # # hide all the widgets
-  # shinyjs::hide(id="selPrmCode")
-  # shinyjs::hide(id="splitbox")
-  # shinyjs::hide(id="splitbyvar")
-  # shinyjs::hide(id="selxvar")
-  # shinyjs::hide(id="selyvar")
-  # shinyjs::hide(id="selzvar")
-  # shinyjs::hide(id="seltimevar")
-  # shinyjs::hide(id="responsevar")
-  # shinyjs::hide(id="AddPoints")
-  # shinyjs::hide(id="animate")
-  # shinyjs::hide(id="animateby")
-  # shinyjs::hide(id="numBins")
-  # shinyjs::hide(id="AddLine")
-  # shinyjs::hide(id="AddSmooth")
-  # shinyjs::hide(id="DiscrXaxis")
-  # shinyjs::hide(id="UseCounts")
-  # 
 }, ignoreNULL = FALSE) # observeEvent input$done
 
   observeEvent(input$radio,{
