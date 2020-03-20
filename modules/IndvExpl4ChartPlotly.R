@@ -14,13 +14,11 @@ IndvExpl4ChartPlotly <- function(input, output, session, datafile, loaded_adams,
     return(intersect(needed_cols_exists,one_visit_exists))
   })
   
-  
   output$plot_header <- renderText({
     req(!is.null(datafile()))
     paste0("Plot Patient '", usubjid(), "' Metrics by Visit")
   })
   
-
   # Need to refresh these every time a new subject is selected
   observeEvent(usubjid(), {
   
@@ -43,8 +41,8 @@ IndvExpl4ChartPlotly <- function(input, output, session, datafile, loaded_adams,
     )
     
   })
-  
-  
+
+# upon selecting a plottable adam
 observeEvent(input$plot_adam, {
   
   # make sure a subject has been selected
@@ -59,7 +57,6 @@ observeEvent(input$plot_adam, {
     NULL
   })
          
-
    lb_data <- datafile()[[input$plot_adam]] %>%  #ac: "ADLB" #lb_rec
      filter(USUBJID == usubjid()) # ac: input$selPatNo
    
@@ -74,15 +71,6 @@ observeEvent(input$plot_adam, {
      shinyjs::hide(id = "plot_param")
      shinyjs::hide(id = "visit_var")
      shinyjs::hide(id = "plot_hor")
-     
-     # # ac: Let's not drop it yet
-     # plot_adams <- plotable_adams()[!plotable_adams() == input$plot_adam] # drops labs from the list
-     # updateSelectInput(
-     #   session = session,
-     #   inputId = "plot_adam",
-     #   choices = plot_adams,
-     #   selected = " "
-     # )
      
    } else { 
      
@@ -109,9 +97,6 @@ observeEvent(input$plot_adam, {
        choices = my_vst_vars ,
        selected = ifelse(length(sel_vst_var) > 0, sel_vst_var, character(0))
      )
-     
-     
-     
    }
   }) # observe      
   
@@ -139,12 +124,10 @@ observeEvent(input$plot_adam, {
         choices = hor_choices
       )
     }
-    else{
-      shinyjs::hide(id = "plot_hor")
-    }
+    else{shinyjs::hide(id = "plot_hor")}
   })
 
-  # If any param or visit var or plot_hor are updated, run code below
+  # If any param or visit var are updated, run code below
   observeEvent(list(input$plot_param, input$visit_var), {
     
     # don't run until a patient and ADAM are selected
@@ -156,7 +139,6 @@ observeEvent(input$plot_adam, {
     
     INPUT_visit_var <- sym(input$visit_var)
     
-    
      output$PlotChart <- renderPlotly({
        
        # In the labs, label what the blue lines are in the legend or hover text.
@@ -167,18 +149,16 @@ observeEvent(input$plot_adam, {
          filter(!(is.na(!!INPUT_visit_var)) & PARAMCD == input$plot_param) # make sure AVISITN is not missing
        
        if("Screening" %in% input$plot_hor){
-         plot_scr <- plot_dat %>% subset(toupper(VISIT) == "SCREENING") %>% distinct(AVAL) %>% pull()
+         plot_scr <- plot_dat %>% subset(toupper(VISIT) == "SCREENING") %>% distinct(AVAL) %>% mutate(Event = "Screening")
          plot_dat <- plot_dat %>% subset(!(toupper(plot_dat$VISIT) == "SCREENING"))
        }
        if("Baseline" %in% input$plot_hor){
-         plot_base <- plot_dat %>% subset(toupper(AVISIT) == "BASELINE") %>% distinct(AVAL) %>% pull()
+         plot_base <- plot_dat %>% subset(toupper(AVISIT) == "BASELINE") %>% distinct(AVAL) %>% mutate(Event = "Baseline")
          plot_dat <- plot_dat %>% subset(!(toupper(plot_dat$AVISIT) == "BASELINE"))
        }
        
-       
        if (nrow(plot_dat) > 0) {
-         
-         # prmcd <- unique(plot_dat$PARAMCD)
+
          prm   <- unique(plot_dat$PARAM)
          
          lb_plot <- ggplot(plot_dat, aes(x = !!INPUT_visit_var, y = AVAL)) + 
@@ -209,11 +189,11 @@ observeEvent(input$plot_adam, {
          # lohi <- paste("LO:",unique(plot_dat$LBSTNRLO),"HI:",unique(plot_dat$LBSTNRHI))
          if("Screening" %in% input$plot_hor){
            lb_plot <- lb_plot +
-             geom_hline(aes(yintercept = plot_scr), colour = "darkgreen")
+             geom_hline(plot_scr, mapping = aes(yintercept = AVAL, colour = Event)) #, colour = "darkgreen"
          }
          if("Baseline" %in% input$plot_hor){
            lb_plot <- lb_plot +
-             geom_hline(aes(yintercept = plot_base), colour = "purple")
+             geom_hline(plot_base, mapping = aes(yintercept = AVAL, colour = Event)) #, colour = "purple")
          }
          
          ggplotly(lb_plot, tooltip = "text") %>%
@@ -238,7 +218,6 @@ observeEvent(input$plot_adam, {
        # make sure a LabCode has been selected
        req(input$plot_param != " ")
        
-       
        lb_tab <- lb_data %>%
          filter(PARAMCD == input$plot_param) %>%
          mutate(avisit_sort = ifelse(is.na(AVISITN), -9000000000, AVISITN)) %>%
@@ -247,20 +226,16 @@ observeEvent(input$plot_adam, {
                "VISITNUM",
                "AVISITN",
                "VISIT",
-               "AVISIT"), #ac: ADDED 
-                # avisit_sort, # temporary VIEWING purposes only
-                PARAMCD,     #ac: ADDED
-                PARAM,   #ac: ADDED
-                AVAL       #ac: ADDED
+               "AVISIT"),
+                PARAMCD,
+                PARAM,
+                AVAL 
          )
-       
-       
        
        if (nrow(lb_tab) > 0) {
          DT::datatable(lb_tab, options = list(dom = 'ftp', pageLength = 20))
        }
        
-       # DT::datatable(plot_dat, options = list(dom = 'ftp', pageLength = 20))
      }) #renderDataTable
   
   }) # observe
