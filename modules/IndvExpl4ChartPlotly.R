@@ -73,6 +73,7 @@ observeEvent(input$plot_adam, {
      
      shinyjs::hide(id = "plot_param")
      shinyjs::hide(id = "visit_var")
+     shinyjs::hide(id = "plot_hor")
      
      # # ac: Let's not drop it yet
      # plot_adams <- plotable_adams()[!plotable_adams() == input$plot_adam] # drops labs from the list
@@ -109,10 +110,41 @@ observeEvent(input$plot_adam, {
        selected = ifelse(length(sel_vst_var) > 0, sel_vst_var, character(0))
      )
      
+     
+     
    }
   }) # observe      
-       
-  # If either param or visit var are updated, run code below
+  
+  # update horizontal line choices
+  observeEvent(input$plot_param, {
+    req(usubjid() != " " & input$plot_adam != " " & input$plot_param != " ")
+    
+    INPUT_visit_var <- sym(input$visit_var)
+    # ac: changed from above. Note this is slightly different from table data
+    plot_dat <- 
+      datafile()[[input$plot_adam]] %>%  #ac: "ADLB" #lb_rec
+      filter(USUBJID == usubjid() & !(is.na(!!INPUT_visit_var)) & PARAMCD == input$plot_param) # make sure AVISITN is not missing
+    
+    # update plot_horizontal variable to display
+    scr <- plot_dat %>% select(one_of("VISIT"))%>% distinct()%>% pull()
+    base <- plot_dat %>% select(one_of("AVISIT"))%>% distinct()%>% pull()
+    hor_choices0 <- c(ifelse("SCREENING" %in% toupper(scr),"Screening",NA), ifelse("BASELINE" %in% toupper(base),"Baseline",NA))
+    hor_choices <- hor_choices0[which(!is.na(hor_choices0))]
+    
+    if(length(hor_choices) > 0){
+      shinyjs::show(id = "plot_hor")
+      updateCheckboxGroupInput (
+        session = session,
+        inputId = "plot_hor",
+        choices = hor_choices
+      )
+    }
+    else{
+      shinyjs::hide(id = "plot_hor")
+    }
+  })
+
+  # If any param or visit var or plot_hor are updated, run code below
   observeEvent(list(input$plot_param, input$visit_var), {
     
     # don't run until a patient and ADAM are selected
@@ -122,7 +154,6 @@ observeEvent(input$plot_adam, {
     lb_data <- datafile()[[input$plot_adam]] %>%  #ac: "ADLB" #lb_rec
       filter(USUBJID == usubjid()) # ac: input$selPatNo
     
-    
     INPUT_visit_var <- sym(input$visit_var)
     
     
@@ -131,11 +162,19 @@ observeEvent(input$plot_adam, {
        # In the labs, label what the blue lines are in the legend or hover text.
        # make sure a LabCode has been selected
        req(input$plot_param != " ")
-
-       
-       # ac: changed from above. Note this is slightly different from table data
-       plot_dat <- lb_data %>%
+       plot_dat <- 
+         lb_data %>%
          filter(!(is.na(!!INPUT_visit_var)) & PARAMCD == input$plot_param) # make sure AVISITN is not missing
+       
+       if("Screening" %in% input$plot_hor){
+         plot_scr <- plot_dat %>% subset(toupper(VISIT) == "SCREENING") %>% distinct(AVAL) %>% pull()
+         plot_dat <- plot_dat %>% subset(!(toupper(plot_dat$VISIT) == "SCREENING"))
+       }
+       if("Baseline" %in% input$plot_hor){
+         plot_base <- plot_dat %>% subset(toupper(AVISIT) == "BASELINE") %>% distinct(AVAL) %>% pull()
+         plot_dat <- plot_dat %>% subset(!(toupper(plot_dat$AVISIT) == "BASELINE"))
+       }
+       
        
        if (nrow(plot_dat) > 0) {
          
@@ -146,7 +185,8 @@ observeEvent(input$plot_adam, {
            geom_line() +
            geom_point(na.rm = TRUE, 
                       aes(text =
-                            paste0(input$visit_var, ": ",!!INPUT_visit_var,
+                            paste0(AVISIT,
+                                   "<br>",input$visit_var, ": ",!!INPUT_visit_var,
                                    "<br>",input$plot_param ,": ",AVAL
                             )
                       )) +
@@ -154,11 +194,40 @@ observeEvent(input$plot_adam, {
            labs(x = paste0("Study Visit (",input$visit_var,")"),
                 y = prm,
                 title = paste(prm,"by Relative Study Day"),
-                subtitle = paste("USUBJID:",usubjid())
+                subtitle = paste(ifelse(input$plot_adam == "ADLB","test<br>",""),"USUBJID:",usubjid())
            )
          
+         if(input$plot_adam == "ADLB"){
+           lohi <- paste("LO:",unique(plot_dat$LBSTNRLO),"HI:",unique(plot_dat$LBSTNRHI))
+           lb_plot <- lb_plot + 
+             geom_hline(aes(yintercept = mean(LBSTNRLO)), colour = "blue") +
+             geom_hline(aes(yintercept = mean(LBSTNRHI)), colour = "blue") +
+             theme(
+               plot.margin = margin(t = 1, unit = "cm")
+             )
+         }
+         # lohi <- paste("LO:",unique(plot_dat$LBSTNRLO),"HI:",unique(plot_dat$LBSTNRHI))
+         if("Screening" %in% input$plot_hor){
+           lb_plot <- lb_plot +
+             geom_hline(aes(yintercept = plot_scr), colour = "darkgreen")
+         }
+         if("Baseline" %in% input$plot_hor){
+           lb_plot <- lb_plot +
+             geom_hline(aes(yintercept = plot_base), colour = "purple")
+         }
+         
          ggplotly(lb_plot, tooltip = "text") %>%
-           layout(title = list(text = paste0(prm," by Study Visit<br><sup>USUBJID: ",usubjid(),"</sup>")))
+           layout(title = list(text = 
+             paste0(prm," by Study Visit<sup>",
+                         "<br>USUBJID: ",usubjid(),
+                        ifelse(input$plot_adam == "ADLB",paste0("<br>Normal Range of values shown in ",'<em style="color:blue">',"blue",'</em> ',lohi),""),
+                        "</sup>")))
+         
+         # layout(title = list(text = paste(prmcd,":",prm,"by Relative Study Day",
+         #                                  '<br>',
+         #                                  '<sup>',
+         #                                  "Normal Range values shown in",'<em style="color:blue">',"blue",'</em>',lohi,
+         #                                  '</sup>'))) 
          
        } # if (nrow(plot_dat) > 0)
      }) # renderPlotly
@@ -168,6 +237,7 @@ observeEvent(input$plot_adam, {
        
        # make sure a LabCode has been selected
        req(input$plot_param != " ")
+       
        
        lb_tab <- lb_data %>%
          filter(PARAMCD == input$plot_param) %>%
@@ -183,6 +253,8 @@ observeEvent(input$plot_adam, {
                 PARAM,   #ac: ADDED
                 AVAL       #ac: ADDED
          )
+       
+       
        
        if (nrow(lb_tab) > 0) {
          DT::datatable(lb_tab, options = list(dom = 'ftp', pageLength = 20))

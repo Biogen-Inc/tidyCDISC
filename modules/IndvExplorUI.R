@@ -41,8 +41,8 @@ IndvExplorUI <- function(id, label = "Individual Explorer") {
     br(),
     
     h4(strong(textOutput(ns("plot_header")))),
-      fixedRow(
-      column(4,
+    fixedRow(
+      column(3,
         selectInput(
         ns("plot_adam"),
         label = HTML("Select a loaded ADaM<br/>with columns 'PARAM' & 'AVAL'"),
@@ -61,15 +61,23 @@ IndvExplorUI <- function(id, label = "Individual Explorer") {
        selectInput(
          ns("visit_var"),
          label = HTML("<br/>Select a Visit Variable"),
-         choices = c("AVISITN"),selected = "AVISITN"
+         choices = c(" ", "AVISITN"),selected = " "
        )
+      ),
+      column(3,
+         checkboxGroupInput(
+           ns("plot_hor"),
+           label = HTML("<br/>Add horizontal line for:"),
+           choices = c(" ")
+         )
       )
     ),
     
     # fluidRow(column(6, DT::dataTableOutput(ns("DataTable"))),
     #          column(6, plotlyOutput(ns("PlotChart"), width = "100%", height = "600px")))
     fluidRow(column(8,plotlyOutput(ns("PlotChart"), width = "100%", height = "600px"))),
-    fluidRow(column(6, DT::dataTableOutput(ns("DataTable"))))
-    
+    br(),
+    fluidRow(column(6, DT::dataTableOutput(ns("DataTable")))),
+    br()
   ) # taglist        
 } # IndvExplorUI
