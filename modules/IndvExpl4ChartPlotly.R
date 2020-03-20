@@ -233,7 +233,7 @@ observeEvent(input$plot_adam, {
          )
        
        if (nrow(lb_tab) > 0) {
-         DT::datatable(lb_tab, options = list(dom = 'ftp', pageLength = 20))
+         DT::datatable(lb_tab, style="bootstrap", class="compact", options = list(dom = 'ftp', pageLength = 20))
        }
        
      }) #renderDataTable
