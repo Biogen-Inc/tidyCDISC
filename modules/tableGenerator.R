@@ -5,6 +5,7 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
     # paste reactive filtering expression as subheader
     paste("<b>", input$table_title, "</b><br>", subheader()) 
   })
+
   
   subheader <- reactive({
     # change condition to word 
@@ -144,14 +145,12 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
       pull(PARAMCD)
   })
   
-  all_data <- reactive({
-    if (input$to_filter == "No") {
-      processed_data()
-    } else {
-      processed_data() %>%
-        dplyr::filter(!!filtering_expr(input))
-    }
-  })
+  all_data <- callModule(
+    shiny_data_filter,
+    "data_filter",
+    data = processed_data,
+    verbose = FALSE)
+
   
   AVISITN <- reactive({ 
     req(BDS())
