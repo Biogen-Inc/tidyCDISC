@@ -14,6 +14,8 @@ IndvExplorUI <- function(id, label = "Individual Explorer") {
     ),
     
     br(),
+    h4(strong(textOutput(ns("demog_header")))),
+    h6(textOutput(ns("subjid_subtitle1"))),
     fluidRow(
       column(10, DT::dataTableOutput(ns("demogInfo")))
     ),
@@ -24,16 +26,28 @@ IndvExplorUI <- function(id, label = "Individual Explorer") {
     
     
     h4(strong(textOutput(ns("events_header")))),
-    checkboxGroupInput(
-      inputId = ns("checkGroup"),
-      label = "For additional events, load a AE, LB, or CM",
-      choices = c(" "),
-      selected = NULL,
-      inline = TRUE
-    ),
-    
+    h6(textOutput(ns("subjid_subtitle2"))),
     fluidRow(
-      column(10, DT::dataTableOutput(ns("eventsTable")))
+      checkboxGroupInput(
+        inputId = ns("checkGroup"),
+        label = "For additional events, load a AE, LB, or CM",
+        choices = c(" "),
+        selected = NULL,
+        inline = TRUE
+      )#,
+      # checkboxInput(inputId = ns("plot_events_timeline"), label = "Plot Timeline of Events", value = T)
+    ),
+    # conditionalPanel("input.plot_events_timeline", ns = ns,
+      fluidRow(
+        column(10, 
+               # plotlyOutput(ns("eventsPlot"))
+               timevisOutput(ns("eventsPlot"))
+              )
+      )
+    # )
+    ,
+    fluidRow(
+      column(8, DT::dataTableOutput(ns("eventsTable")))
     ),
     
     br(),
@@ -41,6 +55,8 @@ IndvExplorUI <- function(id, label = "Individual Explorer") {
     br(),
     
     h4(strong(textOutput(ns("plot_header")))),
+    h6(textOutput(ns("subjid_subtitle3"))),
+    # textOutput(ns("subjid_subtitle")),
     fixedRow(
       column(3,
         selectInput(
@@ -64,18 +80,19 @@ IndvExplorUI <- function(id, label = "Individual Explorer") {
          choices = c(" ", "AVISITN"),selected = " "
        )
       ),
-      column(3,
+      column(2,
          checkboxGroupInput(
            ns("plot_hor"),
            label = HTML("<br/>Add horizontal line for:"),
            choices = c(" ")
          )
-      )
+      ),
+      column(1)
     ),
     
     # fluidRow(column(6, DT::dataTableOutput(ns("DataTable"))),
     #          column(6, plotlyOutput(ns("PlotChart"), width = "100%", height = "600px")))
-    fluidRow(column(8,plotlyOutput(ns("PlotChart"), width = "100%", height = "600px"))),
+    fluidRow(column(10,plotlyOutput(ns("PlotChart"), width = "100%", height = "600px"))),
     br(),
     fluidRow(column(6, DT::dataTableOutput(ns("DataTable")))),
     br()

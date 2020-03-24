@@ -6,7 +6,7 @@ IndvExpl3CheckGroup <- function(input, output, session, datafile, loaded_adams, 
   
 output$events_header <- renderText({
   req(!is.null(datafile()))
-  paste0("Patient '", usubjid(), "' Events by Date")
+  paste0("Patient Events by Date") #'", usubjid(), "'
 })
   
 observeEvent(input$checkGroup, {
@@ -17,7 +17,9 @@ observeEvent(input$checkGroup, {
   output$eventsTable <- DT::renderDataTable({
     NULL
   })
-  
+  output$eventsPlot <- renderTimevis({
+    NULL
+  })
   # Here we collect data for adae, ds (from adsl), adcm and adlb
   # and then combine the ones selected in input$checkGroup
   # DOMAIN is used to match the input$checkGroup string
@@ -93,11 +95,6 @@ observeEvent(input$checkGroup, {
   uni_list <- list(ds_rec, ae_rec, cm_rec, lb_rec)
   uni_list <- uni_list[!sapply(uni_list,is.null)]
   
-  # print some stuff
-  # cat(paste("uni_list:", uni_list))
-  # cat(paste("\nADSL in datafile?", "ADSL" %in% loaded_adams()))
-  # cat(paste("\nChoices list:", choices))
-  # cat(paste("\nChoices unlisted:", unlist(choices)))
   
   uni_rec <-
     do.call("rbind", uni_list) %>%
@@ -109,17 +106,50 @@ observeEvent(input$checkGroup, {
   # Try to process a data table with 0 records but with column information DT will throw exception.
   if (!is.null(uni_rec) && nrow(uni_rec) > 0)
   {
+    
+    shinyjs::show(id = "eventsTable")
+    shinyjs::show(id = "eventsPlot")
+    
     output$eventsTable <- DT::renderDataTable({
-      DT::datatable(uni_rec, colnames = c("Type of Event","Date of Event","Event Description")
-                    ,options = list(  dom = 'lftpr'
+      DT::datatable(uni_rec
+                    , colnames = c("Type of Event","Date of Event","Event Description")
+                    , options = list(  dom = 'lftpr'
                                     , pageLength = 15
                                     , lengthMenu = list(c(15, 50, 100, -1),c('15', '50', '100', "All"))
                                    )
+                    , style="default"
+                    # , class="compact"
                     )
     })
+    
+    # output$eventsPlot <- renderPlotly({
+    output$eventsPlot <- renderTimevis({
+      # req(usubjid() != " " )
+      
+      plot_dat <- 
+        uni_rec %>%
+        select(
+               start = START,
+               content = DECODE,
+               group = EVENTTYP
+               )
+      grp_dat <- 
+        uni_rec %>%
+        mutate(id = EVENTTYP,
+               content = EVENTTYP) %>%
+        distinct(id, content)
+      
+      timevis(plot_dat, groups = grp_dat)
+      
+    })
+    
   } else {
     if (!is.null(input$checkGroup)) {
       shinyjs::alert(paste("No data available for this subject!")) 
+      # disable("eventsTable")
+      shinyjs::hide(id = "eventsTable")
+      shinyjs::hide(id = "eventsPlot")
+      
     }
   }
 }, ignoreNULL=FALSE) # clearing all checkboxes qualifies for an event
