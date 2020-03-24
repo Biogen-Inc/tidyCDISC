@@ -141,7 +141,10 @@ IndvExpl3CheckGroup <- function(input, output, session, datafile, loaded_adams, 
                    content = EVENTTYP) %>%
             distinct(id, content)
           
-          timevis(plot_dat, groups = grp_dat)
+          timevis(plot_dat,
+                  groups = grp_dat
+                  # ,options = list(maxHeight = "300px")
+                  )
           
         })
         
