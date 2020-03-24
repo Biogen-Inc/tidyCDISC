@@ -94,7 +94,7 @@ dataUpload <- function(input, output, session, stringsAsFactors) {
   
   output$data_preview <- DT::renderDataTable({
     DT::datatable(data = data_selected(),
-                  style="bootstrap",
+                  style="default",
                   class="compact",
                   extensions = "Scroller", options = list(scrollY=400, scrollX=TRUE))
   })
