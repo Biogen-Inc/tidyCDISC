@@ -39,9 +39,8 @@ IndvExplorUI <- function(id, label = "Individual Explorer") {
     ),
     # conditionalPanel("input.plot_events_timeline", ns = ns,
       fluidRow(
-        column(10, 
-               # plotlyOutput(ns("eventsPlot"))
-               timevisOutput(ns("eventsPlot"))
+        column(10,
+                timevisOutput(ns("eventsPlot"))
               )
       )
     # )

@@ -82,7 +82,7 @@ IndvExpl3CheckGroup <- function(input, output, session, datafile, loaded_adams, 
         lb_rec <- datafile()[["ADLB"]] %>%
           filter(USUBJID == usubjid()) %>%
           mutate(EVENTTYP = "Lab Results", DOMAIN = "LB") %>%
-          select(USUBJID, EVENTTYP, LBDT, DOMAIN) %>%
+          select(USUBJID, EVENTTYP, LBDT, DOMAIN) %>% #ADT ANALYSIS DATE, 
           mutate(START = LBDT, DECODE = "Labs Drawn") %>%
           select(-starts_with("LB")) %>%
           distinct(.keep_all = TRUE)
@@ -102,7 +102,7 @@ IndvExpl3CheckGroup <- function(input, output, session, datafile, loaded_adams, 
         mutate(ord = ifelse(EVENTTYP == "DS", 1, 0)) %>% # for ties, show DS last
         arrange(START, ord, EVENTTYP) %>%
         filter(DOMAIN %in% c(strng)) %>%
-        select(-USUBJID,-ord,-DOMAIN)
+        select(-USUBJID,-ord)
       
       
       # Try to process a data table with 0 records but with column information DT will throw exception.
@@ -113,7 +113,7 @@ IndvExpl3CheckGroup <- function(input, output, session, datafile, loaded_adams, 
         shinyjs::show(id = "eventsPlot")
         
         output$eventsTable <- DT::renderDataTable({
-          DT::datatable(uni_rec
+          DT::datatable(uni_rec %>% select(-DOMAIN)
                         , colnames = c("Type of Event","Date of Event","Event Description")
                         , options = list(  dom = 'lftpr'
                                            , pageLength = 15
@@ -130,16 +130,21 @@ IndvExpl3CheckGroup <- function(input, output, session, datafile, loaded_adams, 
           
           plot_dat <- 
             uni_rec %>%
-            select(
+            mutate(
               start = START,
               content = DECODE,
-              group = EVENTTYP
-            )
+              group = EVENTTYP,
+              className = DOMAIN
+            ) %>%
+            select(start, content, group, className)
           grp_dat <- 
             uni_rec %>%
             mutate(id = EVENTTYP,
-                   content = EVENTTYP) %>%
-            distinct(id, content)
+                   content = EVENTTYP,
+                   className = DOMAIN,
+                   style = rep("font-wieght: bold;",nrow(uni_rec))
+                   ) %>%
+            distinct(id, content, className)
           
           timevis(plot_dat,
                   groups = grp_dat
