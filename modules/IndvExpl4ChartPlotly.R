@@ -16,7 +16,7 @@ IndvExpl4ChartPlotly <- function(input, output, session, datafile, loaded_adams,
   
   output$plot_header <- renderText({
     req(!is.null(datafile()))
-    paste0("Plot Patient '", usubjid(), "' Metrics by Visit")
+    paste0("Plot Patient Metrics by Visit") #'", usubjid(), "' 
   })
   
   # Need to refresh these every time a new subject is selected
@@ -233,7 +233,10 @@ observeEvent(input$plot_adam, {
          )
        
        if (nrow(lb_tab) > 0) {
-         DT::datatable(lb_tab, options = list(dom = 'ftp', pageLength = 20))
+         DT::datatable(lb_tab,
+                       style="default", 
+                       # class="compact", 
+                       options = list(dom = 'ftp', pageLength = 20))
        }
        
      }) #renderDataTable

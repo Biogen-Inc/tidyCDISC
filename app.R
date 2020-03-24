@@ -18,6 +18,7 @@ library(rmarkdown)
 library(shinytest)
 library(reactable)
 library(waiter)
+library(timevis) # new 3/23
 
 options(shiny.sanitize.errors = FALSE)
 options(bitmapType='cairo') 
