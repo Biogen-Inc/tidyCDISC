@@ -1,35 +1,6 @@
 tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
   
-  output$title <- renderText({ 
-    # paste the title to the top of the table
-    # paste reactive filtering expression as subheader
-    paste("<b>", input$table_title, "</b><br>", subheader()) 
-  })
-
-  
-  subheader <- reactive({
-    # change condition to word 
-    if (input$condition == "==") {
-      condition <- "Equals"
-    } else if (input$condition == "!=") {
-      condition <- "Not Equal To"
-    } else if (input$condition == "<") {
-      condition <- "Less Than"
-    } else if (input$condition == "<=") {
-      condition <- "Less Than or Equal To"
-    } else if (input$condition == ">") {
-      condition <- "Greater Than"
-    } else if (input$condition == ">=") {
-      condition <- "Greater Than or Equal To"
-    }
-    
-    if (input$to_filter == "No") {
-      subheader <- ""
-    } else {
-      subheader <- 
-        paste("Where", input$filtering, condition, input$filt_grp)
-    }
-  })
+  output$title <- renderText( input$table_title )
   
   filtering_expr <- function(input) {
     column <- rlang::sym(input$filtering)
@@ -126,14 +97,16 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
       # Bind all the PARAMCD files 
       all_PARAMCD <- bind_rows(PARAMCD, .id = "data_from")  %>% 
         arrange(SUBJID, AVISITN, PARAMCD) %>% 
-        select(USUBJID, SUBJID, AVISITN, AVISIT, PARAMCD, AVAL, CHG, data_from)
+        select(USUBJID, SUBJID, AVISITN, AVISIT, PARAMCD, AVAL, CHG, data_from) %>%
+        mutate_if(is.character, as.factor)
         # distinct(USUBJID, AVISITN, AVISIT, PARAMCD, .keep_all = TRUE) 
       
       # Join ADSL and all_PARAMCD
       combined_data <- full_join(ADSL(), all_PARAMCD, by = "USUBJID")
     } else {
       combined_data <- ADSL() %>%
-        mutate(data_from = "ADSL", PARAMCD = NA, AVAL = NA, CHG = NA)
+        mutate(data_from = "ADSL", PARAMCD = NA, AVAL = NA, CHG = NA) %>%
+        mutate_if(is.character, as.factor)
     }
     })
     
@@ -150,7 +123,6 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
     "data_filter",
     data = processed_data,
     verbose = FALSE)
-
   
   AVISITN <- reactive({ 
     req(BDS())
