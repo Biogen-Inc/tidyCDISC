@@ -34,18 +34,10 @@ IndvExplorUI <- function(id, label = "Individual Explorer") {
         choices = c(" "),
         selected = NULL,
         inline = TRUE
-      )#,
-      # checkboxInput(inputId = ns("plot_events_timeline"), label = "Plot Timeline of Events", value = T)
-    ),
-    # conditionalPanel("input.plot_events_timeline", ns = ns,
-      fluidRow(
-        column(10, 
-               # plotlyOutput(ns("eventsPlot"))
-               timevisOutput(ns("eventsPlot"))
-              )
       )
-    # )
-    ,
+    ),
+    fluidRow(
+      column(10,timevisOutput(ns("eventsPlot")))),
     fluidRow(
       column(8, DT::dataTableOutput(ns("eventsTable")))
     ),

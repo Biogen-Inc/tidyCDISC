@@ -17,8 +17,25 @@ IndvExpl2SelPatno <- function(input, output, session, datafile, loaded_adams){ #
     
     req(input$selPatNo != " ") # selPatNo cannot be blank
     
-    # Clear eventsTable - ac: do we really want to do this?
-    output$eventsTable <- DT::renderDataTable({NULL})
+    # Show the rest of the widgets once a patient number was selected
+    shinyjs::show(id = "demog_header")
+    shinyjs::show(id = "subjid_subtitle1")
+    shinyjs::show(id = "demogInfo")
+    shinyjs::show(id = "hr2")
+    shinyjs::show(id = "events_header")
+    shinyjs::show(id = "subjid_subtitle2")
+    shinyjs::show(id = "checkGroup")
+    # shinyjs::show(id = "eventsPlot")
+    # shinyjs::show(id = "eventsTable")
+    shinyjs::show(id = "hr3")
+    shinyjs::show(id = "plot_header")
+    shinyjs::show(id = "subjid_subtitle3")
+    shinyjs::show(id = "plot_adam")
+    
+    # Clear datatables abd plots 
+    output$DataTable<- DT::renderDataTable({NULL})
+    output$PlotChart <- renderPlotly({NULL})
+    output$eventsTable <- renderDataTable({NULL})
     output$eventsPlot <- renderTimevis({NULL})
     shinyjs::hide(id = "eventsPlot")
     shinyjs::hide(id = "eventsTable")
@@ -50,36 +67,8 @@ IndvExpl2SelPatno <- function(input, output, session, datafile, loaded_adams){ #
                     )
     })
     
-    # Show the rest of the widgets once a patient number was selected
-    shinyjs::show(id = "demog_header")
-    shinyjs::show(id = "subjid_subtitle1")
-    shinyjs::show(id = "demogInfo")
-    shinyjs::show(id = "hr2")
-    shinyjs::show(id = "events_header")
-    shinyjs::show(id = "subjid_subtitle2")
-    shinyjs::show(id = "checkGroup")
-    # shinyjs::show(id = "eventsPlot")
-    # shinyjs::show(id = "eventsTable")
-    shinyjs::show(id = "hr3")
-    shinyjs::show(id = "plot_header")
-    shinyjs::show(id = "subjid_subtitle3")
-    shinyjs::show(id = "plot_adam")
     
-    # Clear datatables abd plots 
-    output$DataTable<- DT::renderDataTable({
-      NULL
-    })
-    output$PlotChart <- renderPlotly({
-      NULL
-    })
-    output$eventsTable <- renderDataTable({
-      NULL
-    })
-    output$eventsPlot <- renderTimevis({
-      NULL
-    })
-    
-    
+    # update checkboxes
     checked1 <- NULL
     checked2 <- NULL
     checked3 <- NULL
@@ -106,7 +95,6 @@ IndvExpl2SelPatno <- function(input, output, session, datafile, loaded_adams){ #
     choices <- setNames(choices,names)
     # Remove NULLs from the list
     choices <- choices[!sapply(choices,is.null)]
-    
     
     # update the checkbox group
     updateCheckboxGroupInput(
