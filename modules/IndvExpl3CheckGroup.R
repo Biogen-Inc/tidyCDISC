@@ -151,10 +151,38 @@ IndvExpl3CheckGroup <- function(input, output, session, datafile, loaded_adams, 
                    ) %>%
             distinct(id, content, className)
           
-          timevis(plot_dat,
+            
+          # number of non-MH categories
+          nonMH_dat <- 
+            plot_dat %>%
+            filter(className != "MH")
+          nonMH_n <- nonMH_dat %>% distinct(className) %>% pull() %>% length
+          
+          # if only 1 selected, do nothing.
+          # if n_nonMH selected, then zoom to 1st portion of 1/nonMH timespan + 10% space on front
+          # For example: If 2 selected and total timespan is 3 years, then zoom to 1st 1/2 the nonMH timespan + start
+          
+          tv <- timevis(plot_dat,
                   groups = grp_dat
                   # ,options = list(maxHeight = "400px")
                   )
+          
+          if(nonMH_n > 1){
+            # nonMH_n <- 2
+            s <- min(as.Date(nonMH_dat$start))
+            e <- max(as.Date(nonMH_dat$start))
+            # s<-as.Date("2019-03-26")
+            # e<-as.Date("2022-01-01")
+            
+            old_span <- e - s
+            new_span <- old_span / nonMH_n
+            new_s <- as.character(s - round(new_span*.10))
+            new_e <- as.character(s + new_span)
+            
+            tv <- tv %>%
+              setOptions(list(start = new_s, end = new_e))
+          }
+          tv
           
         })
         
