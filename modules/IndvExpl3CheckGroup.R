@@ -2,7 +2,8 @@ IndvExpl3CheckGroup <- function(input, output, session, datafile, loaded_adams, 
   
   ns <- session$ns
   
-  
+  # Initialize Waiter
+  # w_events <- Waiter$new(id = c("eventsTable","eventsPlot"))
   
   output$events_header <- renderText({
     req(!is.null(datafile()))
@@ -12,7 +13,7 @@ IndvExpl3CheckGroup <- function(input, output, session, datafile, loaded_adams, 
   observeEvent(input$checkGroup, {
     
     req(usubjid() != " ") # selPatNo cannot be blank - ac: not sure if Robert expects this to work like "validate(need())"
-    
+
     # Clear outputs if nothing is selected
     if(is.null(input$checkGroup)){
       output$eventsTable <- DT::renderDataTable({NULL})
@@ -21,6 +22,10 @@ IndvExpl3CheckGroup <- function(input, output, session, datafile, loaded_adams, 
       shinyjs::hide(id = "eventsTable")
     }
     else{
+      
+      # turn on waiter screen on event elements (table and plot)
+      # w_events$show()
+      
       # Here we collect data for adae, ds (from adsl), adcm and adlb
       # and then combine the ones selected in input$checkGroup
       # DOMAIN is used to match the input$checkGroup string
@@ -82,7 +87,7 @@ IndvExpl3CheckGroup <- function(input, output, session, datafile, loaded_adams, 
         lb_rec <- datafile()[["ADLB"]] %>%
           filter(USUBJID == usubjid()) %>%
           mutate(EVENTTYP = "Lab Results", DOMAIN = "LB") %>%
-          select(USUBJID, EVENTTYP, LBDT, DOMAIN) %>% #ADT ANALYSIS DATE, 
+          select(USUBJID, EVENTTYP, LBDT, DOMAIN) %>% # Chris suggested: ADT ANALYSIS DATE, 
           mutate(START = LBDT, DECODE = "Labs Drawn") %>%
           select(-starts_with("LB")) %>%
           distinct(.keep_all = TRUE)
@@ -104,14 +109,14 @@ IndvExpl3CheckGroup <- function(input, output, session, datafile, loaded_adams, 
         filter(DOMAIN %in% c(strng)) %>%
         select(-USUBJID,-ord)
       
+      # turn off waiter
+      # w_events$hide()
       
       # Try to process a data table with 0 records but with column information DT will throw exception.
       if (!is.null(uni_rec) && nrow(uni_rec) > 0)
       {
-        
         shinyjs::show(id = "eventsTable")
         shinyjs::show(id = "eventsPlot")
-        
         output$eventsTable <- DT::renderDataTable({
           DT::datatable(uni_rec %>% select(-DOMAIN)
                         , colnames = c("Type of Event","Date of Event","Event Description")
@@ -148,7 +153,7 @@ IndvExpl3CheckGroup <- function(input, output, session, datafile, loaded_adams, 
           
           timevis(plot_dat,
                   groups = grp_dat
-                  # ,options = list(maxHeight = "300px")
+                  # ,options = list(maxHeight = "400px")
                   )
           
         })
