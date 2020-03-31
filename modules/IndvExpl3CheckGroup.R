@@ -20,6 +20,10 @@ IndvExpl3CheckGroup <- function(input, output, session, datafile, loaded_adams, 
     if(is.null(input$checkGroup)){
       output$eventsTable <- DT::renderDataTable({NULL})
       output$eventsPlot <- renderTimevis({NULL})
+      output$events_tv_caption1 <- renderText({NULL})
+      output$events_tv_caption2 <- renderText({NULL})
+      shinyjs::hide(id = "events_tv_caption1")
+      shinyjs::hide(id = "events_tv_caption2")
       shinyjs::hide(id = "eventsPlot")
       shinyjs::hide(id = "eventsTable")
     }
@@ -31,22 +35,30 @@ IndvExpl3CheckGroup <- function(input, output, session, datafile, loaded_adams, 
       # Here we collect data for adae, ds (from adsl), adcm and adlb
       # and then combine the ones selected in input$checkGroup
       # DOMAIN is used to match the input$checkGroup string
+      cat(paste("\n","AE" %in% c(input$checkbox)))
       
       if ("ADAE" %in% loaded_adams() ) { # ac: first part not needed?
-        ae_rec <- datafile()[["ADAE"]] %>%
-          filter(USUBJID == usubjid()) %>%
-          filter(!is.na(AESTDT)) %>%
-          mutate(EVENTTYP = "Adverse Event", DOMAIN = "AE") %>%
-          select(USUBJID, EVENTTYP, AESTDT, AEDECOD, AESEV, AESER, DOMAIN) %>%
-          mutate(
-            START = AESTDT,
-            END = NA,
-            tab_st = as.character(START),
-            tab_en = as.character(END),
-            DECODE = paste(AEDECOD, "AESEV:", AESEV, "AESER:", AESER)
-          ) %>%
-          select(-starts_with("AE")) %>%
-          distinct(.keep_all = TRUE)
+        if("AESTDT" %in% colnames(datafile()[["ADAE"]])){
+          ae_rec <- datafile()[["ADAE"]] %>%
+            filter(USUBJID == usubjid()) %>%
+            filter(!is.na(AESTDT)) %>%
+            mutate(EVENTTYP = "Adverse Event", DOMAIN = "AE") %>%
+            select(USUBJID, EVENTTYP, AESTDT, AEDECOD, AESEV, AESER, DOMAIN) %>%
+            mutate(
+              START = AESTDT,
+              END = AEENDT,
+              tab_st = ifelse(as.character(START) == "", NA_character_, as.character(START)),
+              tab_en = ifelse(as.character(END) == "", NA_character_, as.character(END)),
+              DECODE = paste(AEDECOD, "AESEV:", AESEV, "AESER:", AESER)
+            ) %>%
+            select(-starts_with("AE")) %>%
+            distinct(.keep_all = TRUE)
+        } else{
+          # if("AE" %in% c(input$checkbox)){
+          #   shinyjs::alert(paste("Cannot add Adverse Events: no AESTDT variable exists in the loaded ADAE.")) 
+          # }
+          ae_rec <- NULL
+        }
       } else {
         ae_rec <- NULL
       }
@@ -70,8 +82,8 @@ IndvExpl3CheckGroup <- function(input, output, session, datafile, loaded_adams, 
           arrange(START)%>%
           mutate(EVENTTYP = "Milestones", DOMAIN = "DS",
                  END = NA,
-                 tab_st = as.character(START),
-                 tab_en = as.character(END)
+                 tab_st = ifelse(as.character(START) == "", NA_character_, as.character(START)),
+                 tab_en = ifelse(as.character(END) == "", NA_character_, as.character(END))
                  ) %>%
           select(USUBJID, EVENTTYP, START, END,
                  tab_st,
@@ -79,8 +91,7 @@ IndvExpl3CheckGroup <- function(input, output, session, datafile, loaded_adams, 
                  DECODE, DOMAIN)%>%
           select(-starts_with("DS"))
         
-        cat(paste("\n\nds_rec START",class(ds_rec$START)))
-        cat(paste("\nds_rec END",class(ds_rec$END)))
+
       } else {
         ds_rec <- NULL
       }
@@ -93,8 +104,8 @@ IndvExpl3CheckGroup <- function(input, output, session, datafile, loaded_adams, 
           select(USUBJID, EVENTTYP, CMSTDT, CMDECOD, DOMAIN) %>%
           mutate(START = CMSTDT,
                  END = NA, 
-                 tab_st = as.character(START),
-                 tab_en = as.character(END),
+                 tab_st = ifelse(as.character(START) == "", NA_character_, as.character(START)),
+                 tab_en = ifelse(as.character(END) == "", NA_character_, as.character(END)),
                  DECODE = CMDECOD) %>%
           select(-starts_with("CM")) %>%
           distinct(.keep_all = TRUE)
@@ -109,8 +120,8 @@ IndvExpl3CheckGroup <- function(input, output, session, datafile, loaded_adams, 
           select(USUBJID, EVENTTYP, LBDT, DOMAIN) %>% # Chris suggested: ADT ANALYSIS DATE, 
           mutate(START = LBDT,
                  END = NA,
-                 tab_st = as.character(START),
-                 tab_en = as.character(END),
+                 tab_st = ifelse(as.character(START) == "", NA_character_, as.character(START)),
+                 tab_en = ifelse(as.character(END) == "", NA_character_, as.character(END)),
                  DECODE = "Labs Drawn") %>%
           select(-starts_with("LB")) %>%
           distinct(.keep_all = TRUE)
@@ -132,8 +143,8 @@ IndvExpl3CheckGroup <- function(input, output, session, datafile, loaded_adams, 
                                  nchar(MHENDTC) == 4 ~ paste0(MHENDTC,"-07-15"),
                                  # nchar(MHENDTC) == 0 ~ "",
                                  TRUE ~ NA_character_)),
-                 tab_st = as.character(MHSTDTC),
-                 tab_en = as.character(MHENDTC),
+                 tab_st = ifelse(MHSTDTC == "", NA_character_, MHSTDTC),
+                 tab_en = ifelse(MHENDTC == "", NA_character_, MHENDTC),
                  DECODE = MHTERM
           ) %>%
           select(USUBJID, EVENTTYP, START, END, tab_st, tab_en, DECODE, DOMAIN) %>%
@@ -152,7 +163,7 @@ IndvExpl3CheckGroup <- function(input, output, session, datafile, loaded_adams, 
         do.call("rbind", uni_list) %>%
         mutate(ord = ifelse(EVENTTYP == "DS", 1, 0),
                sort_start = if_else(is.na(START), as.Date("1900-01-01"), START), # If start is null, show at beginning of table
-               END = as.Date(END, origin="1970-01-01")#################################
+               END = as.Date(END, origin="1970-01-01")
                ) %>% # for ties, show DS last
         arrange(sort_start, ord, EVENTTYP) %>%
         filter(DOMAIN %in% c(strng)) %>%
@@ -241,14 +252,35 @@ IndvExpl3CheckGroup <- function(input, output, session, datafile, loaded_adams, 
             
             tv <- tv %>%
               setOptions(list(start = new_s, end = new_e))
-          # }else if (uni_rec %>% subset(is.na(START)) %>% nrow() > 0){
-          #   # Add caption if there are events not shown in the timeline due to missing dates
-          # }else if (uni_rec %>% subset(is.na(START)) %>% nrow() > 0){
-          #   # Add caption if there are events not shown in the timeline due to missing dates
-          # }
+          }
           tv
           
-        })
+        }) # end of Render_timevis
+
+        # Add caption if there are events not shown in the timeline due to missing dates
+        
+        if (uni_rec %>% subset(is.na(START)) %>% nrow() > 0){
+          shinyjs::show(id = "events_tv_caption1")
+          output$events_tv_caption1 <- renderText({
+            "Note: Some patient event dates were not plotted since the loaded data contained missing dates. These events are still included in the table below."
+          })
+        }else {
+          shinyjs::hide(id = "events_tv_caption1")
+          output$events_tv_caption1 <- renderText({NULL})
+        }
+        
+        # cat(paste("\n",uni_rec %>% subset(is.na(START)) %>% nrow() > 0))
+        # Add caption if some dates were imputed 
+        if (!identical(as.character(uni_rec$START),uni_rec$tab_st) | !identical(as.character(uni_rec$END),uni_rec$tab_en)){
+          shinyjs::show(id = "events_tv_caption2")
+          output$events_tv_caption2 <- renderText({
+            "Note: Some patient event dates plotted were imputed when vague. If only a year was provided, July 15 was appeneded for the year & month. If Year-Month was provided, the day of the 15th was imputed."
+          })
+        }else {
+          shinyjs::hide(id = "events_tv_caption2")
+          output$events_tv_caption2 <- renderText({NULL})
+        }
+        
         
       } else {
         if (!is.null(input$checkGroup)) {

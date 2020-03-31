@@ -37,6 +37,10 @@ IndvExpl2SelPatno <- function(input, output, session, datafile, loaded_adams){ #
     output$PlotChart <- renderPlotly({NULL})
     output$eventsTable <- renderDataTable({NULL})
     output$eventsPlot <- renderTimevis({NULL})
+    output$events_tv_caption1 <- renderText({NULL})
+    output$events_tv_caption2 <- renderText({NULL})
+    shinyjs::hide(id = "events_tv_caption1")
+    shinyjs::hide(id = "events_tv_caption2")
     shinyjs::hide(id = "eventsPlot")
     shinyjs::hide(id = "eventsTable")
     
