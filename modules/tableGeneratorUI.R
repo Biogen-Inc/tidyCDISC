@@ -40,7 +40,7 @@ tableGeneratorUI <- function(id, label = "Create Chart") {
       shinyUI(bootstrapPage(
         HTML('<button data-toggle="collapse" data-target="#demo">Filter Data</button>'),
         tags$div(id = 'demo',  class="collapse",
-                 shiny_data_filter_ui(ns("data_filter"))
+                 IDEAFilter::shiny_data_filter_ui(ns("data_filter"))
       ))),
                  
                  fluidRow(
