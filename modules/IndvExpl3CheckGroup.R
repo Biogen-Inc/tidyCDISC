@@ -35,9 +35,7 @@ IndvExpl3CheckGroup <- function(input, output, session, datafile, loaded_adams, 
       # Here we collect data for adae, ds (from adsl), adcm and adlb
       # and then combine the ones selected in input$checkGroup
       # DOMAIN is used to match the input$checkGroup string
-      cat(paste("\n","AE" %in% c(input$checkbox)))
-      
-      if ("ADAE" %in% loaded_adams() ) { # ac: first part not needed?
+      if ("ADAE" %in% loaded_adams() & "AE" %in% c(input$checkGroup)) { # ac: first part not needed?
         if("AESTDT" %in% colnames(datafile()[["ADAE"]])){
           ae_rec <- datafile()[["ADAE"]] %>%
             filter(USUBJID == usubjid()) %>%
@@ -46,7 +44,7 @@ IndvExpl3CheckGroup <- function(input, output, session, datafile, loaded_adams, 
             select(USUBJID, EVENTTYP, AESTDT, AEDECOD, AESEV, AESER, DOMAIN) %>%
             mutate(
               START = AESTDT,
-              END = AEENDT,
+              END = NA,
               tab_st = ifelse(as.character(START) == "", NA_character_, as.character(START)),
               tab_en = ifelse(as.character(END) == "", NA_character_, as.character(END)),
               DECODE = paste(AEDECOD, "AESEV:", AESEV, "AESER:", AESER)
@@ -54,16 +52,16 @@ IndvExpl3CheckGroup <- function(input, output, session, datafile, loaded_adams, 
             select(-starts_with("AE")) %>%
             distinct(.keep_all = TRUE)
         } else{
-          # if("AE" %in% c(input$checkbox)){
-          #   shinyjs::alert(paste("Cannot add Adverse Events: no AESTDT variable exists in the loaded ADAE.")) 
-          # }
+          if("AE" %in% c(input$checkGroup)){
+            shinyjs::alert(paste("Cannot add Adverse Events: no AESTDT variable exists in the loaded ADAE."))
+          }
           ae_rec <- NULL
         }
       } else {
         ae_rec <- NULL
       }
       
-      if ("ADSL" %in% loaded_adams() ) {
+      if ("ADSL" %in% loaded_adams() & "DS" %in% c(input$checkGroup)) {
         
         # organizing our ADSL labels for merging below
         adsl <- data.frame(datafile()[["ADSL"]])
@@ -96,59 +94,80 @@ IndvExpl3CheckGroup <- function(input, output, session, datafile, loaded_adams, 
         ds_rec <- NULL
       }
       
-      if ("ADCM" %in% loaded_adams() ) {
-        cm_rec <- datafile()[["ADCM"]] %>%
-          filter(USUBJID == usubjid()) %>%
-          filter(CMDECOD != "") %>%
-          mutate(EVENTTYP = "Concomitant Medications", DOMAIN = "CM") %>%
-          select(USUBJID, EVENTTYP, CMSTDT, CMDECOD, DOMAIN) %>%
-          mutate(START = CMSTDT,
-                 END = NA, 
-                 tab_st = ifelse(as.character(START) == "", NA_character_, as.character(START)),
-                 tab_en = ifelse(as.character(END) == "", NA_character_, as.character(END)),
-                 DECODE = CMDECOD) %>%
-          select(-starts_with("CM")) %>%
-          distinct(.keep_all = TRUE)
+      if ("ADCM" %in% loaded_adams() & "CM" %in% c(input$checkGroup)) {
+        if("CMSTDT" %in% colnames(datafile()[["ADCM"]])){
+          cm_rec <- datafile()[["ADCM"]] %>%
+            filter(USUBJID == usubjid()) %>%
+            filter(CMDECOD != "") %>%
+            mutate(EVENTTYP = "Concomitant Medications", DOMAIN = "CM") %>%
+            select(USUBJID, EVENTTYP, CMSTDT, CMDECOD, DOMAIN) %>%
+            mutate(START = CMSTDT,
+                   END = NA, 
+                   tab_st = ifelse(as.character(START) == "", NA_character_, as.character(START)),
+                   tab_en = ifelse(as.character(END) == "", NA_character_, as.character(END)),
+                   DECODE = CMDECOD) %>%
+            select(-starts_with("CM")) %>%
+            distinct(.keep_all = TRUE)
+        } else{
+          if("CM" %in% c(input$checkGroup)){
+            shinyjs::alert(paste("Cannot add Con Meds: no CMSTDT variable exists in the loaded ADCM."))
+          }
+          cm_rec <- NULL
+        }
       } else {
         cm_rec <- NULL
       }
       
-      if ("ADLB" %in% loaded_adams() ) {
-        lb_rec <- datafile()[["ADLB"]] %>%
-          filter(USUBJID == usubjid()) %>%
-          mutate(EVENTTYP = "Lab Results", DOMAIN = "LB") %>%
-          select(USUBJID, EVENTTYP, LBDT, DOMAIN) %>% # Chris suggested: ADT ANALYSIS DATE, 
-          mutate(START = LBDT,
-                 END = NA,
-                 tab_st = ifelse(as.character(START) == "", NA_character_, as.character(START)),
-                 tab_en = ifelse(as.character(END) == "", NA_character_, as.character(END)),
-                 DECODE = "Labs Drawn") %>%
-          select(-starts_with("LB")) %>%
-          distinct(.keep_all = TRUE)
+      if ("ADLB" %in% loaded_adams() & "LB" %in% c(input$checkGroup)) {
+        if("LBDT" %in% colnames(datafile()[["ADLB"]])){
+          lb_rec <- datafile()[["ADLB"]] %>%
+            filter(USUBJID == usubjid()) %>%
+            mutate(EVENTTYP = "Lab Results", DOMAIN = "LB") %>%
+            select(USUBJID, EVENTTYP, LBDT, DOMAIN) %>% # Chris suggested: ADT ANALYSIS DATE, 
+            mutate(START = LBDT,
+                   END = NA,
+                   tab_st = ifelse(as.character(START) == "", NA_character_, as.character(START)),
+                   tab_en = ifelse(as.character(END) == "", NA_character_, as.character(END)),
+                   DECODE = "Labs Drawn") %>%
+            select(-starts_with("LB")) %>%
+            distinct(.keep_all = TRUE)
+        } else{
+          if("LB" %in% c(input$checkGroup)){
+            shinyjs::alert(paste("Cannot add Lab Data: no LBDT variable exists in the loaded ADLB"))
+          }
+          lb_rec <- NULL
+        }
       } else {
         lb_rec <- NULL
       }
-      if ("ADMH" %in% loaded_adams() ) {
-        mh_rec <- datafile()[["ADMH"]] %>%
-          filter(USUBJID == usubjid()) %>%
-          mutate(EVENTTYP = "Medical History",
-                 DOMAIN = "MH",
-                 START = as.Date(case_when(nchar(MHSTDTC) == 10 ~ MHSTDTC,
-                                     nchar(MHSTDTC) == 7 ~ paste0(MHSTDTC,"-15"),
-                                     nchar(MHSTDTC) == 4 ~ paste0(MHSTDTC,"-07-15"),
-                                     # nchar(MHSTDTC) == 0 ~ "",
-                                     TRUE ~ NA_character_)),
-                 END = as.Date(case_when(nchar(MHENDTC) == 10 ~ MHENDTC,
-                                 nchar(MHENDTC) == 7 ~ paste0(MHENDTC,"-15"),
-                                 nchar(MHENDTC) == 4 ~ paste0(MHENDTC,"-07-15"),
-                                 # nchar(MHENDTC) == 0 ~ "",
-                                 TRUE ~ NA_character_)),
-                 tab_st = ifelse(MHSTDTC == "", NA_character_, MHSTDTC),
-                 tab_en = ifelse(MHENDTC == "", NA_character_, MHENDTC),
-                 DECODE = MHTERM
-          ) %>%
-          select(USUBJID, EVENTTYP, START, END, tab_st, tab_en, DECODE, DOMAIN) %>%
-          distinct(.keep_all = TRUE)
+      if ("ADMH" %in% loaded_adams() & "MH" %in% c(input$checkGroup)) {
+        if("MHSTDTC" %in% colnames(datafile()[["ADMH"]])){
+          mh_rec <- datafile()[["ADMH"]] %>%
+            filter(USUBJID == usubjid()) %>%
+            mutate(EVENTTYP = "Medical History",
+                   DOMAIN = "MH",
+                   START = as.Date(case_when(nchar(MHSTDTC) == 10 ~ MHSTDTC,
+                                       nchar(MHSTDTC) == 7 ~ paste0(MHSTDTC,"-15"),
+                                       nchar(MHSTDTC) == 4 ~ paste0(MHSTDTC,"-07-15"),
+                                       # nchar(MHSTDTC) == 0 ~ "",
+                                       TRUE ~ NA_character_)),
+                   END = as.Date(case_when(nchar(MHENDTC) == 10 ~ MHENDTC,
+                                   nchar(MHENDTC) == 7 ~ paste0(MHENDTC,"-15"),
+                                   nchar(MHENDTC) == 4 ~ paste0(MHENDTC,"-07-15"),
+                                   # nchar(MHENDTC) == 0 ~ "",
+                                   TRUE ~ NA_character_)),
+                   tab_st = ifelse(MHSTDTC == "", NA_character_, MHSTDTC),
+                   tab_en = ifelse(MHENDTC == "", NA_character_, MHENDTC),
+                   DECODE = MHTERM
+            ) %>%
+            select(USUBJID, EVENTTYP, START, END, tab_st, tab_en, DECODE, DOMAIN) %>%
+            distinct(.keep_all = TRUE)
+        } else{
+          if("MH" %in% c(input$checkGroup)){
+            shinyjs::alert(paste("Cannot add Medical History: no MHSTDTC variable exists in the loaded ADMH"))
+          }
+          mh_rec <- NULL
+        }
       } else {
         mh_rec <- NULL
       }
@@ -269,9 +288,12 @@ IndvExpl3CheckGroup <- function(input, output, session, datafile, loaded_adams, 
           output$events_tv_caption1 <- renderText({NULL})
         }
         
-        # cat(paste("\n",uni_rec %>% subset(is.na(START)) %>% nrow() > 0))
+        # cat(paste("\nSTART:",as.character(uni_rec$START), collapse = ", "))
+        # cat(paste("\ntb_st:",uni_rec$tab_st, collapse = ", "))
         # Add caption if some dates were imputed 
-        if (!identical(as.character(uni_rec$START),uni_rec$tab_st) | !identical(as.character(uni_rec$END),uni_rec$tab_en)){
+        if ("MH" %in% c(input$checkGroup) & (
+          !identical(as.character(uni_rec$START),uni_rec$tab_st) | !identical(as.character(uni_rec$END),uni_rec$tab_en)
+          )){
           shinyjs::show(id = "events_tv_caption2")
           output$events_tv_caption2 <- renderText({
             "Note: Some patient event dates plotted were imputed when vague. If only a year was provided, July 15 was appeneded for the year & month. If Year-Month was provided, the day of the 15th was imputed."
