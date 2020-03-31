@@ -8,8 +8,10 @@ IndvExpl3CheckGroup <- function(input, output, session, datafile, loaded_adams, 
   output$events_header <- renderText({
     req(!is.null(datafile()))
     paste0("Patient Events by Date") #'", usubjid(), "'
+    # paste(input$checkGroup)
   })
     
+  
   observeEvent(input$checkGroup, {
     
     req(usubjid() != " ") # selPatNo cannot be blank - ac: not sure if Robert expects this to work like "validate(need())"
@@ -38,6 +40,9 @@ IndvExpl3CheckGroup <- function(input, output, session, datafile, loaded_adams, 
           select(USUBJID, EVENTTYP, AESTDT, AEDECOD, AESEV, AESER, DOMAIN) %>%
           mutate(
             START = AESTDT,
+            END = NA,
+            tab_st = as.character(START),
+            tab_en = as.character(END),
             DECODE = paste(AEDECOD, "AESEV:", AESEV, "AESER:", AESER)
           ) %>%
           select(-starts_with("AE")) %>%
@@ -63,9 +68,19 @@ IndvExpl3CheckGroup <- function(input, output, session, datafile, loaded_adams, 
           subset(!is.na(START)) %>%
           left_join(labs, by = "event_var") %>% #DECODE variable exists in here
           arrange(START)%>%
-          mutate(EVENTTYP = "Milestones", DOMAIN = "DS") %>%
-          select(USUBJID, EVENTTYP, START, DECODE, DOMAIN)%>%
+          mutate(EVENTTYP = "Milestones", DOMAIN = "DS",
+                 END = NA,
+                 tab_st = as.character(START),
+                 tab_en = as.character(END)
+                 ) %>%
+          select(USUBJID, EVENTTYP, START, END,
+                 tab_st,
+                 tab_en,
+                 DECODE, DOMAIN)%>%
           select(-starts_with("DS"))
+        
+        cat(paste("\n\nds_rec START",class(ds_rec$START)))
+        cat(paste("\nds_rec END",class(ds_rec$END)))
       } else {
         ds_rec <- NULL
       }
@@ -76,7 +91,11 @@ IndvExpl3CheckGroup <- function(input, output, session, datafile, loaded_adams, 
           filter(CMDECOD != "") %>%
           mutate(EVENTTYP = "Concomitant Medications", DOMAIN = "CM") %>%
           select(USUBJID, EVENTTYP, CMSTDT, CMDECOD, DOMAIN) %>%
-          mutate(START = CMSTDT, DECODE = CMDECOD) %>%
+          mutate(START = CMSTDT,
+                 END = NA, 
+                 tab_st = as.character(START),
+                 tab_en = as.character(END),
+                 DECODE = CMDECOD) %>%
           select(-starts_with("CM")) %>%
           distinct(.keep_all = TRUE)
       } else {
@@ -88,26 +107,57 @@ IndvExpl3CheckGroup <- function(input, output, session, datafile, loaded_adams, 
           filter(USUBJID == usubjid()) %>%
           mutate(EVENTTYP = "Lab Results", DOMAIN = "LB") %>%
           select(USUBJID, EVENTTYP, LBDT, DOMAIN) %>% # Chris suggested: ADT ANALYSIS DATE, 
-          mutate(START = LBDT, DECODE = "Labs Drawn") %>%
+          mutate(START = LBDT,
+                 END = NA,
+                 tab_st = as.character(START),
+                 tab_en = as.character(END),
+                 DECODE = "Labs Drawn") %>%
           select(-starts_with("LB")) %>%
           distinct(.keep_all = TRUE)
       } else {
         lb_rec <- NULL
       }
-      
+      if ("ADMH" %in% loaded_adams() ) {
+        mh_rec <- datafile()[["ADMH"]] %>%
+          filter(USUBJID == usubjid()) %>%
+          mutate(EVENTTYP = "Medical History",
+                 DOMAIN = "MH",
+                 START = as.Date(case_when(nchar(MHSTDTC) == 10 ~ MHSTDTC,
+                                     nchar(MHSTDTC) == 7 ~ paste0(MHSTDTC,"-15"),
+                                     nchar(MHSTDTC) == 4 ~ paste0(MHSTDTC,"-07-15"),
+                                     # nchar(MHSTDTC) == 0 ~ "",
+                                     TRUE ~ NA_character_)),
+                 END = as.Date(case_when(nchar(MHENDTC) == 10 ~ MHENDTC,
+                                 nchar(MHENDTC) == 7 ~ paste0(MHENDTC,"-15"),
+                                 nchar(MHENDTC) == 4 ~ paste0(MHENDTC,"-07-15"),
+                                 # nchar(MHENDTC) == 0 ~ "",
+                                 TRUE ~ NA_character_)),
+                 tab_st = as.character(MHSTDTC),
+                 tab_en = as.character(MHENDTC),
+                 DECODE = MHTERM
+          ) %>%
+          select(USUBJID, EVENTTYP, START, END, tab_st, tab_en, DECODE, DOMAIN) %>%
+          distinct(.keep_all = TRUE)
+      } else {
+        mh_rec <- NULL
+      }
       strng <- input$checkGroup
       
       # Remove NULLs from the list
-      uni_list <- list(ds_rec, ae_rec, cm_rec, lb_rec)
+      uni_list <- list(ds_rec, ae_rec, cm_rec, lb_rec, mh_rec)
       uni_list <- uni_list[!sapply(uni_list,is.null)]
       
       
       uni_rec <-
         do.call("rbind", uni_list) %>%
-        mutate(ord = ifelse(EVENTTYP == "DS", 1, 0)) %>% # for ties, show DS last
-        arrange(START, ord, EVENTTYP) %>%
+        mutate(ord = ifelse(EVENTTYP == "DS", 1, 0),
+               sort_start = if_else(is.na(START), as.Date("1900-01-01"), START), # If start is null, show at beginning of table
+               END = as.Date(END, origin="1970-01-01")#################################
+               ) %>% # for ties, show DS last
+        arrange(sort_start, ord, EVENTTYP) %>%
         filter(DOMAIN %in% c(strng)) %>%
-        select(-USUBJID,-ord)
+        select(-USUBJID, -ord, -sort_start)
+      
       
       # turn off waiter
       # w_events$hide()
@@ -117,9 +167,19 @@ IndvExpl3CheckGroup <- function(input, output, session, datafile, loaded_adams, 
       {
         shinyjs::show(id = "eventsTable")
         shinyjs::show(id = "eventsPlot")
+        
+        if("MH" %in% uni_rec$DOMAIN){
+          tab <- uni_rec %>% select(-START, -END, -DOMAIN)
+          date_cols <- c("Start of Event","End of Event")
+        }
+        else{
+          date_cols <- "Date of Event"
+          tab <- uni_rec %>% select(-END, -tab_st, -tab_en, -DOMAIN)
+        }
+        
         output$eventsTable <- DT::renderDataTable({
-          DT::datatable(uni_rec %>% select(-DOMAIN)
-                        , colnames = c("Type of Event","Date of Event","Event Description")
+          DT::datatable(tab
+                        , colnames = c("Type of Event", date_cols, "Event Description")
                         , options = list(  dom = 'lftpr'
                                            , pageLength = 15
                                            , lengthMenu = list(c(15, 50, 100, -1),c('15', '50', '100', "All"))
@@ -127,21 +187,26 @@ IndvExpl3CheckGroup <- function(input, output, session, datafile, loaded_adams, 
                         , style="default"
                         # , class="compact"
           )
+          # DT::datatable(mh_rec, options = list(  dom = 'lftpr'
+          #                                        , pageLength = 15
+          #                                        , lengthMenu = list(c(15, 50, 100, -1),c('15', '50', '100', "All"))
+          # ))
         })
         
-        # output$eventsPlot <- renderPlotly({
+        # Create timevis object for interactive timeline
         output$eventsPlot <- renderTimevis({
-          # req(usubjid() != " " )
-          
+        
           plot_dat <- 
             uni_rec %>%
+            subset(!is.na(START)) %>%
             mutate(
               start = START,
+              end = END,
               content = DECODE,
               group = EVENTTYP,
               className = DOMAIN
             ) %>%
-            select(start, content, group, className)
+            select(start, end, content, group, className)
           grp_dat <- 
             uni_rec %>%
             mutate(id = EVENTTYP,
@@ -150,7 +215,6 @@ IndvExpl3CheckGroup <- function(input, output, session, datafile, loaded_adams, 
                    style = rep("font-wieght: bold;",nrow(uni_rec))
                    ) %>%
             distinct(id, content, className)
-          
             
           # number of non-MH categories
           nonMH_dat <- 
@@ -161,18 +225,14 @@ IndvExpl3CheckGroup <- function(input, output, session, datafile, loaded_adams, 
           # if only 1 selected, do nothing.
           # if n_nonMH selected, then zoom to 1st portion of 1/nonMH timespan + 10% space on front
           # For example: If 2 selected and total timespan is 3 years, then zoom to 1st 1/2 the nonMH timespan + start
-          
           tv <- timevis(plot_dat,
                   groups = grp_dat
                   # ,options = list(maxHeight = "400px")
                   )
           
           if(nonMH_n > 1){
-            # nonMH_n <- 2
             s <- min(as.Date(nonMH_dat$start))
             e <- max(as.Date(nonMH_dat$start))
-            # s<-as.Date("2019-03-26")
-            # e<-as.Date("2022-01-01")
             
             old_span <- e - s
             new_span <- old_span / nonMH_n
@@ -181,7 +241,11 @@ IndvExpl3CheckGroup <- function(input, output, session, datafile, loaded_adams, 
             
             tv <- tv %>%
               setOptions(list(start = new_s, end = new_e))
-          }
+          # }else if (uni_rec %>% subset(is.na(START)) %>% nrow() > 0){
+          #   # Add caption if there are events not shown in the timeline due to missing dates
+          # }else if (uni_rec %>% subset(is.na(START)) %>% nrow() > 0){
+          #   # Add caption if there are events not shown in the timeline due to missing dates
+          # }
           tv
           
         })

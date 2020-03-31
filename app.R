@@ -39,7 +39,7 @@ shinyjs.enableTab = function(param) {
 
 # if we every add another type of event to the events table,
 # expand this selection to cover all our bases
-my_cols <- brewer.pal(4,"Pastel2")
+my_cols <- brewer.pal(5,"Pastel2")
 css <- paste0("
   .nav li a.disabled {
   background-color: #aaa !important;
@@ -52,6 +52,7 @@ css <- paste0("
   .vis-item.CM { background-color: ",my_cols[2],"; }
   .vis-item.AE { background-color: ",my_cols[3],"; }
   .vis-item.LB { background-color: ",my_cols[4],"; }
+  .vis-item.MH { background-color: ",my_cols[5],"; }
 ")
 css
 source("global.R")

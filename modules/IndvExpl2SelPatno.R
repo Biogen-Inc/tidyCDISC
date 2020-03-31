@@ -73,6 +73,7 @@ IndvExpl2SelPatno <- function(input, output, session, datafile, loaded_adams){ #
     checked2 <- NULL
     checked3 <- NULL
     checked4 <- NULL
+    checked5 <- NULL
     
     # Am I supposed to add more to this list?
     # check for "adsl" (required), "adae" (adds to Events), "adcm" (adds to Events & Value), and "adlb" (adds to Events & Value)
@@ -88,9 +89,12 @@ IndvExpl2SelPatno <- function(input, output, session, datafile, loaded_adams){ #
     if ("ADLB" %in% loaded_adams()) {
       checked4 <- "LB"
     }
+    if ("ADMH" %in% loaded_adams()) {
+      checked5 <- "MH"
+    }
     
-    choices <- list(checked1,checked2,checked3,checked4)
-    names <- c("Milestones","Adverse Events","Concomitant Meds","Labs") # ac: labels
+    choices <- list(checked1,checked2,checked3,checked4,checked5)
+    names <- c("Milestones","Adverse Events","Concomitant Meds","Labs","Medical History") # ac: labels
     # build a named list
     choices <- setNames(choices,names)
     # Remove NULLs from the list

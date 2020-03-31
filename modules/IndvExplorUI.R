@@ -30,7 +30,7 @@ IndvExplorUI <- function(id, label = "Individual Explorer") {
     fluidRow(
       checkboxGroupInput(
         inputId = ns("checkGroup"),
-        label = "For additional events, load a AE, LB, or CM",
+        label = "For additional events, load a AE, LB, CM, or MH",
         choices = c(" "),
         selected = NULL,
         inline = TRUE
