@@ -38,7 +38,7 @@ tableGeneratorUI <- function(id, label = "Create Chart") {
                  fluidRow(uiOutput(ns("col_ADSL"))),
       
       shinyUI(bootstrapPage(
-        HTML('<button data-toggle="collapse" data-target="#demo">Filter Data</button>'),
+        HTML('<button data-toggle="collapse" data-target="#demo" style="width:100%;">Filter Data</button>'),
         tags$div(id = 'demo',  class="collapse",
                  IDEAFilter::shiny_data_filter_ui(ns("data_filter"))
       ))),

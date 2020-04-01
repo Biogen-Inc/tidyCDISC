@@ -97,16 +97,14 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
       # Bind all the PARAMCD files 
       all_PARAMCD <- bind_rows(PARAMCD, .id = "data_from")  %>% 
         arrange(SUBJID, AVISITN, PARAMCD) %>% 
-        select(USUBJID, SUBJID, AVISITN, AVISIT, PARAMCD, AVAL, CHG, data_from) %>%
-        mutate_if(is.character, as.factor)
+        select(USUBJID, SUBJID, AVISITN, AVISIT, PARAMCD, AVAL, CHG, data_from)
         # distinct(USUBJID, AVISITN, AVISIT, PARAMCD, .keep_all = TRUE) 
       
       # Join ADSL and all_PARAMCD
       combined_data <- full_join(ADSL(), all_PARAMCD, by = "USUBJID")
     } else {
       combined_data <- ADSL() %>%
-        mutate(data_from = "ADSL", PARAMCD = NA, AVAL = NA, CHG = NA) %>%
-        mutate_if(is.character, as.factor)
+        mutate(data_from = "ADSL", PARAMCD = NA, AVAL = NA, CHG = NA)
     }
     })
     
