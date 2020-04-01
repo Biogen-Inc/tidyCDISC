@@ -158,7 +158,7 @@ IndvExpl3CheckGroup <- function(input, output, session, datafile, loaded_adams, 
                                    TRUE ~ NA_character_)),
                    tab_st = ifelse(MHSTDTC == "", NA_character_, MHSTDTC),
                    tab_en = ifelse(MHENDTC == "", NA_character_, MHENDTC),
-                   DECODE = MHTERM
+                   DECODE = ifelse(is.na(MHDECOD) | MHDECOD == "", MHTERM, MHDECOD),
             ) %>%
             select(USUBJID, EVENTTYP, START, END, tab_st, tab_en, DECODE, DOMAIN) %>%
             distinct(.keep_all = TRUE)
