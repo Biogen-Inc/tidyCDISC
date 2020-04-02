@@ -3,6 +3,7 @@ library(shinyjs)
 library(tidyverse)
 library(tippy)
 library(rvest)
+library(IDEAFilter)
 library(haven)
 library(DT)
 library(shinyWidgets)
@@ -18,6 +19,7 @@ library(shinytest)
 library(reactable)
 library(waiter)
 library(timevis) # new 3/23
+library(glue)
 
 options(shiny.sanitize.errors = FALSE)
 options(bitmapType='cairo') 
@@ -35,7 +37,31 @@ shinyjs.enableTab = function(param) {
     var tab = $('.nav').find('li:not(.active) a');
     tab.unbind('click.tab');
     tab.removeClass('disabled');
-}"
+}
+"
+
+htmljs <- "
+// execute the code after the shiny session has started
+$(document).on('shiny:sessioninitialized', function(event) {
+// browser detection from https://stackoverflow.com/a/5918791/8099834
+navigator.sayswho= (function(){
+var ua= navigator.userAgent, tem, 
+M= ua.match(/(opera|chrome|safari|firefox|msie|trident(?=\\/))\\/?\\s*(\\d+)/i) || [];
+if(/trident/i.test(M[1])){
+tem=  /\\brv[ :]+(\\d+)/g.exec(ua) || [];
+return 'IE '+(tem[1] || '');
+}
+if(M[1]=== 'Chrome'){
+tem= ua.match(/\\b(OPR|Edge)\\/(\\d+)/);
+if(tem!= null) return tem.slice(1).join(' ').replace('OPR', 'Opera');
+}
+M= M[2]? [M[1], M[2]]: [navigator.appName, navigator.appVersion, '-?'];
+if((tem= ua.match(/version\\/(\\d+)/i))!= null) M.splice(1, 1, tem[1]);
+return M.join(' ');
+})(); 
+// pass browser info from JS to R
+Shiny.onInputChange('myBrowser', navigator.sayswho); 
+});"
 
 # if we every add another type of event to the events table,
 # expand this selection to cover all our bases
@@ -59,6 +85,7 @@ source("global.R")
 ui <- 
   tagList(
     tags$head(
+      tags$script(HTML(htmljs)),
       tags$link(rel = "//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"),
       tags$head(tags$link(rel="shortcut icon", href="IDEA_FAVICON.ico")),
       tags$script(src = "https://code.jquery.com/ui/1.12.1/jquery-ui.js")
@@ -97,11 +124,32 @@ ui <-
     tags$script(HTML("var header = $('.navbar > .container-fluid'); header.append('<div style=\"float:right\"><ahref=\"URL\"><img src=\"logo.svg\" alt=\"alt\" style=\"float:right;width:66px;height:41px;\"> </a>`</div>');")),
     tags$script(src = "script.js"),
     tags$script(src = "recipe.js"),
+    tags$style(HTML("
+ 
+                    #browserModal .modal-dialog,
+                    #browserModal .modal-body,
+                    #browserModal .modal-footer {
+                    background-color: #CF000F;
+                    border-color: #CF000F;
+                    color: white;
+                    font-size: 20px;
+                    }
+                    
+                    ")),
     inlineCSS(css),
     tags$head(tags$script(src = "analytics.js"))
   )
 
 server <- function(input, output, session) {
+  
+  observeEvent(input$myBrowser , {
+    if(str_detect(input$myBrowser, "IE")){
+      showModal(tags$div(id="browserModal", modalDialog(
+        glue("Features of this app will not work with {input$myBrowser}")
+      )))
+    }    
+  })
+  
   
   # disable tab2 on page load
   js$disableTab()
