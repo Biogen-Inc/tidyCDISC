@@ -73,11 +73,12 @@ IndvExpl2SelPatno <- function(input, output, session, datafile, loaded_adams){ #
     
     
     # update checkboxes
-    checked1 <- NULL
-    checked2 <- NULL
-    checked3 <- NULL
-    checked4 <- NULL
-    checked5 <- NULL
+    checked1 <- NA
+    checked2 <- NA
+    checked3 <- NA
+    checked4 <- NA
+    checked5 <- NA
+    mh_names <- NA
     
     # Am I supposed to add more to this list?
     # check for "adsl" (required), "adae" (adds to Events), "adcm" (adds to Events & Value), and "adlb" (adds to Events & Value)
@@ -94,15 +95,25 @@ IndvExpl2SelPatno <- function(input, output, session, datafile, loaded_adams){ #
       checked4 <- "LB"
     }
     if ("ADMH" %in% loaded_adams()) {
-      checked5 <- "MH"
+      # For ADMH, we want to create separate checkboxes for each type of 
+      # Medical History Category that exist in the ADMH for the selected patient.
+      mh_names <-
+        datafile()[["ADMH"]] %>%
+        filter(USUBJID == input$selPatNo) %>%
+        distinct(MHCAT) %>%
+        pull()%>%
+        str_to_title()
+      checked5 <- paste0("MH_",sapply(strsplit(mh_names, " "), function(x){
+        toupper(paste(substring(x, 1, 1), collapse = ""))}))
     }
     
-    choices <- list(checked1,checked2,checked3,checked4,checked5)
-    names <- c("Milestones","Adverse Events","Concomitant Meds","Labs","Medical History") # ac: labels
+    choices <- as.list(unlist(c(list(checked1,checked2,checked3,checked4,as.list(checked5)))))
+    names <- c("Milestones","Adverse Events","Concomitant Meds","Labs",mh_names) # ac: labels
+    
     # build a named list
     choices <- setNames(choices,names)
     # Remove NULLs from the list
-    choices <- choices[!sapply(choices,is.null)]
+    choices <- choices[!sapply(choices,is.na)]
     
     # update the checkbox group
     updateCheckboxGroupInput(

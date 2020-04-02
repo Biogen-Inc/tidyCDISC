@@ -140,30 +140,44 @@ IndvExpl3CheckGroup <- function(input, output, session, datafile, loaded_adams, 
       } else {
         lb_rec <- NULL
       }
-      if ("ADMH" %in% loaded_adams() & "MH" %in% c(input$checkGroup)) {
+      # Medical history (which contains several categories that get treated as their own group)
+      if ("ADMH" %in% loaded_adams() & "MH_" %in% substring(input$checkGroup, 1, 3)) {
+        # if the date column exists in the data set, build the data
         if("MHSTDTC" %in% colnames(datafile()[["ADMH"]])){
           mh_rec <- datafile()[["ADMH"]] %>%
             filter(USUBJID == usubjid()) %>%
-            mutate(EVENTTYP = "Medical History",
-                   DOMAIN = "MH",
-                   START = as.Date(case_when(nchar(MHSTDTC) == 10 ~ MHSTDTC,
-                                       nchar(MHSTDTC) == 7 ~ paste0(MHSTDTC,"-15"),
-                                       nchar(MHSTDTC) == 4 ~ paste0(MHSTDTC,"-07-15"),
-                                       # nchar(MHSTDTC) == 0 ~ "",
-                                       TRUE ~ NA_character_)),
-                   END = as.Date(case_when(nchar(MHENDTC) == 10 ~ MHENDTC,
-                                   nchar(MHENDTC) == 7 ~ paste0(MHENDTC,"-15"),
-                                   nchar(MHENDTC) == 4 ~ paste0(MHENDTC,"-07-15"),
-                                   # nchar(MHENDTC) == 0 ~ "",
-                                   TRUE ~ NA_character_)),
+            mutate(EVENTTYP = str_to_title(MHCAT), #used to be "Medical History",
+                   
+                   # Create a domain name based on the initials of the med hist category, appending "MH_" prefix
+                   DOMAIN = paste0("MH_",sapply(strsplit(MHCAT, " "), function(x){
+                     toupper(paste(substring(x, 1, 1), collapse = ""))})),
+                   
+                   # Some date imputation when missing: default to maximum time period as possible when date is vague
+                   has_end = ifelse(MHENDTC == "" | is.na(MHENDTC), FALSE, TRUE),
+                   START = as.Date(case_when(
+                      nchar(MHSTDTC) == 10 ~ MHSTDTC,
+                      nchar(MHSTDTC) == 7 ~ paste0(MHSTDTC,"-01"),
+                      nchar(MHSTDTC) == 4 ~ paste0(MHSTDTC,"-01-01"),
+                      TRUE ~ NA_character_)),
+                   END = as.Date(case_when(
+                      nchar(MHENDTC) == 10 ~ MHENDTC,
+                      has_end & nchar(MHENDTC) == 7 ~ paste0(MHENDTC,"-28"),
+                      has_end & nchar(MHENDTC) == 4 ~ paste0(MHENDTC,"-12-31"),
+                      has_end == F & nchar(MHSTDTC) == 7  ~ paste0(MHSTDTC,"-28"),
+                      has_end == F & nchar(MHSTDTC) == 4 ~ paste0(MHSTDTC,"-12-31"),
+                      TRUE ~ NA_character_)),
                    tab_st = ifelse(MHSTDTC == "", NA_character_, MHSTDTC),
                    tab_en = ifelse(MHENDTC == "", NA_character_, MHENDTC),
+                   # st_imp = ifelse(tab_st == paste(START),0,1),
+                   # en_imp = ifelse(tab_en == paste(END),0,1),
                    DECODE = ifelse(is.na(MHDECOD) | MHDECOD == "", MHTERM, MHDECOD),
+                   sort_start = ifelse(is.na(START), as.Date("1900-01-01"), START)
             ) %>%
+            arrange(sort_start) %>%
             select(USUBJID, EVENTTYP, START, END, tab_st, tab_en, DECODE, DOMAIN) %>%
             distinct(.keep_all = TRUE)
         } else{
-          if("MH" %in% c(input$checkGroup)){
+          if("MH_" %in% substring(input$checkGroup, 1, 3)){
             shinyjs::alert(paste("Cannot add Medical History: no MHSTDTC variable exists in the loaded ADMH"))
           }
           mh_rec <- NULL
@@ -192,13 +206,13 @@ IndvExpl3CheckGroup <- function(input, output, session, datafile, loaded_adams, 
       # turn off waiter
       # w_events$hide()
       
-      # Try to process a data table with 0 records but with column information DT will throw exception.
+      # Tried to process a data table with 0 records but with column information DT will throw exception.
       if (!is.null(uni_rec) && nrow(uni_rec) > 0)
       {
         shinyjs::show(id = "eventsTable")
         shinyjs::show(id = "eventsPlot")
         
-        if("MH" %in% uni_rec$DOMAIN){
+        if("MH_" %in% substr(uni_rec$DOMAIN,1,3)){
           tab <- uni_rec %>% select(-START, -END, -DOMAIN)
           date_cols <- c("Start of Event","End of Event")
         }
@@ -249,7 +263,7 @@ IndvExpl3CheckGroup <- function(input, output, session, datafile, loaded_adams, 
           # number of non-MH categories
           nonMH_dat <- 
             plot_dat %>%
-            filter(className != "MH")
+            filter(substr(className, 1, 3) != "MH_")
           nonMH_n <- nonMH_dat %>% distinct(className) %>% pull() %>% length
           
           # if only 1 selected, do nothing.
@@ -291,12 +305,12 @@ IndvExpl3CheckGroup <- function(input, output, session, datafile, loaded_adams, 
         # cat(paste("\nSTART:",as.character(uni_rec$START), collapse = ", "))
         # cat(paste("\ntb_st:",uni_rec$tab_st, collapse = ", "))
         # Add caption if some dates were imputed 
-        if ("MH" %in% c(input$checkGroup) & (
+        if ("MH_" %in% substr(input$checkGroup, 1, 3) & (
           !identical(as.character(uni_rec$START),uni_rec$tab_st) | !identical(as.character(uni_rec$END),uni_rec$tab_en)
           )){
           shinyjs::show(id = "events_tv_caption2")
           output$events_tv_caption2 <- renderText({
-            "Note: Some patient event dates plotted were imputed when vague. If only a year was provided, July 15 was appeneded for the year & month. If Year-Month was provided, the day of the 15th was imputed."
+            "Note: Some vague & missing patient event dates were imputed in plot above. Original start and end dates from ADMH are displayed in table below."
           })
         }else {
           shinyjs::hide(id = "events_tv_caption2")
