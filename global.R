@@ -3,6 +3,7 @@ source('R/evaluateStandard.R')
 source('R/getSettingsMetadata.R')
 source('R/hasColumn.R')
 source('R/hasField.R')
+source('R/js_strings.R')
 
 source('modules/dataUpload.R')
 source('modules/dataUploadUI.R')
