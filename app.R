@@ -18,7 +18,7 @@ library(rmarkdown)
 library(shinytest)
 library(reactable)
 library(waiter)
-library(timevis) # new 3/23
+library(timevis)
 library(glue)
 
 options(shiny.sanitize.errors = FALSE)
@@ -65,7 +65,7 @@ Shiny.onInputChange('myBrowser', navigator.sayswho);
 
 # if we every add another type of event to the events table,
 # expand this selection to cover all our bases
-my_cols <- brewer.pal(4,"Pastel2")
+my_cols <- brewer.pal(7,"Pastel2")
 css <- paste0("
   .nav li a.disabled {
   background-color: #aaa !important;
@@ -78,6 +78,9 @@ css <- paste0("
   .vis-item.CM { background-color: ",my_cols[2],"; }
   .vis-item.AE { background-color: ",my_cols[3],"; }
   .vis-item.LB { background-color: ",my_cols[4],"; }
+  .vis-item.MH_MH { background-color: ",my_cols[5],"; }
+  .vis-item.MH_FDH { background-color: ",my_cols[6],"; }
+  .vis-item.MH_DH { background-color: ",my_cols[7],"; }
 ")
 css
 source("global.R")
