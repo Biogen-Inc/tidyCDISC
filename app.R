@@ -111,16 +111,17 @@ server <- function(input, output, session) {
       showModal(tags$div(id="browserModal", modalDialog(
         glue("Features of this app will not work with {input$myBrowser}")
       )))
+      js$disable_active_tabs()
     }    
   })
   
   
   # disable tab2 on page load
-  js$disableTab()
+  js$disable_nonActive_tabs()
   
   observeEvent(datafile()$ADSL, {
     # enable tab2 when clicking the button
-    js$enableTab()
+    js$enable_nonActive_tabs()
   })
   
   # Increase allowed file size to 4GB

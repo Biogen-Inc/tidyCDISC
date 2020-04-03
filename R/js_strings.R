@@ -1,5 +1,5 @@
 jscode <- "
-shinyjs.disableTab = function() {
+shinyjs.disable_nonActive_tabs = function() {
 var tabs = $('.nav').find('li:not(.active) a');
 tabs.bind('click.tab', function(e) {
 e.preventDefault();
@@ -7,11 +7,26 @@ return false;
 });
 tabs.addClass('disabled');
 }
-shinyjs.enableTab = function(param) {
+shinyjs.enable_nonActive_tabs = function(param) {
 var tab = $('.nav').find('li:not(.active) a');
 tab.unbind('click.tab');
 tab.removeClass('disabled');
 }
+
+shinyjs.disable_active_tabs = function() {
+var tabs = $('.nav').find('li:.active a');
+tabs.bind('click.tab', function(e) {
+e.preventDefault();
+return false;
+});
+tabs.addClass('disabled');
+}
+shinyjs.enable_active_tabs = function(param) {
+var tab = $('.nav').find('li:.active a');
+tab.unbind('click.tab');
+tab.removeClass('disabled');
+}
+
 "
 
 htmljs <- "
