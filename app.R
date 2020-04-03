@@ -108,20 +108,19 @@ server <- function(input, output, session) {
   
   observeEvent(input$myBrowser , {
     if(str_detect(input$myBrowser, "IE")){
-      showModal(tags$div(id="browserModal", modalDialog(
-        glue("This app will not work with {input$myBrowser}, please switch to Chrome.")
+      showModal(tags$div(id="browserModal", modalDialog(footer = NULL,
+        glue("This web app doesn't function with Internet Explorer. Please use a modern browser such as Google Chrome.")
       )))
-      js$disable_active_tabs()
     }    
   })
   
   
   # disable tab2 on page load
-  js$disable_nonActive_tabs()
+  js$disableTab()
   
   observeEvent(datafile()$ADSL, {
     # enable tab2 when clicking the button
-    js$enable_nonActive_tabs()
+    js$enableTab()
   })
   
   # Increase allowed file size to 4GB
