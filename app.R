@@ -109,7 +109,7 @@ server <- function(input, output, session) {
   observeEvent(input$myBrowser , {
     if(str_detect(input$myBrowser, "IE")){
       showModal(tags$div(id="browserModal", modalDialog(
-        glue("Features of this app will not work with {input$myBrowser}")
+        glue("This app will not work with {input$myBrowser}, please switch to Chrome.")
       )))
       js$disable_active_tabs()
     }    
