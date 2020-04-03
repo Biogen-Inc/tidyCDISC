@@ -6,7 +6,7 @@ IndvExplorUI <- function(id, label = "Individual Explorer") {
   
   tagList(
     
-
+    IDEAFilter::shiny_data_filter_ui(ns("data_filter")),
     selectInput(
       ns("selPatNo"),
       label = "Please Select a Patient Number (USUBJID)",

@@ -17,9 +17,18 @@ IndvExpl1Initial <- function(input, output, session, datafile, dataselected){
     # make sure selectData has been run
     req(!is.null(datafile())) #74
     
+    # Need to create a file that contains all the pertinent information users may want to filter on in this tab
+    # processed_data <-
+    
+    all_data <- callModule(
+      shiny_data_filter,
+      "data_filter", #whatever you named the widget
+      data = processed_data, #the name of your pancaked data
+      verbose = FALSE)
+    
     
     # The rest of the widgets will be shown after the USUBJID has been selected
-    subj <- unique(datafile()$ADSL[, "USUBJID"]) # get list of unique USUBJIDs
+    subj <- unique(all_data[, "USUBJID"]) # unique(datafile()$ADSL[, "USUBJID"]) # get list of unique USUBJIDs
     
     updateSelectInput(
       session = session,
