@@ -332,9 +332,8 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
           summarise(n = sum(n)) %>%
           ungroup() %>%
           mutate(prop = n/sum(n)) %>%
-          mutate(x = paste0(n, " (", round(prop, 2), ")")) %>%
+          mutate(x = paste0(n, " (", round(prop*100, 2), ")")) %>%
           select(!!ROW, x)
-        
         # make the row variable the row names
         d <- textshape::column_to_rownames(df, loc = 1)
         # and convert the column name to have to total N displayed
@@ -352,7 +351,7 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
           count(!!ROW, !!COLUMN) %>%
           group_by(!!COLUMN) %>%
           mutate(prop = prop.table(n)) %>%
-          mutate(v1 = paste0(n, ' (', round(prop, 2), ')')) %>%
+          mutate(v1 = paste0(n, ' (', round(prop*100, 2), ')')) %>%
           select(-n, -prop) %>% 
           spread(!!COLUMN, v1)
         
