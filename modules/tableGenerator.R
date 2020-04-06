@@ -559,12 +559,13 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
   
   output$downloadData <- downloadHandler(
     filename = function() {
-      paste("TableGenerator.csv")
+      paste0("TableGenerator", Sys.Date(), ".csv")
     },
     content = function(file) {
       write.csv(dataFrame(), file, row.names= FALSE)
     }
   )
+
   
   # output$downloadXPT <- downloadHandler(
   #   filename = function() {
@@ -596,7 +597,7 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
     },
     content = function(file) {
       df <- as.data.frame(dataFrame())
-      rtffile <- RTF(file)
+      rtffile <- RTF(file,  width=11, height = 8.5)
       addHeader(rtffile, title = input$table_title, subtitle = subheader())
       addTable(rtffile, df)
       done(rtffile)
