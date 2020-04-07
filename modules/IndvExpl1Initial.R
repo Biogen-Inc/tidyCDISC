@@ -33,6 +33,8 @@ IndvExpl1Initial <- function(input, output, session, datafile, dataselected){
     })
   
   processed_data <- reactive({
+    
+    req("ADSL" %in% names(datafile()))
 
     PARAMCD_dat <- map(BDS(), ~ if(!"CHG" %in% names(.)) update_list(., CHG = NA) else .)
     
@@ -113,6 +115,7 @@ IndvExpl1Initial <- function(input, output, session, datafile, dataselected){
     
     shinyjs::hide(id = "plot_header")
     shinyjs::hide(id = "subjid_subtitle3")
+    shinyjs::hide(id = "bds_remove_filter")
     shinyjs::hide(id = "plot_adam")
     shinyjs::hide(id = "plot_param")
     shinyjs::hide(id = "visit_var")

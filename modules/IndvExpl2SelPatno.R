@@ -31,9 +31,13 @@ IndvExpl2SelPatno <- function(input, output, session, datafile, loaded_adams, fi
     if(any(regexpr("%>%",capture.output(attr(filtered_dat(), "code"))) > 0)){
       updateCheckboxInput(session = session, inputId = "events_remove_filter", value = F)
       shinyjs::show(id = "events_remove_filter")
+      updateCheckboxInput(session = session, inputId = "bds_remove_filter", value = F)
+      shinyjs::show(id = "bds_remove_filter")
     } else {
       updateCheckboxInput(session = session, inputId = "events_remove_filter", value = T)
       shinyjs::hide(id = "events_remove_filter")
+      updateCheckboxInput(session = session, inputId = "bds_remove_filter", value = T)
+      shinyjs::hide(id = "bds_remove_filter")
     }
     shinyjs::show(id = "checkGroup")  
     # shinyjs::show(id = "eventsPlot")
@@ -41,6 +45,7 @@ IndvExpl2SelPatno <- function(input, output, session, datafile, loaded_adams, fi
     shinyjs::show(id = "hr3")
     shinyjs::show(id = "plot_header")
     shinyjs::show(id = "subjid_subtitle3")
+    # see if-then-else up near subjid_subtitle2 ^^^ for bds_remove_filter checkbox toggling
     shinyjs::show(id = "plot_adam")
     
     # Clear datatables abd plots 

@@ -77,14 +77,13 @@ IndvExpl3CheckGroup <- function(input, output, session, datafile, loaded_adams, 
         adsl_date_cols <- adsl %>%
           filter(USUBJID == usubjid()) %>%
           select(USUBJID,ends_with("DT")) %>%
-          colnames() %>%
-          pull()
+          colnames()
         
-        cat(paste("\n",adsl_date_cols))
+        # cat(paste("\n",adsl_date_cols))
         
         ds_rec <- (if(input$events_remove_filter == F) filtered_dat() else adsl) %>%
           filter(USUBJID == usubjid()) %>%
-          select(adsl_date_cols) %>%
+          select(all_of(adsl_date_cols)) %>%
           distinct() %>%
           pivot_longer(-USUBJID, names_to = "event_var", values_to = "START") %>%
           subset(!is.na(START)) %>%

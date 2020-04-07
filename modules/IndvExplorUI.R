@@ -30,11 +30,11 @@ IndvExplorUI <- function(id, label = "Individual Explorer") {
     
     h4(strong(textOutput(ns("events_header")))),
     h6(textOutput(ns("subjid_subtitle2"))),
-    checkboxInput(ns("events_remove_filter"), "Remove filters defined above, showing all events?", value = FALSE),
+    checkboxInput(ns("events_remove_filter"), "Remove filters data defined above", value = FALSE),
     # fluidRow(
       checkboxGroupInput(
         inputId = ns("checkGroup"),
-        label = "For additional events, load a AE, LB, CM, or MH",
+        label = "For additional patient events, load an AE, LB, CM, or MH",
         choices = c(" "),
         selected = NULL,
         inline = TRUE
@@ -56,6 +56,7 @@ IndvExplorUI <- function(id, label = "Individual Explorer") {
     h4(strong(textOutput(ns("plot_header")))),
     h6(textOutput(ns("subjid_subtitle3"))),
     # textOutput(ns("subjid_subtitle")),
+    checkboxInput(ns("bds_remove_filter"), "Remove data filters defined above", value = FALSE),
     fixedRow(
       column(3,
         selectInput(

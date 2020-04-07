@@ -12,7 +12,8 @@ IndvExpl4ChartPlotly <- function(input, output, session, datafile, loaded_adams,
     needed_cols_exists <- names(which(sapply(datafile(), FUN = function(x) all(c("PARAMCD","AVAL") %in% colnames(x)))) > 0)
     one_visit_exists <- names(which(sapply(datafile(), FUN = function(x) any(c("AVISIT","AVISITN","VISIT") %in% colnames(x)))) > 0)
     return(intersect(needed_cols_exists,one_visit_exists))
-  })
+  }) # do I also need to filter these datasets by subjid? For example, if there is no data for 1 subj in a certain data set, then
+     # it shouldn't be an available option to select.
   
   output$plot_header <- renderText({
     req(!is.null(datafile()))
@@ -42,11 +43,11 @@ IndvExpl4ChartPlotly <- function(input, output, session, datafile, loaded_adams,
     
   })
 
-# upon selecting a plottable adam
-observeEvent(input$plot_adam, {
+# upon selecting a plottable adam data set from dropdown
+observeEvent(list(input$plot_adam,input$bds_remove_filter), {
   
   # make sure a subject has been selected
-  req(usubjid() != " ") # selPatNo cannot be blank
+  req(usubjid() != " " & input$plot_adam != " ") # selPatNo cannot be blank
   
   # Clear datatable
   output$DataTable <- DT::renderDataTable({
@@ -56,9 +57,19 @@ observeEvent(input$plot_adam, {
   output$PlotChart <- renderPlotly({
     NULL
   })
-         
-   lb_data <- datafile()[[input$plot_adam]] %>%  #ac: "ADLB" #lb_rec
-     filter(USUBJID == usubjid()) # ac: input$selPatNo
+  
+  bds_cols <- datafile()[[input$plot_adam]] %>%
+    filter(USUBJID == usubjid()) %>%
+    colnames()
+  
+  # cat(paste('\n1: ',input$plot_adam))
+  # cat(paste('\n2:',paste(bds_cols, collapse = ", "),'\n'))
+  
+   lb_data <- (if(input$bds_remove_filter == F) filtered_dat() %>% subset(data_from == input$plot_adam) else datafile()[[input$plot_adam]]) %>%  #ac: "ADLB" #lb_rec
+     filter(USUBJID == usubjid()) %>%
+     select(all_of(bds_cols)) %>%
+     distinct()
+     
    
    lbcodes <- lb_data %>%
               filter(!is.na(AVAL) & AVAL != "") %>% # if all the numeric AVAL exists
@@ -83,8 +94,8 @@ observeEvent(input$plot_adam, {
      updateSelectInput (
        session = session,
        inputId = "plot_param",
-       choices = c(" ",lbcodes),
-       selected = " "
+       choices = c(lbcodes), #" ",
+       # selected = " "
      )
      
      # update visit variable to display by
@@ -101,14 +112,21 @@ observeEvent(input$plot_adam, {
   }) # observe      
   
   # update horizontal line choices
-  observeEvent(input$plot_param, {
+  observeEvent(list(input$plot_param,input$bds_remove_filter), {
     req(usubjid() != " " & input$plot_adam != " " & input$plot_param != " ")
     
     INPUT_visit_var <- sym(input$visit_var)
-    # ac: changed from above. Note this is slightly different from table data
+    
+    bds_cols <- datafile()[[input$plot_adam]] %>%
+      filter(USUBJID == usubjid()) %>%
+      colnames()
+    
+    # ac: changed from above. Note this is slightly different from table data because it get's rid of NA values for visit var
     plot_dat <- 
-      datafile()[[input$plot_adam]] %>%  #ac: "ADLB" #lb_rec
-      filter(USUBJID == usubjid() & !(is.na(!!INPUT_visit_var)) & PARAMCD == input$plot_param) # make sure AVISITN is not missing
+      (if(input$bds_remove_filter == F) filtered_dat() %>% subset(data_from == input$plot_adam) else datafile()[[input$plot_adam]]) %>%  #ac: "ADLB" #lb_rec
+      filter(USUBJID == usubjid() & !(is.na(!!INPUT_visit_var)) & PARAMCD == input$plot_param) %>% # make sure AVISITN is not missing
+      select(all_of(bds_cols)) %>%
+      distinct()
     
     # update plot_horizontal variable to display
     scr <- plot_dat %>% select(one_of("VISIT"))%>% distinct()%>% pull()
@@ -128,14 +146,23 @@ observeEvent(input$plot_adam, {
   })
 
   # If any param or visit var are updated, run code below
-  observeEvent(list(input$plot_param, input$visit_var), {
+  observeEvent(list(input$plot_param, input$visit_var,input$bds_remove_filter), {
     
     # don't run until a patient and ADAM are selected
     req(usubjid() != " " & input$plot_adam != " ") # selPatNo cannot be blank
     
+    
     # create data
-    lb_data <- datafile()[[input$plot_adam]] %>%  #ac: "ADLB" #lb_rec
-      filter(USUBJID == usubjid()) # ac: input$selPatNo
+    bds_cols <- datafile()[[input$plot_adam]] %>%
+      filter(USUBJID == usubjid()) %>%
+      colnames()
+    
+    
+    lb_data <- 
+      (if(input$bds_remove_filter == F) filtered_dat() %>% subset(data_from == input$plot_adam) else datafile()[[input$plot_adam]]) %>%  #ac: "ADLB" #lb_rec
+      filter(USUBJID == usubjid()) %>%
+      select(all_of(bds_cols)) %>%
+      distinct()
     
     INPUT_visit_var <- sym(input$visit_var)
     
