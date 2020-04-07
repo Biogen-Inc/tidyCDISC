@@ -1,4 +1,4 @@
-IndvExpl4ChartPlotly <- function(input, output, session, datafile, loaded_adams, usubjid){ #, dataselected
+IndvExpl4ChartPlotly <- function(input, output, session, datafile, loaded_adams, usubjid, filtered_dat){ #, dataselected
   
   ns <- session$ns
   

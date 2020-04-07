@@ -1,4 +1,4 @@
-IndvExpl3CheckGroup <- function(input, output, session, datafile, loaded_adams, usubjid){ #, dataselected
+IndvExpl3CheckGroup <- function(input, output, session, datafile, loaded_adams, usubjid, filtered_dat){ #, dataselected
   
   ns <- session$ns
   
@@ -12,7 +12,7 @@ IndvExpl3CheckGroup <- function(input, output, session, datafile, loaded_adams, 
   })
     
   
-  observeEvent(input$checkGroup, {
+  observeEvent(list(input$checkGroup, input$events_remove_filter), {
     
     req(usubjid() != " ") # selPatNo cannot be blank - ac: not sure if Robert expects this to work like "validate(need())"
 
@@ -37,11 +37,11 @@ IndvExpl3CheckGroup <- function(input, output, session, datafile, loaded_adams, 
       # DOMAIN is used to match the input$checkGroup string
       if ("ADAE" %in% loaded_adams() & "AE" %in% c(input$checkGroup)) { # ac: first part not needed?
         if("AESTDT" %in% colnames(datafile()[["ADAE"]])){
-          ae_rec <- datafile()[["ADAE"]] %>%
+          ae_rec <- (if(input$events_remove_filter == F) filtered_dat() else datafile()[["ADAE"]]) %>% 
             filter(USUBJID == usubjid()) %>%
             filter(!is.na(AESTDT)) %>%
             mutate(EVENTTYP = "Adverse Event", DOMAIN = "AE") %>%
-            select(USUBJID, EVENTTYP, AESTDT, AEDECOD, AESEV, AESER, DOMAIN) %>%
+            distinct(USUBJID, EVENTTYP, AESTDT, AEDECOD, AESEV, AESER, DOMAIN) %>%
             mutate(
               START = AESTDT,
               END = NA,
@@ -66,14 +66,17 @@ IndvExpl3CheckGroup <- function(input, output, session, datafile, loaded_adams, 
         # organizing our ADSL labels for merging below
         adsl <- data.frame(datafile()[["ADSL"]])
         n <- ncol(adsl)
-        labs <- data.frame(  event_var = colnames(adsl)
-                             , DECODE = map_chr(1:n, function(x) attr(adsl[[x]], "label") )
-        ) %>%
+        labs <- 
+          data.frame(event_var = colnames(adsl)
+                   , DECODE = map_chr(1:n, function(x) attr(adsl[[x]], "label") )
+          ) %>%
           mutate(event_var = as.character(event_var))
         
         ds_rec <- adsl %>%
           filter(USUBJID == usubjid()) %>%
           select(USUBJID,ends_with("DT")) %>%
+          distinct_all() %>%
+          
           pivot_longer(-USUBJID, names_to = "event_var", values_to = "START") %>%
           subset(!is.na(START)) %>%
           left_join(labs, by = "event_var") %>% #DECODE variable exists in here
@@ -83,7 +86,7 @@ IndvExpl3CheckGroup <- function(input, output, session, datafile, loaded_adams, 
                  tab_st = ifelse(as.character(START) == "", NA_character_, as.character(START)),
                  tab_en = ifelse(as.character(END) == "", NA_character_, as.character(END))
                  ) %>%
-          select(USUBJID, EVENTTYP, START, END,
+          distinct(USUBJID, EVENTTYP, START, END,
                  tab_st,
                  tab_en,
                  DECODE, DOMAIN)%>%
@@ -96,11 +99,11 @@ IndvExpl3CheckGroup <- function(input, output, session, datafile, loaded_adams, 
       
       if ("ADCM" %in% loaded_adams() & "CM" %in% c(input$checkGroup)) {
         if("CMSTDT" %in% colnames(datafile()[["ADCM"]])){
-          cm_rec <- datafile()[["ADCM"]] %>%
+          cm_rec <- (if(input$events_remove_filter == F) filtered_dat() else datafile()[["ADCM"]]) %>%
             filter(USUBJID == usubjid()) %>%
             filter(CMDECOD != "") %>%
             mutate(EVENTTYP = "Concomitant Medications", DOMAIN = "CM") %>%
-            select(USUBJID, EVENTTYP, CMSTDT, CMDECOD, DOMAIN) %>%
+            distinct(USUBJID, EVENTTYP, CMSTDT, CMDECOD, DOMAIN) %>%
             mutate(START = CMSTDT,
                    END = NA, 
                    tab_st = ifelse(as.character(START) == "", NA_character_, as.character(START)),
@@ -120,10 +123,10 @@ IndvExpl3CheckGroup <- function(input, output, session, datafile, loaded_adams, 
       
       if ("ADLB" %in% loaded_adams() & "LB" %in% c(input$checkGroup)) {
         if("LBDT" %in% colnames(datafile()[["ADLB"]])){
-          lb_rec <- datafile()[["ADLB"]] %>%
+          lb_rec <- (if(input$events_remove_filter == F) filtered_dat() else datafile()[["ADLB"]]) %>%
             filter(USUBJID == usubjid()) %>%
             mutate(EVENTTYP = "Lab Results", DOMAIN = "LB") %>%
-            select(USUBJID, EVENTTYP, LBDT, DOMAIN) %>% # Chris suggested: ADT ANALYSIS DATE, 
+            distinct(USUBJID, EVENTTYP, LBDT, DOMAIN) %>% # Chris suggested: ADT ANALYSIS DATE, 
             mutate(START = LBDT,
                    END = NA,
                    tab_st = ifelse(as.character(START) == "", NA_character_, as.character(START)),
@@ -144,7 +147,7 @@ IndvExpl3CheckGroup <- function(input, output, session, datafile, loaded_adams, 
       if ("ADMH" %in% loaded_adams() & "MH_" %in% substring(input$checkGroup, 1, 3)) {
         # if the date column exists in the data set, build the data
         if("MHSTDTC" %in% colnames(datafile()[["ADMH"]])){
-          mh_rec <- datafile()[["ADMH"]] %>%
+          mh_rec <- (if(input$events_remove_filter == F) filtered_dat() else datafile()[["ADMH"]]) %>%
             filter(USUBJID == usubjid()) %>%
             mutate(EVENTTYP = str_to_title(MHCAT), #used to be "Medical History",
                    
@@ -174,7 +177,7 @@ IndvExpl3CheckGroup <- function(input, output, session, datafile, loaded_adams, 
                    sort_start = ifelse(is.na(START), as.Date("1900-01-01"), START)
             ) %>%
             arrange(sort_start) %>%
-            select(USUBJID, EVENTTYP, START, END, tab_st, tab_en, DECODE, DOMAIN) %>%
+            distinct(USUBJID, EVENTTYP, START, END, tab_st, tab_en, DECODE, DOMAIN) %>%
             distinct(.keep_all = TRUE)
         } else{
           if("MH_" %in% substring(input$checkGroup, 1, 3)){
@@ -192,7 +195,7 @@ IndvExpl3CheckGroup <- function(input, output, session, datafile, loaded_adams, 
       uni_list <- uni_list[!sapply(uni_list,is.null)]
       
       
-      uni_rec <-
+      uni_rec <- #ae_rec %>%
         do.call("rbind", uni_list) %>%
         mutate(ord = ifelse(EVENTTYP == "DS", 1, 0),
                sort_start = if_else(is.na(START), as.Date("1900-01-01"), START), # If start is null, show at beginning of table
@@ -231,7 +234,7 @@ IndvExpl3CheckGroup <- function(input, output, session, datafile, loaded_adams, 
                         , style="default"
                         # , class="compact"
           )
-          # DT::datatable(mh_rec, options = list(  dom = 'lftpr'
+          # DT::datatable(ae_rec, options = list(  dom = 'lftpr'
           #                                        , pageLength = 15
           #                                        , lengthMenu = list(c(15, 50, 100, -1),c('15', '50', '100', "All"))
           # ))

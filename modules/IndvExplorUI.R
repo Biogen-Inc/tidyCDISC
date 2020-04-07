@@ -30,7 +30,8 @@ IndvExplorUI <- function(id, label = "Individual Explorer") {
     
     h4(strong(textOutput(ns("events_header")))),
     h6(textOutput(ns("subjid_subtitle2"))),
-    fluidRow(
+    checkboxInput(ns("events_remove_filter"), "Remove filters defined above, showing all events?", value = FALSE),
+    # fluidRow(
       checkboxGroupInput(
         inputId = ns("checkGroup"),
         label = "For additional events, load a AE, LB, CM, or MH",
@@ -38,7 +39,8 @@ IndvExplorUI <- function(id, label = "Individual Explorer") {
         selected = NULL,
         inline = TRUE
       )
-    ),
+    # )
+  ,
     fluidRow(column(10,timevisOutput(ns("eventsPlot")))),
     textOutput(ns("events_tv_caption1")),
     textOutput(ns("events_tv_caption2")),

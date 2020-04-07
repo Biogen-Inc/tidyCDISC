@@ -70,6 +70,17 @@ IndvExpl1Initial <- function(input, output, session, datafile, dataselected){
     # make sure selectData has been run
     req(!is.null(datafile())) #74
     
+    
+    # cat(paste0("\n1: ",capture.output(attr(all_data(), "code"))))
+    # cat(paste0("\n2: ",any(str_detect(capture.output(attr(all_data(), "code")), "%>%"))))
+    # cat(paste0("\n3: ",any(regexpr("%>%",capture.output(attr(all_data(), "code"))) > 0),"\n"))
+    
+    # cat(paste0("\n2: ",gsub("%>%", "%>% \n ",
+    #          gsub("\\s{2,}", " ",
+    #               paste0(
+    #                 capture.output(attr(all_data(), "code")),
+    #                 collapse = " "))
+    # )))
     # see if any dup columns are discovered
     # cat(paste("\n",paste(colnames(all_data())[which(regexpr(".x",colnames(all_data()),ignore.case = T) > 0)],collapse = ", "),"\n"))
     # cat(paste("\n",class(all_data()$TR01EDTM)))
@@ -89,15 +100,17 @@ IndvExpl1Initial <- function(input, output, session, datafile, dataselected){
     shinyjs::hide(id = "subjid_subtitle1")
     shinyjs::hide(id = "demogInfo")
     shinyjs::hide(id = "hr2")
+    
     shinyjs::hide(id = "events_header")
     shinyjs::hide(id = "subjid_subtitle2")
+    shinyjs::hide(id = "events_remove_filter")
     shinyjs::hide(id = "checkGroup")
-    # shinyjs::hide(id = "plot_events_timeline")
     shinyjs::hide(id = "eventsPlot")
     shinyjs::hide(id = "events_tv_caption1")
     shinyjs::hide(id = "events_tv_caption2")
     shinyjs::hide(id = "eventsTable")
     shinyjs::hide(id = "hr3")
+    
     shinyjs::hide(id = "plot_header")
     shinyjs::hide(id = "subjid_subtitle3")
     shinyjs::hide(id = "plot_adam")
@@ -107,6 +120,6 @@ IndvExpl1Initial <- function(input, output, session, datafile, dataselected){
   })
   
   # return(dataselected) # #74
-  return(my_loaded_adams) #74
+  return(list(my_loaded_adams = my_loaded_adams,all_data = all_data)) #74
   
 } # IndvExpl1Initial
