@@ -66,17 +66,26 @@ IndvExpl3CheckGroup <- function(input, output, session, datafile, loaded_adams, 
         # organizing our ADSL labels for merging below
         adsl <- data.frame(datafile()[["ADSL"]])
         n <- ncol(adsl)
+        # "label table" for all adsl columns
         labs <- 
           data.frame(event_var = colnames(adsl)
                    , DECODE = map_chr(1:n, function(x) attr(adsl[[x]], "label") )
           ) %>%
           mutate(event_var = as.character(event_var))
         
-        ds_rec <- adsl %>%
+        # date columns we are going to select below
+        adsl_date_cols <- adsl %>%
           filter(USUBJID == usubjid()) %>%
           select(USUBJID,ends_with("DT")) %>%
-          distinct_all() %>%
-          
+          colnames() %>%
+          pull()
+        
+        cat(paste("\n",adsl_date_cols))
+        
+        ds_rec <- (if(input$events_remove_filter == F) filtered_dat() else adsl) %>%
+          filter(USUBJID == usubjid()) %>%
+          select(adsl_date_cols) %>%
+          distinct() %>%
           pivot_longer(-USUBJID, names_to = "event_var", values_to = "START") %>%
           subset(!is.na(START)) %>%
           left_join(labs, by = "event_var") %>% #DECODE variable exists in here
