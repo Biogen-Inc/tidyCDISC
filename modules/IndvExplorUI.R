@@ -30,14 +30,16 @@ IndvExplorUI <- function(id, label = "Individual Explorer") {
     fluidRow(
       checkboxGroupInput(
         inputId = ns("checkGroup"),
-        label = "For additional events, load a AE, LB, or CM",
+        label = "For additional events, load a AE, LB, CM, or MH",
         choices = c(" "),
         selected = NULL,
         inline = TRUE
       )
     ),
-    fluidRow(
-      column(10,timevisOutput(ns("eventsPlot")))),
+    fluidRow(column(10,timevisOutput(ns("eventsPlot")))),
+    textOutput(ns("events_tv_caption1")),
+    textOutput(ns("events_tv_caption2")),
+    br(),
     fluidRow(
       column(8, DT::dataTableOutput(ns("eventsTable")))
     ),

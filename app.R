@@ -18,48 +18,19 @@ library(rmarkdown)
 library(shinytest)
 library(reactable)
 library(waiter)
-library(timevis) # new 3/23
+library(timevis)
+library(glue)
 
 options(shiny.sanitize.errors = FALSE)
 options(bitmapType='cairo') 
 
-jscode <- "
-shinyjs.disableTab = function() {
-    var tabs = $('.nav').find('li:not(.active) a');
-    tabs.bind('click.tab', function(e) {
-        e.preventDefault();
-        return false;
-    });
-    tabs.addClass('disabled');
-}
-shinyjs.enableTab = function(param) {
-    var tab = $('.nav').find('li:not(.active) a');
-    tab.unbind('click.tab');
-    tab.removeClass('disabled');
-}"
 
-# if we every add another type of event to the events table,
-# expand this selection to cover all our bases
-my_cols <- brewer.pal(4,"Pastel2")
-css <- paste0("
-  .nav li a.disabled {
-  background-color: #aaa !important;
-  color: #333 !important;
-  cursor: not-allowed !important;
-  border-color: #aaa !important;
-  }
-  
-  .vis-item.DS { background-color: ",my_cols[1],"; }
-  .vis-item.CM { background-color: ",my_cols[2],"; }
-  .vis-item.AE { background-color: ",my_cols[3],"; }
-  .vis-item.LB { background-color: ",my_cols[4],"; }
-")
-css
 source("global.R")
 
 ui <- 
   tagList(
     tags$head(
+      tags$script(HTML(htmljs)),
       tags$link(rel = "//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"),
       tags$head(tags$link(rel="shortcut icon", href="IDEA_FAVICON.ico")),
       tags$script(src = "https://code.jquery.com/ui/1.12.1/jquery-ui.js")
@@ -98,11 +69,32 @@ ui <-
     tags$script(HTML("var header = $('.navbar > .container-fluid'); header.append('<div style=\"float:right\"><ahref=\"URL\"><img src=\"logo.svg\" alt=\"alt\" style=\"float:right;width:66px;height:41px;\"> </a>`</div>');")),
     tags$script(src = "script.js"),
     tags$script(src = "recipe.js"),
+    tags$style(HTML("
+ 
+                    #browserModal .modal-dialog,
+                    #browserModal .modal-body,
+                    #browserModal .modal-footer {
+                    background-color: #CF000F;
+                    border-color: #CF000F;
+                    color: white;
+                    font-size: 20px;
+                    }
+                    
+                    ")),
     inlineCSS(css),
     tags$head(tags$script(src = "analytics.js"))
   )
 
 server <- function(input, output, session) {
+  
+  observeEvent(input$myBrowser , {
+    if(str_detect(input$myBrowser, "IE")){
+      showModal(tags$div(id="browserModal", modalDialog(footer = NULL,
+        glue("This web app doesn't function with Internet Explorer. Please use a modern browser such as Google Chrome.")
+      )))
+    }    
+  })
+  
   
   # disable tab2 on page load
   js$disableTab()

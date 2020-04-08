@@ -38,6 +38,8 @@ IndvExpl1Initial <- function(input, output, session, datafile, dataselected){
     shinyjs::hide(id = "checkGroup")
     # shinyjs::hide(id = "plot_events_timeline")
     shinyjs::hide(id = "eventsPlot")
+    shinyjs::hide(id = "events_tv_caption1")
+    shinyjs::hide(id = "events_tv_caption2")
     shinyjs::hide(id = "eventsTable")
     shinyjs::hide(id = "hr3")
     shinyjs::hide(id = "plot_header")
