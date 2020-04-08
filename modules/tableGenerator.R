@@ -332,9 +332,8 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
           summarise(n = sum(n)) %>%
           ungroup() %>%
           mutate(prop = n/sum(n)) %>%
-          mutate(x = paste0(n, " (", round(prop, 2), ")")) %>%
+          mutate(x = paste0(n, " (", round(prop*100, 2), ")")) %>%
           select(!!ROW, x)
-        
         # make the row variable the row names
         d <- textshape::column_to_rownames(df, loc = 1)
         # and convert the column name to have to total N displayed
@@ -352,7 +351,7 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
           count(!!ROW, !!COLUMN) %>%
           group_by(!!COLUMN) %>%
           mutate(prop = prop.table(n)) %>%
-          mutate(v1 = paste0(n, ' (', round(prop, 2), ')')) %>%
+          mutate(v1 = paste0(n, ' (', round(prop*100, 2), ')')) %>%
           select(-n, -prop) %>% 
           spread(!!COLUMN, v1)
         
@@ -560,12 +559,15 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
   
   output$downloadData <- downloadHandler(
     filename = function() {
-      paste("TableGenerator.csv")
+      paste0("TableGenerator_", Sys.time(), ".csv", sep = "") %>%
+        str_replace(" ", "_") %>%
+        str_replace_all(":", "-")
     },
     content = function(file) {
       write.csv(dataFrame(), file, row.names= FALSE)
     }
   )
+
   
   # output$downloadXPT <- downloadHandler(
   #   filename = function() {
@@ -593,11 +595,13 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
   
   output$downloadRTF <- downloadHandler(
     filename = function() {
-      paste("TableGenerator_", Sys.Date(), ".doc", sep = "")
+      paste0("TableGenerator_", Sys.time(), ".doc", sep = "") %>%
+        str_replace(" ", "_") %>%
+        str_replace_all(":", "-")
     },
     content = function(file) {
       df <- as.data.frame(dataFrame())
-      rtffile <- RTF(file)
+      rtffile <- RTF(file,  width=11, height = 8.5)
       addHeader(rtffile, title = input$table_title, subtitle = subheader())
       addTable(rtffile, df)
       done(rtffile)
