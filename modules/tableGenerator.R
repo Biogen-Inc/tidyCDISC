@@ -559,7 +559,9 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
   
   output$downloadData <- downloadHandler(
     filename = function() {
-      paste0("TableGenerator_", Sys.Time(), ".csv", sep = "")
+      paste0("TableGenerator_", Sys.time(), ".csv", sep = "") %>%
+        str_replace(" ", "_") %>%
+        str_replace_all(":", "-")
     },
     content = function(file) {
       write.csv(dataFrame(), file, row.names= FALSE)
@@ -593,7 +595,9 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
   
   output$downloadRTF <- downloadHandler(
     filename = function() {
-      paste("TableGenerator_", Sys.Time(), ".doc", sep = "")
+      paste0("TableGenerator_", Sys.time(), ".doc", sep = "") %>%
+        str_replace(" ", "_") %>%
+        str_replace_all(":", "-")
     },
     content = function(file) {
       df <- as.data.frame(dataFrame())
