@@ -51,6 +51,8 @@ IndvExpl1Initial <- function(input, output, session, datafile, dataselected){
     }
   })
   
+  
+  
   all_data <- callModule(
     shiny_data_filter,
     "data_filter", #whatever you named the widget

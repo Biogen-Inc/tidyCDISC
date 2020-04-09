@@ -30,7 +30,7 @@ IndvExplorUI <- function(id, label = "Individual Explorer") {
     
     h4(strong(textOutput(ns("events_header")))),
     h6(textOutput(ns("subjid_subtitle2"))),
-    checkboxInput(ns("events_remove_filter"), "Remove filters data defined above", value = FALSE),
+    checkboxInput(ns("events_remove_filter"), "Remove data filters defined above", value = FALSE),
     # fluidRow(
       checkboxGroupInput(
         inputId = ns("checkGroup"),
