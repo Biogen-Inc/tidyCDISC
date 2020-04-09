@@ -32,15 +32,18 @@ IndvExplorUI <- function(id, label = "Individual Explorer") {
     h6(textOutput(ns("subjid_subtitle2"))),
     
     fluidRow(
-      column(8, checkboxGroupInput(
+      column(9, checkboxGroupInput(
         inputId = ns("checkGroup"),
         label = "For additional patient events, load an AE, LB, CM, or MH",
         choices = c(" "),
         selected = NULL,
         inline = TRUE
       )), 
-      column(2, checkboxInput(ns("events_apply_filter"), "Apply Filters", value = T)),
-      column(2)
+      column(3, materialSwitch(ns("events_apply_filter")
+                               , label = strong(em(h5("Apply Filters")))
+                               , status = "primary"
+                               , value = T))
+      # ,column(1)
     )
   ,
     fluidRow(column(10,timevisOutput(ns("eventsPlot")))),

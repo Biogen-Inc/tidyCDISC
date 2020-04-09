@@ -22,12 +22,12 @@ IndvExpl3CheckGroup <- function(input, output, session, datafile, loaded_adams, 
     req(usubjid() != " ")
     
     if(any(regexpr("%>%",capture.output(attr(filtered_dat(), "code"))) > 0) & !is.null(input$checkGroup)){
-      updateCheckboxInput(session = session, inputId = "events_apply_filter", value = T)
+      updateMaterialSwitch(session = session, inputId = "events_apply_filter", value = T)
       shinyjs::show(id = "events_apply_filter")
       # updateCheckboxInput(session = session, inputId = "bds_remove_filter", value = F)
       # shinyjs::show(id = "bds_remove_filter")
     } else {
-      updateCheckboxInput(session = session, inputId = "events_apply_filter", value = F)
+      updateMaterialSwitch(session = session, inputId = "events_apply_filter", value = F)
       shinyjs::hide(id = "events_apply_filter")
       # updateCheckboxInput(session = session, inputId = "bds_remove_filter", value = T)
       # shinyjs::hide(id = "bds_remove_filter")
