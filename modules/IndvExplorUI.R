@@ -49,6 +49,8 @@ IndvExplorUI <- function(id, label = "Individual Explorer") {
     fluidRow(column(10,timevisOutput(ns("eventsPlot")))),
     textOutput(ns("events_tv_caption1")),
     textOutput(ns("events_tv_caption2")),
+    # div(style = "color: red;", TextOutput(ns("applied_filters"))),
+    div(style = "color: #0275d8; font-size: 11px;", htmlOutput(ns("applied_filters"))),
     br(),
     fluidRow(
       column(8, DT::dataTableOutput(ns("eventsTable")))
