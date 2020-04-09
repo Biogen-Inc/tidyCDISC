@@ -394,8 +394,9 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
         #   NA        NA      p-value
         
         len = length(unique(all_data()[[COLUMN]])) - 1
-        d <- data.frame(t(data.frame("X" = c(rep(" ", len), round(ttest$p.value[1], 3)))))
-        row.names(d) <- "P-Value"
+        d <- data.frame(t(data.frame("X" = c(rep(" ", len), round(ttest$p.value[1], 3)),
+                                     "Y" = c(rep(" ", len), round(ttest$meansq[1], 3)))))
+        row.names(d) <- c("P-Value", "Mean Squared")
         colnames(d) <- lapply(paste0(unlist(header_df[,1]), " (N = ", unlist(header_df[,2]), ")"), CapStr) 
         
       }
