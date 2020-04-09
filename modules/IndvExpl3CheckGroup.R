@@ -12,10 +12,36 @@ IndvExpl3CheckGroup <- function(input, output, session, datafile, loaded_adams, 
   })
     
   
-  observeEvent(list(input$checkGroup, input$events_remove_filter), {
+  
+  
+  
+  # if any filter is selected in IDEAFilter, then we should show the "events_apply_filter" checkbox,
+  # which defaults to TRUE everytime a new patient is selected
+  observeEvent(list(input$checkGroup), {
+    
+    req(usubjid() != " ")
+    
+    if(any(regexpr("%>%",capture.output(attr(filtered_dat(), "code"))) > 0) & !is.null(input$checkGroup)){
+      updateCheckboxInput(session = session, inputId = "events_apply_filter", value = T)
+      shinyjs::show(id = "events_apply_filter")
+      # updateCheckboxInput(session = session, inputId = "bds_remove_filter", value = F)
+      # shinyjs::show(id = "bds_remove_filter")
+    } else {
+      updateCheckboxInput(session = session, inputId = "events_apply_filter", value = F)
+      shinyjs::hide(id = "events_apply_filter")
+      # updateCheckboxInput(session = session, inputId = "bds_remove_filter", value = T)
+      # shinyjs::hide(id = "bds_remove_filter")
+    }
+  })
+  
+  
+  
+    
+  observeEvent(list(input$checkGroup, input$events_apply_filter), {
     
     req(usubjid() != " ") # selPatNo cannot be blank - ac: not sure if Robert expects this to work like "validate(need())"
 
+    
     # Clear outputs if nothing is selected
     if(is.null(input$checkGroup)){
       output$eventsTable <- DT::renderDataTable({NULL})
@@ -37,7 +63,7 @@ IndvExpl3CheckGroup <- function(input, output, session, datafile, loaded_adams, 
       # DOMAIN is used to match the input$checkGroup string
       if ("ADAE" %in% loaded_adams() & "AE" %in% c(input$checkGroup)) { # ac: first part not needed?
         if("AESTDT" %in% colnames(datafile()[["ADAE"]])){
-          ae_rec <- (if(input$events_remove_filter == F) filtered_dat() else datafile()[["ADAE"]]) %>% 
+          ae_rec <- (if(input$events_apply_filter == T) filtered_dat() else datafile()[["ADAE"]]) %>% 
             filter(USUBJID == usubjid()) %>%
             filter(!is.na(AESTDT)) %>%
             mutate(EVENTTYP = "Adverse Event", DOMAIN = "AE") %>%
@@ -81,7 +107,7 @@ IndvExpl3CheckGroup <- function(input, output, session, datafile, loaded_adams, 
         
         # cat(paste("\n",adsl_date_cols))
         
-        ds_rec <- (if(input$events_remove_filter == F) filtered_dat() else adsl) %>%
+        ds_rec <- (if(input$events_apply_filter == T) filtered_dat() else adsl) %>%
           filter(USUBJID == usubjid()) %>%
           select(all_of(adsl_date_cols)) %>%
           distinct() %>%
@@ -107,7 +133,7 @@ IndvExpl3CheckGroup <- function(input, output, session, datafile, loaded_adams, 
       
       if ("ADCM" %in% loaded_adams() & "CM" %in% c(input$checkGroup)) {
         if("CMSTDT" %in% colnames(datafile()[["ADCM"]])){
-          cm_rec <- (if(input$events_remove_filter == F) filtered_dat() else datafile()[["ADCM"]]) %>%
+          cm_rec <- (if(input$events_apply_filter == T) filtered_dat() else datafile()[["ADCM"]]) %>%
             filter(USUBJID == usubjid()) %>%
             filter(CMDECOD != "") %>%
             mutate(EVENTTYP = "Concomitant Medications", DOMAIN = "CM") %>%
@@ -131,7 +157,7 @@ IndvExpl3CheckGroup <- function(input, output, session, datafile, loaded_adams, 
       
       if ("ADLB" %in% loaded_adams() & "LB" %in% c(input$checkGroup)) {
         if("LBDT" %in% colnames(datafile()[["ADLB"]])){
-          lb_rec <- (if(input$events_remove_filter == F) filtered_dat() else datafile()[["ADLB"]]) %>%
+          lb_rec <- (if(input$events_apply_filter == T) filtered_dat() else datafile()[["ADLB"]]) %>%
             filter(USUBJID == usubjid()) %>%
             mutate(EVENTTYP = "Lab Results", DOMAIN = "LB") %>%
             distinct(USUBJID, EVENTTYP, LBDT, DOMAIN) %>% # Chris suggested: ADT ANALYSIS DATE, 
@@ -155,7 +181,7 @@ IndvExpl3CheckGroup <- function(input, output, session, datafile, loaded_adams, 
       if ("ADMH" %in% loaded_adams() & "MH_" %in% substring(input$checkGroup, 1, 3)) {
         # if the date column exists in the data set, build the data
         if("MHSTDTC" %in% colnames(datafile()[["ADMH"]])){
-          mh_rec <- (if(input$events_remove_filter == F) filtered_dat() else datafile()[["ADMH"]]) %>%
+          mh_rec <- (if(input$events_apply_filter == T) filtered_dat() else datafile()[["ADMH"]]) %>%
             filter(USUBJID == usubjid()) %>%
             mutate(EVENTTYP = str_to_title(MHCAT), #used to be "Medical History",
                    

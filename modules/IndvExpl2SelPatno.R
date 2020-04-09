@@ -26,19 +26,7 @@ IndvExpl2SelPatno <- function(input, output, session, datafile, loaded_adams, fi
     shinyjs::show(id = "hr2")
     shinyjs::show(id = "events_header")
     shinyjs::show(id = "subjid_subtitle2")
-    # if any filter is selected in IDEAFilter, then we should show the "events_apply_filters" checkbox,
-    # which defaults to TRUE everytime a new patient is selected
-    if(any(regexpr("%>%",capture.output(attr(filtered_dat(), "code"))) > 0)){
-      updateCheckboxInput(session = session, inputId = "events_remove_filter", value = F)
-      shinyjs::show(id = "events_remove_filter")
-      updateCheckboxInput(session = session, inputId = "bds_remove_filter", value = F)
-      shinyjs::show(id = "bds_remove_filter")
-    } else {
-      updateCheckboxInput(session = session, inputId = "events_remove_filter", value = T)
-      shinyjs::hide(id = "events_remove_filter")
-      updateCheckboxInput(session = session, inputId = "bds_remove_filter", value = T)
-      shinyjs::hide(id = "bds_remove_filter")
-    }
+    
     shinyjs::show(id = "checkGroup")  
     # shinyjs::show(id = "eventsPlot")
     # shinyjs::show(id = "eventsTable")

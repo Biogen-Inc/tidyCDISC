@@ -55,8 +55,8 @@ IndvExpl1Initial <- function(input, output, session, datafile, dataselected){
   
   all_data <- callModule(
     shiny_data_filter,
-    "data_filter", #whatever you named the widget
-    data = processed_data, #the name of your pancaked data
+    "data_filter",         # whatever you named the widget
+    data = processed_data, # the name of your pancaked data
     verbose = FALSE)
   
 
@@ -107,7 +107,7 @@ IndvExpl1Initial <- function(input, output, session, datafile, dataselected){
     
     shinyjs::hide(id = "events_header")
     shinyjs::hide(id = "subjid_subtitle2")
-    shinyjs::hide(id = "events_remove_filter")
+    shinyjs::hide(id = "events_apply_filter")
     shinyjs::hide(id = "checkGroup")
     shinyjs::hide(id = "eventsPlot")
     shinyjs::hide(id = "events_tv_caption1")
@@ -117,7 +117,7 @@ IndvExpl1Initial <- function(input, output, session, datafile, dataselected){
     
     shinyjs::hide(id = "plot_header")
     shinyjs::hide(id = "subjid_subtitle3")
-    shinyjs::hide(id = "bds_remove_filter")
+    # shinyjs::hide(id = "bds_remove_filter")
     shinyjs::hide(id = "plot_adam")
     shinyjs::hide(id = "plot_param")
     shinyjs::hide(id = "visit_var")

@@ -44,7 +44,7 @@ IndvExpl4ChartPlotly <- function(input, output, session, datafile, loaded_adams,
   })
 
 # upon selecting a plottable adam data set from dropdown
-observeEvent(list(input$plot_adam,input$bds_remove_filter), {
+observeEvent(list(input$plot_adam), { # ,input$bds_remove_filter # add this back in if we want to enable total tab filtering
   
   # make sure a subject has been selected
   req(usubjid() != " " & input$plot_adam != " ") # selPatNo cannot be blank
@@ -65,7 +65,9 @@ observeEvent(list(input$plot_adam,input$bds_remove_filter), {
   # cat(paste('\n1: ',input$plot_adam))
   # cat(paste('\n2:',paste(bds_cols, collapse = ", "),'\n'))
   
-   lb_data <- (if(input$bds_remove_filter == F) filtered_dat() %>% subset(data_from == input$plot_adam) else datafile()[[input$plot_adam]]) %>%  #ac: "ADLB" #lb_rec
+   lb_data <- 
+     # (if(input$bds_remove_filter == F) filtered_dat() %>% subset(data_from == input$plot_adam) else datafile()[[input$plot_adam]]) %>%  #ac: "ADLB" #lb_rec
+     datafile()[[input$plot_adam]] %>%
      filter(USUBJID == usubjid()) %>%
      select(all_of(bds_cols)) %>%
      distinct()
@@ -112,7 +114,7 @@ observeEvent(list(input$plot_adam,input$bds_remove_filter), {
   }) # observe      
   
   # update horizontal line choices
-  observeEvent(list(input$plot_param,input$bds_remove_filter), {
+  observeEvent(list(input$plot_param), { # ,input$bds_remove_filter # add this back in if we want to enable total tab filtering
     req(usubjid() != " " & input$plot_adam != " " & input$plot_param != " ")
     
     INPUT_visit_var <- sym(input$visit_var)
@@ -123,7 +125,8 @@ observeEvent(list(input$plot_adam,input$bds_remove_filter), {
     
     # ac: changed from above. Note this is slightly different from table data because it get's rid of NA values for visit var
     plot_dat <- 
-      (if(input$bds_remove_filter == F) filtered_dat() %>% subset(data_from == input$plot_adam) else datafile()[[input$plot_adam]]) %>%  #ac: "ADLB" #lb_rec
+      # (if(input$bds_remove_filter == F) filtered_dat() %>% subset(data_from == input$plot_adam) else datafile()[[input$plot_adam]]) %>%  #ac: "ADLB" #lb_rec
+      datafile()[[input$plot_adam]] %>%
       filter(USUBJID == usubjid() & !(is.na(!!INPUT_visit_var)) & PARAMCD == input$plot_param) %>% # make sure AVISITN is not missing
       select(all_of(bds_cols)) %>%
       distinct()
@@ -146,7 +149,7 @@ observeEvent(list(input$plot_adam,input$bds_remove_filter), {
   })
 
   # If any param or visit var are updated, run code below
-  observeEvent(list(input$plot_param, input$visit_var,input$bds_remove_filter), {
+  observeEvent(list(input$plot_param, input$visit_var), { # ,input$bds_remove_filter # add this back in if we want to enable total tab filtering
     
     # don't run until a patient and ADAM are selected
     req(usubjid() != " " & input$plot_adam != " ") # selPatNo cannot be blank
@@ -159,7 +162,8 @@ observeEvent(list(input$plot_adam,input$bds_remove_filter), {
     
     
     lb_data <- 
-      (if(input$bds_remove_filter == F) filtered_dat() %>% subset(data_from == input$plot_adam) else datafile()[[input$plot_adam]]) %>%  #ac: "ADLB" #lb_rec
+      # (if(input$bds_remove_filter == F) filtered_dat() %>% subset(data_from == input$plot_adam) else datafile()[[input$plot_adam]]) %>%  #ac: "ADLB" #lb_rec
+      datafile()[[input$plot_adam]] %>%
       filter(USUBJID == usubjid()) %>%
       select(all_of(bds_cols)) %>%
       distinct()
