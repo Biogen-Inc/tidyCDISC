@@ -41,33 +41,9 @@ IndvExpl3CheckGroup <- function(input, output, session, datafile, loaded_adams, 
       & !is.null(input$checkGroup)
       & input$events_apply_filter == T
     )
-    # stringr
-    orig_code <- paste(capture.output(attr(filtered_dat(), "code")),collapse = "")
-    # orig_code <- 'processed_data %>% filter(ABIFN1 %in% c(NA, "NEGATIVE")) %>% filter(ABIFN1 %in% c(NA, "POSITIVE"))'
-    code_text <- gsub('\"',"\'",orig_code)
-    len <- nchar(code_text)
-    f_loc <- str_locate_all(code_text,"filter")
-    filter_loc <- as_tibble(f_loc[[1]])
-    var_st <- filter_loc$end + 2
     
-    p_loc <- str_locate_all(code_text,"\\%\\>\\%") # have to use this
-    pipe_loc <- as_tibble(p_loc[[1]])
-    num_pipes <- nrow(pipe_loc)
-    var_end <- c(pipe_loc$start[2:num_pipes] - 3, len - 1)
-    filter_vectors <- map2(.x = var_st, .y = var_end, function(x,y) substr(code_text,x,y))
-    my_msgs <- filter_vectors[!is.na(filter_vectors)]
-    disp_msg <- gsub("\\%in\\%","IN",
-                     gsub("c\\(","\\(",
-                          gsub("NA","Missing",
-                               gsub("na","Missing",
-                                    gsub("   "," ",
-                                         gsub("  "," ",
-                                              gsub("\\|","OR",
-                                                   gsub("\\&","AND",
-                                                        my_msgs
-                                                   ))))))))
-    return(HTML(paste0("<b>Filters Applied:</b><br/>&nbsp;&nbsp;&nbsp;&nbsp;"
-                       ,paste(disp_msg, collapse = "<br/>&nbsp;&nbsp;&nbsp;&nbsp;"))))
+    filters_in_english(filtered_dat())
+    
   })
   
   
