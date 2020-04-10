@@ -7,7 +7,7 @@ IndvExplorUI <- function(id, label = "Individual Explorer") {
   tagList(
     
     h4(strong("Filter by Patient Number")),
-    h6(textOutput(ns("filter_header"))),
+    # h6(textOutput(ns("filter_header"))),
     # textOutput(ns("filter_bds_header")),
     fluidRow(
       column(3, #id = ns("f_waiter"),

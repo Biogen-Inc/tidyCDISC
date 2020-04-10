@@ -2,6 +2,7 @@ IndvExpl1Initial <- function(input, output, session, datafile, dataselected){
   # Initial processing
   
   ns <- session$ns
+  rv = reactiveValues(processed_data = NULL)
   
   my_loaded_adams <- reactive({
     # Only select data that starts with AD followed by one or more alphanumerics or underscore
@@ -29,11 +30,7 @@ IndvExpl1Initial <- function(input, output, session, datafile, dataselected){
   })
   
   
-  # Set initial value ########################################## For now, just adsl, but maybe adsl plus data I need on tab? Maybe not
-  all_data <- reactive({
-    req(!is.null(datafile()))
-    datafile()[["ADSL"]]
-  })
+  
   
   # Create waiting screen over this fluidRow and column area... where IDEAFilter displays
   waiting_screen <- tagList(
@@ -41,8 +38,8 @@ IndvExpl1Initial <- function(input, output, session, datafile, dataselected){
     h4("Hold on a bit while we merge datasets...")
   )
   
-  # upon selection of data set(s) to filter... feed shiny_data_filter module with those selected
-  observeEvent(input$filter_df, {
+  # upon selection of data set(s) to filter... combine to feed shiny_data_filter module with those selected
+  pre_processed_data <- eventReactive(input$filter_df, {
     
     req(input$adv_filtering == T)
     # validate(need(input$filter_df, "Must select a loaded ADaM for advanced filtering"))
@@ -51,69 +48,77 @@ IndvExpl1Initial <- function(input, output, session, datafile, dataselected){
     Sys.sleep(.5)
     
     # grab only df's included in the filter
-    select_dfs <- reactive({ datafile()[input$filter_df] })
+    select_dfs <- datafile()[input$filter_df]
     
-    non_bds <- reactive({
-      req(!is.null(select_dfs()))
-      select_dfs()[sapply(select_dfs(), function(x) !("PARAMCD" %in% colnames(x)) )] 
+    non_bds <- select_dfs[sapply(select_dfs, function(x) !("PARAMCD" %in% colnames(x)) )] 
       # note: join may throw some warnings if labels are different between two datasets, which is fine! Ignore
-    })
-    BDS <- reactive({
-      req(!is.null(select_dfs())) #74
-      select_dfs()[sapply(select_dfs(), function(x) "PARAMCD" %in% colnames(x) )]
-    })
+
+    BDS <- select_dfs[sapply(select_dfs, function(x) "PARAMCD" %in% colnames(x) )]
+    PARAMCD_dat <- map(BDS, ~ if(!"CHG" %in% names(.)) {update_list(., CHG = NA)} else {.})
     
-    processed_data <- reactive({
-      cat(paste("\nNonbds:",names(non_bds())))
-      cat(paste("\nBDS:",names(BDS())))
-      cat("\n")
-      PARAMCD_dat <- map(BDS(), ~ if(!"CHG" %in% names(.)) {update_list(., CHG = NA)} else {.})
+    
+    cat(paste("\nNonbds:",names(non_bds)))
+    cat(paste("\nBDS:",names(BDS)))
+    cat("\n")
+
+    if (!is_empty(PARAMCD_dat)) {
+      # Bind all the PARAMCD files 
+      all_PARAMCD <- bind_rows(PARAMCD_dat, .id = "data_from")  %>%
+        distinct(.keep_all = T)
       
-      if (!is_empty(PARAMCD_dat)) {
-        # Bind all the PARAMCD files 
-        all_PARAMCD <- bind_rows(PARAMCD_dat, .id = "data_from")  %>%
-          distinct(.keep_all = T)
-        
-        if (!is_empty(non_bds())){
-          combined_data <- full_join(non_bds() %>% reduce(full_join), all_PARAMCD) #, by = "USUBJID", suffix = c(".x", ".y")
-        } else {
-          combined_data <-all_PARAMCD
-        }
+      if (!is_empty(non_bds)){
+        combined_data <- full_join(non_bds %>% reduce(full_join), all_PARAMCD) #, by = "USUBJID", suffix = c(".x", ".y")
       } else {
-          combined_data <- non_bds() %>% reduce(full_join)
+        combined_data <-all_PARAMCD
       }
-      
+    } else {
+        combined_data <- non_bds %>% reduce(full_join)
+    }
+    
+    # Sys.sleep(.5)
+    waiter_hide()
+    
+    return(
       if(!is_empty(input$filter_df)){
         combined_data
       } else{
         datafile()$ADSL
+        # NULL
       }
-    })
-    
-    # IDEAFilter
-    all_data <- callModule(
-      shiny_data_filter,
-      "data_filter",         # whatever you named the widget
-      data = processed_data, # the name of your pancaked data
-      verbose = FALSE)
-    
-    # now pin point variable that was filtered and merge it with tab_data and filter tab data
-    
-    
-    # Sys.sleep(.5)
-    waiter_hide()
+    )
   })
+  observe({
+    req(!is.null(datafile()))
+    if(input$adv_filtering){
+      rv$processed_data <- pre_processed_data()
+    } else {
+      rv$processed_data <- datafile()$ADSL
+    }
+  })
+  feed_filter <- reactive({rv$processed_data})
+  
+  # IDEAFilter
+  filtered_data <- callModule(
+    shiny_data_filter,
+    "data_filter",         # whatever you named the widget
+    data = feed_filter,    # the name of your pre-processed data
+    verbose = FALSE)
+  
 
+  #     # now pin point variable that was filtered and merge it with tab_data and filter tab data
+  #     # 1. Create a DF with only the columns we need for this tab (from applicable loaded_adams) plus the columns
+  #          # they originally had in common with the filtered_data() data set
+  #     # 2. Do a semi_join
+  # 
   
-  
-  
-  
-  output$filter_header <- renderText({
-    req(!is.null(all_data()))
-    paste0("If desired, pre-filter USUBJID by variables from loaded data sets")
-  })
+  # not using anymore
+  # output$filter_header <- renderText({
+  #   req(!is.null(filter_header()))
+  #   paste0("If desired, pre-filter USUBJID by variables from loaded data sets")
+  # })
+  # not using anymore
   # output$filter_bds_header <- renderText({
-  #   req(!is.null(all_data()) & length(BDS()) > 0)
+  #   req(!is.null(all_data()) & length(BDS) > 0)
   #   paste0("For convenience: AVAL, CHG, and BASE values are displayed for each PARAMCD")
   # })
   
@@ -146,6 +151,10 @@ IndvExpl1Initial <- function(input, output, session, datafile, dataselected){
     #                                         gsub("\\&","AND",
     #              my_msg
     #              ))))))))
+    
+    cat(paste("\n0:",attr(filtered_data(), "column_name")))
+    # cat(paste("\n1:",attr(filtered_data(), "code")$column_name))
+    cat(paste("\n"))
     # cat(paste("\n1:",orig_code))
     # cat(paste0("\n2:\n",disp_msg,"\n"))
     
@@ -164,7 +173,7 @@ IndvExpl1Initial <- function(input, output, session, datafile, dataselected){
     # cat(paste("\n",class(all_data()$TR01EDTM)))
               
     # The rest of the widgets will be shown after the USUBJID has been selected
-    subj <- unique(all_data()[, "USUBJID"]) # unique(datafile()$ADSL[, "USUBJID"]) # get list of unique USUBJIDs
+    subj <- unique(filtered_data()[, "USUBJID"]) # unique(datafile()$ADSL[, "USUBJID"]) # get list of unique USUBJIDs
     
     updateSelectInput(
       session = session,
@@ -201,5 +210,15 @@ IndvExpl1Initial <- function(input, output, session, datafile, dataselected){
     shinyjs::hide(id = "plot_hor")
   })
   
-  return(list(my_loaded_adams = my_loaded_adams,all_data = all_data))
+  # pass the filtered data from above, but also filtered by 
+  return_filtered <- reactive({
+    if(input$selPatNo != " "){
+      filtered_data() %>% filter(USUBJID == input$selPatNo)
+    } else {
+      filtered_data()
+    }
+  })
+  
+  
+  return(list(my_loaded_adams = my_loaded_adams, all_data = return_filtered)) #isolate(rv$all_data)))
 } # IndvExpl1Initial
