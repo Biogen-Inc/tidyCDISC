@@ -9,12 +9,24 @@ IndvExplorUI <- function(id, label = "Individual Explorer") {
     h4(strong("Filter by Patient Number")),
     h6(textOutput(ns("filter_header"))),
     # textOutput(ns("filter_bds_header")),
-    fluidRow(column(3,IDEAFilter::shiny_data_filter_ui(ns("data_filter")))),
-    selectInput(
-      ns("selPatNo"),
-      label = "Please Select a USUBJID",
-      choices = " "
-    ),
+    fluidRow(
+      column(3, #id = ns("f_waiter"),
+        checkboxInput(ns("adv_filtering"), "Advanced Filtering?", value = F),
+        conditionalPanel(condition = "input.adv_filtering", ns = ns,
+            # uiOutput(ns("filter_df_ui")),
+            selectInput(ns("filter_df"),"Filter on Variable(s) in a loaded ADaM", multiple = TRUE,
+                        choices = NULL, selected = NULL),
+            conditionalPanel(condition = "!is.null(input.filter_df)", ns = ns,
+                IDEAFilter::shiny_data_filter_ui(ns("data_filter")))
+            ),
+        selectInput(
+          ns("selPatNo"),
+          label = "Please Select a USUBJID",
+          choices = " "
+        )
+      )
+    )
+    ,
     
     br(),
     h4(strong(textOutput(ns("demog_header")))),

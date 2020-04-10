@@ -2,7 +2,6 @@ IndvExpl1Initial <- function(input, output, session, datafile, dataselected){
   # Initial processing
   
   ns <- session$ns
-
   
   my_loaded_adams <- reactive({
     # Only select data that starts with AD followed by one or more alphanumerics or underscore
@@ -20,46 +19,95 @@ IndvExpl1Initial <- function(input, output, session, datafile, dataselected){
   # those filters to that data module. By default, they will be applied.
   ###
   
-  # find datasets that don't have PARAMCD, and merge them together by USUBJID
-  non_adsl <- reactive({
-    req(!is.null(datafile())) #74
-    datafile()[sapply(datafile(), function(x) !("PARAMCD" %in% colnames(x)))] %>%
-      reduce(full_join) #, by = "USUBJID", suffix = c(toupper(names(datafile()$.x)), toupper(names(datafile()$.y))) )
-    # may throw some warnings if labels are different between two datasets, which is fine
+  
+  
+  observe({ #Event(input$adv_filtering,
+    req(input$adv_filtering == T)
+    # selectInput(ns("filter_df"),"Filter on Variable in a loaded ADaM", multiple = TRUE,
+    #             choices = NULL, selected = NULL)
+    updateSelectInput("filter_df", session = session, choices = as.list(my_loaded_adams()), selected = "ADSL") #
   })
-  BDS <- reactive({
-    req(!is.null(datafile())) #74
-    datafile()[sapply(datafile(), function(x) "PARAMCD" %in% colnames(x))]
+  
+  
+  # Set initial value ########################################## For now, just adsl, but maybe adsl plus data I need on tab? Maybe not
+  all_data <- reactive({
+    req(!is.null(datafile()))
+    datafile()[["ADSL"]]
+  })
+  
+  # Create waiting screen over this fluidRow and column area... where IDEAFilter displays
+  waiting_screen <- tagList(
+    spin_folding_cube(),
+    h4("Hold on a bit while we merge datasets...")
+  )
+  
+  # upon selection of data set(s) to filter... feed shiny_data_filter module with those selected
+  observeEvent(input$filter_df, {
+    
+    req(input$adv_filtering == T)
+    # validate(need(input$filter_df, "Must select a loaded ADaM for advanced filtering"))
+    
+    waiter_show(html = waiting_screen, color = "lightblue")
+    Sys.sleep(.5)
+    
+    # grab only df's included in the filter
+    select_dfs <- reactive({ datafile()[input$filter_df] })
+    
+    non_bds <- reactive({
+      req(!is.null(select_dfs()))
+      select_dfs()[sapply(select_dfs(), function(x) !("PARAMCD" %in% colnames(x)) )] 
+      # note: join may throw some warnings if labels are different between two datasets, which is fine! Ignore
     })
-  
-  processed_data <- reactive({
+    BDS <- reactive({
+      req(!is.null(select_dfs())) #74
+      select_dfs()[sapply(select_dfs(), function(x) "PARAMCD" %in% colnames(x) )]
+    })
     
-    req("ADSL" %in% names(datafile()))
-
-    PARAMCD_dat <- map(BDS(), ~ if(!"CHG" %in% names(.)) update_list(., CHG = NA) else .)
-    
-    if (!is_empty(PARAMCD_dat)) {
-      # Bind all the PARAMCD files 
-      all_PARAMCD <- bind_rows(PARAMCD_dat, .id = "data_from")  %>%
-        distinct(.keep_all = T)
-      # may throw some warnings if labels are different between two datasets, which is fine
-      combined_data <- full_join(non_adsl(), all_PARAMCD) #, by = "USUBJID", suffix = c(".x", ".y")
+    processed_data <- reactive({
+      cat(paste("\nNonbds:",names(non_bds())))
+      cat(paste("\nBDS:",names(BDS())))
+      cat("\n")
+      PARAMCD_dat <- map(BDS(), ~ if(!"CHG" %in% names(.)) {update_list(., CHG = NA)} else {.})
       
-    } else {
-      combined_data <- non_adsl() #%>%
-        #mutate(data_from = "Non-BDS") #, PARAMCD = NA, AVAL = NA, BASE = NA, CHG = NA)
-    }
+      if (!is_empty(PARAMCD_dat)) {
+        # Bind all the PARAMCD files 
+        all_PARAMCD <- bind_rows(PARAMCD_dat, .id = "data_from")  %>%
+          distinct(.keep_all = T)
+        
+        if (!is_empty(non_bds())){
+          combined_data <- full_join(non_bds() %>% reduce(full_join), all_PARAMCD) #, by = "USUBJID", suffix = c(".x", ".y")
+        } else {
+          combined_data <-all_PARAMCD
+        }
+      } else {
+          combined_data <- non_bds() %>% reduce(full_join)
+      }
+      
+      if(!is_empty(input$filter_df)){
+        combined_data
+      } else{
+        datafile()$ADSL
+      }
+    })
+    
+    # IDEAFilter
+    all_data <- callModule(
+      shiny_data_filter,
+      "data_filter",         # whatever you named the widget
+      data = processed_data, # the name of your pancaked data
+      verbose = FALSE)
+    
+    # now pin point variable that was filtered and merge it with tab_data and filter tab data
+    
+    
+    # Sys.sleep(.5)
+    waiter_hide()
   })
-  
-  
-  
-  all_data <- callModule(
-    shiny_data_filter,
-    "data_filter",         # whatever you named the widget
-    data = processed_data, # the name of your pancaked data
-    verbose = FALSE)
-  
 
+  
+  
+  
+  
   output$filter_header <- renderText({
     req(!is.null(all_data()))
     paste0("If desired, pre-filter USUBJID by variables from loaded data sets")
@@ -153,7 +201,5 @@ IndvExpl1Initial <- function(input, output, session, datafile, dataselected){
     shinyjs::hide(id = "plot_hor")
   })
   
-  # return(dataselected) # #74
-  return(list(my_loaded_adams = my_loaded_adams,all_data = all_data)) #74
-  
+  return(list(my_loaded_adams = my_loaded_adams,all_data = all_data))
 } # IndvExpl1Initial
