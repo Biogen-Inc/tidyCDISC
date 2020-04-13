@@ -1,4 +1,4 @@
-IndvExpl2SelPatno <- function(input, output, session, datafile, loaded_adams){ #, dataselected
+IndvExpl2SelPatno <- function(input, output, session, datafile, loaded_adams, filtered_dat){ #, dataselected
   
   ns <- session$ns
 
@@ -12,6 +12,7 @@ IndvExpl2SelPatno <- function(input, output, session, datafile, loaded_adams){ #
     paste0("USUBJID: '",input$selPatNo,"'")
   })
   
+
   # observeEvent for inputselPatno 
   observeEvent(input$selPatNo, {
     
@@ -21,15 +22,18 @@ IndvExpl2SelPatno <- function(input, output, session, datafile, loaded_adams){ #
     shinyjs::show(id = "demog_header")
     shinyjs::show(id = "subjid_subtitle1")
     shinyjs::show(id = "demogInfo")
+    
     shinyjs::show(id = "hr2")
     shinyjs::show(id = "events_header")
     shinyjs::show(id = "subjid_subtitle2")
-    shinyjs::show(id = "checkGroup")
+    
+    shinyjs::show(id = "checkGroup")  
     # shinyjs::show(id = "eventsPlot")
     # shinyjs::show(id = "eventsTable")
     shinyjs::show(id = "hr3")
     shinyjs::show(id = "plot_header")
     shinyjs::show(id = "subjid_subtitle3")
+    # see if-then-else up near subjid_subtitle2 ^^^ for bds_remove_filter checkbox toggling
     shinyjs::show(id = "plot_adam")
     
     # Clear datatables abd plots 

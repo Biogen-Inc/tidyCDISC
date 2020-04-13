@@ -3,6 +3,7 @@ library(shinyjs)
 library(tidyverse)
 library(tippy)
 library(rvest)
+# devtools::install_github("MayaGans/IDEAFilter")
 library(IDEAFilter)
 library(haven)
 library(DT)
@@ -118,10 +119,10 @@ server <- function(input, output, session) {
   callModule(PopuExplor, id = "popul", datafile = datafile)
   
   # Individual Explorer
-  user_loaded_adams <- callModule(IndvExpl1Initial, "indvl", datafile = datafile)
-  usubjid  <- callModule(IndvExpl2SelPatno , "indvl", datafile = datafile,  loaded_adams = user_loaded_adams) #, dataselected
-  callModule(IndvExpl3CheckGroup,  "indvl", datafile,  loaded_adams = user_loaded_adams, usubjid = usubjid)   #, dataselected
-  callModule(IndvExpl4ChartPlotly, "indvl", datafile,  loaded_adams = user_loaded_adams, usubjid = usubjid)   #, dataselected
+  user_dat <- callModule(IndvExpl1Initial, "indvl", datafile = datafile)
+  usubjid  <- callModule(IndvExpl2SelPatno , "indvl", datafile = datafile,  loaded_adams = user_dat$my_loaded_adams, filtered_dat = user_dat$all_data) #, dataselected
+  callModule(IndvExpl3CheckGroup,  "indvl", datafile,  loaded_adams = user_dat$my_loaded_adams, usubjid = usubjid, filtered_dat = user_dat$all_data)   #, dataselected
+  callModule(IndvExpl4ChartPlotly, "indvl", datafile,  loaded_adams = user_dat$my_loaded_adams, usubjid = usubjid, filtered_dat = user_dat$all_data)   #, dataselected
   
 }
 
