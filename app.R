@@ -22,6 +22,7 @@ library(reactable)
 library(waiter)
 library(timevis)
 library(glue)
+# devtools::install_github("rstudio/rsconnect") # need latest dev version
 # rsconnect::writeManifest()
 
 
