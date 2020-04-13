@@ -15,19 +15,19 @@ filters_in_english <- function(filtered_data){
   len <- nchar(code_text)
   
   # find the start of the variable expressions using position of "filter"
-  f_loc <- str_locate_all(code_text,"filter")
+  f_loc <- str_locate_all(code_text,"filter\\(")
   filter_loc <- as_tibble(f_loc[[1]])
-  var_st <- filter_loc$end + 2
+  var_st <- filter_loc$end + 1
   
   # find the end of variable expression susing position of "%>%"
   p_loc <- str_locate_all(code_text,"\\%\\>\\%") # have to use this
   pipe_loc <- as_tibble(p_loc[[1]])
   num_pipes <- nrow(pipe_loc)
-  var_end <- c(pipe_loc$start[2:num_pipes] - 3, len - 1)
+  var_end <- c(pipe_loc$start[ifelse(num_pipes == 1, 1, 2):num_pipes] - 3, len - 1) # ifelse(num_pipes == 1, 1, 2)
   
   # use map2, to apply multiple arguments to the substr function, returing a list
   filter_vectors <- map2(.x = var_st, .y = var_end, function(x,y) substr(code_text,x,y))
-  my_msgs <- filter_vectors[!is.na(filter_vectors)] # get rid of NA msgs
+  my_msgs <- filter_vectors[!(is.na(filter_vectors) | filter_vectors == "")] # get rid of NA msgs
   
   # clean up messages to read more naturally
   disp_msg <- gsub("\\%in\\%","IN",

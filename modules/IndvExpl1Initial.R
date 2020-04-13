@@ -33,10 +33,10 @@ IndvExpl1Initial <- function(input, output, session, datafile, dataselected){
   
   
   # Create waiting screen over this fluidRow and column area... where IDEAFilter displays
-  waiting_screen <- tagList(
-    spin_folding_cube(),
-    h4("Hold on a bit while we merge datasets...")
-  )
+  # waiting_screen <- tagList(
+  #   spin_folding_cube(),
+  #   h4("Hold on a bit while we merge datasets...")
+  # )
   
   # upon selection of data set(s) to filter... combine to feed shiny_data_filter module with those selected
   pre_processed_data <- eventReactive(input$filter_df, {
@@ -44,8 +44,8 @@ IndvExpl1Initial <- function(input, output, session, datafile, dataselected){
     req(input$adv_filtering == T)
     # validate(need(input$filter_df, "Must select a loaded ADaM for advanced filtering"))
     
-    waiter_show(html = waiting_screen, color = "lightblue")
-    Sys.sleep(.5)
+    # waiter_show(html = waiting_screen, color = "lightblue")
+    # Sys.sleep(.5)
     
     # grab only df's included in the filter
     select_dfs <- datafile()[input$filter_df]
@@ -76,7 +76,7 @@ IndvExpl1Initial <- function(input, output, session, datafile, dataselected){
     }
     
     # Sys.sleep(.5)
-    waiter_hide()
+    # waiter_hide()
     
     return(
       if(!is_empty(input$filter_df)){
@@ -127,51 +127,50 @@ IndvExpl1Initial <- function(input, output, session, datafile, dataselected){
     req(!is.null(datafile())) #74
     
     # # stringr
-    # orig_code <- paste(capture.output(attr(all_data(), "code")),collapse = "")
-    # # orig_code <- 'processed_data %>% filter(ABIFN1 %in% c(NA, "NEGATIVE")) %>% filter(ABIFN1 %in% c(NA, "POSITIVE"))'
+    # # grab the output
+    # orig_code <- paste(capture.output(attr(filtered_data(), "code")),collapse = "")
+    # # orig_code <- 'feed_filter %>% filter(ACTIVE1 %in% c(NA, "0")) %>% filter(var1 == 2)' #
+    # # convert double quotes to single quotes
     # code_text <- gsub('\"',"\'",orig_code)
-    # len <- nchar(code_text)
-    # f_loc <- str_locate_all(code_text,"filter")
-    # filter_loc <- as_tibble(f_loc[[1]])
-    # var_st <- filter_loc$end + 2
     # 
+    # # find the character position for the end of the string
+    # len <- nchar(code_text)
+    # 
+    # # find the start of the variable expressions using position of "filter"
+    # f_loc <- str_locate_all(code_text,"filter\\(")
+    # filter_loc <- as_tibble(f_loc[[1]])
+    # var_st <- filter_loc$end + 1
+    # 
+    # # find the end of variable expression susing position of "%>%"
     # p_loc <- str_locate_all(code_text,"\\%\\>\\%") # have to use this
     # pipe_loc <- as_tibble(p_loc[[1]])
     # num_pipes <- nrow(pipe_loc)
-    # var_end <- c(pipe_loc$start[2:num_pipes] - 3, len - 1)
+    # var_end <- c(pipe_loc$start[ifelse(num_pipes == 1, 1, 2):num_pipes] - 3, len - 1) # ifelse(num_pipes == 1, 1, 2)
+    # 
+    # # use map2, to apply multiple arguments to the substr function, returing a list
     # filter_vectors <- map2(.x = var_st, .y = var_end, function(x,y) substr(code_text,x,y))
-    # my_msg <- paste(filter_vectors[!is.na(filter_vectors)], collapse = "\n")
+    # my_msgs <- filter_vectors[!(is.na(filter_vectors) | filter_vectors == "")] # get rid of NA msgs
+    # 
+    # # clean up messages to read more naturally
     # disp_msg <- gsub("\\%in\\%","IN",
     #                  gsub("c\\(","\\(",
     #                       gsub("NA","Missing",
     #                            gsub("na","Missing",
-    #                               gsub("   "," ",
-    #                                    gsub("  "," ",
-    #                                    gsub("\\|","OR",
-    #                                         gsub("\\&","AND",
-    #              my_msg
-    #              ))))))))
-    
-    cat(paste("\n0:",attr(filtered_data(), "column_name")))
-    # cat(paste("\n1:",attr(filtered_data(), "code")$column_name))
-    cat(paste("\n"))
+    #                                 gsub("   "," ", # 3 spaces
+    #                                      gsub("  "," ", # 2 spaces
+    #                                           gsub("\\|","OR",
+    #                                                gsub("\\&","AND",
+    #                                                     my_msgs
+    #                                                ))))))))
+    # # disp_msg
+    # # cat(paste("\n1:",attr(filtered_data(), "code")$column_name))
+    # # cat(paste("\n"))
     # cat(paste("\n1:",orig_code))
-    # cat(paste0("\n2:\n",disp_msg,"\n"))
+    # cat(paste("\n2:",var_st))
+    # cat(paste("\n3:",var_end))
+    # cat(paste0("\n4:\n",disp_msg,"\n"))
     
-    # cat(paste0("\n1: ",capture.output(attr(all_data(), "code"))))
-    # cat(paste0("\n2: ",any(str_detect(capture.output(attr(all_data(), "code")), "%>%"))))
-    # cat(paste0("\n3: ",any(regexpr("%>%",capture.output(attr(all_data(), "code"))) > 0),"\n"))
-    
-    # cat(paste0("\n2: ",gsub("%>%", "%>% \n ",
-    #          gsub("\\s{2,}", " ",
-    #               paste0(
-    #                 capture.output(attr(all_data(), "code")),
-    #                 collapse = " "))
-    # )))
-    # see if any dup columns are discovered
-    # cat(paste("\n",paste(colnames(all_data())[which(regexpr(".x",colnames(all_data()),ignore.case = T) > 0)],collapse = ", "),"\n"))
-    # cat(paste("\n",class(all_data()$TR01EDTM)))
-              
+  
     # The rest of the widgets will be shown after the USUBJID has been selected
     subj <- unique(filtered_data()[, "USUBJID"]) # unique(datafile()$ADSL[, "USUBJID"]) # get list of unique USUBJIDs
     
