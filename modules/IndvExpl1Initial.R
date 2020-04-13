@@ -57,9 +57,9 @@ IndvExpl1Initial <- function(input, output, session, datafile, dataselected){
     PARAMCD_dat <- map(BDS, ~ if(!"CHG" %in% names(.)) {update_list(., CHG = NA)} else {.})
     
     
-    cat(paste("\nNonbds:",names(non_bds)))
-    cat(paste("\nBDS:",names(BDS)))
-    cat("\n")
+    # cat(paste("\nNonbds:",names(non_bds)))
+    # cat(paste("\nBDS:",names(BDS)))
+    # cat("\n")
 
     if (!is_empty(PARAMCD_dat)) {
       # Bind all the PARAMCD files 
@@ -67,12 +67,12 @@ IndvExpl1Initial <- function(input, output, session, datafile, dataselected){
         distinct(.keep_all = T)
       
       if (!is_empty(non_bds)){
-        combined_data <- full_join(non_bds %>% reduce(full_join), all_PARAMCD) #, by = "USUBJID", suffix = c(".x", ".y")
+        combined_data <- inner_join(non_bds %>% reduce(inner_join), all_PARAMCD) #, by = "USUBJID", suffix = c(".x", ".y")
       } else {
         combined_data <-all_PARAMCD
       }
     } else {
-        combined_data <- non_bds %>% reduce(full_join)
+        combined_data <- non_bds %>% reduce(inner_join)
     }
     
     # Sys.sleep(.5)

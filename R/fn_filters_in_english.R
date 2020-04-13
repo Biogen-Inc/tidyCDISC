@@ -32,8 +32,8 @@ filters_in_english <- function(filtered_data){
   # clean up messages to read more naturally
   disp_msg <- gsub("\\%in\\%","IN",
                    gsub("c\\(","\\(",
-                        gsub("NA","Missing",
-                             gsub("na","Missing",
+                        gsub("\\(NA","\\(Missing",
+                             gsub(".na",".Missing",
                                   gsub("   "," ", # 3 spaces
                                        gsub("  "," ", # 2 spaces
                                             gsub("\\|","OR",
