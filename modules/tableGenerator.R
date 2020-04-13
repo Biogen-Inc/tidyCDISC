@@ -1,34 +1,6 @@
 tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
   
-  output$title <- renderText({ 
-    # paste the title to the top of the table
-    # paste reactive filtering expression as subheader
-    paste("<b>", input$table_title, "</b><br>", subheader()) 
-  })
-  
-  subheader <- reactive({
-    # change condition to word 
-    if (input$condition == "==") {
-      condition <- "Equals"
-    } else if (input$condition == "!=") {
-      condition <- "Not Equal To"
-    } else if (input$condition == "<") {
-      condition <- "Less Than"
-    } else if (input$condition == "<=") {
-      condition <- "Less Than or Equal To"
-    } else if (input$condition == ">") {
-      condition <- "Greater Than"
-    } else if (input$condition == ">=") {
-      condition <- "Greater Than or Equal To"
-    }
-    
-    if (input$to_filter == "No") {
-      subheader <- ""
-    } else {
-      subheader <- 
-        paste("Where", input$filtering, condition, input$filt_grp)
-    }
-  })
+  output$title <- renderText( input$table_title )
   
   filtering_expr <- function(input) {
     column <- rlang::sym(input$filtering)
@@ -144,14 +116,11 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
       pull(PARAMCD)
   })
   
-  all_data <- reactive({
-    if (input$to_filter == "No") {
-      processed_data()
-    } else {
-      processed_data() %>%
-        dplyr::filter(!!filtering_expr(input))
-    }
-  })
+  all_data <- callModule(
+    shiny_data_filter,
+    "data_filter",
+    data = processed_data,
+    verbose = FALSE)
   
   AVISITN <- reactive({ 
     req(BDS())
@@ -332,9 +301,8 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
           summarise(n = sum(n)) %>%
           ungroup() %>%
           mutate(prop = n/sum(n)) %>%
-          mutate(x = paste0(n, " (", round(prop, 2), ")")) %>%
+          mutate(x = paste0(n, " (", round(prop*100, 2), ")")) %>%
           select(!!ROW, x)
-        
         # make the row variable the row names
         d <- textshape::column_to_rownames(df, loc = 1)
         # and convert the column name to have to total N displayed
@@ -352,7 +320,7 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
           count(!!ROW, !!COLUMN) %>%
           group_by(!!COLUMN) %>%
           mutate(prop = prop.table(n)) %>%
-          mutate(v1 = paste0(n, ' (', round(prop, 2), ')')) %>%
+          mutate(v1 = paste0(n, ' (', round(prop*100, 2), ')')) %>%
           select(-n, -prop) %>% 
           spread(!!COLUMN, v1)
         
@@ -426,8 +394,9 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
         #   NA        NA      p-value
         
         len = length(unique(all_data()[[COLUMN]])) - 1
-        d <- data.frame(t(data.frame("X" = c(rep(" ", len), round(ttest$p.value[1], 3)))))
-        row.names(d) <- "P-Value"
+        d <- data.frame(t(data.frame("X" = c(rep(" ", len), round(ttest$p.value[1], 3)),
+                                     "Y" = c(rep(" ", len), round(ttest$meansq[1], 3)))))
+        row.names(d) <- c("P-Value", "Mean Squared")
         colnames(d) <- lapply(paste0(unlist(header_df[,1]), " (N = ", unlist(header_df[,2]), ")"), CapStr) 
         
       }
@@ -560,12 +529,15 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
   
   output$downloadData <- downloadHandler(
     filename = function() {
-      paste("TableGenerator.csv")
+      paste0("TableGenerator_", Sys.time(), ".csv", sep = "") %>%
+        str_replace(" ", "_") %>%
+        str_replace_all(":", "-")
     },
     content = function(file) {
       write.csv(dataFrame(), file, row.names= FALSE)
     }
   )
+
   
   # output$downloadXPT <- downloadHandler(
   #   filename = function() {
@@ -593,11 +565,13 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
   
   output$downloadRTF <- downloadHandler(
     filename = function() {
-      paste("TableGenerator_", Sys.Date(), ".doc", sep = "")
+      paste0("TableGenerator_", Sys.time(), ".doc", sep = "") %>%
+        str_replace(" ", "_") %>%
+        str_replace_all(":", "-")
     },
     content = function(file) {
       df <- as.data.frame(dataFrame())
-      rtffile <- RTF(file)
+      rtffile <- RTF(file,  width=11, height = 8.5)
       addHeader(rtffile, title = input$table_title, subtitle = subheader())
       addTable(rtffile, df)
       done(rtffile)
