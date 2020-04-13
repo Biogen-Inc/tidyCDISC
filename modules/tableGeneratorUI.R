@@ -36,23 +36,12 @@ tableGeneratorUI <- function(id, label = "Create Chart") {
         column(12, "Commonly Used Tables", recipe)),
                  textInput(ns("table_title"), "Table Title", "Table Title "),
                  fluidRow(uiOutput(ns("col_ADSL"))),
-                 div(fluidRow(
-                   radioGroupButtons(ns("to_filter"), "Filter?", choices = c("No", "Yes"), status = "primary", selected = "No")
-                 ), style = "text-align: center;vertical-align: middle;"),
-                 
-                 conditionalPanel(condition = "input.to_filter == 'Yes'", ns = ns,
-                                  fluidRow(
-                                    column(4, uiOutput(ns("filtering_by"))),
-                                    column(4, selectInput(ns("condition"), "Filter Operator", 
-                                                          choices = c("Equals" = "==",
-                                                                      "Not Equal" = "!=",
-                                                                      "Less Than" = "<",
-                                                                      "Less Than or Equal" = "<=",
-                                                                      "Greater Than" = ">",
-                                                                      "Greater Than or Equal" = ">="))),
-                                    column(4, selectInput(ns("filt_grp"), "Value:",
-                                                          character(0)))
-                                  )),
+      
+      shinyUI(bootstrapPage(
+        HTML('<button data-toggle="collapse" data-target="#demo" style="width:100%">Filter Data</button>'),
+        tags$div(id = 'demo',  class="collapse",
+                 IDEAFilter::shiny_data_filter_ui(ns("data_filter"))
+      ))),
                  
                  fluidRow(
                    uiOutput("all_rows"),
@@ -86,7 +75,7 @@ tableGeneratorUI <- function(id, label = "Create Chart") {
     ),
     
     mainPanel(style = "max-width: 500px;",
-      fluidRow(htmlOutput(ns("title"))),
+      #fluidRow(htmlOutput(ns("title"))),
       fluidRow(reactableOutput(ns("all")))
     ),
     tags$script(src = "script.js"),
