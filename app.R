@@ -1,6 +1,7 @@
 library(shiny)
 library(shinyjs)
 library(tidyverse)
+# remotes::install_github("JohnCoene/tippy")
 library(tippy)
 library(rvest)
 # devtools::install_github("MayaGans/IDEAFilter")
@@ -21,6 +22,8 @@ library(reactable)
 library(waiter)
 library(timevis)
 library(glue)
+# rsconnect::writeManifest()
+
 
 options(shiny.sanitize.errors = FALSE)
 options(bitmapType='cairo') 
