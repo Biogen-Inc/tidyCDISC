@@ -124,7 +124,7 @@ IndvExpl1Initial <- function(input, output, session, datafile, dataselected){
   
   observe({
     # make sure selectData has been run
-    req(!is.null(datafile())) #74
+    req(!is.null(filtered_data())) #74 #datafile()
     
     # # stringr
     # # grab the output
@@ -172,7 +172,7 @@ IndvExpl1Initial <- function(input, output, session, datafile, dataselected){
     
   
     # The rest of the widgets will be shown after the USUBJID has been selected
-    subj <- unique(filtered_data()[, "USUBJID"]) # unique(datafile()$ADSL[, "USUBJID"]) # get list of unique USUBJIDs
+    subj <- unique(filtered_data()$USUBJID) # unique(datafile()$ADSL[, "USUBJID"]) # get list of unique USUBJIDs
     
     updateSelectInput(
       session = session,
