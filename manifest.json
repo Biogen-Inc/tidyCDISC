@@ -117,11 +117,13 @@
         "License": "MIT + file LICENSE",
         "Encoding": "UTF-8",
         "LazyData": "true",
-        "RoxygenNote": "6.1.1",
-        "Imports": "shiny,\nggplot2,\npillar,\ncrayon,\nRColorBrewer,\nwaiter",
-        "Suggests": "shinytest,\ntestthat",
+        "RoxygenNote": "7.1.0",
+        "Imports": "shiny, ggplot2, pillar, crayon, RColorBrewer, waiter",
+        "Suggests": "shinytest, testthat",
+        "NeedsCompilation": "no",
+        "Packaged": "2020-04-14 18:56:19 UTC; aclark5",
         "Author": "Maya Gans [aut, cre],\n  Aaron Clark [aut]",
-        "Built": "R 3.6.3; ; 2020-04-14 18:47:37 UTC; windows"
+        "Built": "R 3.6.3; ; 2020-04-14 20:09:21 UTC; windows"
       }
     },
     "MASS": {
@@ -4249,10 +4251,10 @@
   },
   "files": {
     "app.R": {
-      "checksum": "816115ac2af1300b74189f78e1db70b5"
+      "checksum": "b6074b155d2a68b11dcb87abb48362f7"
     },
-    "file57b8784f1c60.log": {
-      "checksum": "8ac18b190b4c2d8cfed4cdaeff4251b7"
+    "file69e423ab52e4.log": {
+      "checksum": "d34681c6934c5a582ece20b4b2e80f81"
     },
     "global.R": {
       "checksum": "bd5878f97eaa132e98b5d24b2fa91f1f"
@@ -4447,7 +4449,7 @@
       "checksum": "8e0960907e8a88469c4a2257706b919c"
     },
     "packrat/desc/IDEAFilter": {
-      "checksum": "68f45d3b279cb1afe93d915bed6f4db3"
+      "checksum": "6c08b0053cc246c78df8f12c8e7fbd65"
     },
     "packrat/desc/isoband": {
       "checksum": "1eca98bdcca82c347e50756f5d812732"
