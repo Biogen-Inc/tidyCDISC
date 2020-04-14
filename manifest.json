@@ -1,7 +1,7 @@
 {
   "version": 1,
   "locale": "en_US",
-  "platform": "3.6.2",
+  "platform": "3.6.3",
   "metadata": {
     "appmode": "shiny",
     "primary_rmd": null,
@@ -101,7 +101,7 @@
     },
     "IDEAFilter": {
       "Source": "CRAN",
-      "Repository": null,
+      "Repository": "https://aaron-clark.github.io/drat/",
       "GithubRepo": null,
       "GithubUsername": null,
       "GithubRef": null,
@@ -117,11 +117,13 @@
         "License": "MIT + file LICENSE",
         "Encoding": "UTF-8",
         "LazyData": "true",
-        "RoxygenNote": "6.1.1",
-        "Imports": "shiny,\nggplot2,\npillar,\ncrayon,\nRColorBrewer,\nwaiter",
-        "Suggests": "shinytest,\ntestthat",
+        "RoxygenNote": "7.1.0",
+        "Imports": "shiny, ggplot2, pillar, crayon, RColorBrewer, waiter",
+        "Suggests": "shinytest, testthat",
+        "NeedsCompilation": "no",
+        "Packaged": "2020-04-14 18:56:19 UTC; aclark5",
         "Author": "Maya Gans [aut, cre],\n  Aaron Clark [aut]",
-        "Built": "R 3.6.2; ; 2020-04-13 15:54:15 UTC; windows"
+        "Built": "R 3.6.3; ; 2020-04-14 20:09:21 UTC; windows"
       }
     },
     "MASS": {
@@ -153,8 +155,8 @@
         "Author": "Brian Ripley [aut, cre, cph],\n  Bill Venables [ctb],\n  Douglas M. Bates [ctb],\n  Kurt Hornik [trl] (partial port ca 1998),\n  Albrecht Gebhardt [trl] (partial port ca 1998),\n  David Firth [ctb]",
         "Maintainer": "Brian Ripley <ripley@stats.ox.ac.uk>",
         "Repository": "CRAN",
-        "Date/Publication": "2019-12-20 09:20:35 UTC",
-        "Built": "R 3.6.3; x86_64-w64-mingw32; 2020-03-24 03:34:30 UTC; windows"
+        "Date/Publication": "2019-12-20 09:21:25 UTC",
+        "Built": "R 3.6.3; x86_64-w64-mingw32; 2020-02-29 09:40:01 UTC; windows"
       }
     },
     "Matrix": {
@@ -190,7 +192,7 @@
         "Author": "Douglas Bates [aut],\n  Martin Maechler [aut, cre] (<https://orcid.org/0000-0002-8685-9910>),\n  Timothy A. Davis [ctb] (SuiteSparse and 'cs' C libraries, notably\n    CHOLMOD, AMD; collaborators listed in dir(pattern =\n    '^[A-Z]+[.]txt$', full.names=TRUE, system.file('doc',\n    'SuiteSparse', package='Matrix'))),\n  Jens Oehlschlägel [ctb] (initial nearPD()),\n  Jason Riedy [ctb] (condest() and onenormest() for octave, Copyright:\n    Regents of the University of California),\n  R Core Team [ctb] (base R matrix implementation)",
         "Repository": "CRAN",
         "Date/Publication": "2019-11-27 15:20:02 UTC",
-        "Built": "R 3.6.2; x86_64-w64-mingw32; 2019-12-12 08:52:42 UTC; windows"
+        "Built": "R 3.6.3; x86_64-w64-mingw32; 2020-02-29 09:40:26 UTC; windows"
       }
     },
     "R.methodsS3": {
@@ -1789,11 +1791,12 @@
       "GithubSha1": null,
       "description": {
         "Package": "lattice",
-        "Version": "0.20-40",
-        "Date": "2020-02-16",
+        "Version": "0.20-38",
+        "Date": "2018-11-01",
         "Priority": "recommended",
         "Title": "Trellis Graphics for R",
-        "Authors@R": "c(person(\"Deepayan\", \"Sarkar\", role = c(\"aut\", \"cre\"),\n\t            email = \"deepayan.sarkar@r-project.org\",\n\t\t    comment = c(ORCID = \"0000-0003-4107-1553\")),\n              person(\"Felix\", \"Andrews\", role = \"ctb\"),\n\t      person(\"Kevin\", \"Wright\", role = \"ctb\", comment = \"documentation\"),\n\t      person(\"Neil\", \"Klepeis\", role = \"ctb\"),\n              person(\"Paul\", \"Murrell\", role = \"ctb\", email = \"paul@stat.auckland.ac.nz\"))",
+        "Author": "Deepayan Sarkar <deepayan.sarkar@r-project.org>",
+        "Maintainer": "Deepayan Sarkar <deepayan.sarkar@r-project.org>",
         "Description": "A powerful and elegant high-level data visualization\n  system inspired by Trellis graphics, with an emphasis on\n  multivariate data. Lattice is sufficient for typical graphics needs,\n  and is also flexible enough to handle most nonstandard requirements.\n  See ?Lattice for an introduction.",
         "Depends": "R (>= 3.0.0)",
         "Suggests": "KernSmooth, MASS, latticeExtra",
@@ -1805,12 +1808,10 @@
         "URL": "http://lattice.r-forge.r-project.org/",
         "BugReports": "https://github.com/deepayan/lattice/issues",
         "NeedsCompilation": "yes",
-        "Packaged": "2020-02-16 17:49:41 UTC; deepayan",
-        "Author": "Deepayan Sarkar [aut, cre] (<https://orcid.org/0000-0003-4107-1553>),\n  Felix Andrews [ctb],\n  Kevin Wright [ctb] (documentation),\n  Neil Klepeis [ctb],\n  Paul Murrell [ctb]",
-        "Maintainer": "Deepayan Sarkar <deepayan.sarkar@r-project.org>",
+        "Packaged": "2018-11-04 11:39:05 UTC; deepayan",
         "Repository": "CRAN",
-        "Date/Publication": "2020-02-19 07:50:06 UTC",
-        "Built": "R 3.6.3; x86_64-w64-mingw32; 2020-03-24 03:33:57 UTC; windows"
+        "Date/Publication": "2018-11-04 12:50:03 UTC",
+        "Built": "R 3.6.3; x86_64-w64-mingw32; 2020-02-29 09:40:13 UTC; windows"
       }
     },
     "lazyeval": {
@@ -1992,7 +1993,7 @@
         "Packaged": "2019-11-08 21:21:15 UTC; sw283",
         "Repository": "CRAN",
         "Date/Publication": "2019-11-09 05:30:11 UTC",
-        "Built": "R 3.6.2; x86_64-w64-mingw32; 2019-12-12 08:56:40 UTC; windows"
+        "Built": "R 3.6.3; x86_64-w64-mingw32; 2020-02-29 09:43:35 UTC; windows"
       }
     },
     "mime": {
@@ -2092,8 +2093,8 @@
       "GithubSha1": null,
       "description": {
         "Package": "nlme",
-        "Version": "3.1-145",
-        "Date": "2020-03-03",
+        "Version": "3.1-144",
+        "Date": "2020-02-02",
         "Priority": "recommended",
         "Title": "Linear and Nonlinear Mixed Effects Models",
         "Authors@R": "c(person(\"José\", \"Pinheiro\", role = \"aut\", comment = \"S version\"),\n             person(\"Douglas\", \"Bates\", role = \"aut\", comment = \"up to 2007\"),\n             person(\"Saikat\", \"DebRoy\", role = \"ctb\", comment = \"up to 2002\"),\n             person(\"Deepayan\", \"Sarkar\", role = \"ctb\", comment = \"up to 2005\"),\n             person(\"EISPACK authors\", role = \"ctb\", comment = \"src/rs.f\"),\n\t     person(\"Siem\", \"Heisterkamp\", role = \"ctb\", comment = \"Author fixed sigma\"),\n             person(\"Bert\", \"Van Willigen\",role = \"ctb\", comment = \"Programmer fixed sigma\"),\n\t     person(\"R-core\", email = \"R-core@R-project.org\",\n                    role = c(\"aut\", \"cre\")))",
@@ -2108,12 +2109,12 @@
         "BugReports": "https://bugs.r-project.org",
         "URL": "https://svn.r-project.org/R-packages/trunk/nlme",
         "NeedsCompilation": "yes",
-        "Packaged": "2020-03-03 19:40:47 UTC; ripley",
+        "Packaged": "2020-02-02 15:05:16 UTC; hornik",
         "Author": "José Pinheiro [aut] (S version),\n  Douglas Bates [aut] (up to 2007),\n  Saikat DebRoy [ctb] (up to 2002),\n  Deepayan Sarkar [ctb] (up to 2005),\n  EISPACK authors [ctb] (src/rs.f),\n  Siem Heisterkamp [ctb] (Author fixed sigma),\n  Bert Van Willigen [ctb] (Programmer fixed sigma),\n  R-core [aut, cre]",
         "Maintainer": "R-core <R-core@R-project.org>",
         "Repository": "CRAN",
-        "Date/Publication": "2020-03-04 13:37:57 UTC",
-        "Built": "R 3.6.3; x86_64-w64-mingw32; 2020-03-24 06:27:40 UTC; windows"
+        "Date/Publication": "2020-02-06 09:50:06 UTC",
+        "Built": "R 3.6.3; x86_64-w64-mingw32; 2020-02-29 09:42:00 UTC; windows"
       }
     },
     "openssl": {
@@ -2146,36 +2147,6 @@
         "Repository": "CRAN",
         "Date/Publication": "2019-07-18 06:35:27 UTC",
         "Built": "R 3.6.2; x86_64-w64-mingw32; 2020-02-01 00:25:01 UTC; windows"
-      }
-    },
-    "packrat": {
-      "Source": "CRAN",
-      "Repository": "https://cran.rstudio.com/",
-      "GithubRepo": null,
-      "GithubUsername": null,
-      "GithubRef": null,
-      "GithubSha1": null,
-      "description": {
-        "Package": "packrat",
-        "Type": "Package",
-        "Title": "A Dependency Management System for Projects and their R Package\nDependencies",
-        "Version": "0.5.0",
-        "Author": "Kevin Ushey, Jonathan McPherson, Joe Cheng, Aron Atkins, JJ Allaire",
-        "Maintainer": "Kevin Ushey <kevin@rstudio.com>",
-        "Description": "Manage the R packages your project depends\n    on in an isolated, portable, and reproducible way.",
-        "License": "GPL-2",
-        "Depends": "R (>= 3.0.0)",
-        "Imports": "tools, utils",
-        "Suggests": "testthat (>= 0.7), devtools, httr, knitr, rmarkdown",
-        "URL": "https://github.com/rstudio/packrat/",
-        "BugReports": "https://github.com/rstudio/packrat/issues",
-        "RoxygenNote": "6.1.1",
-        "Encoding": "UTF-8",
-        "NeedsCompilation": "no",
-        "Packaged": "2018-11-13 23:16:36 UTC; kevin",
-        "Repository": "CRAN",
-        "Date/Publication": "2018-11-14 08:40:02 UTC",
-        "Built": "R 3.6.3; ; 2020-03-30 15:00:16 UTC; windows"
       }
     },
     "parsedate": {
@@ -3035,44 +3006,6 @@
         "Repository": "CRAN",
         "Date/Publication": "2018-01-03 15:36:24 UTC",
         "Built": "R 3.6.3; ; 2020-03-24 03:33:57 UTC; windows"
-      }
-    },
-    "rsconnect": {
-      "Source": "github",
-      "Repository": null,
-      "GithubRepo": "rsconnect",
-      "GithubUsername": "rstudio",
-      "GithubRef": "master",
-      "GithubSha1": "40c162bf3c4cd9b10deed82e1df9ec1b0c107c1f",
-      "description": {
-        "Package": "rsconnect",
-        "Type": "Package",
-        "Title": "Deployment Interface for R Markdown Documents and Shiny\nApplications",
-        "Version": "0.8.16-9001",
-        "Author": "JJ Allaire",
-        "Maintainer": "Jonathan McPherson <jonathan@rstudio.com>",
-        "Description": "Programmatic deployment interface for 'RPubs', 'shinyapps.io', and\n    'RStudio Connect'. Supported content types include R Markdown documents,\n    Shiny applications, Plumber APIs, plots, and static web content.",
-        "Depends": "R (>= 3.0.0)",
-        "Imports": "curl, digest, jsonlite, openssl, packrat (>= 0.4.8-1),\nrstudioapi (>= 0.5), yaml (>= 2.1.5)",
-        "Suggests": "RCurl, callr, httpuv, knitr, plumber (>= 0.3.2), reticulate,\nrmarkdown (>= 1.1), shiny, sourcetools, testthat, xtable",
-        "License": "GPL-2",
-        "RoxygenNote": "7.0.2",
-        "Roxygen": "list(markdown = TRUE)",
-        "URL": "https://github.com/rstudio/rsconnect",
-        "BugReports": "https://github.com/rstudio/rsconnect/issues",
-        "RemoteType": "github",
-        "RemoteHost": "api.github.com",
-        "RemoteRepo": "rsconnect",
-        "RemoteUsername": "rstudio",
-        "RemoteRef": "master",
-        "RemoteSha": "40c162bf3c4cd9b10deed82e1df9ec1b0c107c1f",
-        "GithubRepo": "rsconnect",
-        "GithubUsername": "rstudio",
-        "GithubRef": "master",
-        "GithubSHA1": "40c162bf3c4cd9b10deed82e1df9ec1b0c107c1f",
-        "NeedsCompilation": "no",
-        "Packaged": "2020-04-13 20:49:46 UTC; aclark5",
-        "Built": "R 3.6.2; ; 2020-04-13 20:49:49 UTC; windows"
       }
     },
     "rstudioapi": {
@@ -4318,10 +4251,10 @@
   },
   "files": {
     "app.R": {
-      "checksum": "d1f5dfeda92b6963b85af457cbf21c9a"
+      "checksum": "b6074b155d2a68b11dcb87abb48362f7"
     },
-    "file52547896c22.log": {
-      "checksum": "f4150dbdeb9571ff4a1ba39ff8c462c9"
+    "file69e423ab52e4.log": {
+      "checksum": "d34681c6934c5a582ece20b4b2e80f81"
     },
     "global.R": {
       "checksum": "bd5878f97eaa132e98b5d24b2fa91f1f"
@@ -4342,7 +4275,7 @@
       "checksum": "7b162487e5196ddd04e489e712ddcac8"
     },
     "modules/IndvExpl1Initial.R": {
-      "checksum": "1c8a366de31019f5c044e91bf2525e21"
+      "checksum": "db8c8841a17e04a9c88ca012cd7fc09e"
     },
     "modules/IndvExpl2SelPatno.R": {
       "checksum": "b1abcfbd84d349bd0c7dbf7ee4e8dabb"
@@ -4516,7 +4449,7 @@
       "checksum": "8e0960907e8a88469c4a2257706b919c"
     },
     "packrat/desc/IDEAFilter": {
-      "checksum": "00ae744336a0d4ec2780d6d2a7b5cdbe"
+      "checksum": "6c08b0053cc246c78df8f12c8e7fbd65"
     },
     "packrat/desc/isoband": {
       "checksum": "1eca98bdcca82c347e50756f5d812732"
@@ -4540,7 +4473,7 @@
       "checksum": "ab44ac2443a4b392e806fb771ea1db7e"
     },
     "packrat/desc/lattice": {
-      "checksum": "f99a80b2978946568fe16448f1a251d2"
+      "checksum": "b5f9060f8e44aa424a4ee83e70421483"
     },
     "packrat/desc/lazyeval": {
       "checksum": "60335b5e488f829e5a7dd8596f68d105"
@@ -4558,13 +4491,13 @@
       "checksum": "fb5a6bff3a1569a84e9f585788d40418"
     },
     "packrat/desc/MASS": {
-      "checksum": "acd8792b47dca7dcf075fa61db48392e"
+      "checksum": "8d5df8b184b437c03de79a40aac04350"
     },
     "packrat/desc/Matrix": {
-      "checksum": "eebcc453eba5ccd305e4759ba6a06bb1"
+      "checksum": "57d11bdf7f67c90824f53450c744523f"
     },
     "packrat/desc/mgcv": {
-      "checksum": "50ffd6c04648b7add71d8dcd3510051c"
+      "checksum": "b8e4675951db547a69025ba631af38bd"
     },
     "packrat/desc/mime": {
       "checksum": "b142cfc51e2d0e0eb778227db1185dc3"
@@ -4576,13 +4509,10 @@
       "checksum": "10d71f72bbfc5ebe97f57575077f9fd0"
     },
     "packrat/desc/nlme": {
-      "checksum": "ca36ada3a4b850c4b1579b19fbd487a1"
+      "checksum": "301a2ba5b73e659c009cac98740ebe75"
     },
     "packrat/desc/openssl": {
       "checksum": "547232f9a3b24cff4db5033065e75e38"
-    },
-    "packrat/desc/packrat": {
-      "checksum": "b62af59b9221aa05b6b8f5ed8b7fba1a"
     },
     "packrat/desc/parsedate": {
       "checksum": "bff184b8fa6fc99eab578d7777468acb"
@@ -4682,9 +4612,6 @@
     },
     "packrat/desc/rprojroot": {
       "checksum": "935c26a59eedf4c933af18fea4c3a6b2"
-    },
-    "packrat/desc/rsconnect": {
-      "checksum": "1a04beb54a62784d0ca7af93d5848f3e"
     },
     "packrat/desc/rstudioapi": {
       "checksum": "109679f641804b0addbb4be8420e7622"
@@ -4807,7 +4734,7 @@
       "checksum": "1a902a5286236b90738a357b2537b341"
     },
     "packrat/packrat.lock": {
-      "checksum": "214e8ba7e3f603186283dcc14cc224a6"
+      "checksum": "41cfc8e7fa4f5dcdffe3be06b695bddb"
     },
     "R/allowed_operators.R": {
       "checksum": "c2130178775fc0a80237b19db6cfc7b8"
