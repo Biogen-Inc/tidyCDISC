@@ -3225,6 +3225,38 @@
         "Built": "R 3.6.3; ; 2020-03-24 10:00:46 UTC; windows"
       }
     },
+    "shinyTime": {
+      "Source": "CRAN",
+      "Repository": "https://cran.rstudio.com/",
+      "GithubRepo": null,
+      "GithubUsername": null,
+      "GithubRef": null,
+      "GithubSha1": null,
+      "description": {
+        "Package": "shinyTime",
+        "Type": "Package",
+        "Title": "A Time Input Widget for Shiny",
+        "Version": "1.0.1",
+        "Authors@R": "person(\"Gerhard\", \"Burger\", email = \"burger.ga@gmail.com\", role = c(\"aut\", \"cre\"), comment = c(ORCID = \"0000-0003-1062-5576\"))",
+        "Description": "Provides a time input widget for Shiny. This widget allows intuitive time input in the\n    '[hh]:[mm]:[ss]' or '[hh]:[mm]' (24H) format by using a separate numeric input for each time\n    component. The interface with R uses date-time objects. See the project page for more\n    information and examples.",
+        "License": "GPL-3 | file LICENSE",
+        "LazyData": "TRUE",
+        "Imports": "htmltools, shiny",
+        "URL": "https://burgerga.github.io/shinyTime/,\nhttps://github.com/burgerga/shinyTime",
+        "BugReports": "https://github.com/burgerga/shinyTime/issues",
+        "RoxygenNote": "6.1.1",
+        "Encoding": "UTF-8",
+        "Language": "en-US",
+        "Suggests": "testthat (>= 2.1.0), spelling",
+        "NeedsCompilation": "no",
+        "Packaged": "2019-08-06 12:42:25 UTC; gerhard",
+        "Author": "Gerhard Burger [aut, cre] (<https://orcid.org/0000-0003-1062-5576>)",
+        "Maintainer": "Gerhard Burger <burger.ga@gmail.com>",
+        "Repository": "CRAN",
+        "Date/Publication": "2019-08-06 13:00:02 UTC",
+        "Built": "R 3.6.3; ; 2020-04-02 21:52:18 UTC; windows"
+      }
+    },
     "shinyWidgets": {
       "Source": "CRAN",
       "Repository": "https://cran.rstudio.com/",
@@ -4251,10 +4283,10 @@
   },
   "files": {
     "app.R": {
-      "checksum": "b6074b155d2a68b11dcb87abb48362f7"
+      "checksum": "1217b399616a7c5c5fe2e03310cea276"
     },
-    "file69e423ab52e4.log": {
-      "checksum": "d34681c6934c5a582ece20b4b2e80f81"
+    "file69e465635c2b.log": {
+      "checksum": "8e4f816f9f641b92f1889470ba467c37"
     },
     "global.R": {
       "checksum": "bd5878f97eaa132e98b5d24b2fa91f1f"
@@ -4646,6 +4678,9 @@
     "packrat/desc/shinythemes": {
       "checksum": "ceca7fbd81d6ac2745dae17c9035a8e6"
     },
+    "packrat/desc/shinyTime": {
+      "checksum": "a7886d99f430d2411bb32bb3077d768c"
+    },
     "packrat/desc/shinyWidgets": {
       "checksum": "9a367f47c98d61a860592fb5bf899d4e"
     },
@@ -4734,7 +4769,7 @@
       "checksum": "1a902a5286236b90738a357b2537b341"
     },
     "packrat/packrat.lock": {
-      "checksum": "41cfc8e7fa4f5dcdffe3be06b695bddb"
+      "checksum": "523c8f67f9aaa1661d939674a79155c3"
     },
     "R/allowed_operators.R": {
       "checksum": "c2130178775fc0a80237b19db6cfc7b8"

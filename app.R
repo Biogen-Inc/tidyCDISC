@@ -4,11 +4,12 @@ library(tidyverse)
 # remotes::install_github("JohnCoene/tippy")
 library(tippy)
 library(rvest)
-# devtools::install_github("MayaGans/IDEAFilter") # don't use
+# devtools::install_github("MayaGans/IDEAFilter") # don't use for production
 # drat::addRepo("aaron-clark") # add a repo where the source file (tar.gz) file is hosted on gitHub
 # getOption("repos") # check if the repo was added
 # install.packages("IDEAFilter")
 library(IDEAFilter)
+library(shinyTime) # for IDEAFilter
 library(haven)
 library(DT)
 library(shinyWidgets)
@@ -25,6 +26,7 @@ library(reactable)
 library(waiter)
 library(timevis)
 library(glue)
+
 # devtools::install_github("rstudio/rsconnect")
 # rsconnect::writeManifest()
 
