@@ -1,15 +1,15 @@
 # data table function -- rkrajcik
 # parameters:
-#    df = data frame, splitby = {T|F}, splitvar = var to group on, respvar = response variable
+#    df = data frame, groupbox = {T|F}, groupvar = var to group on, respvar = response variable
 #    returns: summarized DT::datatable
-fnsummtab <- function(data, splitby, splitvar, respvar) {
+fnsummtab <- function(data, groupbox, groupvar, respvar) {
   
-  x_var <- as.name(splitvar)
+  x_var <- as.name(groupvar)
   y_var <- as.name(respvar)
   
   seltime <- select(data, ends_with("DY"), starts_with("AVIS")) 
   
-  if (!splitvar %in% names(seltime) & "AVISIT" %in% names(data) & "USUBJID" %in% names(data)) {
+  if (!groupvar %in% names(seltime) & "AVISIT" %in% names(data) & "USUBJID" %in% names(data)) {
     data.1 <- data %>%
       filter(AVISIT == "Baseline") %>% # Take analysis baseline for now
       distinct(USUBJID, .keep_all = TRUE)
@@ -17,8 +17,8 @@ fnsummtab <- function(data, splitby, splitvar, respvar) {
     data.1 <- data
   }
   
-  if (splitby == TRUE){
-    req(splitvar != " ")
+  if (groupbox == TRUE){
+    req(groupvar != " ")
     table1 <- data.1 %>%
       dplyr::group_by(!!x_var)
   } else {

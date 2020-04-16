@@ -3,35 +3,25 @@ PopuExpl5Hist <- function(input, output, session, df){
   ns <- session$ns
   
 # Histogram
-shinyjs::show(id="selPrmCode")
-shinyjs::show(id="splitbox")
-shinyjs::show(id="splitbyvar")
-shinyjs::hide(id="selxvar")
-shinyjs::hide(id="selyvar")
-shinyjs::hide(id="selzvar")
-shinyjs::hide(id="seltimevar")
-shinyjs::show(id="responsevar")
-shinyjs::hide(id="AddPoints")
-shinyjs::hide(id="animate")
-shinyjs::hide(id="animateby")
-shinyjs::show(id="numBins")
-shinyjs::hide(id="AddLine")
-shinyjs::hide(id="AddSmooth")
-shinyjs::hide(id="DiscrXaxis")
-shinyjs::hide(id="UseCounts")
+widgets <- c("selPrmCode","groupbox","groupbyvar","responsevar","numBins")
+
+# show all the widgets using an anonymous function
+map(widgets, function(x) shinyjs::show(x))
+
+dfsub <- NULL  # assign dfsub in function environment
 
 chr <- sort(names(df()[ , which(sapply(df(),is.character))])) # all chr
 fac <- sort(names(df()[ , which(sapply(df(),is.factor   ))])) # all factors
 num <- sort(names(df()[ , which(sapply(df(),is.numeric  ))])) # all num
 
-# splitbyvar is loaded with all the character/factor columns
-updateSelectInput(session = session, inputId = "splitbyvar", choices = c(" ",sort(c(chr,fac))), selected = " ")
+# groupbyvar is loaded with all the character/factor columns
+updateSelectInput(session = session, inputId = "groupbyvar", choices = c(" ",sort(c(chr,fac))), selected = " ")
 
 # responsevar is loaded with all the numeric columns
 updateSelectInput(session = session, inputId = "responsevar", choices = c(" ",num), selected = " ")
 
 # set checkbox to TRUE
-updateCheckboxInput(session = session, inputId = "splitbox", value = TRUE)
+updateCheckboxInput(session = session, inputId = "groupbox", value = TRUE)
 
 bins <- reactive({
   input$numBins
@@ -42,39 +32,45 @@ observeEvent(input$selPrmCode, {
   req(input$selPrmCode != " ") 
   
   # subset data based on Parameter Code selection
-  dfsub <- filter(df(),PARAMCD == input$selPrmCode)
-  
+  dfsub <<- filter(df(),PARAMCD == input$selPrmCode) # superassignment operator
+
+}, ignoreInit = FALSE) # observeEvent(input$selPrmCode
 
 output$PlotlyOut <- renderPlotly({
   
   req(input$responsevar != " ")
   
-  y_var <- as.name(input$responsevar)
+  laby <- sjlabelled::get_label(dfsub[[input$responsevar]])
   
-  if(input$splitbox == TRUE) {
+  if(input$groupbox == TRUE) {
     
-    req(input$splitbyvar != " ")
-    
-    x_var <- as.name(input$splitbyvar)
+    req(input$groupbyvar != " ")
+
+    # set def.value to use name if the variable has no label attribute
+    labz <- sjlabelled::get_label(dfsub[[input$groupbyvar]], def.value = unique(input$groupbyvar))
     
     # correction for overplotting
-    dfsub <- fnoverplt(dfsub,input$splitbyvar)
+    dfsub <- fnoverplt(dfsub, input$groupbyvar)
 
-    ggtitle <- reactive({ paste("Distribution of",input$responsevar,"Grouped by",input$splitbyvar,"for PARAMCD:",unique(dfsub$PARAMCD)) })
+    # print(paste("N of rows",nrow(dfsub)))
+    # remove missing groups from plot
+    dfsub <- filter(dfsub, !is.na(!!sym(input$groupbyvar))) 
+    # print(paste("N of rows",nrow(dfsub)))
     
-    p <- ggplot(dfsub,aes(x = !!y_var, fill = !!x_var)) +
-      labs(x = input$responsevar, y = "Count", fill = input$splitbyvar, title = ggtitle() )
+    ggtitle <- reactive({ paste("Distribution of",laby,"Grouped by",labz,"for",unique(dfsub$PARAM)) })
+    
+    p <- ggplot(dfsub,aes(x = !!sym(input$responsevar), fill = !!sym(input$groupbyvar))) +
+      labs(x = laby, y = "Count", fill = labz, title = ggtitle() )
     
   } else {
     
-    ggtitle <- reactive({ paste("Distribution of",input$responsevar,"for PARAMCD:",unique(dfsub$PARAMCD)) })
+    ggtitle <- reactive({ paste("Distribution of",laby,"for",unique(dfsub$PARAM)) })
     
-    p <- ggplot(dfsub, aes(x = !!y_var )) +
+    p <- ggplot(dfsub, aes(x = !!sym(input$responsevar) )) +
       labs(y = "Count", title = ggtitle() )
     
   }
-  
-  
+
   p <- p +
     geom_histogram(bins = bins(), position = "stack", na.rm = TRUE) +
     scale_fill_discrete() 
@@ -87,18 +83,16 @@ output$DataTable <- DT::renderDataTable({
   
   req(input$responsevar != " ")
   
-  if(input$splitbox == TRUE) {
-    req(input$splitbyvar != " ")  
+  if(input$groupbox == TRUE) {
+    req(input$groupbyvar != " ")  
     
     # correction for overplotting
-    dfsub <- fnoverplt(dfsub,input$splitbyvar)
+    # dfsub <- fnoverplt(dfsub,input$groupbyvar)
     
   }  
-  tableout <- fnsummtab(dfsub, input$splitbox, input$splitbyvar, input$responsevar)
+  tableout <- fnsummtab(dfsub, input$groupbox, input$groupbyvar, input$responsevar)
   DT::datatable(tableout, options = list(dom = 'ftp', pageLength = 20))
   
 })
-
-}, ignoreInit = FALSE) # observeEvent(input$selPrmCode
 
 }
