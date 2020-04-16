@@ -1,41 +1,38 @@
 # scatterplot function -- rkrajcik
 # parameters:
-#    data = data frame, splitby = {T|F}, splitbyvar = var to group on, selxvar = x-axis, selyvar = y-axis
+#    data = data frame, groupbox = {T|F}, groupvar = var to group on, selxvar = x-axis, selyvar = y-axis
 #    returns: p for ggplotly
-fnscatter <- function(data, splitby, splitbyvar, selxvar, selyvar) {
-  
-  x_var <- as.name(selxvar)
-  y_var <- as.name(selyvar)
+fnscatter <- function(data, groupbox, groupvar, selxvar, selyvar) {
   
   # correction for overplotting
-  data <- fnoverplt(data,selxvar)
-  
-  if(splitby == TRUE) {
-    req(splitbyvar != " ")
+  # message(paste("fnoverplot nrows before",nrow(data)))
+  # data <- fnoverplt(data,groupvar)
+  # message(paste("fnoverplot nrows after ",nrow(data)))
+
+  if(groupbox == TRUE) {
+    req(groupvar != " ")
     
-    
-    z_var <- as.name(splitbyvar)
-    
+    # remove missing groups from plot
+    # print("in scatterplot")
+    # print(paste("N of rows",nrow(data)))
+    # remove missing groups from plot
+    data <- filter(data, !is.na(!!sym(groupvar))) 
+    # print(paste("N of rows",nrow(data)))
+
     p <- ggplot(data,na.rm = TRUE,
-                aes(x = !!x_var, y = !!y_var, color = !!z_var, shape = !!z_var)) +
-      labs(x = selxvar, y = selyvar)
-    
-    if (substr(splitbyvar,1,3) %in% c("ARM","TRT")) {
-      # add shapes for ARM/TRT group
-      p <- p + scale_shape_manual(values = c(0, 1, 2, 5, 6, 7, 9, 10, 11, 12))
-    }
+                aes(x = !!sym(selxvar), y = !!sym(selyvar), color = !!sym(groupvar))) 
     
     if ("USUBJID" %in% colnames(data)) {
     p <- p + 
         suppressWarnings(geom_point(position = 'identity', na.rm = TRUE,
         aes(text = paste0(USUBJID,
-                  "<br>",splitbyvar,": ",get(splitbyvar),
+                  "<br>",groupvar,": ",get(groupvar),
                   "<br>",selxvar,": ",get(selxvar),
                   "<br>",selyvar,": ",get(selyvar)))))
     } else {
       p <- p + 
          suppressWarnings(geom_point(position = 'identity', na.rm = TRUE,
-         aes(text = paste0(splitbyvar, ": ",get(splitbyvar),
+         aes(text = paste0(groupvar, ": ",get(groupvar),
                    "<br>",selxvar,": ",get(selxvar),
                    "<br>",selyvar,": ",get(selyvar)))))
     }
@@ -43,26 +40,22 @@ fnscatter <- function(data, splitby, splitbyvar, selxvar, selyvar) {
     
   } else {
     p <- ggplot(data,na.rm = TRUE,
-                aes(x = !!x_var, y = !!y_var )) +
-      labs(x = selxvar, y = selyvar)
+                aes(x = !!sym(selxvar), y = !!sym(selyvar) )) 
     
     if ("USUBJID" %in% colnames(data)) {
       p <- p +
-        suppressWarnings(geom_point(position = 'identity', na.rm = TRUE,
+        suppressWarnings(geom_point(position = 'identity', alpha = 0.2, na.rm = TRUE,
         aes(text =  paste0(USUBJID,
                    "<br>",selxvar,": ",get(selxvar),
                    "<br>",selyvar,": ",get(selyvar)))))
     } else {
       p <- p +
-        suppressWarnings(geom_point(position = 'identity', na.rm = TRUE,
+        suppressWarnings(geom_point(position = 'identity', alpha = 0.2, na.rm = TRUE,
         aes(text = paste0(selxvar,": ",get(selxvar),
                    "<br>",selyvar,": ",get(selyvar)))))
     }
 
   }
-  
-  p <- p +
-    theme_classic()
   
   return(p)
   

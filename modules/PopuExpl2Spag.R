@@ -3,22 +3,12 @@ PopuExpl2Spag <- function(input, output, session, dataselected, df){
   ns <- session$ns
   
 # Spaghetti Plot
-shinyjs::show(id="selPrmCode")
-shinyjs::show(id="splitbox")
-shinyjs::show(id="splitbyvar")
-shinyjs::hide(id="selxvar")
-shinyjs::hide(id="selyvar")
-shinyjs::hide(id="selzvar")
-shinyjs::show(id="seltimevar")
-shinyjs::show(id="responsevar")
-shinyjs::hide(id="AddPoints")
-shinyjs::show(id="animate")
-shinyjs::show(id="animateby")
-shinyjs::hide(id="numBins")
-shinyjs::hide(id="AddLine")
-shinyjs::hide(id="AddSmooth")
-shinyjs::hide(id="DiscrXaxis")
-shinyjs::hide(id="UseCounts")
+widgets <- c("selPrmCode","groupbox","groupbyvar","seltimevar","responsevar","animate","animateby")
+
+# show all the widgets using an anonymous function
+map(widgets, function(x) shinyjs::show(x))
+
+dfsub <- NULL  # assign dfsub in function environment
 
 # find numeric and date variables
 num <- sort(names(df()[ , which(sapply(df(),is.numeric  ))])) # all num
@@ -30,20 +20,8 @@ seltime <- select(df(), ends_with("DY"), starts_with("AVIS"))
 
 updateSelectInput(
   session = session,
-  inputId = "splitbyvar",
-  choices = c(" ",sort(names(select(df(),starts_with("TRT0"),one_of("SUBJID","USUBJID"))))),
-  selected = " ")
-
-updateSelectInput(
-  session = session,
   inputId = "seltimevar",
-  choices = c(sort(names(seltime))),
-  selected = " ")
-
-updateSelectInput(
-  session = session,
-  inputId = "responsevar",
-  choices = c(num),
+  choices = sort(names(seltime)),
   selected = " ")
 
 updateSelectInput(
@@ -58,11 +36,22 @@ updateCheckboxInput(session = session, inputId = "animate", value = FALSE)
 # update subsequent inputselects based on PARAM code selection
 observeEvent(input$selPrmCode, {
   
-  req(input$selPrmCode != " ") 
-  
   # subset data based on Parameter Code selection
-  dfsub <- filter(df(),PARAMCD == input$selPrmCode)
+  dfsub <<- filter(df(),PARAMCD == input$selPrmCode) # superassignment operator
 
+  updateSelectInput(
+    session = session,
+    inputId = "groupbyvar",
+    choices = sort(names(select(dfsub,any_of(c("USUBJID","SUBJID"))))),
+    selected = "USUBJID")
+  
+  updateSelectInput(
+    session = session,
+    inputId = "responsevar",
+    choices = sort(names(select(dfsub,ends_with("BL"),any_of(c("AVAL","BASE","CHG"))))),
+    selected = " ")
+  
+}, ignoreInit = FALSE) # observeEvent(input$selPrmCode
 
 # set default animateby var whenever seltimevar changes
 observeEvent(input$seltimevar, {
@@ -71,20 +60,34 @@ observeEvent(input$seltimevar, {
 
 output$PlotlyOut <- renderPlotly({
   
-  req(dfsub$PARAMCD == input$selPrmCode)
   req(input$radio != "0")
   req(input$seltimevar  != " ") 
   req(input$responsevar != " ")
   
+  labx <- sjlabelled::get_label(dfsub[[input$seltimevar]])
+  laby <- sjlabelled::get_label(dfsub[[input$responsevar]])
+  
   # build subset of df() by randomly taking 25 subjects
-  if (input$splitbyvar %in% c("SUBJID","USUBJID")) {
+  if (input$groupbyvar %in% c("SUBJID","USUBJID")) {
     message("Spaghetti plot module subsetting data for 25 subjects")
     set.seed(12345)
     dfsub <- inner_join(dfsub, dplyr::sample_n(distinct(dfsub, USUBJID), 25), by = "USUBJID") 
   }
-
-  ggtitle <- reactive({ paste("Plot of",input$responsevar,"over",input$seltimevar,"for PARAMCD:",unique(dfsub$PARAMCD),"by",input$splitbyvar) })
   
+  if (input$groupbox == TRUE) {
+    
+    # remove missing groups from plot
+    dfsub <- filter(dfsub, !is.na(!!sym(input$groupbyvar))) 
+    
+    # set def.value to use name if the variable has no label attribute
+    labz <- sjlabelled::get_label(dfsub[[input$groupbyvar]], def.value = unique(input$groupbyvar))
+    
+    ggtitle <- reactive({ paste("Plot of",laby,"over",labx,"for",unique(dfsub$PARAM),"by",labz) })
+  } else {
+    ggtitle <- reactive({ paste("Plot of",laby,"over",labx,"for",unique(dfsub$PARAM) ) })
+  }
+
+
   if (input$animate == TRUE) {
     req(input$animateby != " ")
     
@@ -104,9 +107,9 @@ output$PlotlyOut <- renderPlotly({
       plot_ly(
         x = ~get(input$seltimevar), 
         y = ~get(input$responsevar), 
-        color = ~get(input$splitbyvar),  
+        color = ~get(input$groupbyvar),  
         frame = ~frame, 
-        text = ~get(input$splitbyvar), 
+        text = ~get(input$groupbyvar), 
         hoverinfo = "text",
         type = 'scatter',
         mode = 'lines+markers',
@@ -119,7 +122,7 @@ output$PlotlyOut <- renderPlotly({
       ) %>%
       layout(
         title = ggtitle(),
-        xaxis = list(title = input$seltimevar), yaxis = list(title = input$responsevar), 
+        xaxis = list(title = labx), yaxis = list(title = laby), 
         showlegend = TRUE,
         legend = list(orientation = "h",   # show entries horizontally
                       xanchor = "center",  # use left of legend as anchor
@@ -134,8 +137,8 @@ output$PlotlyOut <- renderPlotly({
   } else {
     
     p <- ggplot(dfsub,
-                aes(x = !!as.name(input$seltimevar), y = !!as.name(input$responsevar), 
-                    group = !!as.name(input$splitbyvar), fill = !!as.name(input$splitbyvar), color = !!as.name(input$splitbyvar) )) +
+                aes(x = !!sym(input$seltimevar), y = !!sym(input$responsevar), 
+                group = !!sym(input$groupbyvar), fill = !!sym(input$groupbyvar), color = !!sym(input$groupbyvar) )) +
       geom_line(na.rm = TRUE) 
     
     p <- p + suppressWarnings(geom_point(na.rm = TRUE, 
@@ -146,18 +149,19 @@ output$PlotlyOut <- renderPlotly({
                                                )
                                          ))) # aes, geom_point, suppressWarnings
     
-    # https://www.datanovia.com/en/blog/easy-way-to-expand-color-palettes-in-r/
-    nlevs <- nlevels(factor(dfsub[[input$splitbyvar]]))
-    mycolors <- colorRampPalette(brewer.pal(8, "Set2"))(nlevs)
     p <- p +
-      labs(x = input$seltimevar, y = input$responsevar, title =  ggtitle()) +
-      scale_fill_manual(values = mycolors) +
+      labs(x = labx, y = laby, title =  ggtitle()) +
       theme_classic()
     
+    # https://www.datanovia.com/en/blog/easy-way-to-expand-color-palettes-in-r/
+    nlevs <- nlevels(factor(dfsub[[input$groupbyvar]]))
+    mycolors <- colorRampPalette(brewer.pal(8, "Set2"))(nlevs)
+    p <- p + scale_fill_manual(values = mycolors) 
+
     ggplotly(p, tooltip = "text")  %>%
       # ref https://plot.ly/r/reference/#layout-legend  {x,y} range from -2 to 3
       layout( legend = list(orientation = "h",  xanchor = "center", yanchor = "bottom", x=0.5, y=-0.35),
-              title = paste("Plot of",input$responsevar,"over",input$seltimevar,"for PARAMCD:",unique(dfsub$PARAMCD),"grouped by",input$splitbyvar))
+      title = ggtitle())
     
   }
   
@@ -168,12 +172,8 @@ output$DataTable <- DT::renderDataTable({
   req(input$seltimevar  != " ") 
   req(input$responsevar != " ") 
   
-  x_var <- as.name(input$seltimevar)
-  y_var <- as.name(input$responsevar)
-  z_var <- as.name(input$splitbyvar)
-  
   tableout <- dfsub %>%
-    dplyr::select(!!z_var, !!x_var, !!y_var)
+    dplyr::select(!!sym(input$seltimevar), !!sym(input$seltimevar), !!sym(input$responsevar))
   
   DT::datatable(tableout, 
                 options = list(dom = 'tp', 
@@ -182,7 +182,5 @@ output$DataTable <- DT::renderDataTable({
                 colnames = c('Row' = 1, 'Group_var' = 2, 'Time Point (x)' = 3, 'Response (y)' = 4))
   
 })
-
-}, ignoreInit = FALSE) # observeEvent(input$selPrmCode
 
 }

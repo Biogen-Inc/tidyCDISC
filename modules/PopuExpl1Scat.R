@@ -3,77 +3,97 @@ PopuExpl1Scat <- function(input, output, session, df){
   ns <- session$ns
   
 # Scatterplot
-shinyjs::show(id="selPrmCode")
-shinyjs::show(id="splitbox")
-shinyjs::show(id="splitbyvar")
-shinyjs::show(id="selxvar")
-shinyjs::show(id="selyvar")
-shinyjs::hide(id="selzvar")
-shinyjs::hide(id="seltimevar")
-shinyjs::hide(id="responsevar")
-shinyjs::hide(id="AddPoints")
-shinyjs::hide(id="animate")
-shinyjs::hide(id="animateby")
-shinyjs::hide(id="numBins")
-shinyjs::show(id="AddLine")
-shinyjs::show(id="AddSmooth")
-shinyjs::show(id="DiscrXaxis")
-shinyjs::hide(id="UseCounts")
+widgets <- c("selPrmCode","groupbox","groupbyvar","selxvar","selyvar","AddLine","AddSmooth","DiscrXaxis")
 
-# remove any graphics instructions from the lists
+# show all the widgets using an anonymous function
+map(widgets, function(x) shinyjs::show(x))
+
+dfsub <- NULL
+
+# remove any graphics instructions from the lists.  This is unique to PopuExpl1Scat
 dfsel <- suppressWarnings(select(df(),-starts_with("geom_"),-starts_with("scale_"),-one_of("theme","ggtitle","xlabel","ylabel")))
 
-chr <- names(which(sapply(dfsel,is.character))) # all chr
-fac <- names(which(sapply(dfsel,is.factor   ))) # all factors
-num <- names(which(sapply(dfsel,is.numeric  ))) # all num
-
-# print(paste("factors:",paste(fac,collapse = ",")))
-# print(paste("numeric:",paste(num,collapse = ",")))
-# print(paste("character:",paste(chr,collapse = ",")))
-
-# splitbyvar is loaded with all the character/factor columns
-updateSelectInput(session = session, inputId = "splitbyvar", choices = c(" ",sort(c(chr,fac))), selected = " ")
-
-# selxvar is loaded with all the columns
-updateSelectInput(session = session, inputId = "selxvar", choices = c(" ",sort(names(dfsel))),  selected = " ")
-
-# selyvar is loaded with all the numeric columns
-updateSelectInput(session = session, inputId = "selyvar", choices = c(" ",sort(num)), selected = " ")
-
 # set checkbox to TRUE
-updateCheckboxInput(session = session, inputId = "splitbox", value = TRUE)
-
+updateCheckboxInput(session = session, inputId = "groupbox", value = TRUE)
 
 # update subsequent inputselects based on PARAM code selection
 observeEvent(input$selPrmCode, {
   
-  req(input$selPrmCode != " ") 
+  prmsel <- paste(input$selPrmCode,collapse = ",")
+
+  dfsub <<- filter(dfsel,PARAMCD %in% input$selPrmCode) # dfsel created from df() above
   
-  dfsub <- filter(df(),PARAMCD == input$selPrmCode)
+  # if two PARAMCDs selected, then we need to use pivot_wider()
+  if (str_detect(prmsel,",") == TRUE) {
+    dfsubw <- dfsub %>%
+      pivot_wider(id_cols=c(USUBJID, AVISIT), names_from = c(PARAMCD), values_from = c(AVAL, BASE, CHG), names_sep = "_") 
+    
+    dfmrg <- dfsub[, !names(dfsub) %in% c(names(dfsubw),"PARAM","PARAMCD","AVAL","BASE","CHG")]
+    # add USUBJID and AVISIT
+    dfmrg2 <- cbind(select(dfsub,USUBJID,AVISIT),dfmrg,stringsAsFactors = FALSE) %>%
+      distinct(USUBJID, AVISIT, .keep_all = TRUE)
+    
+    dfsub <<- left_join(dfsubw, dfmrg2, by = c("USUBJID","AVISIT")) %>%
+      mutate(PARAMCD = str_replace(prmsel,",","_")) %>%
+      arrange(USUBJID, AVISITN)
+  } 
   
+  chr <- names(which(sapply(dfsub,is.character))) # all chr
+  fac <- names(which(sapply(dfsub,is.factor   ))) # all factors
+  num <- names(which(sapply(dfsub,is.numeric  ))) # all num
+  
+  # groupbyvar is loaded with all the character/factor columns
+  updateSelectInput(session = session, inputId = "groupbyvar", choices = c(" ",sort(c(chr,fac))), selected = " ")
+  
+  # selxvar is loaded with all the columns
+  updateSelectInput(session = session, inputId = "selxvar", choices = c(" ",sort(names(dfsub))),  selected = " ")
+  
+  # selyvar is loaded with all the numeric columns
+  updateSelectInput(session = session, inputId = "selyvar", choices = c(" ",sort(num)), selected = " ")
+ 
+}, ignoreInit = FALSE) # observeEvent(input$selPrmCode
+
 output$PlotlyOut <- renderPlotly({
   
-  req(dfsub$PARAMCD == input$selPrmCode)
   req(input$radio != "0")
   req(input$selxvar != " ")
   req(input$selyvar != " ")
-  
-  # correction for overplotting is located in fnscatter
-  p <- fnscatter(data = dfsub, input$splitbox, input$splitbyvar, input$selxvar, input$selyvar)
+  req(input$selPrmCode != " ") 
 
-  # expand the color palette
-  nb.cols <- length(unique(dfsub[[input$splitbyvar]]))
-  mycolors <- colorRampPalette(brewer.pal(9, "Set1"))(nb.cols)
-  # use scale_fill_manual
-  p <- p + scale_fill_manual(values = mycolors)
+  xvar <- sym(input$selxvar)
+  yvar <- sym(input$selyvar)
+  
+  labx <- sjlabelled::get_label(dfsub[[input$selxvar]])
+  laby <- sjlabelled::get_label(dfsub[[input$selyvar]])
+
+  # If there are two PARAMCDs we prefix the label with the PARAMCD
+  if (str_detect(unique(dfsub$PARAMCD),"_") == TRUE) {
+    labx <- str_c(substr(xvar,str_locate(xvar,"_")[1]+1,str_length(xvar)),labx,sep=":")
+    laby <- str_c(substr(yvar,str_locate(yvar,"_")[1]+1,str_length(yvar)),laby,sep=":")
+  } else {
+    # just use the labels above
+    # labx <- str_c(unique(dfsub$PARAMCD),labx,sep=":")
+    # laby <- str_c(unique(dfsub$PARAMCD),laby,sep=":")
+  }
+
+  # correction for overplotting is located in fnscatter
+  p <- fnscatter(data = dfsub, input$groupbox, input$groupbyvar, input$selxvar, input$selyvar)
+
+  # minimal theme
+  p <- p + theme_minimal()
+  
+  # https://www.datanovia.com/en/blog/easy-way-to-expand-color-palettes-in-r/
+  nlevs <- nlevels(factor(dfsub[[input$groupbyvar]]))
+  mycolors <- colorRampPalette(brewer.pal(8, "Set2"))(nlevs)
+  p <- p + scale_fill_manual(values = mycolors) 
 
   # add geom_line if checked
   if (input$AddLine == TRUE) {
-    p <- p + geom_line()
+    p <- p + geom_smooth(method='lm',    se = FALSE, na.rm = TRUE)
   }
   # add geom_smooth if checked
   if (input$AddSmooth == TRUE) {
-    p <- p + geom_smooth(method="loess", se=FALSE)
+    p <- p + geom_smooth(method="loess", se = FALSE, na.rm = TRUE)
   }
   # Discrete x-axis
   if (input$DiscrXaxis == TRUE) {
@@ -84,72 +104,94 @@ output$PlotlyOut <- renderPlotly({
   if ("xlabel" %in% colnames(dfsub) && "ylabel" %in% colnames(dfsub) && "ggtitle" %in% colnames(dfsub)) {
     p <- p + labs(x = unique(dfsub$xlabel), y = unique(dfsub$ylabel), title = unique(dfsub$ggtitle))
   } else {
-  if (input$splitbox == TRUE) {
-    ggtitle <- reactive({ paste("Plot of",input$selyvar,"by",input$selxvar,"Grouped by",input$splitbyvar,"for PARAMCD:",unique(dfsub$PARAMCD)) })
+  if (input$groupbox == TRUE) {
+    
+    # set def.value to use name if the variable has no label attribute
+    labz <- sjlabelled::get_label(dfsub[[input$groupbyvar]], def.value = unique(input$groupbyvar))
+
+    if (str_detect(unique(dfsub$PARAMCD),"_") == TRUE) {
+      # use labels prefixed with PARAMCD
+      ggtitle <- reactive({ paste("Plot of",laby,"by",labx,"Grouped By",labz) })
+    } else {
+      # use labels followed by PARAM
+      ggtitle <- reactive({ paste("Plot of",laby,"by",labx,"Grouped By",labz,"for",unique(dfsub$PARAM)) })
+    }
   } else {
-    ggtitle <- reactive({ paste("Plot of",input$selyvar,"by",input$selxvar,"for PARAMCD:",unique(dfsub$PARAMCD)) })
+    ggtitle <- reactive({ paste("Plot of",laby,"by",labx) })
   }
-  p <- p + labs(title = ggtitle())
+  p <- p + labs(title = ggtitle(), x = labx, y = laby)
   }
 
   ggcmd <- c("geom_point","geom_line","geom_vline","geom_hline","geom_errorbar","geom_bar","geom_text","geom_text2","coord_flip","geom_pointrange","theme",
              "scale_shape","scale_x_cont","scale_y_cont","scale_x_discr","scale_y_discr","scale_y_log10","scale_x_log10")
   # any embedded graph instructions?
-  graphinst <- suppressWarnings(unique(select(dfsub, one_of(ggcmd))))
-  
-  graphinst <- unname(graphinst)
-  
+  graphinst <- select(dfsub, any_of(ggcmd))
+  # graphinst <- suppressWarnings(unique(select(dfsub, one_of(ggcmd))))
+
+  # print(paste("graphinst has length",length(graphinst)))
+  # 
   # display graph instructions for now
   if (length(graphinst) > 0) {
-    # for (i in 1:length(graphinst)) {
-    #   print(graphinst[i])
-    # }
+    graphinst <- unique(graphinst) %>% unlist(use.names = FALSE) # convert to unnamed vector
+    for (i in 1:length(graphinst)) {
+      print(graphinst[i])
+    }
      p <- p + sapply(graphinst, function(gr) {eval(parse(text = gr))})
   }
-  ggplotly(p, tooltip = "text") %>%
-    layout(legend = list(
-      orientation = "h", x = 0, y = 0   #bottom left
-      ))
+  
+  # workaround to remove "(" and "1)" from legend
+  # Now, the workaround:
+  # ------------------------------------------------------
+
+p1 <-  ggplotly(p, tooltip = "text") 
+
+  if(input$groupbox == TRUE) {
+    # Now, the workaround:
+    # ------------------------------------------------------
+    dfflt <- filter(dfsub,!is.na(!!sym(input$groupbyvar)))
+    p1Names <- unique(dfflt[[input$groupbyvar]]) # we need to know the "true" legend values
+    for (i in 1:length(p1$x$data)) { # this goes over all places where legend values are stored
+      n1 <- p1$x$data[[i]]$name # and this is how the value is stored in plotly
+      n2 <- " "
+      for (j in 1:length(p1Names)) {
+        if (grepl(x = n1, pattern = p1Names[j])) {n2 = p1Names[j]} # if the plotly legend name contains the original value, replace it with the original value
+      }
+      p1$x$data[[i]]$name <- n2 # now is the time for actual replacement
+      if (n2 == " ") {p1$x$data[[i]]$showlegend = FALSE}  # sometimes plotly adds to the legend values that we don't want, this is how to get rid of them, too
+    }
+  }
+  
+return(p1)
 
 })
 
 output$DataTable <- DT::renderDataTable({
   
-  req(dfsub$PARAMCD == input$selPrmCode)
   req(input$radio != "0")
   req(input$selxvar != " ")
   req(input$selyvar != " ")
   
-  x_var <- as.name(input$selxvar)
-  y_var <- as.name(input$selyvar)
-  
-  # correction for overplotting
-  dfsub <- fnoverplt(dfsub,input$selxvar)
-  
-  if(input$splitbox == TRUE) {
-    req(input$splitbyvar != " ")
+  if(input$groupbox == TRUE) {
+    req(input$groupbyvar != " ")
     
-    z_var <- as.name(input$splitbyvar)
     if ("USUBJID" %in% colnames(dfsub)) {
       tableout <- dfsub %>%
-        dplyr::select(USUBJID, !!z_var, !!x_var, !!y_var) 
+        dplyr::select(USUBJID, !!sym(input$groupbyvar), !!sym(input$selxvar), !!sym(input$selyvar)) 
     } else {
     tableout <- dfsub %>%
-      dplyr::select(!!z_var, !!x_var, !!y_var)
+      dplyr::select(!!sym(input$groupbyvar), !!sym(input$selxvar), !!sym(input$selyvar))
     }
   } else {
     if ("USUBJID" %in% colnames(dfsub)) {
       tableout <- dfsub %>%
-        dplyr::select(USUBJID, !!x_var, !!y_var)
+        dplyr::select(USUBJID, !!sym(input$selxvar), !!sym(input$selyvar))
     } else {
     tableout <- dfsub %>%
-      dplyr::select(!!x_var, !!y_var)
+      dplyr::select(!!sym(input$selxvar), !!sym(input$selyvar))
     }
   }
   DT::datatable(tableout, options = list(dom = 'ftp', pageLength = 10))
   
 })
-
-}, ignoreInit = FALSE) # observeEvent(input$selPrmCode
 
 }
