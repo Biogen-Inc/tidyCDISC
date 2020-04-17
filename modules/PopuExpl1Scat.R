@@ -9,6 +9,7 @@ widgets <- c("selPrmCode","groupbox","groupbyvar","selxvar","selyvar","AddLine",
 map(widgets, function(x) shinyjs::show(x))
 
 dfsub <- NULL
+makeReactiveBinding("dfsub")
 
 # remove any graphics instructions from the lists.  This is unique to PopuExpl1Scat
 dfsel <- suppressWarnings(select(df(),-starts_with("geom_"),-starts_with("scale_"),-one_of("theme","ggtitle","xlabel","ylabel")))
@@ -49,8 +50,14 @@ observeEvent(input$selPrmCode, {
   updateSelectInput(session = session, inputId = "selxvar", choices = c(" ",sort(names(dfsub))),  selected = " ")
   
   # selyvar is loaded with all the numeric columns
-  updateSelectInput(session = session, inputId = "selyvar", choices = c(" ",sort(num)), selected = " ")
- 
+  # updateSelectInput(session = session, inputId = "selyvar", choices = c(" ",sort(num)), selected = " ")
+  updateSelectInput(session = session, inputId = "selyvar", choices = c(" ",sort(names(dfsub))), selected = " ")
+  
+  # uncheck these buttons:  "AddLine","AddSmooth","DiscrXaxis"
+  updateCheckboxInput(session = session, inputId = "AddLine", value = FALSE)
+  updateCheckboxInput(session = session, inputId = "AddSmooth", value = FALSE)
+  updateCheckboxInput(session = session, inputId = "DiscrXaxis", value = FALSE)
+
 }, ignoreInit = FALSE) # observeEvent(input$selPrmCode
 
 output$PlotlyOut <- renderPlotly({
@@ -117,7 +124,14 @@ output$PlotlyOut <- renderPlotly({
       ggtitle <- reactive({ paste("Plot of",laby,"by",labx,"Grouped By",labz,"for",unique(dfsub$PARAM)) })
     }
   } else {
-    ggtitle <- reactive({ paste("Plot of",laby,"by",labx) })
+
+    if (str_detect(unique(dfsub$PARAMCD),"_") == TRUE) {
+      # use labels prefixed with PARAMCD
+      ggtitle <- reactive({ paste("Plot of",laby,"by",labx) })
+    } else {
+      # use labels followed by PARAM
+      ggtitle <- reactive({ paste("Plot of",laby,"by",labx,"for",unique(dfsub$PARAM)) })
+    }
   }
   p <- p + labs(title = ggtitle(), x = labx, y = laby)
   }
