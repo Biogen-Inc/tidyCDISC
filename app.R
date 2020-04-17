@@ -5,7 +5,6 @@ library(tidyverse)
 library(tippy)
 library(rvest)
 # devtools::install_github("MayaGans/IDEAFilter") # don't use for production
-# install.packages("drat")
 # drat::addRepo("aaron-clark") # add a repo where the source file (tar.gz) file is hosted on gitHub
 # getOption("repos") # check if the repo was added
 # install.packages("IDEAFilter")
@@ -29,6 +28,11 @@ library(timevis)
 library(glue)
 library(sjlabelled) 
 
+###############################################################
+# make sure this repo exists before writing to manifest file!
+###############################################################
+# drat::addRepo("aaron-clark")
+# getOption("repos")
 # devtools::install_github("rstudio/rsconnect")
 # rsconnect::writeManifest()
 
