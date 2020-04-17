@@ -272,12 +272,15 @@ IndvExpl3CheckGroup <- function(input, output, session, datafile, loaded_adams, 
           tab <- uni_rec %>% select(-END, -tab_st, -tab_en, -DOMAIN)
         }
         
-        output$eventsTable <- DT::renderDataTable({
+        output$eventsTable <- DT::renderDataTable(server = FALSE, {  # This allows for downloading entire data set
           DT::datatable(tab
                         , colnames = c("Type of Event", date_cols, "Event Description")
-                        , options = list(  dom = 'lftpr'
-                                           , pageLength = 15
-                                           , lengthMenu = list(c(15, 50, 100, -1),c('15', '50', '100', "All"))
+                        , extensions = "Buttons"
+                        , options = list(  
+                             dom = 'Blftpr'
+                           , pageLength = 15
+                           , lengthMenu = list(c(15, 50, 100, -1),c('15', '50', '100', "All"))
+                           , buttons = c("excel")
                         )
                         , style="default"
                         # , class="compact"
