@@ -280,7 +280,10 @@ IndvExpl3CheckGroup <- function(input, output, session, datafile, loaded_adams, 
                              dom = 'Blftpr'
                            , pageLength = 15
                            , lengthMenu = list(c(15, 50, 100, -1),c('15', '50', '100', "All"))
-                           , buttons = c("excel")
+                           , buttons = list(list(
+                             extend = "excel", 
+                             filename = paste("PatEvents", usubjid(), "dwnd",str_replace_all(str_replace(Sys.time(), " ", "_"),":", "-"), sep = "_")
+                           ))
                         )
                         , style="default"
                         # , class="compact"

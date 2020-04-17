@@ -244,7 +244,7 @@ observeEvent(list(input$plot_adam), { # ,input$bds_remove_filter # add this back
      }) # renderPlotly
        
        
-     output$DataTable <- DT::renderDataTable({
+     output$DataTable <- DT::renderDataTable(server = FALSE, { # ALLOWS downloading all rows, and not just displayed rows
        
        # make sure a LabCode has been selected
        req(input$plot_param != " ")
@@ -266,8 +266,14 @@ observeEvent(list(input$plot_adam), { # ,input$bds_remove_filter # add this back
        if (nrow(lb_tab) > 0) {
          DT::datatable(lb_tab,
                        style="default", 
+                       extensions = "Buttons",
                        # class="compact", 
-                       options = list(dom = 'ftp', pageLength = 20))
+                       options = list(dom = 'Bftp', pageLength = 20,
+                                      buttons = list(list(
+                                        extend = "excel", 
+                                        filename = paste("Pat", usubjid(), "Param", input$plot_param, "dwnd",str_replace_all(str_replace(Sys.time(), " ", "_"),":", "-"), sep = "_")
+                                      ))
+                      ))
        }
        
      }) #renderDataTable
