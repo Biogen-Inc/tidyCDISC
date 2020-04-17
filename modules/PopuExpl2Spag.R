@@ -9,6 +9,7 @@ widgets <- c("selPrmCode","groupbox","groupbyvar","seltimevar","responsevar","an
 map(widgets, function(x) shinyjs::show(x))
 
 dfsub <- NULL  # assign dfsub in function environment
+makeReactiveBinding("dfsub")
 
 # find numeric and date variables
 num <- sort(names(df()[ , which(sapply(df(),is.numeric  ))])) # all num
@@ -26,6 +27,18 @@ updateSelectInput(
 
 updateSelectInput(
   session = session,
+  inputId = "groupbyvar",
+  choices = c("USUBJID","SUBJID"),
+  selected = "USUBJID")
+
+updateSelectInput(
+  session = session,
+  inputId = "responsevar",
+  choices = sort(names(select(df(),ends_with("BL"),any_of(c("AVAL","BASE","CHG"))))),
+  selected = " ")
+
+updateSelectInput(
+  session = session,
   inputId = "animateby",
   choices = c(sort(c(num,dat))),
   selected = " ")
@@ -39,18 +52,6 @@ observeEvent(input$selPrmCode, {
   # subset data based on Parameter Code selection
   dfsub <<- filter(df(),PARAMCD == input$selPrmCode) # superassignment operator
 
-  updateSelectInput(
-    session = session,
-    inputId = "groupbyvar",
-    choices = sort(names(select(dfsub,any_of(c("USUBJID","SUBJID"))))),
-    selected = "USUBJID")
-  
-  updateSelectInput(
-    session = session,
-    inputId = "responsevar",
-    choices = sort(names(select(dfsub,ends_with("BL"),any_of(c("AVAL","BASE","CHG"))))),
-    selected = " ")
-  
 }, ignoreInit = FALSE) # observeEvent(input$selPrmCode
 
 # set default animateby var whenever seltimevar changes
@@ -71,7 +72,10 @@ output$PlotlyOut <- renderPlotly({
   if (input$groupbyvar %in% c("SUBJID","USUBJID")) {
     message("Spaghetti plot module subsetting data for 25 subjects")
     set.seed(12345)
-    dfsub <- inner_join(dfsub, dplyr::sample_n(distinct(dfsub, USUBJID), 25), by = "USUBJID") 
+    # fix for data frames with less than 25 subjects
+    subjs <- distinct(dfsub, USUBJID)
+    dfsub <<- semi_join(dfsub, dplyr::sample_n(subjs,    min(nrow(subjs),25), by = "USUBJID"))
+    # dfsub <- inner_join(dfsub, dplyr::sample_n(distinct(dfsub, USUBJID), 25), by = "USUBJID") 
   }
   
   if (input$groupbox == TRUE) {
@@ -173,7 +177,7 @@ output$DataTable <- DT::renderDataTable({
   req(input$responsevar != " ") 
   
   tableout <- dfsub %>%
-    dplyr::select(!!sym(input$seltimevar), !!sym(input$seltimevar), !!sym(input$responsevar))
+    dplyr::select(!!sym(input$groupbyvar), !!sym(input$seltimevar), !!sym(input$responsevar))
   
   DT::datatable(tableout, 
                 options = list(dom = 'tp', 
