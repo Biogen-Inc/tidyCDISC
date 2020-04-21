@@ -116,7 +116,8 @@ PopuExplor <- function(input, output, session, datafile){
       filter(SAFFL == "Y") %>% # safety population
       filter(!is.na(AVISITN)) %>%
       select("USUBJID","AVISIT","AVISITN",ends_with("DY"),"PARAMCD",
-             one_of("PARAM","AVAL","BASE","CHG","data_from")) %>%
+             any_of(c("PARAM","AVAL","BASE","CHG","data_from"))) %>%
+             # one_of("PARAM","AVAL","BASE","CHG","data_from")) %>%
       distinct(USUBJID, PARAMCD, AVISIT, .keep_all = TRUE) %>%
       mutate(AVISITN = as.integer(ceiling(AVISITN))) %>%
       arrange(USUBJID, PARAMCD, AVISITN) 
@@ -127,8 +128,10 @@ PopuExplor <- function(input, output, session, datafile){
       # take the names that are unique to ADSL
       ADSL.1 <- ADSL[, !names(ADSL) %in% names(all_USUBJ)]
       # add USUBJID
-      ADSL.2 <- cbind(select(ADSL,USUBJID),ADSL.1,stringsAsFactors = FALSE)
-
+      # ADSL.2 <- cbind(select(ADSL,USUBJID),ADSL.1,stringsAsFactors = FALSE)
+      ADSL.2 <- bind_cols(select(ADSL,USUBJID),ADSL.1)
+      # remove Warning: Column `USUBJID` has different attributes on LHS and RHS of join
+      ADSL.2 <- zap_label(ADSL.2)  
       all_data <- left_join(all_USUBJ, ADSL.2, by = "USUBJID")
       rm(ADSL.1,ADSL.2)
 
@@ -254,7 +257,7 @@ PopuExplor <- function(input, output, session, datafile){
     
     widgets <- c("selPrmCode","groupbox","groupbyvar","selxvar","selyvar","selzvar","seltimevar",
                  "responsevar","AddPoints","animate","animateby","numBins","AddLine","AddSmooth",
-                 "DiscrXaxis","fillType","selectvars","runCorr")
+                 "DiscrXaxis","fillType","selectvars","runCorr","heatMapFill")
     
     # hide all the widgets using an anonymous function
     map(widgets, function(x) shinyjs::hide(x))

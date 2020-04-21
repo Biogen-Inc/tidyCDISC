@@ -3,13 +3,17 @@ PopuExpl4Heat <- function(input, output, session, df){
   ns <- session$ns
   
 # Heatmap
-widgets <- c("selPrmCode","selxvar","selyvar","selzvar","fillType")
+widgets <- c("selPrmCode","selxvar","selyvar","selzvar","fillType","heatMapFill")
 
 # show all the widgets we need here using an anonymous function
 map(widgets, function(x) shinyjs::show(x))
 
 dfsub <- NULL  # assign dfsub in function environment
 
+# function mode
+mode <- function(codes){
+  which.max(tabulate(codes))
+}
 # num <- sort(names(df()[ , which(sapply(df(),is.numeric  ))])) # all num
 
 updateSelectInput(
@@ -64,6 +68,15 @@ observeEvent(input$fillType, {
         shinyjs::hide(id="selxvar")
         shinyjs::hide(id="selyvar")
         shinyjs::hide(id="selzvar")
+        shinyjs::hide(id="heatMapFill")
+
+      } else if (input$fillType == "Use Counts") {
+        shinyjs::hide(id="selectvars")
+        shinyjs::hide(id="runCorr")
+        shinyjs::show(id="selxvar")
+        shinyjs::show(id="selyvar")
+        shinyjs::hide(id="selzvar")
+        shinyjs::hide(id="heatMapFill")
 
       } else {
         shinyjs::hide(id="selectvars")
@@ -71,7 +84,7 @@ observeEvent(input$fillType, {
         shinyjs::show(id="selxvar")
         shinyjs::show(id="selyvar")
         shinyjs::show(id="selzvar")
-        
+        shinyjs::show(id="heatMapFill")
       }
       
 }) # input$fillType
@@ -90,7 +103,7 @@ output$PlotlyOut <- renderPlotly({
   laby <- sjlabelled::get_label(dfsub[[input$selyvar]], def.value = unique(input$selyvar))
   
   # remove missing values from plot
-  # dfsub <- filter(dfsub, !is.na(!!sym(input$selxvar)), !is.na(!!sym(input$selyvar)) ) 
+  dfsub <- filter(dfsub, !is.na(!!sym(input$selxvar)), !is.na(!!sym(input$selyvar)) ) 
 
   # correction for overplotting
   # dfsub <- fnoverplt(dfsub,input$selxvar)
@@ -107,7 +120,7 @@ output$PlotlyOut <- renderPlotly({
       geom_bin2d(na.rm = TRUE) +
       theme_minimal() +  # from https://www.rapidtables.com/web/color/RGB_Color.html
       # this scale goes from "white smoke" to black
-      scale_fill_gradient(name = "Counts", low = "#F5F5F5", high = "#000000", na.value="white") +
+      scale_fill_gradient(name = "Count", low = "#F5F5F5", high = "#000000", na.value="white") +
       # scale_fill_gradient(low="lightyellow",high="darkred",na.value="white") +
       labs(  x = labx, y = laby, title = ggtitle()) 
     
@@ -124,24 +137,60 @@ output$PlotlyOut <- renderPlotly({
     # set def.value to use name if the variable has no label attribute
     labz <- sjlabelled::get_label(dfsub[[input$selzvar]], def.value = unique(input$selzvar))
 
+    # remove missing values from plot
+    dfsub <- filter(dfsub, !is.na(!!sym(input$selxvar)), !is.na(!!sym(input$selyvar)) ) 
     # remove missing groups from plot
     dfsub <- filter(dfsub, !is.na(!!sym(input$selzvar))) 
 
     ggtitle <- reactive(glue::glue("Heatmap of {labz} - {laby} by {labx}, for {unique(dfsub$PARAM)}"))
 
-    p <- ggplot(dfsub, 
-                aes(x = !!sym(input$selxvar), y = !!sym(input$selyvar) ))
-    p <- p +
-    geom_tile(aes(fill = !!sym(input$selzvar))) +
-    scale_fill_gradient(name = input$selzvar, low = "#FFFFFF", high = "#012345") +
-    theme_minimal() 
-    # scale_fill_viridis_c(option = "D", direction = -1) 
+    # https://stackoverflow.com/questions/2547402/is-there-a-built-in-function-for-finding-the-mode
+    mode <- function(x, na.rm = FALSE) {
+      if(na.rm){
+        x = x[!is.na(x)]
+      }
+      ux <- unique(x)
+      return(ux[which.max(tabulate(match(x, ux)))])
+    }
     
-    # p <- p + 
-    # labs(  x = labx, y = laby, fill = labz, title = ggtitle()) 
+    dfsum <- dfsub %>%
+      group_by(!!sym(input$selxvar), !!sym(input$selyvar)) %>%
+      summarise(Count = n(),
+                Min  = round(min(!!sym(input$selzvar))),
+                Mode = round(mode(!!sym(input$selzvar))),
+                Mean = round(mean(!!sym(input$selzvar))),
+                Median = round(median(!!sym(input$selzvar))),
+                Max  = round(max(!!sym(input$selzvar)))
+                ) %>%
+      ungroup()
+    
+    
+    fillvar <- reactive({ input$heatMapFill })
+    print("in heatmap")
+    print(fillvar())
+
+    # p <- ggplot(dfsub, 
+    #             aes(!!sym(input$selxvar), y = !!sym(input$selyvar), z = !!sym(input$selzvar))) +
+    #             stat_summary_2d(fun = fillvar(), na.rm = TRUE) 
+    p <- ggplot(dfsum,
+                aes(x = !!sym(input$selxvar), y = !!sym(input$selyvar), fill = .data[[fillvar()]] )) +
+                geom_tile()
+    
+    labz <- paste(fillvar(),labz)
+    # labs(fill = glue::glue( {rlang::quo_text(FUN)},"\nHorsepower"))
+
+    p <- p +
+    theme_minimal() +  # from https://www.rapidtables.com/web/color/RGB_Color.html
+    # this scale goes from "white smoke" to black
+    scale_fill_gradient(name = "Count", low = "#F5F5F5", high = "#000000", na.value="white") 
+
+    p <- p +
+    labs(  x = labx, y = laby, fill = labz, title = ggtitle()) 
     
     ggplotly(p)
+    
   } else {
+    # correlation matrix
     
     req(input$selectvars != "")
     req(input$runCorr > 0)
@@ -197,33 +246,34 @@ output$DataTable <- DT::renderDataTable({
   req(input$selPrmCode != " ")
   
   # correction for overplotting
-  # dfsub <- fnoverplt(dfsub,input$selxvar)
+  # dfsub <- fnoverplt(dfsub,input$selxvar, input$selyvar)
   
   if (input$fillType == "Use Counts") {
 
-    dfcnts <- dfsub %>%
+  tableout <- dfsub %>%
       group_by(PARAMCD, !!sym(input$selxvar), !!sym(input$selyvar) ) %>%
-      summarise(Counts = n()) %>%
+      summarise(Count = n() ) %>%
       ungroup()
     
-    dfsub <- distinct(dfsub,PARAMCD, !!sym(input$selxvar), !!sym(input$selyvar),.keep_all = TRUE) %>%
-      arrange(!!sym(input$selxvar), !!sym(input$selyvar))
-    
-    dfsub <- left_join(dfsub,dfcnts)
-    
-    tableout <- dfsub %>%
-      dplyr::filter(!is.na(!!sym(input$selxvar))) %>%
-      dplyr::select(PARAMCD, !!sym(input$selxvar), !!sym(input$selyvar), Counts)
-    
-    DT::datatable(tableout, options = list(dom = 'ftp', pageLength = 10), colnames =  c('PARAMCD' = 2))
+  DT::datatable(tableout, options = list(dom = 'ftp', pageLength = 10), colnames =  c('PARAMCD' = 2))
     
   } else if (input$fillType == "Fill Variable") {
     
   req(input$selzvar != " ")
     
   tableout <- dfsub %>%
-  dplyr::filter(!is.na(!!sym(input$selxvar))) %>%
-  dplyr::select(PARAMCD, !!sym(input$selxvar), !!sym(input$selyvar), !!sym(input$selzvar))
+  group_by(PARAMCD, !!sym(input$selxvar), !!sym(input$selyvar) ) %>%
+  summarise(Count = n(),
+            Mode = mode(!!sym(input$selzvar)),
+            Min = min(!!sym(input$selzvar),na.rm = TRUE), 
+            Q1 = quantile(!!sym(input$selzvar), 0.25, na.rm = TRUE, type=1), 
+            Median = median(!!sym(input$selzvar), na.rm = TRUE, type=1), 
+            Mean = round(mean(!!sym(input$selzvar),na.rm = TRUE),2),
+            SD   = round(sd(!!sym(input$selzvar),na.rm = TRUE),3),
+            Q3 = quantile(!!sym(input$selzvar), 0.75, na.rm = TRUE, type=1), 
+            Max = max(!!sym(input$selzvar), na.rm = TRUE) ) %>%
+  ungroup()
+  
   
   DT::datatable(tableout, options = list(dom = 'ftp', pageLength = 10), colnames =  c('PARAMCD' = 2))
   
