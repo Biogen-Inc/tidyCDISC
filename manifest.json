@@ -4349,40 +4349,40 @@
       "checksum": "1ccec44d081a922d99bc26e336298ef3"
     },
     "global.R": {
-      "checksum": "d9fd82cb1ee59144e4297d0ab21fdbb4"
+      "checksum": "fe0a83505af0fbabd3b57be48aadd9ac"
     },
     "kable.log": {
-      "checksum": "5ba4f8cad9c7eee5c94382b92c356b48"
+      "checksum": "ae9d120c740e1b64c5e19dfab7180f36"
     },
     "Kable.Rmd": {
-      "checksum": "115409cec1a5a5a6965cdee44c5de2d5"
+      "checksum": "83db305724f3c012252ce426e7914e64"
     },
     "kable.tex": {
-      "checksum": "d576599ac3cf050ced6f1068c25fe46f"
+      "checksum": "347f19dfd9c39734210181ce4a373aca"
     },
     "modules/dataUpload.R": {
-      "checksum": "761306381fec78dfcf7330cfec1691ab"
+      "checksum": "ee49171171a257cbdc9537cc92d7e886"
     },
     "modules/dataUploadUI.R": {
-      "checksum": "1662a46921d834204911b19f2c6e8944"
+      "checksum": "7b162487e5196ddd04e489e712ddcac8"
     },
     "modules/IndvExpl1Initial.R": {
-      "checksum": "06b3badb7bcb7fe515fd55aa1c73a9ab"
+      "checksum": "db8c8841a17e04a9c88ca012cd7fc09e"
     },
     "modules/IndvExpl2SelPatno.R": {
-      "checksum": "8d43afff82e2c288336c73d39b76b3ff"
+      "checksum": "b1abcfbd84d349bd0c7dbf7ee4e8dabb"
     },
     "modules/IndvExpl3CheckGroup.R": {
-      "checksum": "401dfa255f9eb613c7b5e6163f26cf5b"
+      "checksum": "b99334f8c7611cadbfa05fcf20475aec"
     },
     "modules/IndvExpl4ChartPlotly.R": {
-      "checksum": "13e2fae3c0efccbd52305f27099dca6b"
+      "checksum": "ade31817a12cc575e26951685d1dfc97"
     },
     "modules/IndvExplorUI.R": {
-      "checksum": "e70894fe22ed4290b03c3f672535c920"
+      "checksum": "ebb569a2cfb663adc8faf0df86cbf3b4"
     },
     "modules/PopuExpl1Scat.R": {
-      "checksum": "0034e3150dfef62d6a75a4abc92b9555"
+      "checksum": "3310b616315e9c21d12d3695ea8811fd"
     },
     "modules/PopuExpl2Spag.R": {
       "checksum": "64381c52dbe8933229fd947b7ce7b31d"
@@ -4409,10 +4409,10 @@
       "checksum": "4be3267b7fbc11a3788fc7a088381f79"
     },
     "modules/tableGenerator.R": {
-      "checksum": "cce8a11e722615c6e15318f5d279692f"
+      "checksum": "0689d94018df6061e72dd5e63a4e8cbf"
     },
     "modules/tableGeneratorUI.R": {
-      "checksum": "d9bfcafd8b1eda6291ffbaf6402c954d"
+      "checksum": "31cd63544d376f491cd867a60697e390"
     },
     "packrat/desc/askpass": {
       "checksum": "b8bbbb722a87f9fc689cd53be11047d5"
@@ -4838,28 +4838,28 @@
       "checksum": "cd0092320c81d561a2b976734c90027d"
     },
     "R/allowed_operators.R": {
-      "checksum": "d34622d0f341e46e2603fd762a0013e0"
+      "checksum": "c2130178775fc0a80237b19db6cfc7b8"
     },
     "R/blocks.R": {
-      "checksum": "9ba9b185c3de587616fb9fdb87c6a175"
+      "checksum": "dec4c45346f29bc781584cf849e6e348"
     },
     "R/CapStr.R": {
-      "checksum": "ce19b04ad210718f39efc180a3d4e55f"
+      "checksum": "a9fb6fcd78a277b7060f0498bea5126f"
     },
     "R/css.R": {
-      "checksum": "4feecb2af45f1d8682a7b81c87013d03"
+      "checksum": "95e246e50b1d5439a1b2df0b27fa1157"
     },
     "R/detectStandard.R": {
-      "checksum": "2ccf912081355760828bb2f86d75de01"
+      "checksum": "a8b9f088114258479abbfbc211cd234e"
     },
     "R/evaluateStandard.R": {
-      "checksum": "0afcfa31d6a5785229858ac8b178fb18"
+      "checksum": "63e5c8d919dab661f3145b68e243a41c"
     },
     "R/filtering_expr.R": {
-      "checksum": "5dbe1e2a6793a282563830e2a08fbb8f"
+      "checksum": "182cac08a9a1a107ecc7065079b6e121"
     },
     "R/fn_filters_in_english.R": {
-      "checksum": "0c916ace0c11b4e2126d585430f22a3f"
+      "checksum": "70a315a33b9908179faf2f82f93978cf"
     },
     "R/fnboxplot.R": {
       "checksum": "b70eeb9a37c404b760aa523540198f6c"
@@ -4877,28 +4877,28 @@
       "checksum": "9fe3378ef8f31f40a13103b740906db1"
     },
     "R/getSettingsMetadata.R": {
-      "checksum": "dce9a0633feac40276f7d57f1238075c"
+      "checksum": "98adff52cf75e9c7e199195e49602ecd"
     },
     "R/hasColumn.R": {
-      "checksum": "d3b3de5c97339d772164abc72c8fb5b6"
+      "checksum": "2cb736461e6edfb173e8c7335dd3d3a9"
     },
     "R/hasField.R": {
-      "checksum": "5dc078d72cd6304ff9c6654e59368871"
+      "checksum": "a0bdea145643efec45679ab94b9c299b"
     },
     "R/js_strings.R": {
-      "checksum": "a0c223e4f7c29e5d4a29de2646167e3e"
+      "checksum": "2599cb3259c74991e9e3ebc82f06ae27"
     },
     "R/mean_block.R": {
-      "checksum": "6a816cedd1c6197c0aba51749a63b01b"
+      "checksum": "0d2819a3869b2650cb97fb043c7e278d"
     },
     "R/pivot_paramcd.R": {
-      "checksum": "60c503a6d6fdc3d3bc28ecd31f630739"
+      "checksum": "510cd4e52ec1cc92309a7defee907612"
     },
     "README.md": {
-      "checksum": "749ccb107e4ecd1ea76ef0f7512a686c"
+      "checksum": "f59c9bd6bfe7603dfcbc9b05ec12541c"
     },
     "tests/data/test_data.R": {
-      "checksum": "575b94a593656ba2440c35f0fe9ee83c"
+      "checksum": "9230a31c654308f9c441510bdaf8fed3"
     },
     "tests/data/test_data.RDS": {
       "checksum": "d864d7cd89167b70779edc43bec43daa"
@@ -4976,37 +4976,37 @@
       "checksum": "682fa3ee3484a4cb32954dd793dd3363"
     },
     "tests/README.md": {
-      "checksum": "be2fa343b7c5db9d9cef1bc5147b0b11"
+      "checksum": "be7e67e589241d0424a67af7d190fff6"
     },
     "tests/table_generator/chg_block.R": {
-      "checksum": "817fcf3f942b35fd69a77f27aa2f8591"
+      "checksum": "4d8b2681cf61ceea4051f88a6be6c822"
     },
     "tests/table_generator/data_preprocessing.R": {
-      "checksum": "44c4e04269fb2bc59e5b1e46490e3837"
+      "checksum": "ccf07be2f939ea994d661686b6a20ef9"
     },
     "tests/table_generator/frequency_block.R": {
-      "checksum": "cbc12f0b3364bc410b06028812843f4b"
+      "checksum": "ecce69c4b20579dc79caaacb2c0fd413"
     },
     "tests/table_generator/mean_block.R": {
-      "checksum": "fde90e9779e561e0c7bd8a2193afe261"
+      "checksum": "a3ae0410e8a4e987c57b4780d67b5713"
     },
     "tests/table_generator/ttest_block.R": {
-      "checksum": "9d6f1b0d45abed8769ddf56155e3420b"
+      "checksum": "be701c103690021c8c0e12b4ed7ce290"
     },
     "tests/table_generator/ttest_block/ttest_ADSL.R": {
-      "checksum": "aef60e4fdbaaa75edf4f9eb21cc1bb82"
+      "checksum": "072a592a8264c816032d51ca21c3b8b2"
     },
     "tests/table_generator/ttest_block/ttest_ADSL_filter.R": {
-      "checksum": "6f04a55934c789f33348847cd7018ef7"
+      "checksum": "62413c0adb088630fcc0a235c35064f4"
     },
     "tests/table_generator/ttest_block/ttest_PARAMCD.R": {
-      "checksum": "e9d280272da0f3588a76aad3c80ccc76"
+      "checksum": "b9b4234be2c07f5bd1a29f5e0fd9868c"
     },
     "tests/table_generator/ttest_block/ttest_PARAMCD_filter.R": {
-      "checksum": "1941e4a7ab037f708574a17168ba159b"
+      "checksum": "b2e3240b2148829b6381ac8864351023"
     },
     "www/analytics.js": {
-      "checksum": "65eb74cad5ca574f15b472ecf1c2d4e5"
+      "checksum": "58b61e085b194a44763eb8ad01b38020"
     },
     "www/IDEA_FAVICON.ico": {
       "checksum": "0356fd73062e635dd0b61db22ca21b45"
@@ -5015,19 +5015,19 @@
       "checksum": "f3e1d6341b795f158c12f5e70d8cb860"
     },
     "www/logo.svg": {
-      "checksum": "323e215868020ba7e04f90687d088259"
+      "checksum": "deef254862ca7318d0738e95d6fac2b0"
     },
     "www/recipe.js": {
-      "checksum": "019a8141aff6808d3c0a9b9969b2a3c4"
+      "checksum": "cb93f4e4b9c4e7d6aef1b816391c70e1"
     },
     "www/script.js": {
-      "checksum": "c350491bc219eab15786b2a6a8af3088"
+      "checksum": "d7593da01f46d1b73de0f56250086833"
     },
     "www/styles.css": {
-      "checksum": "cb02318a82745deb603a675cfff46a71"
+      "checksum": "15d585d348c0fcb234285c06642436ad"
     },
     "www/yeti.css": {
-      "checksum": "5322ab77d46667d7ae63108c44d15188"
+      "checksum": "b3d56869fb43b430eccb9417c21abdf9"
     }
   },
   "users": null
