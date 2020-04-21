@@ -22,22 +22,31 @@ observeEvent(input$selPrmCode, {
   
   prmsel <- paste(input$selPrmCode,collapse = ",")
 
-  dfsub <<- filter(dfsel,PARAMCD %in% input$selPrmCode) # dfsel created from df() above
-  
+  dfflt <- filter(dfsel,PARAMCD %in% input$selPrmCode) # dfsel created from df() above
+
   # if two PARAMCDs selected, then we need to use pivot_wider()
   if (str_detect(prmsel,",") == TRUE) {
-    dfsubw <- dfsub %>%
+    # print(paste("two PARAMCDS:",prmsel))
+    suppressWarnings(req(dfflt$AVAL)) # AVAL needs to exist.
+
+    dffltw <- dfflt %>%
       pivot_wider(id_cols=c(USUBJID, AVISIT), names_from = c(PARAMCD), values_from = c(AVAL, BASE, CHG), names_sep = "_") 
+
+    dfmrg <- dfflt[, !names(dfflt) %in% c(names(dffltw),"PARAM","PARAMCD","AVAL","BASE","CHG")]
     
-    dfmrg <- dfsub[, !names(dfsub) %in% c(names(dfsubw),"PARAM","PARAMCD","AVAL","BASE","CHG")]
     # add USUBJID and AVISIT
-    dfmrg2 <- cbind(select(dfsub,USUBJID,AVISIT),dfmrg,stringsAsFactors = FALSE) %>%
+    dfmrg2 <- bind_cols(select(dfflt,USUBJID,AVISIT),dfmrg) %>%
+    # dfmrg2 <- cbind(select(dfsub,USUBJID,AVISIT),dfmrg,stringsAsFactors = FALSE) %>%
       distinct(USUBJID, AVISIT, .keep_all = TRUE)
-    
-    dfsub <<- left_join(dfsubw, dfmrg2, by = c("USUBJID","AVISIT")) %>%
+
+    dfflt <- left_join(dffltw, dfmrg2, by = c("USUBJID","AVISIT")) %>%
       mutate(PARAMCD = str_replace(prmsel,",","_")) %>%
       arrange(USUBJID, AVISITN)
-  } 
+  } else {
+    # print(paste("just one PARAMCD:",prmsel))
+  }
+  
+  dfsub <<- dfflt
   
   chr <- names(which(sapply(dfsub,is.character))) # all chr
   fac <- names(which(sapply(dfsub,is.factor   ))) # all factors
@@ -58,7 +67,7 @@ observeEvent(input$selPrmCode, {
   updateCheckboxInput(session = session, inputId = "AddSmooth", value = FALSE)
   updateCheckboxInput(session = session, inputId = "DiscrXaxis", value = FALSE)
 
-}, ignoreInit = FALSE) # observeEvent(input$selPrmCode
+}, ignoreInit = TRUE) # observeEvent(input$selPrmCode
 
 output$PlotlyOut <- renderPlotly({
   
@@ -83,12 +92,13 @@ output$PlotlyOut <- renderPlotly({
     # laby <- str_c(unique(dfsub$PARAMCD),laby,sep=":")
   }
 
+  print("renderPlotly just before call to fnscatter")
   # correction for overplotting is located in fnscatter
   p <- fnscatter(data = dfsub, input$groupbox, input$groupbyvar, input$selxvar, input$selyvar)
 
   # minimal theme
   p <- p + theme_minimal()
-  
+  print("continuing to add statements")
   # https://www.datanovia.com/en/blog/easy-way-to-expand-color-palettes-in-r/
   nlevs <- nlevels(factor(dfsub[[input$groupbyvar]]))
   mycolors <- colorRampPalette(brewer.pal(8, "Set2"))(nlevs)
