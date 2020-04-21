@@ -4391,16 +4391,16 @@
       "checksum": "69bd8813aaf8c5197c71d8c9d5f28e35"
     },
     "modules/PopuExpl4Heat.R": {
-      "checksum": "fa3adf1b8ad0ee1a66f32a11382bc93e"
+      "checksum": "aec462ad7a946e82f9a77b1a44ba328e"
     },
     "modules/PopuExpl5Hist.R": {
       "checksum": "0db0b5774356c963be45d48492af84d9"
     },
     "modules/PopuExplor.R": {
-      "checksum": "8188ef0eb0ce62c123d7915d43e85bd5"
+      "checksum": "744304b725828699807b5e36b862d784"
     },
     "modules/PopuExplorUI.R": {
-      "checksum": "3905fcc17776110a770cb1bb40260319"
+      "checksum": "1dc0a4f920d23d4fcb60e95d990417f9"
     },
     "modules/selectData.R": {
       "checksum": "62ebfd392adde9f18ccb79e637c0aefc"

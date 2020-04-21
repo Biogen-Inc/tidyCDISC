@@ -30,12 +30,6 @@ sidebarLayout(
                  selectInput(ns("groupbyvar"), label = tags$small("Color by:"), c(" "), selected = " ")
                  )
                ),
-               selectInput(ns("selxvar"), label = tags$small("X Variable:"), 
-                           c(" "), selected = " "
-               ),             
-               selectInput(ns("selyvar"), label = tags$small("Y Variable:"), 
-                           c(" "), selected = " "
-               ),
                awesomeRadio(
                  inputId = ns("fillType"), label = "Select one:",
                  inline = TRUE,
@@ -44,14 +38,20 @@ sidebarLayout(
                  choices = c("Use Counts", "Corr Matrix", "Fill Variable"),
                  selected = "Fill Variable"
                ),
+               selectInput(ns("selxvar"), label = tags$small("X Variable:"), 
+                           c(" "), selected = " "
+               ),             
+               selectInput(ns("selyvar"), label = tags$small("Y Variable:"), 
+                           c(" "), selected = " "
+               ),
+               selectInput(ns("selzvar"), label = tags$small("Fill Variable:"), 
+                           c(" "), selected = " "
+               ),
                selectizeInput(ns("selectvars"), "Select", choices=c(" "), selected = NULL,
                               multiple=TRUE, options = list(maxItems = NULL)),
                
                actionButton(ns("runCorr"),"Generate Graph"),
 
-               selectInput(ns("selzvar"), label = tags$small("Fill Variable:"), 
-                           c(" "), selected = " "
-               ),
                selectInput(ns("seltimevar"), label = tags$small("Time Variable:"), 
                            c(" "), selected = " "
                ),
@@ -70,6 +70,15 @@ sidebarLayout(
                 column(width=5,
                 checkboxInput(ns("DiscrXaxis"), label = tags$small("Discrete\n x-axis"), value = FALSE))
                ),
+               awesomeRadio(
+                 inputId = ns("heatMapFill"), label = NULL,
+                 inline = TRUE,
+                 status = "info",
+                 checkbox = TRUE,
+                 choices = c("Min","Mode","Mean","Median","Max"),
+                 selected = "Max"
+               ),
+               
                
                sliderInput(ns("numBins"), "Number of bins:",
                            min = 20, max = 200, value = 40),
