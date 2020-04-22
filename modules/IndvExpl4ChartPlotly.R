@@ -181,11 +181,11 @@ observeEvent(list(input$plot_adam), { # ,input$bds_remove_filter # add this back
        
        if("Screening" %in% input$plot_hor){
          plot_scr <- plot_dat %>% subset(toupper(VISIT) == "SCREENING") %>% distinct(AVAL) %>% mutate(Event = "Screening")
-         plot_dat <- plot_dat %>% subset(!(toupper(plot_dat$VISIT) == "SCREENING"))
+         # plot_dat <- plot_dat %>% subset(!(toupper(plot_dat$VISIT) == "SCREENING")) # removes screening point from plot
        }
        if("Baseline" %in% input$plot_hor){
          plot_base <- plot_dat %>% subset(toupper(AVISIT) == "BASELINE") %>% distinct(AVAL) %>% mutate(Event = "Baseline")
-         plot_dat <- plot_dat %>% subset(!(toupper(plot_dat$AVISIT) == "BASELINE"))
+         # plot_dat <- plot_dat %>% subset(!(toupper(plot_dat$AVISIT) == "BASELINE")) # removes baseline point from plot
        }
        
        if (nrow(plot_dat) > 0) {
@@ -214,8 +214,9 @@ observeEvent(list(input$plot_adam), { # ,input$bds_remove_filter # add this back
              geom_hline(aes(yintercept = mean(LBSTNRLO)), colour = "blue") +
              geom_hline(aes(yintercept = mean(LBSTNRHI)), colour = "blue") +
              theme(
-               plot.margin = margin(t = 1, unit = "cm")
-             )
+               plot.margin = margin(b = 1, unit = "cm") #t = 1, # used to put margin at top of graph for caption
+             ) 
+             
          }
          # lohi <- paste("LO:",unique(plot_dat$LBSTNRLO),"HI:",unique(plot_dat$LBSTNRHI))
          if("Screening" %in% input$plot_hor){
@@ -227,18 +228,26 @@ observeEvent(list(input$plot_adam), { # ,input$bds_remove_filter # add this back
              geom_hline(plot_base, mapping = aes(yintercept = AVAL, colour = Event)) #, colour = "purple")
          }
          
-         ggplotly(lb_plot, tooltip = "text") %>%
+         ly <- ggplotly(lb_plot, tooltip = "text") %>%
            layout(title = list(text = 
              paste0(prm," by Study Visit<sup>",
-                         "<br>USUBJID: ",usubjid(),
-                        ifelse(input$plot_adam == "ADLB",paste0("<br>Normal Range of values shown in ",'<em style="color:blue">',"blue",'</em> ',lohi),""),
-                        "</sup>")))
+                         "<br>USUBJID: ",usubjid()
+             )))
+            # Used to have lab param range of values in title
+            # , ifelse(input$plot_adam == "ADLB",paste0("<br>Study's average range shown in ",'<em style="color:blue">',"blue",'</em> ',lohi),""),
+            # "</sup>")))
          
-         # layout(title = list(text = paste(prmcd,":",prm,"by Relative Study Day",
-         #                                  '<br>',
-         #                                  '<sup>',
-         #                                  "Normal Range values shown in",'<em style="color:blue">',"blue",'</em>',lohi,
-         #                                  '</sup>'))) 
+         # instead, request was made to add caption to bottom of graph
+         if(input$plot_adam == "ADLB"){
+           ly <- ly %>%
+             add_annotations(x = ggplot_build(lb_plot)$layout$panel_params[[1]]$x.range[1],
+                             y = -.10, # 10% below graph
+                             yref = "paper",
+                             text = paste0("<br>Note: Study's average ",input$plot_param," range shown in ",'<em style="color:blue">',"blue",'</em> ',lohi),
+                             xanchor = 'left',
+                             showarrow = F)
+         }
+         ly
          
        } # if (nrow(plot_dat) > 0)
      }) # renderPlotly
