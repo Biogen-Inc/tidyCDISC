@@ -33,7 +33,7 @@ library(sjlabelled)
 ###############################################################
 # drat::addRepo("aaron-clark")
 # getOption("repos")
-# devtools::install_github("rstudio/rsconnect")
+# # devtools::install_github("rstudio/rsconnect")
 # rsconnect::writeManifest()
 
 
