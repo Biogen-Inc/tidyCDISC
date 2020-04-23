@@ -317,12 +317,11 @@
       "description": {
         "Package": "Rcpp",
         "Title": "Seamless R and C++ Integration",
-        "Version": "1.0.4",
-        "Date": "2020-03-13",
+        "Version": "1.0.4.6",
+        "Date": "2020-04-01",
         "Author": "Dirk Eddelbuettel, Romain Francois, JJ Allaire, Kevin Ushey, Qiang Kou,\n Nathan Russell, Douglas Bates and John Chambers",
         "Maintainer": "Dirk Eddelbuettel <edd@debian.org>",
         "Description": "The 'Rcpp' package provides R functions as well as C++ classes which\n offer a seamless integration of R and C++. Many R data types and objects can be\n mapped back and forth to C++ equivalents which facilitates both writing of new\n code as well as easier integration of third-party libraries. Documentation\n about 'Rcpp' is provided by several vignettes included in this package, via the\n 'Rcpp Gallery' site at <http://gallery.rcpp.org>, the paper by Eddelbuettel and\n Francois (2011, <doi:10.18637/jss.v040.i08>), the book by Eddelbuettel (2013,\n <doi:10.1007/978-1-4614-6868-4>) and the paper by Eddelbuettel and Balamuta (2018,\n <doi:10.1080/00031305.2017.1375990>); see 'citation(\"Rcpp\")' for details.",
-        "Depends": "R (>= 3.0.0)",
         "Imports": "methods, utils",
         "Suggests": "tinytest, inline, rbenchmark, pkgKitten (>= 0.1.2)",
         "URL": "http://www.rcpp.org, http://dirk.eddelbuettel.com/code/rcpp.html,\nhttps://github.com/RcppCore/Rcpp",
@@ -331,10 +330,10 @@
         "MailingList": "Please send questions and comments regarding Rcpp to\nrcpp-devel@lists.r-forge.r-project.org",
         "RoxygenNote": "6.1.1",
         "NeedsCompilation": "yes",
-        "Packaged": "2020-03-13 12:02:51.81453 UTC; edd",
+        "Packaged": "2020-04-02 14:03:36.956046 UTC; edd",
         "Repository": "CRAN",
-        "Date/Publication": "2020-03-17 08:20:02 UTC",
-        "Built": "R 3.6.3; x86_64-w64-mingw32; 2020-03-30 14:46:48 UTC; windows"
+        "Date/Publication": "2020-04-09 08:30:02 UTC",
+        "Built": "R 3.6.3; x86_64-w64-mingw32; 2020-04-19 20:05:04 UTC; windows"
       }
     },
     "askpass": {
@@ -407,7 +406,7 @@
         "Package": "backports",
         "Type": "Package",
         "Title": "Reimplementations of Functions Introduced Since R-3.0.0",
-        "Version": "1.1.5",
+        "Version": "1.1.6",
         "Authors@R": "c(\n    person(\"Michel\", \"Lang\", NULL, \"michellang@gmail.com\",\n      role = c(\"cre\", \"aut\"), comment = c(ORCID = \"0000-0001-9754-0393\")),\n    person(\"R Core Team\", role = \"aut\"))",
         "Maintainer": "Michel Lang <michellang@gmail.com>",
         "Description": "\n    Functions introduced or changed since R v3.0.0 are re-implemented in this\n    package. The backports are conditionally exported in order to let R resolve\n    the function name to either the implemented backport, or the respective base\n    version, if available. Package developers can make use of new functions or\n    arguments by selectively importing specific backports to\n    support older installations.",
@@ -419,12 +418,12 @@
         "Depends": "R (>= 3.0.0)",
         "Imports": "utils",
         "Encoding": "UTF-8",
-        "RoxygenNote": "6.1.1",
-        "Packaged": "2019-10-02 18:35:28 UTC; michel",
+        "RoxygenNote": "7.1.0",
+        "Packaged": "2020-04-05 06:01:58 UTC; michel",
         "Author": "Michel Lang [cre, aut] (<https://orcid.org/0000-0001-9754-0393>),\n  R Core Team [aut]",
         "Repository": "CRAN",
-        "Date/Publication": "2019-10-02 20:20:02 UTC",
-        "Built": "R 3.6.1; x86_64-w64-mingw32; 2019-10-03 09:20:43 UTC; windows"
+        "Date/Publication": "2020-04-05 06:30:02 UTC",
+        "Built": "R 3.6.3; x86_64-w64-mingw32; 2020-04-09 09:43:27 UTC; windows"
       }
     },
     "base64enc": {
@@ -1604,8 +1603,8 @@
       "description": {
         "Package": "isoband",
         "Title": "Generate Isolines and Isobands from Regularly Spaced Elevation\nGrids",
-        "Version": "0.2.0",
-        "Authors@R": "\n    person(given = \"Claus\",\n           family = \"Wilke\",\n           role = c(\"aut\", \"cre\"),\n           email = \"wilke@austin.utexas.edu\")",
+        "Version": "0.2.1",
+        "Authors@R": "\n    person(\n      given = \"Claus O.\",\n      family = \"Wilke\",\n      role = c(\"aut\", \"cre\"),\n      email = \"wilke@austin.utexas.edu\",\n      comment = c(ORCID = \"0000-0002-7470-9261\")\n    )",
         "Description": "A fast C++ implementation to generate contour lines (isolines) and\n  contour polygons (isobands) from regularly spaced grids containing elevation data.",
         "URL": "https://github.com/wilkelab/isoband",
         "BugReports": "https://github.com/wilkelab/isoband/issues",
@@ -1614,17 +1613,17 @@
         "LazyData": "true",
         "LinkingTo": "Rcpp, testthat",
         "Imports": "Rcpp, grid, utils",
-        "RoxygenNote": "6.1.1",
-        "Suggests": "covr, ggplot2, knitr, lwgeom, magick, microbenchmark,\nrmarkdown, sf, testthat",
+        "RoxygenNote": "7.0.2",
+        "Suggests": "covr, ggplot2, knitr, magick, microbenchmark, rmarkdown, sf,\ntestthat",
         "SystemRequirements": "C++11",
         "VignetteBuilder": "knitr",
         "NeedsCompilation": "yes",
-        "Packaged": "2019-04-06 20:02:38 UTC; wilke",
-        "Author": "Claus Wilke [aut, cre]",
-        "Maintainer": "Claus Wilke <wilke@austin.utexas.edu>",
+        "Packaged": "2020-04-12 08:55:17 UTC; clauswilke",
+        "Author": "Claus O. Wilke [aut, cre] (<https://orcid.org/0000-0002-7470-9261>)",
+        "Maintainer": "Claus O. Wilke <wilke@austin.utexas.edu>",
         "Repository": "CRAN",
-        "Date/Publication": "2019-04-06 22:20:03 UTC",
-        "Built": "R 3.6.3; x86_64-w64-mingw32; 2020-03-24 10:44:17 UTC; windows"
+        "Date/Publication": "2020-04-12 09:40:02 UTC",
+        "Built": "R 3.6.3; x86_64-w64-mingw32; 2020-04-19 16:40:09 UTC; windows"
       }
     },
     "janitor": {
@@ -3758,7 +3757,7 @@
       "description": {
         "Package": "tibble",
         "Title": "Simple Data Frames",
-        "Version": "3.0.0",
+        "Version": "3.0.1",
         "Authors@R": "\n    c(person(given = \"Kirill\",\n             family = \"M\\u00fcller\",\n             role = c(\"aut\", \"cre\"),\n             email = \"krlmlr+r@mailbox.org\"),\n      person(given = \"Hadley\",\n             family = \"Wickham\",\n             role = \"aut\",\n             email = \"hadley@rstudio.com\"),\n      person(given = \"Romain\",\n             family = \"Francois\",\n             role = \"ctb\",\n             email = \"romain@r-enthusiasts.com\"),\n      person(given = \"Jennifer\",\n             family = \"Bryan\",\n             role = \"ctb\",\n             email = \"jenny@rstudio.com\"),\n      person(given = \"RStudio\",\n             role = \"cph\"))",
         "Description": "Provides a 'tbl_df' class (the 'tibble') that\n    provides stricter checking and better formatting than the traditional\n    data frame.",
         "License": "MIT + file LICENSE",
@@ -3773,12 +3772,12 @@
         "LazyData": "yes",
         "RoxygenNote": "7.1.0",
         "NeedsCompilation": "yes",
-        "Packaged": "2020-03-29 13:30:48 UTC; kirill",
+        "Packaged": "2020-04-19 19:10:25 UTC; kirill",
         "Author": "Kirill Müller [aut, cre],\n  Hadley Wickham [aut],\n  Romain Francois [ctb],\n  Jennifer Bryan [ctb],\n  RStudio [cph]",
         "Maintainer": "Kirill Müller <krlmlr+r@mailbox.org>",
         "Repository": "CRAN",
-        "Date/Publication": "2020-03-30 07:10:02 UTC",
-        "Built": "R 3.6.2; x86_64-w64-mingw32; 2020-04-01 19:00:15 UTC; windows"
+        "Date/Publication": "2020-04-20 06:10:05 UTC",
+        "Built": "R 3.6.3; x86_64-w64-mingw32; 2020-04-22 20:57:42 UTC; windows"
       }
     },
     "tidyr": {
@@ -4198,29 +4197,29 @@
       "GithubRef": null,
       "GithubSha1": null,
       "description": {
-        "Encoding": "UTF-8",
         "Package": "withr",
         "Title": "Run Code 'With' Temporarily Modified Global State",
-        "Version": "2.1.2",
-        "Authors@R": "c(\n    person(\"Jim\", \"Hester\", , \"james.f.hester@gmail.com\", role = c(\"aut\", \"cre\")),\n    person(\"Kirill\", \"Müller\", , \"krlmlr+r@mailbox.org\", role = \"aut\"),\n    person(\"Kevin\", \"Ushey\", email = \"kevinushey@gmail.com\", role = c(\"aut\")),\n    person(\"Hadley\", \"Wickham\", , \"hadley@rstudio.com\", role = \"aut\"),\n    person(\"Winston\", \"Chang\", role = \"aut\"),\n    person(\"Richard\", \"Cotton\", role = c(\"ctb\")),\n    person(\"RStudio\", role = \"cph\"))",
-        "Description": "A set of functions to run code 'with' safely and temporarily\n    modified global state. Many of these functions were originally a part of the\n    'devtools' package, this provides a simple package with limited dependencies\n    to provide access to these functions.",
+        "Version": "2.2.0",
+        "Authors@R": "\n    c(person(given = \"Jim\",\n             family = \"Hester\",\n             role = c(\"aut\", \"cre\"),\n             email = \"james.f.hester@gmail.com\"),\n      person(given = \"Kirill\",\n             family = \"Müller\",\n             role = \"aut\",\n             email = \"krlmlr+r@mailbox.org\"),\n      person(given = \"Kevin\",\n             family = \"Ushey\",\n             role = \"aut\",\n             email = \"kevinushey@gmail.com\"),\n      person(given = \"Hadley\",\n             family = \"Wickham\",\n             role = \"aut\",\n             email = \"hadley@rstudio.com\"),\n      person(given = \"Winston\",\n             family = \"Chang\",\n             role = \"aut\"),\n      person(given = \"Richard\",\n             family = \"Cotton\",\n             role = \"ctb\"),\n      person(given = \"RStudio\",\n             role = \"cph\"))",
+        "Description": "A set of functions to run code 'with' safely and\n    temporarily modified global state. Many of these functions were\n    originally a part of the 'devtools' package, this provides a simple\n    package with limited dependencies to provide access to these\n    functions.",
+        "License": "GPL (>= 2)",
         "URL": "http://withr.r-lib.org, http://github.com/r-lib/withr#readme",
         "BugReports": "http://github.com/r-lib/withr/issues",
-        "Depends": "R (>= 3.0.2)",
-        "License": "GPL (>= 2)",
-        "LazyData": "true",
-        "Imports": "stats, graphics, grDevices",
-        "Suggests": "testthat, covr, lattice, DBI, RSQLite, methods, knitr,\nrmarkdown",
-        "RoxygenNote": "6.0.1",
-        "Collate": "'local_.R' 'with_.R' 'collate.R' 'connection.R' 'db.R'\n'defer.R' 'wrap.R' 'devices.R' 'dir.R' 'env.R' 'file.R'\n'libpaths.R' 'locale.R' 'makevars.R' 'namespace.R' 'options.R'\n'par.R' 'path.R' 'seed.R' 'sink.R' 'tempfile.R' 'torture.R'\n'utils.R' 'with.R'",
+        "Depends": "R (>= 3.2.0)",
+        "Imports": "graphics, grDevices, stats",
+        "Suggests": "covr, DBI, knitr, lattice, methods, rmarkdown, RSQLite,\ntestthat (>= 2.1.0)",
         "VignetteBuilder": "knitr",
+        "Encoding": "UTF-8",
+        "LazyData": "true",
+        "RoxygenNote": "7.1.0",
+        "Collate": "'local_.R' 'with_.R' 'collate.R' 'connection.R' 'db.R'\n'defer.R' 'wrap.R' 'devices.R' 'dir.R' 'env.R' 'file.R'\n'libpaths.R' 'locale.R' 'makevars.R' 'namespace.R' 'options.R'\n'par.R' 'path.R' 'rng.R' 'seed.R' 'sink.R' 'tempfile.R'\n'timezone.R' 'torture.R' 'utils.R' 'with.R'",
         "NeedsCompilation": "no",
-        "Packaged": "2018-03-15 13:59:37 UTC; jhester",
+        "Packaged": "2020-04-20 21:18:04 UTC; jhester",
         "Author": "Jim Hester [aut, cre],\n  Kirill Müller [aut],\n  Kevin Ushey [aut],\n  Hadley Wickham [aut],\n  Winston Chang [aut],\n  Richard Cotton [ctb],\n  RStudio [cph]",
         "Maintainer": "Jim Hester <james.f.hester@gmail.com>",
         "Repository": "CRAN",
-        "Date/Publication": "2018-03-15 22:39:56 UTC",
-        "Built": "R 3.6.2; ; 2020-01-31 21:55:53 UTC; windows"
+        "Date/Publication": "2020-04-20 22:10:02 UTC",
+        "Built": "R 3.6.3; ; 2020-04-22 20:57:33 UTC; windows"
       }
     },
     "xfun": {
@@ -4350,8 +4349,8 @@
     "app.R": {
       "checksum": "bc64200dc9e91df9e4ec2ccfbf042791"
     },
-    "file2ad422357812.log": {
-      "checksum": "bdab97bab121898360c396c6f1716169"
+    "file1c8c1c527a76.log": {
+      "checksum": "a85c92acf343116dad15c7d39c9ae31b"
     },
     "global.R": {
       "checksum": "fe0a83505af0fbabd3b57be48aadd9ac"
@@ -4375,7 +4374,7 @@
       "checksum": "db8c8841a17e04a9c88ca012cd7fc09e"
     },
     "modules/IndvExpl2SelPatno.R": {
-      "checksum": "b1abcfbd84d349bd0c7dbf7ee4e8dabb"
+      "checksum": "44fc993ac347eda051c912cf17032fac"
     },
     "modules/IndvExpl3CheckGroup.R": {
       "checksum": "c5619c7d086c9625ba89c6f942298908"
@@ -4426,7 +4425,7 @@
       "checksum": "262a3febe857d60d1909694884b4b5d4"
     },
     "packrat/desc/backports": {
-      "checksum": "9bf3b0fbfd20083ef27010d1d7f6ff90"
+      "checksum": "6820a528f4fca08df2d693a5b0159cf9"
     },
     "packrat/desc/base64enc": {
       "checksum": "fba0290cc145271b0b2cd0aca781b38f"
@@ -4552,7 +4551,7 @@
       "checksum": "e46257f320c988d09e8bee484c8d674e"
     },
     "packrat/desc/isoband": {
-      "checksum": "1eca98bdcca82c347e50756f5d812732"
+      "checksum": "515a9e1e621e0e9e7a764e67b2db2fe9"
     },
     "packrat/desc/janitor": {
       "checksum": "93eeb1e337d808b480ac2b0a45d7d649"
@@ -4678,7 +4677,7 @@
       "checksum": "e552c59afd09c6d4387ba9548071e666"
     },
     "packrat/desc/Rcpp": {
-      "checksum": "5f9a8f0d064a958ab9fd4bd4fd7f56ee"
+      "checksum": "f7a0974605a3f902862d246a3b3ea3e4"
     },
     "packrat/desc/reactable": {
       "checksum": "7f0d6d43fd484b5a815765e2a77b8607"
@@ -4783,7 +4782,7 @@
       "checksum": "af2042bec6b5003d3a55e07e63fc2a66"
     },
     "packrat/desc/tibble": {
-      "checksum": "32c0aedc45065839bf4e93431ded253d"
+      "checksum": "30018b1653d6ffc978135af8f2bf3331"
     },
     "packrat/desc/tidyr": {
       "checksum": "16f7fa92913fc5c845e086e5f248d79e"
@@ -4825,7 +4824,7 @@
       "checksum": "ccb073af9568e82bee8a143e66200c86"
     },
     "packrat/desc/withr": {
-      "checksum": "d55ba79d36d629dacd4b84b7007470a5"
+      "checksum": "58268168591d0aa02c07cdc0b949837e"
     },
     "packrat/desc/xfun": {
       "checksum": "7ebec658c2a9419fb263af2aab63e318"
@@ -4840,7 +4839,7 @@
       "checksum": "1a902a5286236b90738a357b2537b341"
     },
     "packrat/packrat.lock": {
-      "checksum": "3b128cda9b7a58b81725862e892a1cc6"
+      "checksum": "45ac2d07ad39de66006934cfc98c0723"
     },
     "R/allowed_operators.R": {
       "checksum": "c2130178775fc0a80237b19db6cfc7b8"
