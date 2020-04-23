@@ -57,9 +57,9 @@ IndvExpl2SelPatno <- function(input, output, session, datafile, loaded_adams, fi
       adsl_rec <- datafile()[["ADSL"]] %>%
         filter(USUBJID == input$selPatNo) %>%
         select(one_of(ifelse("COUNTRYC" %in% colnames(adsl),"COUNTRYC","COUNTRY"))
-               , AGE
+               , one_of("AGE")
                , one_of(ifelse("AGEGR" %in% colnames(adsl),"AGEGR","AGEGR1"))
-               , SEX, RACE, SITEID, TRT01P) #79 removed dates due to redundancy, RANDDT, TR01SDT, LAST2SDT) #74 Removed USUBJID
+               , one_of("SEX", "RACE", "SITEID", "TRT01P")) #79 removed dates due to redundancy, RANDDT, TR01SDT, LAST2SDT) #74 Removed USUBJID
       
       adsl_rec <- as.data.frame((adsl_rec)) # 'data' must be 2-dimensional (e.g. data frame or matrix)
       
@@ -70,7 +70,7 @@ IndvExpl2SelPatno <- function(input, output, session, datafile, loaded_adams, fi
                     class="compact",
                     options = list(bSort = FALSE,dom = 't'),
                     rownames = FALSE,
-                    colnames = c('Planned Treatment Group' = ncol(adsl_rec))#,
+                    colnames = if("TRT01P" %in% colnames(adsl_rec)) c('Planned Treatment Group' = ncol(adsl_rec)) else colnames(adsl_rec) #
                     # caption = tags$caption(style = "font-weight:bold;font-size:20px;color:black;", paste0("Patient Demographic Info\n USUBJID: '", input$selPatNo, "'" ))
                     )
     })
