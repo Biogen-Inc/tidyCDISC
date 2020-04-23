@@ -56,10 +56,10 @@ IndvExpl2SelPatno <- function(input, output, session, datafile, loaded_adams, fi
       adsl <- datafile()[["ADSL"]]
       adsl_rec <- datafile()[["ADSL"]] %>%
         filter(USUBJID == input$selPatNo) %>%
-        select(one_of(ifelse("COUNTRYC" %in% colnames(adsl),"COUNTRYC","COUNTRY"))
-               , one_of("AGE")
-               , one_of(ifelse("AGEGR" %in% colnames(adsl),"AGEGR","AGEGR1"))
-               , one_of("SEX", "RACE", "SITEID", "TRT01P")) #79 removed dates due to redundancy, RANDDT, TR01SDT, LAST2SDT) #74 Removed USUBJID
+        select(any_of(ifelse("COUNTRYC" %in% colnames(adsl),"COUNTRYC","COUNTRY"))
+               , any_of("AGE")
+               , any_of(ifelse("AGEGR" %in% colnames(adsl),"AGEGR","AGEGR1"))
+               , any_of("SEX"), any_of("RACE"), any_of("SITEID"), any_of("TRT01P")) #79 removed dates due to redundancy, RANDDT, TR01SDT, LAST2SDT) #74 Removed USUBJID
       
       adsl_rec <- as.data.frame((adsl_rec)) # 'data' must be 2-dimensional (e.g. data frame or matrix)
       
