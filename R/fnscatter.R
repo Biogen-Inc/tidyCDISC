@@ -1,38 +1,33 @@
 # scatterplot function -- rkrajcik
 # parameters:
-#    data = data frame, groupbox = {T|F}, groupvar = var to group on, selxvar = x-axis, selyvar = y-axis
+#    data = data frame, groupbox = {T|F}, groupbyvar = var to group on, selxvar = x-axis, selyvar = y-axis
 #    returns: p for ggplotly
-fnscatter <- function(data, groupbox, groupvar, selxvar, selyvar) {
+fnscatter <- function(data, groupbox, groupbyvar, selxvar, selyvar) {
   
   # correction for overplotting
-  # message(paste("fnoverplot nrows before",nrow(data)))
-  # data <- fnoverplt(data,groupvar)
-  # message(paste("fnoverplot nrows after ",nrow(data)))
+  data <- fnoverplt(data,selxvar,groupbyvar)
 
   if(groupbox == TRUE) {
-    req(groupvar != " ")
+    req(!is_empty(groupbyvar) && groupbyvar != "")
     
     # remove missing groups from plot
-    # print("in scatterplot")
-    # print(paste("N of rows",nrow(data)))
-    # remove missing groups from plot
-    data <- filter(data, !is.na(!!sym(groupvar))) 
+    data <- filter(data, !is.na(!!sym(groupbyvar))) 
     # print(paste("N of rows",nrow(data)))
 
     p <- ggplot(data,na.rm = TRUE,
-                aes(x = !!sym(selxvar), y = !!sym(selyvar), color = !!sym(groupvar))) 
+                aes(x = !!sym(selxvar), y = !!sym(selyvar), color = !!sym(groupbyvar))) 
     
     if ("USUBJID" %in% colnames(data)) {
     p <- p + 
         suppressWarnings(geom_point(position = 'identity', na.rm = TRUE,
         aes(text = paste0(USUBJID,
-                  "<br>",groupvar,": ",get(groupvar),
+                  "<br>",groupbyvar,": ",get(groupbyvar),
                   "<br>",selxvar,": ",get(selxvar),
                   "<br>",selyvar,": ",get(selyvar)))))
     } else {
       p <- p + 
          suppressWarnings(geom_point(position = 'identity', na.rm = TRUE,
-         aes(text = paste0(groupvar, ": ",get(groupvar),
+         aes(text = paste0(groupbyvar, ": ",get(groupbyvar),
                    "<br>",selxvar,": ",get(selxvar),
                    "<br>",selyvar,": ",get(selyvar)))))
     }

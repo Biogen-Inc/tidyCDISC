@@ -1,29 +1,28 @@
 # boxplot function -- rkrajcik 
 # parameters:
-#    data = data frame, groupbox = {T|F}, groupvar = var to group on, respvar = y-axis variable
+#    data = data frame, groupbox = {T|F}, groupbyvar = var to group on, responsevar = y-axis variable
 #    returns: p for ggplotly
-fnboxplot <- function(data, groupbox, groupvar, respvar) {
+fnboxplot <- function(data, groupbox, groupbyvar, responsevar) {
   
   if(groupbox == TRUE) {
-    req(groupvar != " ")
-    
-    # print("in fnboxplot")
-    # print(paste("N of rows",nrow(data)))
-    # remove missing groups from plot
-    data <- filter(data, !is.na(!!sym(groupvar))) 
-    # print(paste("N of rows",nrow(data)))
+    req(!is_empty(groupbyvar) && groupbyvar != "")
 
     # correction for overplotting
-    # data <- fnoverplt(data,groupvar)
+    data <- fnoverplt(data,responsevar,groupbyvar)
+
+    print(paste("N of rows",nrow(data)))
+    # remove missing groups from plot
+    data <- filter(data, !is.na(!!sym(groupbyvar))) 
+    print(paste("N of rows",nrow(data)))
     
     p <- ggplot(data,na.rm = TRUE,
-                aes(x = !!sym(groupvar), y = !!sym(respvar), fill = !!sym(groupvar))) +
-      labs(x = groupvar, y = respvar)
+                aes(x = !!sym(groupbyvar), y = !!sym(responsevar), fill = !!sym(groupbyvar))) +
+      labs(x = groupbyvar, y = responsevar)
     
   } else {
     p <- ggplot(data,na.rm=TRUE,
-                aes(x = " ", y = !!sym(respvar) )) +
-      labs(x = "All", y = respvar)
+                aes(x = " ", y = !!sym(responsevar) )) +
+      labs(x = "All", y = responsevar)
   }
   
   p <- p +

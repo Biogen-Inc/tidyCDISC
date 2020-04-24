@@ -21,8 +21,13 @@ PopuExplor <- function(input, output, session, datafile){
     Sys.sleep(0.5) # wait 1/2 second
     
     # set these to un-selected
-    updateSelectInput(session = session, inputId = "responsevar", choices = " ", selected = " ")
-    updateSelectInput(session = session, inputId = "selyvar", choices = " ", selected = " ")
+    updateSelectInput(session = session, inputId = "groupbyvar", choices = " ", selected = character(0))
+    updateSelectInput(session = session, inputId = "responsevar", choices = " ", selected = character(0))
+    updateSelectInput(session = session, inputId = "seltimevar", choices = " ", selected = character(0))
+    updateSelectInput(session = session, inputId = "selxvar", choices = " ", selected = character(0))
+    updateSelectInput(session = session, inputId = "selyvar", choices = " ", selected = character(0))
+    updateSelectInput(session = session, inputId = "selzvar", choices = " ", selected = character(0))
+    
     
     # I think what we are up against here is the UI design principle that 
     # there shouldn't be such a thing as radio buttons with nothing selected. 
@@ -233,28 +238,15 @@ PopuExplor <- function(input, output, session, datafile){
       inputId = "selPrmCode",
       choices = sort(unique(all_data$PARAMCD)),
       options = list(maxItems = 1),
-      selected = " ")
+      selected = "")
+
+    # reset key widgets to original values
+    # shinyjs::reset("input$selxvar")
+    # shinyjs::reset("input$selyvar")
+    # shinyjs::reset("input$groupbyvar")
+    # shinyjs::reset("input$responsevar")
 
     # hide all the widgets
-    # shinyjs::hide(id="selPrmCode")
-    # shinyjs::hide(id="groupbox")
-    # shinyjs::hide(id="groupbyvar")
-    # shinyjs::hide(id="selxvar")
-    # shinyjs::hide(id="selyvar")
-    # shinyjs::hide(id="selzvar")
-    # shinyjs::hide(id="seltimevar")
-    # shinyjs::hide(id="responsevar")
-    # shinyjs::hide(id="AddPoints")
-    # shinyjs::hide(id="animate")
-    # shinyjs::hide(id="animateby")
-    # shinyjs::hide(id="numBins")
-    # shinyjs::hide(id="AddLine")
-    # shinyjs::hide(id="AddSmooth")
-    # shinyjs::hide(id="DiscrXaxis")
-    # shinyjs::hide(id="fillType")
-    # shinyjs::hide(id="selectvars")
-    # shinyjs::hide(id="runCorr")
-    
     widgets <- c("selPrmCode","groupbox","groupbyvar","selxvar","selyvar","selzvar","seltimevar",
                  "responsevar","AddPoints","animate","animateby","numBins","AddLine","AddSmooth",
                  "DiscrXaxis","fillType","selectvars","runCorr","heatMapFill")
@@ -276,7 +268,7 @@ PopuExplor <- function(input, output, session, datafile){
                inputId = "selPrmCode",
                choices = sort(unique(all_data$PARAMCD)),
                options = list(maxItems = 2),
-               selected = " ")
+               selected = "")
              
              callModule(PopuExpl1Scat, id = NULL, dataset)
            },
