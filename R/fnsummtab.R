@@ -1,28 +1,28 @@
 # data table function -- rkrajcik
 # parameters:
-#    df = data frame, groupbox = {T|F}, groupvar = var to group on, respvar = response variable
+#    df = data frame, groupbox = {T|F}, groupbyvar = var to group on, responsevar = response variable
 #    returns: summarized DT::datatable
-fnsummtab <- function(data, groupbox, groupvar, respvar) {
+fnsummtab <- function(data, groupbox, groupbyvar, responsevar) {
   
-  x_var <- as.name(groupvar)
-  y_var <- as.name(respvar)
+  x_var <- as.name(groupbyvar)
+  y_var <- as.name(responsevar)
   
   seltime <- select(data, ends_with("DY"), starts_with("AVIS")) 
   
-  if (!groupvar %in% names(seltime) & "AVISIT" %in% names(data) & "USUBJID" %in% names(data)) {
-    data.1 <- data %>%
-      filter(AVISIT == "Baseline") %>% # Take analysis baseline for now
-      distinct(USUBJID, .keep_all = TRUE)
-  } else {
-    data.1 <- data
-  }
-  
+  # if (!groupbyvar %in% names(seltime) & "AVISIT" %in% names(data) & "USUBJID" %in% names(data)) {
+  #   data.1 <- data %>%
+  #     filter(AVISIT == "Baseline") %>% # Take analysis baseline for now
+  #     distinct(USUBJID, .keep_all = TRUE)
+  # } else {
+  #   data.1 <- data
+  # }
+
   if (groupbox == TRUE){
-    req(groupvar != " ")
-    table1 <- data.1 %>%
+    req(!is_empty(groupbyvar) && groupbyvar != "")
+    table1 <- data %>%
       dplyr::group_by(!!x_var)
   } else {
-    table1 <- data.1
+    table1 <- data
   }
 
   # NOTE: use type=1 for quantile() definitions, to match SAS output

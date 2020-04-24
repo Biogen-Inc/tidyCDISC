@@ -19,7 +19,7 @@ sidebarLayout(
                ),
                # below are all the possible subparameters
                tags$h4("Parameters:"),
-               selectizeInput(ns("selPrmCode"), label = tags$small("Parameter Code:"), choices = c(" "),
+               selectizeInput(ns("selPrmCode"), label = tags$small("Parameter Code:"), choices = character(0),
                   selected=character(0), multiple = TRUE, options = list(maxItems = 1)
                ),
                fluidRow( 
@@ -27,7 +27,7 @@ sidebarLayout(
                  checkboxInput(ns("groupbox"),label = NULL, value = TRUE)
                  ),
                  column(width = 10,
-                 selectInput(ns("groupbyvar"), label = tags$small("Color by:"), c(" "), selected = " ")
+                 selectInput(ns("groupbyvar"), label = tags$small("Color by:"), choices=character(0), selected = character(0))
                  )
                ),
                awesomeRadio(
@@ -39,24 +39,24 @@ sidebarLayout(
                  selected = "Fill Variable"
                ),
                selectInput(ns("selxvar"), label = tags$small("X Variable:"), 
-                           c(" "), selected = " "
+                           choices=character(0), selected = character(0)
                ),             
                selectInput(ns("selyvar"), label = tags$small("Y Variable:"), 
-                           c(" "), selected = " "
+                           choices=character(0), selected = character(0)
                ),
                selectInput(ns("selzvar"), label = tags$small("Fill Variable:"), 
-                           c(" "), selected = " "
+                           choices=character(0), selected = character(0)
                ),
-               selectizeInput(ns("selectvars"), "Select", choices=c(" "), selected = NULL,
+               selectizeInput(ns("selectvars"), "Select", choices=character(0), selected = character(0),
                               multiple=TRUE, options = list(maxItems = NULL)),
                
                actionButton(ns("runCorr"),"Generate Graph"),
 
                selectInput(ns("seltimevar"), label = tags$small("Time Variable:"), 
-                           c(" "), selected = " "
+                           choices=character(0), selected = character(0)
                ),
                selectInput(ns("responsevar"), label = tags$small("Response Variable:"), 
-                           c(" "), selected = " "
+                           choices=c(""), selected = ""
                ),
                checkboxInput(ns("AddPoints"),label=tags$small("Add points (jitter)"),value = FALSE),
                
@@ -83,11 +83,11 @@ sidebarLayout(
                sliderInput(ns("numBins"), "Number of bins:",
                            min = 20, max = 200, value = 40),
                
-               # Still under contstruction...
                checkboxInput(ns("animate"),label="Animate Plot:",value = FALSE),
                
                selectInput(ns("animateby"), label = tags$small("Animate By:"),
-                           c(" "), selected = " ")
+                           choices=character(0), selected = character(0)
+               )
                
   ), # sidebarPanel
   mainPanel(width = 10,

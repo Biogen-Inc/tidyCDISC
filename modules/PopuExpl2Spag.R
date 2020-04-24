@@ -19,29 +19,14 @@ dat <- sort(names(df()[ , which(sapply(df(),is.date  ))])) # all date
 # restrict seltimevar to AVISIT, AVISITN, VSDY
 seltime <- select(df(), ends_with("DY"), starts_with("AVIS"))
 
-updateSelectInput(
-  session = session,
-  inputId = "seltimevar",
-  choices = sort(names(seltime)),
-  selected = " ")
+updateSelectInput(session = session, inputId = "seltimevar",  choices = c("",sort(names(seltime))), selected = "")
 
-updateSelectInput(
-  session = session,
-  inputId = "groupbyvar",
-  choices = c("USUBJID","SUBJID"),
-  selected = "USUBJID")
+updateSelectInput(session = session, inputId = "groupbyvar", choices = c("USUBJID","SUBJID"), selected = "USUBJID")
 
-updateSelectInput(
-  session = session,
-  inputId = "responsevar",
-  choices = sort(names(select(df(),ends_with("BL"),any_of(c("AVAL","BASE","CHG"))))),
-  selected = " ")
+updateSelectInput(session = session, inputId = "responsevar", 
+                  choices = c("",sort(names(select(df(),ends_with("BL"),any_of(c("AVAL","BASE","CHG")))))), selected = "")
 
-updateSelectInput(
-  session = session,
-  inputId = "animateby",
-  choices = c(sort(c(num,dat))),
-  selected = " ")
+updateSelectInput(session = session, inputId = "animateby", choices = c("",sort(c(num,dat))))
 
 # set checkbox to FALSE
 updateCheckboxInput(session = session, inputId = "animate", value = FALSE)
@@ -49,10 +34,12 @@ updateCheckboxInput(session = session, inputId = "animate", value = FALSE)
 # update subsequent inputselects based on PARAM code selection
 observeEvent(input$selPrmCode, {
   
+  req(input$selPrmCode != "") 
+  
   # subset data based on Parameter Code selection
   dfsub <<- filter(df(),PARAMCD == input$selPrmCode) # superassignment operator
 
-}, ignoreInit = FALSE) # observeEvent(input$selPrmCode
+}, ignoreInit = TRUE) # observeEvent(input$selPrmCode
 
 # set default animateby var whenever seltimevar changes
 observeEvent(input$seltimevar, {
@@ -61,10 +48,13 @@ observeEvent(input$seltimevar, {
 
 output$PlotlyOut <- renderPlotly({
   
-  req(input$radio != "0")
-  req(input$seltimevar  != " ") 
-  req(input$responsevar != " ")
+  req(input$selPrmCode != "") 
+  req(!is.null(dfsub))
   
+  # Wait for variables
+  req(!is_empty(input$seltimevar) && input$seltimevar != "")
+  req(!is_empty(input$responsevar) && input$responsevar != "")
+
   labx <- sjlabelled::get_label(dfsub[[input$seltimevar]])
   laby <- sjlabelled::get_label(dfsub[[input$responsevar]])
   
@@ -93,7 +83,7 @@ output$PlotlyOut <- renderPlotly({
 
 
   if (input$animate == TRUE) {
-    req(input$animateby != " ")
+    req(input$animateby != "")
     
     accumulate_by <- function(dat, var) {
       var <- lazyeval::f_eval(var, dat)
@@ -173,9 +163,13 @@ output$PlotlyOut <- renderPlotly({
 
 output$DataTable <- DT::renderDataTable({
   
-  req(input$seltimevar  != " ") 
-  req(input$responsevar != " ") 
+  req(input$selPrmCode != "") 
+  req(!is.null(dfsub))
   
+  # Wait for variables
+  req(!is_empty(input$seltimevar)  && input$seltimevar  != "")
+  req(!is_empty(input$responsevar) && input$responsevar != "")
+
   tableout <- dfsub %>%
     dplyr::select(!!sym(input$groupbyvar), !!sym(input$seltimevar), !!sym(input$responsevar))
   

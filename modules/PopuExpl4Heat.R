@@ -9,6 +9,7 @@ widgets <- c("selPrmCode","selxvar","selyvar","selzvar","fillType","heatMapFill"
 map(widgets, function(x) shinyjs::show(x))
 
 dfsub <- NULL  # assign dfsub in function environment
+makeReactiveBinding("dfsub")
 
 # function mode
 mode <- function(codes){
@@ -16,43 +17,22 @@ mode <- function(codes){
 }
 # num <- sort(names(df()[ , which(sapply(df(),is.numeric  ))])) # all num
 
-updateSelectInput(
-  session = session,
-  inputId = "selxvar",
-  choices = c(" ",sort(names(df()))),
-  selected = " ")
-
-updateSelectInput(
-  session = session,
-  inputId = "selyvar",
-  choices = c(" ",sort(names(df()))),
-  selected = " ") 
-
-updateSelectInput(
-  session = session,
-  inputId = "selzvar",
-  choices = c(" ",sort(names(df()))),
-  selected = " ") 
-
+updateSelectInput(session = session, inputId = "selxvar", choices = c("",sort(names(df()))), selected = "")
+updateSelectInput(session = session, inputId = "selyvar", choices = c("",sort(names(df()))), selected = "") 
+updateSelectInput(session = session, inputId = "selzvar", choices = c("",sort(names(df()))), selected = "") 
 
 observeEvent(input$selPrmCode, {
     
-    req(input$selPrmCode != " ") 
+    req(!is_empty(input$selPrmCode) && input$selPrmCode != "") 
   
     # subset data based on Parameter Code selection
     dfsub <<- filter(df(),PARAMCD == input$selPrmCode) # superassignment operator
-    
-    updateSelectInput(
-      session = session,
-      inputId = "selyvar",
-      choices = c(" ",sort(names(dfsub))),
-      selected = " ") 
-    
-}, ignoreInit = FALSE) # observeEvent(input$selPrmCode
+
+}, ignoreInit = TRUE) # observeEvent(input$selPrmCode
 
 observeEvent(input$fillType, {
 
-  req(input$selPrmCode != " ")
+  req(input$selPrmCode != "")
   
       if (input$fillType == "Corr Matrix") {
         
@@ -87,16 +67,17 @@ observeEvent(input$fillType, {
         shinyjs::show(id="heatMapFill")
       }
       
-}) # input$fillType
+}, ignoreInit = TRUE) # input$fillType
     
 output$PlotlyOut <- renderPlotly({
   
+  req(input$selPrmCode != "") 
+  req(!is.null(dfsub))
   if (input$fillType %in% c("Use Counts","fill selected")) {
     
-    # Wait for variables
-    req(input$selxvar != " ")
-    req(input$selyvar != " ")
-    req(input$selPrmCode != " ")
+  # Wait for variables
+  req(!is_empty(input$selxvar) && input$selxvar != "")
+  req(!is_empty(input$selyvar) && input$selyvar != "")
 
   # set def.value to use name if the variable has no label attribute
   labx <- sjlabelled::get_label(dfsub[[input$selxvar]], def.value = unique(input$selxvar))
@@ -106,7 +87,7 @@ output$PlotlyOut <- renderPlotly({
   dfsub <- filter(dfsub, !is.na(!!sym(input$selxvar)), !is.na(!!sym(input$selyvar)) ) 
 
   # correction for overplotting
-  # dfsub <- fnoverplt(dfsub,input$selxvar)
+  dfsub <- fnoverplt(dfsub,input$selxvar, input$selyvar)
   }
   
   if (input$fillType == "Use Counts") {
@@ -128,8 +109,10 @@ output$PlotlyOut <- renderPlotly({
 
   } else if (input$fillType == "Fill Variable") {  
 
-    req(input$selzvar != " ")
-    
+    req(!is_empty(input$selxvar) && input$selxvar != "")
+    req(!is_empty(input$selyvar) && input$selyvar != "")
+    req(!is_empty(input$selzvar) && input$selzvar != "")
+
     # set def.value to use name if the variable has no label attribute
     labx <- sjlabelled::get_label(dfsub[[input$selxvar]], def.value = unique(input$selxvar))
     laby <- sjlabelled::get_label(dfsub[[input$selyvar]], def.value = unique(input$selyvar))
@@ -166,8 +149,6 @@ output$PlotlyOut <- renderPlotly({
     
     
     fillvar <- reactive({ input$heatMapFill })
-    print("in heatmap")
-    print(fillvar())
 
     # p <- ggplot(dfsub, 
     #             aes(!!sym(input$selxvar), y = !!sym(input$selyvar), z = !!sym(input$selzvar))) +
@@ -238,15 +219,17 @@ output$PlotlyOut <- renderPlotly({
 # table needs more work
 output$DataTable <- DT::renderDataTable({
   
+  req(input$selPrmCode != "") 
   req(input$fillType %in% c("Use Counts","Fill Variable"))
   
+  req(!is.null(dfsub))
+  
   # Wait for variables
-  req(input$selxvar != " ")
-  req(input$selyvar != " ")
-  req(input$selPrmCode != " ")
+  req(!is_empty(input$selxvar) && input$selxvar != "")
+  req(!is_empty(input$selyvar) && input$selyvar != "")
   
   # correction for overplotting
-  # dfsub <- fnoverplt(dfsub,input$selxvar, input$selyvar)
+  dfsub <- fnoverplt(dfsub,input$selxvar, input$selyvar)
   
   if (input$fillType == "Use Counts") {
 
@@ -259,8 +242,8 @@ output$DataTable <- DT::renderDataTable({
     
   } else if (input$fillType == "Fill Variable") {
     
-  req(input$selzvar != " ")
-    
+  req(!is_empty(input$selzvar) && input$selzvar != "")
+
   tableout <- dfsub %>%
   group_by(PARAMCD, !!sym(input$selxvar), !!sym(input$selyvar) ) %>%
   summarise(Count = n(),
