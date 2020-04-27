@@ -94,7 +94,7 @@ vv_dy_name <- eventReactive(list(input$plot_adam), {
      shinyjs::hide(id = "plot_hor")
      shinyjs::hide(id = "overlay_events")
      shinyjs::hide(id = "overlay_event_vals")
-     sel_vst_var <- NULL
+     sel_vst_var <- ""
    } else { 
      
      shinyjs::show(id = "plot_param")
@@ -131,8 +131,7 @@ vv_dy_name <- eventReactive(list(input$plot_adam), {
   observe({
     req(input$plot_adam)
     
-    # cat(paste("\n",substr(input$visit_var,nchar(input$visit_var)-1,nchar(input$visit_var))))
-    
+    # can't get rid of this note flashing!
     if(substr(input$visit_var,nchar(input$visit_var)-1,nchar(input$visit_var)) == "DY"){
       shinyjs::hide(id = "display_dy")
       output$display_dy <- renderText({NULL})
