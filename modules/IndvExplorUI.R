@@ -77,7 +77,7 @@ IndvExplorUI <- function(id, label = "Individual Explorer") {
     # textOutput(ns("subjid_subtitle")),
     # checkboxInput(ns("bds_remove_filter"), "Remove data filters defined above", value = FALSE),
     fixedRow(
-      column(3,
+      column(2,
         selectInput(
         ns("plot_adam"),
         label = HTML("Select a loaded ADaM<br/>with columns 'PARAM' & 'AVAL'"),
@@ -85,14 +85,14 @@ IndvExplorUI <- function(id, label = "Individual Explorer") {
         selected =  " "
         )
       ),
-      column(3,
+      column(2,
         selectInput(
           ns("plot_param"),
           label = HTML("<br/>Select a Parameter / Metric:"),
           choices = c(" "),selected = " "
         )
       ),
-      column(3,
+      column(2,
        selectInput(
          ns("visit_var"),
          label = HTML("<br/>Select a Visit Variable"),
@@ -106,7 +106,26 @@ IndvExplorUI <- function(id, label = "Individual Explorer") {
            choices = c(" ")
          )
       ),
-      column(1)
+      column(2,
+             checkboxGroupInput(
+               ns("overlay_events"),
+               label = HTML("<br/>Overlay Events:"),
+               choices = c(" ")
+             ),
+             div(style = "color: blue;",
+                 textOutput(ns("display_dy"))
+                 )
+             
+      ),
+      # conditionalPanel(condition = "length(input.overlay_events) > 0", ns = ns, # won't work
+            column(2,
+               selectInput(
+                 ns("overlay_event_vals"),
+                 label = HTML("<br/>Select Types of Events"),
+                 choices = c(" ")
+               )
+             # )
+      )
     ),
     
     # fluidRow(column(6, DT::dataTableOutput(ns("DataTable"))),

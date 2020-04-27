@@ -15,6 +15,7 @@ IndvExpl2SelPatno <- function(input, output, session, datafile, loaded_adams, fi
 
   # observeEvent for inputselPatno 
   observeEvent(input$selPatNo, {
+  #choices <- eventReactive(input$selPatNo, {
     
     req(input$selPatNo != " ") # selPatNo cannot be blank
     
@@ -47,6 +48,10 @@ IndvExpl2SelPatno <- function(input, output, session, datafile, loaded_adams, fi
     shinyjs::hide(id = "events_tv_caption2")
     shinyjs::hide(id = "eventsPlot")
     shinyjs::hide(id = "eventsTable")
+    shinyjs::hide(id = "display_dy")
+    output$display_dy <- renderText({NULL})
+    shinyjs::hide(id = "overlay_events")
+    shinyjs::hide(id = "overlay_event_vals")
     
     
     output$demogInfo <- DT::renderDataTable({
@@ -127,9 +132,16 @@ IndvExpl2SelPatno <- function(input, output, session, datafile, loaded_adams, fi
       selected = NULL,
       inline = TRUE)
     
+    updateCheckboxGroupInput(
+      session = session,
+      inputId = "overlay_events",
+      choices = unlist(choices), # optionally convert list to array
+      selected = NULL)
+    
+    # return(choices)
   }) # observeEvent
 
   # return selected patient USUBJID from module
-  return(reactive({ input$selPatNo }))
+  return(reactive({ input$selPatNo })) #list(occr_choices = choices,
 
 } # IndvExpl2SelPatno

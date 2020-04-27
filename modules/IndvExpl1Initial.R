@@ -207,6 +207,12 @@ IndvExpl1Initial <- function(input, output, session, datafile, dataselected){
     shinyjs::hide(id = "plot_param")
     shinyjs::hide(id = "visit_var")
     shinyjs::hide(id = "plot_hor")
+    
+    shinyjs::hide(id = "display_dy")
+    output$display_dy <- renderText({NULL})
+    shinyjs::hide(id = "overlay_events")
+    shinyjs::hide(id = "overlay_event_vals")
+    
   })
   
   # pass the filtered data from above, but also filtered by 

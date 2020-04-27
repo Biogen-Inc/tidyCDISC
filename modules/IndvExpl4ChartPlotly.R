@@ -1,4 +1,4 @@
-IndvExpl4ChartPlotly <- function(input, output, session, datafile, loaded_adams, usubjid, filtered_dat){ #, dataselected
+IndvExpl4ChartPlotly <- function(input, output, session, datafile, loaded_adams, usubjid, filtered_dat){ #, dataselected , occr_choices
   
   ns <- session$ns
   
@@ -17,7 +17,7 @@ IndvExpl4ChartPlotly <- function(input, output, session, datafile, loaded_adams,
   
   output$plot_header <- renderText({
     req(!is.null(datafile()))
-    paste0("Plot Patient Metrics by Visit") #'", usubjid(), "' 
+    paste0("Plot Patient Metrics by Visit") #'", usubjid, "' 
   })
   
   # Need to refresh these every time a new subject is selected
@@ -41,11 +41,19 @@ IndvExpl4ChartPlotly <- function(input, output, session, datafile, loaded_adams,
       selected = " "
     )
     
+    # cat(paste("\n",input$overlay_events))
+    # cat(paste("\n",length(input$overlay_events) > 0))
+    
   })
 
-# upon selecting a plottable adam data set from dropdown
-observeEvent(list(input$plot_adam), { # ,input$bds_remove_filter # add this back in if we want to enable total tab filtering
   
+
+
+
+  
+# upon selecting a plottable adam data set from dropdown
+# observeEvent(list(input$plot_adam), { # ,input$bds_remove_filter # add this back in if we want to enable total tab filtering
+vv_dy_name <- eventReactive(list(input$plot_adam), {
   # make sure a subject has been selected
   req(usubjid() != " " & input$plot_adam != " ") # selPatNo cannot be blank
   
@@ -84,13 +92,17 @@ observeEvent(list(input$plot_adam), { # ,input$bds_remove_filter # add this back
      shinyjs::hide(id = "plot_param")
      shinyjs::hide(id = "visit_var")
      shinyjs::hide(id = "plot_hor")
-     
+     shinyjs::hide(id = "overlay_events")
+     shinyjs::hide(id = "overlay_event_vals")
+     sel_vst_var <- NULL
    } else { 
      
      shinyjs::show(id = "plot_param")
      shinyjs::show(id = "visit_var")
      shinyjs::show(id = "DataTable")
      shinyjs::show(id = "PlotChart")
+     shinyjs::show(id = "overlay_events")
+     
      
      # update params list
      updateSelectInput (
@@ -111,7 +123,39 @@ observeEvent(list(input$plot_adam), { # ,input$bds_remove_filter # add this back
        selected = ifelse(length(sel_vst_var) > 0, sel_vst_var, character(0))
      )
    }
-  }) # observe      
+   return(sel_vst_var)
+  }) # eventReactive
+
+
+
+  observe({
+    req(input$plot_adam)
+    
+    # cat(paste("\n",substr(input$visit_var,nchar(input$visit_var)-1,nchar(input$visit_var))))
+    
+    if(substr(input$visit_var,nchar(input$visit_var)-1,nchar(input$visit_var)) == "DY"){
+      shinyjs::hide(id = "display_dy")
+      output$display_dy <- renderText({NULL})
+      shinyjs::show(id = "overlay_events")
+    } else {
+      shinyjs::hide(id = "overlay_events")
+      output$display_dy <- renderText({
+        paste0("<br/>You can overlay events when Vist Variable ends in 'DY': ", vv_dy_name())
+      })
+      shinyjs::show(id = "display_dy")
+    }
+    
+    # display Event Vals if an 1 overlay_events is selected an visit_var == ends_with("DY")
+    if(length(input$overlay_events) > 0 ){
+      shinyjs::show(id = "overlay_event_vals")
+    } else {
+      shinyjs::hide(id = "overlay_event_vals")
+    }
+  })
+  
+  
+  
+  
   
   # update horizontal line choices
   observeEvent(list(input$plot_param), { # ,input$bds_remove_filter # add this back in if we want to enable total tab filtering
