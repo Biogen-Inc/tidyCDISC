@@ -239,9 +239,16 @@ vv_dy_name <- eventReactive(list(input$plot_adam), {
           pull()
 
         if(!is.null(day1)){
+          # names2 <- c("Milestones","Adverse Events","Concomitant Meds","Baseline","Screening") # ac: labels
+          # vline_eventtype_cols <- c(my_cols[1:3],my_gg_color_hue(2))
+          # v_event_cols <- setNames(vline_eventtype_cols,names2)
+          # dashes <- c("solid","dotted","dashed","solid","solid")
+          # v_event_lines <- setNames(dashes,names2)
+          
           vline_dat <-
             olay_events %>%
-            mutate(!!INPUT_visit_var := ifelse(START - day1 < 0, START - day1, START - day1 + 1))
+            mutate(!!INPUT_visit_var := ifelse(START - day1 < 0, START - day1, START - day1 + 1)) %>%
+            rename("Event" = "EVENTTYP")
             # mutate(paste(vv_dy_name(),"= ifelse(START - day1 < 0, START - day1, START - day1 + 1)"))
         }
       }
@@ -289,22 +296,28 @@ vv_dy_name <- eventReactive(list(input$plot_adam), {
            )
          
          
+         # if a lengend is needed, let's just define the line colors and types in one place
+         if(length(input$plot_hor) > 0 | length(input$overlay_events) > 0 & input$visit_var == vv_dy_name()){
+           
+           names2 <- c("Milestones","Adverse Events","Concomitant Meds","Baseline","Screening") # ac: labels
+           vline_eventtype_cols <- c(my_cols[1:3],my_gg_color_hue(2))
+           v_event_cols <- setNames(vline_eventtype_cols,names2)
+           dashes <- c("solid","dotted","dashed","solid","solid")
+           v_event_lines <- setNames(dashes,names2)
+           
+           lb_plot <- lb_plot +
+             scale_color_manual(values= v_event_cols) +
+             scale_linetype_manual(values = v_event_lines)
+         }
+         
          
          # plot vlines using events dataset
          if(length(input$overlay_events) > 0 & input$visit_var == vv_dy_name()){ #& "ADLB" %in% loaded_adams() # overlay checkbox won't appear unless this is true
            if (!is.null(olay_events) && nrow(olay_events) > 0){
              if(!is.null(day1)){
                
-               names2 <- c("Milestones","Adverse Events","Concomitant Meds") # ac: labels
-               vline_eventtype_cols <- my_cols[1:3]
-               v_event_cols <- setNames(vline_eventtype_cols,names2)
-               dashes <- c("solid","dotted","dashed")
-               v_event_lines <- setNames(dashes,names2)
-               
                lb_plot <- lb_plot + 
-                 geom_vline(data = vline_dat, aes(xintercept = !!INPUT_visit_var, colour = EVENTTYP, linetype = EVENTTYP)) +
-                 scale_color_manual(values= v_event_cols) +
-                 scale_linetype_manual(values = v_event_lines)
+                 geom_vline(data = vline_dat, aes(xintercept = !!INPUT_visit_var, colour = Event, linetype = Event))
               }
            }
          }
@@ -322,11 +335,11 @@ vv_dy_name <- eventReactive(list(input$plot_adam), {
          # lohi <- paste("LO:",unique(plot_dat$LBSTNRLO),"HI:",unique(plot_dat$LBSTNRHI))
          if("Screening" %in% input$plot_hor){
            lb_plot <- lb_plot +
-             geom_hline(plot_scr, mapping = aes(yintercept = AVAL, colour = Event)) #, colour = "darkgreen"
+             geom_hline(plot_scr, mapping = aes(yintercept = AVAL, colour = Event))
          }
          if("Baseline" %in% input$plot_hor){
            lb_plot <- lb_plot +
-             geom_hline(plot_base, mapping = aes(yintercept = AVAL, colour = Event)) #, colour = "purple")
+             geom_hline(plot_base, mapping = aes(yintercept = AVAL, colour = Event))
          }
          
          ly <- ggplotly(lb_plot, tooltip = "text") %>%
