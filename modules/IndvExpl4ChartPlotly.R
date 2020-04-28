@@ -294,9 +294,18 @@ vv_dy_name <- eventReactive(list(input$plot_adam), {
          if(length(input$overlay_events) > 0 & input$visit_var == vv_dy_name()){ #& "ADLB" %in% loaded_adams() # overlay checkbox won't appear unless this is true
            if (!is.null(olay_events) && nrow(olay_events) > 0){
              if(!is.null(day1)){
+               
+               names2 <- c("Milestones","Adverse Events","Concomitant Meds") # ac: labels
+               vline_eventtype_cols <- my_cols[1:3]
+               v_event_cols <- setNames(vline_eventtype_cols,names2)
+               dashes <- c("solid","dotted","dashed")
+               v_event_lines <- setNames(dashes,names2)
+               
                lb_plot <- lb_plot + 
-                 geom_vline(data = vline_dat, aes(xintercept = !!INPUT_visit_var, colour = EVENTTYP, linetype = EVENTTYP)) #, colour = "blue"
-             }
+                 geom_vline(data = vline_dat, aes(xintercept = !!INPUT_visit_var, colour = EVENTTYP, linetype = EVENTTYP)) +
+                 scale_color_manual(values= v_event_cols) +
+                 scale_linetype_manual(values = v_event_lines)
+              }
            }
          }
          

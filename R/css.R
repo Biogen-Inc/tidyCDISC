@@ -1,6 +1,7 @@
 # if we every add another type of event to the events table,
 # expand this selection to cover all our bases
 my_cols <- brewer.pal(7,"Pastel2")
+
 css <- paste0("
   .nav li a.disabled {
   background-color: #aaa !important;
@@ -17,4 +18,4 @@ css <- paste0("
   .vis-item.MH_FDH { background-color: ",my_cols[6],"; }
   .vis-item.MH_DH { background-color: ",my_cols[7],"; }
 ")
-# css
+# feel free to add more css above

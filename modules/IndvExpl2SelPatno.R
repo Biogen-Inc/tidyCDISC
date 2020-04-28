@@ -131,11 +131,16 @@ IndvExpl2SelPatno <- function(input, output, session, datafile, loaded_adams, fi
       selected = NULL,
       inline = TRUE)
     
-    #################
-    # No Labs version
-    #################
-    choices2 <- as.list(unlist(c(list(checked1,checked2,checked3,as.list(checked5)))))
-    names2 <- c("Milestones","Adverse Events","Concomitant Meds",mh_names) # ac: labels
+    #############################
+    # No Labs version for vlines
+    #############################
+    choices2 <- as.list(unlist(c(list(checked1,checked2,checked3))))
+    names2 <- c("Milestones","Adverse Events","Concomitant Meds") # ac: labels
+    
+    vline_eventtype_cols <- my_cols[1:3]
+    v_event_cols <- setNames(vline_eventtype_cols,names2)
+    dashes <- c("solid","dotted","dashed")
+    v_event_lines <- setNames(dashes,names2)
     
     # build a named list & Remove NULLs from the list
     choices2 <- setNames(choices2,names2)

@@ -12,7 +12,7 @@ build_events <- function(
       ae_rec <- (if(input_apply_filter == T) my_datafile[["ADAE"]] %>% semi_join(my_filtered_dat) else my_datafile[["ADAE"]]) %>% 
         filter(USUBJID == my_usubjid) %>%
         filter(!is.na(AESTDT)) %>%
-        mutate(EVENTTYP = "Adverse Event", DOMAIN = "AE") %>%
+        mutate(EVENTTYP = "Adverse Events", DOMAIN = "AE") %>%
         distinct(USUBJID, EVENTTYP, AESTDT, AEDECOD, AESEV, AESER, DOMAIN) %>%
         mutate(
           START = AESTDT,
@@ -82,7 +82,7 @@ if ("ADCM" %in% my_loaded_adams & "CM" %in% c(input_checkbox)) {
     cm_rec <- (if(input_apply_filter == T) my_datafile[["ADCM"]] %>% semi_join(my_filtered_dat) else my_datafile[["ADCM"]]) %>%
       filter(USUBJID == my_usubjid) %>%
       filter(CMDECOD != "") %>%
-      mutate(EVENTTYP = "Concomitant Medications", DOMAIN = "CM") %>%
+      mutate(EVENTTYP = "Concomitant Meds", DOMAIN = "CM") %>%
       distinct(USUBJID, EVENTTYP, CMSTDT, CMDECOD, DOMAIN) %>%
       mutate(START = CMSTDT,
              END = NA, 
