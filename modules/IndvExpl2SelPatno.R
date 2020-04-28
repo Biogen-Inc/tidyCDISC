@@ -119,9 +119,8 @@ IndvExpl2SelPatno <- function(input, output, session, datafile, loaded_adams, fi
     choices <- as.list(unlist(c(list(checked1,checked2,checked3,checked4,as.list(checked5)))))
     names <- c("Milestones","Adverse Events","Concomitant Meds","Labs",mh_names) # ac: labels
     
-    # build a named list
+    # build a named list & Remove NULLs from the list
     choices <- setNames(choices,names)
-    # Remove NULLs from the list
     choices <- choices[!sapply(choices,is.na)]
     
     # update the checkbox group
@@ -132,10 +131,20 @@ IndvExpl2SelPatno <- function(input, output, session, datafile, loaded_adams, fi
       selected = NULL,
       inline = TRUE)
     
+    #################
+    # No Labs version
+    #################
+    choices2 <- as.list(unlist(c(list(checked1,checked2,checked3,as.list(checked5)))))
+    names2 <- c("Milestones","Adverse Events","Concomitant Meds",mh_names) # ac: labels
+    
+    # build a named list & Remove NULLs from the list
+    choices2 <- setNames(choices2,names2)
+    choices2 <- choices2[!sapply(choices2,is.na)]
+    
     updateCheckboxGroupInput(
       session = session,
       inputId = "overlay_events",
-      choices = unlist(choices), # optionally convert list to array
+      choices = unlist(choices2), # optionally convert list to array
       selected = NULL)
     
     # return(choices)

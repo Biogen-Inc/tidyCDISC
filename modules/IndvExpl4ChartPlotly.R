@@ -132,7 +132,7 @@ vv_dy_name <- eventReactive(list(input$plot_adam), {
     req(input$plot_adam)
     
     # can't get rid of this note flashing!
-    if(substr(input$visit_var,nchar(input$visit_var)-1,nchar(input$visit_var)) == "DY"){
+    if(substr(input$visit_var,nchar(input$visit_var)-1,nchar(input$visit_var)) == "DY" & "ADLB" %in% loaded_adams()){
       shinyjs::hide(id = "display_dy")
       output$display_dy <- renderText({NULL})
       shinyjs::show(id = "overlay_events")
@@ -190,9 +190,12 @@ vv_dy_name <- eventReactive(list(input$plot_adam), {
     }
     else{shinyjs::hide(id = "plot_hor")}
   })
+  
+  
+  
 
   # If any param or visit var are updated, run code below
-  observeEvent(list(input$plot_param, input$visit_var), { # ,input$bds_remove_filter # add this back in if we want to enable total tab filtering
+  observeEvent(list(input$plot_param, input$visit_var, input$overlay_events), { # ,input$bds_remove_filter # add this back in if we want to enable total tab filtering
     
     # don't run until a patient and ADAM are selected
     req(usubjid() != " " & input$plot_adam != " ") # selPatNo cannot be blank
@@ -213,7 +216,41 @@ vv_dy_name <- eventReactive(list(input$plot_adam), {
     
     INPUT_visit_var <- sym(input$visit_var)
     
-     output$PlotChart <- renderPlotly({
+    
+    
+    # create data to plot vlines using events dataset
+    if(length(input$overlay_events) > 0 & input$visit_var == vv_dy_name()){ #& "ADLB" %in% loaded_adams() # overlay checkbox won't appear unless this is true
+      
+      # See build_events_df.R
+      olay_events <-
+        build_events(
+          input_checkbox = input$overlay_events
+          , input_apply_filter = input$events_apply_filter
+          , my_usubjid = usubjid(), my_loaded_adams = loaded_adams(), my_datafile = datafile(), my_filtered_dat = filtered_dat()
+        )
+      
+      # If df is not null or empty, then let's
+      if (!is.null(olay_events) && nrow(olay_events) > 0){
+
+        day1 <-
+          datafile()[["ADLB"]] %>%
+          filter(USUBJID == usubjid() & PARAMCD == input$plot_param & LBDY == 1) %>%
+          distinct(LBDT) %>%
+          pull()
+
+        if(!is.null(day1)){
+          vline_dat <-
+            olay_events %>%
+            mutate(!!INPUT_visit_var := ifelse(START - day1 < 0, START - day1, START - day1 + 1))
+            # mutate(paste(vv_dy_name(),"= ifelse(START - day1 < 0, START - day1, START - day1 + 1)"))
+        }
+      }
+    }
+    
+    
+    
+    
+    output$PlotChart <- renderPlotly({
        
        # In the labs, label what the blue lines are in the legend or hover text.
        # make sure a LabCode has been selected
@@ -251,6 +288,19 @@ vv_dy_name <- eventReactive(list(input$plot_adam), {
                 subtitle = paste(ifelse(input$plot_adam == "ADLB","test<br>",""),"USUBJID:",usubjid())
            )
          
+         
+         
+         # plot vlines using events dataset
+         if(length(input$overlay_events) > 0 & input$visit_var == vv_dy_name()){ #& "ADLB" %in% loaded_adams() # overlay checkbox won't appear unless this is true
+           if (!is.null(olay_events) && nrow(olay_events) > 0){
+             if(!is.null(day1)){
+               lb_plot <- lb_plot + 
+                 geom_vline(data = vline_dat, aes(xintercept = !!INPUT_visit_var, colour = EVENTTYP, linetype = EVENTTYP)) #, colour = "blue"
+             }
+           }
+         }
+         
+         
          if(input$plot_adam == "ADLB"){
            lohi <- paste("LO:",unique(plot_dat$LBSTNRLO),"HI:",unique(plot_dat$LBSTNRHI))
            lb_plot <- lb_plot + 
@@ -259,7 +309,6 @@ vv_dy_name <- eventReactive(list(input$plot_adam), {
              theme(
                plot.margin = margin(b = 1, unit = "cm") #t = 1, # used to put margin at top of graph for caption
              ) 
-             
          }
          # lohi <- paste("LO:",unique(plot_dat$LBSTNRLO),"HI:",unique(plot_dat$LBSTNRHI))
          if("Screening" %in% input$plot_hor){
@@ -295,6 +344,9 @@ vv_dy_name <- eventReactive(list(input$plot_adam), {
        } # if (nrow(plot_dat) > 0)
      }) # renderPlotly
        
+    
+    
+    
        
      output$DataTable <- DT::renderDataTable(server = FALSE, { # ALLOWS downloading all rows, and not just displayed rows
        
@@ -317,15 +369,16 @@ vv_dy_name <- eventReactive(list(input$plot_adam), {
        
        if (nrow(lb_tab) > 0) {
          DT::datatable(lb_tab,
-                       style="default", 
+                       style="default",
                        extensions = "Buttons",
-                       # class="compact", 
+                       # class="compact",
                        options = list(dom = 'Bftp', pageLength = 20,
                                       buttons = list(list(
-                                        extend = "excel", 
+                                        extend = "excel",
                                         filename = paste("Pat", usubjid(), "Param", input$plot_param, "dwnd",str_replace_all(str_replace(Sys.time(), " ", "_"),":", "-"), sep = "_")
                                       ))
                       ))
+         # DT::datatable(vline_dat)
        }
        
      }) #renderDataTable

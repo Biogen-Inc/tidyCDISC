@@ -247,6 +247,8 @@ IndvExpl3CheckGroup <- function(input, output, session, datafile, loaded_adams, 
       #   arrange(sort_start, ord, EVENTTYP) %>%
       #   filter(DOMAIN %in% c(strng)) %>%
       #   select(-USUBJID, -ord, -sort_start)
+      
+      # See build_events_df.R
       uni_rec <- build_events(input_checkbox = input$checkGroup
                               , input_apply_filter = input$events_apply_filter
                               , my_usubjid = usubjid()
