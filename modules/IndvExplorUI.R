@@ -112,8 +112,9 @@ IndvExplorUI <- function(id, label = "Individual Explorer") {
                label = HTML("<br/>Overlay Events:"),
                choices = c(" ")
              ),
-             div(style = "color: blue;",
-                 textOutput(ns("display_dy"))
+             div(style = "color: blue; font-size: 12px;",
+                 uiOutput(ns("display_dy"))
+                 # textOutput(ns("display_dy"))
                  )
              
       ),

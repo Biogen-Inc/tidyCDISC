@@ -134,18 +134,21 @@ vv_dy_name <- eventReactive(list(input$plot_adam), {
     # can't get rid of this note flashing!
     if(substr(input$visit_var,nchar(input$visit_var)-1,nchar(input$visit_var)) == "DY" & "ADLB" %in% loaded_adams()){
       shinyjs::hide(id = "display_dy")
-      output$display_dy <- renderText({NULL})
+      # output$display_dy <- renderText({NULL})
       shinyjs::show(id = "overlay_events")
     } else {
       shinyjs::hide(id = "overlay_events")
-      output$display_dy <- renderText({
-        paste0("<br/>You can overlay events when Vist Variable ends in 'DY': ", vv_dy_name())
+      # output$display_dy <- renderText({
+      #   paste0("<br/>You can overlay events when Vist Variable ends in 'DY': ", vv_dy_name())
+      # })
+      output$display_dy <- renderUI({
+        HTML(paste0("<br/><br/>You can overlay events when<br/>Visit Variable ends in 'DY': ", vv_dy_name()))
       })
       shinyjs::show(id = "display_dy")
     }
     
     # display Event Vals if an 1 overlay_events is selected an visit_var == ends_with("DY")
-    if(length(input$overlay_events) > 0 ){
+    if(substr(input$visit_var,nchar(input$visit_var)-1,nchar(input$visit_var)) == "DY" & length(input$overlay_events) > 0){
       shinyjs::show(id = "overlay_event_vals")
     } else {
       shinyjs::hide(id = "overlay_event_vals")
@@ -194,7 +197,7 @@ vv_dy_name <- eventReactive(list(input$plot_adam), {
   
   
 
-  # If any param or visit var are updated, run code below
+  # If any *param* or *visit var* are updated, run code below
   observeEvent(list(input$plot_param, input$visit_var, input$overlay_events), { # ,input$bds_remove_filter # add this back in if we want to enable total tab filtering
     
     # don't run until a patient and ADAM are selected
@@ -234,22 +237,16 @@ vv_dy_name <- eventReactive(list(input$plot_adam), {
 
         day1 <-
           datafile()[["ADLB"]] %>%
-          filter(USUBJID == usubjid() & PARAMCD == input$plot_param & LBDY == 1) %>%
-          distinct(LBDT) %>%
-          pull()
+          filter(USUBJID == usubjid() & LBDY == 1) %>%
+          summarize(min_lbdt = min(LBDT)) %>% # lbdt does not vary for a patient's 1st lbdy, but use min just to grab val
+          pull(min_lbdt)
 
         if(!is.null(day1)){
-          # names2 <- c("Milestones","Adverse Events","Concomitant Meds","Baseline","Screening") # ac: labels
-          # vline_eventtype_cols <- c(my_cols[1:3],my_gg_color_hue(2))
-          # v_event_cols <- setNames(vline_eventtype_cols,names2)
-          # dashes <- c("solid","dotted","dashed","solid","solid")
-          # v_event_lines <- setNames(dashes,names2)
           
           vline_dat <-
             olay_events %>%
             mutate(!!INPUT_visit_var := ifelse(START - day1 < 0, START - day1, START - day1 + 1)) %>%
             rename("Event" = "EVENTTYP")
-            # mutate(paste(vv_dy_name(),"= ifelse(START - day1 < 0, START - day1, START - day1 + 1)"))
         }
       }
     }
@@ -267,11 +264,11 @@ vv_dy_name <- eventReactive(list(input$plot_adam), {
          filter(!(is.na(!!INPUT_visit_var)) & PARAMCD == input$plot_param) # make sure AVISITN is not missing
        
        if("Screening" %in% input$plot_hor){
-         plot_scr <- plot_dat %>% subset(toupper(VISIT) == "SCREENING") %>% distinct(AVAL) %>% mutate(Event = "Screening")
+         plot_scr <- plot_dat %>% subset(toupper(VISIT) == "SCREENING") %>% distinct(AVAL) %>% mutate(Visit = "Screening")
          # plot_dat <- plot_dat %>% subset(!(toupper(plot_dat$VISIT) == "SCREENING")) # removes screening point from plot
        }
        if("Baseline" %in% input$plot_hor){
-         plot_base <- plot_dat %>% subset(toupper(AVISIT) == "BASELINE") %>% distinct(AVAL) %>% mutate(Event = "Baseline")
+         plot_base <- plot_dat %>% subset(toupper(AVISIT) == "BASELINE") %>% distinct(AVAL) %>% mutate(Visit = "Baseline")
          # plot_dat <- plot_dat %>% subset(!(toupper(plot_dat$AVISIT) == "BASELINE")) # removes baseline point from plot
        }
        
@@ -279,6 +276,7 @@ vv_dy_name <- eventReactive(list(input$plot_adam), {
 
          prm   <- unique(plot_dat$PARAM)
          
+         # GGPLOT2 OBJECT
          lb_plot <- ggplot(plot_dat, aes(x = !!INPUT_visit_var, y = AVAL)) + 
            geom_line() +
            geom_point(na.rm = TRUE, 
@@ -302,27 +300,40 @@ vv_dy_name <- eventReactive(list(input$plot_adam), {
            names2 <- c("Milestones","Adverse Events","Concomitant Meds","Baseline","Screening") # ac: labels
            vline_eventtype_cols <- c(my_cols[1:3],my_gg_color_hue(2))
            v_event_cols <- setNames(vline_eventtype_cols,names2)
-           dashes <- c("solid","dotted","dashed","solid","solid")
-           v_event_lines <- setNames(dashes,names2)
+           
+           # two dimensions in legend not really support in plotly
+           # https://github.com/ropensci/plotly/issues/1164
+           # dashes <- c("solid","dotted","dashed","solid","solid") 
+           # v_event_lines <- setNames(dashes,names2)
+           
+           # leg_name <- ifelse(length(input$plot_hor) > 0 & length(input$overlay_events) > 0 & input$visit_var == vv_dy_name(),NULL,"Event")
            
            lb_plot <- lb_plot +
-             scale_color_manual(values= v_event_cols) +
-             scale_linetype_manual(values = v_event_lines)
+             scale_color_manual(values= v_event_cols) #+ # , name = "Event"
+             # two dimensions in legend not really support in plotly
+             # https://github.com/ropensci/plotly/issues/1164
+             # scale_linetype_manual(values = v_event_lines, name = NULL)
          }
          
          
          # plot vlines using events dataset
          if(length(input$overlay_events) > 0 & input$visit_var == vv_dy_name()){ #& "ADLB" %in% loaded_adams() # overlay checkbox won't appear unless this is true
-           if (!is.null(olay_events) && nrow(olay_events) > 0){
-             if(!is.null(day1)){
+           if (!is.null(olay_events)){
+             if(!is.null(day1) & nrow(olay_events) > 0){
                
                lb_plot <- lb_plot + 
-                 geom_vline(data = vline_dat, aes(xintercept = !!INPUT_visit_var, colour = Event, linetype = Event))
+                 geom_vline(data = vline_dat, aes(xintercept = !!INPUT_visit_var,
+                                                  colour = Event,
+                                                  # linetype = Event, # two dimensions in legend not really support in plotly
+                                                  text = paste0(input$visit_var, ": ",!!INPUT_visit_var,
+                                                               "<br>", DECODE
+                                                        )
+                                                  ))
               }
            }
          }
          
-         
+         # If lab data, plot the normal low and high values for the drug, add a little space in the bottom margin
          if(input$plot_adam == "ADLB"){
            lohi <- paste("LO:",unique(plot_dat$LBSTNRLO),"HI:",unique(plot_dat$LBSTNRHI))
            lb_plot <- lb_plot + 
@@ -332,16 +343,21 @@ vv_dy_name <- eventReactive(list(input$plot_adam), {
                plot.margin = margin(b = 1, unit = "cm") #t = 1, # used to put margin at top of graph for caption
              ) 
          }
-         # lohi <- paste("LO:",unique(plot_dat$LBSTNRLO),"HI:",unique(plot_dat$LBSTNRHI))
+         
+         # Plotting hortizontal line
          if("Screening" %in% input$plot_hor){
            lb_plot <- lb_plot +
-             geom_hline(plot_scr, mapping = aes(yintercept = AVAL, colour = Event))
+             geom_hline(plot_scr, mapping = aes(yintercept = AVAL, colour = Visit))
          }
          if("Baseline" %in% input$plot_hor){
            lb_plot <- lb_plot +
-             geom_hline(plot_base, mapping = aes(yintercept = AVAL, colour = Event))
+             geom_hline(plot_base, mapping = aes(yintercept = AVAL, colour = Visit))
          }
+         # End: ggplot2 object
          
+         
+         
+         # PLOTLY OBJECT
          ly <- ggplotly(lb_plot, tooltip = "text") %>%
            layout(title = list(text = 
              paste0(prm," by Study Visit<sup>",
@@ -361,7 +377,10 @@ vv_dy_name <- eventReactive(list(input$plot_adam), {
                              xanchor = 'left',
                              showarrow = F)
          }
+         
          ly
+         
+         
          
        } # if (nrow(plot_dat) > 0)
      }) # renderPlotly
