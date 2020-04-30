@@ -198,7 +198,7 @@ vv_dy_name <- eventReactive(list(input$plot_adam), {
   
 
   # If any *param* or *visit var* are updated, run code below
-  observeEvent(list(input$plot_param, input$visit_var, input$overlay_events), { # ,input$bds_remove_filter # add this back in if we want to enable total tab filtering
+  observeEvent(list(input$plot_param, input$visit_var, input$overlay_events, input$overlay_event_vals), { # ,input$bds_remove_filter # add this back in if we want to enable total tab filtering
     
     # don't run until a patient and ADAM are selected
     req(usubjid() != " " & input$plot_adam != " ") # selPatNo cannot be blank
@@ -225,7 +225,7 @@ vv_dy_name <- eventReactive(list(input$plot_adam), {
     if(length(input$overlay_events) > 0 & input$visit_var == vv_dy_name()){ #& "ADLB" %in% loaded_adams() # overlay checkbox won't appear unless this is true
       
       # See build_events_df.R
-      olay_events <-
+      olay_events0 <-
         build_events(
           input_checkbox = input$overlay_events
           , input_apply_filter = input$events_apply_filter
@@ -233,8 +233,30 @@ vv_dy_name <- eventReactive(list(input$plot_adam), {
         )
       
       # If df is not null or empty, then let's
-      if (!is.null(olay_events) && nrow(olay_events) > 0){
+      if (!is.null(olay_events0) && nrow(olay_events0) > 0){
 
+        # if AE exists, create a new column that only contains aedecod
+        olay_events <-
+          olay_events0 %>%
+          mutate(filter_code = ifelse(EVENTTYP == "Adverse Events", substr(DECODE, 1, regexpr("AESEV:",DECODE)-2), as.character(DECODE)))
+        
+        # Grab AE events, CM, and milestones (if applicable)
+        event_val_lists <- c(as.list("All"),split(as.character(olay_events$filter_code), as.character(olay_events$EVENTTYP)))
+        
+        # update events list
+        curr_event_vals <- isolate(input$overlay_event_vals)
+        keep_vals <- curr_event_vals[curr_event_vals %in% unlist(event_val_lists)]
+        sel_ <- keep_vals
+          # ifelse(length(keep_vals) > 1 & "All" %in% keep_vals, keep_vals[keep_vals != "All"], keep_vals) # get rid of "All"
+        
+        cat(paste("\n",keep_vals))
+        cat(paste("\n",sel_))
+        
+        updateSelectizeInput(session, "overlay_event_vals",
+                             choices = event_val_lists,
+                             selected = sel_
+        )
+        
         day1 <-
           datafile()[["ADLB"]] %>%
           filter(USUBJID == usubjid() & LBDY == 1) %>%
@@ -243,13 +265,23 @@ vv_dy_name <- eventReactive(list(input$plot_adam), {
 
         if(!is.null(day1)){
           
-          vline_dat <-
+          vline_dat0 <-
             olay_events %>%
             mutate(!!INPUT_visit_var := ifelse(START - day1 < 0, START - day1, START - day1 + 1)) %>%
             rename("Event" = "EVENTTYP")
+          
+          if(!("All" %in% input$overlay_event_vals)){
+            vline_dat <-
+              vline_dat0 %>%
+              filter(filter_code %in% input$overlay_event_vals)
+          } else {
+            vline_dat <- vline_dat0
+          }
+          
         }
       }
     }
+    
     
     
     

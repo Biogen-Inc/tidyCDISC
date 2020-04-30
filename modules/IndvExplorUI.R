@@ -99,10 +99,10 @@ IndvExplorUI <- function(id, label = "Individual Explorer") {
          choices = c(" ", "AVISITN"),selected = " "
        )
       ),
-      column(2,
+      column(1,
          checkboxGroupInput(
            ns("plot_hor"),
-           label = HTML("<br/>Add horizontal line for:"),
+           label = HTML("<br/>Plot line for:"),
            choices = c(" ")
          )
       ),
@@ -118,16 +118,17 @@ IndvExplorUI <- function(id, label = "Individual Explorer") {
                  )
              
       ),
-      # conditionalPanel(condition = "length(input.overlay_events) > 0", ns = ns, # won't work
-            column(2,
-               selectInput(
-                 ns("overlay_event_vals"),
-                 label = HTML("<br/>Select Types of Events"),
-                 choices = c(" ")
-               )
-             # )
+      column(3,
+         selectizeInput(
+           ns("overlay_event_vals"),
+           label = HTML("<br/>Select Event Type(s)"),
+           multiple = T,
+           choices = c("All"),
+           selected = "All"
+         )
       )
-    ),
+      # ,column(1," ")
+    ), # end fixedRow
     
     # fluidRow(column(6, DT::dataTableOutput(ns("DataTable"))),
     #          column(6, plotlyOutput(ns("PlotChart"), width = "100%", height = "600px")))
