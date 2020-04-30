@@ -208,8 +208,8 @@ IndvExpl1Initial <- function(input, output, session, datafile, dataselected){
     shinyjs::hide(id = "visit_var")
     shinyjs::hide(id = "plot_hor")
     
+    output$display_dy <- renderUI({NULL})
     shinyjs::hide(id = "display_dy")
-    output$display_dy <- renderText({NULL})
     shinyjs::hide(id = "overlay_events")
     shinyjs::hide(id = "overlay_event_vals")
     

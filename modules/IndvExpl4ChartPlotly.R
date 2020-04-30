@@ -70,9 +70,9 @@ vv_dy_name <- eventReactive(list(input$plot_adam), {
     filter(USUBJID == usubjid()) %>%
     colnames()
   
-  # cat(paste('\n1: ',input$plot_adam))
+  cat(paste('\n0: ',input$plot_adam))
   # cat(paste('\n2:',paste(bds_cols, collapse = ", "),'\n'))
-  
+
    lb_data <- 
      # (if(input$bds_remove_filter == F) filtered_dat() %>% subset(data_from == input$plot_adam) else datafile()[[input$plot_adam]]) %>%  #ac: "ADLB" #lb_rec
      datafile()[[input$plot_adam]] %>%
@@ -85,6 +85,8 @@ vv_dy_name <- eventReactive(list(input$plot_adam), {
               filter(!is.na(AVAL) & AVAL != "") %>% # if all the numeric AVAL exists
               distinct(PARAMCD) %>% #ac: PARAM and PARAMCD are both req fields. PARAM cd would be better for a dropdown
               pull()
+   
+   cat(paste("\nlbcodes:", lbcodes))
    
    if ((length(lbcodes) == 0)) {
      shinyjs::alert(paste("No PARAMs exist for this ADaM data set & subject!"))  
@@ -123,30 +125,38 @@ vv_dy_name <- eventReactive(list(input$plot_adam), {
        selected = ifelse(length(sel_vst_var) > 0, sel_vst_var, character(0))
      )
    }
+   cat(paste("\nsel_vst_var:", sel_vst_var))
    return(sel_vst_var)
-  }) # eventReactive
+}) # eventReactive
 
 
 
-  observe({
+
+observe({
+# observeEvent(list(input$visit_var), {
     req(input$plot_adam)
-    
-    # can't get rid of this note flashing!
+
+    cat(paste("\nloaded ADLB:","ADLB" %in% loaded_adams()))
+
+
     if(substr(input$visit_var,nchar(input$visit_var)-1,nchar(input$visit_var)) == "DY" & "ADLB" %in% loaded_adams()){
       shinyjs::hide(id = "display_dy")
-      # output$display_dy <- renderText({NULL})
       shinyjs::show(id = "overlay_events")
+
     } else {
-      shinyjs::hide(id = "overlay_events")
-      # output$display_dy <- renderText({
-      #   paste0("<br/>You can overlay events when Vist Variable ends in 'DY': ", vv_dy_name())
-      # })
+
+      olay_note <- ifelse("ADLB" %in% loaded_adams()
+             ,paste0("when Visit Variable ends in 'DY'- ", vv_dy_name())
+             ,"by uploading a ADLB")
+      cat(paste("\n",olay_note))
       output$display_dy <- renderUI({
-        HTML(paste0("<br/><br/>You can overlay events when<br/>Visit Variable ends in 'DY': ", vv_dy_name()))
+        HTML(paste0("<br/>Note: You can overlay events<br/>when an ADLB is loaded on data<br/>tab and Visit Variable displayed<br/>ends in 'DY' like ", vv_dy_name()))
+        # HTML(paste0("<br/><br/>Note: You can overlay events<br/>",olay_note))
       })
+      shinyjs::hide(id = "overlay_events")
       shinyjs::show(id = "display_dy")
     }
-    
+
     # display Event Vals if an 1 overlay_events is selected an visit_var == ends_with("DY")
     if(substr(input$visit_var,nchar(input$visit_var)-1,nchar(input$visit_var)) == "DY" & length(input$overlay_events) > 0){
       shinyjs::show(id = "overlay_event_vals")
@@ -154,6 +164,9 @@ vv_dy_name <- eventReactive(list(input$plot_adam), {
       shinyjs::hide(id = "overlay_event_vals")
     }
   })
+
+
+
   
   
   
@@ -249,8 +262,8 @@ vv_dy_name <- eventReactive(list(input$plot_adam), {
         sel_ <- keep_vals
           # ifelse(length(keep_vals) > 1 & "All" %in% keep_vals, keep_vals[keep_vals != "All"], keep_vals) # get rid of "All"
         
-        cat(paste("\n",keep_vals))
-        cat(paste("\n",sel_))
+        # cat(paste("\n",keep_vals))
+        # cat(paste("\n",sel_))
         
         updateSelectizeInput(session, "overlay_event_vals",
                              choices = event_val_lists,
