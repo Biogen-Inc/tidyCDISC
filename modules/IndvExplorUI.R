@@ -11,7 +11,7 @@ IndvExplorUI <- function(id, label = "Individual Explorer") {
     # textOutput(ns("filter_bds_header")),
     fluidRow(
       column(3, #id = ns("f_waiter"),
-        checkboxInput(ns("adv_filtering"), "Advanced Filtering?", value = F),
+        checkboxInput(ns("adv_filtering"), "Advanced Pre-Filtering?", value = F),
         conditionalPanel(condition = "input.adv_filtering", ns = ns,
             # uiOutput(ns("filter_df_ui")),
             selectInput(ns("filter_df"),"Filter on Variable(s) in a loaded ADaM", multiple = TRUE,
@@ -76,7 +76,7 @@ IndvExplorUI <- function(id, label = "Individual Explorer") {
                  column(8, DT::dataTableOutput(ns("eventsTable")))
                ),
                
-               br(),br(),br(),br(),br(),br()
+               br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),br()
       ),
       
       
@@ -128,8 +128,27 @@ IndvExplorUI <- function(id, label = "Individual Explorer") {
                             uiOutput(ns("display_dy"))
                             # textOutput(ns("display_dy"))
                         )
-                        
                  ),
+                 column(3, 
+                        radioButtons(
+                          ns("event_type_filter"),
+                          label = HTML("<br/>Choose Events:"),
+                          # inline = T,
+                          choices = as.list(c("All", "Manually Filter")),
+                          selected = "All"
+                        )
+                        # materialSwitch(ns("visits_apply_filter")
+                        #             , label = strong(em(h5("Apply Filters to Events Data")))
+                        #             , status = "primary"
+                        #             , value = T)
+                 )
+                 
+                 # ,column(1," ")
+               ), # end fixedRow
+               
+               # Add a row that contains another "Apply Filters" toggle
+               fluidRow(
+                 column(9), 
                  column(3,
                         selectizeInput(
                           ns("overlay_event_vals"),
@@ -139,8 +158,8 @@ IndvExplorUI <- function(id, label = "Individual Explorer") {
                           selected = "All"
                         )
                  )
-                 # ,column(1," ")
-               ), # end fixedRow
+                 # ,column(1)
+               ),
                
                # fluidRow(column(6, DT::dataTableOutput(ns("DataTable"))),
                #          column(6, plotlyOutput(ns("PlotChart"), width = "100%", height = "600px")))

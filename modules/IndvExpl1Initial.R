@@ -121,7 +121,7 @@ IndvExpl1Initial <- function(input, output, session, datafile, dataselected){
     
     shinyjs::hide(id = "plot_header")
     shinyjs::hide(id = "subjid_subtitle3")
-    # shinyjs::hide(id = "bds_remove_filter")
+    shinyjs::hide(id = "event_type_filter")
     shinyjs::hide(id = "plot_adam")
     shinyjs::hide(id = "plot_param")
     shinyjs::hide(id = "visit_var")

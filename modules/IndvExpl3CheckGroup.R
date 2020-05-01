@@ -22,10 +22,8 @@ IndvExpl3CheckGroup <- function(input, output, session, datafile, loaded_adams, 
     req(usubjid() != "")
     
     if(any(regexpr("%>%",capture.output(attr(filtered_dat(), "code"))) > 0) & !is.null(input$checkGroup)){
-      # updateMaterialSwitch(session = session, inputId = "events_apply_filter", value = T) # do not need to change value
       shinyjs::show(id = "events_apply_filter")
     } else {
-      # updateMaterialSwitch(session = session, inputId = "events_apply_filter", value = F) # do not need to change value
       shinyjs::hide(id = "events_apply_filter")
     }
   })
