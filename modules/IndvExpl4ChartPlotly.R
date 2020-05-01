@@ -526,17 +526,17 @@ output$v_applied_filters <- renderUI({
          )
        
        if (nrow(lb_tab) > 0) {
-         # DT::datatable(lb_tab,
-         #               style="default",
-         #               extensions = "Buttons",
-         #               # class="compact",
-         #               options = list(dom = 'Bftp', pageLength = 20,
-         #                              buttons = list(list(
-         #                                extend = "excel",
-         #                                filename = paste("Pat", usubjid(), "Param", input$plot_param, "dwnd",str_replace_all(str_replace(Sys.time(), " ", "_"),":", "-"), sep = "_")
-         #                              ))
-         #              ))
-         DT::datatable(vline_dat())
+         DT::datatable(lb_tab,
+                       style="default",
+                       extensions = "Buttons",
+                       # class="compact",
+                       options = list(dom = 'Bftp', pageLength = 20,
+                                      buttons = list(list(
+                                        extend = "excel",
+                                        filename = paste("Pat", usubjid(), "Param", input$plot_param, "dwnd",str_replace_all(str_replace(Sys.time(), " ", "_"),":", "-"), sep = "_")
+                                      ))
+                      ))
+         # DT::datatable(vline_dat())
        }
        
      }) #renderDataTable
