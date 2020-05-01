@@ -129,7 +129,7 @@ IndvExplorUI <- function(id, label = "Individual Explorer") {
                             # textOutput(ns("display_dy"))
                         )
                  ),
-                 column(3, 
+                 column(1, 
                         radioButtons(
                           ns("event_type_filter"),
                           label = HTML("<br/>Choose Events:"),
@@ -141,9 +141,10 @@ IndvExplorUI <- function(id, label = "Individual Explorer") {
                         #             , label = strong(em(h5("Apply Filters to Events Data")))
                         #             , status = "primary"
                         #             , value = T)
-                 )
-                 
-                 # ,column(1," ")
+                 ),
+                 column(2,
+                        br(),br(),
+                        div(style = "color: #0275d8; font-size: 11px;", htmlOutput(ns("v_applied_filters"))))
                ), # end fixedRow
                
                # Add a row that contains another "Apply Filters" toggle

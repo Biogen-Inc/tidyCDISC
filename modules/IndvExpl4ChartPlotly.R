@@ -165,7 +165,7 @@ IndvExpl4ChartPlotly <- function(input, output, session, datafile, loaded_adams,
       shinyjs::show(id = "overlay_event_vals")
       if(any(regexpr("%>%",capture.output(attr(filtered_dat(), "code"))) > 0) & !is.null(input$plot_adam)){
         updateRadioButtons(session, "event_type_filter", # inline = T,
-                           choices = as.list(c("All", "Inherit Pre-Filters", "Manually Filter")),
+                           choices = as.list(c("All", "Pre-Filters", "Manually Filter")),
                            selected = isolate(input$event_type_filter)
         )
       } else {
@@ -182,6 +182,9 @@ IndvExpl4ChartPlotly <- function(input, output, session, datafile, loaded_adams,
   })
   
   
+  
+  
+  
 
   ###
   # Recreate the pre-vline data to populate the dropdown overlay_events_vals 
@@ -196,7 +199,7 @@ IndvExpl4ChartPlotly <- function(input, output, session, datafile, loaded_adams,
     if(length(input$overlay_events) > 0 & input$visit_var == vv_dy_name()){ #& "ADLB" %in% loaded_adams() # overlay checkbox won't appear unless this is true
       
       v_events_apply_filter <- reactive({
-        ifelse( input$event_type_filter == "Inherit Pre-Filters", TRUE, FALSE)
+        ifelse( input$event_type_filter == "Pre-Filters", TRUE, FALSE)
       })
       
       # See build_events_df.R
@@ -229,7 +232,7 @@ IndvExpl4ChartPlotly <- function(input, output, session, datafile, loaded_adams,
                              choices = c("All"),
                              selected = "All"
         )
-        # shinyjs::disable(id = "overlay_event_vals")
+        shinyjs::disable(id = "overlay_event_vals")
         
       } else { 
         # "Manually filter" is selected
@@ -237,31 +240,32 @@ IndvExpl4ChartPlotly <- function(input, output, session, datafile, loaded_adams,
         # cat(paste("\n2. choices:",as.character(olay_events()$EVENTTYP)))
         # cat(paste("\n3. choices:",paste(split(setNames(as.character(olay_events()$filter_code),olay_events()$filter_code),
         #                                    as.character(olay_events()$EVENTTYP)), collapse = ", ")))
-        # shinyjs::enable(id = "overlay_event_vals")
+        shinyjs::enable(id = "overlay_event_vals")
+        my_choices <- split(setNames(as.character(olay_events()$filter_code),olay_events()$filter_code),as.character(olay_events()$EVENTTYP))
+        curr_event_vals <- isolate(input$overlay_event_vals)
+        keep_vals <- ifelse(curr_event_vals == "All","",curr_event_vals[curr_event_vals %in% unlist(my_choices)])
+        
         updateSelectizeInput(session, "overlay_event_vals",
-                             choices = split(setNames(as.character(olay_events()$filter_code),olay_events()$filter_code),
-                                             as.character(olay_events()$EVENTTYP)),
-                             selected = ""
+                             choices = my_choices,
+                             selected = keep_vals
         )
       }
     }
   })
 
 
-  
 
-# output$v_applied_filters <- renderUI({
-#   req(
-#     usubjid() != ""
-#     # & !is.null(filtered_dat())
-#     & any(regexpr("%>%",capture.output(attr(filtered_dat(), "code"))) > 0)
-#     & !is.null(input$plot_adam)
-#     & input$visits_apply_filter == T
-#   )
-#   
-#   filters_in_english(filtered_dat())
-#   
-# })
+output$v_applied_filters <- renderUI({
+  req(
+    usubjid() != ""
+    # & !is.null(filtered_dat())
+    & any(regexpr("%>%",capture.output(attr(filtered_dat(), "code"))) > 0)
+    & input$event_type_filter == "Pre-Filters"
+  )
+
+  filters_in_english(filtered_dat())
+
+})
   
   
   ###
