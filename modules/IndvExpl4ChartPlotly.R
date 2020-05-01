@@ -17,7 +17,7 @@ IndvExpl4ChartPlotly <- function(input, output, session, datafile, loaded_adams,
   
   output$plot_header <- renderText({
     req(!is.null(datafile()))
-    paste0("Plot Patient Metrics by Visit") #'", usubjid, "' 
+    paste0("Patient Metrics by Visit") #'", usubjid, "' 
   })
   
   # Need to refresh these every time a new subject is selected
@@ -55,7 +55,7 @@ IndvExpl4ChartPlotly <- function(input, output, session, datafile, loaded_adams,
 # observeEvent(list(input$plot_adam), { # ,input$bds_remove_filter # add this back in if we want to enable total tab filtering
 vv_dy_name <- eventReactive(list(input$plot_adam), {
   # make sure a subject has been selected
-  req(usubjid() != " " & input$plot_adam != " ") # selPatNo cannot be blank
+  req(usubjid() != "" & input$plot_adam != " ") # selPatNo cannot be blank
   
   # Clear datatable
   output$DataTable <- DT::renderDataTable({
@@ -70,7 +70,7 @@ vv_dy_name <- eventReactive(list(input$plot_adam), {
     filter(USUBJID == usubjid()) %>%
     colnames()
   
-  cat(paste('\n0: ',input$plot_adam))
+  # cat(paste('\n0: ',input$plot_adam))
   # cat(paste('\n2:',paste(bds_cols, collapse = ", "),'\n'))
 
    lb_data <- 
@@ -86,7 +86,7 @@ vv_dy_name <- eventReactive(list(input$plot_adam), {
               distinct(PARAMCD) %>% #ac: PARAM and PARAMCD are both req fields. PARAM cd would be better for a dropdown
               pull()
    
-   cat(paste("\nlbcodes:", lbcodes))
+   # cat(paste("\nlbcodes:", lbcodes))
    
    if ((length(lbcodes) == 0)) {
      shinyjs::alert(paste("No PARAMs exist for this ADaM data set & subject!"))  
@@ -125,7 +125,7 @@ vv_dy_name <- eventReactive(list(input$plot_adam), {
        selected = ifelse(length(sel_vst_var) > 0, sel_vst_var, character(0))
      )
    }
-   cat(paste("\nsel_vst_var:", sel_vst_var))
+   # cat(paste("\nsel_vst_var:", sel_vst_var))
    return(sel_vst_var)
 }) # eventReactive
 
@@ -136,7 +136,7 @@ observe({
 # observeEvent(list(input$visit_var), {
     req(input$plot_adam)
 
-    cat(paste("\nloaded ADLB:","ADLB" %in% loaded_adams()))
+    # cat(paste("\nloaded ADLB:","ADLB" %in% loaded_adams()))
 
 
     if(substr(input$visit_var,nchar(input$visit_var)-1,nchar(input$visit_var)) == "DY" & "ADLB" %in% loaded_adams()){
@@ -145,10 +145,10 @@ observe({
 
     } else {
 
-      olay_note <- ifelse("ADLB" %in% loaded_adams()
-             ,paste0("when Visit Variable ends in 'DY'- ", vv_dy_name())
-             ,"by uploading a ADLB")
-      cat(paste("\n",olay_note))
+      # olay_note <- ifelse("ADLB" %in% loaded_adams()
+      #        ,paste0("when Visit Variable ends in 'DY'- ", vv_dy_name())
+      #        ,"by uploading a ADLB")
+      # cat(paste("\n",olay_note))
       output$display_dy <- renderUI({
         HTML(paste0("<br/>Note: You can overlay events<br/>when an ADLB is loaded on data<br/>tab and Visit Variable displayed<br/>ends in 'DY' like ", vv_dy_name()))
         # HTML(paste0("<br/><br/>Note: You can overlay events<br/>",olay_note))
@@ -174,7 +174,7 @@ observe({
   
   # update horizontal line choices
   observeEvent(list(input$plot_param), { # ,input$bds_remove_filter # add this back in if we want to enable total tab filtering
-    req(usubjid() != " " & input$plot_adam != " " & input$plot_param != " ")
+    req(usubjid() != "" & input$plot_adam != " " & input$plot_param != " ")
     
     INPUT_visit_var <- sym(input$visit_var)
     
@@ -214,7 +214,7 @@ observe({
   observeEvent(list(input$plot_param, input$visit_var, input$overlay_events, input$overlay_event_vals), { # ,input$bds_remove_filter # add this back in if we want to enable total tab filtering
     
     # don't run until a patient and ADAM are selected
-    req(usubjid() != " " & input$plot_adam != " ") # selPatNo cannot be blank
+    req(usubjid() != "" & input$plot_adam != " ") # selPatNo cannot be blank
     
     
     # create data

@@ -19,7 +19,7 @@ IndvExpl3CheckGroup <- function(input, output, session, datafile, loaded_adams, 
   # which defaults to TRUE everytime a new patient is selected
   observeEvent(list(input$checkGroup), {
     
-    req(usubjid() != " ")
+    req(usubjid() != "")
     
     if(any(regexpr("%>%",capture.output(attr(filtered_dat(), "code"))) > 0) & !is.null(input$checkGroup)){
       # updateMaterialSwitch(session = session, inputId = "events_apply_filter", value = T) # do not need to change value
@@ -32,7 +32,7 @@ IndvExpl3CheckGroup <- function(input, output, session, datafile, loaded_adams, 
   
   output$applied_filters <- renderUI({
     req(
-        usubjid() != " "
+        usubjid() != ""
       # & !is.null(filtered_dat())
       & any(regexpr("%>%",capture.output(attr(filtered_dat(), "code"))) > 0)
       & !is.null(input$checkGroup)
@@ -48,7 +48,7 @@ IndvExpl3CheckGroup <- function(input, output, session, datafile, loaded_adams, 
     
   observeEvent(list(input$checkGroup, input$events_apply_filter), {
     
-    req(usubjid() != " ") # selPatNo cannot be blank - ac: not sure if Robert expects this to work like "validate(need())"
+    req(usubjid() != "") # selPatNo cannot be blank - ac: not sure if Robert expects this to work like "validate(need())"
 
     
     # Clear outputs if nothing is selected

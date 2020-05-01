@@ -3,12 +3,12 @@ IndvExpl2SelPatno <- function(input, output, session, datafile, loaded_adams, fi
   ns <- session$ns
 
   output$demog_header <- renderText({
-    req(!is.null(datafile()) & input$selPatNo != " ")
+    req(!is.null(datafile()) & input$selPatNo != "")
     paste0("Patient Demographic Info")
   })
   
   output$subjid_subtitle1 <- output$subjid_subtitle2 <- output$subjid_subtitle3 <- renderText({
-    req(!is.null(datafile()) & input$selPatNo != " ")
+    req(!is.null(datafile()) & input$selPatNo != "")
     paste0("USUBJID: '",input$selPatNo,"'")
   })
   
@@ -17,21 +17,24 @@ IndvExpl2SelPatno <- function(input, output, session, datafile, loaded_adams, fi
   observeEvent(input$selPatNo, {
   #choices <- eventReactive(input$selPatNo, {
     
-    req(input$selPatNo != " ") # selPatNo cannot be blank
+    req(input$selPatNo != "") # selPatNo cannot be blank
+    
+    # cat(paste("\n",input$whichTab))
     
     # Show the rest of the widgets once a patient number was selected
     shinyjs::show(id = "demog_header")
     shinyjs::show(id = "subjid_subtitle1")
     shinyjs::show(id = "demogInfo")
     
-    shinyjs::show(id = "hr2")
+    shinyjs::show(id = "mytabs")
+    # shinyjs::show(id = "hr2")
     shinyjs::show(id = "events_header")
     shinyjs::show(id = "subjid_subtitle2")
     
     shinyjs::show(id = "checkGroup")  
     # shinyjs::show(id = "eventsPlot")
     # shinyjs::show(id = "eventsTable")
-    shinyjs::show(id = "hr3")
+    # shinyjs::show(id = "hr3")
     shinyjs::show(id = "plot_header")
     shinyjs::show(id = "subjid_subtitle3")
     # see if-then-else up near subjid_subtitle2 ^^^ for bds_remove_filter checkbox toggling
