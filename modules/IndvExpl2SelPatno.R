@@ -3,34 +3,38 @@ IndvExpl2SelPatno <- function(input, output, session, datafile, loaded_adams, fi
   ns <- session$ns
 
   output$demog_header <- renderText({
-    req(!is.null(datafile()) & input$selPatNo != " ")
+    req(!is.null(datafile()) & input$selPatNo != "")
     paste0("Patient Demographic Info")
   })
   
   output$subjid_subtitle1 <- output$subjid_subtitle2 <- output$subjid_subtitle3 <- renderText({
-    req(!is.null(datafile()) & input$selPatNo != " ")
+    req(!is.null(datafile()) & input$selPatNo != "")
     paste0("USUBJID: '",input$selPatNo,"'")
   })
   
 
   # observeEvent for inputselPatno 
   observeEvent(input$selPatNo, {
+  #choices <- eventReactive(input$selPatNo, {
     
-    req(input$selPatNo != " ") # selPatNo cannot be blank
+    req(input$selPatNo != "") # selPatNo cannot be blank
+    
+    # cat(paste("\n",input$whichTab))
     
     # Show the rest of the widgets once a patient number was selected
     shinyjs::show(id = "demog_header")
     shinyjs::show(id = "subjid_subtitle1")
     shinyjs::show(id = "demogInfo")
     
-    shinyjs::show(id = "hr2")
+    shinyjs::show(id = "mytabs")
+    # shinyjs::show(id = "hr2")
     shinyjs::show(id = "events_header")
     shinyjs::show(id = "subjid_subtitle2")
     
     shinyjs::show(id = "checkGroup")  
     # shinyjs::show(id = "eventsPlot")
     # shinyjs::show(id = "eventsTable")
-    shinyjs::show(id = "hr3")
+    # shinyjs::show(id = "hr3")
     shinyjs::show(id = "plot_header")
     shinyjs::show(id = "subjid_subtitle3")
     # see if-then-else up near subjid_subtitle2 ^^^ for bds_remove_filter checkbox toggling
@@ -47,6 +51,10 @@ IndvExpl2SelPatno <- function(input, output, session, datafile, loaded_adams, fi
     shinyjs::hide(id = "events_tv_caption2")
     shinyjs::hide(id = "eventsPlot")
     shinyjs::hide(id = "eventsTable")
+    shinyjs::hide(id = "display_dy")
+    output$display_dy <- renderText({NULL})
+    shinyjs::hide(id = "overlay_events")
+    shinyjs::hide(id = "overlay_event_vals")
     
     
     output$demogInfo <- DT::renderDataTable({
@@ -114,9 +122,8 @@ IndvExpl2SelPatno <- function(input, output, session, datafile, loaded_adams, fi
     choices <- as.list(unlist(c(list(checked1,checked2,checked3,checked4,as.list(checked5)))))
     names <- c("Milestones","Adverse Events","Concomitant Meds","Labs",mh_names) # ac: labels
     
-    # build a named list
+    # build a named list & Remove NULLs from the list
     choices <- setNames(choices,names)
-    # Remove NULLs from the list
     choices <- choices[!sapply(choices,is.na)]
     
     # update the checkbox group
@@ -127,9 +134,31 @@ IndvExpl2SelPatno <- function(input, output, session, datafile, loaded_adams, fi
       selected = NULL,
       inline = TRUE)
     
+    #############################
+    # No Labs version for vlines
+    #############################
+    choices2 <- as.list(unlist(c(list(checked1,checked2,checked3))))
+    names2 <- c("Milestones","Adverse Events","Concomitant Meds") # ac: labels
+    
+    vline_eventtype_cols <- my_cols[1:3]
+    v_event_cols <- setNames(vline_eventtype_cols,names2)
+    dashes <- c("solid","dotted","dashed")
+    v_event_lines <- setNames(dashes,names2)
+    
+    # build a named list & Remove NULLs from the list
+    choices2 <- setNames(choices2,names2)
+    choices2 <- choices2[!sapply(choices2,is.na)]
+    
+    updateCheckboxGroupInput(
+      session = session,
+      inputId = "overlay_events",
+      choices = unlist(choices2), # optionally convert list to array
+      selected = NULL)
+    
+    # return(choices)
   }) # observeEvent
 
   # return selected patient USUBJID from module
-  return(reactive({ input$selPatNo }))
+  return(reactive({ input$selPatNo })) #list(occr_choices = choices,
 
 } # IndvExpl2SelPatno

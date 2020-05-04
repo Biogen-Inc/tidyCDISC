@@ -21,7 +21,6 @@ IndvExpl1Initial <- function(input, output, session, datafile, dataselected){
   ###
   
   
-  
   observe({ #Event(input$adv_filtering,
     req(input$adv_filtering == T)
     # selectInput(ns("filter_df"),"Filter on Variable in a loaded ADaM", multiple = TRUE,
@@ -29,24 +28,11 @@ IndvExpl1Initial <- function(input, output, session, datafile, dataselected){
     updateSelectInput("filter_df", session = session, choices = as.list(my_loaded_adams()), selected = "ADSL") #
   })
   
-  
-  
-  
-  # Create waiting screen over this fluidRow and column area... where IDEAFilter displays
-  # waiting_screen <- tagList(
-  #   spin_folding_cube(),
-  #   h4("Hold on a bit while we merge datasets...")
-  # )
-  
   # upon selection of data set(s) to filter... combine to feed shiny_data_filter module with those selected
   pre_processed_data <- eventReactive(input$filter_df, {
     
     req(input$adv_filtering == T)
-    # validate(need(input$filter_df, "Must select a loaded ADaM for advanced filtering"))
-    
-    # waiter_show(html = waiting_screen, color = "lightblue")
-    # Sys.sleep(.5)
-    
+
     # grab only df's included in the filter
     select_dfs <- datafile()[input$filter_df]
     
@@ -56,10 +42,6 @@ IndvExpl1Initial <- function(input, output, session, datafile, dataselected){
     BDS <- select_dfs[sapply(select_dfs, function(x) "PARAMCD" %in% colnames(x) )]
     PARAMCD_dat <- map(BDS, ~ if(!"CHG" %in% names(.)) {update_list(., CHG = NA)} else {.})
     
-    
-    # cat(paste("\nNonbds:",names(non_bds)))
-    # cat(paste("\nBDS:",names(BDS)))
-    # cat("\n")
 
     if (!is_empty(PARAMCD_dat)) {
       # Bind all the PARAMCD files 
@@ -75,15 +57,11 @@ IndvExpl1Initial <- function(input, output, session, datafile, dataselected){
         combined_data <- non_bds %>% reduce(inner_join)
     }
     
-    # Sys.sleep(.5)
-    # waiter_hide()
-    
     return(
       if(!is_empty(input$filter_df)){
         combined_data
       } else{
         datafile()$ADSL
-        # NULL
       }
     )
   })
@@ -105,72 +83,12 @@ IndvExpl1Initial <- function(input, output, session, datafile, dataselected){
     verbose = FALSE)
   
 
-  #     # now pin point variable that was filtered and merge it with tab_data and filter tab data
-  #     # 1. Create a DF with only the columns we need for this tab (from applicable loaded_adams) plus the columns
-  #          # they originally had in common with the filtered_data() data set
-  #     # 2. Do a semi_join
-  # 
-  
-  # not using anymore
-  # output$filter_header <- renderText({
-  #   req(!is.null(filter_header()))
-  #   paste0("If desired, pre-filter USUBJID by variables from loaded data sets")
-  # })
-  # not using anymore
-  # output$filter_bds_header <- renderText({
-  #   req(!is.null(all_data()) & length(BDS) > 0)
-  #   paste0("For convenience: AVAL, CHG, and BASE values are displayed for each PARAMCD")
-  # })
+
   
   observe({
     # make sure selectData has been run
     req(!is.null(filtered_data())) #74 #datafile()
-    
-    # # stringr
-    # # grab the output
-    # orig_code <- paste(capture.output(attr(filtered_data(), "code")),collapse = "")
-    # # orig_code <- 'feed_filter %>% filter(ACTIVE1 %in% c(NA, "0")) %>% filter(var1 == 2)' #
-    # # convert double quotes to single quotes
-    # code_text <- gsub('\"',"\'",orig_code)
-    # 
-    # # find the character position for the end of the string
-    # len <- nchar(code_text)
-    # 
-    # # find the start of the variable expressions using position of "filter"
-    # f_loc <- str_locate_all(code_text,"filter\\(")
-    # filter_loc <- as_tibble(f_loc[[1]])
-    # var_st <- filter_loc$end + 1
-    # 
-    # # find the end of variable expression susing position of "%>%"
-    # p_loc <- str_locate_all(code_text,"\\%\\>\\%") # have to use this
-    # pipe_loc <- as_tibble(p_loc[[1]])
-    # num_pipes <- nrow(pipe_loc)
-    # var_end <- c(pipe_loc$start[ifelse(num_pipes == 1, 1, 2):num_pipes] - 3, len - 1) # ifelse(num_pipes == 1, 1, 2)
-    # 
-    # # use map2, to apply multiple arguments to the substr function, returing a list
-    # filter_vectors <- map2(.x = var_st, .y = var_end, function(x,y) substr(code_text,x,y))
-    # my_msgs <- filter_vectors[!(is.na(filter_vectors) | filter_vectors == "")] # get rid of NA msgs
-    # 
-    # # clean up messages to read more naturally
-    # disp_msg <- gsub("\\%in\\%","IN",
-    #                  gsub("c\\(","\\(",
-    #                       gsub("NA","Missing",
-    #                            gsub("na","Missing",
-    #                                 gsub("   "," ", # 3 spaces
-    #                                      gsub("  "," ", # 2 spaces
-    #                                           gsub("\\|","OR",
-    #                                                gsub("\\&","AND",
-    #                                                     my_msgs
-    #                                                ))))))))
-    # # disp_msg
-    # # cat(paste("\n1:",attr(filtered_data(), "code")$column_name))
-    # # cat(paste("\n"))
-    # cat(paste("\n1:",orig_code))
-    # cat(paste("\n2:",var_st))
-    # cat(paste("\n3:",var_end))
-    # cat(paste0("\n4:\n",disp_msg,"\n"))
-    
-  
+
     # The rest of the widgets will be shown after the USUBJID has been selected
     subj <- unique(filtered_data()$USUBJID) # unique(datafile()$ADSL[, "USUBJID"]) # get list of unique USUBJIDs
     
@@ -181,14 +99,15 @@ IndvExpl1Initial <- function(input, output, session, datafile, dataselected){
       selected = " "
     )
     
-    
     # Hide widgets until the input file has been selected
     shinyjs::show(id = "selPatNo")
     shinyjs::hide(id = "demog_header")
     shinyjs::hide(id = "subjid_subtitle1")
     shinyjs::hide(id = "demogInfo")
-    shinyjs::hide(id = "hr2")
+    # shinyjs::hide(id = "hr2")
     
+    
+    shinyjs::hide(id = "mytabs")
     shinyjs::hide(id = "events_header")
     shinyjs::hide(id = "subjid_subtitle2")
     shinyjs::hide(id = "events_apply_filter")
@@ -198,20 +117,26 @@ IndvExpl1Initial <- function(input, output, session, datafile, dataselected){
     shinyjs::hide(id = "events_tv_caption2")
     # shinyjs::hide(id = "applied_filters")
     shinyjs::hide(id = "eventsTable")
-    shinyjs::hide(id = "hr3")
+    # shinyjs::hide(id = "hr3")
     
     shinyjs::hide(id = "plot_header")
     shinyjs::hide(id = "subjid_subtitle3")
-    # shinyjs::hide(id = "bds_remove_filter")
+    shinyjs::hide(id = "event_type_filter")
     shinyjs::hide(id = "plot_adam")
     shinyjs::hide(id = "plot_param")
     shinyjs::hide(id = "visit_var")
     shinyjs::hide(id = "plot_hor")
+    
+    output$display_dy <- renderUI({NULL})
+    shinyjs::hide(id = "display_dy")
+    shinyjs::hide(id = "overlay_events")
+    shinyjs::hide(id = "overlay_event_vals")
+    
   })
   
   # pass the filtered data from above, but also filtered by 
   return_filtered <- reactive({
-    if(input$selPatNo != " "){
+    if(input$selPatNo != ""){
       filtered_data() %>% filter(USUBJID == input$selPatNo)
     } else {
       filtered_data()
