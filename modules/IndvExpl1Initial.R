@@ -97,6 +97,9 @@ IndvExpl1Initial <- function(input, output, session, datafile, dataselected){
   })
   feed_filter <- reactive({rv$processed_data})
   
+  
+  
+  
   # IDEAFilter
   filtered_data <- callModule(
     shiny_data_filter,

@@ -127,6 +127,9 @@ server <- function(input, output, session) {
   # render the dataUpload module in Data tab
   datafile <- callModule(dataUpload, "datafile", stringsAsFactors = FALSE)
   
+  # run data compliance module to determine if data in datafile has the necessary elements for the app to function
+  callModule(dataComply, "dataComply", datafile = datafile, rules = myRules)
+  
   # render the tablegenerator module using the datafile from dataupload as an input
   table_generator <- callModule(tableGenerator, "table_generator", datafile = datafile)
   output$all_rows <- renderUI({ table_generator() })
