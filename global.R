@@ -6,6 +6,7 @@ source('R/hasField.R')
 source('R/js_strings.R')
 source('R/css.R')
 source('R/fn_filters_in_english.R')
+source('R/data_compliance_inputs.R')
 
 source('modules/dataUpload.R')
 source('modules/dataUploadUI.R')

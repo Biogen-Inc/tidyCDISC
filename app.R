@@ -27,6 +27,7 @@ library(waiter)
 library(timevis)
 library(glue)
 library(sjlabelled) 
+library(data.table)
 
 ###############################################################
 # make sure this repo exists before writing to manifest file!
@@ -128,7 +129,10 @@ server <- function(input, output, session) {
   datafile <- callModule(dataUpload, "datafile", stringsAsFactors = FALSE)
   
   # run data compliance module to determine if data in datafile has the necessary elements for the app to function
-  callModule(dataComply, "dataComply", datafile = datafile, rules = myRules)
+  callModule(dataComply, "dataComply",
+             datalist = datafile,
+             expl_rules = hard_rules, # explicit rules for df's
+             df_incl_rules = dfWith_rules) # rules for df's containing specific variables
   
   # render the tablegenerator module using the datafile from dataupload as an input
   table_generator <- callModule(tableGenerator, "table_generator", datafile = datafile)
