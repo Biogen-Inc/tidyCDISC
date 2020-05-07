@@ -29,15 +29,14 @@ library(glue)
 library(sjlabelled) 
 library(data.table) 
 library(gt)
-library(shinyBS)
 
 ###############################################################
 # make sure this repo exists before writing to manifest file!
 ###############################################################
-# drat::addRepo("aaron-clark")
-# getOption("repos")
-# # devtools::install_github("rstudio/rsconnect")
-# rsconnect::writeManifest()
+drat::addRepo("aaron-clark")
+getOption("repos")
+# devtools::install_github("rstudio/rsconnect")
+rsconnect::writeManifest()
 
 
 
