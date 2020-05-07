@@ -11,26 +11,45 @@
 # they can continue if they wish.
 ######################################################################################
 
-hard_rules <- list(
-  ADSL = list(error = c("USUBJID","SUGAR"),
-              warn = c("USUBJID")),
-  ADLB = list(error = c("USUBJID"),
-              warn = c("USUBJID", "LBDT", "LBSTNRLO", "LBSTNRHI")),
-  ADMH = list(error = c("USUBJID", "MHCAT"),
-              warn = c("USUBJID", "MHCAT", "MHSTDTC", "MHENDTC", "MHDECOD", "MHTERM")),
-  ADCM = list(error = c("USUBJID"),
-              warn = c("USUBJID", "CMSTDT", "CMDECOD")),
-  ADAE = list(error = c("USUBJID"),
-              warn = c("USUBJID", "AESTDT", "AEDECOD", "AESEV", "AESER"))
-)
+hard_rules <- NULL
+#   list(
+#   ADSL = list(error = c("USUBJID"),
+#               warn = c("USUBJID","SUGAR")),
+#   ADLB = list(error = c("USUBJID"),
+#               warn = c("USUBJID", "LBDT", "LBSTNRLO", "LBSTNRHI")),
+#   ADMH = list(error = c("USUBJID", "MHCAT"),
+#               warn = c("USUBJID", "MHCAT", "MHSTDTC", "MHENDTC", "MHDECOD", "MHTERM")),
+#   ADCM = list(error = c("USUBJID"),
+#               warn = c("USUBJID", "CMSTDT", "CMDECOD")),
+#   ADAE = list(error = c("USUBJID"),
+#               warn = c("USUBJID", "AESTDT", "AEDECOD", "AESEV", "AESER"))
+# )
 # idea_hard_rules # peek
 
-dfWith_rules <- list(
-  PARAMCD = list(error = c("USUBJID"),
-                 warn = c("USUBJID", "AVISITN", "VISIT", "AVISIT", "PARAMCD", "PARAM", "AVAL", "CHG", "BASE"))
-)
-# idea_dfWith_rules # peek
+dfWith_rules <- 
+  list( list(error = c(""), warn = c("")) ) # GOOD
+  # NULL # GOOD
+  # list(
+# PARAMCD = list(error = c("USUBJID"),
+#                warn = c("USUBJID", "AVISITN", "VISIT", "AVISIT", "PARAMCD", "PARAM", "AVAL", "CHG", "BASE")) # GOOD
+# )
+# PARAMCD = list(error = c("USUBJID"),
+#                  warn = c("USUBJID", "AVISITN", "VISIT", "AVISIT", "PARAMCD", "PARAM", "AVAL", "CHG", "BASE")) # GOOD
+# PARAMCD = list(STING = c("USUBJID"),
+#                warn = c("USUBJID", "AVISITN", "VISIT", "AVISIT", "PARAMCD", "PARAM", "AVAL", "CHG", "BASE")) # GOOD
+# PARAMCD = list(STING = c("USUBJID"))# GOOD
+# )
 
+# dfWith_rules # peek
+# length(dfWith_rules)
+# names(dfWith_rules)
+# 
+# names(dfWith_rules[[names(dfWith_rules[[x]])]])
+# x <- 1
+# 
+# 
+# length(list( list(error = c(""),warn = c("")) ))
+# names(list( list(error = c(""),warn = c("")) ))
 
 
 
@@ -42,39 +61,43 @@ dfWith_rules <- list(
 gather_reqs <- function(input, output, session, 
                         disp_type = c("error","warn"),
                         datalist = reactive(NULL),
-                        expl_rules = list( list(error = c(""),warn = c("")) ),
-                        df_incl_rules = list( list(error = c(""),warn = c("")) )
+                        expl_rules = list( list(error = c(""), warn = c("")) ),
+                        df_incl_rules = list( list(error = c(""), warn = c("")) )
 ) {
 
-  if(!(disp_type %in% c("error","warn"))){
+  if(!(disp_type %in% c("error","warn"))) {
     stop("User must specify either 'error' or 'warn' for disp_type arugment")
   }
-  
-  
-  # output$console <- renderPrint({
-  #   print(datalist())
-  # }) # peek
-  
-  
+
+  if((is.null(expl_rules) | is.null(names(expl_rules))) & (is.null(df_incl_rules) | is.null(names(df_incl_rules)))) {
+    stop("No Rules Supplied. Without rules, the data compliance module is useless. Please remove.")
+  }
+
   # Create a DF of the hard rules
-  # hdfs <- 
-  hdf <- lapply(expl_rules, data.frame, stringsAsFactors = FALSE) %>%
-    data.table::rbindlist(fill=TRUE, idcol = "df") %>%
-    subset(df %in% names(datalist()))
-  
-  # cat(paste("\n",paste(unlist(hdf),collapse = ", ")))
-  # cat(paste("\n",hdf))
-  
-  # hdf # peek
+  if(!is.null(expl_rules) & !is.null(names(expl_rules))) {
+    
+    # Validate that rules lists were constructed correctly: sublists are error and warn
+    expl_sl_nms_correct <- all(unlist(map(.x = 1:length(expl_rules), function(x) all(names(expl_rules[[x]]) %in% c("error","warn")))))
+    if(!expl_sl_nms_correct) stop("Sublist Names must be 'error' and 'warn' for each element of 'expl_rules'")
+    
+    hdf <- lapply(expl_rules, data.frame, stringsAsFactors = FALSE) %>%
+      data.table::rbindlist(fill=TRUE, idcol = "df") %>%
+      subset(df %in% names(datalist())) %>% 
+      mutate(type_col = if(disp_type == "error") error else warn) %>% 
+      distinct(df, type_col)
+  } else{
+    # empty data frame
+    hdf <- data.frame(df = character(), type_col = character())
+  }
   
   # combine hard rules with dfWith Rules
   
   # Any of the rules df_vars in any of our datafiles?
-  
-  if(!is.null(df_incl_rules)) {
+  if(!is.null(df_incl_rules) & !is.null(names(df_incl_rules))) {
+    df_incl_sl_nms_correct <- all(unlist(map(.x = 1:length(df_incl_rules), function(x) all(names(df_incl_rules[[x]]) %in% c("error","warn")))))
+    if(!df_incl_sl_nms_correct) stop("Sublist Names must be 'error' and 'warn' for each element of 'df_incl_rules'")
     
     # Organize into a dataframe & get concise initial reqs
-    # dfw <- 
     dfw_type <-
       lapply(df_incl_rules, data.frame, stringsAsFactors = FALSE) %>%
       data.table::rbindlist(fill=TRUE, idcol = "df_var") %>%
@@ -101,16 +124,20 @@ gather_reqs <- function(input, output, session,
       ) %>%
       subset(col_exist == T) %>%
       distinct(df, df_var, type_col) %>%
-      subset(df %in% names(datalist()))
+      subset(df %in% names(datalist())) %>%
+      select(-df_var)
+    
     # dw
+  } else {
+    # empty data frame
+    dw <- data.frame(df = character(), type_col = character())
+    
   }
   
   # now stack the hard & df_with rules to get a unique set of rules to calc if pass / fail (doesn't exist or missing)
   pf <-
-    hdf %>% 
-    mutate(type_col = if(disp_type == "error") error else warn) %>% 
-    distinct(df, type_col) %>%
-    union( dw %>% select(-df_var) ) %>%
+    hdf %>%
+    union(dw) %>%
     distinct(df, type_col) %>%
     arrange(df, type_col) %>%
     mutate(
