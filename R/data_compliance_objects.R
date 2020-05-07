@@ -11,45 +11,38 @@
 # they can continue if they wish.
 ######################################################################################
 
-hard_rules <- NULL
-#   list(
-#   ADSL = list(error = c("USUBJID"),
-#               warn = c("USUBJID","SUGAR")),
-#   ADLB = list(error = c("USUBJID"),
-#               warn = c("USUBJID", "LBDT", "LBSTNRLO", "LBSTNRHI")),
-#   ADMH = list(error = c("USUBJID", "MHCAT"),
-#               warn = c("USUBJID", "MHCAT", "MHSTDTC", "MHENDTC", "MHDECOD", "MHTERM")),
-#   ADCM = list(error = c("USUBJID"),
-#               warn = c("USUBJID", "CMSTDT", "CMDECOD")),
-#   ADAE = list(error = c("USUBJID"),
-#               warn = c("USUBJID", "AESTDT", "AEDECOD", "AESEV", "AESER"))
-# )
+hard_rules <- 
+  list(
+  ADSL = list(error = c("USUBJID"),
+              warn = c("USUBJID","SUGAR")),
+  ADLB = list(error = c("USUBJID"),
+              warn = c("USUBJID", "LBDT", "LBSTNRLO", "LBSTNRHI")),
+  ADMH = list(error = c("USUBJID", "MHCAT"),
+              warn = c("USUBJID", "MHCAT", "MHSTDTC", "MHENDTC", "MHDECOD", "MHTERM")),
+  ADCM = list(error = c("USUBJID"),
+              warn = c("USUBJID", "CMSTDT", "CMDECOD")),
+  ADAE = list(error = c("USUBJID"),
+              warn = c("USUBJID", "AESTDT", "AEDECOD", "AESEV", "AESER"))
+)
+# NULL # GOOD
 # idea_hard_rules # peek
 
 dfWith_rules <- 
-  list( list(error = c(""), warn = c("")) ) # GOOD
-  # NULL # GOOD
-  # list(
-# PARAMCD = list(error = c("USUBJID"),
-#                warn = c("USUBJID", "AVISITN", "VISIT", "AVISIT", "PARAMCD", "PARAM", "AVAL", "CHG", "BASE")) # GOOD
-# )
-# PARAMCD = list(error = c("USUBJID"),
+  list(
+  PARAMCD = list(error = c("USUBJID"),
+                 warn = c("USUBJID", "AVISITN", "VISIT", "AVISIT", "PARAMCD", "PARAM", "AVAL", "CHG", "BASE")) # GOOD
+  )
+# TEST other scenarios for bogus rules as inputs
+#   PARAMCD = list(error = c("USUBJID"),
+#                    warn = c("USUBJID", "AVISITN", "VISIT", "AVISIT", "PARAMCD", "PARAM", "AVAL", "CHG", "BASE")) # GOOD
+#   PARAMCD = list(STING = c("USUBJID"),
 #                  warn = c("USUBJID", "AVISITN", "VISIT", "AVISIT", "PARAMCD", "PARAM", "AVAL", "CHG", "BASE")) # GOOD
-# PARAMCD = list(STING = c("USUBJID"),
-#                warn = c("USUBJID", "AVISITN", "VISIT", "AVISIT", "PARAMCD", "PARAM", "AVAL", "CHG", "BASE")) # GOOD
-# PARAMCD = list(STING = c("USUBJID"))# GOOD
+#   PARAMCD = list(STING = c("USUBJID"))# GOOD
 # )
-
+# list( list(error = c(""), warn = c("")) ) # GOOD
+# NULL # GOOD
 # dfWith_rules # peek
-# length(dfWith_rules)
-# names(dfWith_rules)
-# 
-# names(dfWith_rules[[names(dfWith_rules[[x]])]])
-# x <- 1
-# 
-# 
-# length(list( list(error = c(""),warn = c("")) ))
-# names(list( list(error = c(""),warn = c("")) ))
+
 
 
 
