@@ -16,15 +16,21 @@ $(function() {
 * @param {id} the id of the dropped zone containing dropped blocks
 * @param {outputID} the name of the input we'll use in Shiny as in input$outputID
 */
-function setUpShiny(id, outputID) {
-      var str = "";
+function setUpShiny(id, outputID, obj) {
+   var obj = { numbers: [] }
+   var str = "";
   $('#' + id).each(function() {
-    const txt = $(this).text()
-    const val = $(this).parent().find("select").children("option:selected").val()
-    str += "<tr><td>" + txt + (val ? ": " + val : "") + "</td></tr>";
+    txt = $(this).text()
+    df = $(this).attr("class").split(" ")[1]  
+    val = $(this).parent().find("select").children("option:selected").val()
+    str += `${df}*${txt.replace(" ", "")}*${val} + `.replace(/\r?\n|\r/g, "")
+    obj.numbers.push({txt,df,val})
   })
-  let str_to_table = '<table>' + str + '</table>'
-  Shiny.setInputValue(outputID, str_to_table)
+  // currently return a string seperated by +
+  // and blocks must be one word - this is very fragile!
+  // would be much better to return an object!
+  //console.log(obj.numbers.push({df,txt,val}))
+  Shiny.setInputValue(outputID, obj)
 }
 
 /**
@@ -86,10 +92,10 @@ selectChange("droppable_blocks", 'droppable_blocks label', 'table_generator-bloc
 * Create a simple block with a name and delete button
 * @param {newid} the new, unique id of the dropped block
 */
-function simpleBlock(newid) {
+function simpleBlock(newid, df) {
   return `
   <div><div><div class="form-group drop_area">
-  <label class="control-label" for="${newid}">
+  <label class="control-label ${df}" for="${newid}">
   ${newid.slice(0, -1).toUpperCase()}
   </label>
   <button class="delete">X</button>
@@ -123,7 +129,7 @@ Shiny.addCustomMessageHandler('my_data', function(df) {
         } else if (draggableId.includes("mean")) {
           $(this).append(selectWeekBlock(newid, "MEAN", select));
         } else {
-          $(this).append(simpleBlock(newid));
+          $(this).append(simpleBlock(newid, "df"));
         }
     }
   }).sortable({
@@ -168,8 +174,9 @@ $(function() {
     accept: ".block",
     drop: function(event, ui) {
       var draggableId = ui.draggable.attr("id");
+      var df = ui.draggable.closest('ul')[0].classList[1]
       var newid = getNewId(draggableId);
-      $(this).append(simpleBlock(newid));
+      $(this).append(simpleBlock(newid, df));
     }
   }).sortable({
     revert: false

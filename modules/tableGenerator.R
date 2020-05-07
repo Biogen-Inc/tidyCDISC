@@ -56,15 +56,17 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
   
   AGGREGATE <- reactive({
     # req(length(input$agg_drop_zone) > 0 & !(is.na(input$agg_drop_zone)))
-    agg <- as.data.frame(read_html(input$agg_drop_zone) %>% html_table(fill=TRUE)) %>%
-      separate(1, into = c("Aggregate", "Select"), sep=":")
-    agg
+    print(input$agg_drop_zone)
+    input$agg_drop_zone
   })
   
   ROWS <- reactive({
-    req(length(input$block_drop_zone) > 0 & !(is.na(input$block_drop_zone)))
-    as.data.frame(read_html(input$block_drop_zone) %>% html_table(fill=TRUE))
+    #req(length(input$block_drop_zone) > 0 & !(is.na(input$block_drop_zone)))
+    print(input$block_drop_zone)
+    input$block_drop_zone
+    #as.data.frame(input$block_drop_zone) %>% html_table(fill=TRUE)
   })
+  
   
   blocks <- reactive({
     if (input$agg_drop_zone == "<table></table>") {
@@ -585,6 +587,7 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
   #     file.rename(out, file)
   #   }
   # )
+  
   
   p <- reactive({
     rowArea(col = 2, block_data())
