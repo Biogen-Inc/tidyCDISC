@@ -992,38 +992,6 @@
         "Built": "R 3.6.3; x86_64-w64-mingw32; 2020-03-24 10:32:48 UTC; windows"
       }
     },
-    "drat": {
-      "Source": "CRAN",
-      "Repository": "https://cran.rstudio.com/",
-      "GithubRepo": null,
-      "GithubUsername": null,
-      "GithubRef": null,
-      "GithubSha1": null,
-      "description": {
-        "Package": "drat",
-        "Type": "Package",
-        "Title": "'Drat' R Archive Template",
-        "Version": "0.1.5",
-        "Date": "2019-03-28",
-        "Author": "Dirk Eddelbuettel with contributions by Carl Boettiger, Neal Fultz,\n Sebastian Gibb, Colin Gillespie, Jan Górecki, Matt Jones, Thomas Leeper,\n Steven Pav, Jan Schulz and Christoph Stepper. ",
-        "Maintainer": "Dirk Eddelbuettel <edd@debian.org>",
-        "Depends": "R (>= 3.2.0)",
-        "Imports": "utils",
-        "Suggests": "git2r, knitr, rmarkdown",
-        "VignetteBuilder": "knitr",
-        "Description": "Creation and use of R Repositories via helper functions \n to insert packages into a repository, and to add repository information \n to the current R session. Two primary types of repositories are support:\n gh-pages at GitHub, as well as local repositories on either the same machine\n or a local network. Drat is a recursive acronym: Drat R Archive Template. ",
-        "License": "GPL (>= 2)",
-        "URL": "http://dirk.eddelbuettel.com/code/drat.html",
-        "BugReports": "https://github.com/eddelbuettel/drat/issues",
-        "Encoding": "UTF-8",
-        "RoxygenNote": "6.1.1",
-        "NeedsCompilation": "no",
-        "Packaged": "2019-03-28 11:37:14.139467 UTC; edd",
-        "Repository": "CRAN",
-        "Date/Publication": "2019-03-28 13:00:03 UTC",
-        "Built": "R 3.6.3; ; 2020-04-02 17:49:14 UTC; windows"
-      }
-    },
     "ellipsis": {
       "Source": "CRAN",
       "Repository": "https://cran.rstudio.com/",
@@ -2310,36 +2278,6 @@
         "Built": "R 3.6.2; x86_64-w64-mingw32; 2020-02-01 00:25:01 UTC; windows"
       }
     },
-    "packrat": {
-      "Source": "CRAN",
-      "Repository": "https://cran.rstudio.com/",
-      "GithubRepo": null,
-      "GithubUsername": null,
-      "GithubRef": null,
-      "GithubSha1": null,
-      "description": {
-        "Package": "packrat",
-        "Type": "Package",
-        "Title": "A Dependency Management System for Projects and their R Package\nDependencies",
-        "Version": "0.5.0",
-        "Author": "Kevin Ushey, Jonathan McPherson, Joe Cheng, Aron Atkins, JJ Allaire",
-        "Maintainer": "Kevin Ushey <kevin@rstudio.com>",
-        "Description": "Manage the R packages your project depends\n    on in an isolated, portable, and reproducible way.",
-        "License": "GPL-2",
-        "Depends": "R (>= 3.0.0)",
-        "Imports": "tools, utils",
-        "Suggests": "testthat (>= 0.7), devtools, httr, knitr, rmarkdown",
-        "URL": "https://github.com/rstudio/packrat/",
-        "BugReports": "https://github.com/rstudio/packrat/issues",
-        "RoxygenNote": "6.1.1",
-        "Encoding": "UTF-8",
-        "NeedsCompilation": "no",
-        "Packaged": "2018-11-13 23:16:36 UTC; kevin",
-        "Repository": "CRAN",
-        "Date/Publication": "2018-11-14 08:40:02 UTC",
-        "Built": "R 3.6.3; ; 2020-03-30 15:00:16 UTC; windows"
-      }
-    },
     "parsedate": {
       "Source": "CRAN",
       "Repository": "https://cran.rstudio.com/",
@@ -3197,44 +3135,6 @@
         "Repository": "CRAN",
         "Date/Publication": "2018-01-03 15:36:24 UTC",
         "Built": "R 3.6.3; ; 2020-03-24 03:33:57 UTC; windows"
-      }
-    },
-    "rsconnect": {
-      "Source": "github",
-      "Repository": null,
-      "GithubRepo": "rsconnect",
-      "GithubUsername": "rstudio",
-      "GithubRef": "master",
-      "GithubSha1": "40c162bf3c4cd9b10deed82e1df9ec1b0c107c1f",
-      "description": {
-        "Package": "rsconnect",
-        "Type": "Package",
-        "Title": "Deployment Interface for R Markdown Documents and Shiny\nApplications",
-        "Version": "0.8.16-9001",
-        "Author": "JJ Allaire",
-        "Maintainer": "Jonathan McPherson <jonathan@rstudio.com>",
-        "Description": "Programmatic deployment interface for 'RPubs', 'shinyapps.io', and\n    'RStudio Connect'. Supported content types include R Markdown documents,\n    Shiny applications, Plumber APIs, plots, and static web content.",
-        "Depends": "R (>= 3.0.0)",
-        "Imports": "curl, digest, jsonlite, openssl, packrat (>= 0.4.8-1),\nrstudioapi (>= 0.5), yaml (>= 2.1.5)",
-        "Suggests": "RCurl, callr, httpuv, knitr, plumber (>= 0.3.2), reticulate,\nrmarkdown (>= 1.1), shiny, sourcetools, testthat, xtable",
-        "License": "GPL-2",
-        "RoxygenNote": "7.0.2",
-        "Roxygen": "list(markdown = TRUE)",
-        "URL": "https://github.com/rstudio/rsconnect",
-        "BugReports": "https://github.com/rstudio/rsconnect/issues",
-        "RemoteType": "github",
-        "RemoteHost": "api.github.com",
-        "RemoteRepo": "rsconnect",
-        "RemoteUsername": "rstudio",
-        "RemoteRef": "master",
-        "RemoteSha": "40c162bf3c4cd9b10deed82e1df9ec1b0c107c1f",
-        "GithubRepo": "rsconnect",
-        "GithubUsername": "rstudio",
-        "GithubRef": "master",
-        "GithubSHA1": "40c162bf3c4cd9b10deed82e1df9ec1b0c107c1f",
-        "NeedsCompilation": "no",
-        "Packaged": "2020-04-13 20:49:46 UTC; aclark5",
-        "Built": "R 3.6.2; ; 2020-04-13 20:49:49 UTC; windows"
       }
     },
     "rstudioapi": {
@@ -4577,10 +4477,10 @@
   },
   "files": {
     "app.R": {
-      "checksum": "421da71bd9db811ca2a8e142096e5d25"
+      "checksum": "bfd73485718596ab7c20fae2cc6f7ba5"
     },
-    "file48cc3f67a86.log": {
-      "checksum": "f972a9005ae1d5cf7073be84cb21c201"
+    "file48cc23e557eb.log": {
+      "checksum": "3dc34d5587bc1b05448d561bd1aeab00"
     },
     "global.R": {
       "checksum": "86e69b27ccde651727e0e0963f9dd3c2"
@@ -4720,9 +4620,6 @@
     "packrat/desc/dplyr": {
       "checksum": "d16cf8fc0f20fcdd4d95ebd4b5728d3a"
     },
-    "packrat/desc/drat": {
-      "checksum": "043eb79531b6008ac0f0353ae37e82a9"
-    },
     "packrat/desc/DT": {
       "checksum": "c9cc81819ad44e4d7a8190de4d20caa3"
     },
@@ -4858,9 +4755,6 @@
     "packrat/desc/openssl": {
       "checksum": "547232f9a3b24cff4db5033065e75e38"
     },
-    "packrat/desc/packrat": {
-      "checksum": "b62af59b9221aa05b6b8f5ed8b7fba1a"
-    },
     "packrat/desc/parsedate": {
       "checksum": "bff184b8fa6fc99eab578d7777468acb"
     },
@@ -4959,9 +4853,6 @@
     },
     "packrat/desc/rprojroot": {
       "checksum": "935c26a59eedf4c933af18fea4c3a6b2"
-    },
-    "packrat/desc/rsconnect": {
-      "checksum": "1a04beb54a62784d0ca7af93d5848f3e"
     },
     "packrat/desc/rstudioapi": {
       "checksum": "109679f641804b0addbb4be8420e7622"
@@ -5093,7 +4984,7 @@
       "checksum": "1a902a5286236b90738a357b2537b341"
     },
     "packrat/packrat.lock": {
-      "checksum": "aad085a0f00a6c34e1ee89f36d1a48d4"
+      "checksum": "b217fc57993c935d146847226798c6d7"
     },
     "R/allowed_operators.R": {
       "checksum": "c2130178775fc0a80237b19db6cfc7b8"
@@ -5111,7 +5002,7 @@
       "checksum": "771148be2d777b40ab766e4cc3ed9eed"
     },
     "R/data_compliance_objects.R": {
-      "checksum": "5bb0f280ba999984b820e3aae1c8f500"
+      "checksum": "456b9e0950daec67b32e67a12323fc4d"
     },
     "R/detectStandard.R": {
       "checksum": "a8b9f088114258479abbfbc211cd234e"

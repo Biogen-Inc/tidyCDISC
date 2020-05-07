@@ -14,7 +14,7 @@
 hard_rules <- 
   list(
   ADSL = list(error = c("USUBJID"),
-              warn = c("USUBJID","SUGAR")),
+              warn = c("USUBJID")),
   ADLB = list(error = c("USUBJID"),
               warn = c("USUBJID", "LBDT", "LBSTNRLO", "LBSTNRHI")),
   ADMH = list(error = c("USUBJID", "MHCAT"),
