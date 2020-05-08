@@ -41,14 +41,22 @@ dataComply <- function(input, output, session, datalist = reactive(NULL)) {
     # Run "the check" to see if any rules are violated
     err_tab <- gather_reqs(disp_type = "error",
                            datalist = datalist,
+                           all_df_rules = alldf_rules,
                            expl_rules = hard_rules,
                            df_incl_rules = dfWith_rules)
     
     # Display Modal Conditionally, don't allow escape
     if(nrow(err_tab$df) > 0){
       output$err_gt <- render_gt({ err_tab$gt })
-      showModal( modalDialog(footer = NULL, title = "ERROR!",
-        tagList(
+      showModal( modalDialog(
+        title = div(style = "text-align:center; font-weight:bold;",
+                    "Error: Loaded Data not in Expected Format"),
+         footer = 
+           div(style = "text-align:center; font-size: 14px;",
+               html(paste(local_image(filename = "www/red_x.png", height = 15)
+                          , "= indicates variable(s) that need attention"))),
+         # Content of the Modal
+         tagList(
             gt_output(ns("err_gt")),
             br(),br()
           )
@@ -59,6 +67,7 @@ dataComply <- function(input, output, session, datalist = reactive(NULL)) {
       # Check for violations to "warnings" rules
       wrn_tab <- gather_reqs(disp_type = "warn",
                              datalist = datalist,
+                             all_df_rules = alldf_rules,
                              expl_rules = hard_rules,
                              df_incl_rules = dfWith_rules)
       
@@ -68,11 +77,21 @@ dataComply <- function(input, output, session, datalist = reactive(NULL)) {
         
         # Only show modal is most recently uploaded data has a warning
         if(names(datalist())[length(names(datalist()))] %in% wrn_tab$df$df) {
-          showModal( modalDialog(title = "WARNING!",
-             tagList(
-               gt_output(ns("wrn_gt")),
-               br(),br()
-             )
+          showModal( modalDialog(
+            title = div(style = "text-align:center; font-weight:bold;",
+                        "Warning: Loaded Data not in Expected Format"),
+            footer = tagList(
+                div(style = "text-align:center; font-size: 14px;",
+                  html(paste(local_image(filename = "www/red_x.png", height = 15)
+                             , "= indicates variable(s) that need attention"))
+                ),
+                modalButton("Dismiss")
+              ),
+           # Content of the modal
+           tagList(
+             gt_output(ns("wrn_gt")),
+             br(),br()
+           )
           ))
         }
       }

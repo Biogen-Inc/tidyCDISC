@@ -10,6 +10,11 @@
 # user if if some columns are missing that are vital for the app to make sense, but 
 # they can continue if they wish.
 ######################################################################################
+# RULES for all dfs
+alldf_rules <- list(
+  error = c("USUBJID"), # if error = "", then throwing an error. This needs
+  warn = c("")
+)
 
 hard_rules <- 
   list(
@@ -54,6 +59,7 @@ dfWith_rules <-
 gather_reqs <- function(input, output, session, 
                         disp_type = c("error","warn"),
                         datalist = reactive(NULL),
+                        all_df_rules = list( list(error = c(""), warn = c("")) ),
                         expl_rules = list( list(error = c(""), warn = c("")) ),
                         df_incl_rules = list( list(error = c(""), warn = c("")) )
 ) {
@@ -62,11 +68,39 @@ gather_reqs <- function(input, output, session,
     stop("User must specify either 'error' or 'warn' for disp_type arugment")
   }
 
-  if((is.null(expl_rules) | is.null(names(expl_rules))) & (is.null(df_incl_rules) | is.null(names(df_incl_rules)))) {
-    stop("No Rules Supplied. Without rules, the data compliance module is useless. Please remove.")
+  if((is.null(expl_rules) | is.null(names(expl_rules))) & 
+     (is.null(df_incl_rules) | is.null(names(df_incl_rules))) &
+     (is.null(all_df_rules) | is.null(names(all_df_rules))) 
+     ) {
+    stop("No Rules Supplied. Without rules, the data compliance module is useless. Please remove the Module.")
   }
 
-  # Create a DF of the hard rules
+  
+  
+  # Create rules that apply to all df's loaded
+  if(!is.null(all_df_rules) & !is.null(names(all_df_rules))) {
+    
+    # Validate that rules lists were constructed correctly: sublists are error and warn
+    ad_sl_nms_correct <- all(unlist(map(.x = 1:length(all_df_rules), function(x) all(names(all_df_rules[[x]]) %in% c("error","warn")))))
+    if(!ad_sl_nms_correct) stop("Names must be 'error' and 'warn' for each element of 'all_df_rules'")
+    
+    alldf <- list()
+    alldf <- map(.x = names(datalist()), function(x) alldf[[x]] <- all_df_rules) %>%
+      setNames(names(datalist()))%>%
+      lapply(data.frame, stringsAsFactors = FALSE) %>%
+      rbindlist(fill=TRUE, idcol = "df") %>%
+      subset(df %in% names(datalist())) %>% 
+      mutate(type_col = if(disp_type == "error") error else warn) %>% 
+      subset(type_col != "") %>% 
+      distinct(df, type_col)
+    # alldf # peek
+  } else{
+    # empty data frame
+    alldf <- data.frame(df = character(), type_col = character())
+  }
+  
+  
+  # Create a explicit rules for specific df's
   if(!is.null(expl_rules) & !is.null(names(expl_rules))) {
     
     # Validate that rules lists were constructed correctly: sublists are error and warn
@@ -77,15 +111,15 @@ gather_reqs <- function(input, output, session,
       data.table::rbindlist(fill=TRUE, idcol = "df") %>%
       subset(df %in% names(datalist())) %>% 
       mutate(type_col = if(disp_type == "error") error else warn) %>% 
+      subset(type_col != "") %>% 
       distinct(df, type_col)
   } else{
     # empty data frame
     hdf <- data.frame(df = character(), type_col = character())
   }
   
-  # combine hard rules with dfWith Rules
   
-  # Any of the rules df_vars in any of our datafiles?
+  # Rules for data frames containing certain vars? (df_vars)
   if(!is.null(df_incl_rules) & !is.null(names(df_incl_rules))) {
     df_incl_sl_nms_correct <- all(unlist(map(.x = 1:length(df_incl_rules), function(x) all(names(df_incl_rules[[x]]) %in% c("error","warn")))))
     if(!df_incl_sl_nms_correct) stop("Sublist Names must be 'error' and 'warn' for each element of 'df_incl_rules'")
@@ -95,6 +129,7 @@ gather_reqs <- function(input, output, session,
       lapply(df_incl_rules, data.frame, stringsAsFactors = FALSE) %>%
       data.table::rbindlist(fill=TRUE, idcol = "df_var") %>%
       mutate(type_col = if(disp_type == "error") error else warn) %>%
+      subset(type_col != "") %>% 
       distinct(df_var, type_col) 
     
     # don't need... consolidated
@@ -128,50 +163,68 @@ gather_reqs <- function(input, output, session,
   }
   
   # now stack the hard & df_with rules to get a unique set of rules to calc if pass / fail (doesn't exist or missing)
-  pf <-
-    hdf %>%
-    union(dw) %>%
-    distinct(df, type_col) %>%
-    arrange(df, type_col) %>%
-    mutate(
-      type = disp_type,
-      # exist0 = map(.x = df, function(x) type_col[df == x] %in% colnames(datalist()[[x]])),
-      not_exist = !unlist(map2(.x = df, .y = type_col, function(x,y) y %in% colnames(datalist()[[x]]))),
-      # unfortunately, the variables that don't exist throw this calculation off.. so we were extremely explicit below
-      missing = ifelse(not_exist == TRUE,
-                       ifelse(disp_type == "error", FALSE,TRUE),
-                       unlist(map2(.x = df, .y = type_col, function(x, y)
-                         all(as.character(datalist()[[x]][,type_col[df == x & type_col == y & not_exist == F]]) == "") |
-                           all(is.na(datalist()[[x]][,type_col[df == x & type_col == y & not_exist == F]]))
-                       )) ) # Here, we'd rather point out that a column doesn't exist instead of being missing
-      
-    ) %>%
-    mutate(not_exist_disp = ifelse(not_exist,"X",""),
-           missing_disp = ifelse(missing,"X",""),
-    )%>%
-    subset(not_exist | missing) %>%
-    select(df, type_col, not_exist_disp, missing_disp) 
-  # pf  
-  
-  # modify the table displayed using gt, remove a column if just exporting warnings
-  tab <- pf %>%
-    gt(rowname_col = "type_col" , groupname_col = "df") %>%
-    cols_label(not_exist_disp = "Doesn't Exist", missing_disp = "Missing Data") %>%
-    text_transform(
-      locations = list(cells_body(columns = vars(not_exist_disp), rows = not_exist_disp == "X"),
-                       cells_body(columns = vars(missing_disp), rows = missing_disp == "X")),
-      fn = function(X) local_image(filename = "www/red_x.png", height = 15) # test_image(type = "png") # web_image(url = r_png_url, height = 15)
-    ) %>%
-    tab_header(title = "Loaded Data not in Expected Format", subtitle = "Please reconcile variables below and reload") %>%
-    tab_stubhead(label = "Data") %>%
-    tab_style(style = cell_text(weight = "bold"), locations = cells_stubhead()) %>%
-    cols_align("center") %>%
-    tab_style(style = cell_text(weight = "bold"), locations = cells_row_groups()) %>% # bold group col groupnames
-    tab_source_note(html(paste(local_image(filename = "www/red_x.png", height = 15)
-                               , "indicates variables that need attention")))
-  
-  if(disp_type == "warn") {
-    tab <- tab %>% cols_hide(vars(not_exist_disp))
+  if(
+    alldf %>%
+      union(hdf) %>%
+      union(dw) %>%
+      distinct(df, type_col) %>% 
+      subset(type_col != "") %>% 
+      is_empty()
+    ){
+    stop("No Rules Supplied. Without rules, the data compliance module is useless. Please remove the Module.")
+    
+  } else {
+    
+    pf <-
+      alldf %>%
+      union(hdf) %>%
+      union(dw) %>%
+      distinct(df, type_col) %>%
+      arrange(df, type_col) %>%
+      mutate(
+        type = disp_type,
+        # exist0 = map(.x = df, function(x) type_col[df == x] %in% colnames(datalist()[[x]])),
+        not_exist = !unlist(map2(.x = df, .y = type_col, function(x,y) y %in% colnames(datalist()[[x]]))),
+        # unfortunately, the variables that don't exist throw this calculation off.. so we were extremely explicit below
+        missing = ifelse(not_exist == TRUE,
+                         ifelse(disp_type == "error", FALSE,TRUE),
+                         unlist(map2(.x = df, .y = type_col, function(x, y)
+                           all(as.character(datalist()[[x]][,type_col[df == x & type_col == y & not_exist == F]]) == "") |
+                             all(is.na(datalist()[[x]][,type_col[df == x & type_col == y & not_exist == F]]))
+                         )) ) # Here, we'd rather point out that a column doesn't exist instead of being missing
+        
+      ) %>%
+      mutate(not_exist_disp = ifelse(not_exist,"X",""),
+             missing_disp = ifelse(missing,"X",""),
+      )%>%
+      subset(not_exist | missing) %>%
+      select(df, type_col, not_exist_disp, missing_disp) 
+    # pf  
+    
+    # modify the table displayed using gt, remove a column if just exporting warnings
+    tab <- pf %>%
+      gt(rowname_col = "type_col" , groupname_col = "df") %>%
+      cols_label(not_exist_disp = "Doesn't Exist", missing_disp = "Missing Data") %>%
+      text_transform(
+        locations = list(cells_body(columns = vars(not_exist_disp), rows = not_exist_disp == "X"),
+                         cells_body(columns = vars(missing_disp), rows = missing_disp == "X")),
+        fn = function(X) local_image(filename = "www/red_x.png", height = 15) # test_image(type = "png") # web_image(url = r_png_url, height = 15)
+      ) %>%
+      tab_header(
+        title = paste(ifelse(disp_type == "error", "Please", "Optional:"),"reconcile variables below"),
+        subtitle = ifelse(disp_type == "error", "and re-upload data",
+                          "to experience the app's full functionality")
+      ) %>%
+      tab_stubhead(label = "Data") %>%
+      tab_style(style = cell_text(weight = "bold"), locations = cells_stubhead()) %>%
+      cols_align("center") %>%
+      tab_style(style = cell_text(weight = "bold"), locations = cells_row_groups()) #%>% # bold group col groupnames
+      # tab_source_note(html(paste(local_image(filename = "www/red_x.png", height = 15)
+      #                            , "indicates variables that need attention")))
+    
+    if(disp_type == "warn") {
+      tab <- tab %>% cols_hide(vars(not_exist_disp))
+    }
   }
   
   return(list(gt = tab, df = pf))
