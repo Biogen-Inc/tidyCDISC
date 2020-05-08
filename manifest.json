@@ -4479,8 +4479,13 @@
     "app.R": {
       "checksum": "bfd73485718596ab7c20fae2cc6f7ba5"
     },
+<<<<<<< HEAD
     "file81029417351.log": {
       "checksum": "470e436681454c141911e64741e48e24"
+=======
+    "file48cc23e557eb.log": {
+      "checksum": "3dc34d5587bc1b05448d561bd1aeab00"
+>>>>>>> ddefc45585e8674b60b291349d14e80f36040efd
     },
     "global.R": {
       "checksum": "86e69b27ccde651727e0e0963f9dd3c2"
@@ -5002,7 +5007,11 @@
       "checksum": "771148be2d777b40ab766e4cc3ed9eed"
     },
     "R/data_compliance_objects.R": {
+<<<<<<< HEAD
       "checksum": "2d781afcb4aa300e5962e55d254f36c4"
+=======
+      "checksum": "456b9e0950daec67b32e67a12323fc4d"
+>>>>>>> ddefc45585e8674b60b291349d14e80f36040efd
     },
     "R/detectStandard.R": {
       "checksum": "a8b9f088114258479abbfbc211cd234e"
