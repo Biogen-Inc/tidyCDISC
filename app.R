@@ -41,7 +41,6 @@ library(sjlabelled)
 options(shiny.sanitize.errors = FALSE)
 options(bitmapType='cairo') 
 
-
 source("global.R")
 
 ui <- 
