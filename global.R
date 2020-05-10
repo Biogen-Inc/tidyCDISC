@@ -12,6 +12,8 @@ source('modules/dataUpload.R')
 source('modules/dataUploadUI.R')
 
 source("R/IDEA_mean.R")
+source("R/IDEA_mean_summary.R")
+source("R/IDEA_chg.R")
 source("R/IDEA_freq.R")
 source('R/blocks.R')
 source('R/CapStr.R')

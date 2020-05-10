@@ -27,6 +27,7 @@ library(waiter)
 library(timevis)
 library(glue)
 library(sjlabelled) 
+library(rlang)
 
 ###############################################################
 # make sure this repo exists before writing to manifest file!
