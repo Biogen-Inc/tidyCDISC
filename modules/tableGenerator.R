@@ -157,7 +157,7 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
   datalist <- list()
   
   column <- reactive({
-    input$COLUMN
+    if (input$COLUMN == "NONE") NULL else input$COLUMN
   })
     
   # dataFrame <- reactive({
@@ -506,8 +506,18 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
   # 
   # paramcdcolumns <- reactive({ paste(PARAMCD_names(), collapse="|") })
   
+  s3 <- reactive({ 
+    req(blocks_and_functions()$S3[[1]])
+    blocks_and_functions()$S3[[1]]
+    })
+  
+  dp <- reactive({ 
+    req(blocks_and_functions()$S3[[1]])
+    blocks_and_functions()$dropdown[1] 
+    })
+  
   output$all <- renderReactable({
-    reactable(blocks_and_functions() %>% select(-S3))
+    reactable(IDEA_mean(s3(), dp(), data = all_data(), group = column()))
   })
   
   # output$all <- renderReactable({

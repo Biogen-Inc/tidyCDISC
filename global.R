@@ -11,6 +11,8 @@ source('R/build_events_df.R')
 source('modules/dataUpload.R')
 source('modules/dataUploadUI.R')
 
+source("R/IDEA_mean.R")
+source("R/IDEA_freq.R")
 source('R/blocks.R')
 source('R/CapStr.R')
 source('R/allowed_operators.R')
