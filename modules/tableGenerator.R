@@ -517,7 +517,7 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
     })
   
   output$all <- renderReactable({
-    reactable(IDEA_mean(s3(), dp(), data = all_data(), group = column()))
+    reactable(IDEA_freq(s3(), dp(), data = all_data(), group = column()))
   })
   
   # output$all <- renderReactable({
