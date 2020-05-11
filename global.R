@@ -11,19 +11,23 @@ source('R/build_events_df.R')
 source('modules/dataUpload.R')
 source('modules/dataUploadUI.R')
 
-source("R/IDEA_mean.R")
-source("R/IDEA_mean_summary.R")
-source("R/IDEA_chg.R")
-source("R/IDEA_freq.R")
-source('R/blocks.R')
-source('R/CapStr.R')
-source('R/allowed_operators.R')
-
-#source('R/pivot_paramcd.R')
-#source("R/mean_block.R")
+# Table Generator
 source('modules/tableGenerator.R')
 source('modules/tableGeneratorUI.R')
 
+# Block UI and helper functions
+source('R/blocks.R')
+source('R/CapStr.R')
+source('R/allowed_operators.R')
+source("R/IDEA_mean_summary.R")
+
+# Block calculations
+source("R/IDEA_mean.R")
+source("R/IDEA_chg.R")
+source("R/IDEA_freq.R")
+source("R/IDEA_anova.R")
+
+# select Data
 source('modules/selectData.R')
 source('modules/selectDataUI.R')
 
