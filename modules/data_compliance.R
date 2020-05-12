@@ -31,12 +31,15 @@ dataComplyUI <- function(id, label = "Check if Data Complies with Rules") {
 # (4) variables and every one of them has to be populated or things are going to break hard
 ############################################################################################
 
-dataComply <- function(input, output, session, datalist = reactive(NULL)) {
+dataComply <- function(input, output, session, datalist = reactive(NULL), showRules = T, dismissErrBttn = T) {
   
   ns <- session$ns
-
-  # any time the reactive datalist() changes, run this code
-  observeEvent(datalist(), {
+  rv <- reactiveValues(return_dl = datalist())
+  
+  # any time the reactive datalist() changes, run the code below which creates
+  # a new datalist (if data compliance error) and updates gt outputs if needed
+  # observeEvent(datalist(), {
+  return_datalist <- eventReactive(datalist(), {
     
     # Run "the check" to see if any rules are violated
     err_tab <- gather_reqs(disp_type = "error",
@@ -45,31 +48,47 @@ dataComply <- function(input, output, session, datalist = reactive(NULL)) {
                            expl_rules = hard_rules,
                            df_incl_rules = dfWith_rules)
     
+    # Check for violations to "warnings" rules
+    wrn_tab <- gather_reqs(disp_type = "warn",
+                           datalist = datalist,
+                           all_df_rules = alldf_rules,
+                           expl_rules = hard_rules,
+                           df_incl_rules = dfWith_rules)
+    
     # Display Modal Conditionally, don't allow escape
     if(nrow(err_tab$df) > 0){
+      
+      rv$return_dl <- err_tab$df_list
+      
       output$err_gt <- render_gt({ err_tab$gt })
+      output$wrn_gt <- if(nrow(wrn_tab$df) > 0) render_gt({ wrn_tab$gt })
+      
       showModal( modalDialog(
         title = div(style = "text-align:center; font-weight:bold;",
                     "Error: Loaded Data not in Expected Format"),
          footer = 
-           div(style = "text-align:center; font-size: 14px;",
-               html(paste(local_image(filename = "www/red_x.png", height = 15)
-                          , "= indicates variable(s) that need attention"))),
+          if(dismissErrBttn){
+            tagList(
+              div(style = "text-align:center; font-size: 14px;",
+                  html(paste(local_image(filename = "www/red_x.png", height = 15)
+                             , "= indicates variable(s) that need attention"))), 
+              modalButton("Dismiss")
+            )
+          } else {
+            div(style = "text-align:center; font-size: 14px;",
+                html(paste(local_image(filename = "www/red_x.png", height = 15)
+                           , "= indicates variable(s) that need attention")))
+          },
          # Content of the Modal
          tagList(
             gt_output(ns("err_gt")),
-            br(),br()
+            br(),br(),
+            gt_output(ns("wrn_gt")),
+            br()
           )
       ))
     }
     else { # if no errors...
-      
-      # Check for violations to "warnings" rules
-      wrn_tab <- gather_reqs(disp_type = "warn",
-                             datalist = datalist,
-                             all_df_rules = alldf_rules,
-                             expl_rules = hard_rules,
-                             df_incl_rules = dfWith_rules)
       
       # Display Modal Conditionally, allow escape
       if(nrow(wrn_tab$df) > 0){
@@ -96,7 +115,15 @@ dataComply <- function(input, output, session, datalist = reactive(NULL)) {
         }
       }
     }
+    # return_datalist <- reactive({ 
+    #   cat(paste("\nlength(names(rv$return_dl)):",length(names(rv$return_dl))))
+    #   cat(paste("\nnames(rv$return_dl):",names(rv$return_dl)))
+    #   rv$return_dl 
+    # })
+    return(rv$return_dl)
   })
+  
+  return(return_datalist())
 }
 
 

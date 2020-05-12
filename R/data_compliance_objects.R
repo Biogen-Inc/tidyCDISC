@@ -227,5 +227,15 @@ gather_reqs <- function(input, output, session,
     }
   }
   
-  return(list(gt = tab, df = pf))
+  return(list(df_list = 
+    if(disp_type == "warn") {
+      datalist()
+    } else {
+      datalist()[!(names(datalist()) %in% unique(pf$df))]
+    },
+    gt = tab,
+    df = pf)
+  )
 }
+
+

@@ -22,5 +22,6 @@ dataUploadUI <- function(id, label = "CSV file") {
              )
       )
     )
+    ,dataComplyUI(id = "comply_id")
   )
 }
