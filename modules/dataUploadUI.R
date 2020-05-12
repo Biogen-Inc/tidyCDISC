@@ -1,4 +1,3 @@
-
 dataUploadUI <- function(id, label = "CSV file") {
   ns <- NS(id)
   

@@ -26,6 +26,7 @@ source("R/IDEA_mean.R")
 source("R/IDEA_chg.R")
 source("R/IDEA_freq.R")
 source("R/IDEA_anova.R")
+source("R/IDEA_methods.R")
 
 # select Data
 source('modules/selectData.R')

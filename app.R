@@ -27,7 +27,6 @@ library(waiter)
 library(timevis)
 library(glue)
 library(sjlabelled) 
-library(rlang)
 
 ###############################################################
 # make sure this repo exists before writing to manifest file!
@@ -41,6 +40,7 @@ library(rlang)
 
 options(shiny.sanitize.errors = FALSE)
 options(bitmapType='cairo') 
+
 
 source("global.R")
 
@@ -87,7 +87,7 @@ ui <-
     tags$script(src = "script.js"),
     tags$script(src = "recipe.js"),
     tags$style(HTML("
- 
+                    
                     #browserModal .modal-dialog,
                     #browserModal .modal-body,
                     #browserModal .modal-footer {
@@ -100,14 +100,14 @@ ui <-
                     ")),
     inlineCSS(css),
     tags$head(tags$script(src = "analytics.js"))
-  )
+    )
 
 server <- function(input, output, session) {
   
   observeEvent(input$myBrowser , {
     if(str_detect(input$myBrowser, "IE")){
       showModal(tags$div(id="browserModal", modalDialog(footer = NULL,
-        glue("This web app doesn't function with Internet Explorer. Please use a modern browser such as Google Chrome.")
+                                                        glue("This web app doesn't function with Internet Explorer. Please use a modern browser such as Google Chrome.")
       )))
     }    
   })

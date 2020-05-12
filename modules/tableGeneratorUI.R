@@ -53,8 +53,8 @@ tableGeneratorUI <- function(id, label = "Create Chart") {
                           tags$ul(
                             id = "sortable_agg",
                             tags$li(
-                              class = "ui-state-default agg", id = "ttest",
-                              div(tippy(div("T-TEST"), "T-Test"))
+                              class = "ui-state-default agg", id = "anova",
+                              div(tippy(div("ANOVA"), "ANOVA"))
                             ),
                             tags$li(
                               class = "ui-state-default agg", id = "chg",
@@ -76,7 +76,7 @@ tableGeneratorUI <- function(id, label = "Create Chart") {
     
     mainPanel(style = "max-width: 500px;",
       #fluidRow(htmlOutput(ns("title"))),
-      fluidRow(reactableOutput(ns("all")))
+      fluidRow(verbatimTextOutput(ns("all")))
     ),
     tags$script(src = "script.js"),
     tags$script(src = "recipe.js")

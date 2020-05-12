@@ -1,3 +1,9 @@
+       $(document).ready(function(){
+          $('.btn-file').click(function(){
+             $(this).toggleClass('disable');
+          });
+       });
+
 $(function() {
   $("#sortable_agg").sortable();
   $("#sortable_agg").disableSelection();
@@ -122,8 +128,8 @@ Shiny.addCustomMessageHandler('my_data', function(df) {
     drop: function(event, ui) {
       var draggableId = ui.draggable.attr("id");
       var newid = getNewId(draggableId);
-      if (draggableId.includes("ttest")) {
-          $(this).append(selectWeekBlock(newid, "T-TEST", select));
+      if (draggableId.includes("anova")) {
+          $(this).append(selectWeekBlock(newid, "ANOVA", select));
         } else if (draggableId.includes("chg")) {
           $(this).append(selectWeekBlock(newid, "CHG", select));
         } else if (draggableId.includes("mean")) {
