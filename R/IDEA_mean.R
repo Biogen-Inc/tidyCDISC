@@ -24,10 +24,13 @@ IDEA_mean.ADSL <- function(column, week, group = NULL, data) {
     group <- sym(group)
     data %>%
       group_by(!!group) %>% 
-      mean_summary(column)
+      mean_summary(column) %>%
+      transpose_df()
+    
   } else {
     data %>%
-      mean_summary(column)
+      mean_summary(column) %>%
+      transpose_df()
   }
   
 }
@@ -44,15 +47,19 @@ IDEA_mean.BDS <- function(column, week, group = NULL, data) {
   }
   
   if (!is.null(group)) {
+    
     group <- sym(group)
     data %>%
       filter(AVISIT == week & PARAMCD == column) %>%
       group_by(!!group) %>%
-      mean_summary("AVAL")
+      mean_summary("AVAL") %>%
+      transpose_df()
+    
   } else {
     data %>%
       filter(AVISIT == week & PARAMCD == column) %>%
-      mean_summary("AVAL")
+      mean_summary("AVAL") %>%
+      transpose_df()
   }
 }
 

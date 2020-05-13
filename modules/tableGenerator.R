@@ -122,7 +122,8 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
          function(x,y,z) 
          IDEA_methods(x,y,z, 
                       group = column(), 
-                      data = all_data()))
+                      data = all_data())) %>%
+      map(setNames, common_rownames(all_data(), column()))
   })
   
   output$all <- renderPrint( print(aslist()) )
