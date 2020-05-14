@@ -13,6 +13,7 @@ IDEA_freq.default <- function(column, week, method) {
 # if ADSL supplied look for the column to take mean of
 # and look for a grouping variable to group_by
 IDEA_freq.ADSL <- function(column, week, group = NULL, data) {
+  
   column <- sym(as.character(column))
   
   if (is.null(group)) {
@@ -26,6 +27,11 @@ IDEA_freq.ADSL <- function(column, week, group = NULL, data) {
       mutate(x = paste0(n, " (", round(prop*100, 2), ")")) %>%
       select(!!column, x)
   } else {
+    
+    if (group == column) {
+      stop(glue("Cannot calculate frequency for {column} when also set as group."))
+    }
+    
     group <- sym(group)
     data %>%
       distinct(USUBJID, !!column, !!group) %>%
