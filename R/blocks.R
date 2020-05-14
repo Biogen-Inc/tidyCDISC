@@ -79,7 +79,13 @@ convertTGOutput <- function(agg, blocks) {
     # why is this NA in the tibble, but not NA pri
     # dropdown = map_chr(agg, "val", .default = NA_character_) %>% unname()
     dropdown = test,
-    S3 = map2(block, dataset, ~ custom_class(.x, .y))
+    S3 = map2(block, dataset, ~ custom_class(.x, .y)),
+    gt_group =
+      case_when(
+        dropdown == "NONE" ~ glue("{agg} of {block}"),
+        is.na(dropdown) ~ glue("{agg} of {block}"),
+        TRUE ~ glue("{agg} of {block} at {dropdown}")
+      )
   )
     
   }

@@ -26,7 +26,8 @@ library(reactable)
 library(waiter)
 library(timevis)
 library(glue)
-library(sjlabelled) 
+library(sjlabelled)
+library(gt)
 library(rlang)
 
 ###############################################################

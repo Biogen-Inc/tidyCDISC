@@ -1,6 +1,6 @@
 tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
   
-  output$title <- renderText( input$table_title )
+  # output$title <- renderText( input$table_title )
   
   filtering_expr <- function(input) {
     column <- rlang::sym(input$filtering)
@@ -123,10 +123,20 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
          IDEA_methods(x,y,z, 
                       group = column(), 
                       data = all_data())) %>%
-      map(setNames, common_rownames(all_data(), column()))
+      map(setNames, common_rownames(all_data(), column())) %>%
+      setNames(paste(blocks_and_functions()$gt_group))
   })
   
-  output$all <- renderPrint( print(aslist()) )
+  output$all <- render_gt({
+    aslist() %>%
+    bind_rows(.id = "ID") %>% 
+      group_by(ID) %>%
+      gt(rowname_col = "Variable") %>%
+      tab_header(
+        title = md(input$table_title),
+        subtitle = "Filtering logic"
+      )
+  })
   
   #####################################################################
   # Block Preperation
