@@ -4,14 +4,14 @@ CapStr <- function(y) {
         sep="", collapse=" ")
 }
 
-transpose_df <- function(df) {
+transpose_df <- function(df, num) {
   t_df <- data.table::transpose(df)
   colnames(t_df) <- rownames(df)
   rownames(t_df) <- colnames(df)
   t_df <- t_df %>%
     tibble::rownames_to_column(.data = .) %>%
     tibble::as_tibble(.)
-  return(t_df[-1,])
+  return(t_df[-num,])
 }
 
 common_rownames <- function(data, group) {

@@ -30,17 +30,22 @@ IDEA_chg.BDS <- function(column, week, group = NULL, data) {
   }
   
   if (!is.null(group)) {
+    
+    if (week == "NONE") {
+      stop("Please select a week from CHG dropdown to calculate the change from baseline for ", column)
+    }
+    
     group <- sym(group)
     data %>%
       filter(AVISIT == week & PARAMCD == column) %>%
       group_by(!!group) %>%
       mean_summary("CHG") %>%
-      transpose_df()
+      transpose_df(1)
   } else {
     data %>%
       filter(AVISIT == week & PARAMCD == column) %>%
       mean_summary("CHG") %>%
-      transpose_df()
+      transpose_df(999)
   }
 }
 

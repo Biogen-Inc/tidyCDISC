@@ -25,12 +25,12 @@ IDEA_mean.ADSL <- function(column, week, group = NULL, data) {
     data %>%
       group_by(!!group) %>% 
       mean_summary(column) %>%
-      transpose_df()
+      transpose_df(1)
     
   } else {
     data %>%
       mean_summary(column) %>%
-      transpose_df()
+      transpose_df(999)
   }
   
 }
@@ -48,18 +48,22 @@ IDEA_mean.BDS <- function(column, week, group = NULL, data) {
   
   if (!is.null(group)) {
     
+    if (week == "NONE") {
+      stop("Please select a week from the MEAN dropdown to calculate mean of ", column)
+    }
+    
     group <- sym(group)
     data %>%
       filter(AVISIT == week & PARAMCD == column) %>%
       group_by(!!group) %>%
       mean_summary("AVAL") %>%
-      transpose_df()
+      transpose_df(1)
     
   } else {
     data %>%
       filter(AVISIT == week & PARAMCD == column) %>%
       mean_summary("AVAL") %>%
-      transpose_df()
+      transpose_df(999)
   }
 }
 
