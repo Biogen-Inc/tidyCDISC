@@ -11,7 +11,7 @@ transpose_df <- function(df) {
   t_df <- t_df %>%
     tibble::rownames_to_column(.data = .) %>%
     tibble::as_tibble(.)
-  return(t_df)
+  return(t_df[-1,])
 }
 
 common_rownames <- function(data, group) {

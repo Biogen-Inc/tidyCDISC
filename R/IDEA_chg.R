@@ -34,11 +34,13 @@ IDEA_chg.BDS <- function(column, week, group = NULL, data) {
     data %>%
       filter(AVISIT == week & PARAMCD == column) %>%
       group_by(!!group) %>%
-      mean_summary("CHG")
+      mean_summary("CHG") %>%
+      transpose_df()
   } else {
     data %>%
       filter(AVISIT == week & PARAMCD == column) %>%
-      mean_summary("CHG")
+      mean_summary("CHG") %>%
+      transpose_df()
   }
 }
 
