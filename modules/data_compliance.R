@@ -1,6 +1,7 @@
 
 ######################################################################################
-# a module that will interface with the data import module and either (I) display an
+# Module description:
+# a module that will interface with a list of data frames and either (I) display an
 # error if needed variables don't exist and stop them from proceeding or (II) warn the
 # user if if some columns are missing that are vital for the app to make sense, but 
 # they can continue if they wish.
@@ -39,7 +40,10 @@ dataComplyUI <- function(id, label = "Check if Data Complies with Rules", showRu
 }
 
 ############################################################################################
-# datalist() is a list of data frames
+# Module Arguments:
+# datalist() is a list of one or more data frames
+# dismissErrBttn == TRUE will produce a Dismiss button on Error modals, FALSE will not 
+#                        which will essentially trap the user on the modal
 # rules is a DF with 3 columns: 
 # (1) data frame name
 # (2) Variable names needed for #3 or #4 below
@@ -52,6 +56,12 @@ dataComply <- function(input, output, session, datalist = reactive(NULL), dismis
   
   ns <- session$ns
   rv <- reactiveValues(return_dl = datalist())
+  
+  # **Keeping this code in here in case we ever want to revisit channeling 
+  # from the error/warning to the help modal. Channeling is only supported
+  # by dean attali's "shinyalert" package. Right now, it's difficult for 
+  # the server to identify anything that's going on and I think that's because
+  # the current location of the callModule() is inside an observeEvent(input$file, {})
   
   # If upload help button is pressed in error modal
   # observeEvent(input$clickRulesError, {
@@ -110,12 +120,13 @@ dataComply <- function(input, output, session, datalist = reactive(NULL), dismis
       showModal( modalDialog(
         title = div(style = "text-align:center; font-weight:bold;",
                     "Error: Loaded Data not in Expected Format"),
-         footer = 
+         footer =
           if(dismissErrBttn){
             tagList(
               div(style = "text-align:center; font-size: 14px;",
                   html(paste(local_image(filename = "www/red_x.png", height = 15)
                              , "= indicates variable(s) that need attention"))),
+              # **
               # actionButton(ns("clickRulesError") #actionBttn
               #              , label = NULL
               #              , icon = icon("question-circle")
@@ -128,11 +139,12 @@ dataComply <- function(input, output, session, datalist = reactive(NULL), dismis
               div(style = "text-align:center; font-size: 14px;",
                   html(paste(local_image(filename = "www/red_x.png", height = 15)
                              , "= indicates variable(s) that need attention"))),
+              # **
               # actionButton(ns("clickRulesError") #actionBttn
               #              , label = NULL
               #              , icon = icon("question-circle")
               # )
-              
+
             )
           },
          # Content of the Modal
@@ -141,6 +153,7 @@ dataComply <- function(input, output, session, datalist = reactive(NULL), dismis
             br(),br(),
             gt_output(ns("wrn_gt")),
             br()
+            # **
             # ,materialSwitch(ns("clickRulesError")
             #                , label = "Show Upload Rules"
             #                , status = "primary"
@@ -165,6 +178,7 @@ dataComply <- function(input, output, session, datalist = reactive(NULL), dismis
                   html(paste(local_image(filename = "www/red_x.png", height = 15)
                              , "= indicates variable(s) that need attention"))
                 ),
+                # **
                 # actionButton(ns("clickRulesWarn") #actionBttn
                 #              , label = NULL
                 #              , icon = icon("question-circle")
@@ -176,6 +190,7 @@ dataComply <- function(input, output, session, datalist = reactive(NULL), dismis
            tagList(
              gt_output(ns("wrn_gt")),
              br(),br()
+             # **
              # ,materialSwitch(ns("clickRulesWarn")
              #                , label = "Show Data Upload Rules"
              #                , status = "primary"
@@ -187,109 +202,11 @@ dataComply <- function(input, output, session, datalist = reactive(NULL), dismis
         }
       }
     }
-    # return_datalist <- reactive({ 
-    #   cat(paste("\nlength(names(rv$return_dl)):",length(names(rv$return_dl))))
-    #   cat(paste("\nnames(rv$return_dl):",names(rv$return_dl)))
-    #   rv$return_dl 
-    # })
-    return(rv$return_dl)
+    return(rv$return_dl) # eventReactive return
   })
   
-  return(return_datalist())
+  return(return_datalist()) # module return
 }
-
-
-
-
-
-
-# observeEvent(input$clickRules, {
-# 
-#   showModal( modalDialog(
-#     title = div(style = "text-align:center; font-weight:bold;",
-#                 "ADaM-ish Upload Rules"),
-#     footer =
-#       tagList(
-#         h5("*User will be alerted if these ADaM-ish datasets are uploaded and these variables (1) don't exist or (2) are completely empty / missing"),
-#         modalButton("Dismiss")
-#       ),
-#     tagList(
-#       # Rules for All Data Sets
-#       tagList(
-#         if(!is_empty(r$all_err) | !is_empty(r$all_wrn)){
-#           tagList(
-#             br(),
-#             h5("Rules for All Data Sets"),
-#             div(style = "font-size: 12px;", tagList(
-#               if(!is_empty(r$all_err)){
-#                 tagList(
-#                   HTML(paste0("&nbsp;&nbsp;&nbsp;Required: ",paste(r$all_err, collapse = ", "))),
-#                   br(),br(),
-#                 )
-#               } else {""},
-#               if(!is_empty(r$all_wrn)){
-#                 tagList(
-#                   HTML(paste0("&nbsp;&nbsp;&nbsp;Recommended: ",paste(r$all_wrn, collapse = ", "))),
-#                   br(),br(),
-#                 )
-#               } else {""}
-#             ))
-#           )
-#         }),
-# 
-#       # Specific Rules for Specific Data Sets
-#       tagList(
-#         if(!is_empty(r$expl_err) | !is_empty(r$expl_wrn)){
-#           tagList(
-#             br(),
-#             h5("Specific Rules for Specific Data Sets"),
-#             div(style = "font-size: 12px;", tagList(
-#               if(!is_empty(r$expl_err)){
-#                 tagList(
-#                   HTML(paste0("&nbsp;&nbsp;&nbsp;Required:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;",
-#                               paste(r$expl_err, collapse = "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"))),
-#                   br(),br(),
-#                 )
-#               } else {""},
-#               if(!is_empty(r$expl_wrn)){
-#                 tagList(
-#                   HTML(paste0("&nbsp;&nbsp;&nbsp;Recommended:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;",
-#                               paste(r$expl_wrn, collapse = "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"))),
-#                   br(),br(),
-#                 )
-#               } else {""}
-#             )) # end div
-#           )
-#         }),
-# 
-#       # Rules for Data Sets That Contain Certain Variables
-#       tagList(
-#         if(!is_empty(r$dfw_err) | !is_empty(r$dfw_wrn)){
-#           tagList(
-#             br(),
-#             h5("Rules for Data Sets That Contain Certain Variables"),
-#             div(style = "font-size: 12px;", tagList(
-#               if(!is_empty(r$dfw_err)){
-#                 tagList(
-#                   HTML(paste0("&nbsp;&nbsp;&nbsp;Required:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;",
-#                               paste(r$dfw_err, collapse = "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"))),
-#                   br(),br(),
-#                 )
-#               } else {""},
-#               if(!is_empty(r$dfw_wrn)){
-#                 tagList(
-#                   HTML(paste0("&nbsp;&nbsp;&nbsp;Recommended:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;",
-#                               paste(r$dfw_wrn, collapse = "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"))),
-#                   br(),br(),
-#                 )
-#               } else {""}
-#             )) # end div
-#           )
-#         })
-#       ) # end of tagList UI
-#     )) # end of modal
-# })
-
 
 
 

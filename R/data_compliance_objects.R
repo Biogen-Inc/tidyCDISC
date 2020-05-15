@@ -5,7 +5,7 @@
 #
 # Module found in "modules/data_compliance.R"
 # Module description:
-# a module that will interface with the data import module and either (I) display an
+# a module that will interface with a list of data frames and either (I) display an
 # error if needed variables don't exist and stop them from proceeding or (II) warn the
 # user if if some columns are missing that are vital for the app to make sense, but 
 # they can continue if they wish.
@@ -18,20 +18,6 @@ all_df_rules <- list(
   warn = c("")
 )
 
-# hard_rules 
-# expl_rules <- 
-#   list(
-#   ADSL = list(error = c("USUBJID"),
-#               warn = c("SUGAR")),
-#   ADLB = list(error = c("USUBJID"),
-#               warn = c("LBDT", "LBSTNRLO", "LBSTNRHI")),
-#   ADMH = list(error = c("USUBJID","MHCAT"),
-#               warn = c("MHSTDTC", "MHENDTC", "MHDECOD", "MHTERM")),
-#   ADCM = list(error = c("USUBJID"),
-#               warn = c("CMSTDT", "CMDECOD")),
-#   ADAE = list(error = c("USUBJID"),
-#               warn = c("AESTDT", "AEDECOD", "AESEV", "AESER"))
-# )
 expl_rules <- 
   list(
     ADSL = list(error = c(""),
@@ -53,11 +39,6 @@ df_incl_rules <-
   PARAMCD = list(error = c(""),
                  warn = c("AVISITN", "VISIT", "AVISIT", "PARAMCD", "PARAM", "AVAL", "CHG", "BASE")) # GOOD
   )
-# df_incl_rules <- 
-#   list(
-#     PARAMCD = list(error = c("USUBJID"),
-#                    warn = c("AVISITN", "VISIT", "AVISIT", "PARAMCD", "PARAM", "AVAL", "CHG", "BASE")) # GOOD
-#   )
 
 
 
@@ -65,9 +46,6 @@ df_incl_rules <-
 ############################################################################################
 # Define the UI for the "Help" module, which simply displays all the rules in a nice format
 ############################################################################################
-# all_df_rules = alldf_rules
-# expl_rules = hard_rules
-# df_incl_rules = dfWith_rules
 
 gather_rules <- function(input, output, session,
                          all_df_rules = list( list(error = c(""), warn = c("")) ),
