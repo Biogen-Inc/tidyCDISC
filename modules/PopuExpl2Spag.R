@@ -55,8 +55,8 @@ output$PlotlyOut <- renderPlotly({
   req(!is_empty(input$seltimevar) && input$seltimevar != "")
   req(!is_empty(input$responsevar) && input$responsevar != "")
 
-  labx <- sjlabelled::get_label(dfsub[[input$seltimevar]])
-  laby <- sjlabelled::get_label(dfsub[[input$responsevar]])
+  labx <- sjlabelled::get_label(dfsub[[input$seltimevar]], def.value = unique(input$seltimevar))
+  laby <- sjlabelled::get_label(dfsub[[input$responsevar]], def.value = unique(input$responsevar))
   
   # build subset of df() by randomly taking 25 subjects
   if (input$groupbyvar %in% c("SUBJID","USUBJID")) {
@@ -116,7 +116,7 @@ output$PlotlyOut <- renderPlotly({
       ) %>%
       layout(
         title = ggtitle(),
-        xaxis = list(title = labx), yaxis = list(title = laby), 
+        xaxis = list(title = labx, type = "category"), yaxis = list(title = laby), 
         showlegend = TRUE,
         legend = list(orientation = "h",   # show entries horizontally
                       xanchor = "center",  # use left of legend as anchor

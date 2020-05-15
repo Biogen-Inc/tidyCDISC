@@ -148,19 +148,19 @@ output$PlotlyOut <- renderPlotly({
 
     if (str_detect(unique(dfsub$PARAMCD),"_") == TRUE) {
       # use labels prefixed with PARAMCD
-      ggtitle <- reactive({ paste("Plot of",laby,"by",labx,"Grouped By",labz) })
+      ggtitle <- reactive({ paste("Plot of",laby,"versus",labx,"Grouped By",labz) })
     } else {
       # use labels followed by PARAM
-      ggtitle <- reactive({ paste("Plot of",laby,"by",labx,"Grouped By",labz,"for",unique(dfsub$PARAM)) })
+      ggtitle <- reactive({ paste("Plot of",laby,"versus",labx,"Grouped By",labz,"for",unique(dfsub$PARAM)) })
     }
   } else {
 
     if (str_detect(unique(dfsub$PARAMCD),"_") == TRUE) {
       # use labels prefixed with PARAMCD
-      ggtitle <- reactive({ paste("Plot of",laby,"by",labx) })
+      ggtitle <- reactive({ paste("Plot of",laby,"versus",labx) })
     } else {
       # use labels followed by PARAM
-      ggtitle <- reactive({ paste("Plot of",laby,"by",labx,"for",unique(dfsub$PARAM)) })
+      ggtitle <- reactive({ paste("Plot of",laby,"versus",labx,"for",unique(dfsub$PARAM)) })
     }
   }
   p <- p + labs(title = ggtitle(), x = labx, y = laby)
@@ -169,17 +169,15 @@ output$PlotlyOut <- renderPlotly({
   ggcmd <- c("geom_point","geom_line","geom_vline","geom_hline","geom_errorbar","geom_bar","geom_text","geom_text2","coord_flip","geom_pointrange","theme",
              "scale_shape","scale_x_cont","scale_y_cont","scale_x_discr","scale_y_discr","scale_y_log10","scale_x_log10")
   # any embedded graph instructions?
-  graphinst <- select(dfsub, any_of(ggcmd))
+  graphinst <- select(df(), any_of(ggcmd))
   # graphinst <- suppressWarnings(unique(select(dfsub, one_of(ggcmd))))
 
-  # print(paste("graphinst has length",length(graphinst)))
-  # 
   # display graph instructions for now
   if (length(graphinst) > 0) {
     graphinst <- unique(graphinst) %>% unlist(use.names = FALSE) # convert to unnamed vector
-    # for (i in 1:length(graphinst)) {
-    #   print(graphinst[i])
-    # }
+    for (i in 1:length(graphinst)) {
+      # print(graphinst[i])
+    }
      p <- p + sapply(graphinst, function(gr) {eval(parse(text = gr))})
   }
   
