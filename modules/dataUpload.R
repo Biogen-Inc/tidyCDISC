@@ -14,7 +14,7 @@ dataUpload <- function(input, output, session, stringsAsFactors) {
   observeEvent(input$file, {
   
     data_list <- list()
-    
+
     ## data list
     for (i in 1:nrow(input$file)){
       if(length(grep(".sas7bdat", input$file$name[i], ignore.case = TRUE)) > 0){
@@ -23,11 +23,18 @@ dataUpload <- function(input, output, session, stringsAsFactors) {
         data_list[[i]] <- NULL
       }
     }
+    
     # names
     names(data_list) <- toupper(str_remove(input$file$name, ".sas7bdat"))
     
-    # append to existing reactiveValues list
-    dd$data <- c(dd$data, data_list)
+    
+    
+    # run that list of dfs through the data compliance module, replacing list with those that comply
+    dl_comply <- callModule(dataComply, "comply_id", datalist = reactive(data_list)) 
+    if(length(names(dl_comply)) > 0){
+      # append to existing reactiveValues list
+      dd$data <-  c(dd$data, dl_comply) # dl_comply #
+    }
     
     # set dd$current to FALSE for previous & TRUE for current uploads
     dd$current <- c(rep(FALSE, length(dd$current)), rep(TRUE, length(data_list)))
@@ -42,9 +49,9 @@ dataUpload <- function(input, output, session, stringsAsFactors) {
   })
   
   
+  
   ### make a reactive combining dd$data & standard
   data_choices <- reactive({
-    
     req(dd$data)
     req(dd$standard)
     
@@ -57,8 +64,10 @@ dataUpload <- function(input, output, session, stringsAsFactors) {
   })
   
   
-  observeEvent(input$file, {
+  
+  observeEvent(dd$data, {
     req(data_choices())
+    
     vals <- data_choices()
     names(vals) <- NULL
     names <- data_choices()

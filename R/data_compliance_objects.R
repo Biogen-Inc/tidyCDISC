@@ -5,57 +5,239 @@
 #
 # Module found in "modules/data_compliance.R"
 # Module description:
-# a module that will interface with the data import module and either (I) display an
+# a module that will interface with a list of data frames and either (I) display an
 # error if needed variables don't exist and stop them from proceeding or (II) warn the
 # user if if some columns are missing that are vital for the app to make sense, but 
 # they can continue if they wish.
 ######################################################################################
+
 # RULES for all dfs
-alldf_rules <- list(
+# alldf_rules 
+all_df_rules <- list(
   error = c("USUBJID"), # if error = "", then throwing an error. This needs
   warn = c("")
 )
 
-hard_rules <- 
+expl_rules <- 
   list(
-  ADSL = list(error = c("USUBJID"),
-              warn = c("USUBJID")),
-  ADLB = list(error = c("USUBJID"),
-              warn = c("USUBJID", "LBDT", "LBSTNRLO", "LBSTNRHI")),
-  ADMH = list(error = c("USUBJID", "MHCAT"),
-              warn = c("USUBJID", "MHCAT", "MHSTDTC", "MHENDTC", "MHDECOD", "MHTERM")),
-  ADCM = list(error = c("USUBJID"),
-              warn = c("USUBJID", "CMSTDT", "CMDECOD")),
-  ADAE = list(error = c("USUBJID"),
-              warn = c("USUBJID", "AESTDT", "AEDECOD", "AESEV", "AESER"))
-)
-# NULL # GOOD
-# idea_hard_rules # peek
-
-dfWith_rules <- 
-  list(
-  PARAMCD = list(error = c("USUBJID"),
-                 warn = c("USUBJID", "AVISITN", "VISIT", "AVISIT", "PARAMCD", "PARAM", "AVAL", "CHG", "BASE")) # GOOD
+    ADLB = list(error = c(""),
+                warn = c("LBDT", "LBSTNRLO", "LBSTNRHI")),
+    ADMH = list(error = c("","MHCAT"),
+                warn = c("MHSTDTC", "MHENDTC", "MHDECOD", "MHTERM")),
+    ADCM = list(error = c(""),
+                warn = c("CMSTDT", "CMDECOD")),
+    ADAE = list(error = c(""),
+                warn = c("AESTDT", "AEDECOD", "AESEV", "AESER"))
   )
-# TEST other scenarios for bogus rules as inputs
-#   PARAMCD = list(error = c("USUBJID"),
-#                    warn = c("USUBJID", "AVISITN", "VISIT", "AVISIT", "PARAMCD", "PARAM", "AVAL", "CHG", "BASE")) # GOOD
-#   PARAMCD = list(STING = c("USUBJID"),
-#                  warn = c("USUBJID", "AVISITN", "VISIT", "AVISIT", "PARAMCD", "PARAM", "AVAL", "CHG", "BASE")) # GOOD
-#   PARAMCD = list(STING = c("USUBJID"))# GOOD
-# )
-# list( list(error = c(""), warn = c("")) ) # GOOD
-# NULL # GOOD
-# dfWith_rules # peek
+
+
+# dfWith_rules
+df_incl_rules <- 
+  list(
+  PARAMCD = list(error = c(""),
+                 warn = c("AVISITN", "VISIT", "AVISIT", "PARAMCD", "PARAM", "AVAL", "CHG", "BASE")) # GOOD
+  )
 
 
 
 
 ############################################################################################
-# Initial function that does most of the work of this module
+# Define the UI for the "Help" module, which simply displays all the rules in a nice format
 ############################################################################################
 
-# disp_type = "warn"
+gather_rules <- function(input, output, session,
+                         all_df_rules = list( list(error = c(""), warn = c("")) ),
+                         expl_rules = list( list(error = c(""), warn = c("")) ),
+                         df_incl_rules = list( list(error = c(""), warn = c("")) )
+) {
+  if((is.null(expl_rules) | is.null(names(expl_rules))) & 
+     (is.null(df_incl_rules) | is.null(names(df_incl_rules))) &
+     (is.null(all_df_rules) | is.null(names(all_df_rules))) 
+  ) {
+    stop("No Rules Supplied. Without rules, the data compliance module is useless. Please remove the Module.")
+  }
+  
+  # rules that apply to all df's loaded
+  if(!is.null(all_df_rules) & !is.null(names(all_df_rules))) {
+    err0 <- unique(unlist(all_df_rules$error)) 
+    err <- if(err0 == "") character(0) else err0
+    wrn0 <- unique(unlist(all_df_rules$warn))
+    wrn <- if(wrn0 == "") character(0) else wrn0
+  } else {
+    err <- character(0) # ""
+    wrn <- character(0) # ""
+  }
+  
+  #  explicit rules for specific df's
+  if(!is.null(expl_rules) & !is.null(names(expl_rules))) {
+    hdf <- 
+      lapply(expl_rules, data.frame, stringsAsFactors = FALSE) %>%
+      data.table::rbindlist(fill=TRUE, idcol = "df")
+    
+    hdf_err <- 
+        hdf %>%
+        distinct(df,error) %>%
+        subset(error != '') %>%
+        group_by(df) %>%
+        summarize(p = paste(error, collapse = ", ")) %>%
+        ungroup() %>%
+        mutate(f = paste(df, p, sep = ": ")) %>%
+        distinct%>%
+        pull(f)
+    
+    hdf_wrn <-
+      hdf %>%
+      distinct(df,warn) %>%
+      subset(warn != "") %>%
+      group_by(df) %>%
+      summarize(p = paste(warn, collapse = ", ")) %>%
+      ungroup() %>%
+      mutate(f = paste(df, p, sep = ": ")) %>%
+      pull(f)
+    
+  } else {
+    hdf_err <- character(0) # "" # data.frame(df = character(), error = character(), warn = character())
+    hdf_wrn <- character(0) # ""
+  }
+  
+  # Rules for data frames containing certain vars (df_vars)
+  if(!is.null(df_incl_rules) & !is.null(names(df_incl_rules))) {
+    dfw <-
+      lapply(df_incl_rules, data.frame, stringsAsFactors = FALSE) %>%
+      data.table::rbindlist(fill=TRUE, idcol = "df_var")
+    
+    dfw_err <-
+      dfw %>%
+      distinct(df_var,error) %>%
+      subset(error != "") %>%
+      group_by(df_var) %>%
+      summarize(p = paste(error, collapse = ", ")) %>%
+      ungroup() %>%
+      mutate(f = paste(df_var, p, sep = ": ")) %>%
+      pull(f)
+    
+    dfw_wrn <-
+      dfw %>%
+      distinct(df_var,warn) %>%
+      subset(warn != "") %>%
+      group_by(df_var) %>%
+      summarize(p = paste(warn, collapse = ", ")) %>%
+      ungroup() %>%
+      mutate(f = paste(df_var, p, sep = ": ")) %>%
+      pull(f)
+    
+  } else {
+    # dfw <- data.frame(df_var = character(), error = character(), warn = character())
+    dfw_err <- character(0) # ""
+    dfw_wrn <- character(0) # ""
+  }
+  
+  ui<- tagList( # start UI of modal
+    
+    # Notes... can't add footer to bsModal
+    # HTML("Note: The user will be alerted if files are uploaded and these variables (1) don't exist or (2) are completely empty / missing"),
+    
+    # Rules for All Data Sets
+    tagList(
+      if(!is_empty(err) | !is_empty(wrn)){
+        tagList(
+          br(),
+          h5(strong("Rules for All Data Sets")),
+          div(style = "font-size: 12px;", tagList(
+            if(!is_empty(err)){
+              tagList(
+                HTML(paste0("&nbsp;&nbsp;&nbsp;Required: ",paste(err, collapse = ", "))),
+                br(),br(),
+              )
+            } else {""},
+            if(!is_empty(wrn)){
+              tagList(
+                HTML(paste0("&nbsp;&nbsp;&nbsp;Recommended: ",paste(wrn, collapse = ", "))),
+                br(),br(),
+              )
+            } else {""}
+          ))
+        )
+      }),
+    
+    # Specific Rules for Specific Data Sets
+    tagList(
+      if(!is_empty(hdf_err) | !is_empty(hdf_wrn)){
+        tagList(
+          br(),
+          h5(strong("Specific Rules for Specific Data Sets")),
+          div(style = "font-size: 12px;", tagList(
+            if(!is_empty(hdf_err)){
+              tagList(
+                HTML(paste0("&nbsp;&nbsp;&nbsp;Required:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;",
+                            paste(hdf_err, collapse = "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"))),
+                br(),br(),
+              )
+            } else {""},
+            if(!is_empty(hdf_wrn)){
+              tagList(
+                HTML(paste0("&nbsp;&nbsp;&nbsp;Recommended:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;",
+                            paste(hdf_wrn, collapse = "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"))),
+                br(),br(),
+              )
+            } else {""}
+          )) # end div
+        )
+      }),
+    
+    # Rules for Data Sets That Contain Certain Variables
+    tagList(
+      if(!is_empty(dfw_err) | !is_empty(dfw_wrn)){
+        tagList(
+          br(),
+          h5(strong("Rules for Data Sets That Contain Certain Variables")),
+          div(style = "font-size: 12px;", tagList(
+            if(!is_empty(dfw_err)){
+              tagList(
+                HTML(paste0("&nbsp;&nbsp;&nbsp;Required:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;",
+                            paste(dfw_err, collapse = "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"))),
+                br(),br(),
+              )
+            } else {""},
+            if(!is_empty(dfw_wrn)){
+              tagList(
+                HTML(paste0("&nbsp;&nbsp;&nbsp;Recommended:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;",
+                            paste(dfw_wrn, collapse = "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"))),
+                br(),br(),
+              )
+            } else {""}
+          )) # end div
+        )
+      })
+  ) # end of tagList UI
+  
+  return(ui)
+    
+
+}
+###########################################################
+# Run it help module UI once, before loading the app
+###########################################################
+rulesUI <- gather_rules(all_df_rules = all_df_rules,
+                  expl_rules = expl_rules,
+                  df_incl_rules = df_incl_rules)
+
+
+
+
+
+
+
+
+
+
+#################################################################################
+# This function validates the rules entered and creates data frames & gt objects
+# for display in modals that pop up upon load. The function also returns a list
+# of data frames just in case a loaded df doesn't meet one of the requirements...
+# it will be removed.
+#################################################################################
+
 gather_reqs <- function(input, output, session, 
                         disp_type = c("error","warn"),
                         datalist = reactive(NULL),
@@ -132,28 +314,28 @@ gather_reqs <- function(input, output, session,
       subset(type_col != "") %>% 
       distinct(df_var, type_col) 
     
-    # don't need... consolidated
-    # dfw_type <- dfw %>%
-    #   mutate(type_col = if(disp_type == "error") error else warn) %>%
-    #   distinct(df_var, type_col) 
-    
-    # expand args to all loaded df's
-    dfw_args <- 
-      expand.grid(df = names(datalist()), df_var = dfw_type$df_var, type_col = dfw_type$type_col) %>% 
-      mutate_if(is.factor, as.character) %>% 
-      inner_join(dfw_type, by = c("df_var","type_col"))
-    
-    # run args through df's to see which one's exist
-    dw <-
-      dfw_args %>%
-      mutate(
-        col_exist = unlist(pmap(dfw_args,function(df, df_var, type_col) 
-          dfw_type$type_col[dfw_type$df_var == df_var & dfw_type$type_col  == type_col ] %in% colnames(datalist()[[df]])))
-      ) %>%
-      subset(col_exist == T) %>%
-      distinct(df, df_var, type_col) %>%
-      subset(df %in% names(datalist())) %>%
-      select(-df_var)
+    if(nrow(dfw_type) > 0){
+      # expand args to all loaded df's
+      dfw_args <- 
+        expand.grid(df = names(datalist()), df_var = dfw_type$df_var, type_col = dfw_type$type_col) %>% 
+        mutate_if(is.factor, as.character) %>% 
+        inner_join(dfw_type, by = c("df_var","type_col"))
+      
+      # run args through df's to see which one's exist
+      dw <-
+        dfw_args %>%
+        mutate(
+          col_exist = unlist(pmap(dfw_args,function(df, df_var, type_col) 
+            dfw_type$type_col[dfw_type$df_var == df_var & dfw_type$type_col  == type_col ] %in% colnames(datalist()[[df]])))
+        ) %>%
+        subset(col_exist == T) %>%
+        distinct(df, df_var, type_col) %>%
+        subset(df %in% names(datalist())) %>%
+        select(-df_var)
+    } else {
+      # empty data frame
+      dw <- data.frame(df = character(), type_col = character())
+    }
     
     # dw
   } else {
@@ -165,13 +347,16 @@ gather_reqs <- function(input, output, session,
   # now stack the hard & df_with rules to get a unique set of rules to calc if pass / fail (doesn't exist or missing)
   if(
     alldf %>%
-      union(hdf) %>%
-      union(dw) %>%
-      distinct(df, type_col) %>% 
-      subset(type_col != "") %>% 
-      is_empty()
-    ){
-    stop("No Rules Supplied. Without rules, the data compliance module is useless. Please remove the Module.")
+    union(hdf) %>%
+    union(dw) %>%
+    distinct(df, type_col) %>% 
+    subset(type_col != "") %>% 
+    nrow() == 0
+    ) {
+    # stop("No Rules Supplied. Without rules, the data compliance module is useless. Please remove the Module.")
+    pf <- data.frame(df = character(), type_col = character(),
+                     not_exist_disp = character(), missing_disp = character())
+    tab <- NULL
     
   } else {
     
@@ -227,5 +412,34 @@ gather_reqs <- function(input, output, session,
     }
   }
   
-  return(list(gt = tab, df = pf))
+  return(list(df_list = 
+    if(disp_type == "warn") {
+      datalist()
+    } else {
+      datalist()[!(names(datalist()) %in% unique(pf$df))]
+    },
+    gt = tab,
+    df = pf)
+  )
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

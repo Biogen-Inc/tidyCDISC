@@ -3387,6 +3387,33 @@
         "Built": "R 3.6.3; ; 2020-03-24 10:00:46 UTC; windows"
       }
     },
+    "shinyBS": {
+      "Source": "CRAN",
+      "Repository": "https://cran.rstudio.com/",
+      "GithubRepo": null,
+      "GithubUsername": null,
+      "GithubRef": null,
+      "GithubSha1": null,
+      "description": {
+        "Package": "shinyBS",
+        "Type": "Package",
+        "Title": "Twitter Bootstrap Components for Shiny",
+        "Version": "0.61",
+        "Date": "2015-03-30",
+        "Author": "Eric Bailey",
+        "Maintainer": "Eric Bailey <ebailey@idem.in.gov>",
+        "Description": "Adds additional Twitter Bootstrap components to Shiny. ",
+        "Imports": "shiny (>= 0.11), htmltools",
+        "URL": "https://ebailey78.github.io/shinyBS",
+        "BugReports": "https://github.com/ebailey78/shinyBS/issues",
+        "License": "GPL-3",
+        "Packaged": "2015-03-30 12:16:24 UTC; ebailey",
+        "NeedsCompilation": "no",
+        "Repository": "CRAN",
+        "Date/Publication": "2015-03-31 07:52:38",
+        "Built": "R 3.6.3; ; 2020-05-11 07:44:59 UTC; windows"
+      }
+    },
     "shinyTime": {
       "Source": "CRAN",
       "Repository": "https://cran.rstudio.com/",
@@ -4477,13 +4504,13 @@
   },
   "files": {
     "app.R": {
-      "checksum": "af5e083771bab4d2457654b8b43a7762"
+      "checksum": "0ffb10dffe54568161f2a8f2b9a84f57"
     },
-    "file810f365355.log": {
-      "checksum": "34fae5438bc49ee4f19f1ecdd39c7c11"
+    "file212c727e2d83.log": {
+      "checksum": "d3714166f7f62c8dda5d6ce8a49388af"
     },
     "global.R": {
-      "checksum": "86e69b27ccde651727e0e0963f9dd3c2"
+      "checksum": "b80561708004f674bbf507630594566c"
     },
     "kable.log": {
       "checksum": "ae9d120c740e1b64c5e19dfab7180f36"
@@ -4495,13 +4522,13 @@
       "checksum": "347f19dfd9c39734210181ce4a373aca"
     },
     "modules/data_compliance.R": {
-      "checksum": "a91516fb7cdb286cea4b504eabc6b83c"
+      "checksum": "8aa7abe9ec6c19ef0e2162651ea2b530"
     },
     "modules/dataUpload.R": {
-      "checksum": "ee49171171a257cbdc9537cc92d7e886"
+      "checksum": "bf97850ad5eba3fe9c4288727c67c2f7"
     },
     "modules/dataUploadUI.R": {
-      "checksum": "7b162487e5196ddd04e489e712ddcac8"
+      "checksum": "66ba958462acb1d351b1025df90bcba2"
     },
     "modules/IndvExpl1Initial.R": {
       "checksum": "abdc2f8ab3ed4669dd72bed20c35950d"
@@ -4516,7 +4543,7 @@
       "checksum": "02432545556314c0bdcf24149d3b4693"
     },
     "modules/IndvExplorUI.R": {
-      "checksum": "d0686959d84c507faae5d21a4620d2ff"
+      "checksum": "1edad6d99647900ff406546aefa2751a"
     },
     "modules/PopuExpl1Scat.R": {
       "checksum": "3213a3889b43246ebc69d7000c0c961e"
@@ -4878,6 +4905,9 @@
     "packrat/desc/shiny": {
       "checksum": "2d059866a47871707d63621b3bfcf45b"
     },
+    "packrat/desc/shinyBS": {
+      "checksum": "0074f03052ab0ade6a3ef18803f6844f"
+    },
     "packrat/desc/shinybusy": {
       "checksum": "80799de796b082f3da9399960fc20d35"
     },
@@ -4984,7 +5014,7 @@
       "checksum": "1a902a5286236b90738a357b2537b341"
     },
     "packrat/packrat.lock": {
-      "checksum": "b217fc57993c935d146847226798c6d7"
+      "checksum": "be8862b6e19cb2b58a51e7619287847d"
     },
     "R/allowed_operators.R": {
       "checksum": "c2130178775fc0a80237b19db6cfc7b8"
@@ -5002,7 +5032,7 @@
       "checksum": "771148be2d777b40ab766e4cc3ed9eed"
     },
     "R/data_compliance_objects.R": {
-      "checksum": "7c091ea04c19f92c1728d5af12e64332"
+      "checksum": "d5603e934c4d92f407062f2543756c93"
     },
     "R/detectStandard.R": {
       "checksum": "a8b9f088114258479abbfbc211cd234e"
