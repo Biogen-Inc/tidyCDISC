@@ -20,8 +20,6 @@ all_df_rules <- list(
 
 expl_rules <- 
   list(
-    ADSL = list(error = c(""),
-                warn = c("SUGAR")),
     ADLB = list(error = c(""),
                 warn = c("LBDT", "LBSTNRLO", "LBSTNRHI")),
     ADMH = list(error = c("","MHCAT"),
