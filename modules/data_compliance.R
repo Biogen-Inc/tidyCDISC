@@ -44,12 +44,7 @@ dataComplyUI <- function(id, label = "Check if Data Complies with Rules", showRu
 # datalist() is a list of one or more data frames
 # dismissErrBttn == TRUE will produce a Dismiss button on Error modals, FALSE will not 
 #                        which will essentially trap the user on the modal
-# rules is a DF with 3 columns: 
-# (1) data frame name
-# (2) Variable names needed for #3 or #4 below
-# (3) Variables that should be in there for the app to make sense, but sure, if you're
-#     desperate, they can make the column blank and it won't break the app
-# (4) variables and every one of them has to be populated or things are going to break hard
+# rules (not an argument) below are defined above
 ############################################################################################
 
 dataComply <- function(input, output, session, datalist = reactive(NULL), dismissErrBttn = T) {
