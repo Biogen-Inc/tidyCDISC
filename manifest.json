@@ -546,6 +546,41 @@
         "Built": "R 3.6.2; ; 2020-02-01 03:04:15 UTC; windows"
       }
     },
+    "checkmate": {
+      "Source": "CRAN",
+      "Repository": "https://cran.rstudio.com/",
+      "GithubRepo": null,
+      "GithubUsername": null,
+      "GithubRef": null,
+      "GithubSha1": null,
+      "description": {
+        "Package": "checkmate",
+        "Type": "Package",
+        "Title": "Fast and Versatile Argument Checks",
+        "Description": "Tests and assertions to perform frequent argument checks. A\n    substantial part of the package was written in C to minimize any worries\n    about execution time overhead.",
+        "Version": "2.0.0",
+        "Authors@R": "c(\n    person(\"Michel\", \"Lang\", NULL, \"michellang@gmail.com\",\n      role = c(\"cre\", \"aut\"), comment = c(ORCID = \"0000-0001-9754-0393\")),\n    person(\"Bernd\", \"Bischl\", NULL, \"bernd_bischl@gmx.net\", role = \"ctb\")\n    )",
+        "URL": "https://github.com/mllg/checkmate",
+        "URLNote": "https://github.com/mllg/checkmate",
+        "BugReports": "https://github.com/mllg/checkmate/issues",
+        "NeedsCompilation": "yes",
+        "ByteCompile": "yes",
+        "Encoding": "UTF-8",
+        "Depends": "R (>= 3.0.0)",
+        "Imports": "backports (>= 1.1.0), utils",
+        "Suggests": "R6, fastmatch, data.table (>= 1.9.8), devtools, ggplot2,\nknitr, magrittr, microbenchmark, rmarkdown, testthat (>=\n0.11.0), tinytest (>= 1.1.0), tibble",
+        "License": "BSD_3_clause + file LICENSE",
+        "VignetteBuilder": "knitr",
+        "RoxygenNote": "7.0.2",
+        "Collate": "'AssertCollection.R' 'allMissing.R' 'anyInfinite.R'\n'anyMissing.R' 'anyNaN.R' 'asInteger.R' 'assert.R' 'helper.R'\n'makeExpectation.R' 'makeTest.R' 'makeAssertion.R'\n'checkAccess.R' 'checkArray.R' 'checkAtomic.R'\n'checkAtomicVector.R' 'checkCharacter.R' 'checkChoice.R'\n'checkClass.R' 'checkComplex.R' 'checkCount.R'\n'checkDataFrame.R' 'checkDataTable.R' 'checkDate.R'\n'checkDirectoryExists.R' 'checkDisjunct.R' 'checkDouble.R'\n'checkEnvironment.R' 'checkFALSE.R' 'checkFactor.R'\n'checkFileExists.R' 'checkFlag.R' 'checkFormula.R'\n'checkFunction.R' 'checkInt.R' 'checkInteger.R'\n'checkIntegerish.R' 'checkList.R' 'checkLogical.R'\n'checkMatrix.R' 'checkMultiClass.R' 'checkNamed.R'\n'checkNames.R' 'checkNull.R' 'checkNumber.R' 'checkNumeric.R'\n'checkOS.R' 'checkPOSIXct.R' 'checkPathForOutput.R' 'checkR6.R'\n'checkRaw.R' 'checkScalar.R' 'checkScalarNA.R'\n'checkSetEqual.R' 'checkString.R' 'checkSubset.R' 'checkTRUE.R'\n'checkTibble.R' 'checkVector.R' 'coalesce.R' 'isIntegerish.R'\n'matchArg.R' 'qassert.R' 'qassertr.R' 'vname.R' 'wfwl.R'\n'zzz.R'",
+        "Packaged": "2020-02-05 12:51:29 UTC; michel",
+        "Author": "Michel Lang [cre, aut] (<https://orcid.org/0000-0001-9754-0393>),\n  Bernd Bischl [ctb]",
+        "Maintainer": "Michel Lang <michellang@gmail.com>",
+        "Repository": "CRAN",
+        "Date/Publication": "2020-02-06 01:00:13 UTC",
+        "Built": "R 3.6.3; x86_64-w64-mingw32; 2020-03-16 15:56:59 UTC; windows"
+      }
+    },
     "cli": {
       "Source": "CRAN",
       "Repository": "https://cran.rstudio.com/",
@@ -642,6 +677,34 @@
         "Repository": "CRAN",
         "Date/Publication": "2019-03-18 14:43:29 UTC",
         "Built": "R 3.6.1; x86_64-w64-mingw32; 2019-11-17 23:51:17 UTC; windows"
+      }
+    },
+    "commonmark": {
+      "Source": "CRAN",
+      "Repository": "https://cran.rstudio.com/",
+      "GithubRepo": null,
+      "GithubUsername": null,
+      "GithubRef": null,
+      "GithubSha1": null,
+      "description": {
+        "Package": "commonmark",
+        "Type": "Package",
+        "Title": "High Performance CommonMark and Github Markdown Rendering in R",
+        "Version": "1.7",
+        "Authors@R": "c(\n    person(\"Jeroen\", \"Ooms\", ,\"jeroen@berkeley.edu\", role = c(\"aut\", \"cre\")),\n    person(\"John MacFarlane\", role = \"cph\", comment = \"Author of cmark\"))",
+        "URL": "http://github.com/jeroen/commonmark (devel)\nhttps://github.github.com/gfm/ (spec)",
+        "BugReports": "http://github.com/jeroen/commonmark/issues",
+        "Description": "The CommonMark specification defines a rationalized version of markdown\n    syntax. This package uses the 'cmark' reference implementation for converting\n    markdown text into various formats including html, latex and groff man. In\n    addition it exposes the markdown parse tree in xml format. Also includes opt-in\n    support for GFM extensions including tables, autolinks, and strikethrough text.",
+        "License": "BSD_2_clause + file LICENSE",
+        "Suggests": "curl, testthat, xml2",
+        "RoxygenNote": "6.0.1",
+        "NeedsCompilation": "yes",
+        "Packaged": "2018-12-01 11:57:14 UTC; jeroen",
+        "Author": "Jeroen Ooms [aut, cre],\n  John MacFarlane [cph] (Author of cmark)",
+        "Maintainer": "Jeroen Ooms <jeroen@berkeley.edu>",
+        "Repository": "CRAN",
+        "Date/Publication": "2018-12-01 12:30:03 UTC",
+        "Built": "R 3.6.3; x86_64-w64-mingw32; 2020-03-30 14:48:00 UTC; windows"
       }
     },
     "crayon": {
@@ -1275,6 +1338,40 @@
         "Repository": "CRAN",
         "Date/Publication": "2017-09-09 14:12:08 UTC",
         "Built": "R 3.6.3; ; 2020-03-16 15:56:23 UTC; windows"
+      }
+    },
+    "gt": {
+      "Source": "CRAN",
+      "Repository": "https://cran.rstudio.com/",
+      "GithubRepo": null,
+      "GithubUsername": null,
+      "GithubRef": null,
+      "GithubSha1": null,
+      "description": {
+        "Type": "Package",
+        "Package": "gt",
+        "Version": "0.2.0.5",
+        "Title": "Easily Create Presentation-Ready Display Tables",
+        "Description": "Build display tables from tabular data using with an easy-to-use\n    API. With its progressive approach, we can construct display tables with a\n    clear separation of concerns: you don't have to decide how the tabular data\n    gets transformed and structured whilst also worrying about aesthetics.",
+        "Authors@R": "c(\n    person(\"Richard\", \"Iannone\", , \"rich@rstudio.com\", c(\"aut\", \"cre\"),\n           comment = c(ORCID = \"0000-0003-3925-190X\")),\n    person(\"Joe\", \"Cheng\", , \"joe@rstudio.com\", \"aut\"),\n    person(\"Barret\", \"Schloerke\", , \"barret@rstudio.com\", \"aut\",\n           comment = c(ORCID = \"0000-0001-9986-114X\")),\n    person(\"RStudio\", role = c(\"cph\", \"fnd\"))\n    )",
+        "License": "MIT + file LICENSE",
+        "URL": "https://github.com/rstudio/gt",
+        "BugReports": "https://github.com/rstudio/gt/issues",
+        "Encoding": "UTF-8",
+        "LazyData": "true",
+        "ByteCompile": "true",
+        "RoxygenNote": "7.1.0",
+        "Depends": "R (>= 3.2.0)",
+        "Imports": "checkmate (>= 2.0.0), commonmark (>= 1.7), dplyr (>= 0.8.5),\nfs (>= 1.3.2), ggplot2 (>= 3.3.0), glue (>= 1.3.2), htmltools\n(>= 0.4.0), magrittr (>= 1.5), rlang (>= 0.4.5), sass (>=\n0.1.1), scales (>= 1.1.0), stringr (>= 1.3.1), tibble (>=\n3.0.0), tidyselect (>= 1.0.0)",
+        "Suggests": "knitr, paletteer, testthat (>= 2.1.0), RColorBrewer,\nrmarkdown, rvest, shiny, tidyr, webshot, xml2",
+        "Collate": "'as_data_frame.R' 'base64.R' 'build_data.R' 'compile_scss.R'\n'data_color.R' 'datasets.R' 'dt__.R' 'dt_body.R' 'dt_boxhead.R'\n'dt_cols_merge.R' 'dt_data.R' 'dt_footnotes.R' 'dt_formats.R'\n'dt_groups_rows.R' 'dt_has_built.R' 'dt_heading.R'\n'dt_options.R' 'dt_row_groups.R' 'dt_source_notes.R'\n'dt_spanners.R' 'dt_stub_df.R' 'dt_stub_others.R'\n'dt_stubhead.R' 'dt_styles.R' 'dt_summary.R' 'dt_transforms.R'\n'export.R' 'format_data.R' 'gt-package.R' 'gt.R' 'gt_preview.R'\n'helpers.R' 'image.R' 'info_tables.R' 'location_methods.R'\n'modify_columns.R' 'modify_rows.R' 'tab_create_modify.R'\n'opts.R' 'print.R' 'reexports.R' 'render_as_html.R'\n'resolver.R' 'shiny.R' 'summary_rows.R' 'text_transform.R'\n'utils.R' 'utils_formatters.R' 'utils_general_str_formatting.R'\n'utils_pipe.R' 'utils_render_common.R'\n'utils_render_footnotes.R' 'utils_render_html.R'\n'utils_render_latex.R' 'utils_render_rtf.R' 'zzz.R'",
+        "NeedsCompilation": "no",
+        "Packaged": "2020-03-31 04:35:21 UTC; rich",
+        "Author": "Richard Iannone [aut, cre] (<https://orcid.org/0000-0003-3925-190X>),\n  Joe Cheng [aut],\n  Barret Schloerke [aut] (<https://orcid.org/0000-0001-9986-114X>),\n  RStudio [cph, fnd]",
+        "Maintainer": "Richard Iannone <rich@rstudio.com>",
+        "Repository": "CRAN",
+        "Date/Publication": "2020-03-31 10:10:02 UTC",
+        "Built": "R 3.6.3; ; 2020-04-29 22:01:12 UTC; windows"
       }
     },
     "gtable": {
@@ -3164,6 +3261,39 @@
         "Built": "R 3.6.3; ; 2020-03-30 20:14:38 UTC; windows"
       }
     },
+    "sass": {
+      "Source": "CRAN",
+      "Repository": "https://cran.rstudio.com/",
+      "GithubRepo": null,
+      "GithubUsername": null,
+      "GithubRef": null,
+      "GithubSha1": null,
+      "description": {
+        "Type": "Package",
+        "Package": "sass",
+        "Version": "0.2.0",
+        "Title": "Syntactically Awesome Style Sheets ('Sass')",
+        "Description": "An 'SCSS' compiler, powered by the 'LibSass' library. With this,\n    R developers can use variables, inheritance, and functions to generate\n    dynamic style sheets. The package uses the 'Sass CSS' extension language,\n    which is stable, powerful, and CSS compatible.",
+        "Authors@R": "c(\n    person(\"Joe\", \"Cheng\", , \"joe@rstudio.com\", \"aut\"),\n    person(\"Timothy\", \"Mastny\", , \"tim.mastny@gmail.com\", \"aut\"),\n    person(\"Richard\", \"Iannone\", , \"rich@rstudio.com\", \"aut\",\n       comment = c(ORCID = \"0000-0003-3925-190X\")),\n    person(\"Barret\", \"Schloerke\", , \"barret@rstudio.com\", \"aut\",\n           comment = c(ORCID = \"0000-0001-9986-114X\")),\n    person(\"Carson\", \"Sievert\", , \"carson@rstudio.com\", c(\"aut\", \"cre\"),\n           comment = c(ORCID = \"0000-0002-4958-2844\")),\n    person(family = \"RStudio\", role = c(\"cph\", \"fnd\")),\n    person(family = \"Sass Open Source Foundation\", role = c(\"ctb\", \"cph\"),\n           comment = \"LibSass library\"),\n    person(\"Greter\", \"Marcel\", role = c(\"ctb\", \"cph\"),\n           comment = \"LibSass library\"),\n    person(\"Mifsud\", \"Michael\", role = c(\"ctb\", \"cph\"),\n           comment = \"LibSass library\"),\n    person(\"Hampton\", \"Catlin\", role = c(\"ctb\", \"cph\"),\n           comment = \"LibSass library\"),\n    person(\"Natalie\", \"Weizenbaum\", role = c(\"ctb\", \"cph\"),\n           comment = \"LibSass library\"),\n    person(\"Chris\", \"Eppstein\", role = c(\"ctb\", \"cph\"),\n           comment = \"LibSass library\"),\n    person(\"Adams\", \"Joseph\", role = c(\"ctb\", \"cph\"),\n           comment = \"json.cpp\"),\n    person(\"Trifunovic\", \"Nemanja\", role = c(\"ctb\", \"cph\"),\n           comment = \"utf8.h\")\n    )",
+        "License": "MIT + file LICENSE",
+        "URL": "https://github.com/rstudio/sass",
+        "BugReports": "https://github.com/rstudio/sass/issues",
+        "Encoding": "UTF-8",
+        "LazyData": "true",
+        "RoxygenNote": "7.0.2",
+        "SystemRequirements": "GNU make",
+        "Imports": "digest, fs, rlang, htmltools",
+        "Suggests": "testthat, knitr, rmarkdown",
+        "VignetteBuilder": "knitr",
+        "NeedsCompilation": "yes",
+        "Packaged": "2020-03-16 21:42:22 UTC; cpsievert",
+        "Author": "Joe Cheng [aut],\n  Timothy Mastny [aut],\n  Richard Iannone [aut] (<https://orcid.org/0000-0003-3925-190X>),\n  Barret Schloerke [aut] (<https://orcid.org/0000-0001-9986-114X>),\n  Carson Sievert [aut, cre] (<https://orcid.org/0000-0002-4958-2844>),\n  RStudio [cph, fnd],\n  Sass Open Source Foundation [ctb, cph] (LibSass library),\n  Greter Marcel [ctb, cph] (LibSass library),\n  Mifsud Michael [ctb, cph] (LibSass library),\n  Hampton Catlin [ctb, cph] (LibSass library),\n  Natalie Weizenbaum [ctb, cph] (LibSass library),\n  Chris Eppstein [ctb, cph] (LibSass library),\n  Adams Joseph [ctb, cph] (json.cpp),\n  Trifunovic Nemanja [ctb, cph] (utf8.h)",
+        "Maintainer": "Carson Sievert <carson@rstudio.com>",
+        "Repository": "CRAN",
+        "Date/Publication": "2020-03-18 15:50:09 UTC",
+        "Built": "R 3.6.3; x86_64-w64-mingw32; 2020-04-29 18:18:50 UTC; windows"
+      }
+    },
     "scales": {
       "Source": "CRAN",
       "Repository": "https://cran.rstudio.com/",
@@ -4347,13 +4477,13 @@
   },
   "files": {
     "app.R": {
-      "checksum": "bc64200dc9e91df9e4ec2ccfbf042791"
+      "checksum": "af5e083771bab4d2457654b8b43a7762"
     },
-    "file3c5446161843.log": {
-      "checksum": "68968e9828b33329211d22acf22d7548"
+    "file810f365355.log": {
+      "checksum": "34fae5438bc49ee4f19f1ecdd39c7c11"
     },
     "global.R": {
-      "checksum": "9e2eba2f97492defb8f7e9dc9dd1fa35"
+      "checksum": "86e69b27ccde651727e0e0963f9dd3c2"
     },
     "kable.log": {
       "checksum": "ae9d120c740e1b64c5e19dfab7180f36"
@@ -4364,6 +4494,9 @@
     "kable.tex": {
       "checksum": "347f19dfd9c39734210181ce4a373aca"
     },
+    "modules/data_compliance.R": {
+      "checksum": "a91516fb7cdb286cea4b504eabc6b83c"
+    },
     "modules/dataUpload.R": {
       "checksum": "ee49171171a257cbdc9537cc92d7e886"
     },
@@ -4371,7 +4504,7 @@
       "checksum": "7b162487e5196ddd04e489e712ddcac8"
     },
     "modules/IndvExpl1Initial.R": {
-      "checksum": "0682db48b67adb3fb19bf952e6f60c3f"
+      "checksum": "abdc2f8ab3ed4669dd72bed20c35950d"
     },
     "modules/IndvExpl2SelPatno.R": {
       "checksum": "9132f2adcc1a85ccb3b44dd0980ac89f"
@@ -4442,6 +4575,9 @@
     "packrat/desc/cellranger": {
       "checksum": "eb45b7ca6a8f9c8881058f4c5daeffb7"
     },
+    "packrat/desc/checkmate": {
+      "checksum": "1f7a92b8f575fa016daa60ff963a2144"
+    },
     "packrat/desc/cli": {
       "checksum": "61470b85e7c241053cd170d19e5a7dd7"
     },
@@ -4450,6 +4586,9 @@
     },
     "packrat/desc/colorspace": {
       "checksum": "1582d819b88077dc291e05e5f3a497a2"
+    },
+    "packrat/desc/commonmark": {
+      "checksum": "8aa38d8b8e6262e688edcc6bdb3c0ffc"
     },
     "packrat/desc/crayon": {
       "checksum": "9e53a6022a422ce949fe7060656485da"
@@ -4516,6 +4655,9 @@
     },
     "packrat/desc/gridExtra": {
       "checksum": "b6d881072a8806beee6ac524f4d25b69"
+    },
+    "packrat/desc/gt": {
+      "checksum": "2be629ebf0d5883b39b80ca17b455917"
     },
     "packrat/desc/gtable": {
       "checksum": "fa5f4c64a2c599695433d8d5c03dc418"
@@ -4724,6 +4866,9 @@
     "packrat/desc/safetyGraphics": {
       "checksum": "9f4cc57a490ca81ab1d3347530dc7807"
     },
+    "packrat/desc/sass": {
+      "checksum": "e4c88c953457eb7a5d7c443d5716158a"
+    },
     "packrat/desc/scales": {
       "checksum": "7dd3d59b9f8d0ca42b079972493e7890"
     },
@@ -4839,7 +4984,7 @@
       "checksum": "1a902a5286236b90738a357b2537b341"
     },
     "packrat/packrat.lock": {
-      "checksum": "45ac2d07ad39de66006934cfc98c0723"
+      "checksum": "b217fc57993c935d146847226798c6d7"
     },
     "R/allowed_operators.R": {
       "checksum": "c2130178775fc0a80237b19db6cfc7b8"
@@ -4855,6 +5000,9 @@
     },
     "R/css.R": {
       "checksum": "771148be2d777b40ab766e4cc3ed9eed"
+    },
+    "R/data_compliance_objects.R": {
+      "checksum": "7c091ea04c19f92c1728d5af12e64332"
     },
     "R/detectStandard.R": {
       "checksum": "a8b9f088114258479abbfbc211cd234e"
@@ -5026,6 +5174,9 @@
     },
     "www/recipe.js": {
       "checksum": "cb93f4e4b9c4e7d6aef1b816391c70e1"
+    },
+    "www/red_x.png": {
+      "checksum": "71ee35ce4c01cb0435f41f91f646eac6"
     },
     "www/script.js": {
       "checksum": "d7593da01f46d1b73de0f56250086833"
