@@ -6,8 +6,9 @@ dataUploadUI <- function(id, label = "CSV file") {
     fluidRow(
       column(3,
              wellPanel(
-               h3("Data upload"),
-               "Uploading an ADSL file is mandatory, all additional BDS files are optional",
+               div(style="display: inline-block; ",h3("Data upload")),
+               div(style="display: inline-block; float:right;",dataComplyUI(id = "comply_id")),
+               HTML("<br>ADSL file is mandatory & BDS/ OCCDS files are optional"),
                fileInput(ns("file"), "Upload sas7bdat files",accept = c(".sas7bdat"), multiple = TRUE),
                uiOutput(ns("radio_test"))
              )
@@ -22,6 +23,5 @@ dataUploadUI <- function(id, label = "CSV file") {
              )
       )
     )
-    ,dataComplyUI(id = "comply_id")
   )
 }

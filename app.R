@@ -29,6 +29,7 @@ library(glue)
 library(sjlabelled) 
 library(data.table) 
 library(gt)
+library(shinyBS)
 
 ###############################################################
 # make sure this repo exists before writing to manifest file!
