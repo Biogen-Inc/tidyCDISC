@@ -29,6 +29,7 @@ library(glue)
 library(sjlabelled)
 library(gt)
 library(rlang)
+library(stringi)
 
 ###############################################################
 # make sure this repo exists before writing to manifest file!

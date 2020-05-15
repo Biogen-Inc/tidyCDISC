@@ -16,6 +16,10 @@ IDEA_freq.ADSL <- function(column, week, group = NULL, data) {
   
   column <- sym(as.character(column))
   
+  if (!is.character(data[[column]])) {
+    stop(paste("Can't calculate frequency, ", column, " is not categorical"))
+  }
+  
   if (is.null(group)) {
     data %>%
       distinct(USUBJID, !!column) %>%

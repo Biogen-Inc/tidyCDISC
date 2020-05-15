@@ -130,6 +130,12 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
   output$all <- render_gt({
     aslist() %>%
     bind_rows(.id = "ID") %>% 
+    mutate(
+      ID = stringi::stri_replace_all_fixed(aslist()$ID, 
+                                    pattern = block_lookup()$pattern,
+                                    replacement = block_lookup()$replacement,
+                                    vectorize_all = FALSE)
+      ) %>%
       group_by(ID) %>%
       gt(rowname_col = "Variable") %>%
       tab_header(
@@ -154,7 +160,15 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
   
     new_list[[length(new_list) + 1 ]] <- metadata
     names(new_list)[length(new_list)] <- "ADSL"
+    print(new_list)
     return(new_list)
+  })
+  
+  # rbind despite diffrent names, new names pattern replacement
+  # then use those in gt
+  block_lookup <- reactive({
+    block_data() %>%
+      map(set_names, c("Pattern", "Replacement"))
   })
   
   output$downloadData <- downloadHandler(
