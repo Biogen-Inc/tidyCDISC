@@ -181,7 +181,6 @@ PopuExplor <- function(input, output, session, datafile){
     if ("AVISIT" %in% colnames(all_data) && "AVISITN" %in% colnames(all_data)) {
       tmplabl <- get_label(all_data$AVISIT)
       all_data <- all_data %>%
-        mutate(AVISITN = as.integer(ceil(AVISITN))) %>%
         mutate(AVISIT = fct_reorder(AVISIT, AVISITN))
       set_label(all_data$AVISIT) <- tmplabl
       # Hmisc::label(all_data$AVISIT) = tmplabl
