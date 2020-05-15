@@ -65,7 +65,6 @@ ui <-
                tabPanel(
                  title = "Data",
                  dataUploadUI("datafile", "Import CSV")
-                 # ,dataComplyUI(id = "comply_id")
                ),
                tabPanel(
                  title = "TableGenerator", id = 't_gen',
