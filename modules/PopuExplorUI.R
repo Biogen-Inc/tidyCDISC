@@ -105,10 +105,10 @@ sidebarLayout(
                   tabPanel("Plot",plotlyOutput(ns("PlotlyOut"), width = "100%", height = "600px")),
                   tabPanel("Table",DT::dataTableOutput(ns("DataTable"))),
                   tabPanel("Filter",
-                  conditionalPanel(condition = "input.adv_filtering", ns = ns,
+                  conditionalPanel(condition = "input.adv_filtering == true", ns = ns,
                                    selectInput(ns("filter_df"),"Filter on Variable(s)", 
                                                multiple = TRUE, choices = NULL, selected = NULL),
-                                   conditionalPanel(condition = "!is.null(input.filter_df)", ns = ns,
+                                   conditionalPanel(condition = "input.filter_df != null", ns = ns,
                                                     IDEAFilter::shiny_data_filter_ui(ns("data_filter")))
                   )
                   )
