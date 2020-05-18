@@ -4,7 +4,6 @@ mean_summary <- function(.data, to_count) {
   
   .data %>%
     summarise(
-      N = n(),
       Missing = sum(is.na(!!to_count)),
       Mean = round(mean(na.omit(!!to_count)), 2),
       SD = round(sd(na.omit(!!to_count)), 2),

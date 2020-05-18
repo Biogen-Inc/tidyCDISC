@@ -16,9 +16,10 @@ transpose_df <- function(df, num) {
 
 common_rownames <- function(data, group) {
   if (is.null(group)) {
-    vars <- c("Variable", "N")
+    vars <- c("Variable", "TOTAL")
   } else {
     vars <- c("Variable", unique(data[[group]]))
+    vars[vars == ""] <- "Missing"
   }
   return(vars)
 }

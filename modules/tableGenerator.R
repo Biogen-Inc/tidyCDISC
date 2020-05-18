@@ -115,8 +115,19 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
   
   column <- reactive( if (input$COLUMN == "NONE") NULL else input$COLUMN)
   
-  aslist <- reactive({
-  int <- pmap(list(blocks_and_functions()$agg, 
+  total <- reactive({
+    if (input$COLUMN == "NONE") {
+      return(nrow(all_data()))
+    } else {
+      return(all_data() %>%
+        group_by(!!sym(input$COLUMN)) %>%
+        summarise(n = n()) %>%
+        pull(n))
+    }
+  })
+  
+  for_gt <- reactive({
+    pmap(list(blocks_and_functions()$agg, 
               blocks_and_functions()$S3, 
               blocks_and_functions()$dropdown), 
          function(x,y,z) 
@@ -134,14 +145,28 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
           vectorize_all = FALSE))
   })
   
+  row_names_n <- reactive({ names(for_gt())[-c(1:2)] })
+  
+  col_for_list <- function(nm, x) {
+    if (is.numeric(all_data()[[input$COLUMN]])) {
+      stop("Need categorical column for grouping")
+    }
+    nm = md(glue::glue("**{row_names_n()}** <br> N={total()}"))
+  }
+  
   output$all <- render_gt({
-    
-    aslist() %>%
+
+    for_gt() %>%
       group_by(ID) %>%
       gt(rowname_col = "Variable") %>%
+      cols_label(.list = imap(for_gt()[-c(1:2)], ~col_for_list(.y, .x))) %>%
       tab_header(
         title = md(input$table_title),
         subtitle = "Filtering logic"
+      ) %>%
+      tab_style(
+        style = cell_text(weight = "bold"),
+        locations = cells_row_groups()
       )
   })
   
@@ -161,7 +186,6 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
   
     new_list[[length(new_list) + 1 ]] <- metadata
     names(new_list)[length(new_list)] <- "ADSL"
-    print(new_list)
     return(new_list)
   })
   
