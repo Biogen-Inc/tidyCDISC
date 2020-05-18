@@ -7,13 +7,10 @@ IndvExplorUI <- function(id, label = "Individual Explorer") {
   tagList(
     
     h4(strong("Filter by Patient Number")),
-    # h6(textOutput(ns("filter_header"))),
-    # textOutput(ns("filter_bds_header")),
     fluidRow(
       column(3, #id = ns("f_waiter"),
         checkboxInput(ns("adv_filtering"), "Advanced Pre-Filtering?", value = F),
         conditionalPanel(condition = "input.adv_filtering", ns = ns,
-            # uiOutput(ns("filter_df_ui")),
             selectInput(ns("filter_df"),"Filter on Variable(s) in a loaded ADaM", multiple = TRUE,
                         choices = NULL, selected = NULL),
             conditionalPanel(condition = "!is.null(input.filter_df)", ns = ns,
@@ -36,10 +33,6 @@ IndvExplorUI <- function(id, label = "Individual Explorer") {
     ),
     
     br(),br(),
-    
-    # conditionalPanel(condition = paste0("input.",id,"-selPatNo != ''"), #ns = ns,
-    #                  HTML("HEY")
-    # ),
     
     hidden(
       div(id = ns("mytabs"), 
@@ -86,8 +79,6 @@ IndvExplorUI <- function(id, label = "Individual Explorer") {
                
                h4(strong(textOutput(ns("plot_header")))),
                h6(textOutput(ns("subjid_subtitle3"))),
-               # textOutput(ns("subjid_subtitle")),
-               # checkboxInput(ns("bds_remove_filter"), "Remove data filters defined above", value = FALSE),
                fixedRow(
                  column(2,
                         selectInput(
@@ -126,7 +117,6 @@ IndvExplorUI <- function(id, label = "Individual Explorer") {
                         ),
                         div(style = "color: blue; font-size: 12px;",
                             uiOutput(ns("display_dy"))
-                            # textOutput(ns("display_dy"))
                         )
                  ),
                  column(1, 
@@ -162,8 +152,6 @@ IndvExplorUI <- function(id, label = "Individual Explorer") {
                  # ,column(1)
                ),
                
-               # fluidRow(column(6, DT::dataTableOutput(ns("DataTable"))),
-               #          column(6, plotlyOutput(ns("PlotChart"), width = "100%", height = "600px")))
                fluidRow(column(10,plotlyOutput(ns("PlotChart"), width = "100%", height = "600px"))),
                br(),
                fluidRow(column(6, DT::dataTableOutput(ns("DataTable")))),

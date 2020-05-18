@@ -29,6 +29,7 @@ library(glue)
 library(sjlabelled) 
 library(data.table) 
 library(gt)
+library(shinyBS)
 
 ###############################################################
 # make sure this repo exists before writing to manifest file!
@@ -64,7 +65,6 @@ ui <-
                tabPanel(
                  title = "Data",
                  dataUploadUI("datafile", "Import CSV")
-                 ,dataComplyUI(id = "comply_id")
                ),
                tabPanel(
                  title = "TableGenerator", id = 't_gen',
@@ -130,8 +130,8 @@ server <- function(input, output, session) {
   # render the dataUpload module in Data tab
   datafile <- callModule(dataUpload, "datafile", stringsAsFactors = FALSE)
   
-  # Data compliance Modals: any time the reactive datalist() changes, run this code
-  callModule(dataComply, "comply_id", datalist = datafile) # ,stringsAsFactors = FALSE
+  # # Data compliance Modals: any time the reactive datalist() changes, run this code
+  # callModule(dataComply, "comply_id", datalist = datafile) # ,stringsAsFactors = FALSE
   
   # render the tablegenerator module using the datafile from dataupload as an input
   table_generator <- callModule(tableGenerator, "table_generator", datafile = datafile)
