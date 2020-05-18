@@ -116,7 +116,7 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
   column <- reactive( if (input$COLUMN == "NONE") NULL else input$COLUMN)
   
   aslist <- reactive({
-    pmap(list(blocks_and_functions()$agg, 
+  int <- pmap(list(blocks_and_functions()$agg, 
               blocks_and_functions()$S3, 
               blocks_and_functions()$dropdown), 
          function(x,y,z) 
@@ -124,18 +124,19 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
                       group = column(), 
                       data = all_data())) %>%
       map(setNames, common_rownames(all_data(), column())) %>%
-      setNames(paste(blocks_and_functions()$gt_group))
+      setNames(paste(blocks_and_functions()$gt_group)) %>%
+      bind_rows(.id = "ID") %>%
+    mutate(
+       ID = stringi::stri_replace_all_regex(
+          ID, 
+          pattern = "\\b"%s+%block_lookup()$Pattern%s+%"\\b",
+          replacement = block_lookup()$Replacement,
+          vectorize_all = FALSE))
   })
   
   output$all <- render_gt({
+    
     aslist() %>%
-    bind_rows(.id = "ID") %>% 
-    # mutate(
-    #   ID = stringi::stri_replace_all_fixed(aslist()$ID, 
-    #                                 pattern = block_lookup()$pattern,
-    #                                 replacement = block_lookup()$replacement,
-    #                                 vectorize_all = FALSE)
-    #   ) %>%
       group_by(ID) %>%
       gt(rowname_col = "Variable") %>%
       tab_header(
@@ -168,7 +169,8 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
   # then use those in gt
   block_lookup <- reactive({
     block_data() %>%
-      map(set_names, c("Pattern", "Replacement"))
+      map(set_names, c("Pattern", "Replacement")) %>%
+      bind_rows()
   })
   
   output$downloadData <- downloadHandler(
