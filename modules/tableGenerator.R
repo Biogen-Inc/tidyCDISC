@@ -157,8 +157,7 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
   output$all <- render_gt({
 
     for_gt() %>%
-      group_by(ID) %>%
-      gt(rowname_col = "Variable") %>%
+      gt(rowname_col = "Variable", groupname_col = "ID") %>%
       cols_label(.list = imap(for_gt()[-c(1:2)], ~col_for_list(.y, .x))) %>%
       tab_header(
         title = md(input$table_title),
