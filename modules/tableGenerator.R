@@ -128,9 +128,9 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
   
   for_gt <- reactive({
     
-    # validate(
-    #   need((nrow(blocks_and_functions()) > 0),'Add variable and statistics blocks to create table.')
-    # )
+    validate(
+      need((nrow(blocks_and_functions()) > 0),'Add variable and statistics blocks to create table.')
+    )
     
     pmap(list(blocks_and_functions()$agg, 
               blocks_and_functions()$S3, 

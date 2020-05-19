@@ -11,15 +11,15 @@ tableGeneratorUI <- function(id, label = "Create Chart") {
   ns <- NS(id)
   
   fluidPage(
-    div(style = "font-size: 10",
-    sidebarPanel(width = 6,
+    
+    fixedPanel(
       div(class = "btn-group", style="",
           id = "download_type",
-          tags$button(class = "btn btn-default dropdown-toggle", 
+          tags$button(class = "btn btn-default dropdown-toggle",
                       `data-toggle` = "dropdown",
                       `aria-haspopup` = "true",
                       `aria-expanded` = "false",
-                      "Table Output Type",
+                      "Save Table",
                       span(class = "caret")
           ),
           tags$ul(class = "dropdown-menu",
@@ -31,6 +31,31 @@ tableGeneratorUI <- function(id, label = "Create Chart") {
                   )
           )
       ),
+      right = 10,
+      top = 60
+    ),
+    
+    div(style = "font-size: 10",
+    sidebarPanel(width = 6,
+                 
+      # div(class = "btn-group", style="",
+      #     id = "download_type",
+      #     tags$button(class = "btn btn-default dropdown-toggle",
+      #                 `data-toggle` = "dropdown",
+      #                 `aria-haspopup` = "true",
+      #                 `aria-expanded` = "false",
+      #                 icon("download"),
+      #                 span(class = "caret")
+      #     ),
+      #     tags$ul(class = "dropdown-menu",
+      #             tags$li(customDownloadbutton(ns("downloadData"), "CSV", class = "downloadButton"),
+      #                     #customDownloadbutton(ns("downloadXPT"), "XPT", class = "downloadButton"),
+      #                     #customDownloadbutton(ns("downloadSAS"), "SAS", class = "downloadButton"),
+      #                     customDownloadbutton(ns("downloadRTF"), "RTF", class = "downloadButton")
+      #                     #customDownloadbutton(ns("downloadPDF"), "PDF", class = "downloadButton")
+      #             )
+      #     )
+      # ),
       
       fluidRow(
         column(12, "Commonly Used Tables", recipe)),
