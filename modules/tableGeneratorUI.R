@@ -72,27 +72,33 @@ tableGeneratorUI <- function(id, label = "Create Chart") {
                                textInput(ns("table_title"), "Table Title", "Table Title", width = '100%'))),
                fluidRow(column(width = 12,
                                
-                               div(class = "btn-group", style="width:100%",
-                                   id = "download_type",
-                                   tags$button(class = "btn btn-default dropdown-toggle", 
-                                               `data-toggle` = "dropdown",
-                                               `aria-haspopup` = "true",
-                                               `aria-expanded` = "false",
-                                               "Download table",
-                                               span(class = "caret")
-                                   ),
-                                   tags$ul(class = "dropdown-menu",
-                                           tags$li(customDownloadbutton(ns("downloadData"), "as CSV", class = "downloadButton"),
-                                                   #customDownloadbutton(ns("downloadXPT"), "XPT", class = "downloadButton"),
-                                                   #customDownloadbutton(ns("downloadSAS"), "SAS", class = "downloadButton"),
-                                                   customDownloadbutton(ns("downloadRTF"), "as RTF", class = "downloadButton")
-                                                   #customDownloadbutton(ns("downloadPDF"), "PDF", class = "downloadButton")
-                                           )
-                                   )
-                               ))
+                               fluidRow(
+                                 column(6, downloadButton(ns("download_gt"), "Download Table")),
+                                 column(6, offset = 0, radioButtons(ns("download_type"), "Choose Output Type:", choices = c("CSV", "PDF", "RTF"), inline = TRUE))
+                               )
+                               
+                               
+                               
+                               # div(class = "btn-group", style="width:100%",
+                               #     id = "download_type",
+                               #     tags$button(class = "btn btn-default dropdown-toggle", 
+                               #                 `data-toggle` = "dropdown",
+                               #                 `aria-haspopup` = "true",
+                               #                 `aria-expanded` = "false",
+                               #                 "Download table",
+                               #                 span(class = "caret")
+                               #     ),
+                               #     tags$ul(class = "dropdown-menu",
+                               #             tags$li(customDownloadbutton(ns("downloadData"), "as CSV", class = "downloadButton"),
+                               #                     #customDownloadbutton(ns("downloadXPT"), "XPT", class = "downloadButton"),
+                               #                     #customDownloadbutton(ns("downloadSAS"), "SAS", class = "downloadButton"),
+                               #                     customDownloadbutton(ns("downloadRTF"), "as RTF", class = "downloadButton")
+                               #                     #customDownloadbutton(ns("downloadPDF"), "PDF", class = "downloadButton")
+                               #             )
+                               #     )
+                               # ))
                         
-               )
-             )
+               )))
       ),
       
       column(width = 7,
