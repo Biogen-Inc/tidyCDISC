@@ -74,7 +74,7 @@ tableGeneratorUI <- function(id, label = "Create Chart") {
                  ))
     ),
     
-    mainPanel(style = "max-width: 500px;",
+    mainPanel(style = "max-width: 800px;",
       #fluidRow(htmlOutput(ns("title"))),
       fluidRow(gt_output(ns("all")))
     ),
