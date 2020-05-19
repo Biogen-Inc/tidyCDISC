@@ -26,8 +26,10 @@ library(reactable)
 library(waiter)
 library(timevis)
 library(glue)
-library(sjlabelled)
+library(sjlabelled) 
+library(data.table) 
 library(gt)
+library(shinyBS)
 library(rlang)
 library(stringi)
 
@@ -53,7 +55,8 @@ ui <-
       tags$script(HTML(htmljs)),
       tags$link(rel = "//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"),
       tags$head(tags$link(rel="shortcut icon", href="IDEA_FAVICON.ico")),
-      tags$script(src = "https://code.jquery.com/ui/1.12.1/jquery-ui.js")
+      tags$script(src = "https://code.jquery.com/ui/1.12.1/jquery-ui.js"),
+      tags$link(rel = "stylesheet", type = "text/css", href = "index.css")
     ),
     useShinyjs(),
     use_waiter(), # include dependencies
@@ -129,6 +132,9 @@ server <- function(input, output, session) {
   
   # render the dataUpload module in Data tab
   datafile <- callModule(dataUpload, "datafile", stringsAsFactors = FALSE)
+  
+  # # Data compliance Modals: any time the reactive datalist() changes, run this code
+  # callModule(dataComply, "comply_id", datalist = datafile) # ,stringsAsFactors = FALSE
   
   # render the tablegenerator module using the datafile from dataupload as an input
   table_generator <- callModule(tableGenerator, "table_generator", datafile = datafile)
