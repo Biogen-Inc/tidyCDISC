@@ -1,0 +1,43 @@
+/* Change title color. */
+  h1 {
+    color: #2573BA;
+      font-family: "Raleway","Helvetica Neue",Helvetica,Arial,sans-serif  !important;
+    font-weight: 700 !important;
+    line-height: 1.1 !important;
+  }
+
+.well {
+  /* background: rgb(78,161,211);*/
+    /* background: linear-gradient(90deg, rgba(78,161,211,1) 0%, rgba(60,167,189,1) 29%); */
+    border-color: #7CCCE5;
+    color: black;
+  background-color: white;
+  -webkit-box-shadow: 0 0 5px 1px lightgrey;
+  -moz-box-shadow: 0 0 5px 1px lightgrey;
+  box-shadow: 0 0 5px 1px lightgrey;
+}
+
+.btn-default {
+  background-color: #008cba !important;
+    color: #ffffff !important;
+    border-color: #0079a1 !important;
+}
+
+/* Change hover color for buttons. */
+  .btn-default:hover {
+    background-color: #006687 !important;
+  }
+
+/* Button to upload new dataset. */
+  #add_files {
+  float: right; 
+vertical-align: middle; 
+margin-top: 6px;
+font-size: 13px;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+/* Change the appearance of dropdowns (selecInput). */
+  .selectize-input .item, .selectize-dropdown .option {
+    font-size: 12px;
+  } 

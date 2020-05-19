@@ -26,10 +26,8 @@ library(reactable)
 library(waiter)
 library(timevis)
 library(glue)
-library(sjlabelled) 
-library(data.table) 
+library(sjlabelled)
 library(gt)
-library(shinyBS)
 library(rlang)
 library(stringi)
 
@@ -61,9 +59,6 @@ ui <-
     use_waiter(), # include dependencies
     extendShinyjs(text = jscode),
     navbarPage(theme = "yeti.css",
-               tags$head(
-                 tags$link(rel = "stylesheet", type = "text/css", href = "index.css")
-               ),
                title = div(id="logo-id","IDEA", img(src="IDEA_ICON.png", style="float:left; padding-right:3px; height:25px; width:30px")), 
                id = "navbarID",
                windowTitle = "IDEA",
@@ -134,9 +129,6 @@ server <- function(input, output, session) {
   
   # render the dataUpload module in Data tab
   datafile <- callModule(dataUpload, "datafile", stringsAsFactors = FALSE)
-  
-  # # Data compliance Modals: any time the reactive datalist() changes, run this code
-  # callModule(dataComply, "comply_id", datalist = datafile) # ,stringsAsFactors = FALSE
   
   # render the tablegenerator module using the datafile from dataupload as an input
   table_generator <- callModule(tableGenerator, "table_generator", datafile = datafile)
