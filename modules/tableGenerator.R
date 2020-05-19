@@ -127,6 +127,11 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
   })
   
   for_gt <- reactive({
+    
+    validate(
+      need((nrow(blocks_and_functions()) > 0),'Add variable and statistics blocks to create table.')
+    )
+    
     pmap(list(blocks_and_functions()$agg, 
               blocks_and_functions()$S3, 
               blocks_and_functions()$dropdown), 
@@ -155,7 +160,7 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
   }
   
   output$all <- render_gt({
-
+    
     for_gt() %>%
       gt(rowname_col = "Variable", groupname_col = "ID") %>%
       cols_label(.list = imap(for_gt()[-c(1:2)], ~col_for_list(.y, .x))) %>%
@@ -166,6 +171,12 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
       tab_style(
         style = cell_text(weight = "bold"),
         locations = cells_row_groups()
+      ) %>%
+      tab_style(
+        style = list(
+          cell_text(align = "right")
+        ),
+        locations = cells_stub(rows = TRUE)
       )
   })
   
