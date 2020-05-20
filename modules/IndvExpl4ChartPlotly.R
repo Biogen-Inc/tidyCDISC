@@ -372,134 +372,20 @@ output$v_applied_filters <- renderUI({
     
     
     output$PlotChart <- renderPlotly({
+      req(input$plot_param != " ")
+      
+      fnIndvExplVisits( # many arguments
+        data = lb_data,
+        usubjid = usubjid(),
+        input_plot_hor = input$plot_hor,
+        input_visit_var = input$visit_var, #AVISITN
+        input_plot_param = input$plot_param,
+        input_plot_adam = input$plot_adam,
+        input_overlay_events = input$overlay_events,
+        vline_dat = vline_dat(),
+        vv_dy_name = vv_dy_name()
+      )$plotly
        
-       # In the labs, label what the blue lines are in the legend or hover text.
-       # make sure a LabCode has been selected
-       req(input$plot_param != " ")
-       plot_dat <- 
-         lb_data %>%
-         filter(!(is.na(!!INPUT_visit_var)) & PARAMCD == input$plot_param) # make sure AVISITN is not missing
-       
-       if("Screening" %in% input$plot_hor){
-         plot_scr <- plot_dat %>% subset(toupper(VISIT) == "SCREENING") %>% distinct(AVAL) %>% mutate(Visit = "Screening")
-         # plot_dat <- plot_dat %>% subset(!(toupper(plot_dat$VISIT) == "SCREENING")) # removes screening point from plot
-       }
-       if("Baseline" %in% input$plot_hor){
-         plot_base <- plot_dat %>% subset(toupper(AVISIT) == "BASELINE") %>% distinct(AVAL) %>% mutate(Visit = "Baseline")
-         # plot_dat <- plot_dat %>% subset(!(toupper(plot_dat$AVISIT) == "BASELINE")) # removes baseline point from plot
-       }
-       
-       if (nrow(plot_dat) > 0) {
-
-         prm   <- unique(plot_dat$PARAM)
-         
-         # GGPLOT2 OBJECT
-         lb_plot <- ggplot(plot_dat, aes(x = !!INPUT_visit_var, y = AVAL)) + 
-           geom_line() +
-           geom_point(na.rm = TRUE, 
-                      aes(text =
-                            paste0(AVISIT,
-                                   "<br>",input$visit_var, ": ",!!INPUT_visit_var,
-                                   "<br>",input$plot_param ,": ",AVAL
-                            )
-                      )) +
-           scale_x_continuous(breaks = seq(0, max(plot_dat[,input$visit_var]), 30)) +
-           labs(x = paste0("Study Visit (",input$visit_var,")"),
-                y = prm,
-                title = paste(prm,"by Relative Study Day"),
-                subtitle = paste(ifelse(input$plot_adam == "ADLB","test<br>",""),"USUBJID:",usubjid())
-           )
-         
-         
-         # if a lengend is needed, let's just define the line colors and types in one place
-         if(length(input$plot_hor) > 0 | length(input$overlay_events) > 0 & input$visit_var == vv_dy_name()){
-           
-           names2 <- c("Milestones","Adverse Events","Concomitant Meds","Baseline","Screening") # ac: labels
-           vline_eventtype_cols <- c(my_cols[1:3],my_gg_color_hue(2))
-           v_event_cols <- setNames(vline_eventtype_cols,names2)
-           
-           # two dimensions in legend not really support in plotly
-           # https://github.com/ropensci/plotly/issues/1164
-           # dashes <- c("solid","dotted","dashed","solid","solid") 
-           # v_event_lines <- setNames(dashes,names2)
-           
-           # leg_name <- ifelse(length(input$plot_hor) > 0 & length(input$overlay_events) > 0 & input$visit_var == vv_dy_name(),NULL,"Event")
-           
-           lb_plot <- lb_plot +
-             scale_color_manual(values= v_event_cols) #+ # , name = "Event"
-             # two dimensions in legend not really support in plotly
-             # https://github.com/ropensci/plotly/issues/1164
-             # scale_linetype_manual(values = v_event_lines, name = NULL)
-         }
-         
-         
-         # plot vlines using events dataset
-         if(length(input$overlay_events) > 0 & input$visit_var == vv_dy_name()){ #& "ADLB" %in% loaded_adams() # overlay checkbox won't appear unless this is true
-           if (!is.null(vline_dat())){
-             if(nrow(vline_dat()) > 0){
-               
-               lb_plot <- lb_plot + 
-                 geom_vline(data = vline_dat(), aes(xintercept = !!INPUT_visit_var,
-                                                  colour = Event,
-                                                  # linetype = Event, # two dimensions in legend not really support in plotly
-                                                  text = paste0(input$visit_var, ": ",!!INPUT_visit_var,
-                                                               "<br>", DECODE
-                                                        )
-                                                  ))
-              }
-           }
-         }
-         
-         # If lab data, plot the normal low and high values for the drug, add a little space in the bottom margin
-         if(input$plot_adam == "ADLB"){
-           lohi <- paste("LO:",unique(plot_dat$LBSTNRLO),"HI:",unique(plot_dat$LBSTNRHI))
-           lb_plot <- lb_plot + 
-             geom_hline(aes(yintercept = mean(LBSTNRLO)), colour = "blue") +
-             geom_hline(aes(yintercept = mean(LBSTNRHI)), colour = "blue") +
-             theme(
-               plot.margin = margin(b = 1, unit = "cm") #t = 1, # used to put margin at top of graph for caption
-             ) 
-         }
-         
-         # Plotting hortizontal line
-         if("Screening" %in% input$plot_hor){
-           lb_plot <- lb_plot +
-             geom_hline(plot_scr, mapping = aes(yintercept = AVAL, colour = Visit))
-         }
-         if("Baseline" %in% input$plot_hor){
-           lb_plot <- lb_plot +
-             geom_hline(plot_base, mapping = aes(yintercept = AVAL, colour = Visit))
-         }
-         # End: ggplot2 object
-         
-         
-         
-         # PLOTLY OBJECT
-         ly <- ggplotly(lb_plot, tooltip = "text") %>%
-           layout(title = list(text = 
-             paste0(prm," by Study Visit<sup>",
-                         "<br>USUBJID: ",usubjid()
-             )))
-            # Used to have lab param range of values in title
-            # , ifelse(input$plot_adam == "ADLB",paste0("<br>Study's average range shown in ",'<em style="color:blue">',"blue",'</em> ',lohi),""),
-            # "</sup>")))
-         
-         # instead, request was made to add caption to bottom of graph
-         if(input$plot_adam == "ADLB"){
-           ly <- ly %>%
-             add_annotations(x = ggplot_build(lb_plot)$layout$panel_params[[1]]$x.range[1],
-                             y = -.10, # 10% below graph
-                             yref = "paper",
-                             text = paste0("<br>Note: Study's average ",input$plot_param," range shown in ",'<em style="color:blue">',"blue",'</em> ',lohi),
-                             xanchor = 'left',
-                             showarrow = F)
-         }
-         
-         ly
-         
-         
-         
-       } # if (nrow(plot_dat) > 0)
      }) # renderPlotly
        
     
