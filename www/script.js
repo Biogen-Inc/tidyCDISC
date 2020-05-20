@@ -1,4 +1,6 @@
-       $(document).ready(function(){
+
+    
+    $(document).ready(function(){
           $('.btn-file').click(function(){
              $(this).toggleClass('disable');
           });

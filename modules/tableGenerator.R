@@ -209,6 +209,10 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
       bind_rows()
   })
   
+  ###############################
+  # Download
+  ###############################
+  
   output$downloadData <- downloadHandler(
     filename = function() {
       paste0("TableGenerator_", Sys.time(), ".csv", sep = "") %>%

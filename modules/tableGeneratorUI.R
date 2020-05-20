@@ -25,7 +25,7 @@ tableGeneratorUI <- function(id, label = "Create Chart") {
                                  HTML('<button data-toggle="collapse" data-target="#demo" style="width:100%">Filter Data</button>'),
                                  tags$div(id = 'demo',  class="collapse",
                                           IDEAFilter::shiny_data_filter_ui(ns("data_filter"))
-                                 ))))),
+                                 )))))
              ),
              wellPanel(
                fluidRow(
@@ -74,9 +74,8 @@ tableGeneratorUI <- function(id, label = "Create Chart") {
                                
                                fluidRow(
                                  column(6, downloadButton(ns("download_gt"), "Download Table")),
-                                 column(6, offset = 0, radioButtons(ns("download_type"), "Choose Output Type:", choices = c("CSV", "PDF", "RTF"), inline = TRUE))
+                                 column(6, offset = 0, radioButtons(ns("download_type"), "Choose Output Type:", choices = c(CSV = "CSV", HTML = "HTML", RTF = "RTF"), inline = TRUE))
                                )
-                               
                                
                                
                                # div(class = "btn-group", style="width:100%",
