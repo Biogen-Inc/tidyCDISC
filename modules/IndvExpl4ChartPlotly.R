@@ -374,11 +374,11 @@ output$v_applied_filters <- renderUI({
     output$PlotChart <- renderPlotly({
       req(input$plot_param != " ")
       
-      fnIndvExplVisits( # many arguments
+      fnIndvExplVisits(
         data = lb_data,
         usubjid = usubjid(),
         input_plot_hor = input$plot_hor,
-        input_visit_var = input$visit_var, #AVISITN
+        input_visit_var = input$visit_var,
         input_plot_param = input$plot_param,
         input_plot_adam = input$plot_adam,
         input_overlay_events = input$overlay_events,
@@ -386,7 +386,7 @@ output$v_applied_filters <- renderUI({
         vv_dy_name = vv_dy_name()
       )$plotly
        
-     }) # renderPlotly
+     })
        
     
     
