@@ -3,7 +3,10 @@ dataUploadUI <- function(id, label = "CSV file") {
   ns <- NS(id)
   
   tagList(
+    h1("Data Upload/Preview", align = "center"),
+    br(), br(), br(),
     fluidRow(
+      style = "padding: 20px",
       column(3,
              wellPanel(
                div(style="display: inline-block; ",h3("Data upload")),
