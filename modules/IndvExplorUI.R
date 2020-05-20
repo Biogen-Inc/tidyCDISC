@@ -5,7 +5,7 @@ IndvExplorUI <- function(id, label = "Individual Explorer") {
   useShinyjs()
   
   tagList(
-    h1("Table Generator", align = "center"),
+    h1("Individual Explorer", align = "center"),
     br(), br(), br(),
     h4(strong("Filter by Patient Number")),
     fluidRow(
