@@ -1,9 +1,19 @@
 PopuExplorUI <- function(id, label = "Population Explorer") {
   
 ns <- NS(id)
-  
+
 sidebarLayout(
   sidebarPanel(width = 2,
+               
+               fluidRow(
+                 column(width=6,
+                   checkboxInput(ns("adv_filtering"), "Filter data", value = F)
+                 ),
+                 column(width=6,
+                   checkboxInput(ns("clearplot"), "Clear plot", value = F)
+                 )
+               ),
+               
                prettyRadioButtons(
                  inputId = ns("radio"),
                  label = "Type of Chart:",
@@ -11,14 +21,14 @@ sidebarLayout(
                  choices = list("Scatter Plot  " = "1",
                                 "Spaghetti Plot" = "2",
                                 "Box Plot      " = "3",
-                                "Heat Map      " = "4",
+                                # "Heat Map      " = "4",
                                 "Histogram     " = "5"
                                 ),
                  selected = character(0),
                  icon = icon("check")
                ),
                # below are all the possible subparameters
-               tags$h4("Parameters:"),
+               tags$h4(id = "Parmstag", label = "Parameters:"),
                selectizeInput(ns("selPrmCode"), label = tags$small("Parameter Code:"), choices = character(0),
                   selected=character(0), multiple = TRUE, options = list(maxItems = 1)
                ),
@@ -90,10 +100,20 @@ sidebarLayout(
                )
                
   ), # sidebarPanel
-  mainPanel(width = 10,
-            verbatimTextOutput("text"),
-            plotlyOutput(ns("PlotlyOut"), width = "100%", height = "600px"),
-            DT::dataTableOutput(ns("DataTable"))
+  mainPanel(width=10,
+            tabsetPanel(id=ns("tabset"), type = "tabs",
+                  tabPanel("Plot",plotlyOutput(ns("PlotlyOut"), width = "100%", height = "600px")),
+                  tabPanel("Table",DT::dataTableOutput(ns("DataTable"))),
+                  tabPanel("Filter",
+                  conditionalPanel(condition = "input.adv_filtering == true", ns = ns,
+                                   selectInput(ns("filter_df"),"Filter on Variable(s)", 
+                                               multiple = TRUE, choices = NULL, selected = NULL),
+                                   conditionalPanel(condition = "input.filter_df != null", ns = ns,
+                                                    IDEAFilter::shiny_data_filter_ui(ns("data_filter")))
+                  )
+                  )
+            )
+            
   ) # mainPanel
 )  # sidebarLayout
 } # PopUExplorUI

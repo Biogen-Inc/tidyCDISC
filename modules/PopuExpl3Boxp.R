@@ -16,6 +16,7 @@ fac <- sort(names(df()[ , which(sapply(df(),is.factor   ))])) # all factors
 num <- sort(names(df()[ , which(sapply(df(),is.numeric  ))])) # all num
 
 # groupbyvar is loaded with all the character/factor columns
+# updateSelectInput(session = session, inputId = "groupbyvar", choices = c("",sort(c(chr,fac))), selected = "")
 updateSelectInput(session = session, inputId = "groupbyvar", choices = c("",sort(c(chr,fac))), selected = "")
 
 # responsevar is loaded with all the numeric columns
@@ -41,28 +42,12 @@ output$PlotlyOut <- renderPlotly({
   req(!is.null(dfsub))
   req(!is_empty(input$responsevar) && input$responsevar != "")
   
-  laby <- sjlabelled::get_label(dfsub[[input$responsevar]])
+  laby <- sjlabelled::get_label(dfsub[[input$responsevar]], def.value = unique(input$responsevar))
   
   # correction for overplotting is located in fnboxplot
-  p <- fnboxplot(data = dfsub, input$groupbox, input$groupbyvar, input$responsevar )
-  
-  # light theme
-  p <- p + theme_light()
-  
-  # remove the legend
-  p <-  p + theme(legend.position = "none")  
-  
-  if(input$AddPoints == TRUE) {
-    p <- p +
-      suppressWarnings(geom_point(position = 'jitter', alpha = 0.2,  na.rm = TRUE,
-                       aes(text = 
-                       paste0(USUBJID,
-                       "<br>",input$groupbyvar, ": ",get(input$groupbyvar),
-                       "<br>",input$responsevar,": ",get(input$responsevar)
-                       )
-                       ))) # aes, geom_point, suppressWarnings 
-  }
-  
+  p <- fnboxplot(data = dfsub, input$groupbox, input$groupbyvar, input$responsevar, input$AddPoints)
+
+  # Add labels here
   if (input$groupbox == TRUE) {
     
     req(!is_empty(input$groupbyvar) && input$groupbyvar != "")
@@ -73,18 +58,28 @@ output$PlotlyOut <- renderPlotly({
     ggtitle <- reactive({ paste("Plot of",laby,"Grouped by",labz,"for",unique(dfsub$PARAM)) })
     p <- p + labs(title = ggtitle(), x = labz, y = laby)
     
-    # https://www.datanovia.com/en/blog/easy-way-to-expand-color-palettes-in-r/
-    nlevs <- nlevels(factor(dfsub[[input$groupbyvar]]))
-    mycolors <- colorRampPalette(brewer.pal(8, "Set2"))(nlevs)
-    p <- p + scale_fill_manual(values = mycolors) 
-    
   } else {
     ggtitle <- reactive({ paste("Plot of",laby,"for",unique(dfsub$PARAM)) })
     p <- p + labs(title = ggtitle(), y = laby)
-    
   }
 
+  # https://www.datanovia.com/en/blog/easy-way-to-expand-color-palettes-in-r/
+  nlevs <- nlevels(factor(dfsub[[input$groupbyvar]]))
+  mycolors <- colorRampPalette(brewer.pal(8, "Set2"))(nlevs)
+  p <- p + scale_fill_manual(values = mycolors) 
+  
   p1 <-  ggplotly(p, tooltip = "text")
+  
+  if (input$AddPoints == TRUE) {
+    # remove outliers in plotly
+    p1$x$data <- lapply(p1$x$data, FUN = function(x){
+      
+      if (x$type == "box") {
+        x$marker = list(opacity = 0)
+      }
+      return(x)
+    })
+  } 
   
   if(input$groupbox == TRUE) {
     # Now, the workaround:
