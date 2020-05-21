@@ -339,6 +339,9 @@ output$v_applied_filters <- renderUI({
        }
     }
   })
+  
+  
+  
     
   ############ 
   # Plotting!
@@ -372,11 +375,12 @@ output$v_applied_filters <- renderUI({
     
     
     
+    
     output$PlotChart <- renderPlotly({
       req(input$plot_param != " ")
       
       fnIndvExplVisits(
-        data = lb_data,
+        bds_data = lb_data,
         usubjid = usubjid(),
         input_plot_hor = input$plot_hor,
         input_visit_var = input$visit_var,
@@ -390,6 +394,35 @@ output$v_applied_filters <- renderUI({
      })
        
     
+    output$batchDownReport <- downloadHandler(
+      filename = function() {
+        paste(paste(usubjid(),input$plot_adam,"Param_by",input$visit_var, sep = '_'), sep = '.', switch(
+          input$format, PDF = 'pdf', HTML = 'html'
+        ))
+      },
+      
+      content = function(file) {
+        # Copy the report file to a temporary directory before processing it, in
+        # case we don't have write permissions to the current working dir (which
+        # can happen when deployed).
+        tempReport <- file.path(tempdir(), "batchDownload.Rmd")
+        file.copy("batchDownload.Rmd", tempReport, overwrite = TRUE)
+        
+        # Knit the document: passing in the `params` list is optional by default but will
+        # make it more difficult to debug, or if in new envir = eval it in a
+        # child of the global environment (this isolates the code in the document
+        # from the code in this app).
+        rmarkdown::render(
+          input = "batchDownload.Rmd",
+          output_file = file,
+          params = list(
+            bds_data_name_ = input$plot_adam,
+            bds_data_ = lb_data
+          )
+          # ,envir = new.env(parent = globalenv()) # comment out to use parent env and inherit inputs
+        )
+      }
+    )
     
     
        

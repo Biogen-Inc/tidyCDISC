@@ -1,0 +1,81 @@
+---
+title: "Batch Download"
+date:
+output:
+  html_document:
+    toc: true
+    toc_depth: 4
+    toc_float:
+      collapsed: false
+params:
+  bds_data_name_: NA
+  bds_data_: NA
+  
+---
+
+```{r setup, include=FALSE} 
+knitr::opts_chunk$set(echo = FALSE, warning=FALSE, message=FALSE, progress = TRUE)
+
+# load in applicable packages
+library(tidyverse)
+library(plotly)
+library(knitr)
+library(rmarkdown)
+library(htmltools)
+
+# select data from list
+dat <- params$bds_data_
+
+# some summary info, and vector of unique paramcd's
+paramcds <- unique(dat$PARAMCD)
+np <- length(paramcds)
+pat <- dat$USUBJID[1]
+# study <- sub("\\/.*", "", dat$USUBJID[1])
+
+```
+
+### Report Summary
+Batch Download from `r params$bds_data_name_` with `r np` paramcds for patient `r pat`.
+
+
+
+
+
+
+
+### Exploratory Plots
+
+```{r plots}
+# if using ggplot, use results='hide'
+
+plotter <- function(pcd){
+
+  fn_output <- fnIndvExplVisits(
+      bds_data = lb_data,
+      usubjid = usubjid(),
+      input_plot_hor = input$plot_hor,
+      input_visit_var = input$visit_var,
+      input_plot_param = pcd,
+      input_plot_adam = input$plot_adam,
+      input_overlay_events = input$overlay_events,
+      vline_dat = vline_dat(),
+      vv_dy_name = vv_dy_name()
+    )$plotly
+  
+  # format display
+  tagList(
+    h4(pcd),
+    fn_output,
+    br(), br(), br(), br(),
+  )
+}
+
+# test just one plot
+# tagList(br(), br(), visitPlot(pcd = input$plot_param))
+
+# Use prrrr to create as many plots as their are paramcd's
+tagList(br(), br(), map(.x = paramcds, ~ plotter(pcd = .x)))
+
+```
+
+

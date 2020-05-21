@@ -151,7 +151,14 @@ IndvExplorUI <- function(id, label = "Individual Explorer") {
                
                fluidRow(column(10,plotlyOutput(ns("PlotChart"), width = "100%", height = "600px"))),
                br(),
-               fluidRow(column(6, DT::dataTableOutput(ns("DataTable")))),
+               fluidRow(
+                 column(8, DT::dataTableOutput(ns("DataTable"))),
+                 column(4,
+                    h5("Download Report Containing All Params"),
+                    radioButtons(ns('format'), 'Document format', c('PDF', 'HTML'),inline = TRUE),
+                    downloadButton(ns('batchDownReport'))
+                  )
+               ),
                br(),br(),br(),br(),br(),br()
       )
     ))) # TabsetPanel & it's div & hidden

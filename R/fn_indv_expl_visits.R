@@ -1,6 +1,6 @@
 
 fnIndvExplVisits <- function(
-  data,
+  bds_data,
   usubjid,
   input_plot_hor,
   input_visit_var,
@@ -17,7 +17,7 @@ fnIndvExplVisits <- function(
   INPUT_visit_var <- sym(input_visit_var)
   
   plot_dat <- 
-    data %>%
+    bds_data %>%
     filter(!(is.na(!!INPUT_visit_var)) & PARAMCD == input_plot_param) # make sure AVISITN is not missing
   
   if("Screening" %in% input_plot_hor){
@@ -135,7 +135,10 @@ fnIndvExplVisits <- function(
                         showarrow = F)
     }
     
-    return(list(plotly = ly, ggplot = lb_plot))
+    return(list(plotly = ly,
+                ggplot = lb_plot
+                )
+    )
   } # if (nrow(plot_dat) > 0)
   
   
