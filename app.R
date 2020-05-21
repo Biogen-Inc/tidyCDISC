@@ -54,7 +54,7 @@ ui <-
       tags$link(rel = "//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"),
       tags$head(tags$link(rel="shortcut icon", href="IDEA_FAVICON.ico")),
       tags$script(src = "https://code.jquery.com/ui/1.12.1/jquery-ui.js"),
-      tags$link(rel = "stylesheet", type = "text/css", href = "www/index.css")
+      tags$link(rel = "stylesheet", type = "text/css", href = "index.css")
     ),
     useShinyjs(),
     use_waiter(), # include dependencies
