@@ -30,7 +30,7 @@ IndvExpl4ChartPlotly <- function(input, output, session, datafile, loaded_adams,
       inputId = "plot_adam",
       choices = plotable_adams(), #  plot_adams ................. does this need to update/ depend on usubjid selected? Because RK was backing out datasets
                                   #                             that didn't have any PARAMs for a patient
-      selected =  " "
+      # selected =  " " # keep commented out if you want visit plot to update when ubsubjid changes
     )
     
     # update array of params
@@ -38,7 +38,7 @@ IndvExpl4ChartPlotly <- function(input, output, session, datafile, loaded_adams,
       session = session,
       inputId = "plot_param",
       # choices = c(" "),
-      selected = " "
+      # selected = " " # keep commented out if you want visit plot to update when ubsubjid changes
     )
     
     # cat(paste("\n",input$overlay_events))
@@ -344,7 +344,8 @@ output$v_applied_filters <- renderUI({
   # Plotting!
   ############
   # If any *param* or *visit var* are updated, run code below
-  observeEvent(list(input$plot_param,
+  observeEvent(list(usubjid(),
+                    input$plot_param,
                     input$visit_var,
                     input$overlay_events,
                     input$overlay_event_vals,
