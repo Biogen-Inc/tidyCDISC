@@ -128,10 +128,6 @@ IndvExplorUI <- function(id, label = "Individual Explorer") {
                           choices = as.list(c("All", "Manually Filter")),
                           selected = "All"
                         )
-                        # materialSwitch(ns("visits_apply_filter")
-                        #             , label = strong(em(h5("Apply Filters to Events Data")))
-                        #             , status = "primary"
-                        #             , value = T)
                  ),
                  column(2,
                         br(),br(),
