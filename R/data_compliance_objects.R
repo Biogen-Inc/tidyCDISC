@@ -346,13 +346,15 @@ gather_reqs <- function(input, output, session,
   
   # now stack the hard & df_with rules to get a unique set of rules to calc if pass / fail (doesn't exist or missing)
   if(
-    alldf %>%
-    union(hdf) %>%
-    union(dw) %>%
+    suppressWarnings(
+      alldf %>%
+      union(hdf) %>%
+      union(dw) 
+    ) %>%
     distinct(df, type_col) %>% 
     subset(type_col != "") %>% 
     nrow() == 0
-    ) {
+  ) {
     # stop("No Rules Supplied. Without rules, the data compliance module is useless. Please remove the Module.")
     pf <- data.frame(df = character(), type_col = character(),
                      not_exist_disp = character(), missing_disp = character())
@@ -361,9 +363,11 @@ gather_reqs <- function(input, output, session,
   } else {
     
     pf <-
-      alldf %>%
-      union(hdf) %>%
-      union(dw) %>%
+      suppressWarnings(
+        alldf %>%
+        union(hdf) %>%
+        union(dw) 
+      ) %>%
       distinct(df, type_col) %>%
       arrange(df, type_col) %>%
       mutate(
@@ -383,7 +387,8 @@ gather_reqs <- function(input, output, session,
              missing_disp = ifelse(missing,"X",""),
       )%>%
       subset(not_exist | missing) %>%
-      select(df, type_col, not_exist_disp, missing_disp) 
+      select(df, type_col, not_exist_disp, missing_disp)
+      
     # pf  
     
     # modify the table displayed using gt, remove a column if just exporting warnings
