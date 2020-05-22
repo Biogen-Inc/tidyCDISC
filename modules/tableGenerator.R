@@ -159,8 +159,7 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
     nm = md(glue::glue("**{row_names_n()}** <br> N={total()}"))
   }
   
-  output$all <- render_gt({
-    
+  gt_table <- reactive({
     for_gt() %>%
       gt(rowname_col = "Variable", 
          groupname_col = "ID") %>%
@@ -181,6 +180,9 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
         locations = cells_stub(rows = TRUE)
       )
   })
+  
+  
+  output$all <- render_gt({ gt_table() })
   
   #####################################################################
   # Block Preperation
@@ -213,79 +215,19 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
   # Download
   ###############################
   
-  as_csv <- downloadHandler(
+  output$download_gt <- downloadHandler(
     filename = function() {
-      paste0("TableGenerator_", Sys.time(), ".csv", sep = "")
+      paste0("TableGenerator", input$download_type)
     },
     content = function(file) {
-      write.csv(for_gt(), file, row.names= FALSE)
+      if(input$download_type == ".csv") {
+        write.csv(for_gt(), file, row.names = FALSE)
+      } else if(input$download_type == ".html") {
+        exportHTML <- gt_table()
+        gtsave(exportHTML, file)
+      }
     }
-  )
-  
-  as_html <- downloadHandler(
-    filename = function() {
-      paste0("TableGeneratorHTML_", Sys.time(), ".csv", sep = "")
-    },
-    content = function(file) {
-      write.csv(for_gt(), file, row.names= FALSE)
-    }
-  )
-  
-  observe(output$download_gt, {
-    switch(input$download_type,
-           "CSV" = as_csv,
-           "HTML" = as_html)
-  })
-
-  
-  # output$downloadXPT <- downloadHandler(
-  #   filename = function() {
-  #     paste("TableGenerator.xpt")
-  #   },
-  #   content = function(file) {
-  #     # remove the spe
-  #     df_remove_special_char <- janitor::clean_names(dataFrame())
-  #     colnames(df_remove_special_char) <- 
-  #       janitor::make_clean_names(str_trunc(colnames(df_remove_special_char), 
-  #                                           8, side = "right"))
-  #     write_xpt(df_remove_special_char, file)
-  #   }
-  # )
-  
-  # output$downloadSAS <- downloadHandler(
-  #   filename = function() {
-  #     paste("TableGenerator_", Sys.Date(), ".sas7bdat", sep = "")
-  #   },
-  #   content = function(file) {
-  #     df_remove_special_char <- janitor::clean_names(dataFrame())
-  #     write_sas(df_remove_special_char, file)
-  #   }
-  # )
-
-  
-  # save_rtf <- downloadHandler(
-  #   filename = function() {
-  #     paste0("TableGenerator_", Sys.time(), ".doc", sep = "") %>%
-  #       str_replace(" ", "_") %>%
-  #       str_replace_all(":", "-")
-  #   },
-  #   content = function(file) {
-  #     df <- as.data.frame(dataFrame())
-  #     rtffile <- RTF(file,  width=11, height = 8.5)
-  #     addHeader(rtffile, title = input$table_title, subtitle = subheader())
-  #     addTable(rtffile, df)
-  #     done(rtffile)
-  #   }
-  # )
-  
-  # output$downloadPDF = downloadHandler(
-  #   filename = "TableGenerator.pdf",
-  #   content = function(file){
-  #     out <- rmarkdown::render("Kable.Rmd", pdf_document())
-  #     file.rename(out, file)
-  #   }
-  # )
-  
+  )  
   
   p <- reactive({
     rowArea(col = 2, block_data())
