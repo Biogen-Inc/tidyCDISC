@@ -8,20 +8,23 @@ output:
     toc_float:
       collapsed: false
 params:
-  bds_data_name_: NA
   bds_data_: NA
-  
+  report_summary: NA
+  user_notes: NA
 ---
 
 ```{r setup, include=FALSE} 
 knitr::opts_chunk$set(echo = FALSE, warning=FALSE, message=FALSE, progress = TRUE)
 
+progress$inc(1) # first increment
+
+# don't need these here, because not creating a new environment
 # load in applicable packages
-library(tidyverse)
-library(plotly)
-library(knitr)
-library(rmarkdown)
-library(htmltools)
+# library(tidyverse)
+# library(plotly)
+# library(knitr)
+# library(rmarkdown)
+# library(htmltools)
 
 # select data from list
 dat <- params$bds_data_
@@ -29,19 +32,36 @@ dat <- params$bds_data_
 # some summary info, and vector of unique paramcd's
 paramcds <- unique(dat$PARAMCD)
 np <- length(paramcds)
-pat <- dat$USUBJID[1]
+# pat <- dat$USUBJID[1]
 # study <- sub("\\/.*", "", dat$USUBJID[1])
 
+print_report_summary <- !is.na(params$report_summary)
+print_user_notes <- (!is.na(params$user_notes) & !is_null(params$user_notes) & params$user_notes != "")
+
+progress$inc(1) # second increment - after libraries & light data work
 ```
 
-### Report Summary
-Batch Download from `r params$bds_data_name_` with `r np` paramcds for patient `r pat`.
+```{r, eval = print_report_summary}
+asis_output("### Report Summary\\n") # Header that is only shown if print_option == TRUE
+```
+```{r, eval = print_report_summary}
+asis_output(params$report_summary) 
+```
+
+
+```{r, eval = print_user_notes}
+asis_output("### Notes\\n") # Header that is only shown if print_option == TRUE
+```
+```{r, eval = print_user_notes}
+asis_output(params$user_notes) 
+```
 
 
 
 
-
-
+<br>
+<br>
+<br>
 
 ### Exploratory Plots
 
@@ -62,6 +82,8 @@ plotter <- function(pcd){
       vv_dy_name = vv_dy_name()
     )$plotly
   
+  progress$inc(1) # increment progress bar
+  
   # format display
   tagList(
     h4(pcd),
@@ -75,6 +97,8 @@ plotter <- function(pcd){
 
 # Use prrrr to create as many plots as their are paramcd's
 tagList(br(), br(), map(.x = paramcds, ~ plotter(pcd = .x)))
+
+progress$inc(1) # last increment
 
 ```
 

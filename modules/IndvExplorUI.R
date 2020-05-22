@@ -154,8 +154,9 @@ IndvExplorUI <- function(id, label = "Individual Explorer") {
                fluidRow(
                  column(8, DT::dataTableOutput(ns("DataTable"))),
                  column(4,
-                    h5("Download Report Containing All Params"),
-                    radioButtons(ns('format'), 'Document format', c('PDF', 'HTML'),inline = TRUE),
+                    h4(textOutput(ns("dwnld_params_header"))),
+                    radioButtons(ns('format'), 'Document format', c('HTML'),inline = TRUE), #'PDF', 
+                    textInput(ns("user_batch_notes"), label = "Add Report Notes", placeholder = "My Notes"),
                     downloadButton(ns('batchDownReport'))
                   )
                ),

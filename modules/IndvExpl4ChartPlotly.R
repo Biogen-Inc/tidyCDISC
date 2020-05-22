@@ -371,6 +371,8 @@ output$v_applied_filters <- renderUI({
       select(all_of(bds_cols)) %>%
       distinct()
     
+    
+    
     INPUT_visit_var <- sym(input$visit_var)
     
     
@@ -392,7 +394,13 @@ output$v_applied_filters <- renderUI({
       )$plotly
        
      })
-       
+    
+    np <- length(unique(lb_data$PARAMCD))
+    output$dwnld_params_header <- renderText({
+      s <- ifelse(np > 1,
+                  paste("Download Report with a Plot for all",np,"Params")
+                  ,"Download Report with Plot Above")
+    })
     
     output$batchDownReport <- downloadHandler(
       filename = function() {
@@ -411,16 +419,22 @@ output$v_applied_filters <- renderUI({
         # Knit the document: passing in the `params` list is optional by default but will
         # make it more difficult to debug, or if in new envir = eval it in a
         # child of the global environment (this isolates the code in the document
-        # from the code in this app).
+        # from the code in this app). Also attached progress bar onto progress
+        progress <- Progress$new(max = np + 3)
+        progress$set(message = "Rendering Report...")
+        on.exit(progress$close())
+        # id <- showNotification("Rendering Report...", type = "message", duration = NULL, closeButton = FALSE)
         rmarkdown::render(
           input = "batchDownload.Rmd",
           output_file = file,
           params = list(
-            bds_data_name_ = input$plot_adam,
-            bds_data_ = lb_data
+            bds_data_ = lb_data,
+            report_summary = paste("Data from", input$plot_adam, "with", np, "paramcds for patient", usubjid(),"."),
+            user_notes = input$user_batch_notes
           )
           # ,envir = new.env(parent = globalenv()) # comment out to use parent env and inherit inputs
         )
+        # on.exit(removeNotification(id), add = TRUE)
       }
     )
     
