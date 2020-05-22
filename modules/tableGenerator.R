@@ -132,13 +132,13 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
       need((nrow(blocks_and_functions()) > 0),'Add variable and statistics blocks to create table.')
     )
     
-    pmap(list(blocks_and_functions()$agg, 
+    test <- pmap(list(blocks_and_functions()$agg, 
               blocks_and_functions()$S3, 
               blocks_and_functions()$dropdown), 
          function(x,y,z) 
          IDEA_methods(x,y,z, 
                       group = column(), 
-                      data = all_data())) %>%
+                      data = all_data())) %>% 
       map(setNames, common_rownames(all_data(), column())) %>%
       setNames(paste(blocks_and_functions()$gt_group)) %>%
       bind_rows(.id = "ID") %>%
@@ -209,7 +209,9 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
     
     pretty_blocks <- tibble(
       Pattern = c("MEAN", "FREQ", "CHG"),
-      Replacement = c("Descriptive Statistics", "Summary Counts", "Change from Baseline")
+      Replacement = c("Descriptive Statistics", 
+                      "Summary Counts", 
+                      "Descriptive Statistics of Change from Baseline")
     )
     
     test <- block_data() %>%
