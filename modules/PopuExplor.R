@@ -2,11 +2,51 @@ PopuExplor <- function(input, output, session, datafile){
   
   ns <- session$ns
   
+  # function for updating the main plot radio buttons
+  RadioUpdate <- function() {
+    
+    # I think what we are up against here is the UI design principle that 
+    # there shouldn't be such a thing as radio button with nothing selected. 
+    # To represent that state you need to add an option called 'None selected' as one of the buttons. 
+    # So here we do it twice, the second time without the 'None selected' choice
+    
+  updatePrettyRadioButtons(
+    session = session,
+    inputId = "radio",
+    choices = list("Scatter Plot  " = "1",
+                   "Spaghetti Plot" = "2",
+                   "Box Plot      " = "3",
+                   # "Heat Map      " = "4",
+                   "Histogram     " = "5",
+                   "Means Plot    " = "6",  
+                   "Hbar PLot     " = "7",
+                   "None selected " = "0"
+    ),
+    selected = "0"
+  )
+  
+  updatePrettyRadioButtons(
+    session = session,
+    inputId = "radio",
+    choices = list("Scatter Plot  " = "1",
+                   "Spaghetti Plot" = "2",
+                   "Box Plot      " = "3",
+                   # "Heat Map      " = "4",
+                   "Histogram     " = "5",
+                   "Means Plot    " = "6",
+                   "Hbar PLot     " = "7"
+                   
+    ),
+    selected = character(0)
+  )
+  }
+  
   waiting_screen <- tagList(
     spin_folding_cube(),
     h4("Hold on a bit while we merge datasets...")
   ) 
 
+  # select the data sets
   dataselected <- callModule(selectData, id = NULL, datafile)
 
   rv <- reactiveValues(all_data = NULL)
@@ -20,42 +60,16 @@ PopuExplor <- function(input, output, session, datafile){
     waiter_show(html = waiting_screen, color = "lightblue")
     Sys.sleep(0.5) # wait 1/2 second
     
-    # print("setting adv_filtering checkbox to FALSE")
+    # set adv_filtering checkbox to FALSE; select Plot tab panel
     updateCheckboxInput(session = session, "adv_filtering", value = F)
     updateTabsetPanel(session = session, "tabset", selected = "Plot")
     
     inputids <- c("groupbyvar","responsevar","seltimevar","selxvar","selyvar","selzvar")
-    # set these to un-selected using an anonymous function
+    # set these to un-selected using map() and an anonymous function
     map(inputids, function(x) updateSelectInput(session = session, x, choices = " ", selected = character(0)) )
 
-    # I think what we are up against here is the UI design principle that 
-    # there shouldn't be such a thing as radio buttons with nothing selected. 
-    # To represent that state you need to add an option called 'None selected' as one of the buttons. 
-    #
-    updatePrettyRadioButtons(
-      session = session,
-      inputId = "radio",
-      choices = list("Scatter Plot  " = "1",
-                     "Spaghetti Plot" = "2",
-                     "Box Plot      " = "3",
-                     # "Heat Map      " = "4",
-                     "Histogram     " = "5",
-                     "None selected " = "0"
-      ),
-      selected = "0"
-    )
-
-    updatePrettyRadioButtons(
-      session = session,
-      inputId = "radio",
-      choices = list("Scatter Plot  " = "1",
-                     "Spaghetti Plot" = "2",
-                     "Box Plot      " = "3",
-                     # "Heat Map      " = "4",
-                     "Histogram     " = "5"
-      ),
-      selected = character(0)
-    )
+    # run the radioUpdate function above
+    RadioUpdate()
 
   datakeep <- reactive({ datafile()[dataselected()] })
   
@@ -119,7 +133,8 @@ PopuExplor <- function(input, output, session, datafile){
       filter(SAFFL == "Y") %>% # safety population
       filter(!is.na(AVISITN)) %>%
       select("USUBJID","STUDYID","AVISIT","AVISITN",ends_with("DY"),"PARAMCD",
-             any_of(c("PARAM","AVAL","BASE","CHG","data_from"))) %>%
+             any_of(c("PARAM","AVAL","BASE","CHG","data_from",
+                      "LBCAT","LBSTRESN","LBSTNRLO","LBSTNRHI"))) %>%
       distinct(USUBJID, PARAMCD, AVISIT, .keep_all = TRUE) %>%
       mutate(AVISITN = as.integer(ceiling(AVISITN))) %>%
       arrange(USUBJID, PARAMCD, AVISITN) 
@@ -139,7 +154,6 @@ PopuExplor <- function(input, output, session, datafile){
     } else {
       # all BDS files without ADSL variables
       all_data <- all_USUBJ
-      
     }
     
   } else {
@@ -147,7 +161,6 @@ PopuExplor <- function(input, output, session, datafile){
     all_data <- bind_rows(ADSL, .id = "data_from")
     all_data$data_from <- "ADSL" # set to ADSL, defaults to "1" here???
     set_label(all_data$AVISIT) <- "Analysis Visit"
-
   }
   
   # SAS data uses blanks as character missing; replace blanks with NAs for chr columns
@@ -164,6 +177,10 @@ PopuExplor <- function(input, output, session, datafile){
   
   # Now this is more generic, not specific to one study
   if ("STUDYID" %in% colnames(all_data)) {
+    if ("CHG" %in% colnames(all_data) ) {
+      # set CHG to zero instead of NA at Baseline
+      all_data <- mutate(all_data, CHG = replace_na(CHG, 0))
+    }
     
     if ("TRT01A" %in% colnames(all_data)) {
       # dummy section
@@ -193,23 +210,33 @@ PopuExplor <- function(input, output, session, datafile){
   
 }, ignoreNULL = FALSE) # observeEvent input$done
 
+  #
   # section for filtering
   #
-
+  
+  # set adv_filtering checkbox to TRUE if user selects the Filter tab panel
+  observeEvent(input$tabset, {
+     # print(paste("You are Viewing tab panel",input$tabset))
+    if (input$tabset == "Filter") {
+     # maybe I'm being too clever here  
+     # updateCheckboxInput(session = session, "adv_filtering", value = T)
+    }
+  }, ignoreInit = TRUE)
+  
+  # If adv_filtering is checked, switch to Filter tab panel; otherwise, Plot tab panel
   observeEvent(input$adv_filtering, {
-    if (input$adv_filtering == F) {
-      updateTabsetPanel(session = session, "tabset", selected = "Plot")
-    } else {
-    # req(input$adv_filtering == T)
-
+    if (input$adv_filtering == T) {
     updateTabsetPanel(session = session, "tabset", selected = "Filter")
-    # print(paste("rv$all_data is",head(unique(rv$all_data()$data_from))))
-    
-    updateSelectInput("filter_df", session = session, choices = as.list(unique(rv$all_data()$data_from)), selected = "ADSL") #
+    # updateSelectInput("filter_df", session = session, choices = as.list(unique(rv$all_data()$data_from)), selected = "ADSL") 
+    } else {
+      
+      updateTabsetPanel(session = session, "tabset", selected = "Plot")
     }
   })
   
-  # feed_filter <- reactive({rv$processed_data})
+  output$hide_panel <- eventReactive(input$adv_filtering, TRUE, ignoreInit = TRUE)
+  outputOptions(output, "hide_panel", suspendWhenHidden = FALSE)
+  
   feed_filter <- reactive({ rv$all_data() })
   
   # IDEAFilter
@@ -218,54 +245,43 @@ PopuExplor <- function(input, output, session, datafile){
     "data_filter",         # whatever you named the widget
     data = feed_filter,    # the name of your pre-processed data
     verbose = FALSE)
-  
+
+ # clear the plot area, table, and radio buttons if clear plot has been checked    
  observeEvent(input$clearplot,{
    req(input$clearplot == TRUE)
-   # # Clear plotoutput
-   # output$PlotlyOut <- renderPlotly({
-   #   NULL
-   # })
-   # # Clear datatable
-   # output$DataTable <- DT::renderDataTable({
-   #   NULL
-   # }) 
-   updatePrettyRadioButtons(
-     session = session,
-     inputId = "radio",
-     choices = list("Scatter Plot  " = "1",
-                    "Spaghetti Plot" = "2",
-                    "Box Plot      " = "3",
-                    # "Heat Map      " = "4",
-                    "Histogram     " = "5",
-                    "None selected " = "0"
-     ),
-     selected = "0"
-   )
-
-   updatePrettyRadioButtons(
-     session = session,
-     inputId = "radio",
-     choices = list("Scatter Plot  " = "1",
-                    "Spaghetti Plot" = "2",
-                    "Box Plot      " = "3",
-                    # "Heat Map      " = "4",
-                    "Histogram     " = "5"
-     ),
-     selected = character(0)
-   )
+   
+   # Clear plotoutput
+   output$PlotlyOut <- renderPlotly({
+     NULL
+   })
+   # Clear datatable
+   output$DataTable <- DT::renderDataTable({
+     NULL
+   })
+   
+   RadioUpdate()
+   
  }, ignoreInit = TRUE)  
  
+ #
+ # input$radio button processing
+ #
  observeEvent(input$radio,{
     
     req(!is.null(rv$all_data))
 
-    updateTabsetPanel(session = session, "tabset", selected = "Plot")
-    
-    if (!is.null(filtered_data()) && input$adv_filtering == T ) {
-      dataset <- reactive({ filtered_data() })
-    } else {
-      dataset <- reactive({ rv$all_data() })
-    }
+   dataset <- eventReactive(input$adv_filtering, {
+     if (!is.null(filtered_data()) && input$adv_filtering == T ) {
+       filtered_data() 
+     } else {
+       rv$all_data() 
+     }
+   })
+    # if (!is.null(filtered_data()) && input$adv_filtering == T ) {
+    #   dataset <- reactive({ filtered_data() })
+    # } else {
+    #   dataset <- reactive({ rv$all_data() })
+    # }
 
     # Clear plotoutput
     output$PlotlyOut <- renderPlotly({
@@ -276,7 +292,10 @@ PopuExplor <- function(input, output, session, datafile){
       NULL
     }) 
     
+    # set clear plot to FALSE, since we just cleared the plot and table
     updateCheckboxInput(session = session, "clearplot", value = F)
+    # select Plot tab panel
+    updateTabsetPanel(session = session, "tabset", selected = "Plot")
     
     # Update Parameter Code choices
     updateSelectizeInput(
@@ -293,7 +312,7 @@ PopuExplor <- function(input, output, session, datafile){
     # widgets to hide
     widgets <- c("selPrmCode","groupbox","groupbyvar","selxvar","selyvar","selzvar","seltimevar",
                  "responsevar","AddPoints","animate","animateby","numBins","AddLine","AddSmooth",
-                 "DiscrXaxis","fillType","selectvars","runCorr","heatMapFill")
+                 "DiscrXaxis","fillType","selectvars","runCorr","heatMapFill","errorBars")
     map(widgets, function(x) shinyjs::hide(x))
 
     
@@ -339,6 +358,15 @@ PopuExplor <- function(input, output, session, datafile){
              # histogram module
              callModule(PopuExpl5Hist, id = NULL, dataset)
            },
+           "6" = {
+             # Means Plot module
+             callModule(PopuExpl6Means, id = NULL, dataset)
+           },
+           "7" = {
+             # Horizontal Bar Plot module
+             callModule(PopuExpl7Hbar, id = NULL, dataset)
+           },
+           
            # This should not happen
            stop("invalid radio button: ",input$radio)
     )

@@ -18,12 +18,15 @@ sidebarLayout(
                  inputId = ns("radio"),
                  label = "Type of Chart:",
                  shape = "square",
-                 choices = list("Scatter Plot  " = "1",
-                                "Spaghetti Plot" = "2",
-                                "Box Plot      " = "3",
-                                # "Heat Map      " = "4",
-                                "Histogram     " = "5"
-                                ),
+                 choices = character(0),
+                 # choices = list("Scatter Plot  " = "1",
+                 #                "Spaghetti Plot" = "2",
+                 #                "Box Plot      " = "3",
+                 #                # "Heat Map      " = "4",
+                 #                "Histogram     " = "5",
+                 #                "Means Plot    " = "6",
+                 #                "Hbar PLot     " = "7"
+                 #                ),
                  selected = character(0),
                  icon = icon("check")
                ),
@@ -89,6 +92,17 @@ sidebarLayout(
                  selected = "Max"
                ),
                
+               prettyRadioButtons(
+                 inputId = ns("errorBars"),
+                 label = "Type of Error Bar:",
+                 shape = "square",
+                 inline = TRUE,
+                 choices = list("Mean SE" = "1",
+                                "Median IQR" = "2"
+                                ),
+                 selected = character(0),
+                 icon = icon("check")
+               ),
                
                sliderInput(ns("numBins"), "Number of bins:",
                            min = 20, max = 200, value = 40),
@@ -102,17 +116,18 @@ sidebarLayout(
   ), # sidebarPanel
   mainPanel(width=10,
             tabsetPanel(id=ns("tabset"), type = "tabs",
-                  tabPanel("Plot",plotlyOutput(ns("PlotlyOut"), width = "100%", height = "600px")),
-                  tabPanel("Table",DT::dataTableOutput(ns("DataTable"))),
-                  tabPanel("Filter",
-                  conditionalPanel(condition = "input.adv_filtering == true", ns = ns,
-                                   selectInput(ns("filter_df"),"Filter on Variable(s)", 
-                                               multiple = TRUE, choices = NULL, selected = NULL),
-                                   conditionalPanel(condition = "input.filter_df != null", ns = ns,
-                                                    IDEAFilter::shiny_data_filter_ui(ns("data_filter")))
-                  )
-                  )
-            )
+                  tabPanel("Plot", id = ns("Plot"), plotlyOutput(ns("PlotlyOut"), width = "100%", height = "600px")),
+                  tabPanel("Table", id = ns("Table"), DT::dataTableOutput(ns("DataTable"))),
+                  tabPanel("Filter", id = ns("Filter"),
+                            fluidRow(
+                               column(6, # 6 = 4 (half the main panel)
+                                conditionalPanel(condition = "input.adv_filtering == true", ns = ns,
+                                               IDEAFilter::shiny_data_filter_ui(ns("data_filter"))
+                                                )
+                                     )
+                                   )
+                  ) #tabPanel
+            ) # tabsetPanel
             
   ) # mainPanel
 )  # sidebarLayout
