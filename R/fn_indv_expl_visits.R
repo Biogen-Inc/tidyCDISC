@@ -43,7 +43,7 @@ fnIndvExplVisits <- function(
                               "<br>",input_plot_param ,": ",AVAL
                        )
                  )) +
-      scale_x_continuous(breaks = seq(0, max(plot_dat[,input_visit_var]), 30)) +
+      scale_x_continuous(breaks = seq(min(plot_dat[,input_visit_var]), max(plot_dat[,input_visit_var]), 30)) +
       labs(x = paste0("Study Visit (",input_visit_var,")"),
            y = prm,
            title = paste(prm,"by Relative Study Day"),
