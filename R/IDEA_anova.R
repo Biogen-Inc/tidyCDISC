@@ -41,7 +41,7 @@ IDEA_anova.BDS <- function(column, week, group = NULL, data) {
   column <- as.character(column)
   
   if (!column %in% data[["PARAMCD"]]) {
-    stop(paste("Can't calculate ANOVA, ", column, " is has no AVAL"))
+    stop(paste("Can't calculate ANOVA, ", column, " has no AVAL"))
   }
   
   if (week == "NONE") {

@@ -213,16 +213,29 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
   # Download
   ###############################
   
-  output$downloadData <- downloadHandler(
+  as_csv <- downloadHandler(
     filename = function() {
-      paste0("TableGenerator_", Sys.time(), ".csv", sep = "") %>%
-        str_replace(" ", "_") %>%
-        str_replace_all(":", "-")
+      paste0("TableGenerator_", Sys.time(), ".csv", sep = "")
     },
     content = function(file) {
-      write.csv(dataFrame(), file, row.names= FALSE)
+      write.csv(for_gt(), file, row.names= FALSE)
     }
   )
+  
+  as_html <- downloadHandler(
+    filename = function() {
+      paste0("TableGeneratorHTML_", Sys.time(), ".csv", sep = "")
+    },
+    content = function(file) {
+      write.csv(for_gt(), file, row.names= FALSE)
+    }
+  )
+  
+  observe(output$download_gt, {
+    switch(input$download_type,
+           "CSV" = as_csv,
+           "HTML" = as_html)
+  })
 
   
   # output$downloadXPT <- downloadHandler(
@@ -248,21 +261,22 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
   #     write_sas(df_remove_special_char, file)
   #   }
   # )
+
   
-  output$downloadRTF <- downloadHandler(
-    filename = function() {
-      paste0("TableGenerator_", Sys.time(), ".doc", sep = "") %>%
-        str_replace(" ", "_") %>%
-        str_replace_all(":", "-")
-    },
-    content = function(file) {
-      df <- as.data.frame(dataFrame())
-      rtffile <- RTF(file,  width=11, height = 8.5)
-      addHeader(rtffile, title = input$table_title, subtitle = subheader())
-      addTable(rtffile, df)
-      done(rtffile)
-    }
-  )
+  # save_rtf <- downloadHandler(
+  #   filename = function() {
+  #     paste0("TableGenerator_", Sys.time(), ".doc", sep = "") %>%
+  #       str_replace(" ", "_") %>%
+  #       str_replace_all(":", "-")
+  #   },
+  #   content = function(file) {
+  #     df <- as.data.frame(dataFrame())
+  #     rtffile <- RTF(file,  width=11, height = 8.5)
+  #     addHeader(rtffile, title = input$table_title, subtitle = subheader())
+  #     addTable(rtffile, df)
+  #     done(rtffile)
+  #   }
+  # )
   
   # output$downloadPDF = downloadHandler(
   #   filename = "TableGenerator.pdf",

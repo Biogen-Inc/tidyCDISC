@@ -54,6 +54,7 @@ source('modules/PopuExpl4Heat.R')
 source('modules/PopuExpl5Hist.R')
 
 # individual explorer
+source('R/fn_indv_expl_visits.R')
 source('modules/IndvExplorUI.R')
 # server code broken into four sections
 source('modules/IndvExpl1Initial.R')

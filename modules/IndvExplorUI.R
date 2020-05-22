@@ -5,7 +5,8 @@ IndvExplorUI <- function(id, label = "Individual Explorer") {
   useShinyjs()
   
   tagList(
-    
+    h1("Individual Explorer", align = "center"),
+    br(), br(), br(),
     h4(strong("Filter by Patient Number")),
     fluidRow(
       column(3, #id = ns("f_waiter"),
@@ -127,10 +128,6 @@ IndvExplorUI <- function(id, label = "Individual Explorer") {
                           choices = as.list(c("All", "Manually Filter")),
                           selected = "All"
                         )
-                        # materialSwitch(ns("visits_apply_filter")
-                        #             , label = strong(em(h5("Apply Filters to Events Data")))
-                        #             , status = "primary"
-                        #             , value = T)
                  ),
                  column(2,
                         br(),br(),

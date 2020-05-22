@@ -25,7 +25,11 @@ tableGeneratorUI <- function(id, label = "Create Chart") {
                                  HTML('<button data-toggle="collapse" data-target="#demo" style="width:100%">Filter Data</button>'),
                                  tags$div(id = 'demo',  class="collapse",
                                           IDEAFilter::shiny_data_filter_ui(ns("data_filter"))
+<<<<<<< HEAD
                                  )))))
+=======
+                                 ))))),
+>>>>>>> 1a1015e1191365f02595c497186064bbad59505f
              ),
              wellPanel(
                fluidRow(
@@ -72,6 +76,7 @@ tableGeneratorUI <- function(id, label = "Create Chart") {
                                textInput(ns("table_title"), "Table Title", "Table Title", width = '100%'))),
                fluidRow(column(width = 12,
                                
+<<<<<<< HEAD
                                fluidRow(
                                  column(6, downloadButton(ns("download_gt"), "Download Table")),
                                  column(6, offset = 0, radioButtons(ns("download_type"), "Choose Output Type:", choices = c(CSV = "CSV", HTML = "HTML", RTF = "RTF"), inline = TRUE))
@@ -98,15 +103,46 @@ tableGeneratorUI <- function(id, label = "Create Chart") {
                                # ))
                         
                )))
+=======
+                               div(class = "btn-group", style="width:100%",
+                                   id = "download_type",
+                                   tags$button(class = "btn btn-default dropdown-toggle", 
+                                               `data-toggle` = "dropdown",
+                                               `aria-haspopup` = "true",
+                                               `aria-expanded` = "false",
+                                               "Download table",
+                                               span(class = "caret")
+                                   ),
+                                   tags$ul(class = "dropdown-menu",
+                                           tags$li(customDownloadbutton(ns("downloadData"), "as CSV", class = "downloadButton"),
+                                                   #customDownloadbutton(ns("downloadXPT"), "XPT", class = "downloadButton"),
+                                                   #customDownloadbutton(ns("downloadSAS"), "SAS", class = "downloadButton"),
+                                                   customDownloadbutton(ns("downloadRTF"), "as RTF", class = "downloadButton")
+                                                   #customDownloadbutton(ns("downloadPDF"), "PDF", class = "downloadButton")
+                                           )
+                                   )
+                               ))
+                        
+               )
+             )
+>>>>>>> 1a1015e1191365f02595c497186064bbad59505f
       ),
       
       column(width = 7,
              wellPanel(
                #fluidRow(htmlOutput(ns("title"))),
+<<<<<<< HEAD
                fluidRow(gt_output(ns("all"))))
+=======
+               fluidRow(reactableOutput(ns("all"))))
+>>>>>>> 1a1015e1191365f02595c497186064bbad59505f
       )
     ),
     tags$script(src = "script.js"),
     tags$script(src = "recipe.js")
   )
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 1a1015e1191365f02595c497186064bbad59505f
