@@ -34,8 +34,8 @@ tableGeneratorUI <- function(id, label = "Create Chart") {
                                  tags$ul(
                                    id = "sortable_agg",
                                    tags$li(
-                                     class = "ui-state-default agg", id = "ttest",
-                                     div(tippy(div("T-TEST"), "T-Test"))
+                                     class = "ui-state-default agg", id = "anova",
+                                     div(tippy(div("ANOVA"), "ANOVA"))
                                    ),
                                    tags$li(
                                      class = "ui-state-default agg", id = "chg",

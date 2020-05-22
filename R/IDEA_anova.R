@@ -56,6 +56,20 @@ IDEA_anova.BDS <- function(column, week, group = NULL, data) {
 
     all_dat <- data %>%  filter(PARAMCD == column & AVISIT == week)
     ttest <- broom::tidy(aov(all_dat$AVAL ~ all_dat[[paste(group)]], data=all_dat))
+    
+    group_n <- length(unique(all_dat[[paste(group)]]))
+    
+    anova_df <- data.frame(matrix(NA, ncol=group_n, nrow=4))
+    anova_df[1,1] <- "p-value"
+    anova_df[2,1] <- "statistic"
+    anova_df[3,1] <- "meansq"
+    anova_df[4,1] <- "sumsq"
+    anova_df[1, group_n] <- ttest$p.value[1]
+    anova_df[2, group_n] <- ttest$statistic[1]
+    anova_df[3, group_n] <- ttest$meansq[1]
+    anova_df[4, group_n] <- ttest$sumsq[1]
+    anova_df
+    
   }
 
 }

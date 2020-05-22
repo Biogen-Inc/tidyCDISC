@@ -206,9 +206,16 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
   # rbind despite diffrent names, new names pattern replacement
   # then use those in gt
   block_lookup <- reactive({
-    block_data() %>%
+    
+    pretty_blocks <- tibble(
+      Pattern = c("MEAN", "FREQ", "CHG"),
+      Replacement = c("Descriptive Statistics", "Summary Counts", "Change from Baseline")
+    )
+    
+    test <- block_data() %>%
       map(set_names, c("Pattern", "Replacement")) %>%
-      bind_rows()
+      bind_rows() %>%
+      rbind(pretty_blocks)
   })
   
   ###############################
