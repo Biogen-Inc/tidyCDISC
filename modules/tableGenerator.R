@@ -167,7 +167,7 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
       cols_label(.list = imap(for_gt()[-c(1:2)], ~col_for_list(.y, .x))) %>%
       tab_header(
         title = md(input$table_title),
-        subtitle = "Filtering logic"
+        subtitle = md(filters_in_english(all_data()))
       ) %>%
       tab_style(
         style = cell_text(weight = "bold"),
