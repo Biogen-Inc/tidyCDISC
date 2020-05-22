@@ -20,9 +20,43 @@ IndvExpl4ChartPlotly <- function(input, output, session, datafile, loaded_adams,
     paste0("Patient Metrics by Visit") #'", usubjid, "' 
   })
   
-  # Need to refresh these every time a new subject is selected
-  observeEvent(usubjid(), {
+  # this won't work for some reason...
+  # ##########
+  # # Need to refresh these every time a new subject or dataset loaded is selected
+  # ###########
+  # observeEvent(list(usubjid(),loaded_adams()), {
+  #   
+  #   # If a plotable adam is loaded, include it in the dropdown choices
+  #   # & set default selection back to blank
+  #   updateSelectInput(
+  #     session = session,
+  #     inputId = "plot_adam",
+  #     choices = plotable_adams(), #  plot_adams ................. does this need to update/ depend on usubjid selected? Because RK was backing out datasets
+  #     #                             that didn't have any PARAMs for a patient
+  #     # selected =  " " # keep commented out if you want visit plot to update when ubsubjid changes
+  #   )
+  # })
+  # 
+  # observeEvent(usubjid(), {
+  #   
+  #   # update array of params
+  #   updateSelectInput (
+  #     session = session,
+  #     inputId = "plot_param",
+  #     # choices = c(" "),
+  #     # selected = " " # keep commented out if you want visit plot to update when ubsubjid changes
+  #   )
+  #   
+  #   # cat(paste("\n",input$overlay_events))
+  #   # cat(paste("\n",length(input$overlay_events) > 0))
+  #   
+  # })
   
+  ##########
+  # Need to refresh these every time a new subject is selected
+  ###########
+  observeEvent(usubjid(), {
+
     # If a plotable adam is loaded, include it in the dropdown choices
     # & set default selection back to blank
     updateSelectInput(
@@ -32,7 +66,7 @@ IndvExpl4ChartPlotly <- function(input, output, session, datafile, loaded_adams,
                                   #                             that didn't have any PARAMs for a patient
       # selected =  " " # keep commented out if you want visit plot to update when ubsubjid changes
     )
-    
+
     # update array of params
     updateSelectInput (
       session = session,
@@ -40,10 +74,10 @@ IndvExpl4ChartPlotly <- function(input, output, session, datafile, loaded_adams,
       # choices = c(" "),
       # selected = " " # keep commented out if you want visit plot to update when ubsubjid changes
     )
-    
+
     # cat(paste("\n",input$overlay_events))
     # cat(paste("\n",length(input$overlay_events) > 0))
-    
+
   })
 
   
@@ -398,7 +432,7 @@ output$v_applied_filters <- renderUI({
     np <- length(unique(lb_data$PARAMCD))
     output$dwnld_params_header <- renderText({
       s <- ifelse(np > 1,
-                  paste("Download Report with a Plot for all",np,"Params")
+                  paste("Download Report with Plots for all",np,"Params")
                   ,"Download Report with Plot Above")
     })
     
