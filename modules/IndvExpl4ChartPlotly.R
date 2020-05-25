@@ -438,7 +438,7 @@ output$v_applied_filters <- renderUI({
     
     output$batchDownReport <- downloadHandler(
       filename = function() {
-        paste(paste(usubjid(),input$plot_adam,"Param_by",input$visit_var, sep = '_'), sep = '.', switch(
+        paste(paste(input$plot_adam, "Params", usubjid(), sep = '_'), sep = '.', switch(
           input$format, PDF = 'pdf', HTML = 'html'
         ))
       },

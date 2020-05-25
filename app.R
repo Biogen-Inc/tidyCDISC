@@ -30,6 +30,7 @@ library(sjlabelled)
 library(data.table) 
 library(gt)
 library(shinyBS)
+library(knitr)
 
 ###############################################################
 # make sure this repo exists before writing to manifest file!
