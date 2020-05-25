@@ -509,7 +509,7 @@ output$v_applied_filters_grphDisp <- renderUI({
           output_file = file,
           params = list(
             bds_data_ = lb_data,
-            report_summary = paste("Data from", input$plot_adam, "with", np, "paramcds for patient", usubjid(),"."),
+            report_summary = paste0("Data from ", input$plot_adam, " with ", np, " paramcds for patient ", usubjid(),"."),
             user_notes = input$user_batch_notes,
             html_filters = v_applied_filters_HTML_on_graph()
           )
