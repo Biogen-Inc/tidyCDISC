@@ -42,34 +42,47 @@ IndvExplorUI <- function(id, label = "Individual Explorer") {
       div(id = ns("mytabs"), 
           tabsetPanel(type = "tabs", # id = "whichTab", # id doesn't seem to work
       
+      #####################
+      # 
       # Events Panel
+      #
+      ######################
+      
       tabPanel(div(style = "font-size: 14px;","Events"),
                br(),br(),br(),
-               wellPanel( ############################################# width? col 10
-                 h4(strong(textOutput(ns("events_header")))),
-                 h6(textOutput(ns("subjid_subtitle2"))),
                  
-                 fluidRow(
-                   column(9, checkboxGroupInput(
-                     inputId = ns("checkGroup"),
-                     label = "For additional patient events, load an AE, LB, CM, or MH",
-                     choices = c(" "),
-                     selected = NULL,
-                     inline = TRUE
-                   )), 
-                   column(3, materialSwitch(ns("events_apply_filter")
+                 
+               fluidRow(
+                 
+                 column(10, wellPanel(
+                   fluidRow(
+                     column(10, 
+                      h4(strong(textOutput(ns("events_header")))),
+                      h6(textOutput(ns("subjid_subtitle2"))),
+                      checkboxGroupInput(
+                       inputId = ns("checkGroup"),
+                       label = "For additional patient events, load an AE, LB, CM, or MH",
+                       choices = c(" "),
+                       selected = NULL,
+                       inline = TRUE
+                     )), 
+                     column(2, 
+                            br(), br(),
+                            materialSwitch(ns("events_apply_filter")
                                             , label = strong(em(h5("Apply Filters")))
                                             , status = "primary"
-                                            , value = T))
-                   # ,column(1)
-                 ) # end fluidRow
-               ) # end wellPanel
+                                            , value = T)
+                     )
+                   ) # end inner fluidRow
+                 )) # end column 10 & wellPanel
+                 ,column(2,HTML(""))
+               ) # end fluidRow
                ,
                fluidRow(column(10,timevisOutput(ns("eventsPlot")))),
                textOutput(ns("events_tv_caption1")),
                textOutput(ns("events_tv_caption2")),
                # div(style = "color: red;", TextOutput(ns("applied_filters"))),
-               div(style = "color: #0275d8; font-size: 11px;", htmlOutput(ns("applied_filters"))),
+               div(style = "color: #0275d8; font-size: 12px;", htmlOutput(ns("applied_filters"))),
                br(),
                fluidRow(
                  column(8, DT::dataTableOutput(ns("eventsTable")))
@@ -78,8 +91,12 @@ IndvExplorUI <- function(id, label = "Individual Explorer") {
                br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),br()
       ),
       
-      
+      #####################
+      #
       # Visits Panel
+      #
+      #####################
+      
       tabPanel(div(style = "font-size: 14px;","Visits"),
                br(),br(),br(),
                
@@ -137,7 +154,7 @@ IndvExplorUI <- function(id, label = "Individual Explorer") {
                    ),
                    column(2,
                           br(),br(),
-                          div(style = "color: #0275d8; font-size: 11px;", htmlOutput(ns("v_applied_filters"))))
+                          div(style = "color: #0275d8; font-size: 12px;", htmlOutput(ns("v_applied_filters"))))
                  ), # end fixedRow
                  
                  # Add a row that contains another "Apply Filters" toggle
@@ -157,6 +174,7 @@ IndvExplorUI <- function(id, label = "Individual Explorer") {
                ), # end of well Panel
                
                fluidRow(column(11,plotlyOutput(ns("PlotChart"), width = "100%", height = "600px"))),
+               div(style = "color: #0275d8; font-size: 12px;", htmlOutput(ns("v_applied_filters_grphDisp"))),
                br(),
                fluidRow(
                  column(8, DT::dataTableOutput(ns("DataTable"))),

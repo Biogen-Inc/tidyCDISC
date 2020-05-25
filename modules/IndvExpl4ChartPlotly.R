@@ -300,6 +300,51 @@ output$v_applied_filters <- renderUI({
   filters_in_english(filtered_dat())
 
 })
+
+
+v_applied_filters_HTML_on_graph <- reactive({
+  
+  req(usubjid() != "" & input$plot_adam != " ")
+
+  cat(paste("\nlength(input$overlay_events):",length(input$overlay_events)))
+  
+  HTML( # case_when wouldn't work since olay_events does exist yet
+    if(length(input$overlay_events) == 0 | 
+       (length(input$overlay_events) > 0 & input$event_type_filter == "All")) {
+      ""
+    } else if(length(input$overlay_events) > 0 & input$event_type_filter == "Pre-Filters") {
+      as.character(filters_in_english(filtered_dat(), filter_header = "Events Lines Filtered to Include:"))
+    
+    } else if (length(input$overlay_events) > 0 & input$event_type_filter == "Manually Filter") {
+
+        paste0("<b>Event Lines Filtered to Include:</b><br/>&nbsp;&nbsp;&nbsp;&nbsp;"
+               ,paste(
+                 olay_events() %>%
+                   filter(filter_code %in% input$overlay_event_vals) %>%
+                   distinct(EVENTTYP, filter_code) %>%
+                   subset(filter_code != '') %>%
+                   group_by(EVENTTYP) %>%
+                   summarize(p = paste(filter_code, collapse = ", ")) %>%
+                   ungroup() %>%
+                   mutate(f = paste(EVENTTYP, p, sep = ": ")) %>%
+                   distinct%>%
+                   pull(f)
+                 , collapse = "<br/>&nbsp;&nbsp;&nbsp;&nbsp;"))
+    }
+  )
+})
+
+output$v_applied_filters_grphDisp <- renderUI({
+  req(
+    usubjid() != ""
+    & length(input$overlay_events) > 0
+    & nrow(olay_events()) > 0
+  )
+  
+  v_applied_filters_HTML_on_graph()
+  
+})
+
   
   
   ###
@@ -450,6 +495,7 @@ output$v_applied_filters <- renderUI({
         tempReport <- file.path(tempdir(), "batchDownload.Rmd")
         file.copy("batchDownload.Rmd", tempReport, overwrite = TRUE)
         
+        
         # Knit the document: passing in the `params` list is optional by default but will
         # make it more difficult to debug, or if in new envir = eval it in a
         # child of the global environment (this isolates the code in the document
@@ -464,7 +510,8 @@ output$v_applied_filters <- renderUI({
           params = list(
             bds_data_ = lb_data,
             report_summary = paste("Data from", input$plot_adam, "with", np, "paramcds for patient", usubjid(),"."),
-            user_notes = input$user_batch_notes
+            user_notes = input$user_batch_notes,
+            html_filters = v_applied_filters_HTML_on_graph()
           )
           # ,envir = new.env(parent = globalenv()) # comment out to use parent env and inherit inputs
         )
