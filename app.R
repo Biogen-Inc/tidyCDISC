@@ -30,6 +30,7 @@ library(sjlabelled)
 library(data.table) 
 library(gt)
 library(shinyBS)
+library(knitr)
 
 ###############################################################
 # make sure this repo exists before writing to manifest file!
@@ -53,12 +54,12 @@ ui <-
       tags$script(HTML(htmljs)),
       tags$link(rel = "//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"),
       tags$head(tags$link(rel="shortcut icon", href="IDEA_FAVICON.ico")),
-      tags$script(src = "https://code.jquery.com/ui/1.12.1/jquery-ui.js"),
-      tags$link(rel = "stylesheet", type = "text/css", href = "index.css")
+      tags$script(src = "https://code.jquery.com/ui/1.12.1/jquery-ui.js")
     ),
     useShinyjs(),
     use_waiter(), # include dependencies
     extendShinyjs(text = jscode),
+    tags$link(rel = "stylesheet", type = "text/css", href = "index.css"),
     navbarPage(theme = "yeti.css",
                
                title = div(id="logo-id","IDEA", img(src="IDEA_ICON.png", style="float:left; padding-right:3px; height:25px; width:30px")), 

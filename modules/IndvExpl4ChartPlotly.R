@@ -20,9 +20,43 @@ IndvExpl4ChartPlotly <- function(input, output, session, datafile, loaded_adams,
     paste0("Patient Metrics by Visit") #'", usubjid, "' 
   })
   
-  # Need to refresh these every time a new subject is selected
-  observeEvent(usubjid(), {
+  # this won't work for some reason...
+  # ##########
+  # # Need to refresh these every time a new subject or dataset loaded is selected
+  # ###########
+  # observeEvent(list(usubjid(),loaded_adams()), {
+  #   
+  #   # If a plotable adam is loaded, include it in the dropdown choices
+  #   # & set default selection back to blank
+  #   updateSelectInput(
+  #     session = session,
+  #     inputId = "plot_adam",
+  #     choices = plotable_adams(), #  plot_adams ................. does this need to update/ depend on usubjid selected? Because RK was backing out datasets
+  #     #                             that didn't have any PARAMs for a patient
+  #     # selected =  " " # keep commented out if you want visit plot to update when ubsubjid changes
+  #   )
+  # })
+  # 
+  # observeEvent(usubjid(), {
+  #   
+  #   # update array of params
+  #   updateSelectInput (
+  #     session = session,
+  #     inputId = "plot_param",
+  #     # choices = c(" "),
+  #     # selected = " " # keep commented out if you want visit plot to update when ubsubjid changes
+  #   )
+  #   
+  #   # cat(paste("\n",input$overlay_events))
+  #   # cat(paste("\n",length(input$overlay_events) > 0))
+  #   
+  # })
   
+  ##########
+  # Need to refresh these every time a new subject is selected
+  ###########
+  observeEvent(usubjid(), {
+
     # If a plotable adam is loaded, include it in the dropdown choices
     # & set default selection back to blank
     updateSelectInput(
@@ -32,7 +66,7 @@ IndvExpl4ChartPlotly <- function(input, output, session, datafile, loaded_adams,
                                   #                             that didn't have any PARAMs for a patient
       # selected =  " " # keep commented out if you want visit plot to update when ubsubjid changes
     )
-    
+
     # update array of params
     updateSelectInput (
       session = session,
@@ -40,10 +74,10 @@ IndvExpl4ChartPlotly <- function(input, output, session, datafile, loaded_adams,
       # choices = c(" "),
       # selected = " " # keep commented out if you want visit plot to update when ubsubjid changes
     )
-    
+
     # cat(paste("\n",input$overlay_events))
     # cat(paste("\n",length(input$overlay_events) > 0))
-    
+
   })
 
   
@@ -152,7 +186,7 @@ IndvExpl4ChartPlotly <- function(input, output, session, datafile, loaded_adams,
       #        ,"by uploading a ADLB")
       # cat(paste("\n",olay_note))
       output$display_dy <- renderUI({
-        HTML(paste0("<br/>Note: You can overlay events<br/>when an ADLB is loaded on data<br/>tab and Visit Variable displayed<br/>ends in 'DY' like ", vv_dy_name()))
+        HTML(paste0("<br/>Note: You can overlay events<br/>when an ADLB is loaded on data<br/>tab and Visit Variable displayed<br/>ends in 'DY' like ", paste(vv_dy_name(),collapse = ", ")))
         # HTML(paste0("<br/><br/>Note: You can overlay events<br/>",olay_note))
       })
       shinyjs::hide(id = "overlay_events")
@@ -196,7 +230,7 @@ IndvExpl4ChartPlotly <- function(input, output, session, datafile, loaded_adams,
     
     
     # create data to plot vlines using events dataset
-    if(length(input$overlay_events) > 0 & input$visit_var == vv_dy_name()){ #& "ADLB" %in% loaded_adams() # overlay checkbox won't appear unless this is true
+    if(length(input$overlay_events) > 0 & input$visit_var %in% vv_dy_name()){ #& "ADLB" %in% loaded_adams() # overlay checkbox won't appear unless this is true
       
       v_events_apply_filter <- reactive({
         ifelse( input$event_type_filter == "Pre-Filters", TRUE, FALSE)
@@ -266,6 +300,51 @@ output$v_applied_filters <- renderUI({
   filters_in_english(filtered_dat())
 
 })
+
+
+v_applied_filters_HTML_on_graph <- reactive({
+  
+  req(usubjid() != "" & input$plot_adam != " ")
+
+  cat(paste("\nlength(input$overlay_events):",length(input$overlay_events)))
+  
+  HTML( # case_when wouldn't work since olay_events does exist yet
+    if(length(input$overlay_events) == 0 | 
+       (length(input$overlay_events) > 0 & input$event_type_filter == "All")) {
+      ""
+    } else if(length(input$overlay_events) > 0 & input$event_type_filter == "Pre-Filters") {
+      as.character(filters_in_english(filtered_dat(), filter_header = "Events Lines Filtered to Include:"))
+    
+    } else if (length(input$overlay_events) > 0 & input$event_type_filter == "Manually Filter") {
+
+        paste0("<b>Event Lines Filtered to Include:</b><br/>&nbsp;&nbsp;&nbsp;&nbsp;"
+               ,paste(
+                 olay_events() %>%
+                   filter(filter_code %in% input$overlay_event_vals) %>%
+                   distinct(EVENTTYP, filter_code) %>%
+                   subset(filter_code != '') %>%
+                   group_by(EVENTTYP) %>%
+                   summarize(p = paste(filter_code, collapse = ", ")) %>%
+                   ungroup() %>%
+                   mutate(f = paste(EVENTTYP, p, sep = ": ")) %>%
+                   distinct%>%
+                   pull(f)
+                 , collapse = "<br/>&nbsp;&nbsp;&nbsp;&nbsp;"))
+    }
+  )
+})
+
+output$v_applied_filters_grphDisp <- renderUI({
+  req(
+    usubjid() != ""
+    & length(input$overlay_events) > 0
+    & nrow(olay_events()) > 0
+  )
+  
+  v_applied_filters_HTML_on_graph()
+  
+})
+
   
   
   ###
@@ -311,7 +390,7 @@ output$v_applied_filters <- renderUI({
   vline_dat <- eventReactive(list(length(input$overlay_events) > 0, input$event_type_filter, input$overlay_event_vals) , {
     
     # create data to plot vlines using events dataset
-    if(length(input$overlay_events) > 0 & input$visit_var == vv_dy_name()){ #& "ADLB" %in% loaded_adams() # overlay checkbox won't appear unless this is true
+    if(length(input$overlay_events) > 0 & input$visit_var %in% vv_dy_name()){ #& "ADLB" %in% loaded_adams() # overlay checkbox won't appear unless this is true
       
        INPUT_visit_var <- sym(input$visit_var)
        
@@ -339,6 +418,9 @@ output$v_applied_filters <- renderUI({
        }
     }
   })
+  
+  
+  
     
   ############ 
   # Plotting!
@@ -368,7 +450,10 @@ output$v_applied_filters <- renderUI({
       select(all_of(bds_cols)) %>%
       distinct()
     
+    
+    
     INPUT_visit_var <- sym(input$visit_var)
+    
     
     
     
@@ -376,7 +461,7 @@ output$v_applied_filters <- renderUI({
       req(input$plot_param != " ")
       
       fnIndvExplVisits(
-        data = lb_data,
+        bds_data = lb_data,
         usubjid = usubjid(),
         input_plot_hor = input$plot_hor,
         input_visit_var = input$visit_var,
@@ -388,8 +473,51 @@ output$v_applied_filters <- renderUI({
       )$plotly
        
      })
-       
     
+    np <- length(unique(lb_data$PARAMCD))
+    output$dwnld_params_header <- renderText({
+      s <- ifelse(np > 1,
+                  paste("Download Report with Plots for all",np,"Params")
+                  ,"Download Report with Plot Above")
+    })
+    
+    output$batchDownReport <- downloadHandler(
+      filename = function() {
+        paste(paste(input$plot_adam, "Params", usubjid(), sep = '_'), sep = '.', switch(
+          input$format, PDF = 'pdf', HTML = 'html'
+        ))
+      },
+      
+      content = function(file) {
+        # Copy the report file to a temporary directory before processing it, in
+        # case we don't have write permissions to the current working dir (which
+        # can happen when deployed).
+        tempReport <- file.path(tempdir(), "batchDownload.Rmd")
+        file.copy("batchDownload.Rmd", tempReport, overwrite = TRUE)
+        
+        
+        # Knit the document: passing in the `params` list is optional by default but will
+        # make it more difficult to debug, or if in new envir = eval it in a
+        # child of the global environment (this isolates the code in the document
+        # from the code in this app). Also attached progress bar onto progress
+        progress <- Progress$new(max = np + 3)
+        progress$set(message = "Rendering Report...")
+        on.exit(progress$close())
+        # id <- showNotification("Rendering Report...", type = "message", duration = NULL, closeButton = FALSE)
+        rmarkdown::render(
+          input = "batchDownload.Rmd",
+          output_file = file,
+          params = list(
+            bds_data_ = lb_data,
+            report_summary = paste0("Data from ", input$plot_adam, " with ", np, " paramcds for patient ", usubjid(),"."),
+            user_notes = input$user_batch_notes,
+            html_filters = v_applied_filters_HTML_on_graph()
+          )
+          # ,envir = new.env(parent = globalenv()) # comment out to use parent env and inherit inputs
+        )
+        # on.exit(removeNotification(id), add = TRUE)
+      }
+    )
     
     
        
