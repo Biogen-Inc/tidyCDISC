@@ -52,6 +52,8 @@ source('modules/PopuExpl2Spag.R')
 source('modules/PopuExpl3Boxp.R')
 source('modules/PopuExpl4Heat.R')
 source('modules/PopuExpl5Hist.R')
+source('modules/PopuExpl6Means.R')
+source('modules/PopuExpl7Hbar.R')
 
 # individual explorer
 source('R/fn_indv_expl_visits.R')
