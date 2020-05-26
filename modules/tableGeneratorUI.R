@@ -1,11 +1,3 @@
-customDownloadbutton <- function (outputId, label = "Download", class = NULL, ...) 
-{
-  aTag <- tags$a(id = outputId, class = paste("btn btn-default shiny-download-link", 
-                                              class), href = "", target = "_blank", download = NA, 
-                 NULL, label, ...)
-}
-
-
 tableGeneratorUI <- function(id, label = "Create Chart") {
   
   ns <- NS(id)
@@ -15,7 +7,7 @@ tableGeneratorUI <- function(id, label = "Create Chart") {
     br(), br(), br(),
     fluidRow(
       style = "padding: 20px",
-      column(width = 5,
+      column(width = 6,
              # Wrangle data.
              wellPanel(
                fluidRow(column(width = 12,
@@ -26,7 +18,6 @@ tableGeneratorUI <- function(id, label = "Create Chart") {
                                  tags$div(id = 'demo',  class="collapse",
                                           IDEAFilter::shiny_data_filter_ui(ns("data_filter"))
                                  ))))),
-             ),
              wellPanel(
                fluidRow(
                  column(12, 
@@ -34,8 +25,11 @@ tableGeneratorUI <- function(id, label = "Create Chart") {
                         recipe,
                         br(),
                         uiOutput("all_rows"),
-                        dropArea(col = 3, styles = "max-height:300px;overflow-y:scroll;padding-right:0.1px", "Variables", "d_blocks", "droppable_blocks", "ui-sortable-helper sortTxtbox droppable_blocks droppable_blocks"),
-                        dropArea(col = 5, styles = "max-height:300px;overflow-y:scroll;padding-left:0.1px", "Stats", "d_agg", "droppable_agg", "ui-sortable-helper sortTxtbox droppable_agg"),
+                        
+                        div(class = "col-sm-9", style = "max-height:300px;overflow-y:scroll;",
+                        dropArea(col = 5, styles = "padding-right:0.1px", "Variables", "d_blocks", "droppable_blocks", "ui-sortable-helper sortTxtbox droppable_blocks droppable_blocks"),
+                        dropArea(col = 7, styles = "padding-left:0.1px", "Stats", "d_agg", "droppable_agg", "ui-sortable-helper sortTxtbox droppable_agg")
+                        ),
                         
                         fluidRow(
                           column(1, offset = 0, style='padding:0px;',
@@ -43,8 +37,8 @@ tableGeneratorUI <- function(id, label = "Create Chart") {
                                  tags$ul(
                                    id = "sortable_agg",
                                    tags$li(
-                                     class = "ui-state-default agg", id = "ttest",
-                                     div(tippy(div("T-TEST"), "T-Test"))
+                                     class = "ui-state-default agg", id = "anova",
+                                     div(tippy(div("ANOVA"), "ANOVA"))
                                    ),
                                    tags$li(
                                      class = "ui-state-default agg", id = "chg",
@@ -64,41 +58,28 @@ tableGeneratorUI <- function(id, label = "Create Chart") {
                         )
                  )
                )
-               
              ),
              # Download data.
              wellPanel(
                fluidRow(column(width = 12,
                                textInput(ns("table_title"), "Table Title", "Table Title", width = '100%'))),
                fluidRow(column(width = 12,
-                               
-                               div(class = "btn-group", style="width:100%",
-                                   id = "download_type",
-                                   tags$button(class = "btn btn-default dropdown-toggle", 
-                                               `data-toggle` = "dropdown",
-                                               `aria-haspopup` = "true",
-                                               `aria-expanded` = "false",
-                                               "Download table",
-                                               span(class = "caret")
-                                   ),
-                                   tags$ul(class = "dropdown-menu",
-                                           tags$li(customDownloadbutton(ns("downloadData"), "as CSV", class = "downloadButton"),
-                                                   #customDownloadbutton(ns("downloadXPT"), "XPT", class = "downloadButton"),
-                                                   #customDownloadbutton(ns("downloadSAS"), "SAS", class = "downloadButton"),
-                                                   customDownloadbutton(ns("downloadRTF"), "as RTF", class = "downloadButton")
-                                                   #customDownloadbutton(ns("downloadPDF"), "PDF", class = "downloadButton")
-                                           )
-                                   )
-                               ))
-                        
+                               fluidRow(
+                                 column(6, downloadButton(ns("download_gt"), "Download Table")),
+                                 column(6, offset = 0,
+                                                     radioButtons(ns("download_type"), "Download Type", 
+                                                                  choices = c("CSV" = ".csv",
+                                                                              "HTML" = ".html"),
+                                                                  inline = TRUE))
+                                 
+                               )
                )
-             )
-      ),
+               )))),
       
-      column(width = 7,
+      column(width = 6,
              wellPanel(
                #fluidRow(htmlOutput(ns("title"))),
-               fluidRow(reactableOutput(ns("all"))))
+               fluidRow(gt_output(ns("all"))))
       )
     ),
     tags$script(src = "script.js"),

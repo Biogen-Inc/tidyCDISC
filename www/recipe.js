@@ -1,10 +1,10 @@
 /* Function to create list of row blocks */
-function recipeRowBlock(text) {
-  return (`
-  <div><div><div class='form-group drop_area'>
-  <label class='control-label' for='demography_recipe'>${text}</label>
-  <button class='delete'>X</button>
-  </div></div></div>`)
+function recipeRowBlock(newid) {
+  return `
+  <div><div><div class="form-group drop_area">
+  <label class="control-label ADSL" for="${newid}">${newid}</label>
+  <button class="delete">X</button>
+  </div></div></div>`
 }
 
 function combineRows(arr) {
@@ -16,8 +16,8 @@ function combineRows(arr) {
   return(t)
 }
 
-demography_rows = ["AGE", "AGEGRN", "SEX", "RACE", "HEIGHTBL", "WEIGHTBL", "BMIBL", "COUNTRY"]
-demography_agg = ["MEAN", "FREQ", "FREQ", "FREQ", "MEAN", "MEAN", "MEAN", "FREQ"]
+demography_rows = ["AGE", "SEX", "RACE", "HEIGHTBL", "WEIGHTBL", "BMIBL", "COUNTRY"]
+demography_agg = ["MEAN", "FREQ", "FREQ", "MEAN", "MEAN", "MEAN", "FREQ"]
 
 /* Create custom block recipes to automatically populate when selected */
   $("#RECIPE").bind("change", function(event, ui) {
@@ -35,6 +35,5 @@ demography_agg = ["MEAN", "FREQ", "FREQ", "FREQ", "MEAN", "MEAN", "MEAN", "FREQ"
   
 $('select#RECIPE').change(function() {
   var selectedDropdown = $(this).children('option:selected').val()
-  console.log(selectedDropdown)
   Shiny.setInputValue('table_generator-recipe', selectedDropdown)
 })

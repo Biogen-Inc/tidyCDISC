@@ -134,6 +134,25 @@ text-align: center;
 font-size: 13px;
 }
 
+/* Button to upload new dataset. */
+#add_files { 
+float: right; 
+vertical-align: right; 
+margin-top: 6px;
+font-size: 13px;
+font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+#download-type {
+  background-color: red;
+}
+
+#download-type .btn-group>.btn:first-child {
+  background-color: blue;
+}
+
 .dropdown-select {
-  width: 5.5em;
+  width: 4em;
+  padding-right:100px;
+  margin-right:100px;
 }

@@ -12,7 +12,7 @@ dataUpload <- function(input, output, session, stringsAsFactors) {
   
   # modify reactive values when data is uploaded
   observeEvent(input$file, {
-  
+    
     data_list <- list()
 
     ## data list
@@ -59,7 +59,7 @@ dataUpload <- function(input, output, session, stringsAsFactors) {
     for (i in 1:length(dd$data)){
       choices[[i]] <- names(dd$data)[i]
     }
-
+    
     return(choices)
   })
   
@@ -75,7 +75,7 @@ dataUpload <- function(input, output, session, stringsAsFactors) {
     
     output$radio_test <- renderUI(
       radioButtons(session$ns("select_file"), label = "Inspect Uploaded Data",
-      choiceNames = names, choiceValues = vals, selected = prev_sel))
+                   choiceNames = names, choiceValues = vals, selected = prev_sel))
     
   })
   
@@ -87,7 +87,7 @@ dataUpload <- function(input, output, session, stringsAsFactors) {
   
   studies <- reactive({ 
     unique(unlist(lapply(dd$data, `[[`, "STUDYID"))) 
-    })
+  })
   
   output$multi_studies <- renderText({
     req(length(studies()) > 1)

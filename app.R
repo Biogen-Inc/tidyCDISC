@@ -31,6 +31,8 @@ library(data.table)
 library(gt)
 library(shinyBS)
 library(knitr)
+library(rlang)
+library(stringi)
 
 ###############################################################
 # make sure this repo exists before writing to manifest file!
@@ -92,7 +94,6 @@ ui <-
     tags$script(HTML("var header = $('.navbar > .container-fluid'); header.append('<div style=\"float:right\"><ahref=\"URL\"><img src=\"logo.svg\" alt=\"alt\" style=\"float:right;width:66px;height:41px;\"> </a>`</div>');")),
     tags$script(src = "script.js"),
     tags$script(src = "recipe.js"),
-    tags$script(src = "sync_divs.js"),
     tags$style(HTML("
  
                     #browserModal .modal-dialog,
