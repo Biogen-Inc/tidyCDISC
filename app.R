@@ -91,6 +91,7 @@ ui <-
     tags$script(HTML("var header = $('.navbar > .container-fluid'); header.append('<div style=\"float:right\"><ahref=\"URL\"><img src=\"logo.svg\" alt=\"alt\" style=\"float:right;width:66px;height:41px;\"> </a>`</div>');")),
     tags$script(src = "script.js"),
     tags$script(src = "recipe.js"),
+    tags$script(src = "sync_divs.js"),
     tags$style(HTML("
  
                     #browserModal .modal-dialog,
