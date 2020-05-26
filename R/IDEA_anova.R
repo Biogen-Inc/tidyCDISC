@@ -55,6 +55,9 @@ IDEA_anova.BDS <- function(column, week, group = NULL, data) {
     group <- sym(group)
 
     all_dat <- data %>%  filter(PARAMCD == column & AVISIT == week)
+  
+    if (length(unique(all_dat[[paste(group)]])) == 1) stop(glue::glue("Only one {group} in data selected, choose another week for ANOVA"))
+    
     ttest <- broom::tidy(aov(all_dat$AVAL ~ all_dat[[paste(group)]], data=all_dat))
     
     group_n <- length(unique(all_dat[[paste(group)]])) + 1
