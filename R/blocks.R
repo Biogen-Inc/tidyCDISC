@@ -51,9 +51,8 @@ custom_class <- function(x, df) {
   class(x) <- 
     case_when(
       df == "ADSL" ~ c(class(x), "ADSL"),
-      df == "ADAE" ~ c(class(x), "OCCDS"), # also admh, conmed
-      df == "ADVS" ~ c(class(x), "BDS"), # contains paramcd
-      TRUE ~ c(class(x), "custom")
+      df == "ADAE" | df == "ADCM" | df == "ADMH" ~ c(class(x), "OCCDS"), # also admh, conmed
+      TRUE ~ c(class(x), "BDS") # contains paramcd
     )
   return(x)
 }
