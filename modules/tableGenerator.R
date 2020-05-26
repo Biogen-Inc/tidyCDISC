@@ -88,6 +88,16 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
   
   AVISITN <- reactive({ 
     req(BDS())
+    
+    # t2 <-tibble(
+    #   AVISIT = BDS()$AVISIT,
+    #   AVISITN = BDS()$AVISITN
+    # ) %>%
+    #   mutate(AVISIT = as.factor(AVISIT)) %>%
+    #   mutate(AVISIT = fct_reorder(AVISIT, AVISITN)) %>%
+    #   pull(AVISIT) %>%
+    #   unique()
+    
     t <- sort(unique(unlist(lapply(BDS(), '[[', "AVISIT"))))
     ifelse((length(t) == 0), t <- " ", t <- t)
     t
@@ -158,6 +168,15 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
     nm = md(glue::glue("**{row_names_n()}** <br> N={total()}"))
   }
   
+  subtitle <- reactive({
+    if (any(regexpr("%>%", capture.output(attr(all_data(), "code"))) > 0)) {
+      filters_in_english(all_data()) 
+      } else {
+        " "
+      }
+  })
+
+  
   gt_table <- reactive({
     for_gt() %>%
       gt(rowname_col = "Variable", 
@@ -166,7 +185,7 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
       cols_label(.list = imap(for_gt()[-c(1:2)], ~col_for_list(.y, .x))) %>%
       tab_header(
         title = md(input$table_title),
-        subtitle = md(filters_in_english(all_data()))
+        subtitle = md(subtitle())
       ) %>%
       tab_style(
         style = cell_text(weight = "bold"),

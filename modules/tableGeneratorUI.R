@@ -7,7 +7,7 @@ tableGeneratorUI <- function(id, label = "Create Chart") {
     br(), br(), br(),
     fluidRow(
       style = "padding: 20px",
-      column(width = 5,
+      column(width = 6,
              # Wrangle data.
              wellPanel(
                fluidRow(column(width = 12,
@@ -76,7 +76,7 @@ tableGeneratorUI <- function(id, label = "Create Chart") {
                )
                )))),
       
-      column(width = 7,
+      column(width = 6,
              wellPanel(
                #fluidRow(htmlOutput(ns("title"))),
                fluidRow(gt_output(ns("all"))))
