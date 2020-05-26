@@ -30,6 +30,7 @@ library(sjlabelled)
 library(data.table) 
 library(gt)
 library(shinyBS)
+library(knitr)
 library(rlang)
 library(stringi)
 
@@ -62,6 +63,7 @@ ui <-
     extendShinyjs(text = jscode),
     tags$link(rel = "stylesheet", type = "text/css", href = "index.css"),
     navbarPage(theme = "yeti.css",
+               
                title = div(id="logo-id","IDEA", img(src="IDEA_ICON.png", style="float:left; padding-right:3px; height:25px; width:30px")), 
                id = "navbarID",
                windowTitle = "IDEA",
@@ -93,7 +95,7 @@ ui <-
     tags$script(src = "script.js"),
     tags$script(src = "recipe.js"),
     tags$style(HTML("
-                    
+ 
                     #browserModal .modal-dialog,
                     #browserModal .modal-body,
                     #browserModal .modal-footer {
@@ -106,14 +108,14 @@ ui <-
                     ")),
     inlineCSS(css),
     tags$head(tags$script(src = "analytics.js"))
-    )
+  )
 
 server <- function(input, output, session) {
   
   observeEvent(input$myBrowser , {
     if(str_detect(input$myBrowser, "IE")){
       showModal(tags$div(id="browserModal", modalDialog(footer = NULL,
-                                                        glue("This web app doesn't function with Internet Explorer. Please use a modern browser such as Google Chrome.")
+        glue("This web app doesn't function with Internet Explorer. Please use a modern browser such as Google Chrome.")
       )))
     }    
   })

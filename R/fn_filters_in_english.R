@@ -3,7 +3,7 @@
 # Function accepts an filtered data object from IDEAFilter (shiny_data_filter module) and translates the information
 # to be more readable to the lay person (a non- R programmer) but still assumes some knowledge of filtering expressions
 # IE, the app is for an audience who is familar with programming (SAS programmers).
-filters_in_english <- function(filtered_data){
+filters_in_english <- function(filtered_data, filter_header = "Filters Applied:"){
   
   # grab the output
   orig_code <- paste(capture.output(attr(filtered_data, "code")),collapse = "")
@@ -42,6 +42,6 @@ filters_in_english <- function(filtered_data){
                                                  ))))))))
   
   # format as html in a specific format, with indentation
-  return(HTML(paste0("<b>Filters Applied:</b><br/>&nbsp;&nbsp;&nbsp;&nbsp;"
+  return(HTML(paste0("<b>",filter_header,"</b><br/>&nbsp;&nbsp;&nbsp;&nbsp;"
                      ,paste(disp_msg, collapse = "<br/>&nbsp;&nbsp;&nbsp;&nbsp;"))))
 }
