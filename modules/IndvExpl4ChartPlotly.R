@@ -186,7 +186,7 @@ IndvExpl4ChartPlotly <- function(input, output, session, datafile, loaded_adams,
       #        ,"by uploading a ADLB")
       # cat(paste("\n",olay_note))
       output$display_dy <- renderUI({
-        HTML(paste0("<br/>Note: You can overlay events<br/>when an ADLB is loaded on data<br/>tab and Visit Variable displayed<br/>ends in 'DY' like ", vv_dy_name()))
+        HTML(paste0("<br/>Note: You can overlay events<br/>when an ADLB is loaded on data<br/>tab and Visit Variable displayed<br/>ends in 'DY' like ", paste(vv_dy_name(),collapse = ", ")))
         # HTML(paste0("<br/><br/>Note: You can overlay events<br/>",olay_note))
       })
       shinyjs::hide(id = "overlay_events")
@@ -230,7 +230,7 @@ IndvExpl4ChartPlotly <- function(input, output, session, datafile, loaded_adams,
     
     
     # create data to plot vlines using events dataset
-    if(length(input$overlay_events) > 0 & input$visit_var == vv_dy_name()){ #& "ADLB" %in% loaded_adams() # overlay checkbox won't appear unless this is true
+    if(length(input$overlay_events) > 0 & input$visit_var %in% vv_dy_name()){ #& "ADLB" %in% loaded_adams() # overlay checkbox won't appear unless this is true
       
       v_events_apply_filter <- reactive({
         ifelse( input$event_type_filter == "Pre-Filters", TRUE, FALSE)
@@ -390,7 +390,7 @@ output$v_applied_filters_grphDisp <- renderUI({
   vline_dat <- eventReactive(list(length(input$overlay_events) > 0, input$event_type_filter, input$overlay_event_vals) , {
     
     # create data to plot vlines using events dataset
-    if(length(input$overlay_events) > 0 & input$visit_var == vv_dy_name()){ #& "ADLB" %in% loaded_adams() # overlay checkbox won't appear unless this is true
+    if(length(input$overlay_events) > 0 & input$visit_var %in% vv_dy_name()){ #& "ADLB" %in% loaded_adams() # overlay checkbox won't appear unless this is true
       
        INPUT_visit_var <- sym(input$visit_var)
        

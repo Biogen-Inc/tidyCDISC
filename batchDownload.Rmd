@@ -15,6 +15,20 @@ params:
 ---
 
 ```{r setup, include=FALSE} 
+# always_allow_html: true killed my table of contents, maybe it was in the wrong spot.
+# should try - 
+# title: "Batch Download"
+# always_allow_html: true
+# output:
+#   md_document:
+#     toc: blah blah blah
+
+# Could also play around with
+# output:
+#   md_document:
+#   allow_html_dependencies: true
+    
+
 knitr::opts_chunk$set(echo = FALSE, warning=FALSE, message=FALSE, progress = TRUE)
 
 progress$inc(1) # first increment

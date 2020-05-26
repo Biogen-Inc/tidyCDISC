@@ -179,6 +179,7 @@ IndvExplorUI <- function(id, label = "Individual Explorer") {
                fluidRow(
                  column(8, DT::dataTableOutput(ns("DataTable"))),
                  column(3,
+                  # batch download UI
                    wellPanel(
                      h5(strong(textOutput(ns("dwnld_params_header")))),
                      br(),

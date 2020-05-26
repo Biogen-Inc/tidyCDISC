@@ -52,7 +52,7 @@ fnIndvExplVisits <- function(
     
     
     # if a lengend is needed, let's just define the line colors and types in one place
-    if(length(input_plot_hor) > 0 | length(input_overlay_events) > 0 & input_visit_var == vv_dy_name){
+    if(length(input_plot_hor) > 0 | length(input_overlay_events) > 0 & input_visit_var %in% vv_dy_name){
       
       names2 <- c("Milestones","Adverse Events","Concomitant Meds","Baseline","Screening") # ac: labels
       vline_eventtype_cols <- c(my_cols[1:3],my_gg_color_hue(2))
@@ -63,7 +63,7 @@ fnIndvExplVisits <- function(
       # dashes <- c("solid","dotted","dashed","solid","solid") 
       # v_event_lines <- setNames(dashes,names2)
       
-      # leg_name <- ifelse(length(input_plot_hor) > 0 & length(input_overlay_events) > 0 & input_visit_var == vv_dy_name,NULL,"Event")
+      # leg_name <- ifelse(length(input_plot_hor) > 0 & length(input_overlay_events) > 0 & input_visit_var %in% vv_dy_name,NULL,"Event")
       
       lb_plot <- lb_plot +
         scale_color_manual(values= v_event_cols) #+ # , name = "Event"
@@ -74,7 +74,7 @@ fnIndvExplVisits <- function(
     
     
     # plot vlines using events dataset
-    if(length(input_overlay_events) > 0 & input_visit_var == vv_dy_name){ #& "ADLB" %in% loaded_adams() # overlay checkbox won't appear unless this is true
+    if(length(input_overlay_events) > 0 & input_visit_var %in% vv_dy_name){ #& "ADLB" %in% loaded_adams() # overlay checkbox won't appear unless this is true
       if (!is.null(vline_dat)){
         if(nrow(vline_dat) > 0){
           
