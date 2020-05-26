@@ -34,8 +34,8 @@ tableGeneratorUI <- function(id, label = "Create Chart") {
                         recipe,
                         br(),
                         uiOutput("all_rows"),
-                        dropArea(col = 3, "Variables", "d_blocks", "droppable_blocks", "ui-sortable-helper sortTxtbox droppable_blocks droppable_blocks", "padding-right:0.1px"),
-                        dropArea(col = 5, "Stats", "d_agg", "droppable_agg", "ui-sortable-helper sortTxtbox droppable_agg", "padding-left:0.1px"),
+                        dropArea(col = 3, styles = "max-height:300px;overflow-y:scroll;padding-right:0.1px", "Variables", "d_blocks", "droppable_blocks", "ui-sortable-helper sortTxtbox droppable_blocks droppable_blocks"),
+                        dropArea(col = 5, styles = "max-height:300px;overflow-y:scroll;padding-left:0.1px", "Stats", "d_agg", "droppable_agg", "ui-sortable-helper sortTxtbox droppable_agg"),
                         
                         fluidRow(
                           column(1, offset = 0, style='padding:0px;',
