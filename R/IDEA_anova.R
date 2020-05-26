@@ -67,10 +67,10 @@ IDEA_anova.BDS <- function(column, week, group = NULL, data) {
     anova_df[2,1] <- "statistic"
     anova_df[3,1] <- "meansq"
     anova_df[4,1] <- "sumsq"
-    anova_df[1, group_n] <- ttest$p.value[1]
-    anova_df[2, group_n] <- ttest$statistic[1]
-    anova_df[3, group_n] <- ttest$meansq[1]
-    anova_df[4, group_n] <- ttest$sumsq[1]
+    anova_df[1, group_n] <- round(ttest$p.value[1], 3)
+    anova_df[2, group_n] <- round(ttest$statistic[1], 2)
+    anova_df[3, group_n] <- round(ttest$meansq[1], 2)
+    anova_df[4, group_n] <- round(ttest$sumsq[1], 2)
     
     anova_df <- mutate_all(anova_df, as.character) %>%
       mutate_all(coalesce, "")
