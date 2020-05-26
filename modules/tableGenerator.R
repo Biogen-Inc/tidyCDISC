@@ -127,7 +127,6 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
   })
   
   for_gt <- reactive({
-    
     validate(
       need((nrow(blocks_and_functions()) > 0),'Add variable and statistics blocks to create table.')
     )
