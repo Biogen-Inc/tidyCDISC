@@ -14,7 +14,7 @@ tableGeneratorUI <- function(id, label = "Create Chart") {
                                uiOutput(ns("col_ADSL")),
                                
                                shinyUI(bootstrapPage(
-                                 HTML('<button data-toggle="collapse" data-target="#demo" style="width:100%">Filter Data</button>'),
+                                 HTML('<button data-toggle="collapse" data-target="#demo" style="width:100%;padding:3px;background-color:#008cba !important;color:white;size:12px;">Filter Data</button>'),
                                  tags$div(id = 'demo',  class="collapse",
                                           IDEAFilter::shiny_data_filter_ui(ns("data_filter"))
                                  ))))),
@@ -24,9 +24,12 @@ tableGeneratorUI <- function(id, label = "Create Chart") {
                         "Commonly Used Tables", 
                         recipe,
                         br(),
-                        uiOutput("all_rows"),
+                        div(class = "col-sm-3", style = "height:300px;overflow-y:scroll;",
+                          uiOutput("all_rows") 
+                        ),
                         
-                        div(class = "col-sm-8", style = "max-height:300px;overflow-y:scroll;",
+                        
+                        div(class = "col-sm-8", style = "height:300px;overflow-y:scroll;",
                         dropArea(col = 5, styles = "padding-right:0.1px", "Variables", "d_blocks", "droppable_blocks", "ui-sortable-helper sortTxtbox droppable_blocks droppable_blocks"),
                         dropArea(col = 7, styles = "padding-left:0.1px", "Stats", "d_agg", "droppable_agg", "ui-sortable-helper sortTxtbox droppable_agg")
                         ),

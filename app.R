@@ -110,7 +110,7 @@ ui <-
                     ")),
     inlineCSS(css),
     tags$head(tags$script(src = "analytics.js")),
-    tags$script(src = "accordion.js")
+    tags$head(tags$script(src="accordion.js"))
   )
 
 server <- function(input, output, session) {

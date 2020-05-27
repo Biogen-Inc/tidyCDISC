@@ -162,11 +162,12 @@ font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
 .accordion {
-background-color: #e3e3e3;
+background-color: #008cba;
+color: white;
 width: 90%;
 margin: 10px auto 0;
 padding: 5px 20px;
-border-radius: 20px;
+border-radius: 10px;
 }
 
 .accordion:hover{
