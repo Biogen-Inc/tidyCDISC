@@ -48,7 +48,11 @@ fnIndvExplVisits <- function(
            y = prm,
            title = paste(prm,"by Relative Study Day"),
            subtitle = paste(ifelse(input_plot_adam == "ADLB","test<br>",""),"USUBJID:",usubjid)
-      )
+      )	+
+      annotate("text", x = Inf, y = -Inf, label = "IDEA: PROOF ONLY",
+               hjust=1.1, vjust=-1.1, col="white", cex=6,
+               fontface = "bold", alpha = 0.8)
+      # annotation_custom(grob=drawDetails.watermark(list(val="IDEA: PROOF ONLY", lab="IDEA: PROOF ONLY", col="grey55", alpha=0.3)))
     
     
     # if a lengend is needed, let's just define the line colors and types in one place
@@ -97,7 +101,7 @@ fnIndvExplVisits <- function(
         geom_hline(aes(yintercept = mean(LBSTNRLO)), colour = "blue") +
         geom_hline(aes(yintercept = mean(LBSTNRHI)), colour = "blue") +
         theme(
-          plot.margin = margin(b = 1, unit = "cm") #t = 1, # used to put margin at top of graph for caption
+          plot.margin = margin(b = 1.2, unit = "cm") #t = 1, # used to put margin at top of graph for caption
         ) 
     }
     
@@ -119,7 +123,13 @@ fnIndvExplVisits <- function(
       layout(title = list(text = 
                             paste0(prm," by Study Visit<sup>",
                                    "<br>USUBJID: ",usubjid
-                            )))
+                            ))) %>%
+    config(displaylogo = FALSE, 
+           modeBarButtonsToRemove= c('sendDataToCloud', 'hoverCompareCartesian','hoverClosestCartesian','autoScale2d'
+                                     ,'select2d', 'lasso2d', 'toggleSpikelines'
+                                      # , 'toImage', 'resetScale2d', 'zoomIn2d', 'zoomOut2d','zoom2d', 'pan2d'
+    ))
+    
     # Used to have lab param range of values in title
     # , ifelse(input_plot_adam == "ADLB",paste0("<br>Study's average range shown in ",'<em style="color:blue">',"blue",'</em> ',lohi),""),
     # "</sup>")))
@@ -128,7 +138,7 @@ fnIndvExplVisits <- function(
     if(input_plot_adam == "ADLB"){
       ly <- ly %>%
         add_annotations(x = ggplot_build(lb_plot)$layout$panel_params[[1]]$x.range[1],
-                        y = -.10, # 10% below graph
+                        y = -.15, # 15% below graph
                         yref = "paper",
                         text = paste0("<br>Note: Study's average ",input_plot_param," range shown in ",'<em style="color:blue">',"blue",'</em> ',lohi),
                         xanchor = 'left',
