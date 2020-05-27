@@ -57,6 +57,7 @@ ui <-
       tags$link(rel = "//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"),
       tags$head(tags$link(rel="shortcut icon", href="IDEA_FAVICON.ico")),
       tags$script(src = "https://code.jquery.com/ui/1.12.1/jquery-ui.js"),
+      tags$script(src = "accordion.js"),
       HTML("<script type='text/javascript' src='accordion.js'></script>")
     ),
     useShinyjs(),
@@ -108,7 +109,8 @@ ui <-
                     
                     ")),
     inlineCSS(css),
-    tags$head(tags$script(src = "analytics.js"))
+    tags$head(tags$script(src = "analytics.js")),
+    tags$script(src = "accordion.js")
   )
 
 server <- function(input, output, session) {

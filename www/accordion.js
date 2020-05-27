@@ -1,23 +1,5 @@
-console.log("test")
-
 $(document).ready(function(){
   $(".accordion-panel").hide();//Hide accordions 
-
-  /* Show all/Hide all accordions onclick */
-  $(".control").click(function(){
-    $(".accordion-panel").stop();//Stops user from spamming button
-    /* Toggle text in button and panel */
-    if ($(".control").text() == "Collapse All") {
-      $(".control").text("Hide All");
-      $(".accordion-panel").slideDown("slow");//Show all panels
-      $(".fa-chevron-down").addClass("up"); 
-    }else {
-      $(".control").text("Collapse All");
-      $(".accordion-panel").slideUp("slow");//Hide all panels
-      $(".fa-chevron-down").removeClass("up"); 
-
-    }
-  });
 
   /* Slide accordion panel down onclick */
   $(".accordion").click(function(){

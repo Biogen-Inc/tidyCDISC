@@ -5,7 +5,6 @@ recipe <- HTML('
                </select>')
 
 
-
 rowBlock <- function(name, classname) {
   apply(name,
         1,
