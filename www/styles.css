@@ -156,3 +156,71 @@ font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   padding-right:100px;
   margin-right:100px;
 }
+
+.block {
+  z-index: 999;
+}
+
+.accordion {
+background-color: #e3e3e3;
+width: 90%;
+margin: 10px auto 0;
+padding: 5px 20px;
+border-radius: 20px;
+}
+
+.accordion:hover{
+cursor: pointer;
+}
+
+/* Main accordion title 
+========================================================================== */
+.accordion h1{
+display: inline;
+font-weight: 100;
+}
+
+/* Main accordion arrow 
+========================================================================== */
+.accordion button{
+float: right;
+font-size: 20px;
+background-color: transparent;
+border-style: none;
+padding: 0;
+margin: 0;
+margin-top: 10px;
+outline: none;
+}
+
+
+/* Accordion dropdown panel
+========================================================================== */
+.accordion-panel{
+margin: 0 auto;
+padding: 10px 15px;
+min-width: 80%;
+max-width: 85%;
+border-width: 2px;
+background-color: #fafafad4;
+border-color: #e3e3e3;
+border-style: solid;
+border-top: none;
+border-bottom-left-radius: 25px;
+border-bottom-right-radius: 25px;
+}
+
+/* Rotate class for dropdown button
+========================================================================== */
+
+.rotate {
+-moz-transition: all .5s linear;
+-webkit-transition: all .5s linear;
+transition: all .5s linear;
+}
+
+.rotate.up {
+-moz-transform:rotate(180deg);
+-webkit-transform:rotate(180deg);
+transform:rotate(180deg);
+}

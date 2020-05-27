@@ -89,28 +89,28 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
   avisit_words <- reactive({ processed_data()$AVISIT })
   avisit_fctr  <- reactive({ processed_data()$AVISITN })
   
-  AVISIT <- reactive({
-    req(BDS())
-    
-    print(avisit_fctr())
-    
-    if (is.null(avisit_words())) {
-      avisit_words <- " "
-    } else {
-      avisit_words <-
-        tibble(AVISIT = avisit_words(), AVISITN = avisit_fctr()) %>%
-        mutate(AVISIT = as.factor(AVISIT)) %>%
-        mutate(AVISIT = fct_reorder(AVISIT, AVISITN)) %>%
-        pull(AVISIT) %>%
-        unique()
-    }
-    avisit_words
-  })
-  
-  observe({
-    req(AVISIT())
-    session$sendCustomMessage("my_data", AVISIT())
-  })
+  # AVISIT <- reactive({
+  #   req(BDS())
+  #   
+  #   print(avisit_fctr())
+  #   
+  #   if (is.null(avisit_words())) {
+  #     avisit_words <- " "
+  #   } else {
+  #     avisit_words <-
+  #       tibble(AVISIT = avisit_words(), AVISITN = avisit_fctr()) %>%
+  #       mutate(AVISIT = as.factor(AVISIT)) %>%
+  #       mutate(AVISIT = fct_reorder(AVISIT, AVISITN)) %>%
+  #       pull(AVISIT) %>%
+  #       unique()
+  #   }
+  #   avisit_words
+  # })
+  # 
+  # observe({
+  #   req(AVISIT())
+  #   session$sendCustomMessage("my_data", AVISIT())
+  # })
   
   
   #####################################################################
@@ -261,7 +261,7 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
   )  
   
   p <- reactive({
-    rowArea(col = 12, block_data())
+    rowArea(col = 2, block_data())
     })
   
   return(p)

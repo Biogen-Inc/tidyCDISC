@@ -24,9 +24,7 @@ tableGeneratorUI <- function(id, label = "Create Chart") {
                         "Commonly Used Tables", 
                         recipe,
                         br(),
-                        div(class = "col-sm-2", style = "max-height:300px;overflow-y:scroll;padding:0px;margin:0px;",
-                        uiOutput("all_rows")
-                        ),
+                        uiOutput("all_rows"),
                         
                         div(class = "col-sm-9", style = "max-height:300px;overflow-y:scroll;",
                         dropArea(col = 5, styles = "padding-right:0.1px", "Variables", "d_blocks", "droppable_blocks", "ui-sortable-helper sortTxtbox droppable_blocks droppable_blocks"),

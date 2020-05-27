@@ -56,7 +56,8 @@ ui <-
       tags$script(HTML(htmljs)),
       tags$link(rel = "//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"),
       tags$head(tags$link(rel="shortcut icon", href="IDEA_FAVICON.ico")),
-      tags$script(src = "https://code.jquery.com/ui/1.12.1/jquery-ui.js")
+      tags$script(src = "https://code.jquery.com/ui/1.12.1/jquery-ui.js"),
+      HTML("<script type='text/javascript' src='accordion.js'></script>")
     ),
     useShinyjs(),
     use_waiter(), # include dependencies

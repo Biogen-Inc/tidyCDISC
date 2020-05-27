@@ -21,11 +21,20 @@ rowBlock <- function(name, classname) {
     map(., ~ .x)
 }
 
+
 rowPallete <- function(data) {
-  map2(names(data),
-       data,
-       ~div(h5(.x), style="max-height:300px;overflow-y:scroll",
-            tags$ul(rowBlock(.y,.x), class = 'all_blocks', class = .x))) %>% 
+  map2(names(data), data,
+       ~div(class="accordion-container",
+            div(class="accordion",
+                h6(.x),
+                tags$button(icon("chevron-down", class="rotate"))),
+            div(class="accordion-panel",
+                div(
+                  tags$ul(rowBlock(.y,.x), class = 'all_blocks', class = .x)
+                )
+            )
+       )
+    ) %>% 
     map(.,
         tagList)
 }
