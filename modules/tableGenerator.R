@@ -261,7 +261,7 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
   )  
   
   p <- reactive({
-    rowArea(col = 2, block_data())
+    rowArea(col = 3, block_data())
     })
   
   return(p)
