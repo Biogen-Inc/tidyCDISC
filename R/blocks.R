@@ -25,7 +25,7 @@ rowPallete <- function(data) {
   map2(names(data), data,
        ~div(class="accordion-container",
             div(class="accordion",
-                h6(.x),
+                h6(.x, style="display:inline-block;"),
                 tags$button(icon("chevron-down w3-tiny", class="rotate"))),
             div(class="accordion-panel",
                 div(
