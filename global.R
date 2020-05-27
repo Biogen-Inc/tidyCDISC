@@ -1,6 +1,5 @@
 source('R/detectStandard.R')
 source('R/evaluateStandard.R')
-source('R/getSettingsMetadata.R')
 source('R/hasColumn.R')
 source('R/hasField.R')
 source('R/js_strings.R')

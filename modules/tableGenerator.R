@@ -86,26 +86,30 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
     data = processed_data,
     verbose = FALSE)
   
-  AVISITN <- reactive({ 
+  avisit_words <- reactive({ processed_data()$AVISIT })
+  avisit_fctr  <- reactive({ processed_data()$AVISITN })
+  
+  AVISIT <- reactive({
     req(BDS())
     
-    # t2 <-tibble(
-    #   AVISIT = BDS()$AVISIT,
-    #   AVISITN = BDS()$AVISITN
-    # ) %>%
-    #   mutate(AVISIT = as.factor(AVISIT)) %>%
-    #   mutate(AVISIT = fct_reorder(AVISIT, AVISITN)) %>%
-    #   pull(AVISIT) %>%
-    #   unique()
+    print(avisit_fctr())
     
-    t <- sort(unique(unlist(lapply(BDS(), '[[', "AVISIT"))))
-    ifelse((length(t) == 0), t <- " ", t <- t)
-    t
+    if (is.null(avisit_words())) {
+      avisit_words <- " "
+    } else {
+      avisit_words <-
+        tibble(AVISIT = avisit_words(), AVISITN = avisit_fctr()) %>%
+        mutate(AVISIT = as.factor(AVISIT)) %>%
+        mutate(AVISIT = fct_reorder(AVISIT, AVISITN)) %>%
+        pull(AVISIT) %>%
+        unique()
+    }
+    avisit_words
   })
   
   observe({
-    req(AVISITN())
-    session$sendCustomMessage("my_data", AVISITN())
+    req(AVISIT())
+    session$sendCustomMessage("my_data", AVISIT())
   })
   
   
