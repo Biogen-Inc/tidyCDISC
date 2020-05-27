@@ -52,30 +52,23 @@ fnIndvExplVisits <- function(
       )	
     
     if(watermark){
-      watermarkGrob <- function(lab = "PROOF ONLY"){
-        grob(lab=lab, cl="watermark") 
-      }
       
-      ## custom draw method to
-      ## calculate expansion factor on-the-fly
+      ## custom draw method to calculate expansion factor on-the-fly
       drawDetails.watermark <- function(x, rot = 45, ...){
         cex <- convertUnit(unit(1,"npc"), "mm", val=TRUE) /
           convertUnit(unit(1,"grobwidth", textGrob(x$val)), "mm",val=TRUE)
-        
         grid.text(x$lab,  rot=rot, gp=gpar(cex = cex, col="white",
                                            fontface = "bold", alpha = 0.5))
-        
       }
       
       lb_plot <- lb_plot +
-        annotation_custom(xmin=-Inf, ymin=-Inf, xmax=Inf, ymax=Inf, watermarkGrob("IDEA: PROOF ONLY"))
+        annotation_custom(xmin=-Inf, ymin=-Inf, xmax=Inf, ymax=Inf, grob(lab="IDEA: PROOF ONLY", cl="watermark"))
         
+        # Smaller watermark
         # annotate("text", x = Inf, y = -Inf, label = "IDEA: PROOF ONLY",
         #        hjust=1.1, vjust=-1.1, col="white", cex=6,
         #        fontface = "bold", alpha = 0.8)
-        
-      # annotation_custom(grob=drawDetails.watermark(list(val="IDEA: PROOF ONLY", lab="IDEA: PROOF ONLY", col="grey55", alpha=0.3)))
-      
+
     }
       
     
