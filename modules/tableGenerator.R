@@ -129,12 +129,16 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
   
   total <- reactive({
     if (input$COLUMN == "NONE") {
-      return(nrow(all_data()))
-    } else {
-      return(all_data() %>%
-        group_by(!!sym(input$COLUMN)) %>%
+      all_data() %>% 
+        distinct(USUBJID) %>% 
         summarise(n = n()) %>%
-        pull(n))
+        pull(n)
+    } else {
+      all_data() %>%
+        group_by(!!sym(input$COLUMN)) %>%
+        distinct(USUBJID) %>%
+        summarise(n = n()) %>%
+        pull(n)
     }
   })
   
