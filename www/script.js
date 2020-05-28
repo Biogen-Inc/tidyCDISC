@@ -177,7 +177,7 @@ function getNewId(type) {
 // with the block names from the droppable area
 // and delete buttons
 $(function() {
-  $(".blocks").draggable();
+  $(".blocks").draggable({ distance: 0 });
   $('#droppable_blocks').droppable({
     accept: ".block",
     drop: function(event, ui) {

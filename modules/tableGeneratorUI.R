@@ -86,7 +86,6 @@ tableGeneratorUI <- function(id, label = "Create Chart") {
       )
     ),
     tags$script(src = "script.js"),
-    tags$script(src = "recipe.js"),
-    tags$script(src = "accordion.js")
+    tags$script(src = "recipe.js")
   )
 }

@@ -1,4 +1,5 @@
-$(document).ready(function(){
+accordion_function = function() {
+	  
   $(".accordion-panel").hide();//Hide accordions 
 
   /* Slide accordion panel down onclick */
@@ -18,5 +19,6 @@ $(document).ready(function(){
       $(".control").text("Hide All");
     }
   }
+}
 
-});
+window.setTimeout(accordion_function, 10)
