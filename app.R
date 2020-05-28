@@ -62,7 +62,6 @@ ui <-
     useShinyjs(),
     use_waiter(), # include dependencies
     extendShinyjs(text = jscode),
-    extendShinyjs(text = accordion_js),
     tags$link(rel = "stylesheet", type = "text/css", href = "index.css"),
     navbarPage(theme = "yeti.css",
                
@@ -144,7 +143,6 @@ server <- function(input, output, session) {
   table_generator <- callModule(tableGenerator, "table_generator", datafile = datafile)
   
   output$all_rows <- renderUI({ table_generator() })
-
   
   # Population Explorer
   callModule(PopuExplor, id = "popul", datafile = datafile)

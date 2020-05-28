@@ -1,28 +1,3 @@
-accordion_js <- "
-shinyjs.accordion_function = function() {
-$(document).on('click', '.accordion', function(){
-$('.accordion-panel').hide();//Hide accordions 
-/* Slide accordion panel down onclick */
-$('.accordion').click(function(){
-/* Select only the accordion clicked on */
-$(this).parent().find('.fa-chevron-down').toggleClass('up'); 
-$(this).parent().find('.accordion-panel').slideToggle('slow');
-panelCheck();
-});
-/* Checks if all panels are closed */
-function panelCheck(){
-/* Panels are all hidden */
-if ($('.fa-chevron-down').hasClass('up') == false) {
-$('.control').text('Collapse All');
-}else{
-$('.control').text('Hide All');
-}
-}
-});
-}
-"
-
-
 jscode <- "
 shinyjs.disableTab = function() {
 var tabs = $('.nav').find('li:not(.active) a');
