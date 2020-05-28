@@ -1,13 +1,13 @@
-# source('R/detectStandard.R')
-# source('R/evaluateStandard.R')
-# source('R/getSettingsMetadata.R')
-# source('R/hasColumn.R')
-# source('R/hasField.R')
-# source('R/js_strings.R')
-# source('R/css.R')
-# source('R/fn_filters_in_english.R')
-# source('R/build_events_df.R')
-# source('R/data_compliance_objects.R')
+source('R/detectStandard.R')
+source('R/evaluateStandard.R')
+source('R/getSettingsMetadata.R')
+source('R/hasColumn.R')
+source('R/hasField.R')
+source('R/js_strings.R')
+source('R/css.R')
+source('R/fn_filters_in_english.R')
+source('R/build_events_df.R')
+source('R/data_compliance_objects.R')
 
 
 source('modules/data_compliance.R')
@@ -19,17 +19,17 @@ source('modules/tableGenerator.R')
 source('modules/tableGeneratorUI.R')
 
 # Block UI and helper functions
-# source('R/blocks.R')
-# source('R/CapStr.R')
-# source('R/allowed_operators.R')
-# source("R/IDEA_mean_summary.R")
+source('R/blocks.R')
+source('R/CapStr.R')
+source('R/allowed_operators.R')
+source("R/IDEA_mean_summary.R")
 
 # Block calculations
-# source("R/IDEA_mean.R")
-# source("R/IDEA_chg.R")
-# source("R/IDEA_freq.R")
-# source("R/IDEA_anova.R")
-# source("R/IDEA_methods.R")
+source("R/IDEA_mean.R")
+source("R/IDEA_chg.R")
+source("R/IDEA_freq.R")
+source("R/IDEA_anova.R")
+source("R/IDEA_methods.R")
 
 # select Data
 source('modules/selectData.R')
@@ -40,11 +40,11 @@ source('modules/PopuExplor.R')
 source('modules/PopuExplorUI.R')
 
 # functions written for population explorer
-# source('R/fnboxplot.R')
-# source('R/fnscatter.R')
-# source('R/fnsummtab.R')
-# source('R/fnoverplot.R')
-# source('R/fncorrmat.R')
+source('R/fnboxplot.R')
+source('R/fnscatter.R')
+source('R/fnsummtab.R')
+source('R/fnoverplot.R')
+source('R/fncorrmat.R')
 
 # child modules called by PopuExplor
 source('modules/PopuExpl1Scat.R')
@@ -56,7 +56,7 @@ source('modules/PopuExpl6Means.R')
 source('modules/PopuExpl7Hbar.R')
 
 # individual explorer
-# source('R/fn_indv_expl_visits.R')
+source('R/fn_indv_expl_visits.R')
 source('modules/IndvExplorUI.R')
 # server code broken into four sections
 source('modules/IndvExpl1Initial.R')
