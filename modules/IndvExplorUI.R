@@ -183,7 +183,7 @@ IndvExplorUI <- function(id, label = "Individual Explorer") {
                    wellPanel(
                      h5(strong(textOutput(ns("dwnld_params_header")))),
                      br(),
-                     radioButtons(ns('format'), 'Document format', c('HTML'),inline = TRUE), #'PDF', 
+                     radioButtons(ns('format'), 'Document format', c('HTML','PDF'),inline = TRUE), #'PDF', 
                      textInput(ns("user_batch_notes"), label = "Add Report Notes", placeholder = "My Notes"),
                      downloadButton(ns('batchDownReport'))
                    )
