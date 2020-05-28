@@ -461,6 +461,8 @@ output$v_applied_filters_grphDisp <- renderUI({
       req(input$plot_param != " ")
       
       fnIndvExplVisits(
+        watermark = FALSE,
+        graph_output = "plotly",
         bds_data = lb_data,
         usubjid = usubjid(),
         input_plot_hor = input$plot_hor,
@@ -470,7 +472,7 @@ output$v_applied_filters_grphDisp <- renderUI({
         input_overlay_events = input$overlay_events,
         vline_dat = vline_dat(),
         vv_dy_name = vv_dy_name()
-      )$plotly
+      )
        
      })
     
@@ -492,8 +494,12 @@ output$v_applied_filters_grphDisp <- renderUI({
         # Copy the report file to a temporary directory before processing it, in
         # case we don't have write permissions to the current working dir (which
         # can happen when deployed).
-        tempReport <- file.path(tempdir(), "batchDownload.Rmd")
-        file.copy("batchDownload.Rmd", tempReport, overwrite = TRUE)
+        tempReport <- file.path(tempdir(), switch(input$format, 
+                                                  HTML = "batchDownload_html.Rmd",
+                                                  PDF = "batchDownload_pdf.Rmd"))
+        file.copy(switch(input$format, 
+                         HTML = "R/batchDownload_html.Rmd",
+                         PDF = "R/batchDownload_pdf.Rmd"), tempReport, overwrite = TRUE)
         
         
         # Knit the document: passing in the `params` list is optional by default but will
@@ -505,7 +511,9 @@ output$v_applied_filters_grphDisp <- renderUI({
         on.exit(progress$close())
         # id <- showNotification("Rendering Report...", type = "message", duration = NULL, closeButton = FALSE)
         rmarkdown::render(
-          input = "batchDownload.Rmd",
+          input = switch(input$format, 
+                         HTML = "R/batchDownload_html.Rmd",
+                         PDF = "R/batchDownload_pdf.Rmd"),
           output_file = file,
           params = list(
             bds_data_ = lb_data,

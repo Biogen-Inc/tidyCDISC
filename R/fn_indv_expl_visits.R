@@ -1,6 +1,7 @@
 
 fnIndvExplVisits <- function(
   watermark = FALSE,
+  graph_output = "plotly",
   bds_data,
   usubjid,
   input_plot_hor,
@@ -13,7 +14,6 @@ fnIndvExplVisits <- function(
 ){
   # In the labs, label what the blue lines are in the legend or hover text.
   # make sure a LabCode has been selected
-  req(input_plot_param != " ")
   
   INPUT_visit_var <- sym(input_visit_var)
   
@@ -51,23 +51,24 @@ fnIndvExplVisits <- function(
            subtitle = paste(ifelse(input_plot_adam == "ADLB","test<br>",""),"USUBJID:",usubjid)
       )	
     
-    if(watermark){
+    if(watermark & graph_output == "ggplot"){
       
       ## custom draw method to calculate expansion factor on-the-fly
-      drawDetails.watermark <- function(x, rot = 45, ...){
-        cex <- convertUnit(unit(1,"npc"), "mm", val=TRUE) /
-          convertUnit(unit(1,"grobwidth", textGrob(x$val)), "mm",val=TRUE)
-        grid.text(x$lab,  rot=rot, gp=gpar(cex = cex, col="white",
-                                           fontface = "bold", alpha = 0.5))
-      }
+      # drawDetails.watermark <- function(x, rot = 45, ...){
+      #   cex <- convertUnit(unit(1,"npc"), "mm", val=TRUE) /
+      #     convertUnit(unit(1,"grobwidth", textGrob(x$val)), "mm",val=TRUE)
+      #   grid.text(x$lab,  rot=rot, gp=gpar(cex = cex, col="white",
+      #                                      fontface = "bold", alpha = 0.5))
+      # }
       
       lb_plot <- lb_plot +
-        annotation_custom(xmin=-Inf, ymin=-Inf, xmax=Inf, ymax=Inf, grob(lab="IDEA: PROOF ONLY", cl="watermark"))
+        # annotation_custom(xmin=-Inf, ymin=-Inf, xmax=Inf, ymax=Inf,
+        #                   grob(lab="IDEA: PROOF ONLY", cl="watermark"))
         
         # Smaller watermark
-        # annotate("text", x = Inf, y = -Inf, label = "IDEA: PROOF ONLY",
-        #        hjust=1.1, vjust=-1.1, col="white", cex=6,
-        #        fontface = "bold", alpha = 0.8)
+        annotate("text", x = Inf, y = -Inf, label = "IDEA: PROOF ONLY",
+               hjust=1.1, vjust=-3.3, col="white", cex=20,
+               fontface = "bold", alpha = 0.8)
 
     }
       
@@ -136,36 +137,79 @@ fnIndvExplVisits <- function(
     
     
     # PLOTLY OBJECT
-    ly <- ggplotly(lb_plot, tooltip = "text") %>%
-      layout(title = list(text = 
-                            paste0(prm," by Study Visit<sup>",
-                                   "<br>USUBJID: ",usubjid
-                            ))) %>%
-    config(displaylogo = FALSE, 
-           modeBarButtonsToRemove= c('sendDataToCloud', 'hoverCompareCartesian','hoverClosestCartesian','autoScale2d'
-                                     ,'select2d', 'lasso2d', 'toggleSpikelines'
-                                      # , 'toImage', 'resetScale2d', 'zoomIn2d', 'zoomOut2d','zoom2d', 'pan2d'
-    ))
-    
-    # Used to have lab param range of values in title
-    # , ifelse(input_plot_adam == "ADLB",paste0("<br>Study's average range shown in ",'<em style="color:blue">',"blue",'</em> ',lohi),""),
-    # "</sup>")))
-    
-    # instead, request was made to add caption to bottom of graph
-    if(input_plot_adam == "ADLB"){
-      ly <- ly %>%
-        add_annotations(x = ggplot_build(lb_plot)$layout$panel_params[[1]]$x.range[1],
-                        y = -.15, # 15% below graph
-                        yref = "paper",
-                        text = paste0("<br>Note: Study's average ",input_plot_param," range shown in ",'<em style="color:blue">',"blue",'</em> ',lohi),
-                        xanchor = 'left',
-                        showarrow = F)
+    if(graph_output == "plotly"){
+      ly <- ggplotly(lb_plot, tooltip = "text") %>%
+        layout(title = list(text = 
+                              paste0(prm," by Study Visit<sup>",
+                                     "<br>USUBJID: ",usubjid
+                              ))) %>%
+        config(displaylogo = FALSE, 
+               modeBarButtonsToRemove= c('sendDataToCloud', 'hoverCompareCartesian','hoverClosestCartesian','autoScale2d'
+                                         ,'select2d', 'lasso2d', 'toggleSpikelines'
+                                         # , 'toImage', 'resetScale2d', 'zoomIn2d', 'zoomOut2d','zoom2d', 'pan2d'
+               ))
+      
+      
+      # Used to have lab param range of values in title
+      # , ifelse(input_plot_adam == "ADLB",paste0("<br>Study's average range shown in ",'<em style="color:blue">',"blue",'</em> ',lohi),""),
+      # "</sup>")))
+      
+      # instead, request was made to add caption to bottom of graph
+      if(input_plot_adam == "ADLB"){
+        ly <- ly %>%
+          add_annotations(x = ggplot_build(lb_plot)$layout$panel_params[[1]]$x.range[1],
+                          y = -.15, # 15% below graph
+                          yref = "paper",
+                          text = paste0("<br>Note: Study's average ",input_plot_param," range shown in ",'<em style="color:blue">',"blue",'</em> ',lohi),
+                          xanchor = 'left',
+                          showarrow = F)
+      }
+      
+      # if watermark is desired, it can be added here
+      if(watermark){
+        ly <- ly %>%
+          layout(annotations = list(text="IDEA: PROOF ONLY",
+                                    xref = "paper",
+                                    yref = "paper",
+                                    opacity = 0.1,
+                                    showarrow = F,
+                                    font=list(size = 40),
+                                    textangle=-35)
+          )
+        
+        # # Doesn't work
+        # plotly_IMAGE(
+        #   ly,
+        #   width = 800,
+        #   height = 600,
+        #   format = "png",
+        #   scale = 1,
+        #   out_file = "output.png")
+        
+      } #else {
+        # Doesn't work
+        # The plotly image that get's downloaded should always have the image
+        # plotly_IMAGE(
+        #   ly %>%
+        #     layout(annotations = list(text="IDEA: PROOF ONLY",
+        #                               xref = "paper",
+        #                               yref = "paper",
+        #                               opacity = 0.1,
+        #                               showarrow = F,
+        #                               font=list(size = 40),
+        #                               textangle=-35)
+        #     )
+        #   ,
+        #   width = 800,
+        #   height = 600,
+        #   format = "png",
+        #   scale = 1,
+        #   out_file = "output.png")
+      # }
+      
     }
     
-    return(list(plotly = ly,
-                ggplot = lb_plot
-                )
-    )
+    return(if(graph_output == "ggplot") lb_plot else ly)
   } # if (nrow(plot_dat) > 0)
   
   
