@@ -56,7 +56,8 @@ ui <-
       tags$script(HTML(htmljs)),
       tags$link(rel = "//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"),
       tags$head(tags$link(rel="shortcut icon", href="IDEA_FAVICON.ico")),
-      tags$script(src = "https://code.jquery.com/ui/1.12.1/jquery-ui.js")
+      tags$script(src = "https://code.jquery.com/ui/1.12.1/jquery-ui.js"),
+      tags$script(src="accordion.js", type="text/javascript")
     ),
     useShinyjs(),
     use_waiter(), # include dependencies
@@ -142,10 +143,7 @@ server <- function(input, output, session) {
   # render the tablegenerator module using the datafile from dataupload as an input
   table_generator <- callModule(tableGenerator, "table_generator", datafile = datafile)
   
-  observeEvent(datafile, {
-    output$all_rows <- renderUI({ table_generator() })
-    js$accordion_function()
-  })
+  output$all_rows <- renderUI({ table_generator() })
 
   
   # Population Explorer
