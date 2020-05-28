@@ -34,6 +34,10 @@ fnIndvExplVisits <- function(
     
     prm   <- unique(plot_dat$PARAM)
     
+    if(input_plot_adam == "ADLB"){
+      lohi <- paste("LO:",unique(plot_dat$LBSTNRLO),"HI:",unique(plot_dat$LBSTNRHI))
+    }
+    
     # GGPLOT2 OBJECT
     lb_plot <- ggplot(plot_dat, aes(x = !!INPUT_visit_var, y = AVAL)) + 
       geom_line() +
@@ -48,7 +52,11 @@ fnIndvExplVisits <- function(
       labs(x = paste0("Study Visit (",input_visit_var,")"),
            y = prm,
            title = paste(prm,"by Relative Study Day"),
-           subtitle = paste(ifelse(input_plot_adam == "ADLB","test<br>",""),"USUBJID:",usubjid)
+           subtitle = paste0(
+             ifelse(input_plot_adam == "ADLB",
+                    paste0("Note: Study's average ",input_plot_param," range shown in blue - ",lohi,"\n")
+                    ,""),
+             "USUBJID: ",usubjid)
       )	
     
     if(watermark & graph_output == "ggplot"){
@@ -114,7 +122,6 @@ fnIndvExplVisits <- function(
     
     # If lab data, plot the normal low and high values for the drug, add a little space in the bottom margin
     if(input_plot_adam == "ADLB"){
-      lohi <- paste("LO:",unique(plot_dat$LBSTNRLO),"HI:",unique(plot_dat$LBSTNRHI))
       lb_plot <- lb_plot + 
         geom_hline(aes(yintercept = mean(LBSTNRLO)), colour = "blue") +
         geom_hline(aes(yintercept = mean(LBSTNRHI)), colour = "blue") +
