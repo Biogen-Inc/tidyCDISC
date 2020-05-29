@@ -68,7 +68,7 @@ asis_output(params$user_notes)
 
 # html_filters <- gsub("</b>","",gsub("<b>","","<b>Event Lines Filtered to Include:</b><br/>&nbsp;&nbsp;&nbsp;&nbsp;Milestones: Randomization"))
 html_filters <- gsub("</b>","",gsub("<b>","",params$html_filters))
-filterRows <- unlist(str_split(html_filters,"<br/>"))
+filterRows <- unlist(str_split(unlist(str_split(html_filters,"<br/>")),"<br>"))
 filterPrinter <- function(txt) {
   writeLines(text = txt)
   writeLines("\n")
