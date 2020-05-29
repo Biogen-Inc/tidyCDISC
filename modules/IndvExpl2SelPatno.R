@@ -12,10 +12,11 @@ IndvExpl2SelPatno <- function(input, output, session, datafile, loaded_adams, fi
     paste0("USUBJID: '",input$selPatNo,"'")
   })
   
-
+    
+    
   # observeEvent for inputselPatno 
   observeEvent(input$selPatNo, {
-  #choices <- eventReactive(input$selPatNo, {
+  # overlayChoices <- eventReactive(input$selPatNo, {
     
     req(input$selPatNo != "") # selPatNo cannot be blank
     
@@ -148,15 +149,28 @@ IndvExpl2SelPatno <- function(input, output, session, datafile, loaded_adams, fi
     # build a named list & Remove NULLs from the list
     choices2 <- setNames(choices2,names2)
     choices2 <- choices2[!sapply(choices2,is.na)]
+    overlay_choices <- reactive({unlist(choices2)})
     
     updateCheckboxGroupInput(
       session = session,
       inputId = "overlay_events",
-      choices = unlist(choices2), # optionally convert list to array
+      choices = overlay_choices(), # optionally convert list to array
       selected = NULL)
     
-    # return(choices)
+    # return(overlay_choices)
   }) # observeEvent
+  
+  # # not working
+  # # need to clear overlay_events if plot_adam changes
+  # observeEvent( input$plot_adam,{
+  #   req(length(input$overlay_events) > 0)
+  #   updateCheckboxGroupInput(
+  #     session = session,
+  #     inputId = "overlay_events",
+  #     choices = "Milestones", # overlay_choices(), # unlist(choices2), # optionally convert list to array
+  #     selected = NULL)
+  # })
+  
 
   # return selected patient USUBJID from module
   return(reactive({ input$selPatNo })) #list(occr_choices = choices,

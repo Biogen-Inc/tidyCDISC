@@ -82,8 +82,6 @@ IndvExpl4ChartPlotly <- function(input, output, session, datafile, loaded_adams,
 
   
 
-
-
   
   # upon selecting a plottable adam data set from dropdown
   # observeEvent(list(input$plot_adam), { # ,input$bds_remove_filter # add this back in if we want to enable total tab filtering
@@ -306,7 +304,7 @@ v_applied_filters_HTML_on_graph <- reactive({
   
   req(usubjid() != "" & input$plot_adam != " ")
 
-  cat(paste("\nlength(input$overlay_events):",length(input$overlay_events)))
+  # cat(paste("\nlength(input$overlay_events):",length(input$overlay_events)))
   
   HTML( # case_when wouldn't work since olay_events does exist yet
     if(length(input$overlay_events) == 0 | 
@@ -460,7 +458,7 @@ output$v_applied_filters_grphDisp <- renderUI({
     output$PlotChart <- renderPlotly({
       req(input$plot_param != " ")
       
-      fnIndvExplVisits(
+      suppressWarnings(fnIndvExplVisits(
         watermark = FALSE,
         graph_output = "plotly",
         bds_data = lb_data,
@@ -472,7 +470,8 @@ output$v_applied_filters_grphDisp <- renderUI({
         input_overlay_events = input$overlay_events,
         vline_dat = vline_dat(),
         vv_dy_name = vv_dy_name()
-      )
+      ))
+      
        
      })
     
