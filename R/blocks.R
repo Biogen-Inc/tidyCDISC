@@ -11,8 +11,7 @@ rowBlock <- function(name, classname) {
         function(x){
           tags$li(
             class = paste("block ", classname), id = paste(x[1]),
-            tippy(paste(x[1]), tooltip = div(paste(x[2]),
-                                             style = "max-width:60px;"))
+            tippy(paste(x[1]), tooltip = div(paste(x[2]), style = "max-width:60px;"))
           )
           
           

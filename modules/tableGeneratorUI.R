@@ -24,7 +24,7 @@ tableGeneratorUI <- function(id, label = "Create Chart") {
                         "Commonly Used Tables", 
                         recipe,
                         br(),
-                        div(class = "col-sm-3", style = "height:300px;overflow-y:scroll;",
+                        div(class = "col-sm-3", style = "height:300px;overflow-y:scroll;overflow-x:hidden;",
                           uiOutput("all_rows") 
                         ),
                         

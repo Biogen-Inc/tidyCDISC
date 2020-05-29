@@ -154,7 +154,7 @@ Shiny.addCustomMessageHandler('my_data', function(df) {
 function selectWeekBlock(newid, label, values) { 
   return `<div class="form-group drop_area">
                         <label class="control-label" for="${newid}">${label}</label>
-                    <select id="${newid}" class="dropdown-select">
+                    <select id="${newid}" class="dropdown">
                     <option value="NONE">NONE</option>
                     ${values}
                     </select>
@@ -177,7 +177,7 @@ function getNewId(type) {
 // with the block names from the droppable area
 // and delete buttons
 $(function() {
-  $(".blocks").draggable({ distance: 0 });
+  $(".blocks").draggable();
   $('#droppable_blocks').droppable({
     accept: ".block",
     drop: function(event, ui) {
