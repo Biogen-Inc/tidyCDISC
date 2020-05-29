@@ -1,6 +1,5 @@
 source('R/detectStandard.R')
 source('R/evaluateStandard.R')
-source('R/getSettingsMetadata.R')
 source('R/hasColumn.R')
 source('R/hasField.R')
 source('R/js_strings.R')
@@ -8,6 +7,7 @@ source('R/css.R')
 source('R/fn_filters_in_english.R')
 source('R/build_events_df.R')
 source('R/data_compliance_objects.R')
+source('R/getSettingsMetadata.R')
 
 
 source('modules/data_compliance.R')

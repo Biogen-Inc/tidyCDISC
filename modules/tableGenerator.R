@@ -86,26 +86,28 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
     data = processed_data,
     verbose = FALSE)
   
-  AVISITN <- reactive({ 
-    req(BDS())
-    
-    # t2 <-tibble(
-    #   AVISIT = BDS()$AVISIT,
-    #   AVISITN = BDS()$AVISITN
-    # ) %>%
-    #   mutate(AVISIT = as.factor(AVISIT)) %>%
-    #   mutate(AVISIT = fct_reorder(AVISIT, AVISITN)) %>%
-    #   pull(AVISIT) %>%
-    #   unique()
-    
-    t <- sort(unique(unlist(lapply(BDS(), '[[', "AVISIT"))))
-    ifelse((length(t) == 0), t <- " ", t <- t)
-    t
-  })
+  avisit_words <- reactive({ processed_data()$AVISIT })
+  avisit_fctr  <- reactive({ processed_data()$AVISITN })
   
+  AVISIT <- reactive({
+    req(BDS())
+
+    if (is.null(avisit_words())) {
+      avisit_words <- " "
+    } else {
+      avisit_words <-
+        tibble(AVISIT = avisit_words(), AVISITN = avisit_fctr()) %>%
+        mutate(AVISIT = as.factor(AVISIT)) %>%
+        mutate(AVISIT = fct_reorder(AVISIT, AVISITN)) %>%
+        pull(AVISIT) %>%
+        unique()
+    }
+    avisit_words
+  })
+
   observe({
-    req(AVISITN())
-    session$sendCustomMessage("my_data", AVISITN())
+    req(AVISIT())
+    session$sendCustomMessage("my_data", AVISIT())
   })
   
   
@@ -127,12 +129,16 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
   
   total <- reactive({
     if (input$COLUMN == "NONE") {
-      return(nrow(all_data()))
-    } else {
-      return(all_data() %>%
-        group_by(!!sym(input$COLUMN)) %>%
+      all_data() %>% 
+        distinct(USUBJID) %>% 
         summarise(n = n()) %>%
-        pull(n))
+        pull(n)
+    } else {
+      all_data() %>%
+        group_by(!!sym(input$COLUMN)) %>%
+        distinct(USUBJID) %>%
+        summarise(n = n()) %>%
+        pull(n)
     }
   })
   
@@ -255,9 +261,10 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
       }
     }
   )  
+
   
   p <- reactive({
-    rowArea(col = 2, block_data())
+    rowArea(col = 12, block_data())
     })
   
   return(p)

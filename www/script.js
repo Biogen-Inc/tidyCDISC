@@ -1,11 +1,3 @@
-
-    
-    $(document).ready(function(){
-          $('.btn-file').click(function(){
-             $(this).toggleClass('disable');
-          });
-       });
-
 $(function() {
   $("#sortable_agg").sortable();
   $("#sortable_agg").disableSelection();
@@ -13,6 +5,16 @@ $(function() {
   $(".all_blocks").disableSelection();
   $('#all_rows').on('shiny:value', function() {
 	    setTimeout(() => $('#all_rows .all_blocks').sortable().disableSelection(), 1)
+	  })
+	 $('#all_rows').on('shiny:value', function() {
+	    setTimeout(() => 	$(".block").draggable({
+            revert: "invalid" ,
+            helper: function(){
+                $copy = $(this).clone();
+                return $copy;},
+            appendTo: 'body',
+            scroll: false
+        }), 1)
 	  })
 	});
 
@@ -154,7 +156,7 @@ Shiny.addCustomMessageHandler('my_data', function(df) {
 function selectWeekBlock(newid, label, values) { 
   return `<div class="form-group drop_area">
                         <label class="control-label" for="${newid}">${label}</label>
-                    <select id="${newid}" class="dropdown-select">
+                    <select id="${newid}" class="dropdown">
                     <option value="NONE">NONE</option>
                     ${values}
                     </select>
@@ -216,3 +218,6 @@ $(function() {
   })
 });
 */
+
+
+
