@@ -16,7 +16,7 @@ params:
 
 knitr::opts_chunk$set(echo = FALSE, warning=FALSE, message=FALSE, progress = TRUE)
 
-progress$inc(1) # first increment
+if(interactive()) progress$inc(1) # first increment
 
 # don't need these here, because not creating a new environment
 # load in applicable packages
@@ -38,7 +38,7 @@ np <- length(paramcds)
 print_report_summary <- !is.na(params$report_summary)
 print_user_notes <- (!is.na(params$user_notes) & !is_null(params$user_notes) & params$user_notes != "")
 
-progress$inc(1) # second increment - after libraries & light data work
+if(interactive()) progress$inc(1) # second increment - after libraries & light data work
 ```
 
 ```{r, eval=print_report_summary, results='asis'}
@@ -83,7 +83,7 @@ plotter <- function(pcd){
     ))
   
   
-  progress$inc(1) # increment progress bar
+  if(interactive()) progress$inc(1) # increment progress bar
 
   # cat("\n\n\\pagebreak\n")
   cat(paste("\n###",pcd,"\n"))
@@ -100,7 +100,7 @@ tagList( #br(), br(),
   map(.x = paramcds, ~ plotter(pcd = .x))
 )
 
-progress$inc(1) # last increment
+if(interactive()) progress$inc(1) # last increment
 
 ```
 
