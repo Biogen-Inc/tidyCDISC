@@ -65,6 +65,15 @@ asis_output(params$user_notes)
 ```{r plots, results='asis', eval = TRUE, fig.height=5.3, fig.width=10}
 # if fitting 2 figures to a page in portrait mode, then use fig.height = 3.6, no width
 
+
+# html_filters <- gsub("</b>","",gsub("<b>","","<b>Event Lines Filtered to Include:</b><br/>&nbsp;&nbsp;&nbsp;&nbsp;Milestones: Randomization"))
+html_filters <- gsub("</b>","",gsub("<b>","",params$html_filters))
+filterRows <- unlist(str_split(html_filters,"<br/>"))
+filterPrinter <- function(txt) {
+  writeLines(text = txt)
+  writeLines("\n")
+}
+  
 plotter <- function(pcd){
 
   # Create Plot
@@ -88,8 +97,9 @@ plotter <- function(pcd){
   # cat("\n\n\\pagebreak\n")
   cat(paste("\n###",pcd,"\n"))
   print(fn_output)
-  writeLines(params$html_filters)
-  cat("\n\n &nbsp; \\newline\n")
+  map(.x = filterRows, ~filterPrinter(txt = .x)) # print filters if they exist
+  writeLines("\n")
+
 }
 
 # test just one plot
