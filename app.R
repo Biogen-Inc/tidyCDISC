@@ -13,7 +13,7 @@ library(shinyTime) # for IDEAFilter
 library(haven)
 library(DT)
 library(shinyWidgets)
-library(plotly)
+library(plotly) 
 library(RColorBrewer)
 library(gridExtra)
 library(grid)

@@ -1,12 +1,10 @@
 ---
-title: "Batch Download"
-date:
+title: "IDEA Batch Download"
 output:
-  html_document:
+  pdf_document:
     toc: true
     toc_depth: 4
-    toc_float:
-      collapsed: false
+classoption: landscape
 params:
   bds_data_: NA
   report_summary: NA
@@ -15,19 +13,6 @@ params:
 ---
 
 ```{r setup, include=FALSE} 
-# always_allow_html: true killed my table of contents, maybe it was in the wrong spot.
-# should try - 
-# title: "Batch Download"
-# always_allow_html: true
-# output:
-#   md_document:
-#     toc: blah blah blah
-
-# Could also play around with
-# output:
-#   md_document:
-#   allow_html_dependencies: true
-    
 
 knitr::opts_chunk$set(echo = FALSE, warning=FALSE, message=FALSE, progress = TRUE)
 
@@ -56,37 +41,36 @@ print_user_notes <- (!is.na(params$user_notes) & !is_null(params$user_notes) & p
 progress$inc(1) # second increment - after libraries & light data work
 ```
 
-```{r, eval = print_report_summary}
-asis_output("### Report Summary\\n") # Header that is only shown if print_option == TRUE
+```{r, eval=print_report_summary, results='asis'}
+cat("\n## Report Summary\n")
 ```
 ```{r, eval = print_report_summary}
-asis_output(params$report_summary) 
+asis_output(params$report_summary)
 ```
 
 
+```{r, eval = print_user_notes, results='asis'}
+cat("\n## Notes\n")
+```
 ```{r, eval = print_user_notes}
-asis_output("### Notes\\n") # Header that is only shown if print_option == TRUE
-```
-```{r, eval = print_user_notes}
-asis_output(params$user_notes) 
+asis_output(params$user_notes)
 ```
 
 
 
 
-<br>
-<br>
-<br>
 
-### Exploratory Plots
+## Exploratory Plots
 
-```{r plots}
-# if using ggplot, use results='hide'
+```{r plots, results='asis', eval = TRUE, fig.height=5.3, fig.width=10}
+# if fitting 2 figures to a page in portrait mode, then use fig.height = 3.6, no width
 
 plotter <- function(pcd){
 
   # Create Plot
-  fn_output <- fnIndvExplVisits(
+  fn_output <- suppressWarnings(fnIndvExplVisits(
+      watermark = TRUE,
+      graph_output = "ggplot",
       bds_data = lb_data,
       usubjid = usubjid(),
       input_plot_hor = input$plot_hor,
@@ -96,27 +80,25 @@ plotter <- function(pcd){
       input_overlay_events = input$overlay_events,
       vline_dat = vline_dat(),
       vv_dy_name = vv_dy_name()
-    )$plotly
+    ))
   
   
   progress$inc(1) # increment progress bar
-  
-  
-  # format display
-  tagList(
-    h4(pcd),
-    fn_output,
-    div(style = "color: #0275d8; font-size: 12px;",
-        HTML(ifelse(is.na(params$html_filters),"",params$html_filters))),
-    br(), br(), br(), br(),
-  )
+
+  # cat("\n\n\\pagebreak\n")
+  cat(paste("\n###",pcd,"\n"))
+  print(fn_output)
+  writeLines(params$html_filters)
+  cat("\n\n &nbsp; \\newline\n")
 }
 
 # test just one plot
-# tagList(br(), br(), visitPlot(pcd = input$plot_param))
+# print(plotter(pcd = input$plot_param))
 
 # Use prrrr to create as many plots as their are paramcd's
-tagList(br(), br(), map(.x = paramcds, ~ plotter(pcd = .x)))
+tagList( #br(), br(),
+  map(.x = paramcds, ~ plotter(pcd = .x))
+)
 
 progress$inc(1) # last increment
 
