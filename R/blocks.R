@@ -5,15 +5,13 @@ recipe <- HTML('
                </select>')
 
 
-
 rowBlock <- function(name, classname) {
   apply(name,
         1,
         function(x){
           tags$li(
             class = paste("block ", classname), id = paste(x[1]),
-            tippy(paste(x[1]), tooltip = div(paste(x[2]),
-                                             style = "max-width:60px;"))
+            tippy(paste(x[1]), tooltip = div(paste(x[2]), style = "max-width:60px;"))
           )
           
           
@@ -21,11 +19,20 @@ rowBlock <- function(name, classname) {
     map(., ~ .x)
 }
 
+
 rowPallete <- function(data) {
-  map2(names(data),
-       data,
-       ~div(h5(.x), style="max-height:300px;overflow-y:scroll",
-            tags$ul(rowBlock(.y,.x), class = 'all_blocks', class = .x))) %>% 
+  map2(names(data), data,
+       ~div(class="accordion-container",
+            div(class="accordion",
+                h6(.x, style="display:inline-block;"),
+                tags$button(icon("chevron-down w3-tiny", class="rotate"))),
+            div(class="accordion-panel",
+                div(
+                  tags$ul(rowBlock(.y,.x), class = 'all_blocks', class = .x)
+                )
+            )
+       )
+    ) %>% 
     map(.,
         tagList)
 }

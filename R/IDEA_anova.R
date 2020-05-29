@@ -64,9 +64,9 @@ IDEA_anova.BDS <- function(column, week, group = NULL, data) {
     
     anova_df <- data.frame(matrix(NA, ncol=group_n, nrow=4))
     anova_df[1,1] <- "p-value"
-    anova_df[2,1] <- "statistic"
-    anova_df[3,1] <- "meansq"
-    anova_df[4,1] <- "sumsq"
+    anova_df[2,1] <- "Test Statistic"
+    anova_df[3,1] <- "Mean Sum of Squares"
+    anova_df[4,1] <- "Sum of Squares"
     anova_df[1, group_n] <- round(ttest$p.value[1], 3)
     anova_df[2, group_n] <- round(ttest$statistic[1], 2)
     anova_df[3, group_n] <- round(ttest$meansq[1], 2)
