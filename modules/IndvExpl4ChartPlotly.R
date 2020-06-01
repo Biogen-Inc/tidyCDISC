@@ -20,42 +20,12 @@ IndvExpl4ChartPlotly <- function(input, output, session, datafile, loaded_adams,
     paste0("Patient Metrics by Visit") #'", usubjid, "' 
   })
   
-  # this won't work for some reason...
-  # ##########
-  # # Need to refresh these every time a new subject or dataset loaded is selected
-  # ###########
-  # observeEvent(list(usubjid(),loaded_adams()), {
-  #   
-  #   # If a plotable adam is loaded, include it in the dropdown choices
-  #   # & set default selection back to blank
-  #   updateSelectInput(
-  #     session = session,
-  #     inputId = "plot_adam",
-  #     choices = plotable_adams(), #  plot_adams ................. does this need to update/ depend on usubjid selected? Because RK was backing out datasets
-  #     #                             that didn't have any PARAMs for a patient
-  #     # selected =  " " # keep commented out if you want visit plot to update when ubsubjid changes
-  #   )
-  # })
-  # 
-  # observeEvent(usubjid(), {
-  #   
-  #   # update array of params
-  #   updateSelectInput (
-  #     session = session,
-  #     inputId = "plot_param",
-  #     # choices = c(" "),
-  #     # selected = " " # keep commented out if you want visit plot to update when ubsubjid changes
-  #   )
-  #   
-  #   # cat(paste("\n",input$overlay_events))
-  #   # cat(paste("\n",length(input$overlay_events) > 0))
-  #   
-  # })
+  
   
   ##########
-  # Need to refresh these every time a new subject is selected
+  # Need to refresh these every time a new subject or dataset loaded is selected
   ###########
-  observeEvent(usubjid(), {
+  observeEvent(list(loaded_adams()), { #
 
     # If a plotable adam is loaded, include it in the dropdown choices
     # & set default selection back to blank
@@ -63,23 +33,12 @@ IndvExpl4ChartPlotly <- function(input, output, session, datafile, loaded_adams,
       session = session,
       inputId = "plot_adam",
       choices = plotable_adams(), #  plot_adams ................. does this need to update/ depend on usubjid selected? Because RK was backing out datasets
-                                  #                             that didn't have any PARAMs for a patient
+      #                             that didn't have any PARAMs for a patient
       # selected =  " " # keep commented out if you want visit plot to update when ubsubjid changes
     )
-
-    # update array of params
-    updateSelectInput (
-      session = session,
-      inputId = "plot_param",
-      # choices = c(" "),
-      # selected = " " # keep commented out if you want visit plot to update when ubsubjid changes
-    )
-
-    # cat(paste("\n",input$overlay_events))
-    # cat(paste("\n",length(input$overlay_events) > 0))
-
   })
 
+  
   
 
   
