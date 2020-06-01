@@ -25,7 +25,7 @@ sidebarLayout(
                  #                # "Heat Map      " = "4",
                  #                "Histogram     " = "5",
                  #                "Means Plot    " = "6",
-                 #                "Hbar PLot     " = "7"
+                 #                "Hbar Plot     " = "7"
                  #                ),
                  selected = character(0),
                  icon = icon("check")
@@ -104,6 +104,17 @@ sidebarLayout(
                  icon = icon("check")
                ),
                
+               prettyRadioButtons(
+                 inputId = ns("hbarOptions"),
+                 label = "hbar Options:",
+                 shape = "square",
+                 inline = TRUE,
+                 choices = list("Calc Percent" = "1",
+                                "Use Values" = "2"
+                 ),
+                 selected = character(0),
+                 icon = icon("check")
+               ),
                sliderInput(ns("numBins"), "Number of bins:",
                            min = 20, max = 200, value = 40),
                

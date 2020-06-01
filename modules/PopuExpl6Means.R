@@ -25,7 +25,7 @@ num <- names(which(sapply(df(),is.numeric  ))) # all num
 updateCheckboxInput(session = session, inputId = "DiscrXaxis", value = FALSE)
 
 # restrict seltimevar to AVISIT, AVISITN, VSDY
-seltime <- select(df(), ends_with("DY"), starts_with("AVIS"))
+seltime <- select(df(), ends_with("DY"), contains("VIS"))
 
 updateSelectInput(session = session, inputId = "seltimevar",  
                   choices = c("",sort(names(seltime))), selected = "")
@@ -53,7 +53,6 @@ observeEvent(input$selPrmCode, {
   
   # Get ULN value, if available
   if ("LBSTNRHI" %in% colnames(dfsub)) {
-    print("generating ULN from LBSTNRHI")  
     dfuln <- dfsub %>%
       group_by(PARAMCD) %>%
       summarise(ULN = min(LBSTNRHI))
@@ -61,7 +60,6 @@ observeEvent(input$selPrmCode, {
     dfsub <<- left_join(dfsub, dfuln, by = "PARAMCD")
   } else {
     # just insert a value for now
-    print("Variable LBSTNRHI not available, setting to NA")
     dfsub$ULN <<- NA
   }
   
@@ -88,17 +86,14 @@ output$PlotlyOut <- renderPlotly({
   req(!is_empty(input$seltimevar) && input$seltimevar != "")
   req(!is_empty(input$responsevar) && input$responsevar != "")
   
-  print(paste("groupbyvar is:",input$groupbyvar))
-  print(paste("check LBSTNRHI",str(dfsub$LBSTNRHI)))
-  
   labx <- sjlabelled::get_label(dfsub[[input$seltimevar]], def.value = unique(input$seltimevar))
   laby <- sjlabelled::get_label(dfsub[[input$responsevar]], def.value = unique(input$responsevar))
 
-  # Now the response var is no longer AVAL, but SummStat
-  input_responsevar  <- deparse(substitute(SummStat))
-  
   if(input$groupbox == TRUE) {
     req(!is_empty(input$groupbyvar) && input$groupbyvar != "")
+    
+    # remove missing groups from plot
+    dfsub <- filter(dfsub, !is.na(!!sym(input$groupbyvar))) 
     
     labz <- sjlabelled::get_label(dfsub[[input$groupbyvar]], def.value = unique(input$groupbyvar))
     
@@ -129,8 +124,12 @@ output$PlotlyOut <- renderPlotly({
            stop("invalid errorBars button: ",input$errorBars)
     )
     
+    
+    # Now the response var is no longer AVAL, but SummStat
+    input_responsevar  <- deparse(substitute(SummStat))
+    
     p <- ggplot(dferr,
-                aes(x = !!sym(input$seltimevar), y = !!sym(input_responsevar), group = !!sym(input$groupbyvar), color = !!sym(input$groupbyvar))) 
+                aes(x = !!sym(input$seltimevar), y = !!sym(input_responsevar), group = !!sym(input$groupbyvar), color = fct_rev(!!sym(input$groupbyvar)))) 
     
     p <- p + 
       suppressWarnings(geom_point(position = 'identity', na.rm = TRUE,
@@ -167,8 +166,12 @@ output$PlotlyOut <- renderPlotly({
            stop("invalid errorBars button: ",input$errorBars)
     )
     
+    
+    # Now the response var is no longer AVAL, but SummStat
+    input_responsevar  <- deparse(substitute(SummStat))
+    
     p <- ggplot(dferr,
-                aes(x = !!sym(input$seltimevar), y = !!sym(input_responsevar) )) 
+                aes(x = !!sym(input$seltimevar), y = !!sym(input_responsevar), group = 1 )) 
     
     p <- p +
       suppressWarnings(geom_point(position = 'identity', alpha = 0.2, na.rm = TRUE,
@@ -184,8 +187,6 @@ output$PlotlyOut <- renderPlotly({
   if (!is.na(unique(dfsub$ULN))) {
     yint <- unique(dfsub$ULN)
     
-    print(paste("yint is",yint))
-
   p <- p +
     geom_hline(yintercept = yint, linetype =2 ) +   # x-value is 3rd from the rightmost
     geom_text(aes(label = "ULN", y = yint - 0.05, x = sort(unique(!!sym(input$seltimevar)), decreasing = TRUE)[4] ))
@@ -194,7 +195,6 @@ output$PlotlyOut <- renderPlotly({
   # update scale_y_continuous
   fr <- round(min(dferr$ymin, na.rm = TRUE)*0.98)
   to <- round(max(dferr$ymax,dfsub$ULN,na.rm = TRUE)*1.02)
-  print(paste("fr =",fr,"to = ",to))
 
   # set scale_y_continuous if the range is large enough
   if (to - fr > 12) {

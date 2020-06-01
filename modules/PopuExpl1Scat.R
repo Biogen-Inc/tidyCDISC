@@ -97,8 +97,8 @@ output$PlotlyOut <- renderPlotly({
   xvar <- sym(v$selxvar)
   yvar <- sym(v$selyvar)
   
-  labx <- sjlabelled::get_label(dfsub[[v$selxvar]])
-  laby <- sjlabelled::get_label(dfsub[[v$selyvar]])
+  labx <- sjlabelled::get_label(dfsub[[v$selxvar]], def.value = unique(v$selxvar))
+  laby <- sjlabelled::get_label(dfsub[[v$selyvar]], def.value = unique(v$selyvar))
 
   # If there are two PARAMCDs we prefix the label with the PARAMCD
   # check to make sure we are still using the pivot_wider variables with "_" in them
@@ -112,15 +112,10 @@ output$PlotlyOut <- renderPlotly({
     # laby <- str_c(unique(dfsub$PARAMCD),laby,sep=":")
   }
 
-  # correction for overplotting is located in fnscatter
+  # correction for overplotting
+  dfsub <- fnoverplt(dfsub, v$selxvar, input$groupbyvar)
+  
   p <- fnscatter(data = dfsub, input$groupbox, input$groupbyvar, v$selxvar, v$selyvar)
-
-  # light theme
-  p <- p + theme_light()
-  # https://www.datanovia.com/en/blog/easy-way-to-expand-color-palettes-in-r/
-  nlevs <- nlevels(factor(dfsub[[input$groupbyvar]]))
-  mycolors <- colorRampPalette(brewer.pal(8, "Set2"))(nlevs)
-  p <- p + scale_fill_manual(values = mycolors) 
 
   # add geom_line if checked
   if (input$AddLine == TRUE) {
@@ -166,19 +161,21 @@ output$PlotlyOut <- renderPlotly({
   p <- p + labs(title = ggtitle(), x = labx, y = laby)
   }
 
+  # graph instruction processing section
+  #
   ggcmd <- c("geom_point","geom_line","geom_vline","geom_hline","geom_errorbar","geom_bar","geom_text","geom_text2","coord_flip","geom_pointrange","theme",
              "scale_shape","scale_x_cont","scale_y_cont","scale_x_discr","scale_y_discr","scale_y_log10","scale_x_log10")
   # any embedded graph instructions?
   graphinst <- select(df(), any_of(ggcmd))
-  # graphinst <- suppressWarnings(unique(select(dfsub, one_of(ggcmd))))
 
   # display graph instructions for now
   if (length(graphinst) > 0) {
     graphinst <- unique(graphinst) %>% unlist(use.names = FALSE) # convert to unnamed vector
     for (i in 1:length(graphinst)) {
-      # print(graphinst[i])
+      print(graphinst[i])
     }
-     p <- p + sapply(graphinst, function(gr) {eval(parse(text = gr))})
+    # add them to the ggplot object
+    p <- p + sapply(graphinst, function(gr) {eval(parse(text = gr))})
   }
   
   # workaround to remove "(" and "1)" from legend
