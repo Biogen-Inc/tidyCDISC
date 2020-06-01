@@ -385,7 +385,10 @@ output$v_applied_filters_grphDisp <- renderUI({
   
   ###
   # Create the vline data to populate the graph, if applicable
-  vline_dat <- eventReactive(list(length(input$overlay_events) > 0, input$event_type_filter, input$overlay_event_vals) , {
+  vline_dat <- eventReactive(list(length(input$overlay_events) > 0,
+                                  input$event_type_filter,
+                                  input$overlay_event_vals,
+                                  input$plot_adam) , {
     
     # create data to plot vlines using events dataset
     if(length(input$overlay_events) > 0 & input$visit_var %in% vv_dy_name()){ #& "ADLB" %in% loaded_adams() # overlay checkbox won't appear unless this is true

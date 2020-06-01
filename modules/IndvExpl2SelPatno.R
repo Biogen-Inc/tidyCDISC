@@ -15,8 +15,8 @@ IndvExpl2SelPatno <- function(input, output, session, datafile, loaded_adams, fi
     
     
   # observeEvent for inputselPatno 
-  # observeEvent(input$selPatNo, {
-  overlayChoices <- eventReactive(input$selPatNo, {
+  observeEvent(input$selPatNo, {
+  # overlayChoices <- eventReactive(input$selPatNo, {
     
     req(input$selPatNo != "") # selPatNo cannot be blank
     
@@ -157,22 +157,8 @@ IndvExpl2SelPatno <- function(input, output, session, datafile, loaded_adams, fi
       choices = overlay_choices, # optionally convert list to array
       selected = NULL)
     
-    return(overlay_choices)
+    # return(overlay_choices)
   }) # observeEvent
-  
-  # # not working
-  # # need to clear overlay_events if plot_adam changes
-  observeEvent( input$plot_adam,{
-    req(length(input$overlay_events) > 0)
-    
-    cat(paste("\noverlayChoices():",paste(overlayChoices(), collapse = "\n")))
-    
-    updateCheckboxGroupInput(
-      session = session,
-      inputId = "overlay_events",
-      choices = overlayChoices(), #"Milestones", # overlay_choices(), # unlist(choices2),
-      selected = NULL)
-  })
   
 
   # return selected patient USUBJID from module
