@@ -16,16 +16,9 @@ selectData <- function(input, output, session, datafile) {
     session = session,
     inputId = "datalist",
     choices = sasdata
-  )
+    )
   
-  # hide all the widgets
-  widgets <- c("adv_filtering","clearplot","Parmstag","radio","selPrmCode","groupbox","groupbyvar","selxvar","selyvar","selzvar","seltimevar",
-               "responsevar","AddPoints","animate","animateby","numBins","AddLine","AddSmooth",
-               "DiscrXaxis","fillType","selectvars","runCorr","heatMapFill","errorBars")
-  
-  # hide all the widgets using an anonymous function
-  map(widgets, function(x) shinyjs::hide(x))
-})
+  })
   
   # show action button done when selected
   observeEvent(input$datalist,{

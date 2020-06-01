@@ -4,9 +4,6 @@
 #    returns: p for ggplotly
 fnscatter <- function(data, groupbox, groupbyvar, selxvar, selyvar) {
   
-  # correction for overplotting
-  data <- fnoverplt(data,selxvar,groupbyvar)
-
   if(groupbox == TRUE) {
     req(!is_empty(groupbyvar) && groupbyvar != "")
     
@@ -51,6 +48,21 @@ fnscatter <- function(data, groupbox, groupbyvar, selxvar, selyvar) {
     }
 
   }
+  
+  # light theme
+  p <- p + theme_light()
+  
+  # https://www.datanovia.com/en/blog/easy-way-to-expand-color-palettes-in-r/
+  nlevs <- nlevels(factor(data[[groupbyvar]]))
+  mycolors <- colorRampPalette(brewer.pal(8, "Set2"))(nlevs)
+  p <- p + scale_fill_manual(values = mycolors) 
+  
+  # add x- and y- axis labels
+  # set def.value to use name if the variable has no label attribute
+  labx <- sjlabelled::get_label(data[[selxvar]], def.value = unique(selxvar))
+  laby <- sjlabelled::get_label(data[[selyvar]], def.value = unique(selyvar))
+  
+  p <- p + labs(x = labx, y = laby)
   
   return(p)
   
