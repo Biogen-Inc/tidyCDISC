@@ -105,11 +105,11 @@
       "GithubRepo": "IDEAFilter",
       "GithubUsername": "MayaGans",
       "GithubRef": "master",
-      "GithubSha1": "fab8eafc991405b980200a006ccaa85933357b85",
+      "GithubSha1": "29a7d454555ec24209f2f2b1bb648ce5d97b607a",
       "description": {
         "Package": "IDEAFilter",
         "Type": "Package",
-        "Version": "0.0.1",
+        "Version": "0.0.2",
         "Title": "agnostic, idiomatic data filter module for shiny",
         "Description": "a small data filter module for shiny.",
         "Authors@R": "as.person(c(\n    \"Maya Gans <maya.gans@biogen.com> [aut, cre]\", \n    \"Aaron Clark <aaron.clark@biogen.com> [aut]\"\n  ))",
@@ -117,23 +117,24 @@
         "License": "MIT + file LICENSE",
         "Encoding": "UTF-8",
         "LazyData": "true",
-        "RoxygenNote": "6.1.1",
+        "RoxygenNote": "7.1.0",
         "Imports": "shiny, ggplot2, pillar, crayon, RColorBrewer, waiter,\nshinyTime",
-        "Suggests": "shinytest, testthat",
+        "Suggests": "shinytest, testthat, knitr, rmarkdown",
+        "VignetteBuilder": "knitr",
         "RemoteType": "github",
         "RemoteHost": "api.github.com",
         "RemoteRepo": "IDEAFilter",
         "RemoteUsername": "MayaGans",
         "RemoteRef": "master",
-        "RemoteSha": "fab8eafc991405b980200a006ccaa85933357b85",
+        "RemoteSha": "29a7d454555ec24209f2f2b1bb648ce5d97b607a",
         "GithubRepo": "IDEAFilter",
         "GithubUsername": "MayaGans",
         "GithubRef": "master",
-        "GithubSHA1": "fab8eafc991405b980200a006ccaa85933357b85",
+        "GithubSHA1": "29a7d454555ec24209f2f2b1bb648ce5d97b607a",
         "NeedsCompilation": "no",
-        "Packaged": "2020-06-01 18:28:09 UTC; mgans",
+        "Packaged": "2020-06-01 19:56:04 UTC; mgans",
         "Author": "Maya Gans [aut, cre],\n  Aaron Clark [aut]",
-        "Built": "R 3.6.3; ; 2020-06-01 18:28:12 UTC; windows"
+        "Built": "R 3.6.3; ; 2020-06-01 19:56:07 UTC; windows"
       }
     },
     "MASS": {
@@ -203,64 +204,6 @@
         "Repository": "CRAN",
         "Date/Publication": "2019-11-27 15:20:02 UTC",
         "Built": "R 3.6.3; x86_64-w64-mingw32; 2020-02-29 09:40:26 UTC; windows"
-      }
-    },
-    "R.methodsS3": {
-      "Source": "CRAN",
-      "Repository": "https://cran.rstudio.com/",
-      "GithubRepo": null,
-      "GithubUsername": null,
-      "GithubRef": null,
-      "GithubSha1": null,
-      "description": {
-        "Package": "R.methodsS3",
-        "Version": "1.8.0",
-        "Depends": "R (>= 2.13.0)",
-        "Imports": "utils",
-        "Suggests": "codetools",
-        "Title": "S3 Methods Simplified",
-        "Authors@R": "c(person(\"Henrik\", \"Bengtsson\", role=c(\"aut\", \"cre\", \"cph\"),\n                                          email = \"henrikb@braju.com\"))",
-        "Author": "Henrik Bengtsson [aut, cre, cph]",
-        "Maintainer": "Henrik Bengtsson <henrikb@braju.com>",
-        "Description": "Methods that simplify the setup of S3 generic functions and S3 methods.  Major effort has been made in making definition of methods as simple as possible with a minimum of maintenance for package developers.  For example, generic functions are created automatically, if missing, and naming conflict are automatically solved, if possible.  The method setMethodS3() is a good start for those who in the future may want to migrate to S4.  This is a cross-platform package implemented in pure R that generates standard S3 methods.",
-        "License": "LGPL (>= 2.1)",
-        "LazyLoad": "TRUE",
-        "URL": "https://github.com/HenrikBengtsson/R.methodsS3",
-        "BugReports": "https://github.com/HenrikBengtsson/R.methodsS3/issues",
-        "NeedsCompilation": "no",
-        "Packaged": "2020-02-14 03:35:57 UTC; hb",
-        "Repository": "CRAN",
-        "Date/Publication": "2020-02-14 07:10:20 UTC",
-        "Built": "R 3.6.2; ; 2020-02-18 22:19:29 UTC; windows"
-      }
-    },
-    "R.oo": {
-      "Source": "CRAN",
-      "Repository": "https://cran.rstudio.com/",
-      "GithubRepo": null,
-      "GithubUsername": null,
-      "GithubRef": null,
-      "GithubSha1": null,
-      "description": {
-        "Package": "R.oo",
-        "Version": "1.23.0",
-        "Depends": "R (>= 2.13.0), R.methodsS3 (>= 1.7.1)",
-        "Imports": "methods, utils",
-        "Suggests": "tools",
-        "Title": "R Object-Oriented Programming with or without References",
-        "Authors@R": "c(person(\"Henrik\", \"Bengtsson\", role=c(\"aut\", \"cre\", \"cph\"),\n                                          email = \"henrikb@braju.com\"))",
-        "Author": "Henrik Bengtsson [aut, cre, cph]",
-        "Maintainer": "Henrik Bengtsson <henrikb@braju.com>",
-        "Description": "Methods and classes for object-oriented programming in R with or without references.  Large effort has been made on making definition of methods as simple as possible with a minimum of maintenance for package developers.  The package has been developed since 2001 and is now considered very stable.  This is a cross-platform package implemented in pure R that defines standard S3 classes without any tricks.",
-        "License": "LGPL (>= 2.1)",
-        "LazyLoad": "TRUE",
-        "URL": "https://github.com/HenrikBengtsson/R.oo",
-        "BugReports": "https://github.com/HenrikBengtsson/R.oo/issues",
-        "NeedsCompilation": "no",
-        "Packaged": "2019-11-03 02:01:44 UTC; hb",
-        "Repository": "CRAN",
-        "Date/Publication": "2019-11-03 08:40:02 UTC",
-        "Built": "R 3.6.2; ; 2020-02-19 02:03:46 UTC; windows"
       }
     },
     "R6": {
@@ -3078,36 +3021,6 @@
         "Built": "R 3.6.3; ; 2020-04-02 16:57:33 UTC; windows"
       }
     },
-    "rtf": {
-      "Source": "CRAN",
-      "Repository": "https://cran.rstudio.com/",
-      "GithubRepo": null,
-      "GithubUsername": null,
-      "GithubRef": null,
-      "GithubSha1": null,
-      "description": {
-        "Package": "rtf",
-        "Version": "0.4-14.1",
-        "Depends": "R (>= 2.10.1)",
-        "Imports": "R.oo, R.methodsS3",
-        "Suggests": "ggplot2, lattice, grid, xtable, gsubfn",
-        "Date": "2019-05-26",
-        "Title": "Rich Text Format (RTF) Output",
-        "Authors@R": "c(person(c(\"Michael\",\"E.\"), \"Schaffer\", role=c(\"aut\", \"cre\", \"cph\"), email = \"mschaff@gmail.com\"))",
-        "Description": "A set of R functions to output Rich Text Format (RTF) files with high resolution tables and graphics that may be edited with a standard word processor such as Microsoft Word.",
-        "License": "GPL (>= 2)",
-        "LazyLoad": "TRUE",
-        "Packaged": "2020-03-22 09:06:07 UTC; hornik",
-        "NeedsCompilation": "no",
-        "Repository": "CRAN",
-        "URL": "https://github.com/schaffman5/rtf",
-        "BugReports": "https://github.com/schaffman5/rtf/issues",
-        "Author": "Michael E. Schaffer [aut, cre, cph]",
-        "Maintainer": "Michael E. Schaffer <mschaff@gmail.com>",
-        "Date/Publication": "2020-03-22 09:32:44 UTC",
-        "Built": "R 3.6.3; ; 2020-04-02 17:18:31 UTC; windows"
-      }
-    },
     "rvest": {
       "Source": "CRAN",
       "Repository": "https://cran.rstudio.com/",
@@ -4327,7 +4240,7 @@
   },
   "files": {
     "app.R": {
-      "checksum": "e7c6f7e1efdc8d2189b8616657441287"
+      "checksum": "b872863ebfb305bee3925dd713d81490"
     },
     "global.R": {
       "checksum": "6647e7d96887e37de3c5fe3c6714746c"
@@ -4531,7 +4444,7 @@
       "checksum": "511b7b895e63a88c5dd94ef5e6621f4c"
     },
     "packrat/desc/IDEAFilter": {
-      "checksum": "ba2d019a2f2d8f7bb4f58606bb613941"
+      "checksum": "d63fdf78867587516508ecce35535bc2"
     },
     "packrat/desc/insight": {
       "checksum": "8d35011684c2adc98996f12c3451e81e"
@@ -4647,12 +4560,6 @@
     "packrat/desc/purrr": {
       "checksum": "48fd87a4eb3eeb55b13ebd5dde3317ea"
     },
-    "packrat/desc/R.methodsS3": {
-      "checksum": "fabb81f9410410d6d961afc93092f213"
-    },
-    "packrat/desc/R.oo": {
-      "checksum": "b0a50cafd8fcba17743741ba691a8072"
-    },
     "packrat/desc/R6": {
       "checksum": "b6084de77c6ee606403e4c81f25ebc16"
     },
@@ -4691,9 +4598,6 @@
     },
     "packrat/desc/rstudioapi": {
       "checksum": "66a1f27ac173d391260e379910a8ace2"
-    },
-    "packrat/desc/rtf": {
-      "checksum": "677a0bffcd5c02a2d9e480342fe9836f"
     },
     "packrat/desc/rvest": {
       "checksum": "4d3ac5144e11cfee24acbe54b00bf1e6"
@@ -4813,7 +4717,7 @@
       "checksum": "1a902a5286236b90738a357b2537b341"
     },
     "packrat/packrat.lock": {
-      "checksum": "8a0f8983399d4fe5c84146d5d8af81e2"
+      "checksum": "b545049e3aa3a6718ec99bc172487c29"
     },
     "R/allowed_operators.R": {
       "checksum": "c2130178775fc0a80237b19db6cfc7b8"
