@@ -84,7 +84,7 @@ fnIndvExplVisits <- function(
     # if a lengend is needed, let's just define the line colors and types in one place
     if(length(input_plot_hor) > 0 | length(input_overlay_events) > 0 & input_visit_var %in% vv_dy_name){
       
-      names2 <- c("Milestones","Adverse Events","Concomitant Meds","Baseline","Screening") # ac: labels
+      names2 <- c("Milestones","Concomitant Meds","Adverse Events","Baseline","Screening") # ac: labels
       vline_eventtype_cols <- c(my_cols[1:3],my_gg_color_hue(2))
       v_event_cols <- setNames(vline_eventtype_cols,names2)
       
