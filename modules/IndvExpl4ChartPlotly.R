@@ -402,7 +402,11 @@ output$v_applied_filters_grphDisp <- renderUI({
          
          vline_dat0 <-
            olay_events() %>%
-           mutate(!!INPUT_visit_var := ifelse(START - day1 < 0, START - day1, START - day1 + 1)) %>%
+           mutate(!!INPUT_visit_var := ifelse(START - day1 < 0, START - day1, START - day1 + 1) +
+                                       case_when(EVENTTYP == "Adverse Events" ~ .3,
+                                                 EVENTTYP == "Concomitant Meds" ~ .7,
+                                                 TRUE ~ 0)                
+          ) %>%
            rename("Event" = "EVENTTYP")
          
          if(input$event_type_filter == "Manually Filter"){

@@ -114,10 +114,11 @@ fnIndvExplVisits <- function(
             geom_vline(data = vline_dat, aes(xintercept = !!INPUT_visit_var,
                                                colour = Event,
                                                # linetype = Event, # two dimensions in legend not really support in plotly
-                                               text = paste0(input_visit_var, ": ",!!INPUT_visit_var,
+                                               text = paste0(input_visit_var, ": ",floor(!!INPUT_visit_var),
                                                              "<br>", DECODE
                                                )
-            ))
+                                        ), size = .35
+            )
         }
       }
     }
