@@ -20,26 +20,13 @@ IndvExpl2SelPatno <- function(input, output, session, datafile, loaded_adams, fi
     
     req(input$selPatNo != "") # selPatNo cannot be blank
     
-    # cat(paste("\n",input$whichTab))
-    
     # Show the rest of the widgets once a patient number was selected
-    shinyjs::show(id = "demog_header")
-    shinyjs::show(id = "subjid_subtitle1")
-    shinyjs::show(id = "demogInfo")
+    # # shinyjs::show(id = "eventsPlot")
+    # # shinyjs::show(id = "eventsTable")
+    show_em <- c("demog_header", "subjid_subtitle1", "demogInfo", "mytabs", "events_header",
+                 "subjid_subtitle2","checkGroup","plot_header", "subjid_subtitle3", "plot_adam")
+    map(show_em, ~shinyjs::show(.x))
     
-    shinyjs::show(id = "mytabs")
-    # shinyjs::show(id = "hr2")
-    shinyjs::show(id = "events_header")
-    shinyjs::show(id = "subjid_subtitle2")
-    
-    shinyjs::show(id = "checkGroup")  
-    # shinyjs::show(id = "eventsPlot")
-    # shinyjs::show(id = "eventsTable")
-    # shinyjs::show(id = "hr3")
-    shinyjs::show(id = "plot_header")
-    shinyjs::show(id = "subjid_subtitle3")
-    # see if-then-else up near subjid_subtitle2 ^^^ for bds_remove_filter checkbox toggling
-    shinyjs::show(id = "plot_adam")
     
     # Clear datatables abd plots 
     output$DataTable<- DT::renderDataTable({NULL})
@@ -48,14 +35,11 @@ IndvExpl2SelPatno <- function(input, output, session, datafile, loaded_adams, fi
     output$eventsPlot <- renderTimevis({NULL})
     output$events_tv_caption1 <- renderText({NULL})
     output$events_tv_caption2 <- renderText({NULL})
-    shinyjs::hide(id = "events_tv_caption1")
-    shinyjs::hide(id = "events_tv_caption2")
-    shinyjs::hide(id = "eventsPlot")
-    shinyjs::hide(id = "eventsTable")
-    shinyjs::hide(id = "display_dy")
+    hide_em <- c("events_tv_caption1", "events_tv_caption2", "eventsPlot", "eventsTable", "display_dy",
+                 "overlay_events","overlay_event_vals")
+    map(hide_em, ~shinyjs::hide(.x))
     output$display_dy <- renderText({NULL})
-    shinyjs::hide(id = "overlay_events")
-    shinyjs::hide(id = "overlay_event_vals")
+    
     
     
     output$demogInfo <- DT::renderDataTable({
