@@ -60,8 +60,8 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
     if (!is_empty(PARAMCD)) {
       # Bind all the PARAMCD files 
       all_PARAMCD <- bind_rows(PARAMCD, .id = "data_from")  %>% 
-        arrange(SUBJID, AVISITN, PARAMCD) %>% 
-        select(USUBJID, SUBJID, AVISITN, AVISIT, PARAMCD, AVAL, CHG, data_from)
+        arrange(USUBJID, AVISITN, PARAMCD) %>% 
+        select(USUBJID, AVISITN, AVISIT, PARAMCD, AVAL, CHG, data_from)
         # distinct(USUBJID, AVISITN, AVISIT, PARAMCD, .keep_all = TRUE) 
       
       # Join ADSL and all_PARAMCD
