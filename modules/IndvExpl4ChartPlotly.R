@@ -20,42 +20,12 @@ IndvExpl4ChartPlotly <- function(input, output, session, datafile, loaded_adams,
     paste0("Patient Metrics by Visit") #'", usubjid, "' 
   })
   
-  # this won't work for some reason...
-  # ##########
-  # # Need to refresh these every time a new subject or dataset loaded is selected
-  # ###########
-  # observeEvent(list(usubjid(),loaded_adams()), {
-  #   
-  #   # If a plotable adam is loaded, include it in the dropdown choices
-  #   # & set default selection back to blank
-  #   updateSelectInput(
-  #     session = session,
-  #     inputId = "plot_adam",
-  #     choices = plotable_adams(), #  plot_adams ................. does this need to update/ depend on usubjid selected? Because RK was backing out datasets
-  #     #                             that didn't have any PARAMs for a patient
-  #     # selected =  " " # keep commented out if you want visit plot to update when ubsubjid changes
-  #   )
-  # })
-  # 
-  # observeEvent(usubjid(), {
-  #   
-  #   # update array of params
-  #   updateSelectInput (
-  #     session = session,
-  #     inputId = "plot_param",
-  #     # choices = c(" "),
-  #     # selected = " " # keep commented out if you want visit plot to update when ubsubjid changes
-  #   )
-  #   
-  #   # cat(paste("\n",input$overlay_events))
-  #   # cat(paste("\n",length(input$overlay_events) > 0))
-  #   
-  # })
+  
   
   ##########
-  # Need to refresh these every time a new subject is selected
+  # Need to refresh these every time a new subject or dataset loaded is selected
   ###########
-  observeEvent(usubjid(), {
+  observeEvent(list(loaded_adams()), { #
 
     # If a plotable adam is loaded, include it in the dropdown choices
     # & set default selection back to blank
@@ -63,26 +33,13 @@ IndvExpl4ChartPlotly <- function(input, output, session, datafile, loaded_adams,
       session = session,
       inputId = "plot_adam",
       choices = plotable_adams(), #  plot_adams ................. does this need to update/ depend on usubjid selected? Because RK was backing out datasets
-                                  #                             that didn't have any PARAMs for a patient
+      #                             that didn't have any PARAMs for a patient
       # selected =  " " # keep commented out if you want visit plot to update when ubsubjid changes
     )
-
-    # update array of params
-    updateSelectInput (
-      session = session,
-      inputId = "plot_param",
-      # choices = c(" "),
-      # selected = " " # keep commented out if you want visit plot to update when ubsubjid changes
-    )
-
-    # cat(paste("\n",input$overlay_events))
-    # cat(paste("\n",length(input$overlay_events) > 0))
-
   })
 
   
-
-
+  
 
   
   # upon selecting a plottable adam data set from dropdown
@@ -306,7 +263,7 @@ v_applied_filters_HTML_on_graph <- reactive({
   
   req(usubjid() != "" & input$plot_adam != " ")
 
-  cat(paste("\nlength(input$overlay_events):",length(input$overlay_events)))
+  # cat(paste("\nlength(input$overlay_events):",length(input$overlay_events)))
   
   HTML( # case_when wouldn't work since olay_events does exist yet
     if(length(input$overlay_events) == 0 | 
@@ -387,7 +344,10 @@ output$v_applied_filters_grphDisp <- renderUI({
   
   ###
   # Create the vline data to populate the graph, if applicable
-  vline_dat <- eventReactive(list(length(input$overlay_events) > 0, input$event_type_filter, input$overlay_event_vals) , {
+  vline_dat <- eventReactive(list(length(input$overlay_events) > 0,
+                                  input$event_type_filter,
+                                  input$overlay_event_vals,
+                                  input$plot_adam) , {
     
     # create data to plot vlines using events dataset
     if(length(input$overlay_events) > 0 & input$visit_var %in% vv_dy_name()){ #& "ADLB" %in% loaded_adams() # overlay checkbox won't appear unless this is true
@@ -404,7 +364,11 @@ output$v_applied_filters_grphDisp <- renderUI({
          
          vline_dat0 <-
            olay_events() %>%
-           mutate(!!INPUT_visit_var := ifelse(START - day1 < 0, START - day1, START - day1 + 1)) %>%
+           mutate(!!INPUT_visit_var := ifelse(START - day1 < 0, START - day1, START - day1 + 1) +
+                                       case_when(EVENTTYP == "Adverse Events" ~ .3,
+                                                 EVENTTYP == "Concomitant Meds" ~ .7,
+                                                 TRUE ~ 0)                
+          ) %>%
            rename("Event" = "EVENTTYP")
          
          if(input$event_type_filter == "Manually Filter"){
@@ -460,7 +424,7 @@ output$v_applied_filters_grphDisp <- renderUI({
     output$PlotChart <- renderPlotly({
       req(input$plot_param != " ")
       
-      fnIndvExplVisits(
+      suppressWarnings(fnIndvExplVisits(
         watermark = FALSE,
         graph_output = "plotly",
         bds_data = lb_data,
@@ -472,7 +436,8 @@ output$v_applied_filters_grphDisp <- renderUI({
         input_overlay_events = input$overlay_events,
         vline_dat = vline_dat(),
         vv_dy_name = vv_dy_name()
-      )
+      ))
+      
        
      })
     

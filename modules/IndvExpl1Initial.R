@@ -104,36 +104,17 @@ IndvExpl1Initial <- function(input, output, session, datafile, dataselected){
     
     # Hide widgets until the input file has been selected
     shinyjs::show(id = "selPatNo")
-    shinyjs::hide(id = "demog_header")
-    shinyjs::hide(id = "subjid_subtitle1")
-    shinyjs::hide(id = "demogInfo")
-    # shinyjs::hide(id = "hr2")
     
+    hide_init <- c("demog_header", "subjid_subtitle1", "demogInfo", "mytabs", "events_header",
+                 "subjid_subtitle2", "events_apply_filter","checkGroup","eventsPlot",
+                 "events_tv_caption1","events_tv_caption2","eventsTable",
+                 "plot_header", "subjid_subtitle3", "plot_adam", "event_type_filter", "plot_param",
+                 "visit_var", "plot_hor", "display_dy", "overlay_events", "overlay_event_vals", ""
+                 )
+    map(hide_init, ~ shinyjs::hide(.x))
     
-    shinyjs::hide(id = "mytabs")
-    shinyjs::hide(id = "events_header")
-    shinyjs::hide(id = "subjid_subtitle2")
-    shinyjs::hide(id = "events_apply_filter")
-    shinyjs::hide(id = "checkGroup")
-    shinyjs::hide(id = "eventsPlot")
-    shinyjs::hide(id = "events_tv_caption1")
-    shinyjs::hide(id = "events_tv_caption2")
-    # shinyjs::hide(id = "applied_filters")
-    shinyjs::hide(id = "eventsTable")
-    # shinyjs::hide(id = "hr3")
-    
-    shinyjs::hide(id = "plot_header")
-    shinyjs::hide(id = "subjid_subtitle3")
-    shinyjs::hide(id = "event_type_filter")
-    shinyjs::hide(id = "plot_adam")
-    shinyjs::hide(id = "plot_param")
-    shinyjs::hide(id = "visit_var")
-    shinyjs::hide(id = "plot_hor")
-    
+    # # shinyjs::hide(id = "applied_filters")
     output$display_dy <- renderUI({NULL})
-    shinyjs::hide(id = "display_dy")
-    shinyjs::hide(id = "overlay_events")
-    shinyjs::hide(id = "overlay_event_vals")
     
   })
   
