@@ -19,7 +19,7 @@ PopuExplor <- function(input, output, session, datafile){
                    # "Heat Map      " = "4",
                    "Histogram     " = "5",
                    "Means Plot    " = "6",  
-                   "Hbar PLot     " = "7",
+                   "Hbar Plot     " = "7",
                    "None selected " = "0"
     ),
     selected = "0"
@@ -34,7 +34,7 @@ PopuExplor <- function(input, output, session, datafile){
                    # "Heat Map      " = "4",
                    "Histogram     " = "5",
                    "Means Plot    " = "6",
-                   "Hbar PLot     " = "7"
+                   "Hbar Plot     " = "7"
                    
     ),
     selected = character(0)
@@ -45,6 +45,14 @@ PopuExplor <- function(input, output, session, datafile){
     spin_folding_cube(),
     h4("Hold on a bit while we merge datasets...")
   ) 
+
+  # hide all the widgets
+  widgets <- c("adv_filtering","clearplot","Parmstag","radio","selPrmCode","groupbox","groupbyvar","selxvar","selyvar","selzvar","seltimevar",
+               "responsevar","AddPoints","animate","animateby","numBins","AddLine","AddSmooth",
+               "DiscrXaxis","fillType","selectvars","runCorr","heatMapFill","errorBars","hbarOptions")
+  
+  # hide all the widgets using an anonymous function
+  map(widgets, function(x) shinyjs::hide(x))
 
   # select the data sets
   dataselected <- callModule(selectData, id = NULL, datafile)
@@ -130,14 +138,13 @@ PopuExplor <- function(input, output, session, datafile){
   } else if (!is_empty(BDSUSUBJ)) {
     # Bind all the BDS (PARAMCD) files and filter them
     all_USUBJ <- bind_rows(BDSUSUBJ, .id = "data_from")  %>%
-      filter(SAFFL == "Y") %>% # safety population
-      filter(!is.na(AVISITN)) %>%
-      select("USUBJID","STUDYID","AVISIT","AVISITN",ends_with("DY"),"PARAMCD",
-             any_of(c("PARAM","AVAL","BASE","CHG","data_from",
-                      "LBCAT","LBSTRESN","LBSTNRLO","LBSTNRHI"))) %>%
-      distinct(USUBJID, PARAMCD, AVISIT, .keep_all = TRUE) %>%
-      mutate(AVISITN = as.integer(ceiling(AVISITN))) %>%
-      arrange(USUBJID, PARAMCD, AVISITN) 
+      select("STUDYID","USUBJID","PARAMCD",
+             everything() ) %>%
+             # ends_with("DY"),
+             # any_of(c("PARAM","AVAL","BASE","CHG","data_from","AVISIT","AVISITN","VISIT","VISITNUM",
+             #          "ITTFL", "BRTHDT", "SMN2COPY", "AGEFDOSE", "AGELEFD",
+             #          "CNSR","LBCAT","LBSTRESN","LBSTNRLO","LBSTNRHI"))) %>%
+      arrange(USUBJID, PARAMCD) 
 
     # Join ADSL and all_PARAMCD, if it exsits
     if (exists("ADSL")) {
@@ -191,16 +198,16 @@ PopuExplor <- function(input, output, session, datafile){
     if ("AGEGR" %in% colnames(all_data) && "AGEGRN" %in% colnames(all_data)) {
       tmplabl <- get_label(all_data$AGEGR)
       all_data <- all_data %>%
-        mutate(AGEGR = fct_reorder(AGEGR, AGEGRN))
-      set_label(all_data$AGEGR) <- tmplabl
-      # Hmisc::label(all_data$AVISIT) = tmplabl
+        mutate(AGEGR = fct_reorder(AGEGR, AGEGRN)) %>%
+        var_labels(AGEGR = "Age Group")
+        # var_labels(AGEGR = !!sym(tmplabl))
     } 
     if ("AVISIT" %in% colnames(all_data) && "AVISITN" %in% colnames(all_data)) {
       tmplabl <- get_label(all_data$AVISIT)
       all_data <- all_data %>%
-        mutate(AVISIT = fct_reorder(AVISIT, AVISITN))
-      set_label(all_data$AVISIT) <- tmplabl
-      # Hmisc::label(all_data$AVISIT) = tmplabl
+        mutate(AVISIT = fct_reorder(AVISIT, AVISITN)) %>%
+        var_labels(AVISIT = "Analysis Visit")
+        # var_labels(AVISIT = !!sym(tmplabl))
     } 
   }
 
@@ -312,7 +319,7 @@ PopuExplor <- function(input, output, session, datafile){
     # widgets to hide
     widgets <- c("selPrmCode","groupbox","groupbyvar","selxvar","selyvar","selzvar","seltimevar",
                  "responsevar","AddPoints","animate","animateby","numBins","AddLine","AddSmooth",
-                 "DiscrXaxis","fillType","selectvars","runCorr","heatMapFill","errorBars")
+                 "DiscrXaxis","fillType","selectvars","runCorr","heatMapFill","errorBars","hbarOptions")
     map(widgets, function(x) shinyjs::hide(x))
 
     
