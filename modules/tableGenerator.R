@@ -86,8 +86,14 @@ tableGenerator <- function(input, output, session, datafile = reactive(NULL)) {
     data = processed_data,
     verbose = FALSE)
   
-  avisit_words <- reactive({ processed_data()$AVISIT })
-  avisit_fctr  <- reactive({ processed_data()$AVISITN })
+  avisit_words <- reactive({ 
+    req("ADSL" %in% names(datafile()))
+    processed_data()$AVISIT 
+    })
+  avisit_fctr  <- reactive({ 
+    req("ADSL" %in% names(datafile()))
+    processed_data()$AVISITN 
+    })
   
   AVISIT <- reactive({
     req(BDS())
