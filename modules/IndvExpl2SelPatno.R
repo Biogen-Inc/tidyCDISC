@@ -15,8 +15,8 @@ IndvExpl2SelPatno <- function(input, output, session, datafile, loaded_adams, fi
     
     
   # observeEvent for inputselPatno 
-  observeEvent(input$selPatNo, {
-  # overlayChoices <- eventReactive(input$selPatNo, {
+  # observeEvent(input$selPatNo, {
+  overlayChoices <- eventReactive(input$selPatNo, {
     
     req(input$selPatNo != "") # selPatNo cannot be blank
     
@@ -149,15 +149,15 @@ IndvExpl2SelPatno <- function(input, output, session, datafile, loaded_adams, fi
     # build a named list & Remove NULLs from the list
     choices2 <- setNames(choices2,names2)
     choices2 <- choices2[!sapply(choices2,is.na)]
-    overlay_choices <- reactive({unlist(choices2)})
+    overlay_choices <- unlist(choices2)
     
     updateCheckboxGroupInput(
       session = session,
       inputId = "overlay_events",
-      choices = overlay_choices(), # optionally convert list to array
+      choices = overlay_choices, # optionally convert list to array
       selected = NULL)
     
-    # return(overlay_choices)
+    return(overlay_choices)
   }) # observeEvent
   
   # # not working
@@ -165,12 +165,12 @@ IndvExpl2SelPatno <- function(input, output, session, datafile, loaded_adams, fi
   observeEvent( input$plot_adam,{
     req(length(input$overlay_events) > 0)
     
-    cat(paste("\noverlay_choices():",paste(overlay_choices(), collapse = "\n")))
+    cat(paste("\noverlayChoices():",paste(overlayChoices(), collapse = "\n")))
     
     updateCheckboxGroupInput(
       session = session,
       inputId = "overlay_events",
-      choices = "Milestones", # overlay_choices(), # unlist(choices2), # optionally convert list to array
+      choices = overlayChoices(), #"Milestones", # overlay_choices(), # unlist(choices2),
       selected = NULL)
   })
   
