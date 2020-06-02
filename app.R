@@ -4,12 +4,8 @@ library(tidyverse)
 # remotes::install_github("JohnCoene/tippy")
 library(tippy)
 library(rvest)
-# devtools::install_github("MayaGans/IDEAFilter") # don't use for production
-# drat::addRepo("aaron-clark") # add a repo where the source file (tar.gz) file is hosted on gitHub
-# getOption("repos") # check if the repo was added
-# install.packages("IDEAFilter")
+# devtools::install_github("MayaGans/IDEAFilter", dependencies = TRUE)
 library(IDEAFilter)
-library(shinyTime) # for IDEAFilter
 library(haven)
 library(DT)
 library(shinyWidgets)
@@ -18,7 +14,6 @@ library(RColorBrewer)
 library(gridExtra)
 library(grid)
 library(janitor)
-library(rtf)
 library(shinythemes)
 library(rmarkdown)
 library(shinytest)
@@ -32,15 +27,6 @@ library(shinyBS)
 library(knitr)
 library(rlang)
 library(stringi)
-
-###############################################################
-# make sure this repo exists before writing to manifest file!
-###############################################################
-# drat::addRepo("aaron-clark")
-# getOption("repos")
-# # devtools::install_github("rstudio/rsconnect")
-# rsconnect::writeManifest()
-
 
 
 options(shiny.sanitize.errors = FALSE)
