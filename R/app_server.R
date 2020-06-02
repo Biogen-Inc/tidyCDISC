@@ -31,7 +31,7 @@ app_server <- function( input, output, session ) {
   datafile <- callModule(mod_dataUpload_server, "dataUpload_ui_1", stringsAsFactors = FALSE)
   
   # # render the tablegenerator module using the datafile from dataupload as an input
-  # table_generator <- callModule(tableGenerator, "table_generator", datafile = datafile)
+  # table_generator <- callModule(mod_tableGen_server, "tableGen_ui_1", datafile = datafile)
   # 
   # output$all_rows <- renderUI({ table_generator() })
   # 
@@ -39,9 +39,9 @@ app_server <- function( input, output, session ) {
   # callModule(PopuExplor, id = "popul", datafile = datafile)
   # 
   # # Individual Explorer
-  # user_dat <- callModule(IndvExpl1Initial, "indvl", datafile = datafile)
-  # usubjid  <- callModule(IndvExpl2SelPatno , "indvl", datafile = datafile,  loaded_adams = user_dat$my_loaded_adams, filtered_dat = user_dat$all_data) #, dataselected
-  # callModule(IndvExpl3CheckGroup,  "indvl", datafile,  loaded_adams = user_dat$my_loaded_adams, usubjid = usubjid, filtered_dat = user_dat$all_data)   #, dataselected
-  # callModule(IndvExpl4ChartPlotly, "indvl", datafile,  loaded_adams = user_dat$my_loaded_adams, usubjid = usubjid, filtered_dat = user_dat$all_data)   #, dataselected
+  # user_dat <- callModule(mod_indvExp_server, "indvExp_ui_1", datafile = datafile)
+  # usubjid  <- callModule(mod_indvExpPat_server, "indvExp_ui_1", datafile = datafile,  loaded_adams = user_dat$my_loaded_adams, filtered_dat = user_dat$all_data)
+  # callModule(mod_indvExpPatEvents_server,  "indvExp_ui_1", datafile,  loaded_adams = user_dat$my_loaded_adams, usubjid = usubjid, filtered_dat = user_dat$all_data)   #, dataselected
+  # callModule(mod_indvExpPatVisits_server, "indvExp_ui_1", datafile,  loaded_adams = user_dat$my_loaded_adams, usubjid = usubjid, filtered_dat = user_dat$all_data)   #, dataselected
   
 }
