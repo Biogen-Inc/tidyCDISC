@@ -38,11 +38,14 @@ usethis::use_news_md( open = FALSE )
 usethis::use_git("AC Initial Commit")
 # $ git remote add origin https://cloudhub.corp.biogen.com/biometrics/SEER.git
 
-## Init Testing Infrastructure ----
+## Init Testing Infrastructure ---- ran
 ## Create a template for tests
+# Call `use_test()` to initialize a basic test file and open it for editing.
 golem::use_recommended_tests()
 
-## Use Recommended Packages ----
+## Use Recommended Packages ---- pass
+# This will add “shiny”, “DT”, “attempt”, “glue”, “htmltools”, and “golem” as a dependency to your package.
+# since we don't need those, we won't run this code now.
 golem::use_recommended_deps()
 
 ## Favicon ----
