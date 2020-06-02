@@ -66,15 +66,27 @@ usethis::use_package("magrittr")
 
 ## Add modules ---- ran
 ## Create a module infrastructure in R/
-golem::add_module( name = "dataUpload" ) # Name of the module
-golem::add_module( name = "dataComply" ) # Name of the module
-golem::add_module( name = "tableGen" ) # Name of the module
+## Only argument is Name of the module
+golem::add_module( name = "dataUpload" ) 
+golem::add_module( name = "dataComply" )
 
-# Haven't run yet
-golem::add_module( name = "indvExp") # Name of the module
-golem::add_module( name = "indvExpPat" ) # Name of the module
-golem::add_module( name = "indvExpPatEvents" ) # Name of the module
-golem::add_module( name = "indvExpPatVisits" ) # Name of the module
+golem::add_module( name = "tableGen" )
+
+golem::add_module( name = "selectData" )
+golem::add_module( name = "popExp" )
+
+# golem::add_module( name = "popExpScat" )
+# golem::add_module( name = "popExpSpag" )
+# golem::add_module( name = "popExpBoxp" )
+# golem::add_module( name = "popExpHeat" )
+# golem::add_module( name = "popExpHist" )
+# golem::add_module( name = "popExpMeans" )
+# golem::add_module( name = "popExpHBar" )
+
+golem::add_module( name = "indvExp")
+golem::add_module( name = "indvExpPat" )
+golem::add_module( name = "indvExpPatEvents" )
+golem::add_module( name = "indvExpPatVisits" )
 
 
 ## Add helper functions ---- ran
