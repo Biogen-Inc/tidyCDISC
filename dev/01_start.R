@@ -44,9 +44,9 @@ usethis::use_git("AC Initial Commit")
 golem::use_recommended_tests()
 
 ## Use Recommended Packages ---- pass
-# This will add “shiny”, “DT”, “attempt”, “glue”, “htmltools”, and “golem” as a dependency to your package.
-# since we don't need those, we won't run this code now.
-golem::use_recommended_deps()
+# By Default, this will add “shiny”, “DT”, “attempt”, “glue”, “htmltools”, and “golem” as a dependency 
+# to our package. Since we don't need all of those, we'll adjusted the recommended vector...
+golem::use_recommended_deps(recommended = c("shiny", "DT",  "glue", "golem")) #"attempt", "htmltools",
 
 ## Favicon ----
 # If you want to change the favicon (default is golem's one)
