@@ -26,7 +26,7 @@ golem::fill_desc(
 ## Set {golem} options ---- ran
 golem::set_golem_options()
 
-## Create Common Files ----
+## Create Common Files ---- ran
 ## See ?usethis for more information
 usethis::use_mit_license( name = "Maya Gans; Aaron Clark; Robert Krajcik; Nate Mockler" )  # You can set another license here
 usethis::use_readme_rmd( open = FALSE )
@@ -34,8 +34,9 @@ usethis::use_code_of_conduct()
 usethis::use_lifecycle_badge( "Experimental" ) #Experimental, Maturing, Stable, Superseded, Archived, Dormant, Questioning
 usethis::use_news_md( open = FALSE )
 
-## Use git ----
-usethis::use_git()
+## Use git ---- ran
+usethis::use_git("AC Initial Commit")
+# $ git remote add origin https://cloudhub.corp.biogen.com/biometrics/SEER.git
 
 ## Init Testing Infrastructure ----
 ## Create a template for tests
