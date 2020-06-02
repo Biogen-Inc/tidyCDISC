@@ -105,7 +105,7 @@
       "GithubRepo": "IDEAFilter",
       "GithubUsername": "MayaGans",
       "GithubRef": "master",
-      "GithubSha1": "29a7d454555ec24209f2f2b1bb648ce5d97b607a",
+      "GithubSha1": "64d04e1b4545a7b4e55de8311ad0359fe83be010",
       "description": {
         "Package": "IDEAFilter",
         "Type": "Package",
@@ -126,15 +126,15 @@
         "RemoteRepo": "IDEAFilter",
         "RemoteUsername": "MayaGans",
         "RemoteRef": "master",
-        "RemoteSha": "29a7d454555ec24209f2f2b1bb648ce5d97b607a",
+        "RemoteSha": "64d04e1b4545a7b4e55de8311ad0359fe83be010",
         "GithubRepo": "IDEAFilter",
         "GithubUsername": "MayaGans",
         "GithubRef": "master",
-        "GithubSHA1": "29a7d454555ec24209f2f2b1bb648ce5d97b607a",
+        "GithubSHA1": "64d04e1b4545a7b4e55de8311ad0359fe83be010",
         "NeedsCompilation": "no",
-        "Packaged": "2020-06-01 19:56:04 UTC; mgans",
+        "Packaged": "2020-06-02 03:16:02 UTC; mgans",
         "Author": "Maya Gans [aut, cre],\n  Aaron Clark [aut]",
-        "Built": "R 3.6.3; ; 2020-06-01 19:56:07 UTC; windows"
+        "Built": "R 3.6.3; ; 2020-06-02 03:16:03 UTC; windows"
       }
     },
     "MASS": {
@@ -4240,7 +4240,7 @@
   },
   "files": {
     "app.R": {
-      "checksum": "b872863ebfb305bee3925dd713d81490"
+      "checksum": "748708ed8b4f7a62faf83b555a928d36"
     },
     "global.R": {
       "checksum": "6647e7d96887e37de3c5fe3c6714746c"
@@ -4444,7 +4444,7 @@
       "checksum": "511b7b895e63a88c5dd94ef5e6621f4c"
     },
     "packrat/desc/IDEAFilter": {
-      "checksum": "d63fdf78867587516508ecce35535bc2"
+      "checksum": "46a3fe50f2890ebc2e33a00f626f7626"
     },
     "packrat/desc/insight": {
       "checksum": "8d35011684c2adc98996f12c3451e81e"
@@ -4717,7 +4717,7 @@
       "checksum": "1a902a5286236b90738a357b2537b341"
     },
     "packrat/packrat.lock": {
-      "checksum": "b545049e3aa3a6718ec99bc172487c29"
+      "checksum": "176b80895647b6b21cb3da70f374e0d4"
     },
     "R/allowed_operators.R": {
       "checksum": "c2130178775fc0a80237b19db6cfc7b8"
