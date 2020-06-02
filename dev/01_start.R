@@ -43,19 +43,20 @@ usethis::use_git("AC Initial Commit")
 # Call `use_test()` to initialize a basic test file and open it for editing.
 golem::use_recommended_tests()
 
-## Use Recommended Packages ---- pass
+## Use Recommended Packages ---- ran slightly altered
 # By Default, this will add “shiny”, “DT”, “attempt”, “glue”, “htmltools”, and “golem” as a dependency 
 # to our package. Since we don't need all of those, we'll adjusted the recommended vector...
 golem::use_recommended_deps(recommended = c("shiny", "DT",  "glue", "golem")) #"attempt", "htmltools",
 
-## Favicon ----
+## Favicon ---- ran
 # If you want to change the favicon (default is golem's one)
 golem::remove_favicon()
-golem::use_favicon() # path = "path/to/ico". Can be an online file. 
+golem::use_favicon("inst/app/www/IDEA_FAVICON.ico") # path = "path/to/ico". Can be an online file. 
+# Favicon is automatically linked in app_ui via `golem_add_external_resources()`
 
-## Add helper functions ----
-golem::use_utils_ui()
-golem::use_utils_server()
+## Add helper functions ---- ran. Go checkout new files
+golem::use_utils_ui() # File created at ~IDEA/R/golem_utils_ui.R
+golem::use_utils_server() # IDEA/R/golem_utils_server.R
 
 # You're now set! ----
 

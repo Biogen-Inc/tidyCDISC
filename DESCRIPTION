@@ -10,7 +10,8 @@ Imports:
     shiny,
     processx,
     DT,
-    glue
+    glue,
+    htmltools
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.1
