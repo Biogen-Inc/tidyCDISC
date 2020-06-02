@@ -20,8 +20,8 @@ app_ui <- function(request) {
                  mod_dataUpload_ui("dataUpload_ui_1", "Import CSV") # ac golem: need import csv label?
                )
                # , tabPanel(
-               #   title = "TableGenerator", id = 't_gen',
-               #   tableGeneratorUI("table_generator")
+               #   title = "TableGenerator", id = 't_gen', # ac golem: make tableGen? Or need?
+               #   mod_tableGen_ui("tableGen_ui_1")
                # ),
                # tabPanel(
                #   title = "Population Explorer",
@@ -31,9 +31,7 @@ app_ui <- function(request) {
                # ),
                # tabPanel(
                #   title = "Individual Explorer",
-               #   # dataUploadUI("indvl", "Import CSV"),  
-               #   # selectDataUI(id = "indvl"), # Removed - Issue 74
-               #   IndvExplorUI(id = "indvl")
+               #   mod_indvExp_ui("indvExp_ui_1")
                # )
     )
   )
@@ -49,6 +47,8 @@ app_ui <- function(request) {
 #' @noRd
 golem_add_external_resources <- function(){
   
+  # source("R/global.R")
+  
   add_resource_path(
     'www', app_sys('app/www')
   )
@@ -59,6 +59,7 @@ golem_add_external_resources <- function(){
       path = app_sys('app/www'),
       app_title = 'IDEA'
     ),
+    
     # Add here other external resources
     # for example, you can add shinyalert::useShinyalert() 
     tags$head(
@@ -73,8 +74,9 @@ golem_add_external_resources <- function(){
     extendShinyjs(text = jscode),
     tags$link(rel = "stylesheet", type = "text/css", href = "index.css"),
     
-    
+    #######################
     # navbarpage was here
+    #######################
     
     # Custom styling to override theme
     tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "styles.css")),
