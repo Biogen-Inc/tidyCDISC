@@ -11,7 +11,36 @@ Imports:
     processx,
     DT,
     glue,
-    htmltools
+    htmltools,
+    shinyjs,
+    tippy (>= 0.1.0),
+    rvest,
+    haven,
+    shinyWidgets,
+    plotly,
+    RColorBrewer,
+    gridExtra,
+    grid,
+    janitor,
+    shinythemes,
+    rmarkdown,
+    shinytest,
+    waiter,
+    timevis,
+    sjlabelled,
+    data.table,
+    gt,
+    shinyBS,
+    knitr,
+    rlang,
+    stringi,
+    ggplot2,
+    dplyr,
+    stringr,
+    purrr,
+    forcats,
+    tidyr,
+    tibble
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.1
@@ -19,3 +48,5 @@ URL: https://cloudhub.corp.biogen.com/biometrics/SEER
 BugReports: https://cloudhub.corp.biogen.com/biometrics/SEER/issues
 Suggests: 
     testthat
+Remotes: 
+    JohnCoene/tippy
