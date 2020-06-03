@@ -57,10 +57,7 @@ usethis::use_package("forcats")
 usethis::use_package("tidyr")
 usethis::use_package("tibble")
 usethis::use_package("magrittr")
-
-
-
-
+usethis::use_pipe()
 
 
 
