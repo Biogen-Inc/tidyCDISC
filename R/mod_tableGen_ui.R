@@ -1,12 +1,17 @@
-#' tableGen UI Function
+#' The tableGen UI provides the interface for creating drag and drop tables
 #'
 #' @description A shiny Module.
 #'
+#' @return a shiny \code{\link[shiny]{tagList}} containing the tableGen ui
+#'
 #' @param id,input,output,session Internal parameters for {shiny}.
 #'
-#' @noRd 
-#'
-#' @importFrom shiny NS tagList 
+#' @importFrom shiny NS tagList fluidPage h1 br fluidRow column wellPanel uiOutput shinyUI HTML div h5 textInput downloadButton radioButtons
+#' @importFrom gt gt_output
+#' @importFrom IDEAFilter shiny_data_filter_ui
+#' @importFrom IDEA dropArea
+#' @importFrom tippy tippy
+#' 
 mod_tableGen_ui <- function(id, label = "Create Chart"){
   ns <- NS(id)
   tagList(
@@ -38,8 +43,8 @@ mod_tableGen_ui <- function(id, label = "Create Chart"){
                             
                             
                             div(class = "col-sm-8", style = "height:300px;overflow-y:scroll;",
-                                dropArea(col = 5, styles = "padding-right:0.1px", "Variables", "d_blocks", "droppable_blocks", "ui-sortable-helper sortTxtbox droppable_blocks droppable_blocks"),
-                                dropArea(col = 7, styles = "padding-left:0.1px", "Stats", "d_agg", "droppable_agg", "ui-sortable-helper sortTxtbox droppable_agg")
+                                IDEA:::dropArea(col = 5, styles = "padding-right:0.1px", "Variables", "d_blocks", "droppable_blocks", "ui-sortable-helper sortTxtbox droppable_blocks droppable_blocks"),
+                                IDEA:::dropArea(col = 7, styles = "padding-left:0.1px", "Stats", "d_agg", "droppable_agg", "ui-sortable-helper sortTxtbox droppable_agg")
                             ),
                             
                             fluidRow(
@@ -49,11 +54,11 @@ mod_tableGen_ui <- function(id, label = "Create Chart"){
                                        id = "sortable_agg",
                                        tags$li(
                                          class = "ui-state-default agg", id = "anova",
-                                         div(tippy(div("ANOVA"), "ANOVA"))
+                                         div(tippy::tippy(div("ANOVA"), "ANOVA"))
                                        ),
                                        tags$li(
                                          class = "ui-state-default agg", id = "chg",
-                                         div(tippy(div("CHG"), "Change from Baseline"))
+                                         div(tippy::tippy(div("CHG"), "Change from Baseline"))
                                        ),
                                        tags$li(
                                          id = "mean",
@@ -90,7 +95,7 @@ mod_tableGen_ui <- function(id, label = "Create Chart"){
         column(width = 6,
                wellPanel(
                  #fluidRow(htmlOutput(ns("title"))),
-                 fluidRow(gt_output(ns("all"))))
+                 fluidRow(gt::gt_output(ns("all"))))
         )
       ),
       tags$script(src = "script.js"),

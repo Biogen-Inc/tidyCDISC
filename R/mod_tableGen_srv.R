@@ -1,6 +1,25 @@
-#' tableGen Server Function
+#' The tableGen Function creates summary statistics using blocks and a gt table output
 #'
-#' @noRd 
+#' @description tableGen module.
+#'
+#' @return \code{rowArea}, the UI needed to create blocks for each dataset
+#'
+#' @param id,input,output,session Internal parameters for {shiny}.
+#'
+#' @import shiny
+#' @import dplyr
+#' @import gt
+#' 
+#' @importFrom shiny renderUI observe req selectInput updateSelectInput renderUI reactive callModule observe session validate need downloadHandler
+#' @importFrom rlang abort sym call2 as_quosure
+#' @importFrom glue glue
+#' @importFrom dplyr select distinct bind_rows arrange full_join mutate pull tibble summarise group_by
+#' @importFrom gt gt tab_options cols_label tab_header tab_style render_gt gtsave
+#' @importFrom IDEAFilter shiny_data_filter_ui
+#' @importFrom IDEA rowArea filters_in_english
+#' @importFrom tippy tippy
+#' @importFrom purrr map pmap
+#' 
 mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL)){
   # ns <- session$ns # this is not used in Maya's code!
   
@@ -31,7 +50,9 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     req(input$filtering)
     x <- input$filtering
     if (is.na(x)) x <- character(0)
-    t <- datafile()$ADSL %>% select(!!sym(input$filtering)) %>% distinct(!!sym(x))
+    t <- datafile()$ADSL %>% 
+      dplyr::select(!!rlang::sym(input$filtering)) %>% 
+      dplyr::distinct(!!rlang::sym(x))
     updateSelectInput(session, "filt_grp", choices = t)
   })
   
@@ -59,29 +80,29 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     
     # Seperate ADSL and the PArAMCD dataframes
     
-    PARAMCD <- map(BDS(), ~ if(!"CHG" %in% names(.)) update_list(., CHG = NA) else .)
+    PARAMCD <- purrr::map(BDS(), ~ if(!"CHG" %in% names(.)) update_list(., CHG = NA) else .)
     
     if (!is_empty(PARAMCD)) {
       # Bind all the PARAMCD files 
-      all_PARAMCD <- bind_rows(PARAMCD, .id = "data_from")  %>% 
-        arrange(USUBJID, AVISITN, PARAMCD) %>% 
-        select(USUBJID, AVISITN, AVISIT, PARAMCD, AVAL, CHG, data_from)
+      all_PARAMCD <- dplyr::bind_rows(PARAMCD, .id = "data_from")  %>% 
+        dplyr::arrange(USUBJID, AVISITN, PARAMCD) %>% 
+        dplyr::select(USUBJID, AVISITN, AVISIT, PARAMCD, AVAL, CHG, data_from)
       # distinct(USUBJID, AVISITN, AVISIT, PARAMCD, .keep_all = TRUE) 
       
       # Join ADSL and all_PARAMCD
-      combined_data <- full_join(ADSL(), all_PARAMCD, by = "USUBJID")
+      combined_data <- dplyr::full_join(ADSL(), all_PARAMCD, by = "USUBJID")
     } else {
       combined_data <- ADSL() %>%
-        mutate(data_from = "ADSL", PARAMCD = NA, AVAL = NA, CHG = NA)
+        dplyr::mutate(data_from = "ADSL", PARAMCD = NA, AVAL = NA, CHG = NA)
     }
   })
   
   # get the list of PARAMCDs
   PARAMCD_names <- reactive({
     all_data() %>% 
-      select(PARAMCD) %>% 
-      distinct() %>%
-      pull(PARAMCD)
+      dplyr::select(PARAMCD) %>% 
+      dplyr::distinct() %>%
+      dplyr::pull(PARAMCD)
   })
   
   all_data <- callModule(
@@ -106,10 +127,10 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       avisit_words <- " "
     } else {
       avisit_words <-
-        tibble(AVISIT = avisit_words(), AVISITN = avisit_fctr()) %>%
-        mutate(AVISIT = as.factor(AVISIT)) %>%
-        mutate(AVISIT = fct_reorder(AVISIT, AVISITN)) %>%
-        pull(AVISIT) %>%
+        dplyr::tibble(AVISIT = avisit_words(), AVISITN = avisit_fctr()) %>%
+        dplyr::mutate(AVISIT = as.factor(AVISIT)) %>%
+        dplyr::mutate(AVISIT = fct_reorder(AVISIT, AVISITN)) %>%
+        dplyr::pull(AVISIT) %>%
         unique()
     }
     avisit_words
@@ -131,8 +152,8 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   
   total <- reactive({ 
     all_data() %>% 
-      distinct(USUBJID) %>%
-      summarise(n = n())
+      dplyr::distinct(USUBJID) %>%
+      dplyr::summarise(n = n())
   })
   
   column <- reactive( if (input$COLUMN == "NONE") NULL else input$COLUMN)
@@ -140,15 +161,15 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   total <- reactive({
     if (input$COLUMN == "NONE") {
       all_data() %>% 
-        distinct(USUBJID) %>% 
-        summarise(n = n()) %>%
-        pull(n)
+        dplyr::distinct(USUBJID) %>% 
+        dplyr::summarise(n = n()) %>%
+        dplyr::pull(n)
     } else {
       all_data() %>%
-        group_by(!!sym(input$COLUMN)) %>%
-        distinct(USUBJID) %>%
-        summarise(n = n()) %>%
-        pull(n)
+        dplyr::group_by(!!sym(input$COLUMN)) %>%
+        dplyr::distinct(USUBJID) %>%
+        dplyr::summarise(n = n()) %>%
+        dplyr::pull(n)
     }
   })
   
@@ -186,7 +207,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   
   subtitle <- reactive({
     if (any(regexpr("%>%", capture.output(attr(all_data(), "code"))) > 0)) {
-      filters_in_english(all_data()) 
+      IDEA:::filters_in_english(all_data()) 
     } else {
       " "
     }
@@ -195,19 +216,19 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   
   gt_table <- reactive({
     for_gt() %>%
-      gt(rowname_col = "Variable", 
+      gt::gt(rowname_col = "Variable", 
          groupname_col = "ID") %>%
-      tab_options(table.width = px(700)) %>%
-      cols_label(.list = imap(for_gt()[-c(1:2)], ~col_for_list(.y, .x))) %>%
-      tab_header(
+      gt::tab_options(table.width = px(700)) %>%
+      gt::cols_label(.list = imap(for_gt()[-c(1:2)], ~col_for_list(.y, .x))) %>%
+      gt::tab_header(
         title = md(input$table_title),
         subtitle = md(subtitle())
       ) %>%
-      tab_style(
+      gt::tab_style(
         style = cell_text(weight = "bold"),
         locations = cells_row_groups()
       ) %>%
-      tab_style(
+      gt::tab_style(
         style = list(
           cell_text(align = "right")
         ),
@@ -216,7 +237,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   })
   
   
-  output$all <- render_gt({ gt_table() })
+  output$all <- gt::render_gt({ gt_table() })
   
   #####################################################################
   # Block Preperation
@@ -267,14 +288,14 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
         write.csv(for_gt(), file, row.names = FALSE)
       } else if(input$download_type == ".html") {
         exportHTML <- gt_table()
-        gtsave(exportHTML, file)
+        gt::gtsave(exportHTML, file)
       }
     }
   )  
   
   
   p <- reactive({
-    rowArea(col = 12, block_data())
+    IDEA:::rowArea(col = 12, block_data())
   })
   
   return(p)
