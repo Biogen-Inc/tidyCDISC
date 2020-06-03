@@ -6,10 +6,6 @@
 #' @param data the data.frame to search.
 #' @return logical scalar. TRUE if the column is found. FALSE otherwise
 #'
-#' @examples
-#' safetyGraphics:::hasColumn(columnName="PARAM",data=adlbc) #TRUE
-#' safetyGraphics:::hasColumn(columnName="Not_a_column",data=adlbc) #FALSE
-#'
 #' @keywords internal
 
 hasColumn <- function(columnName, data){

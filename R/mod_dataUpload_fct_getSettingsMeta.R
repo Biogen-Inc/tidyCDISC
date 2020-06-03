@@ -11,22 +11,11 @@
 #'
 #' @return dataframe with the requested metadata or single metadata value
 #'
-#' @examples
-#' safetyGraphics:::getSettingsMetadata()
-#' # Returns a full copy of settingsMetadata.Rda
-#'
-#' safetyGraphics:::getSettingsMetadata(text_keys=c("id_col"))
-#' # returns a dataframe with a single row with metadata for the id_col setting
-#'
-#' safetyGraphics:::getSettingsMetadata(text_keys=c("id_col"), cols=c("label"))
-#' # returns the character value for the specified row.
-#'
 #' @importFrom stringr str_subset
 #' @importFrom magrittr "%>%"
 #' @import dplyr
 #' @importFrom rlang .data
 #'
-#' @export
 
 getSettingsMetadata<-function(charts=NULL, text_keys=NULL, cols=NULL, filter_expr=NULL, add_standards=TRUE, metadata = safetyGraphics::settingsMetadata){
   md <- metadata %>% mutate(text_key=as.character(.data$text_key))

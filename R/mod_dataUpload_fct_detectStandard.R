@@ -8,15 +8,6 @@
 #' @param includeFields specifies whether to check the data set for field level data in addition to columns.  Default: \code{TRUE}.
 #' @param domain The data domain for the data set provided.  Default: \code{"labs"}.
 #' @return A list containing the matching \code{"standard"} from \code{"standardMetadata"} and a list of  \code{"details"} describing each standard considered.
-#' @examples 
-
-#' detectStandard(adlbc)[["standard"]] #adam
-#' detectStandard(iris)[["standard"]] #none
-#'
-#' \dontrun{
-#'   detectStandard(adlbc,domain="AE") #throws error. AE domain not supported in this release.
-#' }
-#'
 #' @export
 
 detectStandard <- function(data, includeFields=TRUE, domain="labs"){
