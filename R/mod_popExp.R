@@ -61,7 +61,7 @@ mod_popExp_server <- function(input, output, session, datafile){
   map(widgets, function(x) shinyjs::hide(x))
   
   # select the data sets
-  # dataselected <- callModule(mod_selectData_server, id = NULL, datafile)
+  # dataselected <- callModule(mod_selectData_server, id = NULL, datafile) # ac golem: why would id = NULL for dataSelected?
   dataselected <- callModule(mod_selectData_server, "selectData_ui_1", datafile)
   
   rv <- reactiveValues(all_data = NULL)
@@ -345,13 +345,13 @@ mod_popExp_server <- function(input, output, session, datafile){
                options = list(maxItems = 2),
                selected = "")
              
-             callModule(PopuExpl1Scat, id = NULL, dataset)
+             callModule(mod_popExpScat_server, id = NULL, dataset) # ac golem: left id = NULL
            },
            "2" = {
              # spaghetti plot module
              # if ADSL is in data_from then no BDS datasets were selected
              if (!"ADSL" %in% unique(dataset()$data_from)) {
-               callModule(PopuExpl2Spag, id = NULL, dataselected, dataset)
+               callModule(mod_popExpSpag_server, id = NULL, dataselected, dataset) # ac golem: left id = NULL. Why does this module have the extra "dataSelected" arg?
              } else {
                message("Spaghetti Plot needs a BDS dataset, not ADSL")
                shinyjs::alert("An ADaM BDS dataset is required for spaghetti plot")
@@ -359,26 +359,26 @@ mod_popExp_server <- function(input, output, session, datafile){
            },
            "3" = {
              # box plot module
-             callModule(PopuExpl3Boxp, id = NULL, dataset)
+             callModule(mod_popExpBoxp_server, id = NULL, dataset) # ac golem: left id = NULL
            }, 
            "4" = {
              # heat map module
              # commented out for now
              message("heat map is commented out for now")
              # updateAwesomeRadio(session=session, inputId = "fillType", selected = "Fill Variable")
-             # callModule(PopuExpl4Heat, id = NULL, dataset)
+             # callModule(mod_popExpHeat_server, id = NULL, dataset) # ac golem: left id = NULL
            },
            "5" = {
              # histogram module
-             callModule(PopuExpl5Hist, id = NULL, dataset)
+             callModule(mod_popExpHist_server, id = NULL, dataset) # ac golem: left id = NULL
            },
            "6" = {
              # Means Plot module
-             callModule(PopuExpl6Means, id = NULL, dataset)
+             callModule(mod_popExpMeans_server, id = NULL, dataset) # ac golem: left id = NULL
            },
            "7" = {
              # Horizontal Bar Plot module
-             callModule(PopuExpl7Hbar, id = NULL, dataset)
+             callModule(mod_popExpHBar_server, id = NULL, dataset)
            },
            
            # This should not happen
@@ -391,6 +391,6 @@ mod_popExp_server <- function(input, output, session, datafile){
     
 
     
-## To be copied in the server
+## To be copied in the server -- done
 # callModule(mod_popExp_server, "popExp_ui_1")
  

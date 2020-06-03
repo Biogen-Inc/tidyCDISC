@@ -3,9 +3,9 @@ options(golem.app.prod = FALSE) # TRUE = production mode, FALSE = development mo
 
 # Detach all loaded packages and clean your environment
 golem::detach_all_attached()
-# rm(list=ls(all.names = TRUE))
+  # rm(list=ls(all.names = TRUE))
 
-# Document and reload your package, runs these three functions\
+# Document and reload your package, which runs these three functions...
   # rstudioapi::documentSaveAll()
   # roxygen2::roxygenise()
   # pkgload::load_all()
