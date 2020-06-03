@@ -74,7 +74,6 @@ golem::add_module( name = "tableGen" )
 
 golem::add_module( name = "selectData" )
 golem::add_module( name = "popExp" )
-
 golem::add_module( name = "popExpScat" )
 golem::add_module( name = "popExpSpag" )
 golem::add_module( name = "popExpBoxp" )
@@ -93,7 +92,7 @@ golem::add_module( name = "indvExpPatVisits" )
 ## Creates fct_* and utils_*
 
 golem::add_utils( "strObjs" )
-golem::add_utils( "helpers" ) # css.R, CapStr.R, allowedOperators.R
+golem::add_utils( "helpers" ) # old files: css.R, CapStr.R, allowedOperators.R
 
 
 golem::add_fct( "detectStandard", module = "dataUpload" )
@@ -129,6 +128,9 @@ golem::add_css_file( "styles" )
 golem::add_css_file( "index" )
 
 
+###################################################################
+# ac golem: Aaron stopped here and pushed code to team on 6/3/2020
+###################################################################
 
 ## Add internal datasets ---- not run
 ## If you have data in your package
@@ -146,7 +148,7 @@ devtools::build_vignettes()
 
 ## Code coverage ---- not run
 ## (You'll need GitHub there)
-usethis::use_github()
+# usethis::use_github() # don't need to do this. AC manually created a remote origin in terminal and pushed to github.
 usethis::use_travis()
 usethis::use_appveyor()
 

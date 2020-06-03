@@ -33,7 +33,35 @@ app_ui <- function(request) {
                #   title = "Individual Explorer",
                #   mod_indvExp_ui("indvExp_ui_1")
                # )
-    )
+    ),
+    
+    ##############################################################################
+    # ac golem: the order the code compiles here is important, so I'm including  
+    # the items below instead of in the golem_add_external_resources()" section. 
+    # After we get the app working, we should attempt to place them there to see
+    # if it will work.
+    ##############################################################################
+    
+    # Custom styling to override theme
+    tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "styles.css")),
+    # Add logo to top right corner
+    tags$script(HTML("var header = $('.navbar > .container-fluid'); header.append('<div style=\"float:right\"><ahref=\"URL\"><img src=\"logo.svg\" alt=\"alt\" style=\"float:right;width:66px;height:41px;\"> </a>`</div>');")),
+    tags$script(src = "script.js"),
+    tags$script(src = "recipe.js"),
+    tags$style(HTML("
+ 
+                    #browserModal .modal-dialog,
+                    #browserModal .modal-body,
+                    #browserModal .modal-footer {
+                    background-color: #CF000F;
+                    border-color: #CF000F;
+                    color: white;
+                    font-size: 20px;
+                    }
+                    
+                    ")),
+    inlineCSS(css),
+    tags$head(tags$script(src = "analytics.js"))
   )
 }
 
@@ -78,26 +106,7 @@ golem_add_external_resources <- function(){
     # navbarpage was here
     #######################
     
-    # Custom styling to override theme
-    tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "styles.css")),
-    # Add logo to top right corner
-    tags$script(HTML("var header = $('.navbar > .container-fluid'); header.append('<div style=\"float:right\"><ahref=\"URL\"><img src=\"logo.svg\" alt=\"alt\" style=\"float:right;width:66px;height:41px;\"> </a>`</div>');")),
-    tags$script(src = "script.js"),
-    tags$script(src = "recipe.js"),
-    tags$style(HTML("
- 
-                    #browserModal .modal-dialog,
-                    #browserModal .modal-body,
-                    #browserModal .modal-footer {
-                    background-color: #CF000F;
-                    border-color: #CF000F;
-                    color: white;
-                    font-size: 20px;
-                    }
-                    
-                    ")),
-    inlineCSS(css),
-    tags$head(tags$script(src = "analytics.js"))
+    
   )
   
   
