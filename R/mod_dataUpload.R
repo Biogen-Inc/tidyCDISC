@@ -1,14 +1,18 @@
-#' dataUpload UI Function
+#' The dataUpload UI provides the interface for uploading ADSL data
+#' and a table overview of the uploaded file
 #'
 #' @description A shiny Module.
 #'
+#' @return a shiny \code{\link[shiny]{tagList}} containing the filter ui
+#'
 #' @param id,input,output,session Internal parameters for {shiny}.
 #'
-#' @noRd 
 #'
-#' @importFrom shiny NS tagList 
+#' @importFrom shiny NS tagList h1 br fluidRow column wellPanel div HTML fileInput uiOutput span textOutput
+#' @importFrom DT dataTableOutput
+#' 
 mod_dataUpload_ui <- function(id){
-  ns <- NS(id)
+  ns <- shiny::NS(id)
   tagList(
     h1("Data Upload/Preview", align = "center"),
     br(), br(), br(),
@@ -40,23 +44,27 @@ mod_dataUpload_ui <- function(id){
 ## To be copied in the UI - Done
 # mod_dataUpload_ui("dataUpload_ui_1")
 
-
-
-
     
-#' dataUpload Server Function
+#' dataUpload Server Function stores the uploaded data as a list and is exported to be used in other modules
 #'
-#' @noRd 
+#' @param id,input,output,session Internal parameters for {shiny}.
+#' @param stringAsFactors a \code{logical} value indicating whether to convert strings to factors
+#' 
+#' @return a list of dataframes \code{dd$dataframe} to be used in other modules
+#' 
+#' @import shiny reactive observeEvent reactiveValuesToList radioButtons eventReactive renderText renderUI
+#' @importFrom shiny reactiveValues callModule
+#' @importFrom haven zap_formats read_sas
+#' @importFrom stringr str_remove
+#' @importFrom IDEAFilter detectStandard
+#' @importFrom DT datatable renderDataTable
+#' 
 mod_dataUpload_server <- function(input, output, session, stringsAsFactors){
   ns <- session$ns
  
   # initiate reactive values - list of uploaded data files
   # standard to imitate output of detectStandard.R
   dd <- reactiveValues()
-  # dd <- reactiveValues(data = preload_data_list$data,
-  #                      current = preload_data_list$current,
-  #                      standard = preload_data_list$standard)
-  
   
   # modify reactive values when data is uploaded
   observeEvent(input$file, {
@@ -73,7 +81,7 @@ mod_dataUpload_server <- function(input, output, session, stringsAsFactors){
     }
     
     # names
-    names(data_list) <- toupper(str_remove(input$file$name, ".sas7bdat"))
+    names(data_list) <- toupper(stringr::str_remove(input$file$name, ".sas7bdat"))
     
     
     
@@ -90,7 +98,7 @@ mod_dataUpload_server <- function(input, output, session, stringsAsFactors){
     
     # run detectStandard on new data and save to dd$standard
     
-    standard_list <- lapply(data_list, function(x){ detectStandard(x) })
+    standard_list <- lapply(data_list, function(x){ IDEAFilter::detectStandard(x) })
     
     #standard_list <- lapply(data_list, function(x){ detectStandard(x)$standard })
     
