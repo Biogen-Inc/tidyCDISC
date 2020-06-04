@@ -49,6 +49,7 @@ df_incl_rules <-
 #'     DO NOT REMOVE.
 #' @import shiny
 #' @import dplyr
+#' @importFrom dplyr %>%
 #' @import rlang
 #' @noRd
 #' 
@@ -57,6 +58,7 @@ gather_rules <- function(input, output, session,
                          expl_rules = list( list(error = c(""), warn = c("")) ),
                          df_incl_rules = list( list(error = c(""), warn = c("")) )
 ) {
+  
   if((is.null(expl_rules) | is.null(names(expl_rules))) & 
      (is.null(df_incl_rules) | is.null(names(df_incl_rules))) &
      (is.null(all_df_rules) | is.null(names(all_df_rules))) 
