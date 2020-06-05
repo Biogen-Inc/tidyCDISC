@@ -158,12 +158,16 @@ fnIndvExplVisits <- function(
     
     # Plotting hortizontal line
     if("Screening" %in% input_plot_hor){
-      lb_plot <- lb_plot +
-        geom_hline(plot_scr, mapping = aes(yintercept = AVAL, colour = Visit))
+      if(nrow(plot_scr) > 0){
+        lb_plot <- lb_plot +
+          geom_hline(plot_scr, mapping = aes(yintercept = AVAL, colour = Visit))
+      }
     }
     if("Baseline" %in% input_plot_hor){
-      lb_plot <- lb_plot +
-        geom_hline(plot_base, mapping = aes(yintercept = AVAL, colour = Visit))
+      if(nrow(plot_base) > 0){
+        lb_plot <- lb_plot +
+          geom_hline(plot_base, mapping = aes(yintercept = AVAL, colour = Visit))
+      }
     }
     # End: ggplot2 object
     

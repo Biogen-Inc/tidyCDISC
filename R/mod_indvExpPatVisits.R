@@ -430,6 +430,7 @@ mod_indvExpPatVisits_server <- function(input, output, session, datafile, loaded
                       lb_data <- 
                         # (if(input$bds_remove_filter == F) filtered_dat() %>% subset(data_from == input$plot_adam) else datafile()[[input$plot_adam]]) %>%  #ac: "ADLB" #lb_rec
                         datafile()[[input$plot_adam]] %>%
+                        filter(!is.na(AVAL) & AVAL != "") %>%
                         filter(USUBJID == usubjid()) %>%
                         select(all_of(bds_cols)) %>%
                         distinct()
