@@ -140,8 +140,7 @@ mod_dataComply_server <- function(input, output, session, datalist = reactive(NU
           if(dismissErrBttn){
             tagList(
               div(style = "text-align:center; font-size: 14px;",
-                  html(paste(
-                    "X"))),
+                  img(src="www/red_x.png", style="width:30px;height:30px;"), "= indicates variable(s) that need attention"),
                     #local_image(filename = "www/red_x.png", height = 15)
                     #         , "= indicates variable(s) that need attention"))),
               # **
@@ -155,8 +154,8 @@ mod_dataComply_server <- function(input, output, session, datalist = reactive(NU
           } else {
             tagList(
               div(style = "text-align:center; font-size: 14px;",
-                  html(paste(
-                    "X"))),
+                  img(src="www/red_x.png", style="width:30px;height:30px;"), "= indicates variable(s) that need attention"),
+                
                     #local_image(filename = "www/red_x.png", height = 15)
                     #         , "= indicates variable(s) that need attention"))),
               # **
@@ -195,10 +194,8 @@ mod_dataComply_server <- function(input, output, session, datalist = reactive(NU
                         "Warning: Loaded Data not in Expected Format"),
             footer = tagList(
               div(style = "text-align:center; font-size: 14px;",
-                  html(paste(
-                             # "X"
-                             local_image(filename = "www/red_x.png", height = 15)
-                             , "= indicates variable(s) that need attention"))
+                  div(style = "text-align:center; font-size: 14px;",
+                      img(src="www/red_x.png", style="width:30px;height:30px;"), "= indicates variable(s) that need attention")
               ),
               # **
               # actionButton(ns("clickRulesWarn") #actionBttn
