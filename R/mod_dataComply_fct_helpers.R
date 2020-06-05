@@ -251,14 +251,32 @@ rulesUI <- gather_rules(all_df_rules = all_df_rules,
 
 
 
-#' Helper function to gather requirements for modals. Output produces gt & df object
-#' 
-#' @param input,output,session Internal parameters for {shiny}. 
+#' Gather Violated Rules
+#'
+#' Gather applicable Rules into a gt & df object to be included in the pop-up modal
+#'   when a uploaded data frame violates said rule. This function also validates the
+#'   rules entered to verify they are in the expected format.
+#'
+#' @param input,output,session Internal parameters for {shiny}.
+#' @param disp_type Check for rules that would result in an error (required variables)
+#'   or warning (recommended variables)
+#' @param datalist A reactive list of data frames from the upload module
+#' @param all_df_rules A named list of variables names that should result in
+#'   \code{error} or \code{warn} if variables do not exist or are missing for
+#'   ANY DATAFRAME uploaded.
+#' @param expl_rules A named list dataframes containing named lists of variables
+#'   names that should result in \code{error} or \code{warn} if variables do not
+#'   exist or are missing for SPECIFIED DATAFRAMES uploaded
+#' @param df_incl_rules A named list of data frame variables containing a named list of
+#'   variables names that should result in \code{error} or \code{warn} if
+#'   variables do not exist or are missing
+#'
 #'     DO NOT REMOVE.
 #' @import shiny
 #' @import dplyr
-#' @import rlang
 #' @import gt
+#' @import rlang
+#' @importFrom purrr map map2 pmap
 #' @noRd
 #################################################################################
 # This function validates the rules entered and creates data frames & gt objects
