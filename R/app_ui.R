@@ -96,7 +96,10 @@ golem_add_external_resources <- function(){
     
     # Add here other external resources
     # for example, you can add shinyalert::useShinyalert() 
+    
+    
     tags$head(
+      # tags$img(src = "www/red_x.png"), # test works
       tags$script(HTML(htmljs)),
       tags$link(rel = "//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"),
       tags$head(tags$link(rel="shortcut icon", href="IDEA_FAVICON.ico")), # shouldn't need anymore -- ac golem

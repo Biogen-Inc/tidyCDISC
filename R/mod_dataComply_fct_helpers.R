@@ -438,6 +438,7 @@ gather_reqs <- function(input, output, session,
     
     # pf  
     
+    
     # modify the table displayed using gt, remove a column if just exporting warnings
     tab <- pf %>%
       gt(rowname_col = "type_col" , groupname_col = "df") %>%
@@ -445,7 +446,9 @@ gather_reqs <- function(input, output, session,
       text_transform(
         locations = list(cells_body(columns = vars(not_exist_disp), rows = not_exist_disp == "X"),
                          cells_body(columns = vars(missing_disp), rows = missing_disp == "X")),
-        fn = function(X) local_image(filename = "www/red_x.png", height = 15) # test_image(type = "png") # web_image(url = r_png_url, height = 15)
+        fn = function(X) 
+          # "X"
+          local_image(filename = "app/www/red_x.png", height = 15) # test_image(type = "png") # web_image(url = r_png_url, height = 15)
       ) %>%
       tab_header(
         title = paste(ifelse(disp_type == "error", "Please", "Optional:"),"reconcile variables below"),
@@ -456,8 +459,7 @@ gather_reqs <- function(input, output, session,
       tab_style(style = cell_text(weight = "bold"), locations = cells_stubhead()) %>%
       cols_align("center") %>%
       tab_style(style = cell_text(weight = "bold"), locations = cells_row_groups()) #%>% # bold group col groupnames
-    # tab_source_note(html(paste(local_image(filename = "www/red_x.png", height = 15)
-    #                            , "indicates variables that need attention")))
+
     
     if(disp_type == "warn") {
       tab <- tab %>% cols_hide(vars(not_exist_disp))
