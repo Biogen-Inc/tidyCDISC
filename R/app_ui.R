@@ -75,7 +75,7 @@ app_ui <- function(request) {
 #' @importFrom waiter use_waiter
 #' @importFrom shinyjs useShinyjs
 #' @importFrom shinyjs extendShinyjs
-#' @importfrom shinyjs inlineCSS
+#' @importFrom shinyjs inlineCSS
 #' @noRd
 golem_add_external_resources <- function(){
   
