@@ -68,6 +68,7 @@ attachment::att_amend_desc()
 ## Only argument is Name of the module
 golem::add_module( name = "dataUpload" ) 
 golem::add_module( name = "dataComply" )
+golem::add_module( name = "dataComplyRules" )
 
 golem::add_module( name = "tableGen" )
 
@@ -100,7 +101,8 @@ golem::add_fct( "hasColumn", module = "dataUpload" )
 golem::add_fct( "hasField", module = "dataUpload" ) 
 golem::add_fct( "getSettingsMeta", module = "dataUpload" )
 
-golem::add_fct( "helpers", module = "dataComply" ) 
+golem::add_fct( "helpers", module = "dataComply" )
+golem::add_fct( "helpers", module = "dataComplyRules" ) 
 
 golem::add_fct( "meanSummary", module = "tableGen" ) 
 golem::add_fct( "methods", module = "tableGen" ) 

@@ -21,7 +21,7 @@ mod_dataUpload_ui <- function(id){
       column(3,
              wellPanel(
                div(style="display: inline-block; ",h3("Data upload")),
-               div(style="display: inline-block; float:right;",mod_dataComply_ui("dataComply_ui_1")),
+               div(style="display: inline-block; float:right;",mod_dataComplyRules_ui("dataComplyRules_ui_1")),
                HTML("<br>ADSL file is mandatory & BDS/ OCCDS files are optional"),
                fileInput(ns("file"), "Upload sas7bdat files",accept = c(".sas7bdat"), multiple = TRUE),
                uiOutput(ns("radio_test"))
@@ -86,7 +86,9 @@ mod_dataUpload_server <- function(input, output, session, stringsAsFactors){
     
     
     # run that list of dfs through the data compliance module, replacing list with those that comply
-    dl_comply <- callModule(mod_dataComply_server, "dataComply_ui_1", datalist = reactive(data_list))
+    dl_comply <- callModule(mod_dataComply_server, 
+                            id = NULL, #"dataComply_ui_1", 
+                            datalist = reactive(data_list))
     
     if(length(names(dl_comply)) > 0){
       # append to existing reactiveValues list
