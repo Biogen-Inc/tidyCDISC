@@ -11,27 +11,9 @@
 #'
 #' @noRd
 #'
-mod_dataComply_ui <- function(id){ #, showRules = T
+mod_dataComply_ui <- function(id){
   # ns <- NS(id)
   tagList(
-  #   if(showRules == TRUE){
-  #     tagList(
-  #       actionButton(ns("clickRules") #actionBttn
-  #                    , label = NULL
-  #                    , icon = icon("question-circle")
-  #                    , class = "btn-start"
-  #       ),
-  #       
-  #       bsModal(id = ns("upload_rules"),
-  #               title = div(style = "text-align:center; font-weight:bold;","ADaM-ish Upload Rules"),
-  #               trigger = ns("clickRules"),
-  #               
-  #               rulesUI # defined in "data_compliance_objects.R"
-  #               
-  #       ) # end of bsModal
-  # 
-  #     )
-  #   }
   )
 }
 
@@ -55,7 +37,7 @@ mod_dataComply_ui <- function(id){ #, showRules = T
 #' @import shiny
 #' @import dplyr
 #' 
-#' @return A Shiny tagList
+#' @return A list of dataframes that are compliant with the rules
 #' 
 #' @family dataComply Functions
 #'

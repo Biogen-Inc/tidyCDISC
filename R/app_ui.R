@@ -18,8 +18,8 @@ app_ui <- function(request) {
                tabPanel(
                  title = "Data",
                  mod_dataUpload_ui("dataUpload_ui_1") # ac golem: need import csv label?
-               )
-               # , tabPanel(
+               ),
+               # tabPanel(
                #   title = "TableGenerator", id = 't_gen', # ac golem: make tableGen? Or need?
                #   mod_tableGen_ui("tableGen_ui_1")
                # ),
@@ -29,10 +29,10 @@ app_ui <- function(request) {
                #   mod_selectData_ui("selectData_ui_1"),
                #   mod_popExp_ui("popExp_ui_1")
                # ),
-               # tabPanel(
-               #   title = "Individual Explorer",
-               #   mod_indvExp_ui("indvExp_ui_1")
-               # )
+               tabPanel(
+                 title = "Individual Explorer",
+                 mod_indvExp_ui("indvExp_ui_1")
+               )
     ),
     
     ##############################################################################

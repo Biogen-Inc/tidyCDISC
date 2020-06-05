@@ -66,9 +66,10 @@ attachment::att_amend_desc()
 ## Add modules ---- ran
 ## Create a module infrastructure in R/
 ## Only argument is Name of the module
-golem::add_module( name = "dataUpload" ) 
-golem::add_module( name = "dataComply" )
-golem::add_module( name = "dataComplyRules" )
+
+golem::add_module( name = "dataUpload" ) # ran
+golem::add_module( name = "dataComply" ) # ran
+golem::add_module( name = "dataComplyRules" ) # ran
 
 golem::add_module( name = "tableGen" )
 
@@ -82,27 +83,28 @@ golem::add_module( name = "popExpHist" )
 golem::add_module( name = "popExpMeans" )
 golem::add_module( name = "popExpHBar" )
 
-golem::add_module( name = "indvExp")
-golem::add_module( name = "indvExpPat" )
-golem::add_module( name = "indvExpPatEvents" )
-golem::add_module( name = "indvExpPatVisits" )
+golem::add_module( name = "indvExp") # ran
+golem::add_module( name = "indvExpPat" ) # ran
+golem::add_module( name = "indvExpPatEvents" ) # ran
+golem::add_module( name = "indvExpPatVisits" ) # ran
 
 
 ## Add helper functions ---- ran
 ## Creates fct_* and utils_*
 
-golem::add_utils( "strObjs" )
-golem::add_utils( "helpers" ) # old files: css.R, CapStr.R, allowedOperators.R
+golem::add_utils( "strObjs" ) # ran
+# old files: css.R, CapStr.R, allowedOperators.R
+golem::add_utils( "helpers" ) 
 
 
-golem::add_fct( "detectStandard", module = "dataUpload" )
-golem::add_fct( "evalStandard", module = "dataUpload" ) 
-golem::add_fct( "hasColumn", module = "dataUpload" ) 
-golem::add_fct( "hasField", module = "dataUpload" ) 
-golem::add_fct( "getSettingsMeta", module = "dataUpload" )
+golem::add_fct( "detectStandard", module = "dataUpload" ) # ran
+golem::add_fct( "evalStandard", module = "dataUpload" ) # ran
+golem::add_fct( "hasColumn", module = "dataUpload" ) # ran
+golem::add_fct( "hasField", module = "dataUpload" ) # ran
+golem::add_fct( "getSettingsMeta", module = "dataUpload" ) # ran
 
-golem::add_fct( "helpers", module = "dataComply" )
-golem::add_fct( "helpers", module = "dataComplyRules" ) 
+golem::add_fct( "helpers", module = "dataComply" ) # ran
+golem::add_fct( "helpers", module = "dataComplyRules" ) # ran
 
 golem::add_fct( "meanSummary", module = "tableGen" ) 
 golem::add_fct( "methods", module = "tableGen" ) 
@@ -112,8 +114,8 @@ golem::add_fct( "chg", module = "tableGen" )
 golem::add_fct( "freq", module = "tableGen" ) 
 golem::add_fct( "anova", module = "tableGen" ) 
 
-golem::add_fct( "buildEvents", module = "indvExp" ) # used in modules: indvExpPatEvents & indvExpPatVisits
-golem::add_fct( "plot", module = "indvExpPatVisits" )
+golem::add_fct( "buildEvents", module = "indvExp" ) # ran: used in modules: indvExpPatEvents & indvExpPatVisits
+golem::add_fct( "plot", module = "indvExpPatVisits" ) # ran
 
 ## External resources - ran
 ## Creates .js and .css files at inst/app/www
