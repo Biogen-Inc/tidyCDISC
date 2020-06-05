@@ -5539,3 +5539,12 @@ h1 {
 .selectize-input .item, .selectize-dropdown .option {
   font-size: 12px;
 } 
+
+#browserModal .modal-dialog,
+#browserModal .modal-body,
+#browserModal .modal-footer {
+  background-color: #CF000F;
+  border-color: #CF000F;
+  color: white;
+  font-size: 20px;
+}

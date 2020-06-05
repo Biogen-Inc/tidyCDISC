@@ -141,9 +141,9 @@ mod_dataComply_server <- function(input, output, session, datalist = reactive(NU
             tagList(
               div(style = "text-align:center; font-size: 14px;",
                   html(paste(
-                    # "X"
-                    local_image(filename = "www/red_x.png", height = 15)
-                             , "= indicates variable(s) that need attention"))),
+                    "X"))),
+                    #local_image(filename = "www/red_x.png", height = 15)
+                    #         , "= indicates variable(s) that need attention"))),
               # **
               # actionButton(ns("clickRulesError") #actionBttn
               #              , label = NULL
@@ -156,9 +156,9 @@ mod_dataComply_server <- function(input, output, session, datalist = reactive(NU
             tagList(
               div(style = "text-align:center; font-size: 14px;",
                   html(paste(
-                    # "X"
-                    local_image(filename = "www/red_x.png", height = 15)
-                             , "= indicates variable(s) that need attention"))),
+                    "X"))),
+                    #local_image(filename = "www/red_x.png", height = 15)
+                    #         , "= indicates variable(s) that need attention"))),
               # **
               # actionButton(ns("clickRulesError") #actionBttn
               #              , label = NULL
