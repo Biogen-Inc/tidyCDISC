@@ -2,13 +2,13 @@
 
 #' Gather Violated Rules
 #'
-#' Gather applicable Rules into a gt & df object to be included in the pop-up modal
-#'   when a uploaded data frame violates said rule. This function also validates the
-#'   rules entered to verify they are in the expected format.
+#' Gather applicable Rules into a gt & df object to be included in the pop-up
+#' modal when a uploaded data frame violates said rule. This function also
+#' validates the rules entered to verify they are in the expected format.
 #'
 #' @param input,output,session Internal parameters for {shiny}.
-#' @param disp_type Check for rules that would result in an error (required variables)
-#'   or warning (recommended variables)
+#' @param disp_type Check for rules that would result in an error (required
+#'   variables) or warning (recommended variables)
 #' @param datalist A reactive list of data frames from the upload module
 #' @param all_df_rules A named list of variables names that should result in
 #'   \code{error} or \code{warn} if variables do not exist or are missing for
@@ -16,24 +16,23 @@
 #' @param expl_rules A named list dataframes containing named lists of variables
 #'   names that should result in \code{error} or \code{warn} if variables do not
 #'   exist or are missing for SPECIFIED DATAFRAMES uploaded
-#' @param df_incl_rules A named list of data frame variables containing a named list of
-#'   variables names that should result in \code{error} or \code{warn} if
-#'   variables do not exist or are missing
+#' @param df_incl_rules A named list of data frame variables containing a named
+#'   list of variables names that should result in \code{error} or \code{warn}
+#'   if variables do not exist or are missing
 #'
-#'     DO NOT REMOVE.
+#'   DO NOT REMOVE.
 #' @import shiny
 #' @import dplyr
 #' @import gt
 #' @import rlang
 #' @importFrom purrr map map2 pmap
+#'
+#' @return A list of dataframes that are compliant with the rules in addition to
+#'   gt and df object which explain which files violate the rules (if
+#'   applicable)
+#'
 #' @noRd
-#################################################################################
-# This function validates the rules entered and creates data frames & gt objects
-# for display in modals that pop up upon load. The function also returns a list
-# of data frames just in case a loaded df doesn't meet one of the requirements...
-# it will be removed.
-#################################################################################
-
+#' 
 gather_reqs <- function(input, output, session, 
                         disp_type = c("error","warn"),
                         datalist = reactive(NULL),

@@ -62,6 +62,9 @@ df_incl_rules <-
 #' @importFrom rlang is_empty
 #' @importFrom data.table rbindlist
 #' @importFrom purrr map2 pmap
+#' 
+#' @return An shiny tagList
+#' 
 #' @noRd
 #' 
 gather_rules <- function(input, output, session,
