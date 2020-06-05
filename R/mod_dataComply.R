@@ -1,12 +1,3 @@
-######################################################################################
-# Module description:
-# a module that will interface with a list of data frames and either (I) display an
-# error if needed variables don't exist and stop them from proceeding or (II) warn the
-# user if if some columns are missing that are vital for the app to make sense, but 
-# they can continue if they wish.
-######################################################################################
-
-
 
 ############################################################################################
 # User Interface
@@ -14,13 +5,17 @@
 
 #' dataComply UI Function
 #'
-#' @description A shiny Module.
+#' @description A shiny Module that
 #'
 #' @param id,input,output,session Internal parameters for {shiny}.
+#' @param A Label
+#' @param showRules If TRUE, the UI will contain the returned shiny tagList will contain a
+#'   help button and respective modal when clicked. If FALSE, the dataComply module will
+#'   not include a help button to display rules.
 #'
-#' @noRd 
+#' @noRd
 #'
-#' @importFrom shiny NS tagList 
+#' @importFrom shiny NS tagList actionButton
 #' @importFrom shinyBS bsModal
 mod_dataComply_ui <- function(id, label = "Check if Data Complies with Rules", showRules = T){
   ns <- NS(id)
@@ -47,17 +42,31 @@ mod_dataComply_ui <- function(id, label = "Check if Data Complies with Rules", s
 }
 
 
-############################################################################################
-# Module Arguments:
-# datalist() is a list of one or more data frames
-# dismissErrBttn == TRUE will produce a Dismiss button on Error modals, FALSE will not 
-#                        which will essentially trap the user on the modal
-# rules (not an argument) below are defined above
-############################################################################################
+
 
 #' dataComply Server Function
 #'
-#' @noRd 
+#' A module that will interface with a list of data frames and either (I)
+#' display an error if needed variables don't exist and stop them from
+#' proceeding or (II) warn the user if if some columns are missing that are
+#' vital for the app to make sense, but they can continue if they wish.
+#'
+#' @param input,output,session Internal parameters for {shiny}.
+#' @param datalist A reactive list of data frames (from the upload module)
+#' @param dismissErrBttn If \code{TRUE} (the default) then the 'dismiss' button
+#'   will appear on the error modal. If \code{FALSE}, the user will not be able
+#'   to escape the modal. Instead they will have to reload the app.
+#'
+#'   DO NOT REMOVE.
+#' @import shiny
+#' @import dplyr
+#' 
+#' @return A Shiny tagList
+#' 
+#' @family dataComply Functions
+#'
+#' @noRd
+#' 
 mod_dataComply_server <- function(input, output, session, datalist = reactive(NULL), dismissErrBttn = T){
   ns <- session$ns
  
