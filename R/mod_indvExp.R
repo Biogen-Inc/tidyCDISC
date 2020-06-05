@@ -2,9 +2,7 @@
     
 #' indvExp Server Function
 #' 
-#' Plot Individual Explorer Visits by Param
-#'
-#' Gather various shiny inputs and return a graph object, either ggplot or plotly
+#' Prepare Individual Explorer Tab with some of the basics
 #'
 #' @param input,output,session Internal parameters for {shiny}. 
 #' @param datafile A list of dataframes
@@ -15,6 +13,10 @@
 #' @import IDEAFilter
 #' @importFrom stringr str_detect 
 #' @importFrom purrr map update_list reduce
+#' @importFrom shinyjs show hide
+#' 
+#' @return character vector of loaded adams and a filtered dataframe to populate mod_indvExpPat module
+#' 
 #' @noRd
 #' 
 mod_indvExp_server <- function(input, output, session, datafile){

@@ -1,6 +1,25 @@
 #' indvExpPat Server Function
+#' 
+#' Prepare Individual Explorer Tab with content post selection of a UBSUBJID
 #'
-#' @noRd 
+#' @param input,output,session Internal parameters for {shiny}. 
+#' @param datafile A list of dataframes
+#' @param loaded_adams a character vector of loaded adam datasets
+#' @param filtered_dat a filtered dataframe containing USUBJID
+
+#'   DO NOT REMOVE.
+#' @import shiny
+#' @import dplyr
+#' @importFrom purrr map
+#' @importFrom shinyjs show hide
+#' @importFrom DT renderDataTable datatable
+#' @importFrom timevis renderTimevis
+#' @importFrom plotly renderPlotly
+#' @importFrom tidyselect any_of
+#' @importFrom stringr str_to_title
+#' 
+#' @noRd
+#' 
 mod_indvExpPat_server <- function(input, output, session, datafile, loaded_adams, filtered_dat){
   ns <- session$ns
   
@@ -32,9 +51,9 @@ mod_indvExpPat_server <- function(input, output, session, datafile, loaded_adams
     
     # Clear datatables abd plots 
     output$DataTable<- DT::renderDataTable({NULL})
-    output$PlotChart <- renderPlotly({NULL})
-    output$eventsTable <- renderDataTable({NULL})
-    output$eventsPlot <- renderTimevis({NULL})
+    output$PlotChart <- plotly::renderPlotly({NULL})
+    output$eventsTable <- DT::renderDataTable({NULL})
+    output$eventsPlot <- timevis::renderTimevis({NULL})
     output$events_tv_caption1 <- renderText({NULL})
     output$events_tv_caption2 <- renderText({NULL})
     hide_em <- c("events_tv_caption1", "events_tv_caption2", "eventsPlot", "eventsTable", "display_dy",
@@ -101,7 +120,7 @@ mod_indvExpPat_server <- function(input, output, session, datafile, loaded_adams
         filter(USUBJID == input$selPatNo) %>%
         distinct(MHCAT) %>%
         pull()%>%
-        str_to_title()
+        stringr::str_to_title()
       checked5 <- paste0("MH_",sapply(strsplit(mh_names, " "), function(x){
         toupper(paste(substring(x, 1, 1), collapse = ""))}))
     }
