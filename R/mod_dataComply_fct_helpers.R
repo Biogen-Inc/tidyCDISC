@@ -1,22 +1,21 @@
 
-######################################################################################
+################################################################################
 # Inputs for Data Compliance Module
 #
-# Module found in "modules/data_compliance.R"
-# Module description:
-# a module that will interface with a list of data frames and either (I) display an
-# error if needed variables don't exist and stop them from proceeding or (II) warn the
-# user if if some columns are missing that are vital for the app to make sense, but 
-# they can continue if they wish.
-######################################################################################
+# Module found in "R/mod_dataComply.R" Module description: a module that
+# will interface with a list of data frames and either (I) display an error if
+# needed variables don't exist and stop them from proceeding or (II) warn the
+# user if if some columns are missing that are vital for the app to make sense,
+# but they can continue if they wish.
+###############################################################################
 
 # RULES for all dfs
-# alldf_rules 
 all_df_rules <- list(
-  error = c("USUBJID"), # if error = "", then throwing an error. This needs
+  error = c("USUBJID"),
   warn = c("")
 )
 
+# Rules for explicit dfs
 expl_rules <- 
   list(
     ADLB = list(error = c(""),
@@ -29,24 +28,35 @@ expl_rules <-
                 warn = c("AESTDT", "AEDECOD", "AESEV", "AESER"))
   )
 
-
-# dfWith_rules
+# Rules for dfs that include certain variables
 df_incl_rules <- 
   list(
     PARAMCD = list(error = c(""),
-                   warn = c("AVISITN", "VISIT", "AVISIT", "PARAMCD", "PARAM", "AVAL", "CHG", "BASE")) # GOOD
+                   warn = c("AVISITN", "VISIT", "AVISIT", "PARAMCD", "PARAM", "AVAL", "CHG", "BASE"))
   )
 
 
 
 
-############################################################################################
-# Define the UI for the "Help" module, which simply displays all the rules in a nice format
-############################################################################################
-#' Some Roxygen notes
-#' 
-#' @param input,output,session Internal parameters for {shiny}. 
-#'     DO NOT REMOVE.
+
+#' Gather Rules For Help UI
+#'
+#' Gather Rules into a shiny tagList to be included in the UI for "help"
+#'   purposes, conditionally containing different required and/or recommended rule
+#'   sets (if they exist).
+#'
+#' @param input,output,session Internal parameters for {shiny}.
+#' @param all_df_rules A named list of variables names that should result in
+#'   \code{error} or \code{warn} if variables do not exist or are missing for
+#'   ANY DATAFRAME uploaded.
+#' @param expl_rules A named list dataframes containing named lists of variables
+#'   names that should result in \code{error} or \code{warn} if variables do not
+#'   exist or are missing for SPECIFIED DATAFRAMES uploaded
+#' @param df_incl_rules A named list of data frame variables containing a named list of
+#'   variables names that should result in \code{error} or \code{warn} if
+#'   variables do not exist or are missing
+#'
+#'   DO NOT REMOVE.
 #' @import shiny
 #' @import dplyr
 #' @importFrom dplyr %>%
@@ -241,14 +251,32 @@ rulesUI <- gather_rules(all_df_rules = all_df_rules,
 
 
 
-#' Helper function to gather requirements for modals. Output produces gt & df object
-#' 
-#' @param input,output,session Internal parameters for {shiny}. 
+#' Gather Violated Rules
+#'
+#' Gather applicable Rules into a gt & df object to be included in the pop-up modal
+#'   when a uploaded data frame violates said rule. This function also validates the
+#'   rules entered to verify they are in the expected format.
+#'
+#' @param input,output,session Internal parameters for {shiny}.
+#' @param disp_type Check for rules that would result in an error (required variables)
+#'   or warning (recommended variables)
+#' @param datalist A reactive list of data frames from the upload module
+#' @param all_df_rules A named list of variables names that should result in
+#'   \code{error} or \code{warn} if variables do not exist or are missing for
+#'   ANY DATAFRAME uploaded.
+#' @param expl_rules A named list dataframes containing named lists of variables
+#'   names that should result in \code{error} or \code{warn} if variables do not
+#'   exist or are missing for SPECIFIED DATAFRAMES uploaded
+#' @param df_incl_rules A named list of data frame variables containing a named list of
+#'   variables names that should result in \code{error} or \code{warn} if
+#'   variables do not exist or are missing
+#'
 #'     DO NOT REMOVE.
 #' @import shiny
 #' @import dplyr
-#' @import rlang
 #' @import gt
+#' @import rlang
+#' @importFrom purrr map map2 pmap
 #' @noRd
 #################################################################################
 # This function validates the rules entered and creates data frames & gt objects
@@ -410,6 +438,7 @@ gather_reqs <- function(input, output, session,
     
     # pf  
     
+    
     # modify the table displayed using gt, remove a column if just exporting warnings
     tab <- pf %>%
       gt(rowname_col = "type_col" , groupname_col = "df") %>%
@@ -417,7 +446,9 @@ gather_reqs <- function(input, output, session,
       text_transform(
         locations = list(cells_body(columns = vars(not_exist_disp), rows = not_exist_disp == "X"),
                          cells_body(columns = vars(missing_disp), rows = missing_disp == "X")),
-        fn = function(X) local_image(filename = "www/red_x.png", height = 15) # test_image(type = "png") # web_image(url = r_png_url, height = 15)
+        fn = function(X) 
+          # "X"
+          local_image(filename = "app/www/red_x.png", height = 15) # test_image(type = "png") # web_image(url = r_png_url, height = 15)
       ) %>%
       tab_header(
         title = paste(ifelse(disp_type == "error", "Please", "Optional:"),"reconcile variables below"),
@@ -428,8 +459,7 @@ gather_reqs <- function(input, output, session,
       tab_style(style = cell_text(weight = "bold"), locations = cells_stubhead()) %>%
       cols_align("center") %>%
       tab_style(style = cell_text(weight = "bold"), locations = cells_row_groups()) #%>% # bold group col groupnames
-    # tab_source_note(html(paste(local_image(filename = "www/red_x.png", height = 15)
-    #                            , "indicates variables that need attention")))
+
     
     if(disp_type == "warn") {
       tab <- tab %>% cols_hide(vars(not_exist_disp))
