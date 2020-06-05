@@ -1,22 +1,21 @@
 
-######################################################################################
+################################################################################
 # Inputs for Data Compliance Module
 #
-# Module found in "modules/data_compliance.R"
-# Module description:
-# a module that will interface with a list of data frames and either (I) display an
-# error if needed variables don't exist and stop them from proceeding or (II) warn the
-# user if if some columns are missing that are vital for the app to make sense, but 
-# they can continue if they wish.
-######################################################################################
+# Module found in "R/mod_dataComply.R" Module description: a module that
+# will interface with a list of data frames and either (I) display an error if
+# needed variables don't exist and stop them from proceeding or (II) warn the
+# user if if some columns are missing that are vital for the app to make sense,
+# but they can continue if they wish.
+###############################################################################
 
 # RULES for all dfs
-# alldf_rules 
 all_df_rules <- list(
-  error = c("USUBJID"), # if error = "", then throwing an error. This needs
+  error = c("USUBJID"),
   warn = c("")
 )
 
+# Rules for explicit dfs
 expl_rules <- 
   list(
     ADLB = list(error = c(""),
@@ -29,24 +28,35 @@ expl_rules <-
                 warn = c("AESTDT", "AEDECOD", "AESEV", "AESER"))
   )
 
-
-# dfWith_rules
+# Rules for dfs that include certain variables
 df_incl_rules <- 
   list(
     PARAMCD = list(error = c(""),
-                   warn = c("AVISITN", "VISIT", "AVISIT", "PARAMCD", "PARAM", "AVAL", "CHG", "BASE")) # GOOD
+                   warn = c("AVISITN", "VISIT", "AVISIT", "PARAMCD", "PARAM", "AVAL", "CHG", "BASE"))
   )
 
 
 
 
-############################################################################################
-# Define the UI for the "Help" module, which simply displays all the rules in a nice format
-############################################################################################
-#' Some Roxygen notes
-#' 
-#' @param input,output,session Internal parameters for {shiny}. 
-#'     DO NOT REMOVE.
+
+#' Gather Rules For Help UI
+#'
+#' Gather Rules into a shiny tagList to be included in the UI for "help"
+#'   purposes, conditionally containing different required and/or recommended rule
+#'   sets (if they exist).
+#'
+#' @param input,output,session Internal parameters for {shiny}.
+#' @param all_df_rules A named list of variables names that should result in
+#'   \code{error} or \code{warn} if variables do not exist or are missing for
+#'   ANY DATAFRAME uploaded.
+#' @param expl_rules A named list dataframes containing named lists of variables
+#'   names that should result in \code{error} or \code{warn} if variables do not
+#'   exist or are missing for SPECIFIED DATAFRAMES uploaded
+#' @param df_incl_rules A named list of data frame variables containing a named list of
+#'   variables names that should result in \code{error} or \code{warn} if
+#'   variables do not exist or are missing
+#'
+#'   DO NOT REMOVE.
 #' @import shiny
 #' @import dplyr
 #' @importFrom dplyr %>%

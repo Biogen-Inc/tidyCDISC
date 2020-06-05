@@ -85,8 +85,10 @@ golem_add_external_resources <- function(){
     'www', app_sys('app/www')
   )
   
+  # golem tags$head start
   tags$head(
-    favicon(),
+    
+    favicon(), # from golem's use_favicon in 01_dev... doesn't work
     bundle_resources(
       path = app_sys('app/www'),
       app_title = 'IDEA'
@@ -97,7 +99,7 @@ golem_add_external_resources <- function(){
     tags$head(
       tags$script(HTML(htmljs)),
       tags$link(rel = "//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"),
-      # tags$head(tags$link(rel="shortcut icon", href="IDEA_FAVICON.ico")), # shouldn't need anymore -- ac golem
+      tags$head(tags$link(rel="shortcut icon", href="IDEA_FAVICON.ico")), # shouldn't need anymore -- ac golem
       tags$script(src = "https://code.jquery.com/ui/1.12.1/jquery-ui.js"),
       tags$script(src="accordion.js", type="text/javascript")
     ),
@@ -110,8 +112,7 @@ golem_add_external_resources <- function(){
     # navbarpage was here
     #######################
     
-    
-  )
+  ) # golem tags$head end
   
   
 }
