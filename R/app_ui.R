@@ -43,7 +43,7 @@ app_ui <- function(request) {
     ##############################################################################
     
     # Custom styling to override theme
-    tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "styles.css")),
+    # tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "styles.css")),
     # Add logo to top right corner
     tags$script(HTML("var header = $('.navbar > .container-fluid'); header.append('<div style=\"float:right\"><ahref=\"URL\"><img src=\"www/logo.svg\" alt=\"alt\" style=\"float:right;width:66px;height:41px;\"> </a></div>');")),
     tags$script(src = "script.js"),
