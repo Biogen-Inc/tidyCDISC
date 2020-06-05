@@ -93,8 +93,7 @@ golem::add_module( name = "indvExpPatVisits" ) # ran
 ## Creates fct_* and utils_*
 
 golem::add_utils( "strObjs" ) # ran
-# old files: css.R, CapStr.R, allowedOperators.R
-golem::add_utils( "helpers" ) 
+golem::add_utils( "helpers" ) # ran, but Maya still has to uncomment and document her funtions
 
 
 golem::add_fct( "detectStandard", module = "dataUpload" ) # ran

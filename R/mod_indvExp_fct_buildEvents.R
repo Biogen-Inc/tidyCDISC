@@ -13,7 +13,8 @@
 #'   DO NOT REMOVE.
 #' @import dplyr
 #' @importFrom shinyjs alert
-#' @importFrom tidyr pivot_longer
+#' @importFrom tidyr pivot_longer 
+#' @importFrom purrr map_chr
 #' 
 #' @noRd
 #' 
@@ -60,7 +61,7 @@ build_events <- function(
     # "label table" for all adsl columns
     labs <- 
       data.frame(event_var = colnames(adsl)
-                 , DECODE = map_chr(1:n, function(x) attr(adsl[[x]], "label") )
+                 , DECODE = purrr::map_chr(1:n, function(x) attr(adsl[[x]], "label") )
       ) %>%
       mutate(event_var = as.character(event_var))
     

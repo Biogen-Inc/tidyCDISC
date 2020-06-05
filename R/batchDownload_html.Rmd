@@ -1,0 +1,111 @@
+---
+title: "IDEA Batch Download"
+date:
+output:
+  html_document:
+    toc: true
+    toc_depth: 4
+    toc_float:
+      collapsed: false
+params:
+  bds_data_: NA
+  report_summary: NA
+  user_notes: NA
+  html_filters: NA
+---
+
+```{r setup, include=FALSE} 
+# always_allow_html: true killed my table of contents, maybe it was in the wrong spot.
+# should try - 
+# title: "Batch Download"
+# always_allow_html: true
+# output:
+#   md_document:
+#     toc: blah blah blah
+# Could also play around with
+# output:
+#   md_document:
+#   allow_html_dependencies: true
+    
+knitr::opts_chunk$set(echo = FALSE, warning=FALSE, message=FALSE, progress = TRUE)
+progress$inc(1) # first increment
+# don't need these here, because not creating a new environment
+# load in applicable packages
+# library(tidyverse)
+# library(plotly)
+# library(knitr)
+# library(rmarkdown)
+# library(htmltools)
+# select data from list
+dat <- params$bds_data_
+# some summary info, and vector of unique paramcd's
+paramcds <- unique(dat$PARAMCD)
+np <- length(paramcds)
+# pat <- dat$USUBJID[1]
+# study <- sub("\\/.*", "", dat$USUBJID[1])
+print_report_summary <- !is.na(params$report_summary)
+print_user_notes <- (!is.na(params$user_notes) & !is_null(params$user_notes) & params$user_notes != "")
+progress$inc(1) # second increment - after libraries & light data work
+```
+
+```{r, eval = print_report_summary}
+knitr::asis_output("### Report Summary\\n") # Header that is only shown if print_option == TRUE
+```
+```{r, eval = print_report_summary}
+knitr::asis_output(params$report_summary) 
+```
+
+
+```{r, eval = print_user_notes}
+knitr::asis_output("### Notes\\n") # Header that is only shown if print_option == TRUE
+```
+```{r, eval = print_user_notes}
+knitr::asis_output(params$user_notes) 
+```
+
+
+
+
+<br>
+<br>
+<br>
+
+### Exploratory Plots
+
+```{r plots}
+# if using ggplot, use results='hide'
+plotter <- function(pcd){
+  # Create Plot
+  fn_output <- suppressWarnings(fnIndvExplVisits(
+      watermark = TRUE,
+      graph_output = "plotly",
+      bds_data = lb_data,
+      usubjid = usubjid(),
+      input_plot_hor = input$plot_hor,
+      input_visit_var = input$visit_var,
+      input_plot_param = pcd,
+      input_plot_adam = input$plot_adam,
+      input_overlay_events = input$overlay_events,
+      vline_dat = vline_dat(),
+      vv_dy_name = vv_dy_name()
+    ))
+  
+  
+  progress$inc(1) # increment progress bar
+  
+  
+  # format display
+  tagList(
+    h4(pcd),
+    fn_output,
+    div(style = "color: #0275d8; font-size: 12px;",
+        HTML(ifelse(is.na(params$html_filters),"",params$html_filters))),
+    br(), br(), br(), br(),
+  )
+}
+# test just one plot
+# tagList(br(), br(), visitPlot(pcd = input$plot_param))
+# Use prrrr to create as many plots as their are paramcd's
+tagList(br(), br(), purrr::map(.x = paramcds, ~ plotter(pcd = .x)))
+progress$inc(1) # last increment
+```

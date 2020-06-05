@@ -1,7 +1,12 @@
-# if we every add another type of event to the events table,
-# expand this selection to cover all our bases
 
+
+#' my_cols
+#'
+#' Grab a quick color pallette
+#'
 #' @importFrom RColorBrewer brewer.pal
+#' 
+#' @noRd
 my_cols <- RColorBrewer::brewer.pal(7,"Pastel2")
 
 css <- paste0("
