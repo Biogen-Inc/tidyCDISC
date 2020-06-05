@@ -95,8 +95,7 @@ golem_add_external_resources <- function(){
     ),
     shinyjs::useShinyjs(),
     waiter::use_waiter(), # include dependencies
-    shinyjs::extendShinyjs(text = jscode),
-    tags$link(rel = "stylesheet", type = "text/css", href = "index.css"),
+    shinyjs::extendShinyjs(text = jscode)
     
     #######################
     # navbarpage was here
