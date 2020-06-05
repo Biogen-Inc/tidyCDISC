@@ -11,7 +11,7 @@ app_ui <- function(request) {
     
     # List the first level UI elements here 
     navbarPage(theme = "yeti.css",
-               
+  
                title = div(id="logo-id","IDEA", img(src="www/IDEA_ICON.png", style="float:left; padding-right:3px; height:25px; width:30px")), 
                id = "navbarID",
                windowTitle = "IDEA",
