@@ -21,6 +21,7 @@
 #' @noRd 
 #'
 #' @importFrom shiny NS tagList 
+#' @importFrom shinyBS bsModal
 mod_dataComply_ui <- function(id, label = "Check if Data Complies with Rules", showRules = T){
   ns <- NS(id)
   tagList(

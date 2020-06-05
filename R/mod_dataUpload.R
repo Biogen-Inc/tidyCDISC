@@ -44,7 +44,7 @@ mod_dataUpload_ui <- function(id){
 ## To be copied in the UI - Done
 # mod_dataUpload_ui("dataUpload_ui_1")
 
-    
+
 #' dataUpload Server Function stores the uploaded data as a list and is exported to be used in other modules
 #'
 #' @param id,input,output,session Internal parameters for {shiny}.
@@ -52,16 +52,16 @@ mod_dataUpload_ui <- function(id){
 #' 
 #' @return a list of dataframes \code{dd$dataframe} to be used in other modules
 #' 
-#' @import shiny reactive observeEvent reactiveValuesToList radioButtons eventReactive renderText renderUI
-#' @importFrom shiny reactiveValues callModule
-#' @importFrom haven zap_formats read_sas
+#' @import shiny
+#' @importFrom haven zap_formats 
+#' @importFrom haven read_sas
 #' @importFrom stringr str_remove
-#' @importFrom IDEAFilter detectStandard
-#' @importFrom DT datatable renderDataTable
+#' @importFrom DT datatable 
+#' @importFrom DT renderDataTable
 #' 
 mod_dataUpload_server <- function(input, output, session, stringsAsFactors){
   ns <- session$ns
- 
+  
   # initiate reactive values - list of uploaded data files
   # standard to imitate output of detectStandard.R
   dd <- reactiveValues()
@@ -98,7 +98,7 @@ mod_dataUpload_server <- function(input, output, session, stringsAsFactors){
     
     # run detectStandard on new data and save to dd$standard
     
-    standard_list <- lapply(data_list, function(x){ IDEAFilter::detectStandard(x) })
+    standard_list <- lapply(data_list, function(x){ detectStandard(x) })
     
     #standard_list <- lapply(data_list, function(x){ detectStandard(x)$standard })
     
@@ -169,9 +169,9 @@ mod_dataUpload_server <- function(input, output, session, stringsAsFactors){
   ### return all data
   return(reactive(dd$data))
 }
-    
 
-    
+
+
 ## To be copied in the server - Done
 # callModule(mod_dataUpload_server, "dataUpload_ui_1")
- 
+
