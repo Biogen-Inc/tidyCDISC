@@ -448,7 +448,9 @@ gather_reqs <- function(input, output, session,
                          cells_body(columns = vars(missing_disp), rows = missing_disp == "X")),
         fn = function(X) 
           # "X"
-          img(src="www/red_x.png", style="width:16px;height:20px;") # test_image(type = "png") # web_image(url = r_png_url, height = 15)
+          local_image(filename = "inst/app/www/red_x.png", height = 15)
+          # local_image(filename = test_image(type = "png"), height = 15)
+          # web_image(url = r_png_url, height = 15)
       ) %>%
       tab_header(
         title = paste(ifelse(disp_type == "error", "Please", "Optional:"),"reconcile variables below"),
