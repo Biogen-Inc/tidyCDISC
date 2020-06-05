@@ -12,7 +12,7 @@ app_ui <- function(request) {
     # List the first level UI elements here 
     navbarPage(theme = "yeti.css",
                
-               title = div(id="logo-id","IDEA", img(src="IDEA_ICON.png", style="float:left; padding-right:3px; height:25px; width:30px")), 
+               title = div(id="logo-id","IDEA", img(src="www/IDEA_ICON.png", style="float:left; padding-right:3px; height:25px; width:30px")), 
                id = "navbarID",
                windowTitle = "IDEA",
                tabPanel(
@@ -45,7 +45,7 @@ app_ui <- function(request) {
     # Custom styling to override theme
     tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "styles.css")),
     # Add logo to top right corner
-    tags$script(HTML("var header = $('.navbar > .container-fluid'); header.append('<div style=\"float:right\"><ahref=\"URL\"><img src=\"logo.svg\" alt=\"alt\" style=\"float:right;width:66px;height:41px;\"> </a>`</div>');")),
+    tags$script(HTML("var header = $('.navbar > .container-fluid'); header.append('<div style=\"float:right\"><ahref=\"URL\"><img src=\"www/logo.svg\" alt=\"alt\" style=\"float:right;width:66px;height:41px;\"> </a></div>');")),
     tags$script(src = "script.js"),
     tags$script(src = "recipe.js"),
     tags$style(HTML("
