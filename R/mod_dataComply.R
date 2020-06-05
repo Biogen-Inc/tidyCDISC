@@ -5,39 +5,33 @@
 
 #' dataComply UI Function
 #'
-#' @description A shiny Module that
+#' @description A shiny Module Not in use
 #'
 #' @param id,input,output,session Internal parameters for {shiny}.
-#' @param A Label
-#' @param showRules If TRUE, the UI will contain the returned shiny tagList will contain a
-#'   help button and respective modal when clicked. If FALSE, the dataComply module will
-#'   not include a help button to display rules.
 #'
 #' @noRd
 #'
-#' @importFrom shiny NS tagList actionButton
-#' @importFrom shinyBS bsModal
-mod_dataComply_ui <- function(id, label = "Check if Data Complies with Rules", showRules = T){
-  ns <- NS(id)
+mod_dataComply_ui <- function(id){ #, showRules = T
+  # ns <- NS(id)
   tagList(
-    if(showRules == TRUE){
-      tagList(
-        actionButton(ns("clickRules") #actionBttn
-                     , label = NULL
-                     , icon = icon("question-circle")
-                     , class = "btn-start"
-        ),
-        
-        bsModal(id = ns("upload_rules"),
-                title = div(style = "text-align:center; font-weight:bold;","ADaM-ish Upload Rules"),
-                trigger = ns("clickRules"),
-                
-                rulesUI # defined in "data_compliance_objects.R"
-                
-        ) # end of bsModal
-
-      )
-    }
+  #   if(showRules == TRUE){
+  #     tagList(
+  #       actionButton(ns("clickRules") #actionBttn
+  #                    , label = NULL
+  #                    , icon = icon("question-circle")
+  #                    , class = "btn-start"
+  #       ),
+  #       
+  #       bsModal(id = ns("upload_rules"),
+  #               title = div(style = "text-align:center; font-weight:bold;","ADaM-ish Upload Rules"),
+  #               trigger = ns("clickRules"),
+  #               
+  #               rulesUI # defined in "data_compliance_objects.R"
+  #               
+  #       ) # end of bsModal
+  # 
+  #     )
+  #   }
   )
 }
 
