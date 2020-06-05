@@ -1,6 +1,23 @@
 #' indvExpPatVisits Server Function
+#' 
+#' Prepare Individual Explorer Tab Visits subtab with content
 #'
-#' @noRd 
+#' @param input,output,session Internal parameters for {shiny}. 
+#' @param datafile A list of dataframes
+#' @param loaded_adams a character vector of loaded adam datasets
+#' @param usubjid A Character string containing a USUBJID
+#' @param filtered_dat a filtered dataframe containing USUBJID
+
+#'   DO NOT REMOVE.
+#' @import shiny
+#' @import dplyr
+#' @importFrom shinyjs show hide enable disable
+#' @importFrom plotly renderPlotly
+#' @importFrom DT renderDataTable datatable
+#' @importFrom stringr str_replace_all str_replace
+#' @importFrom rmarkdown render
+#' @noRd
+#' 
 mod_indvExpPatVisits_server <- function(input, output, session, datafile, loaded_adams, usubjid, filtered_dat){
   ns <- session$ns
   
@@ -254,6 +271,7 @@ mod_indvExpPatVisits_server <- function(input, output, session, datafile, loaded
       # & !is.null(filtered_dat())
       & any(regexpr("%>%",capture.output(attr(filtered_dat(), "code"))) > 0)
       & input$event_type_filter == "Pre-Filters"
+      & length(input$overlay_events) > 0
     )
     
     filters_in_english(filtered_dat())

@@ -97,7 +97,7 @@ fnIndvExplVisits <- function(
         #                   grob(lab="IDEA: PROOF ONLY", cl="watermark"))
         
         # Smaller watermark
-        ?annotate("text", x = Inf, y = -Inf, label = "IDEA: PROOF ONLY",
+        annotate("text", x = Inf, y = -Inf, label = "IDEA: PROOF ONLY",
                  hjust=1.1, vjust=-3.3, col="white", cex=20,
                  fontface = "bold", alpha = 0.8)
       

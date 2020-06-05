@@ -1,6 +1,22 @@
 #' indvExpPatEvents Server Function
+#' 
+#' Prepare Individual Explorer Tab Events subtab with content
 #'
-#' @noRd 
+#' @param input,output,session Internal parameters for {shiny}. 
+#' @param datafile A list of dataframes
+#' @param loaded_adams a character vector of loaded adam datasets
+#' @param usubjid A Character string containing a USUBJID
+#' @param filtered_dat a filtered dataframe containing USUBJID
+
+#'   DO NOT REMOVE.
+#' @import shiny
+#' @import dplyr
+#' @importFrom shinyjs show hide
+#' @importFrom DT renderDataTable datatable
+#' @importFrom timevis timevis  renderTimevis setOptions
+#' @importFrom stringr str_replace_all str_replace
+#' @noRd
+#' 
 mod_indvExpPatEvents_server <- function(input, output, session, datafile, loaded_adams, usubjid, filtered_dat){
   ns <- session$ns
   
@@ -64,189 +80,6 @@ mod_indvExpPatEvents_server <- function(input, output, session, datafile, loaded
     }
     else{
       
-      # # turn on waiter screen on event elements (table and plot)
-      # # w_events$show()
-      # 
-      # # Here we collect data for adae, ds (from adsl), adcm and adlb
-      # # and then combine the ones selected in input$checkGroup
-      # # DOMAIN is used to match the input$checkGroup string
-      # if ("ADAE" %in% loaded_adams() & "AE" %in% c(input$checkGroup)) { # ac: first part not needed?
-      #   if("AESTDT" %in% colnames(datafile()[["ADAE"]])){
-      #     ae_rec <- (if(input$events_apply_filter == T) datafile()[["ADAE"]] %>% semi_join(filtered_dat()) else datafile()[["ADAE"]]) %>% 
-      #       filter(USUBJID == usubjid()) %>%
-      #       filter(!is.na(AESTDT)) %>%
-      #       mutate(EVENTTYP = "Adverse Event", DOMAIN = "AE") %>%
-      #       distinct(USUBJID, EVENTTYP, AESTDT, AEDECOD, AESEV, AESER, DOMAIN) %>%
-      #       mutate(
-      #         START = AESTDT,
-      #         END = NA,
-      #         tab_st = ifelse(as.character(START) == "", NA_character_, as.character(START)),
-      #         tab_en = ifelse(as.character(END) == "", NA_character_, as.character(END)),
-      #         DECODE = paste(AEDECOD, "AESEV:", AESEV, "AESER:", AESER)
-      #       ) %>%
-      #       select(-starts_with("AE")) %>%
-      #       distinct(.keep_all = TRUE)
-      #   } else{
-      #     if("AE" %in% c(input$checkGroup)){
-      #       shinyjs::alert(paste("Cannot add Adverse Events: no AESTDT variable exists in the loaded ADAE."))
-      #     }
-      #     ae_rec <- NULL
-      #   }
-      # } else {
-      #   ae_rec <- NULL
-      # }
-      # 
-      # if ("ADSL" %in% loaded_adams() & "DS" %in% c(input$checkGroup)) {
-      #   
-      #   # organizing our ADSL labels for merging below
-      #   adsl <- data.frame(datafile()[["ADSL"]])
-      #   n <- ncol(adsl)
-      #   # "label table" for all adsl columns
-      #   labs <- 
-      #     data.frame(event_var = colnames(adsl)
-      #              , DECODE = map_chr(1:n, function(x) attr(adsl[[x]], "label") )
-      #     ) %>%
-      #     mutate(event_var = as.character(event_var))
-      #   
-      #   # date columns we are going to select below
-      #   adsl_date_cols <- adsl %>%
-      #     filter(USUBJID == usubjid()) %>%
-      #     select(USUBJID,ends_with("DT")) %>%
-      #     colnames()
-      #   
-      #   # cat(paste("\n",adsl_date_cols))
-      #   
-      #   ds_rec <- (if(input$events_apply_filter == T) adsl %>% semi_join(filtered_dat()) else adsl) %>%
-      #     filter(USUBJID == usubjid()) %>%
-      #     select(all_of(adsl_date_cols)) %>%
-      #     distinct() %>%
-      #     pivot_longer(-USUBJID, names_to = "event_var", values_to = "START") %>%
-      #     subset(!is.na(START)) %>%
-      #     left_join(labs, by = "event_var") %>% #DECODE variable exists in here
-      #     arrange(START)%>%
-      #     mutate(EVENTTYP = "Milestones", DOMAIN = "DS",
-      #            END = NA,
-      #            tab_st = ifelse(as.character(START) == "", NA_character_, as.character(START)),
-      #            tab_en = ifelse(as.character(END) == "", NA_character_, as.character(END))
-      #            ) %>%
-      #     distinct(USUBJID, EVENTTYP, START, END,
-      #            tab_st,
-      #            tab_en,
-      #            DECODE, DOMAIN)%>%
-      #     select(-starts_with("DS"))
-      #   
-      # 
-      # } else {
-      #   ds_rec <- NULL
-      # }
-      # 
-      # if ("ADCM" %in% loaded_adams() & "CM" %in% c(input$checkGroup)) {
-      #   if("CMSTDT" %in% colnames(datafile()[["ADCM"]])){
-      #     cm_rec <- (if(input$events_apply_filter == T) datafile()[["ADCM"]] %>% semi_join(filtered_dat()) else datafile()[["ADCM"]]) %>%
-      #       filter(USUBJID == usubjid()) %>%
-      #       filter(CMDECOD != "") %>%
-      #       mutate(EVENTTYP = "Concomitant Medications", DOMAIN = "CM") %>%
-      #       distinct(USUBJID, EVENTTYP, CMSTDT, CMDECOD, DOMAIN) %>%
-      #       mutate(START = CMSTDT,
-      #              END = NA, 
-      #              tab_st = ifelse(as.character(START) == "", NA_character_, as.character(START)),
-      #              tab_en = ifelse(as.character(END) == "", NA_character_, as.character(END)),
-      #              DECODE = CMDECOD) %>%
-      #       select(-starts_with("CM")) %>%
-      #       distinct(.keep_all = TRUE)
-      #   } else{
-      #     if("CM" %in% c(input$checkGroup)){
-      #       shinyjs::alert(paste("Cannot add Con Meds: no CMSTDT variable exists in the loaded ADCM."))
-      #     }
-      #     cm_rec <- NULL
-      #   }
-      # } else {
-      #   cm_rec <- NULL
-      # }
-      # 
-      # if ("ADLB" %in% loaded_adams() & "LB" %in% c(input$checkGroup)) {
-      #   if("LBDT" %in% colnames(datafile()[["ADLB"]])){
-      #     lb_rec <- (if(input$events_apply_filter == T) datafile()[["ADLB"]] %>% semi_join(filtered_dat()) else datafile()[["ADLB"]]) %>%
-      #       filter(USUBJID == usubjid()) %>%
-      #       mutate(EVENTTYP = "Lab Results", DOMAIN = "LB") %>%
-      #       distinct(USUBJID, EVENTTYP, LBDT, DOMAIN) %>% # Chris suggested: ADT ANALYSIS DATE, 
-      #       mutate(START = LBDT,
-      #              END = NA,
-      #              tab_st = ifelse(as.character(START) == "", NA_character_, as.character(START)),
-      #              tab_en = ifelse(as.character(END) == "", NA_character_, as.character(END)),
-      #              DECODE = "Labs Drawn") %>%
-      #       select(-starts_with("LB")) %>%
-      #       distinct(.keep_all = TRUE)
-      #   } else{
-      #     if("LB" %in% c(input$checkGroup)){
-      #       shinyjs::alert(paste("Cannot add Lab Data: no LBDT variable exists in the loaded ADLB"))
-      #     }
-      #     lb_rec <- NULL
-      #   }
-      # } else {
-      #   lb_rec <- NULL
-      # }
-      # # Medical history (which contains several categories that get treated as their own group)
-      # if ("ADMH" %in% loaded_adams() & "MH_" %in% substring(input$checkGroup, 1, 3)) {
-      #   # if the date column exists in the data set, build the data
-      #   if("MHSTDTC" %in% colnames(datafile()[["ADMH"]])){
-      #     mh_rec <- (if(input$events_apply_filter == T) datafile()[["ADMH"]] %>% semi_join(filtered_dat()) else datafile()[["ADMH"]]) %>%
-      #       filter(USUBJID == usubjid()) %>%
-      #       mutate(EVENTTYP = str_to_title(MHCAT), #used to be "Medical History",
-      #              
-      #              # Create a domain name based on the initials of the med hist category, appending "MH_" prefix
-      #              DOMAIN = paste0("MH_",sapply(strsplit(MHCAT, " "), function(x){
-      #                toupper(paste(substring(x, 1, 1), collapse = ""))})),
-      #              
-      #              # Some date imputation when missing: default to maximum time period as possible when date is vague
-      #              has_end = ifelse(MHENDTC == "" | is.na(MHENDTC), FALSE, TRUE),
-      #              START = as.Date(case_when(
-      #                 nchar(MHSTDTC) == 10 ~ MHSTDTC,
-      #                 nchar(MHSTDTC) == 7 ~ paste0(MHSTDTC,"-01"),
-      #                 nchar(MHSTDTC) == 4 ~ paste0(MHSTDTC,"-01-01"),
-      #                 TRUE ~ NA_character_)),
-      #              END = as.Date(case_when(
-      #                 nchar(MHENDTC) == 10 ~ MHENDTC,
-      #                 has_end & nchar(MHENDTC) == 7 ~ paste0(MHENDTC,"-28"),
-      #                 has_end & nchar(MHENDTC) == 4 ~ paste0(MHENDTC,"-12-31"),
-      #                 has_end == F & nchar(MHSTDTC) == 7  ~ paste0(MHSTDTC,"-28"),
-      #                 has_end == F & nchar(MHSTDTC) == 4 ~ paste0(MHSTDTC,"-12-31"),
-      #                 TRUE ~ NA_character_)),
-      #              tab_st = ifelse(MHSTDTC == "", NA_character_, MHSTDTC),
-      #              tab_en = ifelse(MHENDTC == "", NA_character_, MHENDTC),
-      #              # st_imp = ifelse(tab_st == paste(START),0,1),
-      #              # en_imp = ifelse(tab_en == paste(END),0,1),
-      #              DECODE = ifelse(is.na(MHDECOD) | MHDECOD == "", MHTERM, MHDECOD),
-      #              sort_start = ifelse(is.na(START), as.Date("1900-01-01"), START)
-      #       ) %>%
-      #       arrange(sort_start) %>%
-      #       distinct(USUBJID, EVENTTYP, START, END, tab_st, tab_en, DECODE, DOMAIN) %>%
-      #       distinct(.keep_all = TRUE)
-      #   } else{
-      #     if("MH_" %in% substring(input$checkGroup, 1, 3)){
-      #       shinyjs::alert(paste("Cannot add Medical History: no MHSTDTC variable exists in the loaded ADMH"))
-      #     }
-      #     mh_rec <- NULL
-      #   }
-      # } else {
-      #   mh_rec <- NULL
-      # }
-      # strng <- input$checkGroup
-      # 
-      # # Remove NULLs from the list
-      # uni_list <- list(ds_rec, ae_rec, cm_rec, lb_rec, mh_rec)
-      # uni_list <- uni_list[!sapply(uni_list,is.null)]
-      # 
-      # 
-      # uni_rec <- #ae_rec %>%
-      #   do.call("rbind", uni_list) %>%
-      #   mutate(ord = ifelse(EVENTTYP == "DS", 1, 0),
-      #          sort_start = if_else(is.na(START), as.Date("1900-01-01"), START), # If start is null, show at beginning of table
-      #          END = as.Date(END, origin="1970-01-01")
-      #          ) %>% # for ties, show DS last
-      #   arrange(sort_start, ord, EVENTTYP) %>%
-      #   filter(DOMAIN %in% c(strng)) %>%
-      #   select(-USUBJID, -ord, -sort_start)
       
       # See build_events_df.R
       uni_rec <- build_events(input_checkbox = input$checkGroup
