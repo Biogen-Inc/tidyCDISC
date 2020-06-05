@@ -50,7 +50,9 @@ df_incl_rules <-
 #' @import shiny
 #' @import dplyr
 #' @importFrom dplyr %>%
-#' @import rlang
+#' @importFrom rlang is_empty
+#' @importFrom data.table rbindlist
+#' @importFrom purrr map2 pmap
 #' @noRd
 #' 
 gather_rules <- function(input, output, session,
