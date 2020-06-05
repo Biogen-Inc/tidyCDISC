@@ -110,6 +110,7 @@ mod_dataComply_server <- function(input, output, session, datalist = reactive(NU
   # observeEvent(datalist(), {
   return_datalist <- eventReactive(datalist(), {
     
+    
     # Run "the check" to see if any rules are violated
     err_tab <- gather_reqs(disp_type = "error",
                            datalist = datalist,
@@ -139,7 +140,9 @@ mod_dataComply_server <- function(input, output, session, datalist = reactive(NU
           if(dismissErrBttn){
             tagList(
               div(style = "text-align:center; font-size: 14px;",
-                  html(paste(local_image(filename = "www/red_x.png", height = 15)
+                  html(paste(
+                    # "X"
+                    local_image(filename = "app/www/red_x.png", height = 15)
                              , "= indicates variable(s) that need attention"))),
               # **
               # actionButton(ns("clickRulesError") #actionBttn
@@ -152,7 +155,9 @@ mod_dataComply_server <- function(input, output, session, datalist = reactive(NU
           } else {
             tagList(
               div(style = "text-align:center; font-size: 14px;",
-                  html(paste(local_image(filename = "www/red_x.png", height = 15)
+                  html(paste(
+                    # "X"
+                    local_image(filename = "app/www/red_x.png", height = 15)
                              , "= indicates variable(s) that need attention"))),
               # **
               # actionButton(ns("clickRulesError") #actionBttn
@@ -190,7 +195,9 @@ mod_dataComply_server <- function(input, output, session, datalist = reactive(NU
                         "Warning: Loaded Data not in Expected Format"),
             footer = tagList(
               div(style = "text-align:center; font-size: 14px;",
-                  html(paste(local_image(filename = "www/red_x.png", height = 15)
+                  html(paste(
+                             # "X"
+                             local_image(filename = "app/www/red_x.png", height = 15)
                              , "= indicates variable(s) that need attention"))
               ),
               # **
