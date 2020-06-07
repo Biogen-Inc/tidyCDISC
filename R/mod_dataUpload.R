@@ -95,13 +95,6 @@ mod_dataUpload_server <- function(input, output, session, stringsAsFactors){
     # set dd$current to FALSE for previous & TRUE for current uploads
     dd$current <- c(rep(FALSE, length(dd$current)), rep(TRUE, length(data_list)))
     
-    # run detectStandard on new data and save to dd$standard
-    
-    #standard_list <- lapply(data_list, function(x){ detectStandard(x) })
-    
-    #standard_list <- lapply(data_list, function(x){ detectStandard(x)$standard })
-    
-    #dd$standard <- c(dd$standard, standard_list)
   })
   
   
