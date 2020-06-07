@@ -16,46 +16,43 @@ my_gg_color_hue <- function(n) {
   hcl(h = hues, l = 65, c = 100)[1:n]
 }
 
+#' Capitalize the first letter of a string
+#' @param y the strings to capitalize
+CapStr <- function(y) {
+  c <- strsplit(y, " ")[[1]]
+  paste(toupper(substring(c, 1,1)), substring(c, 2),
+        sep="", collapse=" ")
+}
 
+#' transpose dataframes so they can all 
+#' be used with rbind to generate
+#' the gt tables
+#' @param df the dataframe to transpose
+#' @param num the number of rows to return
+transpose_df <- function(df, num) {
+  t_df <- data.table::transpose(df)
+  colnames(t_df) <- rownames(df)
+  rownames(t_df) <- colnames(df)
+  t_df <- t_df %>%
+    tibble::rownames_to_column(.data = .) %>%
+    tibble::as_tibble(.)
+  return(t_df[-num,])
+}
 
-###########
-# For Maya
-###########
-# CapStr <- function(y) {
-#   c <- strsplit(y, " ")[[1]]
-#   paste(toupper(substring(c, 1,1)), substring(c, 2),
-#         sep="", collapse=" ")
-# }
-# 
-# 
-# transpose_df <- function(df, num) {
-#   t_df <- data.table::transpose(df)
-#   colnames(t_df) <- rownames(df)
-#   rownames(t_df) <- colnames(df)
-#   t_df <- t_df %>%
-#     tibble::rownames_to_column(.data = .) %>%
-#     tibble::as_tibble(.)
-#   return(t_df[-num,])
-# }
-# 
-# 
-# common_rownames <- function(data, group) {
-#   if (is.null(group)) {
-#     vars <- c("Variable", "TOTAL")
-#   } else {
-#     vars <- c("Variable", unique(data[[group]]))
-#     vars[vars == ""] <- "Missing"
-#   }
-#   return(vars)
-# }
-# 
-# 
-# allowed_operators <- c(">", ">=", "==", "<=", "<", "!=") %>% 
-#   set_names() %>% 
-#   map(match.fun)
-
-
-
+#' transform the gt rownames
+#' from generics to the column name
+#' and the total N of each column
+#' @param data the data to create columns with
+#' @param group weather to group the data to calculate Ns
+common_rownames <- function(data, group) {
+  if (is.null(group)) {
+    vars <- c("Variable", "TOTAL")
+  } else {
+    vars <- c("Variable", unique(data[[group]]))
+    vars[vars == ""] <- "Missing"
+  }
+  return(vars)
+}
 
 
 #' Convert actions performed on from an IDEAFilter output dataframe into text

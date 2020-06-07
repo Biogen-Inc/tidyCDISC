@@ -127,36 +127,6 @@ mod_tableGen_ui <- function(id){
 
 mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL)) {
   
-  filtering_expr <- function(input) {
-    column <- rlang::sym(input$filtering)
-    operator <- allowed_operators[[input$condition]]
-    if (is.null(operator)) {
-      rlang::abort(glue::glue("Can't use operator `{input$condition}`"))
-    }
-    
-    if (grepl("[A-Za-z]", datafile()$ADSL[[input$filtering]][1])) {
-      value <- input$filt_grp
-    } else {
-      value <- as.numeric(input$filt_grp)
-    }
-    
-    call <- rlang::call2(operator, column, value)
-    rlang::as_quosure(call, env = emptyenv())
-  }
-  
-  output$filtering_by <- renderUI({
-    selectInput(session$ns("filtering"), "Filter Column:", colnames(datafile()$ADSL)[colnames(datafile()$ADSL) != "STUDYID"])
-  })
-  
-  observe({
-    req(input$filtering)
-    x <- input$filtering
-    if (is.na(x)) x <- character(0)
-    t <- datafile()$ADSL %>% select(!!sym(input$filtering)) %>% distinct(!!sym(x))
-    updateSelectInput(session, "filt_grp", choices = t)
-  })
-  
-  
   output$col_ADSL <- renderUI({
     x <- input$recipe
     if (is.null(x) | length(x) == 0) {
