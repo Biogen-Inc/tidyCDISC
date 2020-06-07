@@ -13,6 +13,10 @@ app_server <- function( input, output, session ) {
   callModule(mod_dataComplyRules_server, "dataComplyRules_ui_1")
   datafile <- callModule(mod_dataUpload_server, "dataUpload_ui_1")
   
+  # render the tablegenerator module using the datafile from dataupload as an input
+  table_generator <- callModule(mod_tableGen_server, "tableGen_ui_1", datafile = datafile)
+  
+  output$all_rows <- renderUI({ table_generator() })
   
   # Individual Explorer
   user_dat <- callModule(mod_indvExp_server, "indvExp_ui_1", datafile = datafile)

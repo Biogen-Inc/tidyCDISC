@@ -41,14 +41,6 @@ usethis::use_package("rlang")
 usethis::use_package("stringi")
 usethis::use_dev_package("tippy") #remotes::install_github("JohnCoene/tippy")
 usethis::use_dev_package("IDEAFilter") # devtools::install_github("MayaGans/IDEAFilter")
-
-# Error: 'tidyverse' is a meta-package and it is rarely a good idea to depend on it. Please 
-# determine the specific underlying package(s) that offer the function(s) you need and depend 
-# on that instead. For data analysis projects that use a package structure but do not implement
-# a formal R package, adding 'tidyverse' to Depends is a reasonable compromise. Call 
-# `use_package("tidyverse", type = "depends")` to achieve this.
-# usethis::use_package("tidyverse")
-# ran these:
 usethis::use_package("ggplot2")
 usethis::use_package("dplyr")
 usethis::use_package("stringr")
@@ -59,7 +51,6 @@ usethis::use_package("tibble")
 usethis::use_package("magrittr")
 usethis::use_package("cicerone")
 usethis::use_pipe()
-attachment::att_amend_desc()
 
 
 
@@ -71,7 +62,7 @@ golem::add_module( name = "dataUpload" ) # ran
 golem::add_module( name = "dataComply" ) # ran
 golem::add_module( name = "dataComplyRules" ) # ran
 
-golem::add_module( name = "tableGen" )
+golem::add_module( name = "tableGen" ) #ran
 
 golem::add_module( name = "selectData" )
 golem::add_module( name = "popExp" )
@@ -94,13 +85,6 @@ golem::add_module( name = "indvExpPatVisits" ) # ran
 
 golem::add_utils( "strObjs" ) # ran
 golem::add_utils( "helpers" ) # ran, but Maya still has to uncomment and document her funtions
-
-
-golem::add_fct( "detectStandard", module = "dataUpload" ) # ran
-golem::add_fct( "evalStandard", module = "dataUpload" ) # ran
-golem::add_fct( "hasColumn", module = "dataUpload" ) # ran
-golem::add_fct( "hasField", module = "dataUpload" ) # ran
-golem::add_fct( "getSettingsMeta", module = "dataUpload" ) # ran
 
 golem::add_fct( "helpers", module = "dataComply" ) # ran
 golem::add_fct( "helpers", module = "dataComplyRules" ) # ran
@@ -126,8 +110,6 @@ golem::add_js_file( "recipe" )
 golem::add_js_file( "sync_divs" )
 
 golem::add_css_file( "yeti" )
-golem::add_css_file( "styles" )
-golem::add_css_file( "index" )
 
 
 ###################################################################

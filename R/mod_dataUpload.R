@@ -1,14 +1,15 @@
-#' The dataUpload UI provides the interface for uploading ADSL data
+#' The dataUpload UI 
+#' provides the interface for uploading ADSL data
 #' and a table overview of the uploaded file
 #'
 #' @description A shiny Module.
 #'
-#' @return a shiny \code{\link[shiny]{tagList}} containing the filter ui
+#' @return a shiny \code{\link[shiny]{tagList}} 
+#' containing the filter ui
 #'
-#' @param id,input,output,session Internal parameters for {shiny}.
+#' @param id Internal parameters for {shiny}.
 #'
-#'
-#' @importFrom shiny NS tagList h1 br fluidRow column wellPanel div HTML fileInput uiOutput span textOutput
+#' @import shiny
 #' 
 mod_dataUpload_ui <- function(id){
   ns <- shiny::NS(id)
@@ -40,15 +41,16 @@ mod_dataUpload_ui <- function(id){
 }
 
 
-## To be copied in the UI - Done
-# mod_dataUpload_ui("dataUpload_ui_1")
-
-
-#' dataUpload Server Function stores the uploaded data as a list and is exported to be used in other modules
+#' dataUpload Server Function stores 
+#' the uploaded data as a list and 
+#' is exported to be used in other modules
 #'
-#' @param id,input,output,session Internal parameters for {shiny}.
+#' @param input,output,session 
+#' Internal parameters for {shiny}.
 #' 
-#' @return a list of dataframes \code{dd$dataframe} to be used in other modules
+#' @return a list of dataframes 
+#' \code{dd$dataframe} 
+#' to be used in other modules
 #' 
 #' @import shiny
 #' @importFrom haven zap_formats 
@@ -160,9 +162,4 @@ mod_dataUpload_server <- function(input, output, session){
   ### return all data
   return(reactive(dd$data))
 }
-
-
-
-## To be copied in the server - Done
-# callModule(mod_dataUpload_server, "dataUpload_ui_1")
 

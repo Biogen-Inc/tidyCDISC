@@ -2,16 +2,18 @@
 % Please edit documentation in R/mod_dataUpload.R
 \name{mod_dataUpload_ui}
 \alias{mod_dataUpload_ui}
-\title{The dataUpload UI provides the interface for uploading ADSL data
+\title{The dataUpload UI 
+provides the interface for uploading ADSL data
 and a table overview of the uploaded file}
 \usage{
 mod_dataUpload_ui(id)
 }
 \arguments{
-\item{id, input, output, session}{Internal parameters for {shiny}.}
+\item{id}{Internal parameters for {shiny}.}
 }
 \value{
-a shiny \code{\link[shiny]{tagList}} containing the filter ui
+a shiny \code{\link[shiny]{tagList}} 
+containing the filter ui
 }
 \description{
 A shiny Module.

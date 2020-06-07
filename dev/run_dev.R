@@ -6,9 +6,6 @@ golem::detach_all_attached()
   # rm(list=ls(all.names = TRUE))
 
 # Document and reload your package, which runs these three functions...
-  # rstudioapi::documentSaveAll()
-  # roxygen2::roxygenise()
-  # pkgload::load_all()
 golem::document_and_reload()
 
 # Run the application
