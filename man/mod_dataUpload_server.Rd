@@ -2,16 +2,22 @@
 % Please edit documentation in R/mod_dataUpload.R
 \name{mod_dataUpload_server}
 \alias{mod_dataUpload_server}
-\title{dataUpload Server Function stores the uploaded data as a list and is exported to be used in other modules}
+\title{dataUpload Server Function stores 
+the uploaded data as a list and 
+is exported to be used in other modules}
 \usage{
 mod_dataUpload_server(input, output, session)
 }
 \arguments{
-\item{id, input, output, session}{Internal parameters for {shiny}.}
+\item{input, output, session}{Internal parameters for {shiny}.}
 }
 \value{
-a list of dataframes \code{dd$dataframe} to be used in other modules
+a list of dataframes 
+\code{dd$dataframe} 
+to be used in other modules
 }
 \description{
-dataUpload Server Function stores the uploaded data as a list and is exported to be used in other modules
+dataUpload Server Function stores 
+the uploaded data as a list and 
+is exported to be used in other modules
 }

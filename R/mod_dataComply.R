@@ -7,9 +7,8 @@
 #'
 #' @description A shiny Module Not in use
 #'
-#' @param id,input,output,session Internal parameters for {shiny}.
+#' @param id Internal parameters for {shiny}.
 #'
-#' @noRd
 #'
 mod_dataComply_ui <- function(id){
   # ns <- NS(id)
@@ -40,8 +39,6 @@ mod_dataComply_ui <- function(id){
 #' @return A list of dataframes that are compliant with the rules
 #' 
 #' @family dataComply Functions
-#'
-#' @noRd
 #' 
 mod_dataComply_server <- function(input, output, session, datalist = reactive(NULL), dismissErrBttn = T){
   ns <- session$ns

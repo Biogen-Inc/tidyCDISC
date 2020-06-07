@@ -219,3 +219,6 @@ $(function() {
 });
 */
 
+$( document ).ready(function() {
+  
+});

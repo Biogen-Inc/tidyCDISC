@@ -19,10 +19,10 @@ app_ui <- function(request) {
                  title = "Data",
                  mod_dataUpload_ui("dataUpload_ui_1") # ac golem: need import csv label?
                ),
-               # tabPanel(
-               #   title = "TableGenerator", id = 't_gen', # ac golem: make tableGen? Or need?
-               #   mod_tableGen_ui("tableGen_ui_1")
-               # ),
+               tabPanel(
+                  title = "TableGenerator", id = 't_gen', # ac golem: make tableGen? Or need?
+                  mod_tableGen_ui("tableGen_ui_1")
+               ),
                # tabPanel(
                #   title = "Population Explorer",
                #   # dataUploadUI("popul", "Import CSV"),  
