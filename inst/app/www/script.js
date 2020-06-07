@@ -1,4 +1,5 @@
-$(function() {
+
+  $(function() {
   $("#sortable_agg").sortable();
   $("#sortable_agg").disableSelection();
   $(".all_blocks").sortable();
@@ -219,6 +220,3 @@ $(function() {
 });
 */
 
-$( document ).ready(function() {
-  
-});
