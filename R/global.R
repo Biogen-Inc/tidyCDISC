@@ -48,6 +48,7 @@ utils::globalVariables(c(
   "ord",
   "setNames",
   "sort_start",
+  "str_subset",
   "start",
   "tab_en",
   "tab_st",
