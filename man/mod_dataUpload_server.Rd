@@ -4,12 +4,10 @@
 \alias{mod_dataUpload_server}
 \title{dataUpload Server Function stores the uploaded data as a list and is exported to be used in other modules}
 \usage{
-mod_dataUpload_server(input, output, session, stringsAsFactors)
+mod_dataUpload_server(input, output, session)
 }
 \arguments{
 \item{id, input, output, session}{Internal parameters for {shiny}.}
-
-\item{stringAsFactors}{a \code{logical} value indicating whether to convert strings to factors}
 }
 \value{
 a list of dataframes \code{dd$dataframe} to be used in other modules

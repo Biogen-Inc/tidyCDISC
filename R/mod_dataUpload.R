@@ -47,7 +47,6 @@ mod_dataUpload_ui <- function(id){
 #' dataUpload Server Function stores the uploaded data as a list and is exported to be used in other modules
 #'
 #' @param id,input,output,session Internal parameters for {shiny}.
-#' @param stringAsFactors a \code{logical} value indicating whether to convert strings to factors
 #' 
 #' @return a list of dataframes \code{dd$dataframe} to be used in other modules
 #' 
@@ -56,7 +55,7 @@ mod_dataUpload_ui <- function(id){
 #' @importFrom haven read_sas
 #' @importFrom stringr str_remove
 #' 
-mod_dataUpload_server <- function(input, output, session, stringsAsFactors){
+mod_dataUpload_server <- function(input, output, session){
   ns <- session$ns
   
   # initiate reactive values - list of uploaded data files
