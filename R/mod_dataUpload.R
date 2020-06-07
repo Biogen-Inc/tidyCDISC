@@ -97,11 +97,11 @@ mod_dataUpload_server <- function(input, output, session, stringsAsFactors){
     
     # run detectStandard on new data and save to dd$standard
     
-    standard_list <- lapply(data_list, function(x){ detectStandard(x) })
+    #standard_list <- lapply(data_list, function(x){ detectStandard(x) })
     
     #standard_list <- lapply(data_list, function(x){ detectStandard(x)$standard })
     
-    dd$standard <- c(dd$standard, standard_list)
+    #dd$standard <- c(dd$standard, standard_list)
   })
   
   
@@ -109,7 +109,7 @@ mod_dataUpload_server <- function(input, output, session, stringsAsFactors){
   ### make a reactive combining dd$data & standard
   data_choices <- reactive({
     req(dd$data)
-    req(dd$standard)
+    #req(dd$standard)
     
     choices  <- list()
     for (i in 1:length(dd$data)){
