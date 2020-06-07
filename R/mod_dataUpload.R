@@ -9,7 +9,6 @@
 #'
 #'
 #' @importFrom shiny NS tagList h1 br fluidRow column wellPanel div HTML fileInput uiOutput span textOutput
-#' @importFrom DT dataTableOutput
 #' 
 mod_dataUpload_ui <- function(id){
   ns <- shiny::NS(id)
@@ -56,8 +55,6 @@ mod_dataUpload_ui <- function(id){
 #' @importFrom haven zap_formats 
 #' @importFrom haven read_sas
 #' @importFrom stringr str_remove
-#' @importFrom DT datatable 
-#' @importFrom DT renderDataTable
 #' 
 mod_dataUpload_server <- function(input, output, session, stringsAsFactors){
   ns <- session$ns
