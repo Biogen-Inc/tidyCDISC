@@ -24,9 +24,9 @@ mod_indvExp_ui <- function(id, label = "Individual Explorer"){
                checkboxInput(ns("adv_filtering"), "Advanced Pre-Filtering?", value = F),
                conditionalPanel(condition = "input.adv_filtering", ns = ns,
                                 selectInput(ns("filter_df"),"Filter on Variable(s) in a loaded ADaM", multiple = TRUE,
-                                            choices = NULL, selected = NULL)
-                                #conditionalPanel(condition = "!is.null(input.filter_df)", ns = ns,
-                                #                 IDEAFilter::shiny_data_filter_ui(ns("data_filter")))
+                                            choices = NULL, selected = NULL),
+                                conditionalPanel(condition = "!is.null(input.filter_df)", ns = ns,
+                                                 IDEAFilter::shiny_data_filter_ui(ns("data_filter")))
                ),
                selectInput(
                  ns("selPatNo"),
