@@ -1,3 +1,5 @@
+$(document).ready(function(){
+  $(document).on('click', '#RECIPE', function(){
 /* Function to create list of row blocks */
 function recipeRowBlock(newid) {
   return `
@@ -37,3 +39,6 @@ $('select#RECIPE').change(function() {
   var selectedDropdown = $(this).children('option:selected').val()
   Shiny.setInputValue('tableGen-recipe', selectedDropdown)
 })
+
+});
+});
