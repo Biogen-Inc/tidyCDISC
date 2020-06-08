@@ -107,7 +107,7 @@ IDEA_anova.BDS <- function(column, week, group = NULL, data) {
 #' @return NULL
 #' @rdname IDEA_anova
 IDEA_anova.OCCDS <- function(column, week = NULL, group = NULL, data) {
-  abort::abort(glue::glue(
+  rlang::abort(glue::glue(
     "Currently no method to perform ANOVA on OCCDS"
   ))
 }
@@ -116,7 +116,7 @@ IDEA_anova.OCCDS <- function(column, week = NULL, group = NULL, data) {
 #' @return NULL
 #' @rdname IDEA_anova
 IDEA_anova.custom <- function(column, week = NULL, group = NULL, data) {
-  abort::abort(glue::glue(
+  rlang::abort(glue::glue(
     "Can't calculate ANOVA, data is not classified as ADLB, BDS or OCCDS"
   ))
 }

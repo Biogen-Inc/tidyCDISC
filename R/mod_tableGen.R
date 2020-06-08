@@ -95,9 +95,7 @@ mod_tableGen_ui <- function(id){
                  #fluidRow(htmlOutput(ns("title"))),
                  fluidRow(gt_output(ns("all"))))
         )
-      ),
-      tags$script(src = "script.js"),
-      tags$script(src = "recipe.js")
+      )
     )
   )
 }
@@ -120,6 +118,7 @@ mod_tableGen_ui <- function(id){
 #' @importFrom purrr map2
 #' @import gt
 #' @importFrom stringi stri_replace_all_regex
+#' @importFrom glue glue
 #'
 #' @noRd 
 

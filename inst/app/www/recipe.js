@@ -35,7 +35,5 @@ demography_agg = ["MEAN", "FREQ", "FREQ", "MEAN", "MEAN", "MEAN", "FREQ"]
   
 $('select#RECIPE').change(function() {
   var selectedDropdown = $(this).children('option:selected').val()
-  Shiny.setInputValue('table_generator-recipe', selectedDropdown)
-})$( document ).ready(function() {
-  
-});
+  Shiny.setInputValue('tableGen-recipe', selectedDropdown)
+})

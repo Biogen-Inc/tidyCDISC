@@ -1,5 +1,4 @@
-
-  $(function() {
+$(function() {
   $("#sortable_agg").sortable();
   $("#sortable_agg").disableSelection();
   $(".all_blocks").sortable();
@@ -87,13 +86,13 @@ function domChange(id, inputID, outputID) {
   observer.observe(target, config);
 }
 
-domChange('droppable_agg', 'droppable_agg label', 'table_generator-agg_drop_zone')
-deleteBlock("droppable_agg", 'droppable_agg label', 'table_generator-agg_drop_zone')
-selectChange("droppable_agg", 'droppable_agg label', 'table_generator-agg_drop_zone')
+domChange('droppable_agg', 'droppable_agg label', 'tableGen-agg_drop_zone')
+deleteBlock("droppable_agg", 'droppable_agg label', 'tableGen-agg_drop_zone')
+selectChange("droppable_agg", 'droppable_agg label', 'tableGen-agg_drop_zone')
 
-domChange('droppable_blocks', 'droppable_blocks label', 'table_generator-block_drop_zone')
-deleteBlock("droppable_blocks", 'droppable_blocks label', 'table_generator-block_drop_zone')
-selectChange("droppable_blocks", 'droppable_blocks label', 'table_generator-block_drop_zone')
+domChange('droppable_blocks', 'droppable_blocks label', 'tableGen-block_drop_zone')
+deleteBlock("droppable_blocks", 'droppable_blocks label', 'tableGen-block_drop_zone')
+selectChange("droppable_blocks", 'droppable_blocks label', 'tableGen-block_drop_zone')
 
 
 /* Functions needed to render blocks in drop zone */
@@ -219,4 +218,3 @@ $(function() {
   })
 });
 */
-
