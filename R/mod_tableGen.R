@@ -116,9 +116,12 @@ mod_tableGen_ui <- function(id){
 #' @import dplyr
 #' @importFrom purrr map
 #' @importFrom purrr map2
+#' @importFrom purrr imap
 #' @import gt
 #' @importFrom stringi stri_replace_all_regex
+#' @importFrom stringi %s+%
 #' @importFrom glue glue
+#' @import tidyr
 #'
 #' @noRd 
 

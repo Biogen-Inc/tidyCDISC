@@ -86,13 +86,13 @@ function domChange(id, inputID, outputID) {
   observer.observe(target, config);
 }
 
-domChange('droppable_agg', 'droppable_agg label', 'tableGen-agg_drop_zone')
-deleteBlock("droppable_agg", 'droppable_agg label', 'tableGen-agg_drop_zone')
-selectChange("droppable_agg", 'droppable_agg label', 'tableGen-agg_drop_zone')
+domChange('droppable_agg', 'droppable_agg label', 'tableGen_ui_1-agg_drop_zone')
+deleteBlock("droppable_agg", 'droppable_agg label', 'tableGen_ui_1-agg_drop_zone')
+selectChange("droppable_agg", 'droppable_agg label', 'tableGen_ui_1-agg_drop_zone')
 
-domChange('droppable_blocks', 'droppable_blocks label', 'tableGen-block_drop_zone')
-deleteBlock("droppable_blocks", 'droppable_blocks label', 'tableGen-block_drop_zone')
-selectChange("droppable_blocks", 'droppable_blocks label', 'tableGen-block_drop_zone')
+domChange('droppable_blocks', 'droppable_blocks label', 'tableGen_ui_1-block_drop_zone')
+deleteBlock("droppable_blocks", 'droppable_blocks label', 'tableGen_ui_1-block_drop_zone')
+selectChange("droppable_blocks", 'droppable_blocks label', 'tableGen_ui_1-block_drop_zone')
 
 
 /* Functions needed to render blocks in drop zone */
@@ -193,7 +193,7 @@ $(function() {
   })
 })
 
-/*
+
 // for agg blocks, 
 // create dropdowns specific to each block
 $(function() {
@@ -217,4 +217,3 @@ $(function() {
     revert: false
   })
 });
-*/
