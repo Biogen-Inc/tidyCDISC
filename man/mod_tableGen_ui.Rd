@@ -7,7 +7,7 @@
 mod_tableGen_ui(id)
 }
 \arguments{
-\item{id, input, output, session}{Internal parameters for {shiny}.}
+\item{id}{internal parameters for {shiny}.}
 }
 \description{
 drag and drop table generator module

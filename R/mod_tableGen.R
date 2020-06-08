@@ -2,8 +2,7 @@
 #'
 #' @description drag and drop table generator module
 #'
-#' @param id,input,output,session 
-#' Internal parameters for {shiny}.
+#' @param id internal parameters for {shiny}.
 #'
 #'
 #' @import shiny 
@@ -106,8 +105,8 @@ mod_tableGen_ui <- function(id){
     
 #' tableGen Server Function
 #'
-#' @param id,input,output,session 
-#' Internal parameters for {shiny}.
+#' @param input,output,session 
+#' Internal parameters for {shiny}
 #' @param datafile all uploaded data files 
 #' from the dataImport module
 #' 

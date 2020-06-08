@@ -12,6 +12,8 @@ dropArea(name, id, ulid, class, styles, col)
 
 \item{id}{the id of the drop area}
 
+\item{ulid}{the id of the list item}
+
 \item{class}{the class of the drop area 
 so that blocks can be dropped here but not others}
 

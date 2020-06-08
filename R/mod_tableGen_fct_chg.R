@@ -23,14 +23,12 @@ IDEA_chg.default <- function(column, week, group, data) {
 }
 
 #' Currently cannot calculate change from baseline from ADSL data
-#' 
-#' @importFrom glue glue
-#' @importFrom rlang abort
+#'
 #' @return NULL
 #' 
 #' @rdname IDEA_chg
 IDEA_chg.ADSL <- function(column, week, group = NULL, data) {
-  abort(glue(
+  rlang::abort(glue::glue(
     "Can't calculate change from baseline, {column} from ADSL - please choose a variable from BDS"
   ))
 }

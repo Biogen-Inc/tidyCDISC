@@ -7,6 +7,17 @@ and look for a grouping variable to group_by}
 \usage{
 \method{IDEA_mean}{ADSL}(column, week, group = NULL, data)
 }
+\arguments{
+\item{column}{the variable to perform summary statistics on,
+this also contains the class of the column
+based on the data file the column came from}
+
+\item{week}{filter the variable by certain week}
+
+\item{group}{the groups to compare for the summary statistics}
+
+\item{data}{the data to use}
+}
 \value{
 an summary statistic table of grouped variables
 }

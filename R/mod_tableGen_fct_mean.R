@@ -29,7 +29,13 @@ IDEA_mean.default <- function(column, week, group, data) {
 #' @import rlang
 #' 
 #' @return an summary statistic table of grouped variables
-
+#' 
+#' @param column the variable to perform summary statistics on,
+#' this also contains the class of the column
+#' based on the data file the column came from
+#' @param week filter the variable by certain week
+#' @param group the groups to compare for the summary statistics
+#' @param data the data to use 
 IDEA_mean.ADSL <- function(column, week, group = NULL, data) {
   
   column <- as.character(column)
@@ -60,6 +66,13 @@ IDEA_mean.ADSL <- function(column, week, group = NULL, data) {
 #' @import rlang
 #' 
 #' @return an summary statistic table of grouped variables
+#' 
+#' @param column the variable to perform summary statistics on,
+#' this also contains the class of the column
+#' based on the data file the column came from
+#' @param week filter the variable by certain week
+#' @param group the groups to compare for the summary statistics
+#' @param data the data to use 
 IDEA_mean.BDS <- function(column, week, group = NULL, data) {
   
   column <- as.character(column)
@@ -92,7 +105,7 @@ IDEA_mean.BDS <- function(column, week, group = NULL, data) {
 #' @return NULL
 #' @rdname IDEA_mean
 IDEA_mean.OCCDS <- function(column, week = NULL, group, data) {
-  abort::abort(glue::glue(
+  rlang::abort(glue::glue(
     "Currently no method to perform summary statistics on OCCDS"
   ))
 }

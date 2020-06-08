@@ -69,11 +69,11 @@ rowArea <- function(bins, col) {
 #' both statistical and columns
 #' @param name the name of the drop area
 #' @param id the id of the drop area
+#' @param ulid the id of the list item 
 #' @param class the class of the drop area 
 #' so that blocks can be dropped here but not others
 #' @param styles the aesthetics to apply
 #' @param col the width of the drop area
-#' 
 #' @import shiny
 dropArea <- function(name, id, ulid, class, styles, col) {
   column(col, offset = 0, style=styles,
@@ -116,6 +116,10 @@ custom_class <- function(x, df) {
 #' @importFrom purrr map_chr
 #' @importFrom stringr str_trim
 #' 
+#' @param agg the aggregate statistic block 
+#' to apply to the column
+#' @param blocks the block corresponding 
+#' to the column name to apply statistic on
 convertTGOutput <- function(agg, blocks) {
   
   agg <- unlist(agg, recursive = FALSE)
