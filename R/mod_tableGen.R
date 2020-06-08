@@ -121,6 +121,7 @@ mod_tableGen_ui <- function(id){
 #' @importFrom stringi stri_replace_all_regex
 #' @importFrom stringi %s+%
 #' @importFrom glue glue
+#' @importFrom forcats fct_reorder
 #' @import tidyr
 #'
 #' @noRd 
@@ -200,7 +201,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       avisit_words <-
         tibble(AVISIT = avisit_words(), AVISITN = avisit_fctr()) %>%
         mutate(AVISIT = as.factor(AVISIT)) %>%
-        mutate(AVISIT = fct_reorder(AVISIT, AVISITN)) %>%
+        mutate(AVISIT = forcats::fct_reorder(AVISIT, AVISITN)) %>%
         pull(AVISIT) %>%
         unique()
     }

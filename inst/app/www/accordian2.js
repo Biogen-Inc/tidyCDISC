@@ -1,4 +1,4 @@
-$(document).ready(function(){
+$( document ).ready(function() {
   $(document).on('click', '.accordion', function(){
         /* Select only the accordion clicked on */
           $(this).parent().find('.fa-chevron-down').toggleClass('up'); 
