@@ -50,6 +50,7 @@ usethis::use_package("tidyr")
 usethis::use_package("tibble")
 usethis::use_package("magrittr")
 usethis::use_package("cicerone")
+usethis::use_package("glue")
 usethis::use_pipe()
 
 

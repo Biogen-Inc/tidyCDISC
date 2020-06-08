@@ -48,8 +48,8 @@ app_ui <- function(request) {
     # tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "styles.css")),
     # Add logo to top right corner
     tags$script(HTML("var header = $('.navbar > .container-fluid'); header.append('<div style=\"float:right\"><ahref=\"URL\"><img src=\"www/logo.svg\" alt=\"alt\" style=\"float:right;width:66px;height:41px;\"> </a></div>');")),
-    tags$script(src = "script.js"),
-    tags$script(src = "recipe.js"),
+    #tags$script(src = "script.js"),
+    #tags$script(src = "recipe.js"),
     shinyjs::inlineCSS(css),
     tags$head(tags$script(src = "analytics.js"))
     )
@@ -87,16 +87,13 @@ golem_add_external_resources <- function(){
     # Add here other external resources
     # for example, you can add shinyalert::useShinyalert() 
     
-    
-    tags$head(
       # tags$img(src = "www/red_x.png"), # test works
-      tags$script(HTML(htmljs)),
-      tags$link(rel = "//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"),
-      tags$script(src = "https://code.jquery.com/ui/1.12.1/jquery-ui.js"),
-      tags$script(src="accordion.js", type="text/javascript"),
-      tags$script(src = "script.js"),
-      tags$script(src = "recipe.js")
-    ),
+    tags$script(HTML(htmljs)),
+    tags$link(rel = "//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"),
+    tags$script(src = "https://code.jquery.com/ui/1.12.1/jquery-ui.js"),
+    tags$script(src="accordion.js", type="text/javascript"),
+    tags$script(src = "script.js"),
+    tags$script(src = "recipe.js"),
     shinyjs::useShinyjs(),
     waiter::use_waiter(), # include dependencies
     shinyjs::extendShinyjs(text = jscode)
