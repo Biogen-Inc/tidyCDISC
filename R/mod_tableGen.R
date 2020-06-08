@@ -108,6 +108,7 @@ mod_tableGen_ui <- function(id){
 #' @param datafile all uploaded data files 
 #' from the dataImport module
 #' 
+#' @import IDEAFilter
 #' @importFrom rlang sym
 #' @importFrom rlang !!
 #' @importFrom rlang call2
@@ -219,8 +220,6 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   #####################################################################
   
   blocks_and_functions <- reactive({ 
-    print(input$agg_drop_zone)
-    print(input$block_drop_zone)
     convertTGOutput(input$agg_drop_zone, input$block_drop_zone) 
   })
   
