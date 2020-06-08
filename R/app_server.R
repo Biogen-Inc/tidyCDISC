@@ -3,8 +3,26 @@
 #' @param input,output,session Internal parameters for {shiny}. 
 #'     DO NOT REMOVE.
 #' @import shiny
+#' @import shinyjs
 #' @noRd
 app_server <- function( input, output, session ) {
+  
+  observeEvent(input$myBrowser , {
+    if(str_detect(input$myBrowser, "IE")){
+      showModal(tags$div(id="browserModal", modalDialog(footer = NULL,
+                                                        glue("This web app doesn't function with Internet Explorer. Please use a modern browser such as Google Chrome.")
+      )))
+    }    
+  })
+  
+  
+  # disable tab2 on page load
+  js$disableTab()
+  
+  observeEvent(datafile()$ADSL, {
+    # enable tab2 when clicking the button
+    js$enableTab()
+  })
   
   # Increase allowed file size to 4GB
   options(shiny.maxRequestSize = 4096*1024^2)
