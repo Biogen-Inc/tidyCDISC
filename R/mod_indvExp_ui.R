@@ -10,9 +10,10 @@
 #' @importFrom shinyWidgets materialSwitch
 #' @importFrom timevis timevisOutput
 #' @importFrom plotly plotlyOutput
+
 mod_indvExp_ui <- function(id, label = "Individual Explorer"){
   ns <- NS(id)
-  useShinyjs()
+  shinyjs::useShinyjs()
   tagList(
     h1("Individual Explorer", align = "center"),
     br(), br(), br(),
