@@ -11,6 +11,13 @@ datafile of origin}
 \usage{
 convertTGOutput(agg, blocks)
 }
+\arguments{
+\item{agg}{the aggregate statistic block 
+to apply to the column}
+
+\item{blocks}{the block corresponding 
+to the column name to apply statistic on}
+}
 \description{
 Using the drag and drop blocks
 and the shiny inputs,

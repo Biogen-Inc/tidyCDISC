@@ -7,7 +7,7 @@
 #' and class of the column dictated by the data frame it came from
 #' @param week the week if needed for calculation
 #' @param group whether to perform a group_by and if so by which column
-#' @param the dataset to perform all functions on
+#' @param data the dataset to perform all functions on
 #' 
 #' @return the table corresponding to the proper function
 #' to perform given the supplied column.
