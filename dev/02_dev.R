@@ -101,6 +101,9 @@ golem::add_fct( "anova", module = "tableGen" )
 golem::add_fct( "buildEvents", module = "indvExp" ) # ran: used in modules: indvExpPatEvents & indvExpPatVisits
 golem::add_fct( "plot", module = "indvExpPatVisits" ) # ran
 
+golem::add_fct( "blah", module = "popExp")
+
+
 ## External resources - ran
 ## Creates .js and .css files at inst/app/www
 # golem::add_js_handler( "handlers" ) # ac golem: none

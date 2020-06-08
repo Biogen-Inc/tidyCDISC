@@ -71,5 +71,6 @@ utils::globalVariables(c(
   "spread",
   "v1",
   "write.csv",
-  "x"
+  "x",
+  "js"
 ))
