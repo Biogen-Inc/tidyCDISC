@@ -93,7 +93,7 @@ golem_add_external_resources <- function(){
     tags$script(src = "https://code.jquery.com/ui/1.12.1/jquery-ui.js"),
     tags$script(src="accordion.js", type="text/javascript"),
     #tags$script(src = "script.js"),
-    #tags$script(src = "recipe.js"),
+    tags$script(src = "recipe.js"),
     shinyjs::useShinyjs(),
     waiter::use_waiter(), # include dependencies
     shinyjs::extendShinyjs(text = jscode)
