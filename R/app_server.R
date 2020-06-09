@@ -3,7 +3,6 @@
 #' @param input,output,session Internal parameters for {shiny}. 
 #'     DO NOT REMOVE.
 #' @import shiny
-#' @import shinyjs extendShinyjs
 #' @noRd
 app_server <- function( input, output, session ) {
   
@@ -17,11 +16,11 @@ app_server <- function( input, output, session ) {
   
   
   # disable tab2 on page load
-  js$disableTab()
+  shinyjs::js$disableTab()
 
   observeEvent(datafile()$ADSL, {
     # enable tab2 when clicking the button
-    js$enableTab()
+    shinyjs::js$enableTab()
   })
   
   # Increase allowed file size to 4GB
