@@ -15,13 +15,13 @@ app_server <- function( input, output, session ) {
   })
   
   
-  # disable tab2 on page load
-  js$disableTab()
-  
-  observeEvent(datafile()$ADSL, {
-    # enable tab2 when clicking the button
-    js$enableTab()
-  })
+  # # disable tab2 on page load
+  # js$disableTab()
+  # 
+  # observeEvent(datafile()$ADSL, {
+  #   # enable tab2 when clicking the button
+  #   js$enableTab()
+  # })
   
   # Increase allowed file size to 4GB
   options(shiny.maxRequestSize = 4096*1024^2)

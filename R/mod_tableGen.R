@@ -219,7 +219,9 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # Table Generator
   #####################################################################
   
-  blocks_and_functions <- reactive({ 
+  blocks_and_functions <- reactive({
+    print(input$agg_drop_zone)
+    print(input$block_drop_zone)
     convertTGOutput(input$agg_drop_zone, input$block_drop_zone) 
   })
   
