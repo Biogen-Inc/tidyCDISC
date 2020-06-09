@@ -1,5 +1,8 @@
 context("table generator server")
 
+agg <- list(numbers = list(list(txt = "MEAN",val = "NONE")))
+block <- list(numbers = list(list(txt = "\n  AGE\n  ",df = "ADSL")))
+
 test_that("create custom class based on dataframe", {
   test_block <- custom_class("AGE", "ADSL")
   expect_equal(class(test_block)[2], "ADSL")

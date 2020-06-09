@@ -318,6 +318,8 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # Block Preperation
   #####################################################################
   
+  # create dataframe of block names and their labels
+  # for BDS use param cd as column names and params as their labels 
   block_data <- reactive({
     metadata <- data.frame(col_names = colnames(ADSL()))
     metadata$code <- NA
