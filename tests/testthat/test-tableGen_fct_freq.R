@@ -13,7 +13,7 @@ test_that("freq block ADSL group", {
 # -------------------------------------------
 
 test_that("freq block numeric fails", {
-  IDEA_freq.ADSL("AGE", NULL, NULL, tg_data)
+  expect_error(IDEA_freq.ADSL("AGE", NULL, NULL, tg_data))
 })
 
 test_that("freq block BDS exits", {

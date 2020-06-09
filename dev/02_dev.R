@@ -129,6 +129,7 @@ usethis::use_data_raw( name = "my_dataset", open = FALSE )
 ## Add one line by test you want to create
 usethis::use_test( "app" )
 
+
 # Documentation
 
 ## Vignette ---- not run
