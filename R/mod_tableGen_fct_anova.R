@@ -47,8 +47,26 @@ IDEA_anova.ADSL <- function(column, week, group = NULL, data) {
     column <- rlang::sym(column)
     all_dat <- data %>% 
       dplyr::distinct(!!column, !!group, USUBJID)
-    broom::tidy(aov(all_dat[[paste(column)]] ~ all_dat[[paste(group)]], data=all_dat))
+    
+    ttest <- broom::tidy(aov(all_dat[[paste(column)]] ~ all_dat[[paste(group)]], data=all_dat))
+    
+    group_n <- length(unique(all_dat[[paste(group)]])) + 1
+    
+    anova_df <- data.frame(matrix(NA, ncol=group_n, nrow=4))
+    anova_df[1,1] <- "p-value"
+    anova_df[2,1] <- "Test Statistic"
+    anova_df[3,1] <- "Mean Sum of Squares"
+    anova_df[4,1] <- "Sum of Squares"
+    anova_df[1, group_n] <- round(ttest$p.value[1], 3)
+    anova_df[2, group_n] <- round(ttest$statistic[1], 2)
+    anova_df[3, group_n] <- round(ttest$meansq[1], 2)
+    anova_df[4, group_n] <- round(ttest$sumsq[1], 2)
+    
+    anova_df <- dplyr::mutate_all(anova_df, as.character) %>%
+      dplyr::mutate_all(dplyr::coalesce, "")
+    anova_df
   }
+  
   
 }
 
@@ -100,6 +118,7 @@ IDEA_anova.BDS <- function(column, week, group = NULL, data) {
     
     anova_df <- dplyr::mutate_all(anova_df, as.character) %>%
       dplyr::mutate_all(dplyr::coalesce, "")
+    anova_df
   }
   
 }
