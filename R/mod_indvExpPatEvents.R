@@ -12,7 +12,6 @@
 #' @import shiny
 #' @import dplyr
 #' @importFrom shinyjs show hide
-#' @importFrom DT renderDataTable datatable
 #' @importFrom timevis timevis  renderTimevis setOptions
 #' @importFrom stringr str_replace_all str_replace
 #' @noRd
