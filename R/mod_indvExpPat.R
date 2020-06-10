@@ -12,7 +12,6 @@
 #' @import dplyr
 #' @importFrom purrr map
 #' @importFrom shinyjs show hide
-#' @importFrom DT renderDataTable datatable
 #' @importFrom timevis renderTimevis
 #' @importFrom plotly renderPlotly
 #' @importFrom tidyselect any_of

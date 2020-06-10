@@ -56,3 +56,6 @@ Suggests:
 Remotes: 
     JohnCoene/tippy,
     MayaGans/IDEAFilter
+Depends: 
+    R (>= 2.10)
+VignetteBuilder: knitr
