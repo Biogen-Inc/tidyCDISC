@@ -67,6 +67,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     # Seperate ADSL and the PARAMCD dataframes
     PARAMCD <- map(BDS(), ~ if(!"CHG" %in% names(.)) update_list(., CHG = NA) else .)
     
+    # if there are no BDS files 
     if (!is_empty(PARAMCD)) {
       # Bind all the PARAMCD files 
       all_PARAMCD <- bind_rows(PARAMCD, .id = "data_from")  %>% 
@@ -98,18 +99,15 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # Table Generator
   #####################################################################
   
+  # convert the custom shiny input to a table output
   blocks_and_functions <- reactive({
     convertTGOutput(input$agg_drop_zone, input$block_drop_zone) 
   })
   
-  total <- reactive({ 
-    all_data() %>% 
-      distinct(USUBJID) %>%
-      summarise(n = n())
-  })
-  
   column <- reactive( if (input$COLUMN == "NONE") NULL else input$COLUMN)
   
+  # calculate the totals to input after N= in the table headers
+  # a single N if data is not grouped
   total <- reactive({
     if (input$COLUMN == "NONE") {
       all_data() %>% 
@@ -125,6 +123,8 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     }
   })
   
+  # create a gt table output by mapping over each row in the block input
+  # and performing the correct statistical method given the blocks S3 class
   for_gt <- reactive({
     validate(
       need((nrow(blocks_and_functions()) > 0),'Add variable and statistics blocks to create table.')
@@ -229,6 +229,9 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       rbind(pretty_blocks)
   })
   
+  # prepare the AVISIT dropdown of the statistics blocks
+  # by converting them to a factor in the order of AVISITN
+  # this allows our dropdown to be in chronological order
   avisit_words <- reactive({ 
     req("ADSL" %in% names(datafile()))
     processed_data()$AVISIT 
@@ -276,10 +279,8 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     }
   )  
   
-  
-  p <- reactive({
-    rowArea(col = 12, block_data())
-  })
+  # return the block area to be created in app_ui
+  p <- reactive({ rowArea(col = 12, block_data()) })
   
   return(p)
  
