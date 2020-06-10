@@ -13,7 +13,6 @@
 #' @import dplyr
 #' @importFrom shinyjs show hide enable disable
 #' @importFrom plotly renderPlotly
-#' @importFrom DT renderDataTable datatable
 #' @importFrom stringr str_replace_all str_replace
 #' @importFrom rmarkdown render
 #' @noRd
