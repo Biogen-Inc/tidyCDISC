@@ -1,4 +1,14 @@
 #' tableGen Server Function
+#' 
+#' This module combines the BDS and ADSL files within the list
+#' of dataframes to create a single data frame.
+#' This data is what's ussed to create the
+#' draggable blocks which appear in a drag zone,
+#' and a custom shiny input binding returns the blocks in the drop zone 
+#' as a list. This list is used to create a gt table output
+#' which can be output as html oor csv.
+#' In order to include OCCDS or custom data the structure of the import data
+#' will need to be changed.
 #'
 #' @param input,output,session Internal parameters for {shiny}
 #' @param datafile all uploaded datafiles from the dataImport module
