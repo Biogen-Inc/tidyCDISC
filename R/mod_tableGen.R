@@ -1,40 +1,45 @@
 #' tableGen Server Function
 #'
-#' @param input,output,session 
-#' Internal parameters for {shiny}
-#' @param datafile all uploaded data files 
-#' from the dataImport module
+#' @param input,output,session Internal parameters for {shiny}
+#' @param datafile all uploaded datafiles from the dataImport module
 #' 
 #' @import IDEAFilter
-#' @importFrom rlang sym
-#' @importFrom rlang !!
-#' @importFrom rlang call2
-#' @importFrom rlang as_quosure
 #' @import shiny
 #' @import dplyr
+#' @import gt
+#' @importFrom rlang sym !!
 #' @importFrom purrr map
 #' @importFrom purrr map2
 #' @importFrom purrr imap
-#' @import gt
 #' @importFrom stringi stri_replace_all_regex
 #' @importFrom stringi %s+%
 #' @importFrom glue glue
 #' @importFrom forcats fct_reorder
 #' @import tidyr
 #'
-#' @noRd 
+#' @return the grouped blocks for columns
+#' to be used in the tableGen UI
 
 
 mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL)) {
   
+  
+  # function to change the selected input of input$COLUMN based on the recipe block
+  recipe_column <- function(column) {
+    selectInput(session$ns("COLUMN"), "Group Data By:", choices = c("NONE", colnames(ADSL())), selected = column)
+  }
+  
+  # the user can group their data using input$COLUMN
+  # but changing input$recipe will also trigger a group change
+  # in our prespecified demography table we group by TRT01P
   output$col_ADSL <- renderUI({
     x <- input$recipe
-    if (is.null(x) | length(x) == 0) {
-      selectInput(session$ns("COLUMN"), "Group Data By:", choices = c("NONE", colnames(ADSL())), selected = "NONE")
-    } else if (x == "NONE") {
-      selectInput(session$ns("COLUMN"), "Group Data By:", choices = c("NONE", colnames(ADSL())), selected = "NONE")
+    if (is.null(x) | length(x) == 0) { 
+      recipe_column("NONE") 
+    } else if (x == "DEMOGRAPHY") {
+      recipe_column("TRT01P") 
     } else {
-      selectInput(session$ns("COLUMN"), "Group Data By:", choices = c("NONE", colnames(ADSL())), selected = "TRT01P")
+      recipe_column("NONE")
     }
   })
   
@@ -43,13 +48,13 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # Data Preperation
   ######################################################################
   
+  # get the ADSL file and all BDS files from the list of dataframes
   ADSL <- reactive({ datafile()$ADSL })
   BDS <- reactive({ datafile()[sapply(datafile(), function(x) "PARAMCD" %in% colnames(x))] })
   
   processed_data <- reactive({ 
     
-    # Seperate ADSL and the PArAMCD dataframes
-    
+    # Seperate ADSL and the PARAMCD dataframes
     PARAMCD <- map(BDS(), ~ if(!"CHG" %in% names(.)) update_list(., CHG = NA) else .)
     
     if (!is_empty(PARAMCD)) {
@@ -57,7 +62,6 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       all_PARAMCD <- bind_rows(PARAMCD, .id = "data_from")  %>% 
         arrange(USUBJID, AVISITN, PARAMCD) %>% 
         select(USUBJID, AVISITN, AVISIT, PARAMCD, AVAL, CHG, data_from)
-      # distinct(USUBJID, AVISITN, AVISIT, PARAMCD, .keep_all = TRUE) 
       
       # Join ADSL and all_PARAMCD
       combined_data <- full_join(ADSL(), all_PARAMCD, by = "USUBJID")
@@ -75,41 +79,9 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       pull(PARAMCD)
   })
   
-  all_data <- callModule(
-    shiny_data_filter,
-    "data_filter",
-    data = processed_data,
-    verbose = FALSE)
-  
-  avisit_words <- reactive({ 
-    req("ADSL" %in% names(datafile()))
-    processed_data()$AVISIT 
-  })
-  avisit_fctr  <- reactive({ 
-    req("ADSL" %in% names(datafile()))
-    processed_data()$AVISITN 
-  })
-  
-  AVISIT <- reactive({
-    req(BDS())
-    
-    if (is.null(avisit_words())) {
-      avisit_words <- " "
-    } else {
-      avisit_words <-
-        tibble(AVISIT = avisit_words(), AVISITN = avisit_fctr()) %>%
-        mutate(AVISIT = as.factor(AVISIT)) %>%
-        mutate(AVISIT = forcats::fct_reorder(AVISIT, AVISITN)) %>%
-        pull(AVISIT) %>%
-        unique()
-    }
-    avisit_words
-  })
-  
-  observe({
-    req(AVISIT())
-    session$sendCustomMessage("my_data", AVISIT())
-  })
+  # create a reactive for the data with filters applied
+  # use all_data() for any analyses
+  all_data <- callModule(shiny_data_filter, "data_filter", data = processed_data, verbose = FALSE)
   
   
   #####################################################################
@@ -247,6 +219,35 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       rbind(pretty_blocks)
   })
   
+  avisit_words <- reactive({ 
+    req("ADSL" %in% names(datafile()))
+    processed_data()$AVISIT 
+  })
+  avisit_fctr  <- reactive({ 
+    req("ADSL" %in% names(datafile()))
+    processed_data()$AVISITN 
+  })
+  
+  AVISIT <- reactive({
+    req(BDS())
+    
+    if (is.null(avisit_words())) {
+      avisit_words <- " "
+    } else {
+      avisit_words <-
+        tibble(AVISIT = avisit_words(), AVISITN = avisit_fctr()) %>%
+        mutate(AVISIT = as.factor(AVISIT)) %>%
+        mutate(AVISIT = forcats::fct_reorder(AVISIT, AVISITN)) %>%
+        pull(AVISIT) %>%
+        unique()
+    }
+    avisit_words
+  })
+  
+  observe({
+    req(AVISIT())
+    session$sendCustomMessage("my_data", AVISIT())
+  })
   ###############################
   # Download
   ###############################
