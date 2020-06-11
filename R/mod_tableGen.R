@@ -34,22 +34,17 @@
 mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL)) {
   
   
-  # function to change the selected input of input$COLUMN based on the recipe block
-  recipe_column <- function(column) {
-    selectInput(session$ns("COLUMN"), "Group Data By:", choices = c("NONE", colnames(ADSL())), selected = column)
-  }
-  
   # the user can group their data using input$COLUMN
   # but changing input$recipe will also trigger a group change
   # in our prespecified demography table we group by TRT01P
   output$col_ADSL <- renderUI({
     x <- input$recipe
     if (is.null(x) | length(x) == 0) { 
-      recipe_column("NONE") 
+      recipe_column(session$ns("COLUMN"), ADSL(), "NONE") 
     } else if (x == "DEMOGRAPHY") {
-      recipe_column("TRT01P") 
+      recipe_column(session$ns("COLUMN"), ADSL(), "TRT01P") 
     } else {
-      recipe_column("NONE")
+      recipe_column(session$ns("COLUMN"), ADSL(), "NONE")
     }
   })
   
