@@ -34,6 +34,31 @@
 mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL)) {
   
   
+  # ----------------------------------------------------------------------
+  # input prep for table manipulation
+  # ----------------------------------------------------------------------
+  
+  # the reactive column to group data by
+  # change the default value of "NONE" to NULL
+  column <- reactive( if (input$COLUMN == "NONE") NULL else input$COLUMN)
+  
+  # calculate the totals to input after N= in the table headers
+  # a single N if data is not grouped
+  total <- reactive({
+    if (input$COLUMN == "NONE") {
+      all_data() %>% 
+        distinct(USUBJID) %>% 
+        summarise(n = n()) %>%
+        pull(n)
+    } else {
+      all_data() %>%
+        group_by(!!sym(input$COLUMN)) %>%
+        distinct(USUBJID) %>%
+        summarise(n = n()) %>%
+        pull(n)
+    }
+  })
+  
   # the user can group their data using input$COLUMN
   # but changing input$recipe will also trigger a group change
   # in our prespecified demography table we group by TRT01P
@@ -49,9 +74,11 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   })
   
   
-  ######################################################################
-  # Data Preperation
-  ######################################################################
+  # ----------------------------------------------------------------------
+  # convert list of dataframes to a single joined dataframe
+  # containing only BDS and ADSL files
+  # this code will need to be changed if you want to add in OCCDS 
+  # ----------------------------------------------------------------------
   
   # get the ADSL file and all BDS files from the list of dataframes
   ADSL <- reactive({ datafile()$ADSL })
@@ -90,32 +117,32 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   all_data <- callModule(shiny_data_filter, "data_filter", data = processed_data, verbose = FALSE)
   
   
-  #####################################################################
-  # Table Generator
-  #####################################################################
+  # ----------------------------------------------------------------------
+  # Generate table given the droped blocks
+  # ----------------------------------------------------------------------
   
   # convert the custom shiny input to a table output
   blocks_and_functions <- reactive({
     convertTGOutput(input$agg_drop_zone, input$block_drop_zone) 
   })
   
-  column <- reactive( if (input$COLUMN == "NONE") NULL else input$COLUMN)
-  
-  # calculate the totals to input after N= in the table headers
-  # a single N if data is not grouped
-  total <- reactive({
-    if (input$COLUMN == "NONE") {
-      all_data() %>% 
-        distinct(USUBJID) %>% 
-        summarise(n = n()) %>%
-        pull(n)
-    } else {
-      all_data() %>%
-        group_by(!!sym(input$COLUMN)) %>%
-        distinct(USUBJID) %>%
-        summarise(n = n()) %>%
-        pull(n)
-    }
+  # create a lookup table for each stats block
+  # and what to print in the tab headers instead 
+  # of the name of the block:
+  # rather than print STATSBLOCKNAME of COLUMN
+  # replace all STATSBLOCKNAME with a more table friendly label
+  # MEAN becomes Descriptive Statistics etc.
+  block_lookup <- reactive({
+    
+    pretty_blocks <- tibble(
+      Pattern = c("MEAN", "FREQ", "CHG"),
+      Replacement = c("Descriptive Statistics", 
+                      "Summary Counts", 
+                      "Descriptive Statistics of Change from Baseline")
+    ) %>%
+      map(set_names, c("Pattern", "Replacement")) %>%
+      bind_rows() %>%
+      rbind(pretty_blocks)
   })
   
   # create a gt table output by mapping over each row in the block input
@@ -143,8 +170,12 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
           vectorize_all = FALSE))
   })
   
+  # remove the first two columns from the row names to use
+  # since these are used for grouping in gt
   row_names_n <- reactive({ names(for_gt())[-c(1:2)] })
   
+  # create the labels for each column using the total function
+  # so the columns are now NAME N= X
   col_for_list <- function(nm, x) {
     if (is.numeric(all_data()[[input$COLUMN]])) {
       stop("Need categorical column for grouping")
@@ -152,6 +183,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     nm = md(glue::glue("**{row_names_n()}** <br> N={total()}"))
   }
   
+  # Create the tables subtitle if the table has been filtered
   subtitle <- reactive({
     if (any(regexpr("%>%", capture.output(attr(all_data(), "code"))) > 0)) {
       filters_in_english(all_data()) 
@@ -160,7 +192,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     }
   })
   
-  
+  # create gt table
   gt_table <- reactive({
     for_gt() %>%
       gt(rowname_col = "Variable", 
@@ -186,9 +218,14 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   
   output$all <- render_gt({ gt_table() })
   
-  #####################################################################
-  # Block Preperation
-  #####################################################################
+  # ----------------------------------------------------------------------
+  # Block UI based on the data files that are uploaded
+  # create a two column dataframe of the the ADSL column names
+  # and their labels
+  # and for BDS files the PARAMCDs and their names
+  # these will be used as block names and hover text
+  # and blocks will be grouped by the datafile they came from
+  # ----------------------------------------------------------------------
   
   # create dataframe of block names and their labels
   # for BDS use param cd as column names and params as their labels 
@@ -205,23 +242,6 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     new_list[[length(new_list) + 1 ]] <- metadata
     names(new_list)[length(new_list)] <- "ADSL"
     return(new_list)
-  })
-  
-  # rbind despite diffrent names, new names pattern replacement
-  # then use those in gt
-  block_lookup <- reactive({
-    
-    pretty_blocks <- tibble(
-      Pattern = c("MEAN", "FREQ", "CHG"),
-      Replacement = c("Descriptive Statistics", 
-                      "Summary Counts", 
-                      "Descriptive Statistics of Change from Baseline")
-    )
-    
-    test <- block_data() %>%
-      map(set_names, c("Pattern", "Replacement")) %>%
-      bind_rows() %>%
-      rbind(pretty_blocks)
   })
   
   # prepare the AVISIT dropdown of the statistics blocks
@@ -256,9 +276,13 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     req(AVISIT())
     session$sendCustomMessage("my_data", AVISIT())
   })
-  ###############################
-  # Download
-  ###############################
+
+  
+  # ----------------------------------------------------------------------
+  # Download table
+  # Currently CSV and HTML but easy to add more!
+  # ----------------------------------------------------------------------
+  
   
   output$download_gt <- downloadHandler(
     filename = function() {
