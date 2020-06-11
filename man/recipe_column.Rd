@@ -7,7 +7,8 @@
 recipe_column(column)
 }
 \arguments{
-\item{column}{the selected column to group by}
+\item{column}{the column to select the group by 
+based on the selected recipe dropdown}
 }
 \description{
 function to change the selected input of input$COLUMN based on the recipe block
