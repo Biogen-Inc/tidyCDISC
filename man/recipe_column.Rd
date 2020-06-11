@@ -4,11 +4,14 @@
 \alias{recipe_column}
 \title{function to change the selected input of input$COLUMN based on the recipe block}
 \usage{
-recipe_column(column)
+recipe_column(input, dataset, column)
 }
 \arguments{
-\item{column}{the column to select the group by 
-based on the selected recipe dropdown}
+\item{input}{the shiny input id to change based on the recipe dropdown}
+
+\item{dataset}{the data to use for all choices - ADSL reactive}
+
+\item{column}{the specific column to select within the shiny input}
 }
 \description{
 function to change the selected input of input$COLUMN based on the recipe block

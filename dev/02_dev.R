@@ -115,7 +115,7 @@ golem::add_js_file( "sync_divs" )
 golem::add_js_file( "detect_browser" )
 
 golem::add_css_file( "yeti" )
-
+golem::add_css_file( "styles" )
 
 ###################################################################
 # ac golem: Aaron stopped here and pushed code to team on 6/3/2020
