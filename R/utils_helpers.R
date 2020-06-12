@@ -121,3 +121,17 @@ filters_in_english <- function(filtered_data, filter_header = "Filters Applied:"
   return(HTML(paste0("<b>",filter_header,"</b><br/>&nbsp;&nbsp;&nbsp;&nbsp;"
                      ,paste(disp_msg, collapse = "<br/>&nbsp;&nbsp;&nbsp;&nbsp;"))))
 }
+
+#' getLevels function
+#'
+#' Return levels of a factor/vector
+#'
+#' @param x a vector
+#' 
+#'   DO NOT REMOVE.
+#'   
+#' @return x vector 
+#' 
+#' @noRd
+#' 
+getLevels <- function(x) {if(is.factor(x)) levels(x)else sort(unique(x)) } 

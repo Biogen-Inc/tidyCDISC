@@ -1,0 +1,76 @@
+#' Generate basic box plot 
+#'
+#' @param data a data frame
+#' @param groupbox {T|F} Should groupbyvar be used?
+#' @param groupbyvar var to group on
+#' @param responsevar y-axis variable
+#' @param addpoints {T|F} should jittered points be overlaid?
+#'
+#' @return p ggplot2 object
+#' 
+#'   DO NOT REMOVE.
+#' @import dplyr
+#' @import ggplot2
+#' @importFrom dplyr %>%
+#' @importFrom rlang sym
+#' @noRd
+#' 
+fnboxplot <- function(data, groupbox, groupbyvar, responsevar, addpoints) {
+  
+  if(groupbox == TRUE) {
+    req(!is_empty(groupbyvar) && groupbyvar != "")
+    
+    # correction for overplotting
+    data <- fnoverplt(data,responsevar,groupbyvar)
+    
+    # remove missing groups from plot
+    data <- filter(data, !is.na(!!sym(groupbyvar))) 
+    
+    p <- ggplot(data,na.rm = TRUE,
+                aes(x = !!sym(groupbyvar), y = !!sym(responsevar), fill = !!sym(groupbyvar)))
+    
+    if (addpoints == TRUE){
+      p <- p +
+        # Remove outliers when overlaying boxplot with original data points
+        geom_boxplot(outlier.shape = NA, na.rm = TRUE) + 
+        suppressWarnings(geom_point(position = 'jitter', alpha = 0.2,  na.rm = TRUE,
+                                    aes(text = 
+                                          paste0(USUBJID,
+                                                 "<br>",groupbyvar, ": ",get(groupbyvar),
+                                                 "<br>",responsevar,": ",get(responsevar)
+                                          )
+                                    ))) # aes, geom_point, suppressWarnings 
+    } else {
+      p <- p +
+        geom_boxplot(outlier.colour = "darkblue", outlier.shape = 0, na.rm = TRUE, alpha = 0.2) 
+    }
+    
+  } else {
+    p <- ggplot(data,na.rm=TRUE,
+                aes(x = " ", y = !!sym(responsevar) ))
+    
+    if (addpoints == TRUE) {
+      p <- p +
+        # Remove outliers when overlaying boxplot with original data points
+        geom_boxplot(outlier.shape = NA, na.rm = TRUE) + 
+        suppressWarnings(geom_point(position = 'jitter', alpha = 0.2,  na.rm = TRUE,
+                                    aes(text = 
+                                          paste0(USUBJID,
+                                                 "<br>",groupbyvar, ": ",get(groupbyvar),
+                                                 "<br>",responsevar,": ",get(responsevar)
+                                          )
+                                    ))) # aes, geom_point, suppressWarnings 
+    } else {
+      p <- p +
+        geom_boxplot(outlier.colour = "darkblue", outlier.shape = 0, na.rm = TRUE, alpha = 0.2) 
+    }
+  }
+  
+  # Add light theme
+  p <- p + theme_light()
+  
+  # remove the legend
+  p <-  p + theme(legend.position = "none")  
+  
+  return(p)
+}
