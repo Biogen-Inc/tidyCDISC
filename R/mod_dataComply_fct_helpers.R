@@ -204,7 +204,7 @@ gather_reqs <- function(input, output, session,
         fn = function(X) local_image(filename = "inst/app/www/red_x.png", height = 15)
       ) %>%
       tab_header(
-        title = paste(ifelse(disp_type == "error", "Please", "Optional:"),"reconcile variables below"),
+        title = paste(ifelse(disp_type == "error", "Required:", "Optional:"),"reconcile variables below"),
         subtitle = ifelse(disp_type == "error", "and re-upload data",
                           "to experience the app's full functionality")
       ) %>%
