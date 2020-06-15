@@ -40,6 +40,9 @@ single standardized events dataset
 }
 \seealso{
 Other indvExp Functions: 
+\code{\link{fnIndvExplVisits}()},
+\code{\link{mod_indvExpPatEvents_server}()},
+\code{\link{mod_indvExpPatVisits_server}()},
 \code{\link{mod_indvExpPat_server}()},
 \code{\link{mod_indvExp_server}()},
 \code{\link{mod_indvExp_ui}()},

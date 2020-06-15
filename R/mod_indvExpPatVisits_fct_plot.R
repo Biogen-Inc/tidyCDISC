@@ -1,27 +1,45 @@
 
 #' Plot Individual Explorer Visits by Param
 #'
-#' Gather various shiny inputs and return a graph object, either ggplot or plotly
+#' Gather various shiny inputs and return either a ggplot or plotly object. This
+#' graph's purpose is to plot AVAL against a visit variable for any PARAMCD,
+#' establishing one part of patient narrative found on the Individual Explorer
+#' Tab. The graph allows many features to be toggled to enhance the data
+#' presented in the plot, including plotting horizontal lines for screening &
+#' baseline measurements (when available) and overlaying pertinent OCCDs events
+#' (certain milestones, adverse events, and/or con meds) that have occurred
+#' during the patients journey.
 #'
 #' @param watermark If \code{TRUE}, then include a watermark on the output plot
-#' @param graph_output Two options, either "plotly" or "ggplot2"
-#' @param bds_data The BDS Dataset
-#' @param usubjid Patient number in the form of USUBJID
-#' @param input_plot_hor Variable name to have horizontal line plotted
-#' @param input_visit_var The Visit Variable name
-#' @param input_plot_param The PARAMCD name / Value to plot AVAL values for
-#' @param input_plot_adam The ADaM dataset name
-#' @param input_overlay_events A character vector containing the names of patient events to plot
-#' @param vline_dat The corresponding vline dataframe that contains x intercept values for the events desired for plotting
-#' @param vv_dy_name The name of the visit variable as a reactive object
+#' @param graph_output A character string specifying either "plotly" or
+#'   "ggplot2"
+#' @param bds_data A character string containg the name of the BDS Dataset
+#' @param usubjid A character string containing Patient number in the form of
+#'   USUBJID standards
+#' @param input_plot_hor A character string containing variable name to have
+#'   horizontal line plotted
+#' @param input_visit_var A character string containing the visit variable name
+#' @param input_plot_param A character string containing the PARAMCD name /
+#'   Value from which to plot AVAL values
+#' @param input_plot_adam A character string containing the ADaM dataset name
+#' @param input_overlay_events A character vector containing the names of
+#'   patient events to plot
+#' @param vline_dat The vline data frame that contains x-intercept values for the
+#'   corrresponding events selected to be overlain on the plot
+#' @param vv_dy_name TA character vector containing the name of the visit
+#'   variable(s)
 #'
-#'   DO NOT REMOVE.
 #' @import dplyr
 #' @import ggplot2
 #' @importFrom dplyr %>%
 #' @importFrom rlang sym
-#' @noRd
-#' 
+#' @importFrom plotly ggplotly layout config add_annotations
+#'
+#' @return If graph_output is \code{plotly}, then a plotly object, else if
+#'   \code{ggplot} then a ggplot2 object
+#'
+#' @family indvExp Functions
+#'   
 fnIndvExplVisits <- function(
   watermark = FALSE,
   graph_output = "plotly",
@@ -35,9 +53,6 @@ fnIndvExplVisits <- function(
   vline_dat,
   vv_dy_name
 ){
-  # In the labs, label what the blue lines are in the legend or hover text.
-  # make sure a LabCode has been selected
-  
   INPUT_visit_var <- sym(input_visit_var)
   
   plot_dat <- 
@@ -46,11 +61,9 @@ fnIndvExplVisits <- function(
   
   if("Screening" %in% input_plot_hor){
     plot_scr <- plot_dat %>% subset(toupper(VISIT) == "SCREENING") %>% distinct(AVAL) %>% mutate(Visit = "Screening")
-    # plot_dat <- plot_dat %>% subset(!(toupper(plot_dat$VISIT) == "SCREENING")) # removes screening point from plot
   }
   if("Baseline" %in% input_plot_hor){
     plot_base <- plot_dat %>% subset(toupper(AVISIT) == "BASELINE") %>% distinct(AVAL) %>% mutate(Visit = "Baseline")
-    # plot_dat <- plot_dat %>% subset(!(toupper(plot_dat$AVISIT) == "BASELINE")) # removes baseline point from plot
   }
   
   if (nrow(plot_dat) > 0) {
@@ -113,18 +126,8 @@ fnIndvExplVisits <- function(
         my_gg_color_hue(2))
       v_event_cols <- setNames(vline_eventtype_cols,names2)
       
-      # two dimensions in legend not really support in plotly
-      # https://github.com/ropensci/plotly/issues/1164
-      # dashes <- c("solid","dotted","dashed","solid","solid") 
-      # v_event_lines <- setNames(dashes,names2)
-      
-      # leg_name <- ifelse(length(input_plot_hor) > 0 & length(input_overlay_events) > 0 & input_visit_var %in% vv_dy_name,NULL,"Event")
-      
       lb_plot <- lb_plot +
-        scale_color_manual(values= v_event_cols) #+ # , name = "Event"
-      # two dimensions in legend not really support in plotly
-      # https://github.com/ropensci/plotly/issues/1164
-      # scale_linetype_manual(values = v_event_lines, name = NULL)
+        scale_color_manual(values= v_event_cols)
     }
     
     
@@ -134,13 +137,12 @@ fnIndvExplVisits <- function(
         if(nrow(vline_dat) > 0){
           
           lb_plot <- lb_plot + 
-            geom_vline(data = vline_dat, aes(xintercept = !!INPUT_visit_var,
-                                             colour = Event,
-                                             # linetype = Event, # two dimensions in legend not really support in plotly
-                                             text = paste0(input_visit_var, ": ",floor(!!INPUT_visit_var),
-                                                           "<br>", DECODE
-                                             )
-            ), size = .35
+            geom_vline(
+               data = vline_dat, 
+               aes(xintercept = !!INPUT_visit_var,
+                   colour = Event,
+                   text = paste0(input_visit_var, ": ",floor(!!INPUT_visit_var),"<br>", DECODE)
+                ), size = .35
             )
         }
       }
@@ -152,7 +154,7 @@ fnIndvExplVisits <- function(
         geom_hline(aes(yintercept = mean(LBSTNRLO)), colour = "blue") +
         geom_hline(aes(yintercept = mean(LBSTNRHI)), colour = "blue") +
         theme(
-          plot.margin = margin(b = 1.2, unit = "cm") #t = 1, # used to put margin at top of graph for caption
+          plot.margin = margin(b = 1.2, unit = "cm")
         ) 
     }
     
@@ -173,7 +175,7 @@ fnIndvExplVisits <- function(
     
     
     
-    # PLOTLY OBJECT
+    # Create PLOTLY object from ggplot object
     if(graph_output == "plotly"){
       ly <- plotly::ggplotly(lb_plot, tooltip = "text") %>%
         plotly::layout(title = list(text = 
@@ -185,11 +187,6 @@ fnIndvExplVisits <- function(
                                          ,'select2d', 'lasso2d', 'toggleSpikelines'
                                          # , 'toImage', 'resetScale2d', 'zoomIn2d', 'zoomOut2d','zoom2d', 'pan2d'
                ))
-      
-      
-      # Used to have lab param range of values in title
-      # , ifelse(input_plot_adam == "ADLB",paste0("<br>Study's average range shown in ",'<em style="color:blue">',"blue",'</em> ',lohi),""),
-      # "</sup>")))
       
       # instead, request was made to add caption to bottom of graph
       if(input_plot_adam == "ADLB"){
@@ -205,45 +202,16 @@ fnIndvExplVisits <- function(
       # if watermark is desired, it can be added here
       if(watermark){
         ly <- ly %>%
-          plotly::layout(annotations = list(text="IDEA: PROOF ONLY",
-                                    xref = "paper",
-                                    yref = "paper",
-                                    opacity = 0.1,
-                                    showarrow = F,
-                                    font=list(size = 40),
-                                    textangle=-35)
+          plotly::layout(annotations = 
+                           list(text="IDEA: PROOF ONLY",
+                                xref = "paper",
+                                yref = "paper",
+                                opacity = 0.1,
+                                showarrow = F,
+                                font=list(size = 40),
+                                textangle=-35)
           )
-        
-        # # Doesn't work
-        # plotly_IMAGE(
-        #   ly,
-        #   width = 800,
-        #   height = 600,
-        #   format = "png",
-        #   scale = 1,
-        #   out_file = "output.png")
-        
-      } #else {
-      # Doesn't work
-      # The plotly image that get's downloaded should always have the image
-      # plotly_IMAGE(
-      #   ly %>%
-      #     layout(annotations = list(text="IDEA: PROOF ONLY",
-      #                               xref = "paper",
-      #                               yref = "paper",
-      #                               opacity = 0.1,
-      #                               showarrow = F,
-      #                               font=list(size = 40),
-      #                               textangle=-35)
-      #     )
-      #   ,
-      #   width = 800,
-      #   height = 600,
-      #   format = "png",
-      #   scale = 1,
-      #   out_file = "output.png")
-      # }
-      
+      }
     }
     
     return(if(graph_output == "ggplot") lb_plot else ly)

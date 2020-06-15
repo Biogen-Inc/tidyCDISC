@@ -20,6 +20,9 @@ Note: well panels encompass any user input fields
 \seealso{
 Other indvExp Functions: 
 \code{\link{build_events}()},
+\code{\link{fnIndvExplVisits}()},
+\code{\link{mod_indvExpPatEvents_server}()},
+\code{\link{mod_indvExpPatVisits_server}()},
 \code{\link{mod_indvExpPat_server}()},
 \code{\link{mod_indvExp_server}()},
 \code{\link{my_gg_color_hue}()}

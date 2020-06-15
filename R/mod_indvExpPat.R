@@ -1,12 +1,15 @@
 #' indvExpPat Server Function
-#' 
-#' Prepare Individual Explorer Tab with content post selection of a UBSUBJID. Specifically, 
 #'
-#' @param input,output,session Internal parameters for {shiny}. 
+#' Prepare Individual Explorer Tab with content post selection of a UBSUBJID.
+#' Specifically, show and hide certain widgets, create header outputs, populate
+#' demographic info in a table, Generating checkboxes for the Events and Visits
+#' tabs
+#'
+#' @param input,output,session Internal parameters for {shiny}.
 #' @param datafile A list of dataframes
-#' @param loaded_adams a character vector of loaded adam datasets
-#' @param filtered_dat a filtered dataframe containing USUBJID
-#' 
+#' @param loaded_adams A character vector of loaded adam datasets
+#' @param filtered_dat A IDEAFilter output data frame containing USUBJID
+#'
 #' @import shiny
 #' @import dplyr
 #' @importFrom purrr map
@@ -15,11 +18,11 @@
 #' @importFrom plotly renderPlotly
 #' @importFrom tidyselect any_of
 #' @importFrom stringr str_to_title
-#' 
+#'
 #' @return character string containing a USUBJID
-#' 
+#'
 #' @family indvExp Functions
-#' 
+#'   
 mod_indvExpPat_server <- function(input, output, session, datafile, loaded_adams, filtered_dat){
   ns <- session$ns
   
@@ -160,8 +163,6 @@ mod_indvExpPat_server <- function(input, output, session, datafile, loaded_adams
   return(reactive({ input$selPatNo }))
   
 }
-
-
 
 ## To be copied in the server -- done
 # callModule(mod_indvExpPat_server, "indvExpPat_ui_1")
