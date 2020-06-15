@@ -216,62 +216,58 @@ test_that("gather_reqs errors return expectations for expl_rules", {
 ###############
 # df_incl_rules
 ###############
-test_that("gather_reqs errors return expectations for expl_rules", {
-  # 
-  # setwd("C:/Users/aclark5/Documents/small_adam/biib017_105ms301_interim_data_crt/")
-  # advs <- read_sas("advs.sas7bdat")
+test_that("gather_reqs errors return expectations for df_incl_rules", {
   
   # df_list should be an empty list
   expect_output(
     str(
       gather_reqs(
         disp_type = "error",
-        datalist = reactive(list("mtcars" = mtcars, "iris" = iris)),
+        datalist = reactive(list("mtcars" = mtcars)),
         all_df_rules = list(error = c(""), warn = c("")),
         expl_rules = list(list(error = c(""), warn = c("")) ),
-        df_incl_rules = list(PARAMCD = list(error = c("peanuts","SUGAR","USUBJID","AVAL"), warn = c(""))
-                             ,mpg = list(error = c("grass","TRASH","hp","wt"), warn = c(""))) 
+        df_incl_rules = list(mpg = list(error = c("USUBJID"), warn = c(""))) 
       )$df_list
     ),
     "Named list()"
   )
   
-#   # df should be one row with USUBJID
-#   expect_equal(
-#     gather_reqs(
-#       disp_type = "error",
-#       datalist = reactive(list("mtcars" = mtcars)),
-#       all_df_rules = list(error = c(""), warn = c("")),
-#       expl_rules = list(mtcars = list(error = c("USUBJID"), warn = c("")) ),
-#       df_incl_rules = list( list(error = c(""), warn = c("")) ))$df$type_col
-#     ,
-#     "USUBJID"
-#   )
-#   
-#   # df_list should not be an empty list if USUBJID exists
-#   expect_output(str(gather_reqs(
-#     disp_type = "error",
-#     datalist = reactive(list("mtcars" = mtcars %>% mutate(USUBJID = "1"))),
-#     all_df_rules = list(error = c(""), warn = c("")),
-#     expl_rules = list(mtcars = list(error = c("USUBJID"), warn = c("")) ),
-#     df_incl_rules = list( list(error = c(""), warn = c("")) ) 
-#   )$df_list
-#   ),
-#   "List of 1"
-#   )
-#   
-#   # df should be an empty data frame
-#   expect_equal(
-#     nrow(gather_reqs(
-#       disp_type = "error",
-#       datalist = reactive(list("mtcars" = mtcars %>% mutate(USUBJID = "1"))),
-#       all_df_rules = list(error = c(""), warn = c("")),
-#       expl_rules = list(mtcars = list(error = c("USUBJID"), warn = c("")) ),
-#       df_incl_rules = list( list(error = c(""), warn = c("")) ) 
-#     )$df
-#     ),
-#     0
-#   )
+  # df should be one row with USUBJID
+  expect_equal(
+    gather_reqs(
+      disp_type = "error",
+      datalist = reactive(list("mtcars" = mtcars)),
+      all_df_rules = list(error = c(""), warn = c("")),
+      expl_rules = list(list(error = c(""), warn = c("")) ),
+      df_incl_rules = list(mpg = list(error = c("USUBJID"), warn = c("")) ))$df$type_col
+    ,
+    "USUBJID"
+  )
+
+  # df_list should not be an empty list if USUBJID exists
+  expect_output(str(gather_reqs(
+    disp_type = "error",
+    datalist = reactive(list("mtcars" = mtcars %>% mutate(USUBJID = "1"))),
+    all_df_rules = list(error = c(""), warn = c("")),
+    expl_rules = list( list(error = c(""), warn = c("")) ),
+    df_incl_rules = list(mpg = list(error = c("USUBJID"), warn = c("")) )
+  )$df_list
+  ),
+  "List of 1"
+  )
+
+  # df should be an empty data frame
+  expect_equal(
+    nrow(gather_reqs(
+      disp_type = "error",
+      datalist = reactive(list("mtcars" = mtcars %>% mutate(USUBJID = "1"))),
+      all_df_rules = list(error = c(""), warn = c("")),
+      expl_rules = list( list(error = c(""), warn = c("")) ),
+      df_incl_rules = list(mpg = list(error = c("USUBJID"), warn = c("")) )
+    )$df
+    ),
+    0
+  )
   
 })
 
@@ -369,49 +365,49 @@ test_that("gather_reqs warnings return expectations for expl_rules", {
   )
 })
 
-# # not tested test code yet
-# ###############
-# # df_incl_rules
-# ###############
-# test_that("gather_reqs warnings return expectations for df_incl_rules", {
-#   
-#   # df_list should be not be empty list when warning
-#   expect_output(str(gather_reqs(
-#     disp_type = "warn",
-#     datalist = reactive(list("mtcars" = mtcars)),
-#     all_df_rules = list(error = c(""), warn = c("")),
-#     expl_rules = list( list(error = c(""), warn = c("")) ),
-#     df_incl_rules = list(mpg = list(error = c(""), warn = c("USUBJID")) ) 
-#   )$df_list
-#   ),
-#   "List of 1"
-#   )
-#   
-#   # df should be one row with USUBJID
-#   expect_equal(
-#     gather_reqs(
-#       disp_type = "warn",
-#       datalist = reactive(list("mtcars" = mtcars)),
-#       all_df_rules = list(error = c(""), warn = c("")),
-#       expl_rules = list( list(error = c(""), warn = c("")) ),
-#       df_incl_rules = list(mpg = list(error = c(""), warn = c("USUBJID")) ))$df$type_col
-#     ,
-#     "USUBJID"
-#   )
-#   
-#   # No warning should be thrown, df should be an empty data frame.
-#   expect_equal(
-#     nrow(gather_reqs(
-#       disp_type = "warn",
-#       datalist = reactive(list("mtcars" = mtcars %>% mutate(USUBJID = "1"))),
-#       all_df_rules = list(error = c(""), warn = c("")),
-#       expl_rules = list( list(error = c(""), warn = c("")) ),
-#       df_incl_rules = list(mpg = list(error = c(""), warn = c("USUBJID")) ) 
-#     )$df
-#     ),
-#     0
-#   )
-# })
+###############
+# df_incl_rules
+###############
+test_that("gather_reqs warnings return expectations for df_incl_rules", {
+
+  # df_list should be not be empty list when warning
+  expect_output(str(gather_reqs(
+    disp_type = "warn",
+    datalist = reactive(list("mtcars" = mtcars)),
+    all_df_rules = list(error = c(""), warn = c("")),
+    expl_rules = list( list(error = c(""), warn = c("")) ),
+    df_incl_rules = list(mpg = list(error = c(""), warn = c("USUBJID")) )
+  )$df_list
+  ),
+  "List of 1"
+  )
+
+  # df should be one row with USUBJID
+  expect_equal(
+    gather_reqs(
+      disp_type = "warn",
+      datalist = reactive(list("mtcars" = mtcars)),
+      all_df_rules = list(error = c(""), warn = c("")),
+      expl_rules = list( list(error = c(""), warn = c("")) ),
+      df_incl_rules = list(mpg = list(error = c(""), warn = c("USUBJID")) ))$df$type_col
+    ,
+    "USUBJID"
+  )
+
+  # No warning should be thrown, df should be an empty data frame.
+  expect_equal(
+    nrow(gather_reqs(
+      disp_type = "warn",
+      datalist = reactive(list("mtcars" = mtcars %>% mutate(USUBJID = "1"))),
+      all_df_rules = list(error = c(""), warn = c("")),
+      expl_rules = list( list(error = c(""), warn = c("")) ),
+      df_incl_rules = list(mpg = list(error = c(""), warn = c("USUBJID")) )
+    )$df
+    ),
+    0
+  )
+})
+
 consoleReactive(FALSE) # turn off reactive state
 
 
