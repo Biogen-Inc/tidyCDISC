@@ -113,29 +113,25 @@ gather_reqs <- function(input, output, session,
     df_incl_sl_nms_correct <- all(unlist(map(.x = 1:length(df_incl_rules), function(x) all(names(df_incl_rules[[x]]) %in% c("error","warn")))))
     if(!df_incl_sl_nms_correct) stop("Sublist Names must be 'error' and 'warn' for each element of 'df_incl_rules'")
     
-    # Organize into a dataframe & get concise initial reqs
+    # Organize Rules into a dataframe & get concise initial reqs
     dfw_type <-
       lapply(df_incl_rules, data.frame, stringsAsFactors = FALSE) %>%
       data.table::rbindlist(fill=TRUE, idcol = "df_var") %>%
       mutate(type_col = if(disp_type == "error") error else warn) %>%
       subset(type_col != "") %>% 
       distinct(df_var, type_col) 
-    
+
     if(nrow(dfw_type) > 0){
-      # expand args to all loaded df's
-      dfw_args <- 
-        expand.grid(df = names(datalist()), df_var = dfw_type$df_var, type_col = dfw_type$type_col) %>% 
-        mutate_if(is.factor, as.character) %>% 
-        inner_join(dfw_type, by = c("df_var","type_col"))
-      
-      # run args through df's to see which ones actually exist
+      # Organize data that contains those rules into another df and join them
+      # together
+      df_vars <- unique(dfw_type$df_var)
       dw <-
-        dfw_args %>%
-        mutate(
-          col_exist = unlist(pmap(dfw_args,function(df, df_var, type_col) 
-            dfw_type$type_col[dfw_type$df_var == df_var & dfw_type$type_col  == type_col ] %in% colnames(datalist()[[df]])))
-        ) %>%
-        subset(col_exist == T) %>%
+        map(.x = names(datalist()), ~df_vars[df_vars %in% colnames(datalist()[[.x]])]) %>%
+        setNames(names(datalist())) %>%
+        lapply(data.frame, stringsAsFactors = FALSE) %>%
+        data.table::rbindlist(fill=TRUE, idcol = "df") %>%
+        rename("df_var" = "X..i..") %>%
+        inner_join(dfw_type, by = c("df_var")) %>%
         distinct(df, df_var, type_col) %>%
         subset(df %in% names(datalist())) %>%
         select(-df_var)
