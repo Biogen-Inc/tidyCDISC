@@ -10,7 +10,7 @@ gather_reqs(
   session,
   disp_type = c("error", "warn"),
   datalist = reactive(NULL),
-  all_df_rules = list(list(error = c(""), warn = c(""))),
+  all_df_rules = list(error = c(""), warn = c("")),
   expl_rules = list(list(error = c(""), warn = c(""))),
   df_incl_rules = list(list(error = c(""), warn = c("")))
 )

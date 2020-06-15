@@ -1,43 +1,40 @@
 #' indvExpPatEvents Server Function
-#' 
-#' Prepare Individual Explorer Tab Events subtab with content
 #'
-#' @param input,output,session Internal parameters for {shiny}. 
+#' Prepare Individual Explorer Tab's Events subtab with content. Specifically,
+#' creating some headers, build events dataset, Output a DT & TimeVis Object
+#'
+#' @param input,output,session Internal parameters for {shiny}.
 #' @param datafile A list of dataframes
-#' @param loaded_adams a character vector of loaded adam datasets
+#' @param loaded_adams A character vector of loaded adam datasets
 #' @param usubjid A Character string containing a USUBJID
-#' @param filtered_dat a filtered dataframe containing USUBJID
-
-#'   DO NOT REMOVE.
+#' @param filtered_dat A IDEAFilter output data frame containing USUBJID
+#'
 #' @import shiny
 #' @import dplyr
 #' @importFrom shinyjs show hide
 #' @importFrom timevis timevis  renderTimevis setOptions
 #' @importFrom stringr str_replace_all str_replace
-#' @noRd
-#' 
-mod_indvExpPatEvents_server <- function(input, output, session, datafile, loaded_adams, usubjid, filtered_dat){
+#'
+#' @family indvExp Functions
+#'   
+mod_indvExpPatEvents_server <- function(input, output, session,
+                                        datafile, loaded_adams, usubjid, filtered_dat){
   ns <- session$ns
   
-  # Initialize Waiter
-  # w_events <- Waiter$new(id = c("eventsTable","eventsPlot"))
-  
+  # Header that depends on a few items existing
   output$events_header <- renderText({
     req(!is.null(datafile()))
-    paste0("Patient Events by Date") #'", usubjid(), "'
-    # paste(input$checkGroup)
+    "Patient Events by Date" 
   })
   
-  
-  
-  
-  
-  # if any filter is selected in IDEAFilter, then we should show the "events_apply_filter" checkbox,
-  # which defaults to TRUE everytime a new patient is selected
+  # if any filter is selected in IDEAFilter, then we should show the
+  # "events_apply_filter" checkbox, which defaults to TRUE everytime a new
+  # patient is selected
   observeEvent(list(input$checkGroup), {
-    
     req(usubjid() != "")
     
+    # looking for IDEAFilter output code attr containing a pipe. If it exists,
+    # that means something was filtered
     if(any(regexpr("%>%",capture.output(attr(filtered_dat(), "code"))) > 0) & !is.null(input$checkGroup)){
       shinyjs::show(id = "events_apply_filter")
     } else {
@@ -45,26 +42,25 @@ mod_indvExpPatEvents_server <- function(input, output, session, datafile, loaded
     }
   })
   
+  # Output text string of what was filtered in IDEAFilter widget/ module
   output$applied_filters <- renderUI({
     req(
       usubjid() != ""
-      # & !is.null(filtered_dat())
       & any(regexpr("%>%",capture.output(attr(filtered_dat(), "code"))) > 0)
       & !is.null(input$checkGroup)
       & input$events_apply_filter == T
     )
-    
     filters_in_english(filtered_dat())
-    
   })
   
-  
-  
-  
+  # If EVENTS apply filters toggle or checkgroup changes, run the following
+  # code:
+  #  - clear outputs
+  #  - build events dataset
+  #  - Output a DT & TimeVis Object
+  #    - conditionally create captions and alter the time window
   observeEvent(list(input$checkGroup, input$events_apply_filter), {
-    
-    req(usubjid() != "") # selPatNo cannot be blank - ac: not sure if Robert expects this to work like "validate(need())"
-    
+    req(usubjid() != "") # selPatNo cannot be blank 
     
     # Clear outputs if nothing is selected
     if(is.null(input$checkGroup)){
@@ -88,12 +84,9 @@ mod_indvExpPatEvents_server <- function(input, output, session, datafile, loaded
                               , my_datafile = datafile()
                               , my_filtered_dat = filtered_dat())
       
-      # turn off waiter
-      # w_events$hide()
       
-      # Tried to process a data table with 0 records but with column information DT will throw exception.
-      if (!is.null(uni_rec) && nrow(uni_rec) > 0)
-      {
+      # If data exists, output a DT object containing Events date data
+      if (!is.null(uni_rec) && nrow(uni_rec) > 0) {
         shinyjs::show(id = "eventsTable")
         shinyjs::show(id = "eventsPlot")
         
@@ -120,12 +113,7 @@ mod_indvExpPatEvents_server <- function(input, output, session, datafile, loaded
                           ))
                         )
                         , style="default"
-                        # , class="compact"
           )
-          # DT::datatable(ae_rec, options = list(  dom = 'lftpr'
-          #                                        , pageLength = 15
-          #                                        , lengthMenu = list(c(15, 50, 100, -1),c('15', '50', '100', "All"))
-          # ))
         })
         
         # Create timevis object for interactive timeline
@@ -157,7 +145,7 @@ mod_indvExpPatEvents_server <- function(input, output, session, datafile, loaded
             filter(substr(className, 1, 3) != "MH_")
           nonMH_n <- nonMH_dat %>% distinct(className) %>% pull() %>% length
           
-          # if only 1 selected, do nothing.
+          # if only 1 Event type is selected, do not manually alter the default time window
           # if n_nonMH selected, then zoom to 1st portion of 1/nonMH timespan + 10% space on front
           # For example: If 2 selected and total timespan is 3 years, then zoom to 1st 1/2 the nonMH timespan + start
           tv <- timevis(plot_dat,
@@ -179,10 +167,10 @@ mod_indvExpPatEvents_server <- function(input, output, session, datafile, loaded
           }
           tv
           
-        }) # end of Render_timevis
+        }) # end of renderTimevis
+        
         
         # Add caption if there are events not shown in the timeline due to missing dates
-        
         if (uni_rec %>% subset(is.na(START)) %>% nrow() > 0){
           shinyjs::show(id = "events_tv_caption1")
           output$events_tv_caption1 <- renderText({
@@ -193,8 +181,6 @@ mod_indvExpPatEvents_server <- function(input, output, session, datafile, loaded
           output$events_tv_caption1 <- renderText({NULL})
         }
         
-        # cat(paste("\nSTART:",as.character(uni_rec$START), collapse = ", "))
-        # cat(paste("\ntb_st:",uni_rec$tab_st, collapse = ", "))
         # Add caption if some dates were imputed 
         if ("MH_" %in% substr(input$checkGroup, 1, 3) & (
           !identical(as.character(uni_rec$START),uni_rec$tab_st) | !identical(as.character(uni_rec$END),uni_rec$tab_en)
@@ -209,7 +195,7 @@ mod_indvExpPatEvents_server <- function(input, output, session, datafile, loaded
         }
         
         
-      } else {
+      } else { # if no data for that subj
         if (!is.null(input$checkGroup)) {
           shinyjs::alert(paste("No data available for this subject!")) 
         }
