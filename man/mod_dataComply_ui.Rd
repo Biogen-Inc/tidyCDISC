@@ -9,6 +9,18 @@ mod_dataComply_ui(id)
 \arguments{
 \item{id}{Internal parameters for {shiny}.}
 }
-\description{
-A shiny Module Not in use
+\value{
+An empty shiny tagList
 }
+\description{
+A shiny Module of a blank UI
+}
+\seealso{
+Other dataComply Functions: 
+\code{\link{gather_reqs}()},
+\code{\link{gather_rules}()},
+\code{\link{mod_dataComplyRules_server}()},
+\code{\link{mod_dataComplyRules_ui}()},
+\code{\link{mod_dataComply_server}()}
+}
+\concept{dataComply Functions}
