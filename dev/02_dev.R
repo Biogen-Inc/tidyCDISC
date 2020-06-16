@@ -51,6 +51,8 @@ usethis::use_package("tibble")
 usethis::use_package("magrittr")
 usethis::use_package("cicerone")
 usethis::use_package("glue")
+usethis::use_package("lazyeval",type="Suggests")
+usethis::use_package("scales",type = "Suggests")
 usethis::use_pipe()
 
 
@@ -65,15 +67,15 @@ golem::add_module( name = "dataComplyRules" ) # ran
 
 golem::add_module( name = "tableGen" ) #ran
 
-golem::add_module( name = "selectData" )
-golem::add_module( name = "popExp" )
-golem::add_module( name = "popExpScat" )
-golem::add_module( name = "popExpSpag" )
-golem::add_module( name = "popExpBoxp" )
-golem::add_module( name = "popExpHeat" )
-golem::add_module( name = "popExpHist" )
-golem::add_module( name = "popExpMeans" )
-golem::add_module( name = "popExpHBar" )
+golem::add_module( name = "selectData" )  #ran
+golem::add_module( name = "popExp" )      #ran
+golem::add_module( name = "popExpScat" )  #ran
+golem::add_module( name = "popExpSpag" )  #ran
+golem::add_module( name = "popExpBoxp" )  #ran
+golem::add_module( name = "popExpHeat" )  #ran
+golem::add_module( name = "popExpHist" )  #ran
+golem::add_module( name = "popExpMeans" ) #ran
+golem::add_module( name = "popExpHBar" )  #ran
 
 golem::add_module( name = "indvExp") # ran
 golem::add_module( name = "indvExpPat" ) # ran
@@ -101,7 +103,11 @@ golem::add_fct( "anova", module = "tableGen" )
 golem::add_fct( "buildEvents", module = "indvExp" ) # ran: used in modules: indvExpPatEvents & indvExpPatVisits
 golem::add_fct( "plot", module = "indvExpPatVisits" ) # ran
 
-golem::add_fct( "blah", module = "popExp")
+golem::add_fct( "scttr", module = "popExp") #ran
+golem::add_fct( "bxplt", module = "popExp") #ran
+golem::add_fct( "sumtb", module = "popExp") #ran
+golem::add_fct( "ovrpl", module = "popExp") #ran
+golem::add_fct( "corrm", module = "popExp") #ran
 
 
 ## External resources - ran
@@ -115,7 +121,7 @@ golem::add_js_file( "sync_divs" )
 golem::add_js_file( "detect_browser" )
 
 golem::add_css_file( "yeti" )
-
+golem::add_css_file( "styles" )
 
 ###################################################################
 # ac golem: Aaron stopped here and pushed code to team on 6/3/2020

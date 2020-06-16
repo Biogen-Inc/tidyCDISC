@@ -52,7 +52,9 @@ RoxygenNote: 7.1.0
 URL: https://github.com/Biogen-Inc/tidyCDISC
 BugReports: https://github.com/Biogen-Inc/tidyCDISC/issues
 Suggests: 
-    testthat
+    testthat,
+    lazyeval,
+    scales
 Remotes: 
     JohnCoene/tippy,
     MayaGans/IDEAFilter
