@@ -123,7 +123,10 @@ golem::add_css_file( "yeti" )
 
 ## Add internal datasets ---- not run
 ## If you have data in your package
-usethis::use_data_raw( name = "my_dataset", open = FALSE ) 
+usethis::use_data_raw( name = "adsl", open = FALSE ) # ran 
+usethis::use_data_raw( name = "adlbc", open = FALSE ) # ran
+usethis::use_data_raw( name = "advs", open = FALSE ) # ran
+usethis::use_data_raw( name = "adae", open = FALSE ) # ran
 
 ## Tests ---- not run
 ## Add one line by test you want to create

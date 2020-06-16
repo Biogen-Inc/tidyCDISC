@@ -8,7 +8,7 @@ gather_rules(
   input,
   output,
   session,
-  all_df_rules = list(list(error = c(""), warn = c(""))),
+  all_df_rules = list(error = c(""), warn = c("")),
   expl_rules = list(list(error = c(""), warn = c(""))),
   df_incl_rules = list(list(error = c(""), warn = c("")))
 )
