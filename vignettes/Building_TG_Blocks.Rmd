@@ -2,7 +2,7 @@
 title: "Create A Statistical Block"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{tg}
+  %\VignetteIndexEntry{Create A Statistical Block}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
