@@ -46,7 +46,7 @@ build_events <- function(
         # conditionally toggle which dataset is used
         (if(input_apply_filter == T) my_datafile[["ADAE"]] %>% semi_join(my_filtered_dat) else my_datafile[["ADAE"]]) %>% 
         filter(USUBJID == my_usubjid) %>%
-        filter(!is.na(AESTDT)) %>%
+        filter(!is.na(AESTDT) ) %>%
         mutate(EVENTTYP = "Adverse Events", DOMAIN = "AE") %>%
         distinct(USUBJID, EVENTTYP, AESTDT, AEDECOD, AESEV, AESER, DOMAIN) %>%
         mutate(
