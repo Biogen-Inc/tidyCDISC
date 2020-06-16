@@ -10,9 +10,7 @@ app_ui <- function(request) {
     golem_add_external_resources(),
     
     # List the first level UI elements here 
-    navbarPage(theme = "yeti.css",
-  
-               title = div(id="logo-id","IDEA", img(src="www/IDEA_ICON.png", style="float:left; padding-right:3px; height:25px; width:30px")), 
+    navbarPage(title = div(id="logo-id","IDEA", img(src="www/IDEA_ICON.png", style="float:left; padding-right:3px; height:25px; width:30px")), 
                id = "navbarID",
                windowTitle = "IDEA",
                tabPanel(
@@ -25,7 +23,6 @@ app_ui <- function(request) {
                ),
                # tabPanel(
                #   title = "Population Explorer",
-               #   # dataUploadUI("popul", "Import CSV"),  
                #   mod_selectData_ui("selectData_ui_1"),
                #   mod_popExp_ui("popExp_ui_1")
                # ),

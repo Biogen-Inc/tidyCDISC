@@ -52,7 +52,9 @@ RoxygenNote: 7.1.0
 URL: https://cloudhub.corp.biogen.com/biometrics/SEER
 BugReports: https://cloudhub.corp.biogen.com/biometrics/SEER/issues
 Suggests: 
-    testthat
+    testthat,
+    lazyeval,
+    scales
 Remotes: 
     JohnCoene/tippy,
     MayaGans/IDEAFilter
