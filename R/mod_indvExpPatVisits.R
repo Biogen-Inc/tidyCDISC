@@ -373,7 +373,7 @@ mod_indvExpPatVisits_server <- function(input, output, session, datafile, loaded
       req(input$plot_param != " ")
       
       # See mod_indvExpPatVisits_fct_plot.R
-      suppressWarnings(fnIndvExplVisits(
+      fnIndvExplVisits(
         watermark = FALSE,
         graph_output = "plotly",
         bds_data = lb_data,
@@ -385,7 +385,7 @@ mod_indvExpPatVisits_server <- function(input, output, session, datafile, loaded
         input_overlay_events = input$overlay_events,
         vline_dat = vline_dat(),
         vv_dy_name = vv_dy_name()
-      ))
+      )
     })
     
     ################################

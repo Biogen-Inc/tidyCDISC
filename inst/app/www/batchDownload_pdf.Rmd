@@ -67,7 +67,7 @@ filterPrinter <- function(txt) {
   
 plotter <- function(pcd){
   # Create Plot
-  fn_output <- suppressWarnings(fnIndvExplVisits(
+  fn_output <- fnIndvExplVisits(
       watermark = TRUE,
       graph_output = "ggplot",
       bds_data = lb_data,
@@ -79,7 +79,7 @@ plotter <- function(pcd){
       input_overlay_events = input$overlay_events,
       vline_dat = vline_dat(),
       vv_dy_name = vv_dy_name()
-    ))
+    )
   
   
   progress$inc(1) # increment progress bar
