@@ -77,13 +77,13 @@ fnIndvExplVisits <- function(
     # GGPLOT2 OBJECT
     lb_plot <- ggplot(plot_dat, aes(x = !!INPUT_visit_var, y = AVAL)) + 
       geom_line() +
-      geom_point(na.rm = TRUE, 
+      suppressWarnings(geom_point(na.rm = TRUE, 
                  aes(text =
                        paste0(AVISIT,
                               "<br>",input_visit_var, ": ",!!INPUT_visit_var,
                               "<br>",input_plot_param ,": ",AVAL
                        )
-                 )) +
+                 ))) +
       scale_x_continuous(breaks = seq(min(plot_dat[,input_visit_var]), max(plot_dat[,input_visit_var]), 30)) +
       labs(x = paste0("Study Visit (",input_visit_var,")"),
            y = prm,
