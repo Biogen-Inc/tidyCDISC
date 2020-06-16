@@ -1,15 +1,15 @@
 
-############################################################################################
-# User Interface
-############################################################################################
 
 #' dataComply UI Function
 #'
-#' @description A shiny Module Not in use
+#' @description A shiny Module of a blank UI
 #'
 #' @param id Internal parameters for {shiny}.
-#'
-#'
+#' 
+#' @return An empty shiny tagList
+#' 
+#' @family dataComply Functions
+#' 
 mod_dataComply_ui <- function(id){
   # ns <- NS(id)
   tagList(
@@ -19,149 +19,111 @@ mod_dataComply_ui <- function(id){
 
 
 
+
 #' dataComply Server Function
 #'
 #' A module that will interface with a list of data frames and either (I)
-#' display an error if needed variables don't exist and stop them from
-#' proceeding or (II) warn the user if if some columns are missing that are
-#' vital for the app to make sense, but they can continue if they wish.
+#' display an error if needed variables don't exist and or (II) warn the user if
+#' some recommended columns don't exist. In the former case, the dataframes that
+#' violate the rules (supplied in mod_dataComplyRules_fct_helpers) will not be
+#' returned. In the latter case, they will (implying the users will have access
+#' to those dataframe(s) in the app).
 #'
 #' @param input,output,session Internal parameters for {shiny}.
-#' @param datalist A reactive list of data frames (from the upload module)
+#' @param datalist A reactive list of data frames (in this context, from the
+#'   mod_dataUpload module)
 #' @param dismissErrBttn If \code{TRUE} (the default) then the 'dismiss' button
 #'   will appear on the error modal. If \code{FALSE}, the user will not be able
-#'   to escape the modal. Instead they will have to reload the app.
+#'   to escape the modal. Instead they will have to reload the app and re-submit
+#'   data for upload
 #'
-#'   DO NOT REMOVE.
 #' @import shiny
 #' @import dplyr
-#' 
-#' @return A list of dataframes that are compliant with the rules
-#' 
+#'
+#' @return A list of dataframes which are compliant with the rules
+#'
 #' @family dataComply Functions
-#' 
+#'   
 mod_dataComply_server <- function(input, output, session, datalist = reactive(NULL), dismissErrBttn = T){
   ns <- session$ns
  
+  # Initialize return_dl with the input list of dataframes
   rv <- reactiveValues(return_dl = datalist())
   
-  # **Keeping this code in here in case we ever want to revisit channeling 
-  # from the error/warning to the help modal. Channeling is only supported
-  # by dean attali's "shinyalert" package. Right now, it's difficult for 
-  # the server to identify anything that's going on and I think that's because
-  # the current location of the callModule() is inside an observeEvent(input$file, {})
-  
-  # If upload help button is pressed in error modal
-  # observeEvent(input$clickRulesError, {
-  #   removeModal()
-  #   updateActionButton(session, "clickRules", class = "btn-postModal")
-  #   # Sys.sleep(2)
-  #   # output$q_color <- renderUI({
-  #   #   tags$head(
-  #   #     tags$style(HTML('#clickRules{background-color:red}'))
-  #   #   )
-  #   # })
-  #   # click("clickRules")
-  #   # showModal(modalDialog(div("Test error")))
-  #   # toggleModal(session, modalId = 'upload_rules', toggle = "open")
-  # })
-  
-  # observeEvent(input$clickRulesWarn, {
-  #   removeModal()
-  #   updateActionButton(session, "clickRules", class = "btn-postModal")
-  #   # Sys.sleep(2)
-  #   # click("clickRules")
-  #   # showModal(modalDialog(div("Test warn")))
-  #   # toggleModal(session, modalId = 'upload_rules', toggle = "open")
-  # })
-  
-  
-  
-  
-  # any time the reactive datalist() changes, run the code below which creates
-  # a new datalist (if data compliance error) and updates gt outputs if needed
-  # observeEvent(datalist(), {
+  # Any time the reactive datalist() changes, run the code below which creates a
+  # new datalist (only including compliant data frames) and updates df & gt outputs
   return_datalist <- eventReactive(datalist(), {
     
     
-    # Run "the check" to see if any rules are violated
+    # Run "the error check" to see if any required rules were violated
     err_tab <- gather_reqs(disp_type = "error",
                            datalist = datalist,
-                           all_df_rules = all_df_rules, # = alldf_rules,
-                           expl_rules = expl_rules, # = hard_rules,
-                           df_incl_rules = df_incl_rules) # = dfWith_rules)
+                           all_df_rules = all_df_rules,
+                           expl_rules = expl_rules,
+                           df_incl_rules = df_incl_rules)
     
-    # Check for violations to "warnings" rules
+    # Run "the warning check" to see if any recommended rules were violated
     wrn_tab <- gather_reqs(disp_type = "warn",
                            datalist = datalist,
-                           all_df_rules = all_df_rules, # = alldf_rules,
-                           expl_rules = expl_rules, # = hard_rules,
-                           df_incl_rules = df_incl_rules) # = dfWith_rules)
+                           all_df_rules = all_df_rules,
+                           expl_rules = expl_rules,
+                           df_incl_rules = df_incl_rules)
     
-    # Display Modal Conditionally, don't allow escape
+    # First, check if any compliance errors. If so, display Modal Conditionally
+    # (Note: this modal will show both warnings and Errors if warnings exist)
     if(nrow(err_tab$df) > 0){
       
+      # update return_dl with list of compliant dfs
       rv$return_dl <- err_tab$df_list
       
+      # render error & warning gt objects for modal
       output$err_gt <- render_gt({ err_tab$gt })
       output$wrn_gt <- if(nrow(wrn_tab$df) > 0) render_gt({ wrn_tab$gt })
       
+      # Create modal pop-up UI
       showModal( modalDialog(
         title = div(style = "text-align:center; font-weight:bold;",
                     "Error: Loaded Data not in Expected Format"),
+        
+        # Show dismiss Button Conditionally based on R developer's wishes in footer
         footer =
           if(dismissErrBttn){
             tagList(
               div(style = "text-align:center; font-size: 14px;",
                   img(src="www/red_x.png", style="height:20px;"), "= indicates variable(s) that need attention"),
-                    #local_image(filename = "www/red_x.png", height = 15)
-                    #         , "= indicates variable(s) that need attention"))),
-              # **
-              # actionButton(ns("clickRulesError") #actionBttn
-              #              , label = NULL
-              #              , icon = icon("question-circle")
-              # ),
-              # actionButton(bs("close_err_mod"), "Dismiss")
               modalButton("Dismiss")
             )
           } else {
             tagList(
               div(style = "text-align:center; font-size: 14px;",
-                  img(src="www/red_x.png", style="height:20px;"), "= indicates variable(s) that need attention"),
-                
-                    #local_image(filename = "www/red_x.png", height = 15)
-                    #         , "= indicates variable(s) that need attention"))),
-              # **
-              # actionButton(ns("clickRulesError") #actionBttn
-              #              , label = NULL
-              #              , icon = icon("question-circle")
-              # )
-              
+                  img(src="www/red_x.png", style="height:20px;"), "= indicates variable(s) that need attention")
             )
           },
-        # Content of the Modal
+        
+        # Content of the Modal Body
         tagList(
-          gt_output(ns("err_gt")),
+          br(),
+          gt_output(ns("err_gt")), # gt table of error vars
           br(),br(),
-          gt_output(ns("wrn_gt")),
+          gt_output(ns("wrn_gt")), # gt table of warning vars
           br()
-          # **
-          # ,materialSwitch(ns("clickRulesError")
-          #                , label = "Show Upload Rules"
-          #                , status = "primary"
-          #                , value = F),
-          # conditionalPanel("input.clickRulesError", ns = ns, tagList(h5("Error Test"))) #rulesUI)
         )
       ))
     }
-    else { # if no errors...
+    else { # if no errors... take a slightly different approach:
       
-      # Display Modal Conditionally, allow escape
+      # Check if Warnings exist
       if(nrow(wrn_tab$df) > 0){
+        
+        # render gt output for modal
         output$wrn_gt <- render_gt({ wrn_tab$gt })
         
-        # Only show modal is most recently uploaded data has a warning
+        # Only show modal for most recently uploaded data file, avoiding the
+        # modal popping up for with every change in datalist() --> we only want
+        # it to show for the file where the warning actually exists
         if(names(datalist())[length(names(datalist()))] %in% wrn_tab$df$df) {
+          
+          # Create modal pop-up UI
           showModal( modalDialog(
             title = div(style = "text-align:center; font-weight:bold;",
                         "Warning: Loaded Data not in Expected Format"),
@@ -170,31 +132,21 @@ mod_dataComply_server <- function(input, output, session, datalist = reactive(NU
                   div(style = "text-align:center; font-size: 14px;",
                       img(src="www/red_x.png", style="height:20px;"), "= indicates variable(s) that need attention")
               ),
-              # **
-              # actionButton(ns("clickRulesWarn") #actionBttn
-              #              , label = NULL
-              #              , icon = icon("question-circle")
-              # ),
-              
               modalButton("Dismiss")
             ),
-            # Content of the modal
+            
+            # Content of the modal body
             tagList(
+              br(),
               gt_output(ns("wrn_gt")),
               br(),br()
-              # **
-              # ,materialSwitch(ns("clickRulesWarn")
-              #                , label = "Show Data Upload Rules"
-              #                , status = "primary"
-              #                , value = F),
-              # conditionalPanel("input.clickRulesWarn", ns = ns, tagList(h5("Warn Test"))) #rulesUI)
               
             )
           ))
         }
       }
-    }
-    return(rv$return_dl) # eventReactive return
+    } # end else
+    return(rv$return_dl) # this get's updated if compliance error exists
   })
   
   return(return_datalist()) # module return

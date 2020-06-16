@@ -15,21 +15,31 @@ mod_dataComply_server(
 \arguments{
 \item{input, output, session}{Internal parameters for {shiny}.}
 
-\item{datalist}{A reactive list of data frames (from the upload module)}
+\item{datalist}{A reactive list of data frames (in this context, from the
+mod_dataUpload module)}
 
 \item{dismissErrBttn}{If \code{TRUE} (the default) then the 'dismiss' button
-  will appear on the error modal. If \code{FALSE}, the user will not be able
-  to escape the modal. Instead they will have to reload the app.
-
-  DO NOT REMOVE.}
+will appear on the error modal. If \code{FALSE}, the user will not be able
+to escape the modal. Instead they will have to reload the app and re-submit
+data for upload}
 }
 \value{
-A list of dataframes that are compliant with the rules
+A list of dataframes which are compliant with the rules
 }
 \description{
 A module that will interface with a list of data frames and either (I)
-display an error if needed variables don't exist and stop them from
-proceeding or (II) warn the user if if some columns are missing that are
-vital for the app to make sense, but they can continue if they wish.
+display an error if needed variables don't exist and or (II) warn the user if
+some recommended columns don't exist. In the former case, the dataframes that
+violate the rules (supplied in mod_dataComplyRules_fct_helpers) will not be
+returned. In the latter case, they will (implying the users will have access
+to those dataframe(s) in the app).
+}
+\seealso{
+Other dataComply Functions: 
+\code{\link{gather_reqs}()},
+\code{\link{gather_rules}()},
+\code{\link{mod_dataComplyRules_server}()},
+\code{\link{mod_dataComplyRules_ui}()},
+\code{\link{mod_dataComply_ui}()}
 }
 \concept{dataComply Functions}

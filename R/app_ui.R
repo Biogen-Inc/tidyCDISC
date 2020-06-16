@@ -1,7 +1,7 @@
 #' The application User-Interface
 #' 
 #' @param request Internal parameter for `{shiny}`. 
-#'     DO NOT REMOVE.
+#' 
 #' @import shiny
 #' @noRd
 app_ui <- function(request) {
@@ -18,8 +18,8 @@ app_ui <- function(request) {
                  mod_dataUpload_ui("dataUpload_ui_1")
                ),
                tabPanel(
-                  title = "TableGenerator",
-                  mod_tableGen_ui("tableGen_ui_1")
+                 title = "TableGenerator",
+                 mod_tableGen_ui("tableGen_ui_1")
                ),
                # tabPanel(
                #   title = "Population Explorer",
@@ -30,11 +30,7 @@ app_ui <- function(request) {
                  title = "Individual Explorer",
                  mod_indvExp_ui("indvExp_ui_1")
                )
-    ),
-    
-    # Add logo to top right corner
-    tags$script(HTML("var header = $('.navbar > .container-fluid'); header.append('<div style=\"float:right\"><ahref=\"URL\"><img src=\"www/logo.svg\" alt=\"alt\" style=\"float:right;width:66px;height:41px;\"> </a></div>');")),
-    shinyjs::inlineCSS(css)
+      )
     )
   }
 
@@ -46,13 +42,19 @@ app_ui <- function(request) {
 #' @import shiny
 #' @importFrom golem add_resource_path activate_js favicon bundle_resources
 #' @importFrom waiter use_waiter
+#' @importFrom shinyjs useShinyjs
+#' @importFrom shinyjs extendShinyjs
+#' @importFrom shinyjs inlineCSS
 #' @noRd
 golem_add_external_resources <- function(){
+  
+  # source("R/global.R")
   
   add_resource_path(
     'www', app_sys('app/www')
   )
-
+  
+  # golem tags$head start
   tags$head(
     
     favicon(),
@@ -60,12 +62,12 @@ golem_add_external_resources <- function(){
       path = app_sys('app/www'),
       app_title = 'IDEA'
     ),
-
-    tags$script(HTML(htmljs)),
-    tags$link(rel = "//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"),
-    tags$script(src = "https://code.jquery.com/ui/1.12.1/jquery-ui.js"),
+    
+    # Add here other external resources
+    # for example, you can add shinyalert::useShinyalert() 
     shinyjs::useShinyjs(),
-    waiter::use_waiter(),
+    waiter::use_waiter(), # include dependencies
+    shinyjs::inlineCSS(css),
     shinyjs::extendShinyjs(text = jscode)
     
   )
