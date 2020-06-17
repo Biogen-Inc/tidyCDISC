@@ -836,35 +836,6 @@
         "Built": "R 3.6.3; x86_64-w64-mingw32; 2020-03-16 15:56:11 UTC; windows"
       }
     },
-    "debugme": {
-      "Source": "CRAN",
-      "Repository": "https://cran.rstudio.com/",
-      "GithubRepo": null,
-      "GithubUsername": null,
-      "GithubRef": null,
-      "GithubSha1": null,
-      "description": {
-        "Package": "debugme",
-        "Title": "Debug R Packages",
-        "Version": "1.1.0",
-        "Author": "Gábor Csárdi",
-        "Maintainer": "Gábor Csárdi <csardi.gabor@gmail.com>",
-        "Description": "Specify debug messages as special string constants, and\n    control debugging of packages via environment variables.",
-        "License": "MIT + file LICENSE",
-        "LazyData": "true",
-        "URL": "https://github.com/r-lib/debugme#readme",
-        "BugReports": "https://github.com/r-lib/debugme/issues",
-        "RoxygenNote": "6.0.1",
-        "Imports": "crayon, grDevices",
-        "Suggests": "covr, mockery, R6, testthat, withr",
-        "Encoding": "UTF-8",
-        "NeedsCompilation": "no",
-        "Packaged": "2017-10-22 09:14:23 UTC; gaborcsardi",
-        "Repository": "CRAN",
-        "Date/Publication": "2017-10-22 14:18:09 UTC",
-        "Built": "R 3.6.3; ; 2020-03-30 14:48:49 UTC; windows"
-      }
-    },
     "desc": {
       "Source": "CRAN",
       "Repository": "https://cran.rstudio.com/",
@@ -2370,7 +2341,7 @@
         "Built": "R 3.6.2; x86_64-w64-mingw32; 2020-02-01 00:25:01 UTC; windows"
       }
     },
-    "parsedate": {
+    "packrat": {
       "Source": "CRAN",
       "Repository": "https://cran.rstudio.com/",
       "GithubRepo": null,
@@ -2378,25 +2349,26 @@
       "GithubRef": null,
       "GithubSha1": null,
       "description": {
-        "Package": "parsedate",
-        "Title": "Recognize and Parse Dates in Various Formats, Including All ISO\n8601 Formats",
-        "Version": "1.2.0",
-        "Maintainer": "Gábor Csárdi <csardi.gabor@gmail.com>",
-        "Author": "Gábor Csárdi, Linus Torvalds",
-        "Description": "Parse dates automatically, without the need of\n    specifying a format. Currently it includes the git date parser.\n    It can also recognize and parse all ISO 8601 formats.",
+        "Package": "packrat",
+        "Type": "Package",
+        "Title": "A Dependency Management System for Projects and their R Package\nDependencies",
+        "Version": "0.5.0",
+        "Author": "Kevin Ushey, Jonathan McPherson, Joe Cheng, Aron Atkins, JJ Allaire",
+        "Maintainer": "Kevin Ushey <kevin@rstudio.com>",
+        "Description": "Manage the R packages your project depends\n    on in an isolated, portable, and reproducible way.",
         "License": "GPL-2",
-        "LazyData": "true",
-        "Imports": "rematch2",
-        "Suggests": "covr, testthat, withr",
-        "URL": "https://github.com/gaborcsardi/parsedate",
-        "BugReports": "https://github.com/gaborcsardi/parsedate/issues",
+        "Depends": "R (>= 3.0.0)",
+        "Imports": "tools, utils",
+        "Suggests": "testthat (>= 0.7), devtools, httr, knitr, rmarkdown",
+        "URL": "https://github.com/rstudio/packrat/",
+        "BugReports": "https://github.com/rstudio/packrat/issues",
         "RoxygenNote": "6.1.1",
         "Encoding": "UTF-8",
-        "NeedsCompilation": "yes",
-        "Packaged": "2019-05-08 13:19:59 UTC; gaborcsardi",
+        "NeedsCompilation": "no",
+        "Packaged": "2018-11-13 23:16:36 UTC; kevin",
         "Repository": "CRAN",
-        "Date/Publication": "2019-05-08 14:00:03 UTC",
-        "Built": "R 3.6.3; x86_64-w64-mingw32; 2020-03-30 14:48:50 UTC; windows"
+        "Date/Publication": "2018-11-14 08:40:02 UTC",
+        "Built": "R 3.6.3; ; 2020-03-30 15:00:16 UTC; windows"
       }
     },
     "pillar": {
@@ -2428,36 +2400,6 @@
         "Repository": "CRAN",
         "Date/Publication": "2020-05-05 05:30:03 UTC",
         "Built": "R 3.6.3; ; 2020-05-25 01:43:01 UTC; windows"
-      }
-    },
-    "pingr": {
-      "Source": "CRAN",
-      "Repository": "https://cran.rstudio.com/",
-      "GithubRepo": null,
-      "GithubUsername": null,
-      "GithubRef": null,
-      "GithubSha1": null,
-      "description": {
-        "Package": "pingr",
-        "Title": "Check if a Remote Computer is Up",
-        "Version": "2.0.0",
-        "Authors@R": "person(given = \"Gábor\", family = \"Csárdi\", role = c(\"aut\", \"cre\"),\n             email = \"csardi.gabor@gmail.com\")",
-        "Description": "Check if a remote computer is up. It can either\n    just call the system ping command, or check a specified\n    TCP port.",
-        "License": "MIT + file LICENSE",
-        "LazyData": "true",
-        "URL": "https://github.com/r-lib/pingr#readme",
-        "BugReports": "https://github.com/r-lib/pingr/issues",
-        "Suggests": "covr, testthat",
-        "Imports": "processx, utils",
-        "RoxygenNote": "6.1.99.9001",
-        "Encoding": "UTF-8",
-        "NeedsCompilation": "yes",
-        "Packaged": "2019-10-21 14:15:34 UTC; gaborcsardi",
-        "Author": "Gábor Csárdi [aut, cre]",
-        "Maintainer": "Gábor Csárdi <csardi.gabor@gmail.com>",
-        "Repository": "CRAN",
-        "Date/Publication": "2019-10-21 16:20:02 UTC",
-        "Built": "R 3.6.3; x86_64-w64-mingw32; 2020-03-30 16:18:09 UTC; windows"
       }
     },
     "pkgbuild": {
@@ -2640,31 +2582,6 @@
         "Repository": "CRAN",
         "Date/Publication": "2020-03-03 14:40:02 UTC",
         "Built": "R 3.6.3; x86_64-w64-mingw32; 2020-03-24 06:28:05 UTC; windows"
-      }
-    },
-    "png": {
-      "Source": "CRAN",
-      "Repository": "https://cran.rstudio.com/",
-      "GithubRepo": null,
-      "GithubUsername": null,
-      "GithubRef": null,
-      "GithubSha1": null,
-      "description": {
-        "Package": "png",
-        "Version": "0.1-7",
-        "Title": "Read and write PNG images",
-        "Author": "Simon Urbanek <Simon.Urbanek@r-project.org>",
-        "Maintainer": "Simon Urbanek <Simon.Urbanek@r-project.org>",
-        "Depends": "R (>= 2.9.0)",
-        "Description": "This package provides an easy and simple way to read, write and display bitmap images stored in the PNG format. It can read and write both files and in-memory raw vectors.",
-        "License": "GPL-2 | GPL-3",
-        "SystemRequirements": "libpng",
-        "URL": "http://www.rforge.net/png/",
-        "Packaged": "2013-12-03 20:09:14 UTC; svnuser",
-        "NeedsCompilation": "yes",
-        "Repository": "CRAN",
-        "Date/Publication": "2013-12-03 22:25:05",
-        "Built": "R 3.6.0; x86_64-w64-mingw32; 2019-05-28 20:43:20 UTC; windows"
       }
     },
     "praise": {
@@ -2880,34 +2797,6 @@
         "Repository": "CRAN",
         "Date/Publication": "2018-12-21 09:40:02 UTC",
         "Built": "R 3.6.2; x86_64-w64-mingw32; 2020-02-01 03:04:09 UTC; windows"
-      }
-    },
-    "rematch": {
-      "Source": "CRAN",
-      "Repository": "https://cran.rstudio.com/",
-      "GithubRepo": null,
-      "GithubUsername": null,
-      "GithubRef": null,
-      "GithubSha1": null,
-      "description": {
-        "Package": "rematch",
-        "Title": "Match Regular Expressions with a Nicer 'API'",
-        "Version": "1.0.1",
-        "Author": "Gabor Csardi",
-        "Maintainer": "Gabor Csardi <gcsardi@mango-solutions.com>",
-        "Description": "A small wrapper on 'regexpr' to extract the matches and\n    captured groups from the match of a regular expression to a character\n    vector.",
-        "License": "MIT + file LICENSE",
-        "LazyData": "true",
-        "URL": "https://github.com/MangoTheCat/rematch",
-        "BugReports": "https://github.com/MangoTheCat/rematch/issues",
-        "RoxygenNote": "5.0.1.9000",
-        "Suggests": "covr, testthat",
-        "Encoding": "UTF-8",
-        "NeedsCompilation": "no",
-        "Packaged": "2016-04-20 19:54:37 UTC; gaborcsardi",
-        "Repository": "CRAN",
-        "Date/Publication": "2016-04-21 08:20:46",
-        "Built": "R 3.6.2; ; 2020-01-31 21:55:45 UTC; windows"
       }
     },
     "rematch2": {
@@ -3132,6 +3021,44 @@
         "Repository": "CRAN",
         "Date/Publication": "2018-01-03 15:36:24 UTC",
         "Built": "R 3.6.3; ; 2020-03-24 03:33:57 UTC; windows"
+      }
+    },
+    "rsconnect": {
+      "Source": "github",
+      "Repository": null,
+      "GithubRepo": "rsconnect",
+      "GithubUsername": "rstudio",
+      "GithubRef": "master",
+      "GithubSha1": "40c162bf3c4cd9b10deed82e1df9ec1b0c107c1f",
+      "description": {
+        "Package": "rsconnect",
+        "Type": "Package",
+        "Title": "Deployment Interface for R Markdown Documents and Shiny\nApplications",
+        "Version": "0.8.16-9001",
+        "Author": "JJ Allaire",
+        "Maintainer": "Jonathan McPherson <jonathan@rstudio.com>",
+        "Description": "Programmatic deployment interface for 'RPubs', 'shinyapps.io', and\n    'RStudio Connect'. Supported content types include R Markdown documents,\n    Shiny applications, Plumber APIs, plots, and static web content.",
+        "Depends": "R (>= 3.0.0)",
+        "Imports": "curl, digest, jsonlite, openssl, packrat (>= 0.4.8-1),\nrstudioapi (>= 0.5), yaml (>= 2.1.5)",
+        "Suggests": "RCurl, callr, httpuv, knitr, plumber (>= 0.3.2), reticulate,\nrmarkdown (>= 1.1), shiny, sourcetools, testthat, xtable",
+        "License": "GPL-2",
+        "RoxygenNote": "7.0.2",
+        "Roxygen": "list(markdown = TRUE)",
+        "URL": "https://github.com/rstudio/rsconnect",
+        "BugReports": "https://github.com/rstudio/rsconnect/issues",
+        "RemoteType": "github",
+        "RemoteHost": "api.github.com",
+        "RemoteRepo": "rsconnect",
+        "RemoteUsername": "rstudio",
+        "RemoteRef": "master",
+        "RemoteSha": "40c162bf3c4cd9b10deed82e1df9ec1b0c107c1f",
+        "GithubRepo": "rsconnect",
+        "GithubUsername": "rstudio",
+        "GithubRef": "master",
+        "GithubSHA1": "40c162bf3c4cd9b10deed82e1df9ec1b0c107c1f",
+        "NeedsCompilation": "no",
+        "Packaged": "2020-04-13 20:49:46 UTC; aclark5",
+        "Built": "R 3.6.2; ; 2020-04-13 20:49:49 UTC; windows"
       }
     },
     "rstudioapi": {
@@ -3444,37 +3371,6 @@
         "Built": "R 3.6.2; ; 2020-02-01 01:58:41 UTC; windows"
       }
     },
-    "shinytest": {
-      "Source": "CRAN",
-      "Repository": "https://cran.rstudio.com/",
-      "GithubRepo": null,
-      "GithubUsername": null,
-      "GithubRef": null,
-      "GithubSha1": null,
-      "description": {
-        "Package": "shinytest",
-        "Title": "Test Shiny Apps",
-        "Version": "1.3.1",
-        "Authors@R": "c(\n    person(\"Winston\", \"Chang\", role = c(\"aut\", \"cre\"), email = \"winston@rstudio.com\"),\n    person(\"Gábor\", \"Csárdi\", role = \"aut\", email = \"gabor@rstudio.com\")\n    )",
-        "Description": "For automated testing of Shiny applications, using a headless\n    browser, driven through 'WebDriver'.",
-        "License": "MIT + file LICENSE",
-        "LazyData": "true",
-        "URL": "https://github.com/rstudio/shinytest",
-        "BugReports": "https://github.com/rstudio/shinytest/issues",
-        "RoxygenNote": "6.1.1",
-        "Imports": "assertthat, digest, crayon, debugme, parsedate, pingr, callr\n(>= 2.0.3), R6, rematch, httr, shiny (>= 1.0.4), testthat (>=\n1.0.0), utils, webdriver (>= 1.0.5), htmlwidgets, jsonlite,\nwithr, httpuv, rstudioapi (>= 0.8.0.9002)",
-        "Suggests": "rmarkdown, flexdashboard",
-        "Encoding": "UTF-8",
-        "SystemRequirements": "PhantomJS (http://phantomjs.org/)",
-        "NeedsCompilation": "no",
-        "Packaged": "2019-05-03 22:10:28 UTC; cpsievert",
-        "Author": "Winston Chang [aut, cre],\n  Gábor Csárdi [aut]",
-        "Maintainer": "Winston Chang <winston@rstudio.com>",
-        "Repository": "CRAN",
-        "Date/Publication": "2019-05-06 19:40:02 UTC",
-        "Built": "R 3.6.3; ; 2020-03-30 19:55:28 UTC; windows"
-      }
-    },
     "shinythemes": {
       "Source": "CRAN",
       "Repository": "https://cran.rstudio.com/",
@@ -3500,35 +3396,6 @@
         "Repository": "CRAN",
         "Date/Publication": "2018-11-06 17:00:03 UTC",
         "Built": "R 3.6.3; ; 2020-03-30 19:55:42 UTC; windows"
-      }
-    },
-    "showimage": {
-      "Source": "CRAN",
-      "Repository": "https://cran.rstudio.com/",
-      "GithubRepo": null,
-      "GithubUsername": null,
-      "GithubRef": null,
-      "GithubSha1": null,
-      "description": {
-        "Package": "showimage",
-        "Title": "Show an Image on an 'R' Graphics Device",
-        "Version": "1.0.0",
-        "Author": "Gábor Csárdi",
-        "Maintainer": "Gábor Csárdi <csardi.gabor@gmail.com>",
-        "Description": "Sometimes it is handy to be able to view an image file on an\n    'R' graphics device. This package just does that. Currently it supports\n    'PNG' files.",
-        "License": "GPL-2 | GPL-3",
-        "LazyData": "true",
-        "URL": "https://github.com/r-lib/showimage#readme",
-        "BugReports": "https://github.com/r-lib/showimage/issues",
-        "Imports": "png, tools",
-        "Suggests": "covr, testthat",
-        "RoxygenNote": "5.0.1",
-        "Encoding": "UTF-8",
-        "NeedsCompilation": "no",
-        "Packaged": "2018-01-23 10:39:23 UTC; gaborcsardi",
-        "Repository": "CRAN",
-        "Date/Publication": "2018-01-24 09:51:26 UTC",
-        "Built": "R 3.6.3; ; 2020-03-30 14:48:51 UTC; windows"
       }
     },
     "sjlabelled": {
@@ -4105,36 +3972,6 @@
         "Built": "R 3.6.3; ; 2020-03-30 19:52:56 UTC; windows"
       }
     },
-    "webdriver": {
-      "Source": "CRAN",
-      "Repository": "https://cran.rstudio.com/",
-      "GithubRepo": null,
-      "GithubUsername": null,
-      "GithubRef": null,
-      "GithubSha1": null,
-      "description": {
-        "Package": "webdriver",
-        "Title": "'WebDriver' Client for 'PhantomJS'",
-        "Version": "1.0.5",
-        "Author": "Ariya Hidayat, Gábor Csárdi, Gabor Torok, Ivan De Marino, Robert Gieseke,\n    Steven Masala, Winston Chang, Zack Weinberg",
-        "Maintainer": "Gábor Csárdi <csardi.gabor@gmail.com>",
-        "Description": "A client for the 'WebDriver' 'API'. It allows driving a\n    (probably headless) web browser, and can be used to test web\n    applications, including 'Shiny' apps. In theory it works with any\n    'WebDriver' implementation, but it was only tested with 'PhantomJS'.",
-        "License": "MIT + file LICENSE",
-        "LazyData": "true",
-        "URL": "https://github.com/rstudio/webdriver",
-        "BugReports": "https://github.com/rstudio/webdriver/issues",
-        "RoxygenNote": "6.0.1",
-        "Imports": "callr (>= 2.0.0), base64enc, curl (>= 2.0), debugme, httr,\njsonlite, R6, showimage, utils, withr",
-        "Suggests": "covr, pingr, rprojroot, servr, testthat",
-        "Encoding": "UTF-8",
-        "SystemRequirements": "PhantomJS (http://phantomjs.org/)",
-        "NeedsCompilation": "no",
-        "Packaged": "2018-04-10 23:12:55 UTC; gaborcsardi",
-        "Repository": "CRAN",
-        "Date/Publication": "2018-04-11 03:48:44 UTC",
-        "Built": "R 3.6.3; ; 2020-03-30 18:58:19 UTC; windows"
-      }
-    },
     "whisker": {
       "Source": "CRAN",
       "Repository": "https://cran.rstudio.com/",
@@ -4365,13 +4202,13 @@
       "checksum": "61efa82920fa062e23d6215dfbdb74be"
     },
     "DESCRIPTION": {
-      "checksum": "a67bb976d3f28873c006780bdfbe5e30"
+      "checksum": "dd058bfb26aae8f99b64445c955cfe90"
     },
     "dev/01_start.R": {
       "checksum": "6992ea42b2ce8c44c53dd72e75724aac"
     },
     "dev/02_dev.R": {
-      "checksum": "a79caa5f52a71a63234303b143b2b33f"
+      "checksum": "339490cf7845e4f79fa18e3c6afbca0b"
     },
     "dev/03_deploy.R": {
       "checksum": "7b413fcf3e7273e8b80cb6971b2190a4"
@@ -4625,9 +4462,6 @@
     "packrat/desc/data.table": {
       "checksum": "f788686c6c272d4cbee34937e1b2c724"
     },
-    "packrat/desc/debugme": {
-      "checksum": "9ea84159d9c626262e3ffcd198c0c151"
-    },
     "packrat/desc/desc": {
       "checksum": "c3643a047d1d1efb602eb6276e6ce309"
     },
@@ -4784,14 +4618,11 @@
     "packrat/desc/openssl": {
       "checksum": "547232f9a3b24cff4db5033065e75e38"
     },
-    "packrat/desc/parsedate": {
-      "checksum": "bff184b8fa6fc99eab578d7777468acb"
+    "packrat/desc/packrat": {
+      "checksum": "b62af59b9221aa05b6b8f5ed8b7fba1a"
     },
     "packrat/desc/pillar": {
       "checksum": "d626fd8cbdb495d03cf0c31560f77276"
-    },
-    "packrat/desc/pingr": {
-      "checksum": "7fbcacc787d10a3a7a470463a86d58ae"
     },
     "packrat/desc/pkgbuild": {
       "checksum": "9df3e4e5762f65d03cb1be4b4966e1a6"
@@ -4810,9 +4641,6 @@
     },
     "packrat/desc/plyr": {
       "checksum": "cf342550e153f34f3ecdedd9e5edc763"
-    },
-    "packrat/desc/png": {
-      "checksum": "9bd4763f3aeab746892470d5aeab2a37"
     },
     "packrat/desc/praise": {
       "checksum": "8a163fd14152681c06bab6757b029528"
@@ -4844,9 +4672,6 @@
     "packrat/desc/readr": {
       "checksum": "99fd95de8389474f3c80c4ca66499559"
     },
-    "packrat/desc/rematch": {
-      "checksum": "8974447e5207820cabee8e220e6e3d2a"
-    },
     "packrat/desc/rematch2": {
       "checksum": "7eb77a132dac8baf2e092332055090fe"
     },
@@ -4867,6 +4692,9 @@
     },
     "packrat/desc/rprojroot": {
       "checksum": "935c26a59eedf4c933af18fea4c3a6b2"
+    },
+    "packrat/desc/rsconnect": {
+      "checksum": "1a04beb54a62784d0ca7af93d5848f3e"
     },
     "packrat/desc/rstudioapi": {
       "checksum": "109679f641804b0addbb4be8420e7622"
@@ -4892,9 +4720,6 @@
     "packrat/desc/shinyjs": {
       "checksum": "55ba0abbd7014e7cedfd978f9a6eff9e"
     },
-    "packrat/desc/shinytest": {
-      "checksum": "b27f267fef742da62875ec30f52aac77"
-    },
     "packrat/desc/shinythemes": {
       "checksum": "ceca7fbd81d6ac2745dae17c9035a8e6"
     },
@@ -4903,9 +4728,6 @@
     },
     "packrat/desc/shinyWidgets": {
       "checksum": "a768d4603296f285e2b69156c44dd7d5"
-    },
-    "packrat/desc/showimage": {
-      "checksum": "32d8f263b2a4098de0e4574375d0a5c0"
     },
     "packrat/desc/sjlabelled": {
       "checksum": "b338d57c338f503d29d8bddfd3b440b4"
@@ -4961,9 +4783,6 @@
     "packrat/desc/waiter": {
       "checksum": "fc68392e35dd83486c77f993e58eec44"
     },
-    "packrat/desc/webdriver": {
-      "checksum": "31b90cad06f4502e53f91aff7d46ec9f"
-    },
     "packrat/desc/whisker": {
       "checksum": "ccb073af9568e82bee8a143e66200c86"
     },
@@ -4983,7 +4802,7 @@
       "checksum": "1a902a5286236b90738a357b2537b341"
     },
     "packrat/packrat.lock": {
-      "checksum": "07bacbfdfaddc88a87d18b181852d667"
+      "checksum": "e27bebf71db54d6385e17e28aec8757e"
     },
     "R/app_config.R": {
       "checksum": "97f9726e9dc06c780f75227609fee0bf"
