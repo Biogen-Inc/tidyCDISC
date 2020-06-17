@@ -65,7 +65,6 @@ golem_add_external_resources <- function(){
     ),
     
     tags$script(HTML(htmljs)),
-    tags$link(rel = "//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"),
     tags$script(src = "https://code.jquery.com/ui/1.12.1/jquery-ui.js"),
     shinyjs::useShinyjs(),
     waiter::use_waiter(), # include dependencies
