@@ -14,6 +14,7 @@
 #' @importFrom haven zap_label
 #' @importFrom purrr map 
 #' @importFrom shinyjs show hide
+#' @importFrom shinyWidgets updatePrettyRadioButtons
 #' 
 #' @return character vector of loaded adams and a filtered dataframe to populate mod_indvExpPat module
 #' 
@@ -21,6 +22,9 @@
 mod_popExp_server <- function(input, output, session, datafile){
   ns <- session$ns
  
+  # print("in mod_popExp. session id is...")
+  # print(session$ns(""))
+  
   # function for updating the main plot radio buttons
   RadioUpdate <- function() {
     
@@ -75,7 +79,8 @@ mod_popExp_server <- function(input, output, session, datafile){
   
   # select the data sets
   # dataselected <- callModule(mod_selectData_server, id = NULL, datafile) # ac golem: why would id = NULL for dataSelected?
-  dataselected <- callModule(mod_selectData_server, "selectData_ui_1", datafile)
+  # dataselected <- callModule(mod_selectData_server, "selectData_ui_1", datafile)
+  dataselected <- callModule(mod_selectData_server, id = NULL, datafile)
   
   rv <- reactiveValues(all_data = NULL)
   
@@ -198,7 +203,6 @@ mod_popExp_server <- function(input, output, session, datafile){
     
     # copy SAS labels back into data
     for (i in seq_along(datakeep())) {
-      # print(names(datakeep()[i]))
       all_data <- sjlabelled::copy_labels(all_data, as.data.frame(datakeep()[[i]]))
     }
     
@@ -220,14 +224,12 @@ mod_popExp_server <- function(input, output, session, datafile){
         all_data <- all_data %>%
           mutate(AGEGR = fct_reorder(AGEGR, AGEGRN)) %>%
           sjlabelled::var_labels(AGEGR = "Age Group")
-        # var_labels(AGEGR = !!sym(tmplabl))
       } 
       if ("AVISIT" %in% colnames(all_data) && "AVISITN" %in% colnames(all_data)) {
         tmplabl <- sjlabelled::get_label(all_data$AVISIT)
         all_data <- all_data %>%
           mutate(AVISIT = fct_reorder(AVISIT, AVISITN)) %>%
           sjlabelled::var_labels(AVISIT = "Analysis Visit")
-        # var_labels(AVISIT = !!sym(tmplabl))
       } 
     }
     
@@ -242,13 +244,13 @@ mod_popExp_server <- function(input, output, session, datafile){
   #
   
   # set adv_filtering checkbox to TRUE if user selects the Filter tab panel
-  observeEvent(input$tabset, {
-    # print(paste("You are Viewing tab panel",input$tabset))
-    if (input$tabset == "Filter") {
-      # maybe I'm being too clever here  
-      # updateCheckboxInput(session = session, "adv_filtering", value = T)
-    }
-  }, ignoreInit = TRUE)
+  # observeEvent(input$tabset, {
+  #   # print(paste("You are Viewing tab panel",input$tabset))
+  #   if (input$tabset == "Filter") {
+  #     # maybe I'm being too clever here  
+  #     # updateCheckboxInput(session = session, "adv_filtering", value = T)
+  #   }
+  # }, ignoreInit = TRUE)
   
   # If adv_filtering is checked, switch to Filter tab panel; otherwise, Plot tab panel
   observeEvent(input$adv_filtering, {

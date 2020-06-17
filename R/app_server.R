@@ -36,7 +36,7 @@ app_server <- function( input, output, session ) {
   output$all_rows <- renderUI({ table_generator() })
   
   # Population Explorer
-  # callModule(mod_popExp_server, "popExp_ui_1", datafile = datafile)
+  callModule(mod_popExp_server, "popExp_ui_1", datafile = datafile)
   
   # Individual Explorer
   user_dat <- callModule(mod_indvExp_server, "indvExp_ui_1", datafile = datafile)
