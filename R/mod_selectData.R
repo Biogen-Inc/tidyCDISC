@@ -42,8 +42,12 @@ mod_selectData_ui <- function(id){
 mod_selectData_server <- function(input, output, session, datafile){
   ns <- session$ns
  
+  # print("in mod_selectData. session id is...")
+  # print(session$ns(""))
+
   observeEvent(datafile(), {
     
+    print("in observeEvent for datafile()")
     req(!is.null(datafile()))
     
     sasdata <- toupper(names(datafile()))

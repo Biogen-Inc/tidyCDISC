@@ -13,6 +13,7 @@
 #' @importFrom rlang sym
 #' @importFrom shinyjs show hide
 #' @importFrom plotly ggplotly layout
+#' @importFrom shinyWidgets updatePrettyRadioButtons
 #' 
 #' @noRd
 #' 
