@@ -2,7 +2,7 @@
 #' Add more tables here!
 #' @importFrom shiny HTML
 recipe <- HTML('
-               <select id="RECIPE">
+               <select id="RECIPE" class="selectize-input">
                <option  id="none">NONE</option>
                <option  id="demography">DEMOGRAPHY</option>
                </select>')
