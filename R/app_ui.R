@@ -23,11 +23,12 @@ app_ui <- function(request) {
                   title = "TableGenerator",
                   mod_tableGen_ui("tableGen_ui_1")
                ),
-               # tabPanel(
-               #   title = "Population Explorer",
-               #   mod_selectData_ui("selectData_ui_1"),
-               #   mod_popExp_ui("popExp_ui_1")
-               # ),
+               tabPanel(
+                 title = "Population Explorer",
+                 # mod_selectData_ui("selectData_ui_1"),
+                 mod_selectData_ui("popExp_ui_1"),
+                 mod_popExp_ui("popExp_ui_1")
+               ),
                tabPanel(
                  title = "Individual Explorer",
                  mod_indvExp_ui("indvExp_ui_1")
