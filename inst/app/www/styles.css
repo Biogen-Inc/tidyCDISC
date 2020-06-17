@@ -1,6 +1,6 @@
 /* Change title color. */
 h1 {
-  color: #2573BA;
+  color: #2573BA !important;
   font-family: "Raleway","Helvetica Neue",Helvetica,Arial,sans-serif  !important;
   font-weight: 700 !important;
   line-height: 1.1 !important;
@@ -9,12 +9,12 @@ h1 {
 .well {
   /* background: rgb(78,161,211);*/
   /* background: linear-gradient(90deg, rgba(78,161,211,1) 0%, rgba(60,167,189,1) 29%); */
-  border-color: #7CCCE5;
-  color: black;
-  background-color: white;
-  -webkit-box-shadow: 0 0 5px 1px lightgrey;
-  -moz-box-shadow: 0 0 5px 1px lightgrey;
-  box-shadow: 0 0 5px 1px lightgrey;
+  border-color: #7CCCE5 !important;
+  color: black !important;
+  background-color: white !important;
+  -webkit-box-shadow: 0 0 5px 1px lightgrey !important;
+  -moz-box-shadow: 0 0 5px 1px lightgrey !important;
+  box-shadow: 0 0 5px 1px lightgrey !important;
 }
 
 .btn-default {
