@@ -1,16 +1,14 @@
 
 #' My GG Color Hue
 #'
-#' Grab specific colors from the default color palette of length n
+#' Grab specific colors from the ggplot2 default color palette of length n
 #'
 #' @param n An output reactive dataframe from IDEAFilter
-#' 
-#'   DO NOT REMOVE.
-#'   
+#'
 #' @return character vector of hex colors of length n
-#' 
-#' @noRd
-#' 
+#'
+#' @family indvExp Functions
+#'   
 my_gg_color_hue <- function(n) {
   hues = seq(15, 375, length = n +1)
   hcl(h = hues, l = 65, c = 100)[1:n]

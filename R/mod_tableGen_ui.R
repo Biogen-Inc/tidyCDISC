@@ -1,4 +1,9 @@
 #' tableGen UI Function
+#' 
+#' The UI is comprised of a drop zone
+#' of both statistical and column blocks
+#' as well as a means to filter and group the data.
+#' The output is a gt table
 #'
 #' @description drag and drop table generator module
 #'
