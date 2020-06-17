@@ -29,7 +29,7 @@ usethis::use_package("grid")
 usethis::use_package("janitor")
 usethis::use_package("shinythemes")
 usethis::use_package("rmarkdown")
-usethis::use_package("shinytest")
+# usethis::use_package("shinytest")
 usethis::use_package("waiter")
 usethis::use_package("timevis")
 usethis::use_package("sjlabelled") 
@@ -41,6 +41,7 @@ usethis::use_package("rlang")
 usethis::use_package("stringi")
 usethis::use_dev_package("tippy") #remotes::install_github("JohnCoene/tippy")
 usethis::use_dev_package("IDEAFilter") # devtools::install_github("MayaGans/IDEAFilter")
+usethis::use_dev_package("rsconnect") 
 usethis::use_package("ggplot2")
 usethis::use_package("dplyr")
 usethis::use_package("stringr")
@@ -137,7 +138,6 @@ usethis::use_data_raw( name = "adae", open = FALSE ) # ran
 ## Tests ---- not run
 ## Add one line by test you want to create
 usethis::use_test( "app" )
-
 
 # Documentation
 
