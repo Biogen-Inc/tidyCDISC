@@ -90,11 +90,11 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # by converting them to a factor in the order of AVISITN
   # this allows our dropdown to be in chronological order
   avisit_words <- reactive({ 
-    req("ADSL" %in% names(datafile()))
+    req(any(purrr::map_lgl(datafile(), ~"AVISIT" %in% colnames(.x))))
     suppressWarnings(processed_data()$AVISIT)
   })
   avisit_fctr  <- reactive({ 
-    req("ADSL" %in% names(datafile()))
+    req(any(purrr::map_lgl(datafile(), ~"AVISIT" %in% colnames(.x))))
     processed_data()$AVISITN 
   })
   
