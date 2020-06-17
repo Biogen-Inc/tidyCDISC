@@ -47,7 +47,6 @@ mod_selectData_server <- function(input, output, session, datafile){
 
   observeEvent(datafile(), {
     
-    print("in observeEvent for datafile()")
     req(!is.null(datafile()))
     
     sasdata <- toupper(names(datafile()))
