@@ -12,7 +12,7 @@
 #' @importFrom purrr map
 #' @importFrom rlang sym
 #' @importFrom shinyjs show hide
-#' @importFrom plotly ggplotly plot_ly layout
+#' @importFrom plotly ggplotly plot_ly layout animation_opts animation_slider
 #' 
 #' @noRd
 #' 
@@ -34,7 +34,7 @@ mod_popExpSpag_server <- function(input, output, session, df){
   dat <- sort(names(df()[ , which(sapply(df(),is.date  ))])) # all date
   
   # restrict seltimevar to AVISIT, AVISITN, VSDY
-  seltime <- select(df(), ends_with("DY"), starts_with("AVIS"))
+  seltime <- select(df(), ends_with("DY"), contains("VIS"))
   
   updateSelectInput(session = session, inputId = "seltimevar",  choices = c("",sort(names(seltime))), selected = "")
   
@@ -43,7 +43,7 @@ mod_popExpSpag_server <- function(input, output, session, df){
   updateSelectInput(session = session, inputId = "responsevar", 
                     choices = c("",sort(names(select(df(),ends_with("BL"),any_of(c("AVAL","BASE","CHG")))))), selected = "")
   
-  updateSelectInput(session = session, inputId = "animateby", choices = c("",sort(c(num,dat))))
+  updateSelectInput(session = session, inputId = "animateby",  choices = c("",sort(names(seltime))), selected = "")
   
   # set checkbox to FALSE
   updateCheckboxInput(session = session, inputId = "animate", value = FALSE)
