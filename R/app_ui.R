@@ -5,6 +5,9 @@
 #' @import shiny
 #' @noRd
 app_ui <- function(request) {
+  
+  golem::get_golem_options("showerrors")
+  
   tagList(
     # Leave this function for adding external resources
     golem_add_external_resources(),
