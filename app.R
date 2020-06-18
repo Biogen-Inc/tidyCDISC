@@ -7,4 +7,4 @@ pkgload::load_all(helpers = FALSE, attach_testthat = FALSE) # export_all = FALSE
 options( "golem.app.prod" = TRUE)
 options(shiny.sanitize.errors = FALSE)
 # rsconnect::writeManifest() # ac added
-IDEA::run_app(showerrors = "options(shiny.sanitize.errors = FALSE)") # add parameters here (if any)
+IDEA::run_app() # add parameters here (if any)
