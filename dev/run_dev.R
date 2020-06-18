@@ -8,5 +8,5 @@ golem::detach_all_attached()
 golem::document_and_reload()
 
 # Run the application 
-run_app(showerrors = "options(shiny.sanitize.errors = FALSE)")
+run_app()
 
