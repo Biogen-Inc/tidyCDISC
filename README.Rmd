@@ -14,3 +14,31 @@ knitr::opts_chunk$set(
 ```
 
 # IDEA
+
+The purpose of IDEA is a shiny app to easily create custom tables and figures from ADaM datasets.
+
+
+# Installation
+
+```{r, eval=FALSE}
+remotes::install_github("IDEA")
+```
+
+# Use Case
+
+Using the dev/run_dev.R file, you can run the application locally:
+
+```{r, eval=FALSE}
+# Set options here
+options(golem.app.prod = FALSE) # TRUE = production mode, FALSE = development mode
+
+# Detach all loaded packages and clean your environment
+golem::detach_all_attached()
+
+# Document and reload your package, which runs these three functions...
+golem::document_and_reload()
+
+# Run the application 
+run_app()
+```
+
