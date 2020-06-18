@@ -45,8 +45,8 @@ IDEA_anova.ADSL <- function(column, week, group = NULL, data) {
   } else {
     group <- rlang::sym(group)
     column <- rlang::sym(column)
-    all_dat <- data %>% 
-      dplyr::distinct(!!column, !!group, USUBJID)
+    
+    all_dat <- data %>% dplyr::distinct(!!column, !!group, USUBJID)
     
     ttest <- broom::tidy(aov(all_dat[[paste(column)]] ~ all_dat[[paste(group)]], data=all_dat))
     
@@ -64,6 +64,7 @@ IDEA_anova.ADSL <- function(column, week, group = NULL, data) {
     
     anova_df <- dplyr::mutate_all(anova_df, as.character) %>%
       dplyr::mutate_all(dplyr::coalesce, "")
+
     anova_df
   }
   
