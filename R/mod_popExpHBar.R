@@ -14,6 +14,7 @@
 #' @importFrom shinyjs show hide
 #' @importFrom plotly ggplotly layout
 #' @importFrom shinyWidgets updatePrettyRadioButtons
+#' @importFrom forcats fct_rev fct_infreq fct_explicit_na
 #' 
 #' @noRd
 #' 
@@ -113,19 +114,15 @@ mod_popExpHBar_server <- function(input, output, session, df){
       switch(input$hbarOptions,
              "1" = {
                
-               # order by x-var          
-               # dfsub <- dfsub %>%
-               #   mutate(!!sym(v$selxvar) := fct_rev(factor(!!sym(v$selxvar))))
-               
                # order by desc frequency count
                dfsel <- dfsel %>%
-                 mutate(!!sym(v$selxvar) := !!sym(v$selxvar) %>% fct_infreq() %>% fct_rev() ) 
+                 mutate(!!sym(v$selxvar) := !!sym(v$selxvar) %>% forcats::fct_infreq() %>% forcats::fct_rev() ) 
                
                ggtitle <- paste("Plot of",labx,"versus Percent of Subjects, grouped by",labz,",for",PARAM) 
                
                p <- ggplot(data = dfsel) +
                  geom_bar(mapping = aes(x = !!sym(v$selxvar), y = ..prop.., 
-                                        group = !!sym(input$groupbyvar), fill = fct_rev(!!sym(input$groupbyvar)), 
+                                        group = !!sym(input$groupbyvar), fill = forcats::fct_rev(!!sym(input$groupbyvar)), 
                                         text = paste0(v$selxvar,": ",get(v$selxvar),
                                                       "<br>",v$selyvar,": ",get(v$selyvar))), 
                           stat = "count", width=0.7, alpha = 0.5, position = "dodge",  na.rm = TRUE) +
@@ -150,13 +147,13 @@ mod_popExpHBar_server <- function(input, output, session, df){
                
                # order by desc frequency count
                dfsub <- dfsub %>%
-                 mutate(!!sym(v$selxvar) := !!sym(v$selxvar) %>% fct_infreq() %>% fct_rev() )
+                 mutate(!!sym(v$selxvar) := !!sym(v$selxvar) %>% forcats::fct_infreq() %>% forcats::fct_rev() )
                
                ggtitle <- paste("Plot of",labx,"versus mean",laby,"grouped by",labz,"for",PARAM) 
                
                p <- ggplot(data = dfsub) +
                  geom_bar(mapping = aes(x = !!sym(v$selxvar), y = !!sym(v$selyvar), 
-                                        group = !!sym(input$groupbyvar), fill = fct_rev(!!sym(input$groupbyvar)), 
+                                        group = !!sym(input$groupbyvar), fill = forcats::fct_rev(!!sym(input$groupbyvar)), 
                                         text = paste0(v$selxvar,": ",get(v$selxvar),
                                                       "<br>",v$selyvar,": ",get(v$selyvar))), 
                           stat = "identity", width=0.7, alpha = 0.5, position = "dodge",  na.rm = TRUE) +
@@ -181,7 +178,7 @@ mod_popExpHBar_server <- function(input, output, session, df){
                
                # order by desc frequency count
                dfsub <- dfsub %>%
-                 mutate(!!sym(v$selxvar) := !!sym(v$selxvar) %>% fct_infreq() %>% fct_rev() )
+                 mutate(!!sym(v$selxvar) := !!sym(v$selxvar) %>% forcats::fct_infreq() %>% forcats::fct_rev() )
                
                ggtitle <- paste("Plot of",labx,"versus Percent of Subjects for",PARAM) 
                
@@ -208,7 +205,7 @@ mod_popExpHBar_server <- function(input, output, session, df){
                
                # order by desc frequency count
                dfsub <- dfsub %>%
-                 mutate(!!sym(v$selxvar) := !!sym(v$selxvar) %>% fct_infreq() %>% fct_rev() )
+                 mutate(!!sym(v$selxvar) := !!sym(v$selxvar) %>% forcats::fct_infreq() %>% forcats::fct_rev() )
                
                ggtitle <- paste("Plot of",labx,"versus mean",laby,"for",PARAM) 
                
@@ -270,7 +267,7 @@ mod_popExpHBar_server <- function(input, output, session, df){
     
     # give missing x-values an explicit factor level
     dfsub <- dfsub %>%
-      mutate(!!sym(input$selxvar) := fct_explicit_na(!!sym(input$selxvar), na_level = "(Missing)"))
+      mutate(!!sym(input$selxvar) := forcats::fct_explicit_na(!!sym(input$selxvar), na_level = "(Missing)"))
     
     if(input$groupbox == TRUE) {
       
@@ -302,7 +299,7 @@ mod_popExpHBar_server <- function(input, output, session, df){
                
                # order by desc frequency count
                dfsel <- dfsel %>%
-                 mutate(!!sym(v$selxvar) := !!sym(v$selxvar) %>% fct_infreq() %>% fct_rev() ) 
+                 mutate(!!sym(v$selxvar) := !!sym(v$selxvar) %>% forcats::fct_infreq() %>% forcats::fct_rev() ) 
                
                
              },
@@ -322,7 +319,7 @@ mod_popExpHBar_server <- function(input, output, session, df){
                
                # order by desc frequency count
                dfsel <- dfsel %>%
-                 mutate(!!sym(v$selxvar) := !!sym(v$selxvar) %>% fct_infreq() %>% fct_rev() ) 
+                 mutate(!!sym(v$selxvar) := !!sym(v$selxvar) %>% forcats::fct_infreq() %>% forcats::fct_rev() ) 
                
              },
              stop("invalid hbarOptions button: ",input$hbarOptions)
@@ -352,7 +349,7 @@ mod_popExpHBar_server <- function(input, output, session, df){
                
                # order by desc frequency count
                dfsel <- dfsel %>%
-                 mutate(!!sym(v$selxvar) := !!sym(v$selxvar) %>% fct_infreq() %>% fct_rev() ) 
+                 mutate(!!sym(v$selxvar) := !!sym(v$selxvar) %>% forcats::fct_infreq() %>% forcats::fct_rev() ) 
              },
              "2" = {
                
@@ -369,7 +366,7 @@ mod_popExpHBar_server <- function(input, output, session, df){
                
                # order by desc frequency count
                dfsel <- dfsel %>%
-                 mutate(!!sym(v$selxvar) := !!sym(v$selxvar) %>% fct_infreq() %>% fct_rev() ) 
+                 mutate(!!sym(v$selxvar) := !!sym(v$selxvar) %>% forcats::fct_infreq() %>% forcats::fct_rev() ) 
                
              },
              stop("invalid hbarOptions button: ",input$hbarOptions)
