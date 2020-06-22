@@ -14,6 +14,7 @@
 #' @importFrom shinyjs show hide
 #' @importFrom plotly ggplotly layout
 #' @importFrom shinyWidgets updatePrettyRadioButtons
+#' @importFrom forcats fct_rev
 #' 
 #' @noRd
 #' 
@@ -28,9 +29,6 @@ mod_popExpMeans_server <- function(input, output, session, df){
   
   dfsub <- NULL
   makeReactiveBinding("dfsub")
-  
-  # remove any graphics instructions from the lists.  This is unique to PopuExpl1Scat
-  # dfsel <- suppressWarnings(select(df(),-starts_with("geom_"),-starts_with("scale_"),-one_of("theme","ggtitle","xlabel","ylabel")))
   
   # set checkbox to TRUE
   updateCheckboxInput(session = session, inputId = "groupbox", value = TRUE)
@@ -81,20 +79,9 @@ mod_popExpMeans_server <- function(input, output, session, df){
       dfsub$ULN <<- NA
     }
     
-    # updateSelectInput(session = session, inputId = "groupbyvar", 
-    #                   choices = c("",sort(names(select(dfsub,any_of(c("TRT01A","TRT01P","TRT02A","TRT02P")))))), selected = "")
-    
   }, ignoreInit = TRUE) # observeEvent(input$selPrmCode
   
-  # observeEvent(input$input$seltimevar, {
-  #   input$seltimevar <- input$input$seltimevar
-  # })
-  # observeEvent(input$input$responsevar, {
-  #   input$responsevar <- input$input$responsevar
-  # })
-  
-  
-  
+
   output$PlotlyOut <- renderPlotly({
     
     req(input$selPrmCode != "") 
@@ -147,7 +134,7 @@ mod_popExpMeans_server <- function(input, output, session, df){
       input_responsevar  <- deparse(substitute(SummStat))
       
       p <- ggplot(dferr,
-                  aes(x = !!sym(input$seltimevar), y = !!sym(input_responsevar), group = !!sym(input$groupbyvar), color = fct_rev(!!sym(input$groupbyvar)))) 
+                  aes(x = !!sym(input$seltimevar), y = !!sym(input_responsevar), group = !!sym(input$groupbyvar), color = forcats::fct_rev(!!sym(input$groupbyvar)))) 
       
       p <- p + 
         suppressWarnings(geom_point(position = 'identity', na.rm = TRUE,
