@@ -46,7 +46,7 @@ common_rownames <- function(data, group) {
   if (is.null(group)) {
     vars <- c("Variable", "TOTAL")
   } else {
-    vars <- c("Variable", unique(data[[group]]))
+    vars <- c("Variable", sort(unique(data[[group]])))
     vars[vars == ""] <- "Missing"
   }
   return(vars)
