@@ -120,6 +120,7 @@ golem::add_js_file( "analytics" )
 golem::add_js_file( "recipe" )
 golem::add_js_file( "sync_divs" )
 golem::add_js_file( "detect_browser" )
+golem::add_js_file( "test2" )
 
 golem::add_css_file( "yeti" )
 golem::add_css_file( "styles" )

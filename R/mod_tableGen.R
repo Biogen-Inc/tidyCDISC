@@ -161,9 +161,12 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
                  function(x,y,z) 
                    IDEA_methods(x,y,z, 
                                 group = column(), 
-                                data = all_data())) %>% 
-      map(setNames, common_rownames(all_data(), column())) %>%
-      setNames(paste(blocks_and_functions()$gt_group)) %>%
+                                data = all_data()))
+    print(test)
+    
+    test %>%
+    map(setNames, common_rownames(all_data(), column())) %>%
+    setNames(paste(blocks_and_functions()$gt_group)) %>%
       bind_rows(.id = "ID") %>%
       mutate(
         ID = stringi::stri_replace_all_regex(
@@ -198,8 +201,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # create gt table
   gt_table <- reactive({
     for_gt() %>%
-      gt(rowname_col = "Variable", 
-         groupname_col = "ID") %>%
+      gt(rowname_col = "Variable", groupname_col = "ID") %>%
       tab_options(table.width = px(700)) %>%
       cols_label(.list = imap(for_gt()[-c(1:2)], ~col_for_list(.y, .x))) %>%
       tab_header(
