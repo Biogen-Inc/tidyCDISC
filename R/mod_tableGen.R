@@ -52,25 +52,32 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   ADSL <- reactive({ datafile()$ADSL })
   BDS <- reactive({ datafile()[sapply(datafile(), function(x) "PARAMCD" %in% colnames(x))] })
   
-  processed_data <- reactive({ 
+  processed_data <- reactive({
     
-    # Seperate ADSL and the PArAMCD dataframes
+    select_dfs <- datafile()
+    # Separate out non BDS and BDS data frames. Note: join may throw some
+    # warnings if labels are different between two datasets, which is fine!
+    # Ignore
+    non_bds <- select_dfs[sapply(select_dfs, function(x) !("PARAMCD" %in% colnames(x)) )] 
+    BDS <- select_dfs[sapply(select_dfs, function(x) "PARAMCD" %in% colnames(x) )]
     
-    PARAMCD <- map(BDS(), ~ if(!"CHG" %in% names(.)) update_list(., CHG = NA) else .)
+    # Make CHG var doesn't exist, create the column and populate with NA
+    PARAMCD_dat <- purrr::map(BDS, ~ if(!"CHG" %in% names(.)) {purrr::update_list(., CHG = NA)} else {.})
     
-    if (!is_empty(PARAMCD)) {
-      # Bind all the PARAMCD files 
-      all_PARAMCD <- bind_rows(PARAMCD, .id = "data_from")  %>% 
-        arrange(USUBJID, AVISITN, PARAMCD) %>% 
-        select(USUBJID, AVISITN, AVISIT, PARAMCD, AVAL, CHG, data_from)
-      # distinct(USUBJID, AVISITN, AVISIT, PARAMCD, .keep_all = TRUE) 
+    # Combine selected data into a 1 usable data frame
+    if (!rlang::is_empty(PARAMCD_dat)) {
+      all_PARAMCD <- bind_rows(PARAMCD_dat, .id = "data_from") %>% distinct(.keep_all = T)
       
-      # Join ADSL and all_PARAMCD
-      combined_data <- full_join(ADSL(), all_PARAMCD, by = "USUBJID")
+      if (!rlang::is_empty(non_bds)){
+        combined_data <- inner_join(non_bds %>% purrr::reduce(inner_join), all_PARAMCD)
+      } else {
+        combined_data <-all_PARAMCD
+      }
     } else {
-      combined_data <- ADSL() %>%
-        mutate(data_from = "ADSL", PARAMCD = NA, AVAL = NA, CHG = NA)
+      combined_data <- non_bds %>% reduce(inner_join)
     }
+    
+    return(combined_data)
   })
   
   # get the list of PARAMCDs
@@ -155,15 +162,15 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       need((nrow(blocks_and_functions()) > 0),'Add variable and statistics blocks to create table.')
     )
     
-    test <- pmap(list(blocks_and_functions()$agg, 
+    pmap(list(blocks_and_functions()$agg, 
                       blocks_and_functions()$S3, 
                       blocks_and_functions()$dropdown), 
                  function(x,y,z) 
                    IDEA_methods(x,y,z, 
                                 group = column(), 
-                                data = all_data())) %>% 
-      map(setNames, common_rownames(all_data(), column())) %>%
-      setNames(paste(blocks_and_functions()$gt_group)) %>%
+                                data = all_data())) %>%
+    map(setNames, common_rownames(all_data(), column())) %>%
+    setNames(paste(blocks_and_functions()$gt_group)) %>%
       bind_rows(.id = "ID") %>%
       mutate(
         ID = stringi::stri_replace_all_regex(
@@ -198,8 +205,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # create gt table
   gt_table <- reactive({
     for_gt() %>%
-      gt(rowname_col = "Variable", 
-         groupname_col = "ID") %>%
+      gt(rowname_col = "Variable", groupname_col = "ID") %>%
       tab_options(table.width = px(700)) %>%
       cols_label(.list = imap(for_gt()[-c(1:2)], ~col_for_list(.y, .x))) %>%
       tab_header(
