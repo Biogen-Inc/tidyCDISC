@@ -49,7 +49,7 @@ knitr::include_graphics("figures/tableGen/04-diabp_mean.gif")
 Lastly, we can use the `Group By` dropdown to calculate our statistics across groups. When we select `ARM`, rather than have a single column in the output table we now see the `DIABP` summary statics for each treatment group. 
 
 ```{r, out.width="90%", out.height="90%", echo=FALSE}
-knitr::include_graphics("figures/05-grouping.png")
+knitr::include_graphics("figures/tableGen/05-grouping.png")
 ```
 
 And that's it! 
