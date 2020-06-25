@@ -1,3 +1,9 @@
+#' Table Generator Cicerone R6 Object 
+#' 
+#' This object is used within the table generator module
+#' to add help text to the various fields using 
+#' a help buttom
+#' 
 #' @importFrom cicerone Cicerone
 
 tg_guide <- cicerone::Cicerone$
