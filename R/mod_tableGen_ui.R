@@ -26,14 +26,17 @@ mod_tableGen_ui <- function(id){
         column(width = 6,
                # Wrangle data.
                wellPanel(
+                 actionButton(ns("help") 
+                              , label = NULL
+                              , icon = icon("question-circle")
+                              , class = "btn-start"
+                              , style = "display: inline-block; float:right; margin-bottom:15px;"
+                 ),
                  fluidRow(column(width = 12,
-                                 actionButton(ns("help") 
-                                              , label = NULL
-                                              , icon = icon("question-circle")
-                                              , class = "btn-start"
-                                              , style = "display: inline-block; float:right; margin-bottom:15px;"
+                                 div(
+                                   id = "COLUMN-wrapper",
+                                   uiOutput(ns("col_ADSL"))
                                  ),
-                                 uiOutput(ns("col_ADSL")),
                                  shinyUI(bootstrapPage(
                                    HTML('<button data-toggle="collapse" data-target="#demo" 
                                         class="btn btn-input" id="filter-accordion"

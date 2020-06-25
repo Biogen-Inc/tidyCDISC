@@ -9,9 +9,9 @@
 tg_guide <- cicerone::Cicerone$
   new()$ 
   step(
-    el = "col_ADSL",
-    title = "Text Input",
-    description = "This is where you enter the text you want to print."
+    el = "COLUMN-wrapper",
+    title = "Grouping Data",
+    description = "Subdivide the table's summary statistics into selected groups"
   )$
   step(
     "filter-accordion",
