@@ -26,11 +26,21 @@ mod_tableGen_ui <- function(id){
         column(width = 6,
                # Wrangle data.
                wellPanel(
+                 actionButton(ns("help") 
+                              , label = NULL
+                              , icon = icon("question-circle")
+                              , class = "btn-start"
+                              , style = "display: inline-block; float:right; margin-bottom:15px;"
+                 ),
                  fluidRow(column(width = 12,
-                                 uiOutput(ns("col_ADSL")),
-                                 
+                                 div(
+                                   id = "COLUMN-wrapper",
+                                   uiOutput(ns("col_ADSL"))
+                                 ),
                                  shinyUI(bootstrapPage(
-                                   HTML('<button data-toggle="collapse" data-target="#demo" style="width:100%;padding:3px;background-color:#008cba !important;color:white;size:12px;">Filter Data</button>'),
+                                   HTML('<button data-toggle="collapse" data-target="#demo" 
+                                        class="btn btn-input" id="filter-accordion"
+                                        style="width:100%;padding:3px;background-color:#008cba !important;color:white;size:12px;margin-bottom:10px;">Filter Data</button>'),
                                    tags$div(id = 'demo',  class="collapse",
                                             IDEAFilter::shiny_data_filter_ui(ns("data_filter"))
                                    ))))),
@@ -40,12 +50,12 @@ mod_tableGen_ui <- function(id){
                             "Commonly Used Tables", 
                             recipe,
                             br(),
-                            div(class = "col-sm-3", style = "height:300px;overflow-y:scroll;overflow-x:hidden;",
+                            div(class = "col-sm-3", id="all-column-blocks", style = "height:300px;overflow-y:scroll;overflow-x:hidden;",
                                 uiOutput("all_rows") 
                             ),
                             
                             
-                            div(class = "col-sm-8", style = "height:300px;overflow-y:scroll;",
+                            div(class = "col-sm-8", id='all-output-blocks', style = "height:300px;overflow-y:scroll;",
                                 dropArea(col = 5, styles = "padding-right:0.1px", "Variables", "d_blocks", "droppable_blocks", "ui-sortable-helper sortTxtbox droppable_blocks droppable_blocks"),
                                 dropArea(col = 7, styles = "padding-left:0.1px", "Stats", "d_agg", "droppable_agg", "ui-sortable-helper sortTxtbox droppable_agg")
                             ),
