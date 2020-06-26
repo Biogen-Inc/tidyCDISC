@@ -20,7 +20,7 @@ app_ui <- function(request) {
                ),
                tabPanel(
                  title = "TableGenerator",
-                 mod_tableGen_ui("tableGen_ui_1")
+                 div(mod_tableGen_ui("tableGen_ui_1"), id = "tableGen")
                ),
                tabPanel(
                  title = "Population Explorer",
