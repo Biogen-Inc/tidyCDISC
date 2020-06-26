@@ -47,6 +47,7 @@ app_ui <- function(request) {
 #' @importFrom shinyjs useShinyjs
 #' @importFrom shinyjs extendShinyjs
 #' @importFrom shinyjs inlineCSS
+#' @importFrom cicerone use_cicerone
 #' @noRd
 golem_add_external_resources <- function(){
   
@@ -69,10 +70,9 @@ golem_add_external_resources <- function(){
     tags$script(src = "https://code.jquery.com/ui/1.12.1/jquery-ui.js"),
     shinyjs::useShinyjs(),
     waiter::use_waiter(),
-    waiter::use_cicerone(),
     shinyjs::inlineCSS(css),
-    shinyjs::extendShinyjs(text = jscode)
-    
+    shinyjs::extendShinyjs(text = jscode),
+    cicerone::use_cicerone()
   )
   
   

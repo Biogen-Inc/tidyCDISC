@@ -27,7 +27,14 @@ mod_indvExp_ui <- function(id){
     fluidRow(
       column(3,
          wellPanel(
-           h4(strong("Filter by Patient Number")),
+           div(style="display: inline-block; ",h4(strong("Filter by Patient Number"))),
+           div(style="display: inline-block; float:right;",
+               actionButton(ns("help_sel") 
+                            , label = NULL
+                            , icon = icon("question-circle")
+                            , class = "btn-start"
+                            , style = "display: inline-block; float:right; margin-bottom:15px;"
+               )),
            br(),
            checkboxInput(ns("adv_filtering"), "Advanced Pre-Filtering?", value = F),
            conditionalPanel(condition = "input.adv_filtering", ns = ns,
