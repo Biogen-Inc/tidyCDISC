@@ -14,7 +14,6 @@ app_server <- function( input, output, session ) {
     }    
   })
   
-  
   # disable tab2 on page load
   shinyjs::js$disableTab()
 
