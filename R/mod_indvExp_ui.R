@@ -36,17 +36,24 @@ mod_indvExp_ui <- function(id){
                             , style = "display: inline-block; float:right; margin-bottom:15px;"
                )),
            br(),
-           checkboxInput(ns("adv_filtering"), "Advanced Pre-Filtering?", value = F),
+           div(id = "cic_adv_filtering",checkboxInput(ns("adv_filtering"), "Advanced Pre-Filtering?", value = F)),
            conditionalPanel(condition = "input.adv_filtering", ns = ns,
-                            selectInput(ns("filter_df"),"Filter on Variable(s) in a loaded ADaM", multiple = TRUE,
-                                        choices = NULL, selected = NULL),
+                            div(id = "cic_filter_df",
+                              selectInput(ns("filter_df"),"Filter on Variable(s) in a loaded ADaM",
+                                          multiple = TRUE, choices = NULL, selected = NULL)
+                            ),
                             conditionalPanel(condition = "!is.null(input.filter_df)", ns = ns,
-                                             IDEAFilter::shiny_data_filter_ui(ns("data_filter")))
+                               div(id = "cic_data_filter",
+                                  IDEAFilter::shiny_data_filter_ui(ns("data_filter"))
+                               )
+                            )
            ),
-           selectInput(
-             ns("selPatNo"),
-             label = "Please Select a USUBJID",
-             choices = ""
+           div(id = "cic_selPatNo",
+             selectInput(
+               ns("selPatNo"),
+               label = "Please Select a USUBJID",
+               choices = ""
+             )
            )
          )
        )
@@ -69,7 +76,7 @@ mod_indvExp_ui <- function(id){
             #
             ######################
             
-            tabPanel(div(style = "font-size: 14px;","Events"),
+            tabPanel(div(id = "cic_EventsTab", style = "font-size: 14px;","Events"),
                br(),br(),br(),
                
                
@@ -78,35 +85,47 @@ mod_indvExp_ui <- function(id){
                  column(10, wellPanel(
                    fluidRow(
                      column(10, 
-                            h4(strong(textOutput(ns("events_header")))),
+                            div(style="display: inline-block; ",h4(strong(textOutput(ns("events_header"))))),
+                            div(style="display: inline-block; float:right;",
+                                actionButton(ns("help_events") 
+                                             , label = NULL
+                                             , icon = icon("question-circle")
+                                             , class = "btn-start"
+                                             , style = "display: inline-block; float:right; margin-bottom:15px;"
+                            )),
                             h6(textOutput(ns("subjid_subtitle2"))),
-                            checkboxGroupInput(
-                              inputId = ns("checkGroup"),
-                              label = "For additional patient events, load an AE, LB, CM, or MH",
-                              choices = c(" "),
-                              selected = NULL,
-                              inline = TRUE
-                            )), 
+                            div(id = "cic_checkGroup", 
+                              checkboxGroupInput(
+                                inputId = ns("checkGroup"),
+                                label = "For additional patient events, load an AE, LB, CM, or MH",
+                                choices = c(" "),
+                                selected = NULL,
+                                inline = TRUE
+                              ))
+                            ), 
                      column(2, 
-                            br(), br(),
+                          br(), br(),
+                          div(id = "cic_events_apply_filter", 
                             materialSwitch(ns("events_apply_filter")
                                            , label = strong(em(h5("Apply Filters")))
                                            , status = "primary"
                                            , value = T)
+                          )
                      )
                    ) # end inner fluidRow
                  )) # end column 10 & wellPanel
                  ,column(2,HTML("")) # blank column
                ) # end fluidRow
                ,
-               fluidRow(column(10,timevisOutput(ns("eventsPlot")))),
-               textOutput(ns("events_tv_caption1")),
-               textOutput(ns("events_tv_caption2")),
-               # div(style = "color: red;", TextOutput(ns("applied_filters"))),
-               div(style = "color: #0275d8; font-size: 12px;", htmlOutput(ns("applied_filters"))),
+               div(id = "cic_eventsPlot", 
+                 fluidRow(column(10,timevisOutput(ns("eventsPlot")))),
+                 textOutput(ns("events_tv_caption1")),
+                 textOutput(ns("events_tv_caption2")),
+                 div(style = "color: #0275d8; font-size: 12px;", htmlOutput(ns("applied_filters")))
+               ),
                br(),
-               fluidRow(
-                 column(8, DT::dataTableOutput(ns("eventsTable")))
+               div(id = "cic_eventsTable", 
+                   fluidRow(column(8, DT::dataTableOutput(ns("eventsTable"))))
                ),
                br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),br()
             ),
