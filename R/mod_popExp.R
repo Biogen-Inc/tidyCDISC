@@ -244,21 +244,19 @@ mod_popExp_server <- function(input, output, session, datafile){
   #
   
   # set adv_filtering checkbox to TRUE if user selects the Filter tab panel
-  # observeEvent(input$tabset, {
-  #   # print(paste("You are Viewing tab panel",input$tabset))
-  #   if (input$tabset == "Filter") {
-  #     # maybe I'm being too clever here  
-  #     # updateCheckboxInput(session = session, "adv_filtering", value = T)
-  #   }
-  # }, ignoreInit = TRUE)
+  observeEvent(input$tabset, {
+    # print(paste("You are Viewing tab panel",input$tabset))
+    if (input$tabset == "Filter") {
+     updateCheckboxInput(session = session, "adv_filtering", value = T)
+    }
+  }, ignoreInit = TRUE)
   
   # If adv_filtering is checked, switch to Filter tab panel; otherwise, Plot tab panel
   observeEvent(input$adv_filtering, {
+    print(paste("adv_filtering is:",input$adv_filtering))
     if (input$adv_filtering == T) {
       updateTabsetPanel(session = session, "tabset", selected = "Filter")
-      # updateSelectInput("filter_df", session = session, choices = as.list(unique(rv$all_data()$data_from)), selected = "ADSL") 
     } else {
-      
       updateTabsetPanel(session = session, "tabset", selected = "Plot")
     }
   })
@@ -267,7 +265,7 @@ mod_popExp_server <- function(input, output, session, datafile){
   outputOptions(output, "hide_panel", suspendWhenHidden = FALSE)
   
   feed_filter <- reactive({ rv$all_data() })
-  
+
   # IDEAFilter
   filtered_data <- callModule(
     shiny_data_filter,
@@ -299,19 +297,17 @@ mod_popExp_server <- function(input, output, session, datafile){
     
     req(!is.null(rv$all_data))
     
+    print(paste("In observe event for input$radio.  input$adv_filtering is",input$adv_filtering))
+    
     dataset <- eventReactive(input$adv_filtering, {
-      if (!is.null(filtered_data()) && input$adv_filtering == T ) {
+      if (!is.null(filtered_data()) && input$adv_filtering == TRUE ) {
         filtered_data() 
       } else {
-        rv$all_data() 
+        feed_filter()
+        # rv$all_data() 
       }
     })
-    # if (!is.null(filtered_data()) && input$adv_filtering == T ) {
-    #   dataset <- reactive({ filtered_data() })
-    # } else {
-    #   dataset <- reactive({ rv$all_data() })
-    # }
-    
+
     # Clear plotoutput
     output$PlotlyOut <- renderPlotly({
       NULL

@@ -27,8 +27,8 @@ mod_popExpHBar_server <- function(input, output, session, df){
   # show all the widgets using an anonymous function
   map(widgets, function(x) shinyjs::show(x))
   
-  dfsub <- NULL  # assign dfsub in function environment
-  makeReactiveBinding("dfsub")
+  # dfsub <- NULL  # assign dfsub in function environment
+  # makeReactiveBinding("dfsub")
   
   chr <- sort(names(df()[ , which(sapply(df(),is.character))])) # all chr
   fac <- sort(names(df()[ , which(sapply(df(),is.factor   ))])) # all factors
@@ -50,66 +50,67 @@ mod_popExpHBar_server <- function(input, output, session, df){
   # create reactive values for selxvar and selyvar
   v <- reactiveValues(selxvar = character(0), selyvar = character(0))
   
-  observeEvent(input$selPrmCode, {
-    
+
+  dfsub <- reactive({ 
     req(input$selPrmCode != "") 
-    
+    print("in reactive for dfsub")
+    table(df()$AGEGR)
+    filter(df(), PARAMCD == input$selPrmCode) 
+  })
+  
+  observeEvent(input$selPrmCode, {
+
+    req(input$selPrmCode != "")
+
+    print("in observeEvent for selPrmCode")
     # invalidate selxvar and selyvar
     v$selxvar <- character(0)
     v$selyvar <- character(0)
-    
-    # subset data based on Parameter Code selection
-    dfsub <<- filter(df(),PARAMCD == input$selPrmCode) # superassignment operator
-    
-    # update select inputs
-    chr <- sort(names(df()[ , which(sapply(dfsub,is.character))])) # all chr
-    fac <- sort(names(df()[ , which(sapply(dfsub,is.factor   ))])) # all factors
-    num <- sort(names(df()[ , which(sapply(dfsub,is.numeric  ))])) # all num
-    updateSelectInput(session = session, inputId = "selxvar", choices = c("",chr),  selected=character(0))
-    updateSelectInput(session = session, inputId = "selyvar", choices = c("",num),  selected=character(0))
-    updateSelectInput(session = session, inputId = "groupbyvar", choices = c("",sort(c(chr,fac))), selected=character(0))
+
+    req(!is.null(dfsub()))
+    print("created reactive dfsub.  First five columns:")
+    print(str(dfsub()[,1:5]))
     
   }, ignoreInit = TRUE) # observeEvent(input$selPrmCode
-  
+
   observeEvent(input$selxvar, {
     v$selxvar <- input$selxvar
   })
   observeEvent(input$selyvar, {
     v$selyvar <- input$selyvar
   })
-  
+
   output$PlotlyOut <- renderPlotly({
     
+    print("At top of renderPLotly.")
+    
     req(input$selPrmCode != "") 
-    req(!is.null(dfsub))
+    req(!is.null(dfsub()))
     
     req(!is_empty(v$selxvar) && v$selxvar != "")
     req(!is_empty(v$selyvar) && v$selyvar != "")
     
+    # select variables
+    dfsel <- dfsub() %>%
+      select(PARAM, !!sym(v$selxvar), !!sym(v$selyvar), !!sym(input$groupbyvar))
+    # remove missing x-values from plot
+    dfsel <- filter(dfsel, !is.na(!!sym(input$selxvar))) 
+    
     xvar <- sym(v$selxvar)
     yvar <- sym(v$selyvar)
     
-    labx <- sjlabelled::get_label(dfsub[[v$selxvar]], def.value = unique(v$selxvar))
-    laby <- sjlabelled::get_label(dfsub[[v$selyvar]], def.value = unique(v$selyvar))
-    
-    # remove missing x-values from plot
-    dfsub <- filter(dfsub, !is.na(!!sym(input$selxvar))) 
+    labx <- sjlabelled::get_label(dfsel[[v$selxvar]], def.value = unique(v$selxvar))
+    laby <- sjlabelled::get_label(dfsel[[v$selyvar]], def.value = unique(v$selyvar))
     
     if(input$groupbox == TRUE) {
-      
+
       req(!is_empty(input$groupbyvar) && input$groupbyvar != "")
       
-      # remove missing groups from plot
-      dfsub <- filter(dfsub, !is.na(!!sym(input$groupbyvar))) 
-      
       # set def.value to use name if the variable has no label attribute
-      labz <- sjlabelled::get_label(dfsub[[input$groupbyvar]], def.value = unique(input$groupbyvar))
+      labz <- sjlabelled::get_label(dfsub()[[input$groupbyvar]], def.value = unique(input$groupbyvar))
       
       # save PARAm for ggtitle 
-      PARAM <- dfsub$PARAM[1]
-      
-      dfsel <- dfsub %>%
-        select(PARAM, !!sym(v$selxvar), !!sym(v$selyvar), !!sym(input$groupbyvar))
+      PARAM <- dfsel$PARAM[1]
       
       switch(input$hbarOptions,
              "1" = {
@@ -121,11 +122,11 @@ mod_popExpHBar_server <- function(input, output, session, df){
                ggtitle <- paste("Plot of",labx,"versus Percent of Subjects, grouped by",labz,",for",PARAM) 
                
                p <- ggplot(data = dfsel) +
-                 geom_bar(mapping = aes(x = !!sym(v$selxvar), y = ..prop.., 
+                 suppressWarnings(geom_bar(mapping = aes(x = !!sym(v$selxvar), y = ..prop.., 
                                         group = !!sym(input$groupbyvar), fill = forcats::fct_rev(!!sym(input$groupbyvar)), 
                                         text = paste0(v$selxvar,": ",get(v$selxvar),
                                                       "<br>",v$selyvar,": ",get(v$selyvar))), 
-                          stat = "count", width=0.7, alpha = 0.5, position = "dodge",  na.rm = TRUE) +
+                          stat = "count", width=0.7, alpha = 0.5, position = "dodge",  na.rm = TRUE) ) +
                  scale_y_continuous(labels = scales::percent_format(), limits=c(0, 1), breaks = seq(0, 1, by=0.1)) +
                  scale_x_discrete(drop = FALSE) +
                  coord_flip() +
@@ -135,7 +136,7 @@ mod_popExpHBar_server <- function(input, output, session, df){
              "2" = {     
                
                # calculate mean value per x-var and groupvar
-               dfsub <- dfsub %>%
+               dfsel <- dfsel %>%
                  group_by(PARAM, !!sym(v$selxvar), !!sym(input$groupbyvar)) %>%
                  mutate(!!sym(v$selyvar) := round(mean(!!sym(v$selyvar), na.rm = TRUE), digits = 2)) %>%
                  distinct(PARAM, !!sym(v$selxvar), !!sym(input$groupbyvar), .keep_all = TRUE) %>%
@@ -146,17 +147,17 @@ mod_popExpHBar_server <- function(input, output, session, df){
                #   mutate(!!sym(v$selxvar) := fct_rev(factor(!!sym(v$selxvar))))
                
                # order by desc frequency count
-               dfsub <- dfsub %>%
+               dfsel <- dfsel %>%
                  mutate(!!sym(v$selxvar) := !!sym(v$selxvar) %>% forcats::fct_infreq() %>% forcats::fct_rev() )
                
                ggtitle <- paste("Plot of",labx,"versus mean",laby,"grouped by",labz,"for",PARAM) 
                
-               p <- ggplot(data = dfsub) +
-                 geom_bar(mapping = aes(x = !!sym(v$selxvar), y = !!sym(v$selyvar), 
+               p <- ggplot(data = dfsel) +
+                 suppressWarnings(geom_bar(mapping = aes(x = !!sym(v$selxvar), y = !!sym(v$selyvar), 
                                         group = !!sym(input$groupbyvar), fill = forcats::fct_rev(!!sym(input$groupbyvar)), 
                                         text = paste0(v$selxvar,": ",get(v$selxvar),
                                                       "<br>",v$selyvar,": ",get(v$selyvar))), 
-                          stat = "identity", width=0.7, alpha = 0.5, position = "dodge",  na.rm = TRUE) +
+                          stat = "identity", width=0.7, alpha = 0.5, position = "dodge",  na.rm = TRUE) ) +
                  scale_x_discrete(drop = FALSE) +
                  coord_flip() +
                  labs(x = "", y = laby, fill = labz, title = ggtitle)
@@ -168,25 +169,22 @@ mod_popExpHBar_server <- function(input, output, session, df){
     } else {
       
       # save PARAm for ggtitle 
-      PARAM <- dfsub$PARAM[1]
-      
-      dfsel <- dfsub %>%
-        select(PARAM, !!sym(v$selxvar), !!sym(v$selyvar))
+      PARAM <- dfsel$PARAM[1]
       
       switch(input$hbarOptions,
              "1" = {
                
                # order by desc frequency count
-               dfsub <- dfsub %>%
+               dfsel <- dfsel %>%
                  mutate(!!sym(v$selxvar) := !!sym(v$selxvar) %>% forcats::fct_infreq() %>% forcats::fct_rev() )
                
                ggtitle <- paste("Plot of",labx,"versus Percent of Subjects for",PARAM) 
                
-               p <- ggplot(data = dfsub) +
-                 geom_bar(mapping = aes(x = !!sym(v$selxvar), y = ..prop.., group = 1, 
+               p <- ggplot(data = dfsel) +
+                 suppressWarnings(geom_bar(mapping = aes(x = !!sym(v$selxvar), y = ..prop.., group = 1, 
                                         text = paste0(v$selxvar,": ",get(v$selxvar),
                                                       "<br>",v$selyvar,": ",get(v$selyvar))), 
-                          stat = "count", width=0.7, alpha = 0.5, position = "dodge",  na.rm = TRUE) +
+                          stat = "count", width=0.7, alpha = 0.5, position = "dodge",  na.rm = TRUE) ) +
                  scale_y_continuous(labels = scales::percent_format(), limits=c(0, 1), breaks = seq(0, 1, by=0.1)) +
                  scale_x_discrete(drop = FALSE) +
                  coord_flip() +
@@ -197,23 +195,23 @@ mod_popExpHBar_server <- function(input, output, session, df){
                
                
                # calculate mean value per x-var 
-               dfsub <- dfsub %>%
+               dfsel <- dfsel %>%
                  group_by(PARAM, !!sym(input$selxvar)) %>%
                  mutate(!!sym(input$selyvar) := round(mean(!!sym(input$selyvar), na.rm = TRUE), digits = 2)) %>%
                  distinct(PARAM, !!sym(input$selxvar), .keep_all = TRUE) %>%
                  ungroup()
                
                # order by desc frequency count
-               dfsub <- dfsub %>%
+               dfsel <- dfsel %>%
                  mutate(!!sym(v$selxvar) := !!sym(v$selxvar) %>% forcats::fct_infreq() %>% forcats::fct_rev() )
                
                ggtitle <- paste("Plot of",labx,"versus mean",laby,"for",PARAM) 
                
-               p <- ggplot(data = dfsub) +
-                 geom_bar(mapping = aes(x = !!sym(v$selxvar), y = !!sym(v$selyvar), 
+               p <- ggplot(data = dfsel) +
+                 suppressWarnings(geom_bar(mapping = aes(x = !!sym(v$selxvar), y = !!sym(v$selyvar), 
                                         text = paste0(v$selxvar,": ",get(v$selxvar),
                                                       "<br>",v$selyvar,": ",get(v$selyvar))), 
-                          stat = "identity", width=0.7, alpha = 0.5, position = "dodge",  na.rm = TRUE) +
+                          stat = "identity", width=0.7, alpha = 0.5, position = "dodge",  na.rm = TRUE) ) +
                  scale_x_discrete(drop = FALSE) +
                  coord_flip() +
                  labs(x = "", y = laby, title = ggtitle)
@@ -234,7 +232,7 @@ mod_popExpHBar_server <- function(input, output, session, df){
     if(input$groupbox == TRUE) {
       # Now, the workaround:
       # ------------------------------------------------------
-      dfflt <- filter(dfsub,!is.na(!!sym(input$groupbyvar)))
+      dfflt <- filter(dfsel,!is.na(!!sym(input$groupbyvar)))
       p1Names <- unique(dfflt[[input$groupbyvar]]) # we need to know the "true" legend values
       for (i in 1:length(p1$x$data)) { # this goes over all places where legend values are stored
         n1 <- p1$x$data[[i]]$name # and this is how the value is stored in plotly
@@ -259,29 +257,30 @@ mod_popExpHBar_server <- function(input, output, session, df){
     req(!is_empty(v$selxvar) && v$selxvar != "")
     req(!is_empty(v$selyvar) && v$selyvar != "")
     
+    # select variables
+    dfsel <- dfsub() %>%
+      select(PARAM, !!sym(v$selxvar), !!sym(v$selyvar), !!sym(input$groupbyvar))
+    
+    # give missing x-values an explicit factor level
+    dfsel <- dfsel %>%
+      mutate(!!sym(input$selxvar) := forcats::fct_explicit_na(!!sym(input$selxvar), na_level = "(Missing)"))
+    
     xvar <- sym(v$selxvar)
     yvar <- sym(v$selyvar)
     
-    labx <- sjlabelled::get_label(dfsub[[v$selxvar]], def.value = unique(v$selxvar))
-    laby <- sjlabelled::get_label(dfsub[[v$selyvar]], def.value = unique(v$selyvar))
-    
-    # give missing x-values an explicit factor level
-    dfsub <- dfsub %>%
-      mutate(!!sym(input$selxvar) := forcats::fct_explicit_na(!!sym(input$selxvar), na_level = "(Missing)"))
-    
+    labx <- sjlabelled::get_label(dfsel[[v$selxvar]], def.value = unique(v$selxvar))
+    laby <- sjlabelled::get_label(dfsel[[v$selyvar]], def.value = unique(v$selyvar))
+
     if(input$groupbox == TRUE) {
       
       req(!is_empty(input$groupbyvar) && input$groupbyvar != "")
       
       # set def.value to use name if the variable has no label attribute
-      labz <- sjlabelled::get_label(dfsub[[input$groupbyvar]], def.value = unique(input$groupbyvar))
+      labz <- sjlabelled::get_label(dfsel[[input$groupbyvar]], def.value = unique(input$groupbyvar))
       
       # save PARAm for ggtitle 
-      PARAM <- dfsub$PARAM[1]
-      
-      dfsel <- dfsub %>%
-        select(PARAM, !!sym(v$selxvar), !!sym(v$selyvar), !!sym(input$groupbyvar))
-      
+      PARAM <- dfsel$PARAM[1]
+
       switch(input$hbarOptions,
              "1" = {
                
@@ -292,10 +291,10 @@ mod_popExpHBar_server <- function(input, output, session, df){
                  mutate(prop = count/sum(count) ) %>%
                  ungroup()
                
-               dfsel <- dfsel %>%
-                 # expand to all x-var, group-var combinations
-                 expand(!!sym(input$groupbyvar), !!sym(v$selxvar) ) %>%
-                 left_join(dfsel) 
+               # dfsel <- dfsel %>%
+               #   # expand to all x-var, group-var combinations
+               #   expand(!!sym(input$groupbyvar), !!sym(v$selxvar) ) %>%
+               #   left_join(dfsel, by = c(input$groupbyvar, v$selxvar))
                
                # order by desc frequency count
                dfsel <- dfsel %>%
@@ -312,10 +311,10 @@ mod_popExpHBar_server <- function(input, output, session, df){
                  distinct(PARAM, !!sym(input$selxvar), !!sym(input$groupbyvar), .keep_all = TRUE) %>%
                  ungroup()
                
-               dfsel <- dfsel %>%
-                 # expand to all x-var, group-var combinations
-                 expand(!!sym(v$selxvar), !!sym(input$groupbyvar)) %>%
-                 left_join(dfsel) 
+               # dfsel <- dfsel %>%
+               #   # expand to all x-var, group-var combinations
+               #   expand(!!sym(v$selxvar), !!sym(input$groupbyvar)) %>%
+               #   left_join(dfsel, by = c(v$selxvar, input$groupbyvar))
                
                # order by desc frequency count
                dfsel <- dfsel %>%
@@ -328,9 +327,9 @@ mod_popExpHBar_server <- function(input, output, session, df){
     } else {
       
       # save PARAm for ggtitle 
-      PARAM <- dfsub$PARAM[1]
+      PARAM <- dfsel$PARAM[1]
       
-      dfsel <- dfsub %>%
+      dfsel <- dfsel %>%
         select(PARAM, !!sym(input$selxvar), !!sym(input$selyvar))
       
       switch(input$hbarOptions,
@@ -342,10 +341,10 @@ mod_popExpHBar_server <- function(input, output, session, df){
                  mutate(prop = count/sum(count) ) %>%
                  ungroup()
                
-               dfsel <- dfsub %>%
-                 # expand to all x-var combinations
-                 expand(!!sym(v$selxvar)) %>%
-                 left_join(dfsel) 
+               # dfsel <- dfsel %>%
+               #   # expand to all x-var combinations
+               #   expand(!!sym(v$selxvar)) %>%
+               #   left_join(dfsel, by = c(v$selxvar)) 
                
                # order by desc frequency count
                dfsel <- dfsel %>%
@@ -359,10 +358,10 @@ mod_popExpHBar_server <- function(input, output, session, df){
                  distinct(PARAM, !!sym(input$selxvar), .keep_all = TRUE) %>%
                  ungroup()
                
-               dfsel <- dfsub %>%
-                 # expand to all x-var combinations
-                 expand(!!sym(v$selxvar)) %>%
-                 left_join(dfsel) 
+               # dfsel <- dfsel %>%
+               #   # expand to all x-var combinations
+               #   expand(!!sym(v$selxvar)) %>%
+               #   left_join(dfsel, by =c(v$selxvar)) 
                
                # order by desc frequency count
                dfsel <- dfsel %>%
