@@ -80,7 +80,7 @@ guide_ind_exp_events_blank <-
   step(
     "cic_EventsTab",
     "Events vs. Visits",
-    "'Events' investigates important study dates on an interactive timeline vs 'Visits' plots PARAMs by Study Visit"
+    "'Events' investigates important study dates  from OCCDs files on an interactive timeline vs 'Visits' plots PARAMs by Study Visit from BDS files"
   )$
   step(
     "cic_checkGroup",
@@ -104,7 +104,7 @@ guide_ind_exp_events <-
   step(
     "cic_EventsTab",
     "Events vs. Visits",
-    "'Events' investigates important study dates on an interactive timeline vs 'Visits' plots PARAMs by Study Visit"
+    "'Events' investigates important study dates  from OCCDs files on an interactive timeline vs 'Visits' plots PARAMs by Study Visit from BDS files"
   )$
   step(
     "cic_checkGroup",
@@ -140,7 +140,7 @@ guide_ind_exp_events_adv <-
   step(
     "cic_EventsTab",
     "Events vs. Visits",
-    "'Events' investigates important study dates on an interactive timeline vs 'Visits' plots PARAMs by Study Visit"
+    "'Events' investigates important study dates  from OCCDs files on an interactive timeline vs 'Visits' plots PARAMs by Study Visit from BDS files"
   )$
   step(
     "cic_checkGroup",
@@ -163,4 +163,84 @@ guide_ind_exp_events_adv <-
     "View, sort, and download dates data mined for plotting the timeline visual"
   )
 
+
+
+
+
+#' Individual Explorer Cicerone Guide For Patient Visits tab when no ADAMs selected
+#'
+#' This object is used within the table generator Individual Explorer to add
+#' help text to the various fields using a help buttom
+#'
+#' @importFrom cicerone Cicerone
+#' 
+#' @return a cicerone r6 object
+#' 
+guide_ind_exp_visits_blank <-
+  cicerone::Cicerone$
+  new()$
+  step(
+    "cic_VisitsTab",
+    "Visits vs. Events",
+    "'Visits' plots PARAMs by Study Visit from BDS files vs. 'Events' investigates important study dates from OCCDs files on an interactive timeline"
+  )$
+  step(
+    "cic_plot_adam",
+    "Choose a BDS",
+    "Upload & select BDS files to plot AVAL by PARAMCD and visit"
+  )
+
+
+#' Individual Explorer Cicerone Guide For Patient Visits tab when no ADAMs selected
+#'
+#' This object is used within the table generator Individual Explorer to add
+#' help text to the various fields using a help buttom
+#'
+#' @importFrom cicerone Cicerone
+#' 
+#' @return a cicerone r6 object
+#' 
+guide_ind_exp_visits <-
+  cicerone::Cicerone$
+  new()$
+  step(
+    "cic_VisitsTab",
+    "Visits vs. Events",
+    "'Visits' plots PARAMs by Study Visit from BDS files vs. 'Events' investigates important study dates from OCCDs files on an interactive timeline"
+  )$
+  step(
+    "cic_plot_adam",
+    "Choose a BDS",
+    "Upload & select BDS files to plot AVAL by PARAMCD and visit"
+  )$
+  step(
+    "cic_plot_param",
+    "Plot by PARAMCD",
+    "test text"
+  )$
+  step(
+    "cic_visit_var",
+    "And by a Visit Variable",
+    "test text"
+  )$
+  step(
+    "cic_plot_hor",
+    "Include a Horizontal Line",
+    "test text"
+  )$
+  step(
+    "cic_PlotlyChart",
+    "Interative Plot",
+    "test text"
+  )$
+  step(
+    "cic_DataTable",
+    "Inspect Data",
+    "test text"
+  )$
+  step(
+    "cic_batchDwnld",
+    "Create a Report",
+    "test text"
+  )
 
