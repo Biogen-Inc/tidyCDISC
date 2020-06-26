@@ -27,6 +27,10 @@
 
 mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL)) {
   
+  observeEvent( input$help, {
+    tg_guide$init()$start()
+  })
+  
   # ----------------------------------------------------------------------
   # input prep for table manipulation
   # ----------------------------------------------------------------------
@@ -300,3 +304,4 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   return(p)
   
 }
+
