@@ -27,6 +27,9 @@ mod_indvExp_server <- function(input, output, session, datafile){
   # Initialize reactive vals df called 'processed_data'
   rv = reactiveValues(processed_data = NULL)
   
+  
+  
+  # When the user asks for help, guide them through the UI
   observeEvent( input$help_sel, {
     if(input$adv_filtering == TRUE){
       guide_ind_exp_sel_adv$init()$start() # guide includes IDEAFilter
