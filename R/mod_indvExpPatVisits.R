@@ -34,6 +34,21 @@ mod_indvExpPatVisits_server <- function(input, output, session, datafile, loaded
   # no data for 1 subj in a certain data set, then it shouldn't be an available
   # option to select.
   
+  # When the user asks for help, guide them through the UI
+  observeEvent( input$help_visits, {
+    if(length(plotable_adams()) == 0){
+      guide_ind_exp_visits_blank$init()$start()
+    } else {
+      guide_ind_exp_visits$init()$start()
+    #   if(any(regexpr("%>%",capture.output(attr(filtered_dat(), "code"))) > 0)){
+    #     guide_ind_exp_events_adv$init()$start()
+    #   } else {
+    #     guide_ind_exp_events$init()$start()
+    #   }
+    }
+  })
+  
+  
   # Header that depends on a few items existing
   output$plot_header <- renderText({
     req(!is.null(datafile()))

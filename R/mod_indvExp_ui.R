@@ -136,41 +136,56 @@ mod_indvExp_ui <- function(id){
             #
             #####################
             
-            tabPanel(div(style = "font-size: 14px;","Visits"),
+            tabPanel(div(id = "cic_VisitsTab", style = "font-size: 14px;","Visits"),
                br(),br(),br(),
                
                wellPanel(
-                 h4(strong(textOutput(ns("plot_header")))),
+                 div(style="display: inline-block; ",h4(strong(textOutput(ns("plot_header"))))),
+                 div(style="display: inline-block; float:right;",
+                     actionButton(ns("help_visits") 
+                                  , label = NULL
+                                  , icon = icon("question-circle")
+                                  , class = "btn-start"
+                                  , style = "display: inline-block; float:right; margin-bottom:15px;"
+                     )),
                  h6(textOutput(ns("subjid_subtitle3"))),
                  fixedRow(
                    column(2,
+                      div(id = "cic_plot_adam",
                           selectInput(
                             ns("plot_adam"),
                             label = HTML("Select a loaded ADaM<br/>with columns 'PARAM' & 'AVAL'"),
                             choices = c(" "),
                             selected =  " "
                           )
+                      )
                    ),
                    column(2,
+                      div(id = "cic_plot_param",
                           selectInput(
                             ns("plot_param"),
                             label = HTML("<br/>Select a Parameter / Metric:"),
                             choices = c(" "),selected = " "
                           )
+                      )
                    ),
                    column(2,
+                      div(id = "cic_visit_var",
                           selectInput(
                             ns("visit_var"),
                             label = HTML("<br/>Select a Visit Variable"),
                             choices = c(" ", "AVISITN"),selected = " "
                           )
+                      )
                    ),
                    column(1,
+                      div(id = "cic_plot_hor",
                           checkboxGroupInput(
                             ns("plot_hor"),
                             label = HTML("<br/>Plot line for:"),
                             choices = c(" ")
                           )
+                      )
                    ),
                    column(2,
                           checkboxGroupInput(
@@ -210,24 +225,26 @@ mod_indvExp_ui <- function(id){
                  ) # end fluidRow
                ), # end of well Panel
                
-               fluidRow(column(11,plotlyOutput(ns("PlotChart"), width = "100%", height = "600px"))),
-               div(style = "color: #0275d8; font-size: 12px;", htmlOutput(ns("v_applied_filters_grphDisp"))),
+               div(id = "cic_PlotlyChart",
+                 fluidRow(column(11,plotlyOutput(ns("PlotChart"), width = "100%", height = "600px"))),
+                 div(style = "color: #0275d8; font-size: 12px;", htmlOutput(ns("v_applied_filters_grphDisp"))),
+               ),
                br(),
                fluidRow(
-                 column(8, DT::dataTableOutput(ns("DataTable"))),
+                 column(8, div(id = "cic_DataTable",DT::dataTableOutput(ns("DataTable")))),
                  column(3,
                         #####################
                         #
                         # Batch Download UI
                         #
                         #####################
-                        wellPanel(
+                        div(id = "cic_batchDwnld", wellPanel(
                           h5(strong(textOutput(ns("dwnld_params_header")))),
                           br(),
                           radioButtons(ns('format'), 'Document format', c('HTML','PDF'),inline = TRUE), #'PDF', 
                           textInput(ns("user_batch_notes"), label = "Add Report Notes", placeholder = "My Notes"),
                           downloadButton(ns('batchDownReport'))
-                        )
+                        ))
                  )
                ),
                br(),br(),br(),br(),br(),br()
