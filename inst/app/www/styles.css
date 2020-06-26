@@ -272,7 +272,7 @@ transform:rotate(180deg);
 }
 
 @media only screen and (max-width: 3000px) {
-  #tableGen {
+  body {
     zoom: 75%;
   }
 }
