@@ -120,7 +120,7 @@ mod_popExp_ui <- function(id, label = "Population Explorer"){
                    shape = "square",
                    inline = TRUE,
                    choices = list("Calc Percent" = "1",
-                                  "Use Values" = "2"
+                                  "Calc Mean   " = "2"
                    ),
                    selected = character(0),
                    icon = icon("check")
