@@ -117,7 +117,7 @@ mod_popExpHBar_server <- function(input, output, session, df){
       switch(input$hbarOptions,
              "1" = {
 
-               ggtitle <- paste("Plot of",labx,"versus Percent of Subjects, grouped by",labz,",for",PARAM) 
+               ggtitle <- paste("Plot of Percent of Subjects versus",labx, "grouped by",labz,",for",PARAM) 
                
                # order by desc frequency count
                dfsel <- dfsel %>%
@@ -139,7 +139,7 @@ mod_popExpHBar_server <- function(input, output, session, df){
                req(!is_empty(v$selyvar) && v$selyvar != "")
                laby <- sjlabelled::get_label(dfsel[[v$selyvar]], def.value = unique(v$selyvar))
                
-               ggtitle <- paste("Plot of",labx,"versus mean",laby,"grouped by",labz,"for",PARAM) 
+               ggtitle <- paste("Plot of Mean",laby,"versus",labx,"grouped by",labz,"for",PARAM) 
               
                dfsel <- dfsel %>%
                  # expand to all x-var, group-var combinations
@@ -179,7 +179,7 @@ mod_popExpHBar_server <- function(input, output, session, df){
       switch(input$hbarOptions,
              "1" = {
 
-               ggtitle <- paste("Plot of",labx,"versus Percent of Subjects for",PARAM) 
+               ggtitle <- paste("Plot of Percent of Subjects versus",labx,"for",PARAM) 
                
                # order by desc frequency count
                dfsel <- dfsel %>%
@@ -200,7 +200,7 @@ mod_popExpHBar_server <- function(input, output, session, df){
                req(!is_empty(v$selyvar) && v$selyvar != "")
                laby <- sjlabelled::get_label(dfsel[[v$selyvar]], def.value = unique(v$selyvar))
                
-               ggtitle <- paste("Plot of",labx,"versus mean",laby,"for",PARAM) 
+               ggtitle <- paste("Plot of Mean",laby,"versus",labx,"for",PARAM) 
                
                # calculate mean value per x-var 
                dfsel <- dfsel %>%
