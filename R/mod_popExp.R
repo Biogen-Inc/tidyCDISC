@@ -253,7 +253,7 @@ mod_popExp_server <- function(input, output, session, datafile){
   
   # If adv_filtering is checked, switch to Filter tab panel; otherwise, Plot tab panel
   observeEvent(input$adv_filtering, {
-    print(paste("adv_filtering is:",input$adv_filtering))
+
     if (input$adv_filtering == T) {
       updateTabsetPanel(session = session, "tabset", selected = "Filter")
     } else {
@@ -297,14 +297,12 @@ mod_popExp_server <- function(input, output, session, datafile){
     
     req(!is.null(rv$all_data))
     
-    print(paste("In observe event for input$radio.  input$adv_filtering is",input$adv_filtering))
-    
     dataset <- eventReactive(input$adv_filtering, {
+      # print(paste("in eventReactive for adv_filtering, which is",input$adv_filtering))
       if (!is.null(filtered_data()) && input$adv_filtering == TRUE ) {
         filtered_data() 
       } else {
         feed_filter()
-        # rv$all_data() 
       }
     })
 
