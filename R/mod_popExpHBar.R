@@ -27,9 +27,6 @@ mod_popExpHBar_server <- function(input, output, session, df){
   # show all the widgets using an anonymous function
   map(widgets, function(x) shinyjs::show(x))
   
-  # dfsub <- NULL  # assign dfsub in function environment
-  # makeReactiveBinding("dfsub")
-  
   chr <- sort(names(df()[ , which(sapply(df(),is.character))])) # all chr
   fac <- sort(names(df()[ , which(sapply(df(),is.factor   ))])) # all factors
   num <- sort(names(df()[ , which(sapply(df(),is.numeric  ))])) # all num
@@ -40,7 +37,8 @@ mod_popExpHBar_server <- function(input, output, session, df){
   # set checkbox to TRUE
   updateCheckboxInput(session = session, inputId = "groupbox", value = TRUE)
   
-  updateSelectInput(session = session, inputId = "selxvar", choices = c("",chr),  selected=character(0))
+  updateSelectInput(session = session, inputId = "selxvar", choices = c("",sort(c(chr,fac))), selected = character(0))
+  
   updateSelectInput(session = session, inputId = "selyvar", choices = c("",num),  selected=character(0))
   
   updatePrettyRadioButtons(session = session, inputId = "hbarOptions", selected = "1")
@@ -106,7 +104,7 @@ mod_popExpHBar_server <- function(input, output, session, df){
       req(!is_empty(input$groupbyvar) && input$groupbyvar != "")
       
       # remove missing z-values (groupby values) from plot
-      dfsel <- filter(dfsub(), !is.na(!!sym(input$groupbyvar)), !!sym(input$groupbyvar) != "")
+      dfsel <- filter(dfsel, !is.na(!!sym(input$groupbyvar)), !!sym(input$groupbyvar) != "", !!sym(input$groupbyvar) != "Missing")
 
       # set def.value to use name if the variable has no label attribute
       labz <- sjlabelled::get_label(dfsub()[[input$groupbyvar]], def.value = unique(input$groupbyvar))
@@ -125,7 +123,7 @@ mod_popExpHBar_server <- function(input, output, session, df){
 
                p <- ggplot(data = dfsel) +
                  suppressWarnings(geom_bar(mapping = aes(x = !!sym(v$selxvar), y = ..prop.., 
-                                        group = !!sym(input$groupbyvar), fill = forcats::fct_rev(!!sym(input$groupbyvar)), 
+                                        group = !!sym(input$groupbyvar), fill = get(input$groupbyvar),  
                                         text = paste0(v$selxvar,": ",get(v$selxvar))), 
                           stat = "count", width=0.7, alpha = 0.5, position = "dodge",  na.rm = TRUE) ) +
                  scale_y_continuous(labels = scales::percent_format(), limits=c(0, 1), breaks = seq(0, 1, by=0.1)) +
@@ -162,7 +160,7 @@ mod_popExpHBar_server <- function(input, output, session, df){
                
                p <- ggplot(data = dfsel) +
                  suppressWarnings(geom_bar(mapping = aes(x = !!sym(v$selxvar), y = !!sym(v$selyvar), 
-                                        group = !!sym(input$groupbyvar), fill = forcats::fct_rev(!!sym(input$groupbyvar)), 
+                                        group = !!sym(input$groupbyvar), fill = get(input$groupbyvar), 
                                         text = paste0(v$selxvar,": ",get(v$selxvar),
                                                       "<br>",v$selyvar,": ",get(v$selyvar))), 
                           stat = "identity", width=0.7, alpha = 0.5, position = "dodge",  na.rm = TRUE) ) +
@@ -258,16 +256,16 @@ mod_popExpHBar_server <- function(input, output, session, df){
   output$DataTable <- DT::renderDataTable({
     
     req(input$selPrmCode != "") 
-    req(!is.null(dfsub))
+    req(!is.null(dfsub()))
     
     req(!is_empty(v$selxvar) && v$selxvar != "")
-    
+
     # give missing x-values an explicit factor level
     dfsel <- dfsub() %>%
       mutate(!!sym(v$selxvar) := forcats::fct_explicit_na(!!sym(v$selxvar), na_level = "(Missing)"))
     
-    dfsel <- dfsub()
-    
+    dftbl <- reactive({
+      
     if(input$groupbox == TRUE) {
       
       req(!is_empty(input$groupbyvar) && input$groupbyvar != "")
@@ -279,10 +277,10 @@ mod_popExpHBar_server <- function(input, output, session, df){
                  select(PARAM, !!sym(v$selxvar), !!sym(input$groupbyvar))
                
                # expand to all x-var, group-var combinations
-               dfsel <- dfsel %>%
-                 # expand to all x-var, group-var combinations
-                 expand(PARAM, !!sym(input$groupbyvar), !!sym(v$selxvar) ) %>%
-                 left_join(dfsel, dfsel, by = c("PARAM", input$groupbyvar, v$selxvar))
+               # dfsel <- dfsel %>%
+               #   # expand to all x-var, group-var combinations
+               #   expand(PARAM, !!sym(input$groupbyvar), !!sym(v$selxvar) ) %>%
+               #   left_join(dfsel, dfsel, by = c("PARAM", input$groupbyvar, v$selxvar))
                
                dfsel <- dfsel %>%
                  group_by(PARAM, !!sym(input$groupbyvar), !!sym(v$selxvar) ) %>%
@@ -300,10 +298,10 @@ mod_popExpHBar_server <- function(input, output, session, df){
                  select(PARAM, !!sym(v$selxvar), !!sym(v$selyvar), !!sym(input$groupbyvar))
                
                # expand to all x-var, group-var combinations
-               dfsel <- dfsel %>%
-                 # expand to all x-var, group-var combinations
-                 expand(PARAM, !!sym(input$groupbyvar), !!sym(v$selxvar) ) %>%
-                 left_join(dfsel, dfsel, by = c("PARAM", input$groupbyvar, v$selxvar))
+               # dfsel <- dfsel %>%
+               #   # expand to all x-var, group-var combinations
+               #   expand(PARAM, !!sym(input$groupbyvar), !!sym(v$selxvar) ) %>%
+               #   left_join(dfsel, dfsel, by = c("PARAM", input$groupbyvar, v$selxvar))
                
                dfsel <- dfsel %>%
                  group_by(PARAM, !!sym(v$selxvar), !!sym(input$groupbyvar)) %>%
@@ -356,10 +354,9 @@ mod_popExpHBar_server <- function(input, output, session, df){
       )
     }  
     
-
-    tableout <- dfsel
+    })
     
-    DT::datatable(tableout, options = list(dom = 'ftp', pageLength = 10))
+    DT::datatable(dftbl(), options = list(dom = 'ftp', pageLength = 15, lengthMenu = c(5, 10, 15, 20)))
   })
   
 }
