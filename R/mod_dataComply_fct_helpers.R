@@ -1,5 +1,4 @@
 
-
 #' Gather Violated Rules
 #'
 #' Gather applicable Rules into a usable output (gt & df objects) to be included
