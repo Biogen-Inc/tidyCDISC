@@ -188,6 +188,7 @@ mod_indvExp_ui <- function(id){
                       )
                    ),
                    column(2,
+                      div(id = "cic_overlay_events",
                           checkboxGroupInput(
                             ns("overlay_events"),
                             label = HTML("<br/>Overlay Events:"),
@@ -196,14 +197,17 @@ mod_indvExp_ui <- function(id){
                           div(style = "color: blue; font-size: 12px;",
                               uiOutput(ns("display_dy"))
                           )
+                      ),
                    ),
                    column(1, 
+                      div(id = "cic_event_type_filter",
                           radioButtons(
                             ns("event_type_filter"),
                             label = HTML("<br/>Choose Events:"),
                             choices = as.list(c("All", "Manually Filter")),
                             selected = "All"
                           )
+                      )
                    ),
                    column(2,
                           br(),br(),
@@ -214,6 +218,7 @@ mod_indvExp_ui <- function(id){
                  fluidRow(
                    column(9), 
                    column(3,
+                      div(id = "cic_overlay_event_vals",
                           selectizeInput(
                             ns("overlay_event_vals"),
                             label = HTML("<br/>Select Event Type(s)"),
@@ -221,6 +226,7 @@ mod_indvExp_ui <- function(id){
                             choices = c("All"),
                             selected = "All"
                           )
+                      )
                    )
                  ) # end fluidRow
                ), # end of well Panel

@@ -39,7 +39,23 @@ mod_indvExpPatVisits_server <- function(input, output, session, datafile, loaded
     if(length(plotable_adams()) == 0){
       guide_ind_exp_visits_blank$init()$start()
     } else {
-      guide_ind_exp_visits$init()$start()
+      # if no adlb, then
+      if(!("ADLB" %in% plotable_adams()) | !(input$visit_var %in% vv_dy_name())){
+        guide_ind_exp_visits$init()$start()
+      } else {
+        if(length(input$overlay_events) == 0){
+          guide_ind_exp_visits_adlb$init()$start()
+        } else{
+          guide_ind_exp_visits_adlb_olay$init()$start()
+        }
+      }
+      
+
+      # else, adlb but no overlay
+      # 
+      # else adlb & overlay
+      # guide_ind_exp_visits_adlb_olay$init()$start()
+      
     #   if(any(regexpr("%>%",capture.output(attr(filtered_dat(), "code"))) > 0)){
     #     guide_ind_exp_events_adv$init()$start()
     #   } else {
