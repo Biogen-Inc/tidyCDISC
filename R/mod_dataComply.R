@@ -44,7 +44,9 @@ mod_dataComply_ui <- function(id){
 #'
 #' @family dataComply Functions
 #'   
-mod_dataComply_server <- function(input, output, session, datalist = reactive(NULL), dismissErrBttn = T){
+mod_dataComply_server <- function(input, output, session,
+                                  datalist = reactive(NULL)
+                                  , dismissErrBttn = T){
   ns <- session$ns
  
   # Initialize return_dl with the input list of dataframes
