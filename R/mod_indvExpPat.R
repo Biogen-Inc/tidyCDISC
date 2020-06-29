@@ -72,10 +72,14 @@ mod_indvExpPat_server <- function(input, output, session, datafile, loaded_adams
       adsl <- datafile()[["ADSL"]]
       adsl_rec <- datafile()[["ADSL"]] %>%
         filter(USUBJID == input$selPatNo) %>%
-        select(any_of(ifelse("COUNTRYC" %in% colnames(adsl),"COUNTRYC","COUNTRY"))
-               , any_of("AGE")
-               , any_of(ifelse("AGEGR" %in% colnames(adsl),"AGEGR","AGEGR1"))
-               , any_of("SEX"), any_of("RACE"), any_of("SITEID"), any_of("TRT01P")) 
+        select(any_of("RGNGR1")
+               , any_of(ifelse("COUNTRYC" %in% colnames(adsl),"COUNTRYC","COUNTRY"))
+               , any_of("RACE") 
+               , any_of("SEX")
+               , any_of("AGE"), any_of(ifelse("AGEGR" %in% colnames(adsl),"AGEGR","AGEGR1"))
+               , any_of("HEIGHTBL"), any_of("HEIGHTU")
+               , any_of("WEIGHTBL"), any_of("WEIGHTU")
+               , any_of("SITEID"), any_of("TRT01P")) 
       
       adsl_rec <- as.data.frame((adsl_rec)) # 'data' must be 2-dimensional (e.g. data frame or matrix)
       
