@@ -262,7 +262,7 @@ mod_popExpHBar_server <- function(input, output, session, df){
 
     # give missing x-values an explicit factor level
     dfsel <- dfsub() %>%
-      mutate(!!sym(v$selxvar) := forcats::fct_explicit_na(!!sym(v$selxvar), na_level = "(Missing)"))
+      mutate(!!sym(v$selxvar) := forcats::fct_explicit_na(!!sym(v$selxvar), na_level = "Missing"))
     
     dftbl <- reactive({
       
