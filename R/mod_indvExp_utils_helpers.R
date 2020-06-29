@@ -80,12 +80,12 @@ guide_ind_exp_events_blank <-
   step(
     "cic_EventsTab",
     "Events vs. Visits",
-    "'Events' investigates important study dates  from OCCDs files on an interactive timeline vs 'Visits' plots PARAMs by Study Visit from BDS files"
+    "The 'Events' tab which plots dates on an interactive timeline (using OCCDs files) vs the 'Visits' tab plots PARAMs by Study Visit (using BDS files)"
   )$
   step(
     "cic_checkGroup",
     "Plot a Timeline",
-    "Upload & select more data sets to explore more dates on a interactive timeline plot"
+    "Upload & select data sets to explore more pertinent dates on a interactive timeline plot. 'Milestones' come from the ADSL."
   )
 
 
@@ -104,12 +104,12 @@ guide_ind_exp_events <-
   step(
     "cic_EventsTab",
     "Events vs. Visits",
-    "'Events' investigates important study dates  from OCCDs files on an interactive timeline vs 'Visits' plots PARAMs by Study Visit from BDS files"
+    "The 'Events' tab which plots dates on an interactive timeline (using OCCDs files) vs the 'Visits' tab plots PARAMs by Study Visit (using BDS files)"
   )$
   step(
     "cic_checkGroup",
     "Plot a Timeline",
-    "Upload & select more data sets to explore more dates on a interactive timeline plot"
+    "Upload & select data sets to explore more pertinent dates on a interactive timeline plot. 'Milestones' come from the ADSL."
   )$
   step(
     "cic_eventsPlot",
@@ -140,12 +140,12 @@ guide_ind_exp_events_adv <-
   step(
     "cic_EventsTab",
     "Events vs. Visits",
-    "'Events' investigates important study dates  from OCCDs files on an interactive timeline vs 'Visits' plots PARAMs by Study Visit from BDS files"
+    "The 'Events' tab which plots dates on an interactive timeline (using OCCDs files) vs the 'Visits' tab plots PARAMs by Study Visit (using BDS files)"
   )$
   step(
     "cic_checkGroup",
     "Plot a Timeline",
-    "Upload & select more data sets to explore more dates on a interactive timeline plot"
+    "Upload & select data sets to explore more pertinent dates on a interactive timeline plot. 'Milestones' come from the ADSL."
   )$
   step(
     "cic_events_apply_filter",
@@ -182,7 +182,7 @@ guide_ind_exp_visits_blank <-
   step(
     "cic_VisitsTab",
     "Visits vs. Events",
-    "'Visits' plots PARAMs by Study Visit from BDS files vs. 'Events' investigates important study dates from OCCDs files on an interactive timeline"
+    "The 'Visits' tab plots PARAMs by Study Visit (using BDS files) vs. the 'Events' tab which plots dates on an interactive timeline (using OCCDs files)"
   )$
   step(
     "cic_plot_adam",
@@ -191,7 +191,7 @@ guide_ind_exp_visits_blank <-
   )
 
 
-#' Individual Explorer Cicerone Guide For Patient Visits tab when no ADAMs selected
+#' Individual Explorer Cicerone Guide For Patient Visits tab when ADAM selected
 #'
 #' This object is used within the table generator Individual Explorer to add
 #' help text to the various fields using a help buttom
@@ -206,41 +206,172 @@ guide_ind_exp_visits <-
   step(
     "cic_VisitsTab",
     "Visits vs. Events",
-    "'Visits' plots PARAMs by Study Visit from BDS files vs. 'Events' investigates important study dates from OCCDs files on an interactive timeline"
+    "The 'Visits' tab plots PARAMs by Study Visit (using BDS files) vs. the 'Events' tab which plots dates on an interactive timeline (using OCCDs files)"
   )$
   step(
     "cic_plot_adam",
     "Choose a BDS",
-    "Upload & select BDS files to plot AVAL by PARAMCD and visit"
+    "Upload & select the BDS file which contains the PARAMCDs to plot by visit."
   )$
   step(
     "cic_plot_param",
     "Plot by PARAMCD",
-    "test text"
+    "Select one PARAMCD and the graph below will plot the corresponding AVALs on the y-axis."
   )$
   step(
     "cic_visit_var",
-    "And by a Visit Variable",
-    "test text"
+    "Plot by a Visit Variable",
+    "Visit variable goes on the x-axis and must be numeric. If available in data, you may choose from the following visit variables: AVISITN, VISITNUM, and any variable ending in 'DY'."
   )$
   step(
     "cic_plot_hor",
     "Include a Horizontal Line",
-    "test text"
+    "Visually compare results from each visit against the screening or baseline visit."
   )$
   step(
     "cic_PlotlyChart",
-    "Interative Plot",
-    "test text"
+    "Interact with the Plot",
+    "Zoom in & out, hover over points/lines to gain additional insights and establish a useful patient narrative through the study"
   )$
   step(
     "cic_DataTable",
     "Inspect Data",
-    "test text"
+    "View, sort, and download the 'PARAM by visit' data mined to plot the visual"
   )$
   step(
     "cic_batchDwnld",
-    "Create a Report",
-    "test text"
+    "Create a Report & Save Time",
+    "Avoid clicking through every PARAMCD by downloading a report with every plot you could generate for the selected ADaM. Create an HTML report (which maintains interactivity) or PDF. Regardless, the plots will inherit all the options you've selected here. Optionally, add your unique notes to be included in the final report."
   )
+
+
+#' Individual Explorer Cicerone Guide For Patient Visits tab when ADLB loaded &
+#' 'dy' visit var selected
+#'
+#' This object is used within the table generator Individual Explorer to add
+#' help text to the various fields using a help buttom
+#'
+#' @importFrom cicerone Cicerone
+#'
+#' @return a cicerone r6 object
+#'   
+guide_ind_exp_visits_adlb <-
+  cicerone::Cicerone$
+  new()$
+  step(
+    "cic_VisitsTab",
+    "Visits vs. Events",
+    "The 'Visits' tab plots PARAMs by Study Visit (using BDS files) vs. the 'Events' tab which plots dates on an interactive timeline (using OCCDs files)"
+  )$
+  step(
+    "cic_plot_adam",
+    "Choose a BDS",
+    "Upload & select the BDS file which contains the PARAMCDs to plot by visit."
+  )$
+  step(
+    "cic_plot_param",
+    "Plot by PARAMCD",
+    "Select one PARAMCD and the graph below will plot the corresponding AVALs on the y-axis."
+  )$
+  step(
+    "cic_visit_var",
+    "Plot by a Visit Variable",
+    "Visit variable goes on the x-axis and must be numeric. If available in data, you may choose from the following visit variables: AVISITN, VISITNUM, and any variable ending in 'DY'."
+  )$
+  step(
+    "cic_plot_hor",
+    "Include a Horizontal Line",
+    "Visually compare results from each visit against the screening or baseline visit."
+  )$
+  step(
+    "cic_overlay_events",
+    "Include Vertical Line(s) for Events",
+    "Visually compare various OCCD events in relation to each visit by overlaying them on the plot."
+  )$
+  step(
+    "cic_PlotlyChart",
+    "Interact with the Plot",
+    "Zoom in & out, hover over points/lines to gain additional insights and establish a useful patient narrative through the study"
+  )$
+  step(
+    "cic_DataTable",
+    "Inspect Data",
+    "View, sort, and download the 'PARAM by visit' data mined to plot the visual"
+  )$
+  step(
+    "cic_batchDwnld",
+    "Create a Report & Save Time",
+    "Avoid clicking through every PARAMCD by downloading a report with every plot you could generate for the selected ADaM. Create an HTML report (which maintains interactivity) or PDF. Regardless, the plots will inherit all the options you've selected here. Optionally, add your unique notes to be included in the final report."
+  )
+
+
+#' Individual Explorer Cicerone Guide For Patient Visits tab when ADLB loaded &
+#' 'dy' visit var selected, plus overlain events selected
+#'
+#' This object is used within the table generator Individual Explorer to add
+#' help text to the various fields using a help buttom
+#'
+#' @importFrom cicerone Cicerone
+#'
+#' @return a cicerone r6 object
+#'   
+guide_ind_exp_visits_adlb_olay <-
+  cicerone::Cicerone$
+  new()$
+  step(
+    "cic_VisitsTab",
+    "Visits vs. Events",
+    "The 'Visits' tab plots PARAMs by Study Visit (using BDS files) vs. the 'Events' tab which plots dates on an interactive timeline (using OCCDs files)"
+  )$
+  step(
+    "cic_plot_adam",
+    "Choose a BDS",
+    "Upload & select the BDS file which contains the PARAMCDs to plot by visit."
+  )$
+  step(
+    "cic_plot_param",
+    "Plot by PARAMCD",
+    "Select one PARAMCD and the graph below will plot the corresponding AVALs on the y-axis."
+  )$
+  step(
+    "cic_visit_var",
+    "Plot by a Visit Variable",
+    "Visit variable goes on the x-axis and must be numeric. If available in data, you may choose from the following visit variables: AVISITN, VISITNUM, and any variable ending in 'DY'."
+  )$
+  step(
+    "cic_plot_hor",
+    "Include a Horizontal Line",
+    "Visually compare results from each visit against the screening or baseline visit."
+  )$
+  step(
+    "cic_overlay_events",
+    "Include Vertical Line(s) for Events",
+    "Visually compare various OCCD events in relation to each visit by overlaying them on the plot."
+  )$
+  step(
+    "cic_event_type_filter",
+    "Optional: Subset Displayed Events",
+    "User can show 'All' events, 'Manually Filter' events by hand, or when advanced pre-filtering was used on USUBJID list, inherit those filters."
+  )$
+  step(
+    "cic_overlay_event_vals",
+    "Choose which Events to Display",
+    "If 'Manually Filter' was chosen, then sort through the list of events selected for display."
+  )$
+  step(
+    "cic_PlotlyChart",
+    "Interact with the Plot",
+    "Zoom in & out, hover over points/lines to gain additional insights and establish a useful patient narrative through the study"
+  )$
+  step(
+    "cic_DataTable",
+    "Inspect Data",
+    "View, sort, and download the 'PARAM by visit' data mined to plot the visual"
+  )$
+  step(
+    "cic_batchDwnld",
+    "Create a Report & Save Time",
+    "Avoid clicking through every PARAMCD by downloading a report with every plot you could generate for the selected ADaM. Create an HTML report (which maintains interactivity) or PDF. Regardless, the plots will inherit all the options you've selected here. Optionally, add your unique notes to be included in the final report."
+  )
+
 
