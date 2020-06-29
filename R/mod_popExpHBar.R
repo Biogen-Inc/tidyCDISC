@@ -46,7 +46,7 @@ mod_popExpHBar_server <- function(input, output, session, df){
   # https://groups.google.com/forum/#!topic/shiny-discuss/4GEJZW0ZDUc
   # suggestion from Joe Cheng
   # create reactive values for selxvar and selyvar
-  v <- reactiveValues(selxvar = character(0), selyvar = character(0))
+  v <- reactiveValues(selxvar = character(0), selyvar = character(0), groupbyvar = character(0))
   
 
   dfsub <- reactive({ 
@@ -66,9 +66,10 @@ mod_popExpHBar_server <- function(input, output, session, df){
 
     req(input$selPrmCode != "")
 
-    # invalidate selxvar and selyvar
+    # invalidate selxvar and selyvar and groupbyvar
     v$selxvar <- character(0)
     v$selyvar <- character(0)
+    v$groupbyvar <- character(0)
 
   }, ignoreInit = TRUE) # observeEvent(input$selPrmCode
 
@@ -78,7 +79,10 @@ mod_popExpHBar_server <- function(input, output, session, df){
   observeEvent(input$selyvar, {
     v$selyvar <- input$selyvar
   })
-
+  observeEvent(input$groupbyvar, {
+    v$groupbyvar <- input$groupbyvar
+  })
+  
   output$PlotlyOut <- renderPlotly({
     
     req(input$selPrmCode != "") 
@@ -101,13 +105,13 @@ mod_popExpHBar_server <- function(input, output, session, df){
     # groupbox == TRUE
     if(input$groupbox == TRUE) {
 
-      req(!is_empty(input$groupbyvar) && input$groupbyvar != "")
+      req(!is_empty(v$groupbyvar) && v$groupbyvar != "")
       
       # remove missing z-values (groupby values) from plot
-      dfsel <- filter(dfsel, !is.na(!!sym(input$groupbyvar)), !!sym(input$groupbyvar) != "", !!sym(input$groupbyvar) != "Missing")
+      dfsel <- filter(dfsel, !is.na(!!sym(v$groupbyvar)), !!sym(v$groupbyvar) != "", !!sym(v$groupbyvar) != "Missing")
 
       # set def.value to use name if the variable has no label attribute
-      labz <- sjlabelled::get_label(dfsub()[[input$groupbyvar]], def.value = unique(input$groupbyvar))
+      labz <- sjlabelled::get_label(dfsub()[[v$groupbyvar]], def.value = unique(v$groupbyvar))
       
       # save PARAm for ggtitle 
       PARAM <- dfsel$PARAM[1]
@@ -123,7 +127,7 @@ mod_popExpHBar_server <- function(input, output, session, df){
 
                p <- ggplot(data = dfsel) +
                  suppressWarnings(geom_bar(mapping = aes(x = !!sym(v$selxvar), y = ..prop.., 
-                                        group = !!sym(input$groupbyvar), fill = get(input$groupbyvar),  
+                                        group = !!sym(v$groupbyvar), fill = get(v$groupbyvar),  
                                         text = paste0(v$selxvar,": ",get(v$selxvar))), 
                           stat = "count", width=0.7, alpha = 0.5, position = "dodge",  na.rm = TRUE) ) +
                  scale_y_continuous(labels = scales::percent_format(), limits=c(0, 1), breaks = seq(0, 1, by=0.1)) +
@@ -139,16 +143,11 @@ mod_popExpHBar_server <- function(input, output, session, df){
                
                ggtitle <- paste("Plot of Mean",laby,"versus",labx,"grouped by",labz,"for",PARAM) 
               
-               dfsel <- dfsel %>%
-                 # expand to all x-var, group-var combinations
-                 expand(PARAM, !!sym(input$groupbyvar), !!sym(v$selxvar) ) %>%
-                 left_join(dfsel, dfsel, by = c("PARAM", input$groupbyvar, v$selxvar))
-               
                # calculate mean value per x-var and groupvar
                dfsel <- dfsel %>%
-                 group_by(PARAM, !!sym(v$selxvar), !!sym(input$groupbyvar)) %>%
+                 group_by(PARAM, !!sym(v$selxvar), !!sym(v$groupbyvar)) %>%
                  mutate(!!sym(v$selyvar) := round(mean(!!sym(v$selyvar), na.rm = TRUE), digits = 2)) %>%
-                 distinct(PARAM, !!sym(v$selxvar), !!sym(input$groupbyvar), .keep_all = TRUE) %>%
+                 distinct(PARAM, !!sym(v$selxvar), !!sym(v$groupbyvar), .keep_all = TRUE) %>%
                  ungroup() %>%
                  group_by(PARAM, !!sym(v$selxvar)) %>%
                  mutate(byymean = round(mean(!!sym(v$selyvar), na.rm = TRUE), digits = 2)) %>%
@@ -160,7 +159,7 @@ mod_popExpHBar_server <- function(input, output, session, df){
                
                p <- ggplot(data = dfsel) +
                  suppressWarnings(geom_bar(mapping = aes(x = !!sym(v$selxvar), y = !!sym(v$selyvar), 
-                                        group = !!sym(input$groupbyvar), fill = get(input$groupbyvar), 
+                                        group = !!sym(v$groupbyvar), fill = get(v$groupbyvar), 
                                         text = paste0(v$selxvar,": ",get(v$selxvar),
                                                       "<br>",v$selyvar,": ",get(v$selyvar))), 
                           stat = "identity", width=0.7, alpha = 0.5, position = "dodge",  na.rm = TRUE) ) +
@@ -236,8 +235,8 @@ mod_popExpHBar_server <- function(input, output, session, df){
     if(input$groupbox == TRUE) {
       # Now, the workaround:
       # ------------------------------------------------------
-      dfflt <- filter(dfsel,!is.na(!!sym(input$groupbyvar)))
-      p1Names <- unique(dfflt[[input$groupbyvar]]) # we need to know the "true" legend values
+      dfflt <- filter(dfsel,!is.na(!!sym(v$groupbyvar)))
+      p1Names <- unique(dfflt[[v$groupbyvar]]) # we need to know the "true" legend values
       for (i in 1:length(p1$x$data)) { # this goes over all places where legend values are stored
         n1 <- p1$x$data[[i]]$name # and this is how the value is stored in plotly
         n2 <- " "
@@ -268,26 +267,20 @@ mod_popExpHBar_server <- function(input, output, session, df){
       
     if(input$groupbox == TRUE) {
       
-      req(!is_empty(input$groupbyvar) && input$groupbyvar != "")
+      req(!is_empty(v$groupbyvar) && v$groupbyvar != "")
       
       switch(input$hbarOptions,
              "1" = {
                # select variables
                dfsel <- dfsel %>%
-                 select(PARAM, !!sym(v$selxvar), !!sym(input$groupbyvar))
-               
-               # expand to all x-var, group-var combinations
-               # dfsel <- dfsel %>%
-               #   # expand to all x-var, group-var combinations
-               #   expand(PARAM, !!sym(input$groupbyvar), !!sym(v$selxvar) ) %>%
-               #   left_join(dfsel, dfsel, by = c("PARAM", input$groupbyvar, v$selxvar))
+                 select(PARAM, !!sym(v$selxvar), !!sym(v$groupbyvar))
                
                dfsel <- dfsel %>%
-                 group_by(PARAM, !!sym(input$groupbyvar), !!sym(v$selxvar) ) %>%
+                 group_by(PARAM, !!sym(v$groupbyvar), !!sym(v$selxvar) ) %>%
                  summarise(count = n()) %>%
                  mutate(prop = count/sum(count) ) %>%
                  ungroup() %>%
-                 arrange(desc(count), !!sym(input$groupbyvar))
+                 arrange(desc(count), !!sym(v$groupbyvar))
 
              },
              "2" = {     
@@ -295,23 +288,17 @@ mod_popExpHBar_server <- function(input, output, session, df){
                
                # select variables
                dfsel <- dfsel %>%
-                 select(PARAM, !!sym(v$selxvar), !!sym(v$selyvar), !!sym(input$groupbyvar))
-               
-               # expand to all x-var, group-var combinations
-               # dfsel <- dfsel %>%
-               #   # expand to all x-var, group-var combinations
-               #   expand(PARAM, !!sym(input$groupbyvar), !!sym(v$selxvar) ) %>%
-               #   left_join(dfsel, dfsel, by = c("PARAM", input$groupbyvar, v$selxvar))
+                 select(PARAM, !!sym(v$selxvar), !!sym(v$selyvar), !!sym(v$groupbyvar))
                
                dfsel <- dfsel %>%
-                 group_by(PARAM, !!sym(v$selxvar), !!sym(input$groupbyvar)) %>%
+                 group_by(PARAM, !!sym(v$selxvar), !!sym(v$groupbyvar)) %>%
                  mutate(!!sym(v$selyvar) := round(mean(!!sym(v$selyvar), na.rm = TRUE), digits = 2)) %>%
-                 distinct(PARAM, !!sym(v$selxvar), !!sym(input$groupbyvar), .keep_all = TRUE) %>%
+                 distinct(PARAM, !!sym(v$selxvar), !!sym(v$groupbyvar), .keep_all = TRUE) %>%
                  ungroup() %>%
                  group_by(PARAM, !!sym(v$selxvar)) %>%
                  mutate(byymean = round(mean(!!sym(v$selyvar), na.rm = TRUE), digits = 2)) %>%
                  ungroup() %>%
-                 arrange(desc(byymean),!!sym(input$groupbyvar))
+                 arrange(desc(byymean),!!sym(v$groupbyvar))
 
              },
              stop("invalid hbarOptions button: ",input$hbarOptions)
