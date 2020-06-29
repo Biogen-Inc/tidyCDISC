@@ -273,10 +273,10 @@ mod_popExp_server <- function(input, output, session, datafile){
     data = feed_filter,    # the name of your pre-processed data
     verbose = FALSE)
   
+  
   # clear the plot area, table, and radio buttons if clear plot has been checked    
   observeEvent(input$clearplot,{
     req(input$clearplot == TRUE)
-    
     # Clear plotoutput
     output$PlotlyOut <- renderPlotly({
       NULL
@@ -285,11 +285,18 @@ mod_popExp_server <- function(input, output, session, datafile){
     output$DataTable <- DT::renderDataTable({
       NULL
     })
-    
     RadioUpdate()
-    
   }, ignoreInit = TRUE)  
   
+  # Update datset, depending on adv_filtering or filtered_data() changing
+  dataset <- eventReactive(list(input$adv_filtering,filtered_data()), {
+      if (!is.null(filtered_data()) && input$adv_filtering == TRUE ) {
+        filtered_data() 
+      } else {
+        feed_filter()
+      }
+  })
+
   #
   # input$radio button processing
   #
@@ -297,15 +304,6 @@ mod_popExp_server <- function(input, output, session, datafile){
     
     req(!is.null(rv$all_data))
     
-    dataset <- eventReactive(input$adv_filtering, {
-      # print(paste("in eventReactive for adv_filtering, which is",input$adv_filtering))
-      if (!is.null(filtered_data()) && input$adv_filtering == TRUE ) {
-        filtered_data() 
-      } else {
-        feed_filter()
-      }
-    })
-
     # Clear plotoutput
     output$PlotlyOut <- renderPlotly({
       NULL
