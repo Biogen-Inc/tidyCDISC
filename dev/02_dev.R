@@ -101,6 +101,7 @@ golem::add_fct( "chg", module = "tableGen" )
 golem::add_fct( "freq", module = "tableGen" ) 
 golem::add_fct( "anova", module = "tableGen" ) 
 
+golem::add_utils("helpers", module = "indvExp" )
 golem::add_fct( "buildEvents", module = "indvExp" ) # ran: used in modules: indvExpPatEvents & indvExpPatVisits
 golem::add_fct( "plot", module = "indvExpPatVisits" ) # ran
 

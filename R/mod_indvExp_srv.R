@@ -27,6 +27,17 @@ mod_indvExp_server <- function(input, output, session, datafile){
   # Initialize reactive vals df called 'processed_data'
   rv = reactiveValues(processed_data = NULL)
   
+  
+  
+  # When the user asks for help, guide them through the UI
+  observeEvent( input$help_sel, {
+    if(input$adv_filtering == TRUE){
+      guide_ind_exp_sel_adv$init()$start() # guide includes IDEAFilter
+    } else {
+      guide_ind_exp_sel$init()$start()
+    }
+  })
+  
   # Only select data that starts with AD followed by one or more alphanumerics or underscore
   my_loaded_adams <- reactive({
     req(!is.null(datafile()))

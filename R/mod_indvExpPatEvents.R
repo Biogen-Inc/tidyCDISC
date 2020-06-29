@@ -27,6 +27,19 @@ mod_indvExpPatEvents_server <- function(input, output, session,
     "Patient Events by Date" 
   })
   
+  # When the user asks for help, guide them through the UI
+  observeEvent( input$help_events, {
+    if(is.null(input$checkGroup)){
+      guide_ind_exp_events_blank$init()$start()
+    } else {
+      if(any(regexpr("%>%",capture.output(attr(filtered_dat(), "code"))) > 0)){
+        guide_ind_exp_events_adv$init()$start()
+      } else {
+        guide_ind_exp_events$init()$start()
+      }
+    } 
+  })
+  
   # if any filter is selected in IDEAFilter, then we should show the
   # "events_apply_filter" checkbox, which defaults to TRUE everytime a new
   # patient is selected
