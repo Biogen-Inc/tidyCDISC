@@ -40,9 +40,10 @@ mod_dataComplyRules_ui <- function(id, showRules = T){
 #'   
 #' @family dataComply Functions
 #'   
-mod_dataComplyRules_server <- function(input, output, session, modal_title = "ADaM-ish Upload Rules"){
+mod_dataComplyRules_server <- function(input, output, session,
+                                       modal_title = "ADaM-ish Upload Rules"){
   ns <- session$ns
- 
+  
   observeEvent(input$clickRules, {
     
     showModal( modalDialog(
