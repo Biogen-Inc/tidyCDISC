@@ -53,12 +53,46 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # this code will need to be changed if you want to add in OCCDS 
   # ----------------------------------------------------------------------
   
+  
+  my_loaded_adams <- reactive({
+    req(!is.null(datafile()))
+    sasdata0 <- toupper(names(datafile()))
+    sasdata <- names(which(sapply(sasdata0,function(df) { return(stringr::str_detect(toupper(df),"^AD[A-Z0-9\\_]+")) })))
+    return(sasdata)
+  })
+  
+  
+  # If User wants to perform advance filtering, update drop down of data frames they can filter on
+  observe({
+    req(my_loaded_adams())
+    updateSelectInput("filter_df", session = session, choices = as.list(my_loaded_adams()), selected = "ADSL")
+  })
+  
   ADSL <- reactive({ datafile()$ADSL })
   BDS <- reactive({ datafile()[sapply(datafile(), function(x) "PARAMCD" %in% colnames(x))] })
   
-  processed_data <- reactive({
+  tg_data <- reactive({ 
+    # Seperate ADSL and the PArAMCD dataframe
+    PARAMCD <- map(BDS(), ~ if(!"CHG" %in% names(.)) {update_list(., CHG = NA)} else {.})
     
-    select_dfs <- datafile()
+    if (!is_empty(PARAMCD)) {
+      # Bind all the PARAMCD files 
+      all_PARAMCD <- bind_rows(PARAMCD, .id = "data_from")  %>% 
+        arrange(USUBJID, AVISITN, PARAMCD) %>% 
+        select(USUBJID, AVISITN, AVISIT, PARAMCD, AVAL, CHG, data_from)
+      
+      # Join ADSL and all_PARAMCD
+      combined_data <- full_join(ADSL(), all_PARAMCD, by = "USUBJID")
+    } else {
+      combined_data <- ADSL() %>%
+        mutate(data_from = "ADSL", PARAMCD = NA, AVAL = NA, CHG = NA)
+    }
+  })
+  
+  processed_data <- eventReactive(input$filter_df, {
+    
+    select_dfs <- datafile()[input$filter_df]
+    
     # Separate out non BDS and BDS data frames. Note: join may throw some
     # warnings if labels are different between two datasets, which is fine!
     # Ignore
@@ -83,6 +117,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     
     return(combined_data)
   })
+
   
   # get the list of PARAMCDs
   PARAMCD_names <- reactive({
@@ -94,8 +129,9 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   
   # create a reactive for the data with filters applied
   # use all_data() for any analyses
-  all_data <- callModule(shiny_data_filter, "data_filter", data = processed_data, verbose = FALSE)
+  filtered_data <- callModule(shiny_data_filter, "data_filter", data = processed_data, verbose = FALSE)
   
+  all_data <- reactive({ tg_data() %>% semi_join(filtered_data()) })
   
   # prepare the AVISIT dropdown of the statistics blocks
   # by converting them to a factor in the order of AVISITN
