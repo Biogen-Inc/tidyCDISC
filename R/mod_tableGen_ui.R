@@ -42,6 +42,8 @@ mod_tableGen_ui <- function(id){
                                         class="btn btn-input" id="filter-accordion"
                                         style="width:100%;padding:3px;background-color:#008cba !important;color:white;size:12px;margin-bottom:10px;">Filter Data</button>'),
                                    tags$div(id = 'demo',  class="collapse",
+                                            selectInput(ns("filter_df"),"Filter on Variable(s) in a loaded ADaM",
+                                                        multiple = TRUE, choices = NULL, selected = NULL),
                                             IDEAFilter::shiny_data_filter_ui(ns("data_filter"))
                                    ))))),
                  wellPanel(
