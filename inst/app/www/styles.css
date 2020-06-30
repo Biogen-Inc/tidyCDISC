@@ -271,8 +271,9 @@ transition: all .5s linear;
 transform:rotate(180deg);
 }
 
+/*
 @media only screen and (max-width: 3000px) {
   body {
     zoom: 75%;
-  }
+  */
 }
