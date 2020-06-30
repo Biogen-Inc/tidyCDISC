@@ -2,7 +2,7 @@
 title: "Integrate New OCCD Events in Individual Explorer"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Create A Statistical Block}
+  %\VignetteIndexEntry{Integrate New OCCD Events in Individual Explorer}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
