@@ -1,5 +1,5 @@
 ---
-title: "Create A Statistical Block"
+title: "Add Individual Explorer Events"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Create A Statistical Block}
@@ -7,7 +7,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-This tutorial will walk you through creating a new statistical block using JavaScript and R, then writing an R function to use the block within the `gt` table. 
+This tutorial will walk you through how to add additional  writing an R function to use the block within the `gt` table. 
 
 # Creating Blocks
 
