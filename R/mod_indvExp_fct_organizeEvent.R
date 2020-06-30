@@ -83,7 +83,7 @@ org_df_events <- function(
         mutate_(
           DECODE = event_desc
         ) %>%
-        select(-starts_with(df_domain_abbr)) %>%
+        select(-starts_with(df_domain_abbr), -!!st_date_var) %>%
         distinct(.keep_all = TRUE)
     } else{
       if(df_domain_abbr %in% c(mi_input_checkbox)){
