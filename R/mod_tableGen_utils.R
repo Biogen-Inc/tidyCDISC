@@ -43,7 +43,8 @@ tg_guide <- cicerone::Cicerone$
   step(
     "filter-accordion",
     "Filter Data",
-    "You can apply filters to your data by selecting the column to filter by, then supplying the range or categories to include"
+    "You can apply filters to your data by first selecting the datasets you want to filter by. This will populate a dropdown menu of
+    specific columns to filter by which you can then select and filter based on specific values to include"
   )$
   step(
     "RECIPE",
