@@ -22,17 +22,17 @@
 #' @param event_desc A character string containing the name of a variable or
 #'   even an expression to compute the event description to be displayed and
 #'   contains the variables in event_desc_vars
-#' @param input_checkbox A character vector of event names selected. Some
+#' @param mi_input_checkbox A character vector of event names selected. Some
 #'   possible event names include "Milestones", "Adverse Events", "Con Meds",
 #'   "Labs", "Medical History", etc...
-#' @param input_apply_filter Logical; If \code{TRUE} then toggle data frame used
-#'   to build events to "my_filtered_dat", which is pre-filtered data frame from
+#' @param mi_input_apply_filter Logical; If \code{TRUE} then toggle data frame used
+#'   to build events to "mi_filtered_dat", which is pre-filtered data frame from
 #'   IDEAFilter
-#' @param my_loaded_adams A character vector of available dataframes in
-#'   my_datafile
-#' @param my_datafile A list of data frames
-#' @param my_filtered_dat The output from IDEAFilter, a pre-filtered dataset
-#' @param my_usubjid Character patient number, in the standard USUBJID format
+#' @param mi_loaded_adams A character vector of available dataframes in
+#'   mi_datafile
+#' @param mi_datafile A list of data frames
+#' @param mi_filtered_dat The output from IDEAFilter, a pre-filtered dataset
+#' @param mi_usubjid Character patient number, in the standard USUBJID format
 #'
 #' @import dplyr
 #' @importFrom shinyjs alert
@@ -49,27 +49,27 @@ org_df_events <- function(
   , df_st_date_vars
   , event_desc_vars
   , event_desc
-  , input_checkbox
-  , input_apply_filter
-  , my_loaded_adams
-  , my_datafile
-  , my_filtered_dat
-  , my_usubjid
+  , mi_input_checkbox
+  , mi_input_apply_filter
+  , mi_loaded_adams
+  , mi_datafile
+  , mi_filtered_dat
+  , mi_usubjid
 ){
-  if (df_name %in% my_loaded_adams & df_domain_abbr %in% c(input_checkbox)) {
+  if (df_name %in% mi_loaded_adams & df_domain_abbr %in% c(mi_input_checkbox)) {
     
     # do any of the df_st_date_vars exist?
-    if(any(df_st_date_vars %in% colnames(my_datafile[[df_name]]))){
+    if(any(df_st_date_vars %in% colnames(mi_datafile[[df_name]]))){
       
       # If so, which df_st_date_var should we use? They should be ordered
       # left-to-right from most-preferred to least-preferred
-      st_date_var_str <- df_st_date_vars[df_st_date_vars %in% colnames(my_datafile[[df_name]])][1]
+      st_date_var_str <- df_st_date_vars[df_st_date_vars %in% colnames(mi_datafile[[df_name]])][1]
       st_date_var <- sym(st_date_var_str)
       
       dat <- 
         # conditionally toggle which dataset is used
-        (if(input_apply_filter == T) my_datafile[[df_name]] %>% semi_join(my_filtered_dat) else my_datafile[[df_name]]) %>% 
-        filter(USUBJID == my_usubjid) %>%
+        (if(mi_input_apply_filter == T) mi_datafile[[df_name]] %>% semi_join(mi_filtered_dat) else mi_datafile[[df_name]]) %>% 
+        filter(USUBJID == mi_usubjid) %>%
         filter(!is.na(!!st_date_var) ) %>%
         mutate(EVENTTYP = df_desc, DOMAIN = df_domain_abbr) %>%
         select(USUBJID, EVENTTYP, !!st_date_var, one_of(event_desc_vars), DOMAIN) %>%
@@ -86,7 +86,7 @@ org_df_events <- function(
         select(-starts_with(df_domain_abbr)) %>%
         distinct(.keep_all = TRUE)
     } else{
-      if(df_domain_abbr %in% c(input_checkbox)){
+      if(df_domain_abbr %in% c(mi_input_checkbox)){
         shinyjs::alert(paste0("Cannot add Adverse Events: no ", st_date_var_str, " variable exists in the loaded ", df_name, "."))
       }
       dat <- NULL
