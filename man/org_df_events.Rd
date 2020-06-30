@@ -11,12 +11,12 @@ org_df_events(
   df_st_date_vars,
   event_desc_vars,
   event_desc,
-  input_checkbox,
-  input_apply_filter,
-  my_loaded_adams,
-  my_datafile,
-  my_filtered_dat,
-  my_usubjid
+  mi_input_checkbox,
+  mi_input_apply_filter,
+  mi_loaded_adams,
+  mi_datafile,
+  mi_filtered_dat,
+  mi_usubjid
 )
 }
 \arguments{
@@ -43,22 +43,22 @@ variables needed from the data set above for event_desc.}
 even an expression to compute the event description to be displayed and
 contains the variables in event_desc_vars}
 
-\item{input_checkbox}{A character vector of event names selected. Some
+\item{mi_input_checkbox}{A character vector of event names selected. Some
 possible event names include "Milestones", "Adverse Events", "Con Meds",
 "Labs", "Medical History", etc...}
 
-\item{input_apply_filter}{Logical; If \code{TRUE} then toggle data frame used
-to build events to "my_filtered_dat", which is pre-filtered data frame from
+\item{mi_input_apply_filter}{Logical; If \code{TRUE} then toggle data frame used
+to build events to "mi_filtered_dat", which is pre-filtered data frame from
 IDEAFilter}
 
-\item{my_loaded_adams}{A character vector of available dataframes in
-my_datafile}
+\item{mi_loaded_adams}{A character vector of available dataframes in
+mi_datafile}
 
-\item{my_datafile}{A list of data frames}
+\item{mi_datafile}{A list of data frames}
 
-\item{my_filtered_dat}{The output from IDEAFilter, a pre-filtered dataset}
+\item{mi_filtered_dat}{The output from IDEAFilter, a pre-filtered dataset}
 
-\item{my_usubjid}{Character patient number, in the standard USUBJID format}
+\item{mi_usubjid}{Character patient number, in the standard USUBJID format}
 }
 \value{
 Data frame standardized from various OCCDs class files
