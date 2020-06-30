@@ -70,6 +70,7 @@ Other indvExp Functions:
 \code{\link{mod_indvExpPat_server}()},
 \code{\link{mod_indvExp_server}()},
 \code{\link{mod_indvExp_ui}()},
-\code{\link{my_gg_color_hue}()}
+\code{\link{my_gg_color_hue}()},
+\code{\link{org_df_events}()}
 }
 \concept{indvExp Functions}
