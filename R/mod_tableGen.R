@@ -153,7 +153,6 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   
   AVISIT <- reactive({
     req(BDS())
-    print(avisit_words())
     if (is.null(avisit_words())) {
       avisit_words <- " "
     } else {
