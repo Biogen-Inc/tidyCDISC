@@ -60,10 +60,10 @@ fnIndvExplVisits <- function(
     filter(!(is.na(!!INPUT_visit_var)) & PARAMCD == input_plot_param) # make sure AVISITN is not missing
   
   if("Screening" %in% input_plot_hor){
-    plot_scr <- plot_dat %>% subset(toupper(VISIT) == "SCREENING") %>% distinct(AVAL) %>% mutate(Visit = "Screening")
+    plot_scr <- plot_dat %>% subset(regexpr("SCREENING", toupper(VISIT)) > 0) %>% distinct(AVAL) %>% mutate(Visit = "Screening")
   }
   if("Baseline" %in% input_plot_hor){
-    plot_base <- plot_dat %>% subset(toupper(AVISIT) == "BASELINE") %>% distinct(AVAL) %>% mutate(Visit = "Baseline")
+    plot_base <- plot_dat %>% subset(regexpr("BASELINE", toupper(AVISIT)) > 0) %>% distinct(AVAL) %>% mutate(Visit = "Baseline")
   }
   
   if (nrow(plot_dat) > 0) {
