@@ -31,7 +31,7 @@ my_datafile}
 \item{my_usubjid}{Character patient number, in the standard USUBJID format}
 }
 \value{
-Data frame standardized to include events from vaious OCCDs class
+Data frame standardized to include events from various OCCDs class
   files
 }
 \description{
@@ -46,6 +46,7 @@ Other indvExp Functions:
 \code{\link{mod_indvExpPat_server}()},
 \code{\link{mod_indvExp_server}()},
 \code{\link{mod_indvExp_ui}()},
-\code{\link{my_gg_color_hue}()}
+\code{\link{my_gg_color_hue}()},
+\code{\link{org_df_events}()}
 }
 \concept{indvExp Functions}

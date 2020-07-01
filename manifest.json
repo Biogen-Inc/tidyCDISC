@@ -4211,7 +4211,7 @@
       "checksum": "6992ea42b2ce8c44c53dd72e75724aac"
     },
     "dev/02_dev.R": {
-      "checksum": "00f13e99d6f5c4f7c378b84e7114a9c3"
+      "checksum": "afd71d0bccfe34a9ad7a22c56fa6218c"
     },
     "dev/03_deploy.R": {
       "checksum": "7b413fcf3e7273e8b80cb6971b2190a4"
@@ -4253,7 +4253,7 @@
       "checksum": "b2b6f2d813317905f0c10dd513526e74"
     },
     "inst/app/www/styles.css": {
-      "checksum": "2790ef5306998c68ea8ce4ed3f598aa7"
+      "checksum": "ef288f56148e4aaa13d52bc0042934b2"
     },
     "inst/app/www/sync_divs.js": {
       "checksum": "23e76c85900525440527df79163e813b"
@@ -4283,7 +4283,7 @@
       "checksum": "ee89343a9e63fa9a668a57d8698f7fad"
     },
     "man/build_events.Rd": {
-      "checksum": "bd36d6355222c031ddcd1c99d7038920"
+      "checksum": "38d15da06bc8d975d2d6d0cde2b9c4ed"
     },
     "man/CapStr.Rd": {
       "checksum": "e0fc45639e48e434bed5f861ab9a4cd6"
@@ -4301,7 +4301,7 @@
       "checksum": "58898ff45aa21ff8680afae542918ab0"
     },
     "man/fnIndvExplVisits.Rd": {
-      "checksum": "aa4bc021f7583d337f01609582549d50"
+      "checksum": "0a20ab9e1c32c63f43c4eb27ee3046d8"
     },
     "man/gather_reqs.Rd": {
       "checksum": "1a78f7c5fa0035284918a0f455bf09fe"
@@ -4379,25 +4379,28 @@
       "checksum": "248f43eae47ec697c6f456d7eb0d88aa"
     },
     "man/mod_indvExp_server.Rd": {
-      "checksum": "d80169a82cfc001d43dfce54fc98f1f9"
+      "checksum": "918323c1f77f984a468d68ee390af82a"
     },
     "man/mod_indvExp_ui.Rd": {
-      "checksum": "aa0681c13735fcc968c18ef738268836"
+      "checksum": "c04d27adbf6afb996d1ca674bb25a4f6"
     },
     "man/mod_indvExpPat_server.Rd": {
-      "checksum": "253ca82149a3a7675d4bd800978f050c"
+      "checksum": "4ccf287631890582c984ec7715f8b165"
     },
     "man/mod_indvExpPatEvents_server.Rd": {
-      "checksum": "1f0180e9771cc27e71bda648c80c7d83"
+      "checksum": "2117895ef76bef5f56678f221a48ba8b"
     },
     "man/mod_indvExpPatVisits_server.Rd": {
-      "checksum": "aa40001683548eea8a20d120ecc51413"
+      "checksum": "90ab757e94ac6a82f19479ca0150b840"
     },
     "man/mod_tableGen_ui.Rd": {
       "checksum": "ff75237473b275d0c7f1fd4d49f988dc"
     },
     "man/my_gg_color_hue.Rd": {
-      "checksum": "e4b2c0a62008cad07fbbd1f2709a1c8d"
+      "checksum": "40beccf24f4bbbaad8c49e5fae7c54d1"
+    },
+    "man/org_df_events.Rd": {
+      "checksum": "5409e36ab2e1950f3acc222bba708c88"
     },
     "man/pipe.Rd": {
       "checksum": "de570f4bd2659c8f2cd27a85c5f92d4f"
@@ -4841,10 +4844,10 @@
       "checksum": "97f9726e9dc06c780f75227609fee0bf"
     },
     "R/app_server.R": {
-      "checksum": "7e0ff50c9c8240c8af5b7d0375cba70e"
+      "checksum": "1ddb423777ca07376c047cdc25d544ae"
     },
     "R/app_ui.R": {
-      "checksum": "f416b5b64918470f6874007d7857fb90"
+      "checksum": "9c2b67397a36ddd2d67b14b187fa862f"
     },
     "R/data-phuse_TDF_ADaM.R": {
       "checksum": "dd6bbb4ce77ce6a0f0ac5f8d75995dce"
@@ -4853,7 +4856,7 @@
       "checksum": "1dc6162be19a6a317f131096fdddd385"
     },
     "R/global.R": {
-      "checksum": "ce1a9e85455be3fef9f470fc5ad95705"
+      "checksum": "61e2a6b4dce5d0af777025fb6e8af796"
     },
     "R/golem_utils_server.R": {
       "checksum": "2303a1260fa755a7ce0f24b3d4ad8cb5"
@@ -4877,7 +4880,10 @@
       "checksum": "407f592a74aa9b392965a7b4856233d0"
     },
     "R/mod_indvExp_fct_buildEvents.R": {
-      "checksum": "917e3eb68f0b65f17fe3c9e7449b1ba9"
+      "checksum": "66d6d526b3767fc5de25155e95fc45af"
+    },
+    "R/mod_indvExp_fct_organizeEvent.R": {
+      "checksum": "6471271e6b1ece981cd4eb215d077138"
     },
     "R/mod_indvExp_srv.R": {
       "checksum": "6a32ed953f5dfdcbf0397d77d003cfcd"
@@ -4943,7 +4949,7 @@
       "checksum": "441678f5eca7c7ef1c65806ebe272c40"
     },
     "R/mod_tableGen.R": {
-      "checksum": "3a65704ef46aacc9515b13029e9e1648"
+      "checksum": "c48c908f2024763d4da92194323f2e79"
     },
     "R/mod_tableGen_fct_anova.R": {
       "checksum": "d57471b96eaff2ab434479f99b6f63d2"
@@ -4967,10 +4973,10 @@
       "checksum": "e918ca31cae85719f65484a5671b8dd7"
     },
     "R/mod_tableGen_ui.R": {
-      "checksum": "96d48a2247b69b86e4fe075f2d9ef7f6"
+      "checksum": "277c15d0cc161bf63d31ed81245a5a1d"
     },
     "R/mod_tableGen_utils.R": {
-      "checksum": "13cc159e7bdf87538f3feed586a27a87"
+      "checksum": "cf34d82cea398e5754808586e9f93616"
     },
     "R/run_app.R": {
       "checksum": "84781c4a639edd105b3236fbf9b4390a"
@@ -5031,6 +5037,12 @@
     },
     "vignettes/Create_TG_Table.Rmd": {
       "checksum": "6e2428b015ae2f1fad2a293ef377e76b"
+    },
+    "vignettes/dev_Indv_Expl_Add_Events.Rmd": {
+      "checksum": "5a4963d589b237212fb4dc4cce0f2ae9"
+    },
+    "vignettes/figures/IndvExp/org_df_events_output.PNG": {
+      "checksum": "eaad33853f3c4a0563fdef04547cf12f"
     },
     "vignettes/figures/tableGen/01-dataupload.png": {
       "checksum": "7804e9f2b04b8dc4f2acb9e83e43d31b"
