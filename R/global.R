@@ -104,5 +104,5 @@ utils::globalVariables(c(
   "write.csv",
   "x",
   "js",
-  "bymean"
+  "byymean"
 ))

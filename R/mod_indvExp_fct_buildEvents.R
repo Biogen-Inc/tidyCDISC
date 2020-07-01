@@ -20,7 +20,7 @@
 #' @importFrom tidyr pivot_longer
 #' @importFrom purrr map_chr
 #'
-#' @return Data frame standardized to include events from vaious OCCDs class
+#' @return Data frame standardized to include events from various OCCDs class
 #'   files
 #'
 #' @family indvExp Functions
@@ -33,40 +33,22 @@ build_events <- function(
   , my_filtered_dat
   , my_usubjid
 ){
-  ########
-  # ADAE #
-  ########
+
   
   # If Adverse Events (adae) selected & loaded, and If correct date variable exists
   # then convert the adae data frame to a standard format.
-  if ("ADAE" %in% my_loaded_adams & "AE" %in% c(input_checkbox)) {
-    
-    if("AESTDT" %in% colnames(my_datafile[["ADAE"]])){
-      ae_rec <- 
-        # conditionally toggle which dataset is used
-        (if(input_apply_filter == T) my_datafile[["ADAE"]] %>% semi_join(my_filtered_dat) else my_datafile[["ADAE"]]) %>% 
-        filter(USUBJID == my_usubjid) %>%
-        filter(!is.na(AESTDT) ) %>%
-        mutate(EVENTTYP = "Adverse Events", DOMAIN = "AE") %>%
-        distinct(USUBJID, EVENTTYP, AESTDT, AEDECOD, AESEV, AESER, DOMAIN) %>%
-        mutate(
-          START = AESTDT,
-          END = NA,
-          tab_st = ifelse(as.character(START) == "", NA_character_, as.character(START)), # disp chr in DT
-          tab_en = ifelse(as.character(END) == "", NA_character_, as.character(END)),     # disp chr in DT
-          DECODE = paste(AEDECOD, "AESEV:", AESEV, "AESER:", AESER)
-        ) %>%
-        select(-starts_with("AE")) %>%
-        distinct(.keep_all = TRUE)
-    } else{
-      if("AE" %in% c(input_checkbox)){
-        shinyjs::alert(paste("Cannot add Adverse Events: no AESTDT variable exists in the loaded ADAE."))
-      }
-      ae_rec <- NULL
-    }
-  } else {
-    ae_rec <- NULL
-  }
+  ae_rec <- org_df_events(
+    df_name = "ADAE", df_domain_abbr = "AE", df_desc = "Adverse Events"
+    , df_st_date_vars = c("AESTDT","ASTDT")
+    , event_desc_vars = c("AEDECOD","AESEV","AESER")
+    , event_desc = 'paste0(AEDECOD, ", AESEV: ", AESEV, ", AESER: ", AESER)'
+    , mi_input_checkbox = input_checkbox
+    , mi_input_apply_filter = input_apply_filter
+    , mi_usubjid = my_usubjid
+    , mi_loaded_adams = my_loaded_adams
+    , mi_datafile = my_datafile
+    , mi_filtered_dat = my_filtered_dat
+  )
   
   ########
   # ADSL #
@@ -117,56 +99,36 @@ build_events <- function(
     ds_rec <- NULL
   }
   
-  if ("ADCM" %in% my_loaded_adams & "CM" %in% c(input_checkbox)) {
-    if("CMSTDT" %in% colnames(my_datafile[["ADCM"]])){
-      cm_rec <- 
-        # conditionally toggle which dataset is used
-        (if(input_apply_filter == T) my_datafile[["ADCM"]] %>% semi_join(my_filtered_dat) else my_datafile[["ADCM"]]) %>%
-        filter(USUBJID == my_usubjid) %>%
-        filter(CMDECOD != "") %>%
-        mutate(EVENTTYP = "Concomitant Meds", DOMAIN = "CM") %>%
-        distinct(USUBJID, EVENTTYP, CMSTDT, CMDECOD, DOMAIN) %>%
-        mutate(START = CMSTDT,
-               END = NA, 
-               tab_st = ifelse(as.character(START) == "", NA_character_, as.character(START)), # disp chr in DT
-               tab_en = ifelse(as.character(END) == "", NA_character_, as.character(END)),     # disp chr in DT
-               DECODE = CMDECOD) %>%
-        select(-starts_with("CM")) %>%
-        distinct(.keep_all = TRUE)
-    } else{
-      if("CM" %in% c(input_checkbox)){
-        shinyjs::alert(paste("Cannot add Con Meds: no CMSTDT variable exists in the loaded ADCM."))
-      }
-      cm_rec <- NULL
-    }
-  } else {
-    cm_rec <- NULL
-  }
+  # If con meds (adcm) selected & loaded, and If correct date variable exists
+  # then convert the adae data frame to a standard format.
+  cm_rec <- org_df_events(
+    df_name = "ADCM", df_domain_abbr = "CM", df_desc = "Concomitant Meds"
+    , df_st_date_vars = c("CMSTDT")
+    , event_desc_vars = "CMDECOD"
+    , event_desc = 'CMDECOD'
+    , mi_input_checkbox = input_checkbox
+    , mi_input_apply_filter = input_apply_filter
+    , mi_usubjid = my_usubjid
+    , mi_loaded_adams = my_loaded_adams
+    , mi_datafile = my_datafile
+    , mi_filtered_dat = my_filtered_dat
+  )
   
-  if ("ADLB" %in% my_loaded_adams & "LB" %in% c(input_checkbox)) {
-    if("LBDT" %in% colnames(my_datafile[["ADLB"]])){
-      lb_rec <- 
-        # conditionally toggle which dataset is used
-        (if(input_apply_filter == T) my_datafile[["ADLB"]] %>% semi_join(my_filtered_dat) else my_datafile[["ADLB"]]) %>%
-        filter(USUBJID == my_usubjid) %>%
-        mutate(EVENTTYP = "Lab Results", DOMAIN = "LB") %>%
-        distinct(USUBJID, EVENTTYP, LBDT, DOMAIN) %>% # Chris suggested: ADT ANALYSIS DATE, 
-        mutate(START = LBDT,
-               END = NA,
-               tab_st = ifelse(as.character(START) == "", NA_character_, as.character(START)), # disp chr in DT
-               tab_en = ifelse(as.character(END) == "", NA_character_, as.character(END)),     # disp chr in DT
-               DECODE = "Labs Drawn") %>%
-        select(-starts_with("LB")) %>%
-        distinct(.keep_all = TRUE)
-    } else{
-      if("LB" %in% c(input_checkbox)){
-        shinyjs::alert(paste("Cannot add Lab Data: no LBDT variable exists in the loaded ADLB"))
-      }
-      lb_rec <- NULL
-    }
-  } else {
-    lb_rec <- NULL
-  }
+  # If Lab (adlb) selected & loaded, and If correct date variable exists
+  # then convert the adae data frame to a standard format.
+  lb_rec <- org_df_events(
+    df_name = "ADLB", df_domain_abbr = "LB", df_desc = "Lab Results"
+    , df_st_date_vars = c("LBDT") # from left to right
+    , event_desc_vars = ""
+    , event_desc = "'Labs Drawn'"
+    , mi_input_checkbox = input_checkbox
+    , mi_input_apply_filter = input_apply_filter
+    , mi_usubjid = my_usubjid
+    , mi_loaded_adams = my_loaded_adams
+    , mi_datafile = my_datafile
+    , mi_filtered_dat = my_filtered_dat
+  )
+  
   # Medical history (which contains several categories that get treated as their own group)
   if ("ADMH" %in% my_loaded_adams & "MH_" %in% substring(input_checkbox, 1, 3)) {
     # if the date column exists in the data set, build the data
@@ -228,5 +190,6 @@ build_events <- function(
     arrange(sort_start, ord, EVENTTYP) %>%
     filter(DOMAIN %in% c(strng)) %>%
     select(-USUBJID, -ord, -sort_start)
+  
   return(uni_rec)
 }

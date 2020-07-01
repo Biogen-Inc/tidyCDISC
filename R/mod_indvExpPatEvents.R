@@ -88,7 +88,6 @@ mod_indvExpPatEvents_server <- function(input, output, session,
     }
     else{
       
-      
       # See build_events_df.R
       uni_rec <- build_events(input_checkbox = input$checkGroup
                               , input_apply_filter = input$events_apply_filter

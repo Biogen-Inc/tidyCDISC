@@ -31,7 +31,7 @@ app_server <- function( input, output, session ) {
   
   # render the tablegenerator module using the datafile from dataupload as an input
   table_generator <- callModule(mod_tableGen_server, "tableGen_ui_1", datafile = datafile)
-  
+
   output$all_rows <- renderUI({ table_generator() })
   
   # Population Explorer
