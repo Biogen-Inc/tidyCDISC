@@ -288,15 +288,16 @@ mod_popExp_server <- function(input, output, session, datafile){
   #   RadioUpdate()
   # }, ignoreInit = TRUE)  
   
+
   # Update datset, depending on adv_filtering or filtered_data() changing
   dataset <- eventReactive(list(input$adv_filtering,filtered_data()), {
-      if (!is.null(filtered_data() && input$adv_filtering == TRUE)) {
-        filtered_data() 
-      } else {
-        feed_filter()
-      }
+    if (!is.null(filtered_data()) && input$adv_filtering == TRUE ) {
+      filtered_data() 
+    } else {
+      feed_filter()
+    }
   })
-
+    
   #
   # input$radio button processing
   #
