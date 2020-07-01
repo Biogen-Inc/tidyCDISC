@@ -59,6 +59,16 @@ fnIndvExplVisits <- function(
     bds_data %>%
     filter(!(is.na(!!INPUT_visit_var)) & PARAMCD == input_plot_param) # make sure AVISITN is not missing
   
+  # Find the max number of avals for any visit
+  most_avals_per_visit <- 
+    plot_dat %>%
+    group_by(!!INPUT_visit_var) %>%
+    summarize(n = n()) %>%
+    ungroup() %>%
+    summarize(max_avals = max(n, na.rm = T)) %>%
+    pull(max_avals)
+    
+  
   if("Screening" %in% input_plot_hor){
     plot_scr <- plot_dat %>% subset(regexpr("SCREENING", toupper(VISIT)) > 0) %>% distinct(AVAL) %>% mutate(Visit = "Screening")
   }
@@ -75,15 +85,9 @@ fnIndvExplVisits <- function(
     }
     
     # GGPLOT2 OBJECT
-    lb_plot <- ggplot(plot_dat, aes(x = !!INPUT_visit_var, y = AVAL)) + 
+    lb_plot <- 
+      ggplot(plot_dat, aes(x = !!INPUT_visit_var, y = AVAL)) + 
       geom_line() +
-      suppressWarnings(geom_point(na.rm = TRUE, 
-                 aes(text =
-                       paste0(AVISIT,
-                              "<br>",input_visit_var, ": ",!!INPUT_visit_var,
-                              "<br>",input_plot_param ,": ",AVAL
-                       )
-                 ))) +
       scale_x_continuous(breaks = seq(min(plot_dat[,input_visit_var]), max(plot_dat[,input_visit_var]), 30)) +
       labs(x = paste0("Study Visit (",input_visit_var,")"),
            y = prm,
@@ -94,6 +98,32 @@ fnIndvExplVisits <- function(
                     ,""),
              "USUBJID: ",usubjid)
       )	
+    
+    # IF there are multiple AVALs for a single USUBJID, PARAMCD, and VISIT
+    #    AND ADTM or ATPT exists... THEN plot those values on the graph as well
+    if(most_avals_per_visit > 1 & any(c("ATM","ATPT") %in% colnames(plot_dat))){
+      avals_by <- sym(c("ATM","ATPT")[c("ATM","ATPT") %in% colnames(plot_dat)][1])
+      lb_plot <- lb_plot + 
+        suppressWarnings(geom_point(na.rm = TRUE, 
+                        aes(colour = !!avals_by, # add variable to color by
+                            text = paste0(AVISIT,
+                                     "<br>",input_visit_var, ": ",!!INPUT_visit_var,
+                                     "<br>",avals_by, ": ",!!avals_by,
+                                     "<br>",input_plot_param ,": ",AVAL
+                              )
+                        ))
+        )
+    } else { # no color by variable in legend
+      lb_plot <- lb_plot + 
+        suppressWarnings(geom_point(na.rm = TRUE, 
+                        aes(text = paste0(AVISIT,
+                                          "<br>",input_visit_var, ": ",!!INPUT_visit_var,
+                                          "<br>",input_plot_param ,": ",AVAL
+                            )
+                        ))
+        )
+      
+    }
     
     if(watermark & graph_output == "ggplot"){
       

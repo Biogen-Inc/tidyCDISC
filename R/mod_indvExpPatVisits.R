@@ -489,7 +489,10 @@ mod_indvExpPatVisits_server <- function(input, output, session, datafile, loaded
           "VISITNUM",
           "AVISITN",
           "VISIT",
-          "AVISIT"),
+          "AVISIT",
+          "ATM",
+          "ATPT"
+          ),
           PARAMCD,
           PARAM,
           AVAL 
