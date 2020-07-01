@@ -109,8 +109,8 @@ mod_indvExp_ui <- function(id){
                               materialSwitch(ns("events_apply_filter")
                                              , label = strong(em(h5("Apply Filters")))
                                              , status = "primary"
-                                             , value = T)
-                          )
+                                             , value = F) # should default to false to avoid
+                          )                               # semi-joins found in build-events
                      )
                    ) # end inner fluidRow
                  )) # end column 10 & wellPanel
