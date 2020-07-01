@@ -97,10 +97,10 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     # warnings if labels are different between two datasets, which is fine!
     # Ignore
     non_bds <- select_dfs[sapply(select_dfs, function(x) !("PARAMCD" %in% colnames(x)) )] 
-    BDS <- select_dfs[sapply(select_dfs, function(x) "PARAMCD" %in% colnames(x) )]
+    bds <- select_dfs[sapply(select_dfs, function(x) "PARAMCD" %in% colnames(x) )]
     
     # Make CHG var doesn't exist, create the column and populate with NA
-    PARAMCD_dat <- purrr::map(BDS, ~ if(!"CHG" %in% names(.)) {purrr::update_list(., CHG = NA)} else {.})
+    PARAMCD_dat <- purrr::map(bds, ~ if(!"CHG" %in% names(.)) {purrr::update_list(., CHG = NA)} else {.})
     
     # Combine selected data into a 1 usable data frame
     if (!rlang::is_empty(PARAMCD_dat)) {
@@ -138,16 +138,22 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # this allows our dropdown to be in chronological order
   avisit_words <- reactive({ 
     req(any(purrr::map_lgl(datafile(), ~"AVISIT" %in% colnames(.x))))
-    suppressWarnings(processed_data()$AVISIT)
+    
+    purrr::map(BDS(), function(x) x %>% dplyr::select(AVISIT)) %>%
+      dplyr::bind_rows() %>%
+      dplyr::pull(AVISIT)
   })
+  
   avisit_fctr  <- reactive({ 
     req(any(purrr::map_lgl(datafile(), ~"AVISIT" %in% colnames(.x))))
-    processed_data()$AVISITN 
+    purrr::map(BDS(), function(x) x %>% dplyr::select(AVISITN)) %>%
+      dplyr::bind_rows() %>%
+      dplyr::pull(AVISITN)
   })
   
   AVISIT <- reactive({
     req(BDS())
-    
+    print(avisit_words())
     if (is.null(avisit_words())) {
       avisit_words <- " "
     } else {
