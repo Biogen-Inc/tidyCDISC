@@ -25,7 +25,7 @@ app_ui <- function(request) {
                tabPanel(
                  title = "Population Explorer",
                  # mod_selectData_ui("selectData_ui_1"),
-                 mod_selectData_ui("popExp_ui_1"),
+                 # mod_selectData_ui("popExp_ui_1"),
                  mod_popExp_ui("popExp_ui_1")
                ),
                tabPanel(
