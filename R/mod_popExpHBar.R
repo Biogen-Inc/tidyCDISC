@@ -38,26 +38,21 @@ mod_popExpHBar_server <- function(input, output, session, df){
   v <- reactiveValues(selxvar = character(0), selyvar = character(0), groupbyvar = character(0))
   
 
+  chr <- sort(names(df()[ , which(sapply(df(),is.character))])) # all chr
+  fac <- sort(names(df()[ , which(sapply(df(),is.factor   ))])) # all factors
+  num <- sort(names(df()[ , which(sapply(df(),is.numeric  ))])) # all num
+  
+  # groupbyvar is loaded with all the character/factor columns
+  updateSelectInput(session = session, inputId = "groupbyvar", choices = c("",sort(c(chr,fac))), selected = "")
+  
+  updateSelectInput(session = session, inputId = "selxvar", choices = c("",sort(c(chr,fac))), selected = character(0))
+  
+  updateSelectInput(session = session, inputId = "selyvar", choices = c("",num),  selected=character(0))
+  
   dfsub <- reactive({ 
     req(input$selPrmCode != "") 
     filter(df(), PARAMCD == input$selPrmCode) 
   })
-  
-  observeEvent(dfsub(), {
-
-    req(!is.null(dfsub()))
-    
-    chr <- sort(names(dfsub()[ , which(sapply(df(),is.character))])) # all chr
-    fac <- sort(names(dfsub()[ , which(sapply(df(),is.factor   ))])) # all factors
-    num <- sort(names(dfsub()[ , which(sapply(df(),is.numeric  ))])) # all num
-    
-    # groupbyvar is loaded with all the character/factor columns
-    updateSelectInput(session = session, inputId = "groupbyvar", choices = c("",sort(c(chr,fac))), selected = "")
-    
-    updateSelectInput(session = session, inputId = "selxvar", choices = c("",sort(c(chr,fac))), selected = character(0))
-    
-    updateSelectInput(session = session, inputId = "selyvar", choices = c("",num),  selected=character(0))
-  }, ignoreInit = FALSE) 
   
 observeEvent(input$hbarOptions, {
     if (input$hbarOptions == "1") {
