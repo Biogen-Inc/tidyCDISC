@@ -11,8 +11,8 @@
 #' @import IDEAFilter
 #' @import waiter
 #' @importFrom rlang sym
-#' @importFrom haven zap_label
-#' @importFrom purrr map 
+#' @importFrom haven zap_label zap_formats
+#' @importFrom purrr map walk2
 #' @importFrom shinyjs show hide
 #' @importFrom shinyWidgets updatePrettyRadioButtons
 #' 
@@ -22,9 +22,6 @@
 mod_popExp_server <- function(input, output, session, datafile){
   ns <- session$ns
  
-  # print("in mod_popExp. session id is...")
-  # print(session$ns(""))
-  
   # function for updating the main plot radio buttons
   RadioUpdate <- function() {
     
@@ -64,10 +61,10 @@ mod_popExp_server <- function(input, output, session, datafile){
     )
   }
   
-  waiting_screen <- tagList(
-    spin_folding_cube(),
-    h4("Hold on a bit while we merge datasets...")
-  ) 
+  # waiting_screen <- tagList(
+  #   spin_folding_cube(),
+  #   h4("Hold on a bit while we merge datasets...")
+  # ) 
   
   # hide all the widgets
   widgets <- c("Parmstag","radio","selPrmCode","groupbox","groupbyvar","selxvar","selyvar","selzvar","seltimevar",
@@ -78,20 +75,19 @@ mod_popExp_server <- function(input, output, session, datafile){
   map(widgets, function(x) shinyjs::hide(x))
   
   # select the data sets
-  # dataselected <- callModule(mod_selectData_server, id = NULL, datafile) # ac golem: why would id = NULL for dataSelected?
-  # dataselected <- callModule(mod_selectData_server, "selectData_ui_1", datafile)
-  dataselected <- callModule(mod_selectData_server, id = NULL, datafile)
+  # dataselected <- callModule(mod_selectData_server, id = NULL, datafile)
   
   rv <- reactiveValues(all_data = NULL)
   
   # show/hide checkboxes depending on radiobutton selection
-  observeEvent(input$done,{
+  # observeEvent(input$done,{
+  observeEvent(datafile(), {
     
     # make sure selectData has been run
-    req(!is.null(dataselected()))    
+    req(!is.null(datafile()))  
     
-    waiter_show(html = waiting_screen, color = "lightblue")
-    Sys.sleep(0.5) # wait 1/2 second
+    # waiter_show(html = waiting_screen, color = "lightblue")
+    # Sys.sleep(0.5) # wait 1/2 second
     
     # set adv_filtering checkbox to FALSE; select Plot tab panel
     updateCheckboxInput(session = session, "adv_filtering", value = F)
@@ -104,13 +100,13 @@ mod_popExp_server <- function(input, output, session, datafile){
     # run the radioUpdate function above
     RadioUpdate()
     
-    datakeep <- reactive({ datafile()[dataselected()] })
+    # datakeep <- reactive({ datafile()[dataselected()] })
+    datakeep <- reactive({ datafile() })
     
     # The data used by the population explorer is going to be one of:
     # (1) one or more BDS datasets row-joined ("pancaked") together 
     #     if ADSL was also selected, it will be column-joined with the BDS data
     # (2) ADSL data alone
-    # (3) A custom dataset (with a PARAMCD but without a USUBJID)
     # 
     # Also, build fake PARAMCDs for ADAE and ADCM, if they were selected.
     
@@ -120,79 +116,84 @@ mod_popExp_server <- function(input, output, session, datafile){
     if ("ADSL" %in% names(datakeep())) {
       
       ADSL <- datakeep()$ADSL %>%
+        haven::zap_formats() %>%
         mutate(PARAMCD = "ADSL", PARAM = "Subject-Level Data", AVISIT = "Baseline", AVISITN = 0) 
-      sjlabelled::set_label(ADSL$AVISIT) <- "Analysis Visit"
+      sjlabelled::set_label(ADSL$PARAMCD) <- "Parameter Code"
+      sjlabelled::set_label(ADSL$PARAM)   <- "Parameter"
+      sjlabelled::set_label(ADSL$AVISIT)  <- "Analysis Visit"
+      sjlabelled::set_label(ADSL$AVISITN) <- "Analysis Visit (N)"
     }
     
     # add a PARAMCD and PARAM to ADAE, if it exists and put it back in the list
     if ("ADAE" %in% names(datakeep())) {
       ADAE <- datakeep()$ADAE %>%
+        haven::zap_formats() %>%
         filter(!AETERM %in% c(""," ",".")) %>%  # drop records where AETERM is missing
         mutate_if(is.character, list(~na_if(., ""))) %>%
         mutate(PARAMCD = "ADAE", PARAM = "Adverse Events", AVISIT = "Baseline", AVISITN = 0)
       
-      datazz <- append(datakeep()[!names(datakeep()) %in% "ADAE"],list("ADAE" = ADAE)) 
-      datakeep <- reactive({ datazz })
+      sjlabelled::set_label(ADAE$PARAMCD) <- "Parameter Code"
+      sjlabelled::set_label(ADAE$PARAM)   <- "Parameter"
+      sjlabelled::set_label(ADAE$AVISIT)  <- "Analysis Visit"
+      sjlabelled::set_label(ADAE$AVISITN) <- "Analysis Visit (N)"
+      
+      keepdata <- append(datakeep()[!names(datakeep()) %in% "ADAE"],list("ADAE" = ADAE)) 
+      datakeep <- reactive({ keepdata })
     }
     # add a PARAMCD and PARAM to ADCM, if it exists and put it back in the list
     if ("ADCM" %in% names(datakeep())) {
       ADCM <- datakeep()$ADCM %>%
+        haven::zap_formats() %>%
+        mutate_if(is.character, list(~na_if(., ""))) %>%
         mutate(PARAMCD = "ADCM", PARAM = "Concomitant Meds", AVISIT = "Baseline", AVISITN = 0)
       
-      datazz <- append(datakeep()[!names(datakeep()) %in% "ADCM"],list("ADCM" = ADCM)) 
-      datakeep <- reactive({ datazz })
+      sjlabelled::set_label(ADCM$PARAMCD) <- "Parameter Code"
+      sjlabelled::set_label(ADCM$PARAM)   <- "Parameter"
+      sjlabelled::set_label(ADCM$AVISIT)  <- "Analysis Visit"
+      sjlabelled::set_label(ADCM$AVISITN) <- "Analysis Visit (N)"
+      
+      keepdata <- append(datakeep()[!names(datakeep()) %in% "ADCM"],list("ADCM" = ADCM)) 
+      datakeep <- reactive({ keepdata })
     }
     
     # split the non-ADSL data into those which have a USUBJID or not
     NOTADSL <- datakeep()[names(datakeep()) != "ADSL" ]
     if (!is_empty(NOTADSL)) {
-      # keep only BDS datasets -- one of the colnames has to be "PARAMCD"
-      BDS <- NOTADSL[which(sapply(NOTADSL, function(df) "PARAMCD" %in% colnames(df)))]
-      # which of the above contain USUBJID ?
-      BDSUSUBJ <- BDS[which(sapply(BDS, function(df) "USUBJID" %in% colnames(df)))]
-      BDSOTHER <- BDS[!names(BDS) %in% names(BDSUSUBJ)]
-    } else {
-      BDSUSUBJ <- list()
-      BDSOTHER <- list()
-    }
-    
-    # we're going to assume you just want to look at the custom dataframe
-    if (!is_empty(BDSOTHER)) {
-      all_data <- bind_rows(BDSOTHER, .id = "data_from")
+      # keep only BDS/OCCDS datasets -- one of the colnames has to be "PARAMCD"
+      BDSOCCDS <- NOTADSL[which(sapply(NOTADSL, function(df) "PARAMCD" %in% colnames(df)))]
+   
+      # zap formats
+      for (i in 1:length(BDSOCCDS)) (
+        BDSOCCDS[[i]] <- haven::zap_formats(BDSOCCDS[[i]])
+      )
       
-    } else if (!is_empty(BDSUSUBJ)) {
       # Bind all the BDS (PARAMCD) files and filter them
-      all_USUBJ <- bind_rows(BDSUSUBJ, .id = "data_from")  %>%
-        select("STUDYID","USUBJID","PARAMCD",
-               everything() ) %>%
-        # ends_with("DY"),
-        # any_of(c("PARAM","AVAL","BASE","CHG","data_from","AVISIT","AVISITN","VISIT","VISITNUM",
-        #          "ITTFL", "BRTHDT", "SMN2COPY", "AGEFDOSE", "AGELEFD",
-        #          "CNSR","LBCAT","LBSTRESN","LBSTNRLO","LBSTNRHI"))) %>%
-        arrange(USUBJID, PARAMCD) 
+      all_BDSDATA <- bind_rows(BDSOCCDS, .id = "data_from")  
+      
+      # replace the variable labels lost when doing bind_rows()
+      for (i in 1:length(BDSOCCDS)) (
+        all_BDSDATA <- sjlabelled::copy_labels(all_BDSDATA, as.data.frame(BDSOCCDS[[i]]))
+      )
       
       # Join ADSL and all_PARAMCD, if it exsits
       if (exists("ADSL")) {
-        # take the names that are unique to ADSL
-        ADSL.1 <- ADSL[, !names(ADSL) %in% names(all_USUBJ)]
-        # add USUBJID
-        # ADSL.2 <- cbind(select(ADSL,USUBJID),ADSL.1,stringsAsFactors = FALSE)
-        ADSL.2 <- bind_cols(select(ADSL,USUBJID),ADSL.1)
-        # remove Warning: Column `USUBJID` has different attributes on LHS and RHS of join
-        ADSL.2 <- haven::zap_label(ADSL.2)  
-        all_data <- left_join(all_USUBJ, ADSL.2, by = "USUBJID")
-        rm(ADSL.1,ADSL.2)
+        # take by= variable USUBJID plus all the names that are unique to ADSL
+        ADSL.1 <- select(ADSL, USUBJID, dplyr::setdiff(names(ADSL), names(all_BDSDATA)))
+        # Warning: Column `USUBJID` has different attributes on LHS and RHS of join
+        all_data <- suppressWarnings(left_join(all_BDSDATA, ADSL.1, by = "USUBJID"))
+        rm(ADSL.1)
         
       } else {
         # all BDS files without ADSL variables
-        all_data <- all_USUBJ
+        all_data <- all_BDSDATA
+        
       }
       
     } else {
       # just ADSL by itself
       all_data <- bind_rows(ADSL, .id = "data_from")
       all_data$data_from <- "ADSL" # set to ADSL, defaults to "1" here???
-      sjlabelled::set_label(all_data$AVISIT) <- "Analysis Visit"
+      all_data <- sjlabelled::copy_labels(all_data, ADSL) 
     }
     
     # SAS data uses blanks as character missing; replace blanks with NAs for chr columns
@@ -210,56 +211,39 @@ mod_popExp_server <- function(input, output, session, datafile){
     if ("STUDYID" %in% colnames(all_data)) {
       if ("CHG" %in% colnames(all_data) ) {
         # set CHG to zero instead of NA at Baseline
-        all_data <- mutate(all_data, CHG = replace_na(CHG, 0))
+        all_data <- mutate(all_data, CHG = ifelse(AVISIT == "Baseline", replace_na(CHG, 0), CHG))
       }
+     
+      refact <- function(data, varc, varn) {
+        datac <- deparse(substitute(data))
+        if (varc %in% colnames(data) && varn %in% colnames(data)) {
+          message(paste("A factor was created for", varc, "based on", varn, "levels"))
+          data[, (varc) := forcats::fct_reorder(get(varc), get(varn))]
+        } 
+      }
+      varclst <- c("AGEGR","AGEGR1","SEX","RACE","TRTA","TRT01A","TRT02A","TRTP","TRT01P","TRT02P","AVISIT","APHASE","AETOXGR","AESEV","AEREL")
+      varnlst <- c("AGEGRN","AGEGR1N","SEXN","RACEN","TRTAN","TRT01AN","TRT02AN","TRTPN","TRT01PN","TRT02PN","AVISITN","APHASEN","AETOXGRN","AESEVN","AERELN")
       
-      if ("TRT01A" %in% colnames(all_data)) {
-        # dummy section
-      }
-      if ("TRT01P" %in% colnames(all_data)) {
-        # dummy section
-      }
-      if ("AGEGR" %in% colnames(all_data) && "AGEGRN" %in% colnames(all_data)) {
-        tmplabl <- sjlabelled::get_label(all_data$AGEGR)
-        all_data <- all_data %>%
-          mutate(AGEGR = fct_reorder(AGEGR, AGEGRN)) %>%
-          sjlabelled::var_labels(AGEGR = "Age Group")
-      } 
-      if ("AVISIT" %in% colnames(all_data) && "AVISITN" %in% colnames(all_data)) {
-        tmplabl <- sjlabelled::get_label(all_data$AVISIT)
-        all_data <- all_data %>%
-          mutate(AVISIT = fct_reorder(AVISIT, AVISITN)) %>%
-          sjlabelled::var_labels(AVISIT = "Analysis Visit")
-      } 
+      # save the variable labels into savelbls vector
+      savelbls <- sjlabelled::get_label(all_data)
+      
+      data.table::setDT(all_data)
+      purrr::walk2(varclst, varnlst, ~ refact(all_data, .x, .y))
+      
+      # copy SAS labels back into data
+      all_data <- sjlabelled::set_label(all_data, label = savelbls)
+      
     }
     
     rv$all_data <- reactive({ all_data })
     
-    waiter_hide()
-    
-  }, ignoreNULL = FALSE) # observeEvent input$done
+    # waiter_hide()
+  
+  }, ignoreNULL = FALSE) # observeEvent datafile()
   
   #
   # section for filtering
   #
-  
-  # set adv_filtering checkbox to TRUE if user selects the Filter tab panel
-  # observeEvent(input$tabset, {
-  #   # print(paste("You are Viewing tab panel",input$tabset))
-  #   if (input$tabset == "Filter") {
-  #    updateCheckboxInput(session = session, "adv_filtering", value = T)
-  #   }
-  # }, ignoreInit = TRUE)
-  
-  # If adv_filtering is checked, switch to Filter tab panel; otherwise, Plot tab panel
-  # observeEvent(input$adv_filtering, {
-  # 
-  #   if (input$adv_filtering == T) {
-  #     updateTabsetPanel(session = session, "tabset", selected = "Filter")
-  #   } else {
-  #     updateTabsetPanel(session = session, "tabset", selected = "Plot")
-  #   }
-  # })
   
   output$hide_panel <- eventReactive(input$adv_filtering, TRUE, ignoreInit = TRUE)
   outputOptions(output, "hide_panel", suspendWhenHidden = FALSE)
@@ -274,21 +258,6 @@ mod_popExp_server <- function(input, output, session, datafile){
     verbose = FALSE)
   
   
-  # clear the plot area, table, and radio buttons if clear plot has been checked    
-  # observeEvent(input$clearplot,{
-  #   req(input$clearplot == TRUE)
-  #   # Clear plotoutput
-  #   output$PlotlyOut <- renderPlotly({
-  #     NULL
-  #   })
-  #   # Clear datatable
-  #   output$DataTable <- DT::renderDataTable({
-  #     NULL
-  #   })
-  #   RadioUpdate()
-  # }, ignoreInit = TRUE)  
-  
-
   # Update datset, depending on adv_filtering or filtered_data() changing
   dataset <- eventReactive(list(input$adv_filtering,filtered_data()), {
     if (!is.null(filtered_data()) && input$adv_filtering == TRUE ) {
@@ -398,9 +367,6 @@ mod_popExp_server <- function(input, output, session, datafile){
   }, ignoreNULL = FALSE, ignoreInit = TRUE) # observeEvent input$radio
   
 }
-    
 
-    
 ## To be copied in the server -- done
 # callModule(mod_popExp_server, "popExp_ui_1")
- 
