@@ -194,5 +194,46 @@ uni_list <- list(ds_rec, ae_rec, cm_rec, lb_rec, mh_rec, md_rec)
 
 That's all it takes! A few lines later, `uni_list` is rbind-ed into a single data frame (hence the need for uniformity) that `build_events()` will sort and return in the app. Once that data is in the app, it will automatically flow through to the `timevis` object on the `Events` tab or the `Visits` tab, if you (the developer) allowed it to do so.
 
+## Color Aesthetics
+The absolutely last steps is going to be just adjust a few colors schemes on both the `timeviz` object on the `Events` tab and the plot on the `Visits` tab. Why? Because consistency between the tabs will help the users quickly recognize what type of data they're observing when the color is always consistent.
+
+First, to update the colors on the `timeviz` object on the `Events` tab, find the file called `utils_strObjs.R` in the R directory. It's there you'll find the following code:
+
+```{r, eval=FALSE}
+my_cols <- RColorBrewer::brewer.pal(7,"Pastel2")
+
+css <- paste0("
+              .nav li a.disabled {
+              background-color: #aaa !important;
+              color: #333 !important;
+              cursor: not-allowed !important;
+              border-color: #aaa !important;
+              }
+              
+              .vis-item.DS { background-color: ",my_cols[1],"; }
+              .vis-item.CM { background-color: ",my_cols[2],"; }
+              .vis-item.AE { background-color: ",my_cols[3],"; }
+              .vis-item.LB { background-color: ",my_cols[4],"; }
+              .vis-item.MH_MH { background-color: ",my_cols[5],"; }
+              .vis-item.MH_FDH { background-color: ",my_cols[6],"; }
+              .vis-item.MH_DH { background-color: ",my_cols[7],"; }
+              ")
+```
+
+If you are adding another OCCD Events class data type, you'll manually add a new color by increasing brewer.pal's first argument by 1 (from 7 to 8 in this case). Then, you'll add another row at the bottom. Continuing with our example, an ADMD would add a row that looks like this:
+
+```{r, eval=FALSE}
+".vis-item.MH_DH { background-color: ",my_cols[8],"; }"
+```
+
+Similarly, for the `Visits` tab, you'll need to add the name of the new event description to an object called `names2`, found in `R/mod_indvExpPatVisits_fct_plot.R`, assuming this type of event is approprate to overlay on such a plot. Here, we've actually taken the same colors as found in the `my_cols` vector above, but tinted them slightly darker so that they are more visible on the default grey ggplot2 background. Use your discretion whether you should tint or not. When ready, add the hex digit color to the vector below called vline_eventtype_cols, in the same element position as in `names2`.
+
+```{r, eval=FALSE}
+# mod_indvExpPatVisits_fct_plot
+names2 <- c("Milestones","Concomitant Meds","Adverse Events")
+vline_eventtype_cols <- c("#80d1ad", "#f5ae7d", "#a8bde6") # dark version of my_cols
+```
+
+
 Congratulations! After completing the above steps, you should now have access to the pertinent event/dates information in the app. With any questions, please feel free to reach out to app authors/ maintainers listed in the package documentation.
 
