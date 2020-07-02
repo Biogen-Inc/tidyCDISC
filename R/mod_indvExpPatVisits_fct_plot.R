@@ -101,18 +101,20 @@ fnIndvExplVisits <- function(
     
     # IF there are multiple AVALs for a single USUBJID, PARAMCD, and VISIT
     #    AND ADTM or ATPT exists... THEN plot those values on the graph as well
-    if(most_avals_per_visit > 1 & any(c("ATM","ATPT") %in% colnames(plot_dat))){
-      avals_by <- sym(c("ATM","ATPT")[c("ATM","ATPT") %in% colnames(plot_dat)][1])
+    extra_aval_vars <- c("ATM","ADTM","ATPT")
+    if(most_avals_per_visit > 1 & any(extra_aval_vars %in% colnames(plot_dat))){
+      # Grab first available variable that exists and could explain why their are extra avals
+      avals_by <- sym(extra_aval_vars[extra_aval_vars %in% colnames(plot_dat)][1])
+      # color geom_points by that variable
       lb_plot <- lb_plot + 
         suppressWarnings(geom_point(na.rm = TRUE, 
-                        # add variable to color by
-                        aes(colour = if(avals_by == "ATM"){as.POSIXct(!!avals_by)} else {!!avals_by},
-                            text = paste0(AVISIT,
-                                     "<br>",input_visit_var, ": ",!!INPUT_visit_var,
-                                     "<br>",avals_by, ": ",!!avals_by,
-                                     "<br>",input_plot_param ,": ",AVAL
-                              )
-                        ))
+          aes(colour = if(regexpr("TM",avals_by) > 0) {!!avals_by} else {!!avals_by},
+              text = paste0(AVISIT,
+                       "<br>",input_visit_var, ": ",!!INPUT_visit_var,
+                       "<br>",avals_by, ": ",!!avals_by,
+                       "<br>",input_plot_param ,": ",AVAL
+                )
+          ))
         )
       
       # as.POSIXct(strptime("1970-01-01 23:00:02",format='%H:%M:%S'))
@@ -120,11 +122,11 @@ fnIndvExplVisits <- function(
     } else { # no color by variable in legend
       lb_plot <- lb_plot + 
         suppressWarnings(geom_point(na.rm = TRUE, 
-                        aes(text = paste0(AVISIT,
-                                          "<br>",input_visit_var, ": ",!!INPUT_visit_var,
-                                          "<br>",input_plot_param ,": ",AVAL
-                            )
-                        ))
+          aes(text = paste0(AVISIT,
+                            "<br>",input_visit_var, ": ",!!INPUT_visit_var,
+                            "<br>",input_plot_param ,": ",AVAL
+              )
+          ))
         )
       
     }
