@@ -101,16 +101,19 @@ fnIndvExplVisits <- function(
     
     # IF there are multiple AVALs for a single USUBJID, PARAMCD, and VISIT
     #    AND ADTM or ATPT exists... THEN plot those values on the graph as well
-    extra_aval_vars <- c("ATM","ADTM","ATPT")
+    extra_aval_vars <- c("ATM","ATPT","ADTM")
     if(most_avals_per_visit > 1 & any(extra_aval_vars %in% colnames(plot_dat))){
       # Grab first available variable that exists and could explain why their are extra avals
       avals_by <- sym(extra_aval_vars[extra_aval_vars %in% colnames(plot_dat)][1])
+      # avals_by <- sym("ADTM")
+      if(avals_by == "ATM") {
+        plot_dat <- plot_dat %>% mutate(ATM = as.POSIXct(paste("1970-01-01",ATM)))
+      }
       
       # color geom_points by that variable
       lb_plot <- lb_plot + 
-        suppressWarnings(geom_point(na.rm = TRUE, 
-          aes(colour = !!avals_by,
-                # if(regexpr("TM",avals_by) > 0) {!!avals_by} else {!!avals_by},
+        suppressWarnings(geom_point(data = plot_dat, na.rm = TRUE, 
+          aes(x = !!INPUT_visit_var, y = AVAL, colour = !!avals_by,
               text = paste0(AVISIT,
                        "<br>",input_visit_var, ": ",!!INPUT_visit_var,
                        "<br>",avals_by, ": ",!!avals_by,
