@@ -68,7 +68,10 @@ fnIndvExplVisits <- function(
     summarize(max_avals = max(n, na.rm = T)) %>%
     pull(max_avals)
     
+  # initialize man_cols for manual color control
+  man_cols <- character(0)
   
+  # Create screening or baseline data as necessary
   if("Screening" %in% input_plot_hor){
     plot_scr <- plot_dat %>% subset(regexpr("SCREENING", toupper(VISIT)) > 0) %>% distinct(AVAL) %>% mutate(Visit = "Screening")
   }
@@ -109,7 +112,6 @@ fnIndvExplVisits <- function(
       if(avals_by == "ATM") {
         plot_dat <- plot_dat %>% mutate(ATM = as.POSIXct(paste("1970-01-01",ATM)))
       }
-      
       # color geom_points by that variable
       lb_plot <- lb_plot + 
         suppressWarnings(geom_point(data = plot_dat, na.rm = TRUE, 
@@ -122,8 +124,18 @@ fnIndvExplVisits <- function(
           ))
         )
       
-      # as.POSIXct(strptime("1970-01-01 23:00:02",format='%H:%M:%S'))
-      # as.POSIXct(strftime("1970-01-01 23:00:02",format='%H:%M:%S'))
+      geom_point_names <- plot_dat %>% distinct(!!avals_by) %>% pull()
+      num_names <- length(geom_point_names)
+      geom_point_cols <- my_gg_color_hue(2 + num_names)[3:(2+num_names)]
+      man_cols <- c(man_cols, setNames(geom_point_cols, geom_point_names))
+      
+      # geom_point_cols <- 
+      # lb_plot$layers
+      # grab all the geom data except for geom_line, which is always first [[1]]
+      # g <- ggplot_build(lb_plot)
+      # gg <- g$data[2:length(g$data)]
+      # existing_colours <- unique(unlist(map(.x = 1:length(gg), ~gg[[.x]]$colour)))
+      
     } else { # no color by variable in legend
       lb_plot <- lb_plot + 
         suppressWarnings(geom_point(na.rm = TRUE, 
@@ -133,7 +145,6 @@ fnIndvExplVisits <- function(
               )
           ))
         )
-      
     }
     
     if(watermark & graph_output == "ggplot"){
@@ -158,19 +169,6 @@ fnIndvExplVisits <- function(
     }
     
     
-    # if a lengend is needed, let's just define the line colors and types in one place
-    if(length(input_plot_hor) > 0 | length(input_overlay_events) > 0 & input_visit_var %in% vv_dy_name){
-      
-      names2 <- c("Milestones","Concomitant Meds","Adverse Events","Baseline","Screening") # ac: labels
-      vline_eventtype_cols <- c(
-        "#80d1ad", "#f5ae7d", "#a8bde6", # my_cols[1:3]
-        my_gg_color_hue(2))
-      v_event_cols <- setNames(vline_eventtype_cols,names2)
-      
-      lb_plot <- lb_plot +
-        scale_color_manual(values= v_event_cols)
-    }
-    
     
     # plot vlines using events dataset
     if(length(input_overlay_events) > 0 & input_visit_var %in% vv_dy_name){ #& "ADLB" %in% loaded_adams() # overlay checkbox won't appear unless this is true
@@ -185,6 +183,10 @@ fnIndvExplVisits <- function(
                    text = paste0(input_visit_var, ": ",floor(!!INPUT_visit_var),"<br>", DECODE)
                 ), size = .35
             )
+          
+          names2 <- c("Milestones","Concomitant Meds","Adverse Events")
+          vline_eventtype_cols <- c("#80d1ad", "#f5ae7d", "#a8bde6") # dark version of my_cols
+          man_cols <- c(man_cols, setNames(vline_eventtype_cols,names2))
         }
       }
     }
@@ -192,8 +194,8 @@ fnIndvExplVisits <- function(
     # If lab data, plot the normal low and high values for the drug, add a little space in the bottom margin
     if(input_plot_adam == "ADLB"){
       lb_plot <- lb_plot + 
-        geom_hline(aes(yintercept = mean(LBSTNRLO)), colour = "blue") +
-        geom_hline(aes(yintercept = mean(LBSTNRHI)), colour = "blue") +
+        geom_hline(aes(yintercept = mean(LBSTNRLO)), color = "blue") +
+        geom_hline(aes(yintercept = mean(LBSTNRHI)), color = "blue") +
         theme(
           plot.margin = margin(b = 1.2, unit = "cm")
         ) 
@@ -204,15 +206,39 @@ fnIndvExplVisits <- function(
       if(nrow(plot_scr) > 0){
         lb_plot <- lb_plot +
           geom_hline(plot_scr, mapping = aes(yintercept = AVAL, colour = Visit))
+        
+        man_cols <- c(man_cols, setNames(my_gg_color_hue(2)[2],"Screening"))
       }
     }
     if("Baseline" %in% input_plot_hor){
       if(nrow(plot_base) > 0){
         lb_plot <- lb_plot +
           geom_hline(plot_base, mapping = aes(yintercept = AVAL, colour = Visit))
+        
+        man_cols <- c(man_cols, setNames(my_gg_color_hue(2)[1],"Baseline"))
       }
     }
+    
+    # if a lengend is needed, let's just define the line colors and types in one place
+    if(length(input_plot_hor) > 0 | 
+       (most_avals_per_visit > 1 & any(extra_aval_vars %in% colnames(plot_dat)))|
+       (length(input_overlay_events) > 0 & input_visit_var %in% vv_dy_name)){
+
+      lb_plot <- lb_plot +
+        scale_color_manual(values= man_cols)
+    }
     # End: ggplot2 object
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
