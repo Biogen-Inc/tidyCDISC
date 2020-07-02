@@ -104,39 +104,49 @@ fnIndvExplVisits <- function(
     
     # IF there are multiple AVALs for a single USUBJID, PARAMCD, and VISIT
     #    AND ADTM or ATPT exists... THEN plot those values on the graph as well
-    extra_aval_vars <- c("ATM","ATPT","ADTM")
+    extra_aval_vars <- c("ATM","ATPT")
     if(most_avals_per_visit > 1 & any(extra_aval_vars %in% colnames(plot_dat))){
       # Grab first available variable that exists and could explain why their are extra avals
       avals_by <- sym(extra_aval_vars[extra_aval_vars %in% colnames(plot_dat)][1])
-      # avals_by <- sym("ADTM")
       if(avals_by == "ATM") {
         plot_dat <- plot_dat %>% mutate(ATM = as.POSIXct(paste("1970-01-01",ATM)))
       }
-      # color geom_points by that variable
-      lb_plot <- lb_plot + 
-        suppressWarnings(geom_point(data = plot_dat, na.rm = TRUE, 
-          aes(x = !!INPUT_visit_var, y = AVAL, colour = !!avals_by,
-              text = paste0(AVISIT,
-                       "<br>",input_visit_var, ": ",!!INPUT_visit_var,
-                       "<br>",avals_by, ": ",!!avals_by,
-                       "<br>",input_plot_param ,": ",AVAL
-                )
-          ))
-        )
+      # if discrete atpt, use color aesthetic 
+      if(avals_by == "ATPT"){
+        lb_plot <- lb_plot + 
+          suppressWarnings(
+            geom_point(data = plot_dat, na.rm = TRUE, 
+              aes(x = !!INPUT_visit_var, y = AVAL, 
+                  colour = !!avals_by, # colour aesthetic for for discrete
+                  text = paste0(AVISIT,
+                                "<br>",input_visit_var, ": ",!!INPUT_visit_var,
+                                "<br>",avals_by, ": ",!!avals_by,
+                                "<br>",input_plot_param ,": ",AVAL
+                  )
+              ))
+          )
+        # manually create colors and updates man_cols
+        geom_point_names <- plot_dat %>% distinct(!!avals_by) %>% pull()
+        num_names <- length(geom_point_names)
+        geom_point_cols <- my_gg_color_hue(2 + num_names)[3:(2+num_names)]
+        man_cols <- c(man_cols, setNames(geom_point_cols, geom_point_names))
+      } 
+      else { # if continuous posixct object (like ATM) then use fill aesthetic for color gradient
+        lb_plot <- lb_plot + 
+          suppressWarnings(
+            geom_point(data = plot_dat, na.rm = TRUE, 
+              aes(x = !!INPUT_visit_var, y = AVAL, 
+                  fill = !!avals_by, # fill aesthetic for for continuous will make gradient legend
+                  text = paste0(AVISIT,
+                                "<br>",input_visit_var, ": ",!!INPUT_visit_var,
+                                "<br>",avals_by, ": ",!!avals_by,
+                                "<br>",input_plot_param ,": ",AVAL
+                  )
+              ))
+          )
+      }
       
-      geom_point_names <- plot_dat %>% distinct(!!avals_by) %>% pull()
-      num_names <- length(geom_point_names)
-      geom_point_cols <- my_gg_color_hue(2 + num_names)[3:(2+num_names)]
-      man_cols <- c(man_cols, setNames(geom_point_cols, geom_point_names))
-      
-      # geom_point_cols <- 
-      # lb_plot$layers
-      # grab all the geom data except for geom_line, which is always first [[1]]
-      # g <- ggplot_build(lb_plot)
-      # gg <- g$data[2:length(g$data)]
-      # existing_colours <- unique(unlist(map(.x = 1:length(gg), ~gg[[.x]]$colour)))
-      
-    } else { # no color by variable in legend
+    } else { # no color by variable in legend or hover text
       lb_plot <- lb_plot + 
         suppressWarnings(geom_point(na.rm = TRUE, 
           aes(text = paste0(AVISIT,
