@@ -105,7 +105,8 @@ fnIndvExplVisits <- function(
       avals_by <- sym(c("ATM","ATPT")[c("ATM","ATPT") %in% colnames(plot_dat)][1])
       lb_plot <- lb_plot + 
         suppressWarnings(geom_point(na.rm = TRUE, 
-                        aes(colour = !!avals_by, # add variable to color by
+                        # add variable to color by
+                        aes(colour = if(avals_by == "ATM"){as.POSIXct(!!avals_by)} else {!!avals_by},
                             text = paste0(AVISIT,
                                      "<br>",input_visit_var, ": ",!!INPUT_visit_var,
                                      "<br>",avals_by, ": ",!!avals_by,
@@ -113,6 +114,9 @@ fnIndvExplVisits <- function(
                               )
                         ))
         )
+      
+      # as.POSIXct(strptime("1970-01-01 23:00:02",format='%H:%M:%S'))
+      # as.POSIXct(strftime("1970-01-01 23:00:02",format='%H:%M:%S'))
     } else { # no color by variable in legend
       lb_plot <- lb_plot + 
         suppressWarnings(geom_point(na.rm = TRUE, 
