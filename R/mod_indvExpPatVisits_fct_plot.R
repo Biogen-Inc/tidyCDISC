@@ -105,10 +105,12 @@ fnIndvExplVisits <- function(
     if(most_avals_per_visit > 1 & any(extra_aval_vars %in% colnames(plot_dat))){
       # Grab first available variable that exists and could explain why their are extra avals
       avals_by <- sym(extra_aval_vars[extra_aval_vars %in% colnames(plot_dat)][1])
+      
       # color geom_points by that variable
       lb_plot <- lb_plot + 
         suppressWarnings(geom_point(na.rm = TRUE, 
-          aes(colour = if(regexpr("TM",avals_by) > 0) {!!avals_by} else {!!avals_by},
+          aes(colour = !!avals_by,
+                # if(regexpr("TM",avals_by) > 0) {!!avals_by} else {!!avals_by},
               text = paste0(AVISIT,
                        "<br>",input_visit_var, ": ",!!INPUT_visit_var,
                        "<br>",avals_by, ": ",!!avals_by,
