@@ -244,12 +244,12 @@ mod_popExp_server <- function(input, output, session, datafile){
   #
   
   # set adv_filtering checkbox to TRUE if user selects the Filter tab panel
-  observeEvent(input$tabset, {
-    # print(paste("You are Viewing tab panel",input$tabset))
-    if (input$tabset == "Filter") {
-     updateCheckboxInput(session = session, "adv_filtering", value = T)
-    }
-  }, ignoreInit = TRUE)
+  # observeEvent(input$tabset, {
+  #   # print(paste("You are Viewing tab panel",input$tabset))
+  #   if (input$tabset == "Filter") {
+  #    updateCheckboxInput(session = session, "adv_filtering", value = T)
+  #   }
+  # }, ignoreInit = TRUE)
   
   # If adv_filtering is checked, switch to Filter tab panel; otherwise, Plot tab panel
   # observeEvent(input$adv_filtering, {
