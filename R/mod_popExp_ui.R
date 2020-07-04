@@ -137,7 +137,7 @@ mod_popExp_ui <- function(id, label = "Population Explorer"){
     ), # sidebarPanel
     mainPanel(width=10,
               tabsetPanel(id=ns("tabset"), type = "tabs",
-                          tabPanel("Plot", id = ns("Plot"), plotlyOutput(ns("PlotlyOut"), width = "100%", height = "600px")),
+                          tabPanel("Plot", id = ns("Plot"), plotlyOutput(ns("PlotlyOut"), width = "100%", height = "800px")),
                           tabPanel("Table", id = ns("Table"), DT::dataTableOutput(ns("DataTable"))),
                           tabPanel("Filter", id = ns("Filter"),
                                    fluidRow(

@@ -77,14 +77,17 @@ mod_popExp_server <- function(input, output, session, datafile){
   # select the data sets
   # dataselected <- callModule(mod_selectData_server, id = NULL, datafile)
   
-  rv <- reactiveValues(all_data = NULL)
+  rv <- reactiveValues(all_data = NULL, df = NULL)
   
   # show/hide checkboxes depending on radiobutton selection
   # observeEvent(input$done,{
   observeEvent(datafile(), {
     
     # make sure selectData has been run
-    req(!is.null(datafile()))  
+    req(!is.null(datafile()))
+    
+    # wait until ADSL has been selected
+    req("ADSL" %in% names(datafile()) )
     
     # waiter_show(html = waiting_screen, color = "lightblue")
     # Sys.sleep(0.5) # wait 1/2 second
@@ -101,21 +104,21 @@ mod_popExp_server <- function(input, output, session, datafile){
     RadioUpdate()
     
     # datakeep <- reactive({ datafile()[dataselected()] })
-    datakeep <- reactive({ datafile() })
+    # datakeep <- reactive({ datafile() })
     
     # The data used by the population explorer is going to be one of:
     # (1) one or more BDS datasets row-joined ("pancaked") together 
-    #     if ADSL was also selected, it will be column-joined with the BDS data
+    #     and ADSL will be column-joined with the BDS data
     # (2) ADSL data alone
     # 
     # Also, build fake PARAMCDs for ADAE and ADCM, if they were selected.
     
-    all_data <- NULL
+    rv$df <- datafile()
     
     # Isolate ADSL 
-    if ("ADSL" %in% names(datakeep())) {
+    if ("ADSL" %in% names(datafile())) {
       
-      ADSL <- datakeep()$ADSL %>%
+      ADSL <- datafile()$ADSL %>%
         haven::zap_formats() %>%
         mutate(PARAMCD = "ADSL", PARAM = "Subject-Level Data", AVISIT = "Baseline", AVISITN = 0) 
       sjlabelled::set_label(ADSL$PARAMCD) <- "Parameter Code"
@@ -125,8 +128,8 @@ mod_popExp_server <- function(input, output, session, datafile){
     }
     
     # add a PARAMCD and PARAM to ADAE, if it exists and put it back in the list
-    if ("ADAE" %in% names(datakeep())) {
-      ADAE <- datakeep()$ADAE %>%
+    if ("ADAE" %in% names(datafile())) {
+      ADAE <- datafile()$ADAE %>%
         haven::zap_formats() %>%
         filter(!AETERM %in% c(""," ",".")) %>%  # drop records where AETERM is missing
         mutate_if(is.character, list(~na_if(., ""))) %>%
@@ -137,12 +140,14 @@ mod_popExp_server <- function(input, output, session, datafile){
       sjlabelled::set_label(ADAE$AVISIT)  <- "Analysis Visit"
       sjlabelled::set_label(ADAE$AVISITN) <- "Analysis Visit (N)"
       
-      keepdata <- append(datakeep()[!names(datakeep()) %in% "ADAE"],list("ADAE" = ADAE)) 
-      datakeep <- reactive({ keepdata })
+      rv$df <-  append(isolate(rv$df[!names(rv$df) %in% "ADAE"]),list("ADAE" = ADAE)) 
+      datafile <- reactive({ rv$df })
+      
+
     }
     # add a PARAMCD and PARAM to ADCM, if it exists and put it back in the list
-    if ("ADCM" %in% names(datakeep())) {
-      ADCM <- datakeep()$ADCM %>%
+    if ("ADCM" %in% names(datafile())) {
+      ADCM <- datafile()$ADCM %>%
         haven::zap_formats() %>%
         mutate_if(is.character, list(~na_if(., ""))) %>%
         mutate(PARAMCD = "ADCM", PARAM = "Concomitant Meds", AVISIT = "Baseline", AVISITN = 0)
@@ -151,13 +156,14 @@ mod_popExp_server <- function(input, output, session, datafile){
       sjlabelled::set_label(ADCM$PARAM)   <- "Parameter"
       sjlabelled::set_label(ADCM$AVISIT)  <- "Analysis Visit"
       sjlabelled::set_label(ADCM$AVISITN) <- "Analysis Visit (N)"
+
+      rv$df <-  append(isolate(rv$df[!names(rv$df) %in% "ADAE"]),list("ADAE" = ADAE)) 
+      datafile <- reactive({ rv$df })
       
-      keepdata <- append(datakeep()[!names(datakeep()) %in% "ADCM"],list("ADCM" = ADCM)) 
-      datakeep <- reactive({ keepdata })
     }
     
     # split the non-ADSL data into those which have a USUBJID or not
-    NOTADSL <- datakeep()[names(datakeep()) != "ADSL" ]
+    NOTADSL <- datafile()[names(datafile()) != "ADSL" ]
     if (!is_empty(NOTADSL)) {
       # keep only BDS/OCCDS datasets -- one of the colnames has to be "PARAMCD"
       BDSOCCDS <- NOTADSL[which(sapply(NOTADSL, function(df) "PARAMCD" %in% colnames(df)))]
@@ -184,7 +190,7 @@ mod_popExp_server <- function(input, output, session, datafile){
         rm(ADSL.1)
         
       } else {
-        # all BDS files without ADSL variables
+        # all BDS files without ADSL variables -- really can't happen
         all_data <- all_BDSDATA
         
       }
@@ -203,8 +209,8 @@ mod_popExp_server <- function(input, output, session, datafile){
       mutate_if(is.character, list(~na_if(., "")))
     
     # copy SAS labels back into data
-    for (i in seq_along(datakeep())) {
-      all_data <- sjlabelled::copy_labels(all_data, as.data.frame(datakeep()[[i]]))
+    for (i in seq_along(datafile())) {
+      all_data <- sjlabelled::copy_labels(all_data, as.data.frame(datafile()[[i]]))
     }
     
     # Now this is more generic, not specific to one study
