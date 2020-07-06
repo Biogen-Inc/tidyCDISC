@@ -241,7 +241,7 @@ mod_popExp_server <- function(input, output, session, datafile){
       
     }
     
-    rv$all_data <- reactive({ all_data })
+    rv$all_data <- all_data 
     
     # waiter_hide()
   
@@ -254,7 +254,7 @@ mod_popExp_server <- function(input, output, session, datafile){
   output$hide_panel <- eventReactive(input$adv_filtering, TRUE, ignoreInit = TRUE)
   outputOptions(output, "hide_panel", suspendWhenHidden = FALSE)
   
-  feed_filter <- reactive({ rv$all_data() })
+  feed_filter <- reactive({ rv$all_data })
 
   # IDEAFilter
   filtered_data <- callModule(
