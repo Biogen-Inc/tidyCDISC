@@ -26,44 +26,52 @@ mod_popExpBoxp_server <- function(input, output, session, df){
   # show all the widgets using an anonymous function
   map(widgets, function(x) shinyjs::show(x))
   
-  dfsub <- NULL  # assign dfsub in function environment
-  makeReactiveBinding("dfsub")
-  
-  chr <- sort(names(df()[ , which(sapply(df(),is.character))])) # all chr
-  fac <- sort(names(df()[ , which(sapply(df(),is.factor   ))])) # all factors
-  num <- sort(names(df()[ , which(sapply(df(),is.numeric  ))])) # all num
-  
-  # groupbyvar is loaded with all the character/factor columns
-  # updateSelectInput(session = session, inputId = "groupbyvar", choices = c("",sort(c(chr,fac))), selected = "")
-  updateSelectInput(session = session, inputId = "groupbyvar", choices = c("",sort(c(chr,fac))), selected = "")
-  
-  # responsevar is loaded with all the numeric columns
-  updateSelectInput(session = session, inputId = "responsevar", choices =  c("",num), selected = "")
+  # dfsub <- NULL  # assign dfsub in function environment
+  # makeReactiveBinding("dfsub")
   
   # set checkbox to TRUE
   updateCheckboxInput(session = session, inputId = "groupbox", value = TRUE)
   
+    # reactive dataset filtered by PARAMCD
+  dfsub <- reactive({ 
+    req(input$selPrmCode != "") 
+    filter(df(), PARAMCD == input$selPrmCode) %>%
+      # remove all NA columns
+      mutate_if(is.character, ~replace(., . == "", NA)) %>%
+      base::Filter(function(x) !all(is.na(x)), .)
+  })
   
   # update subsequent inputselects based on PARAM code selection
   observeEvent(input$selPrmCode, {
     
-    req(input$selPrmCode != "") 
+    # req(input$selPrmCode != "") 
+    req(!is.null(dfsub()))
     
+    print("in observeEvent for PrmCode")
     # subset data based on Parameter Code selection
-    dfsub <<- filter(df(),PARAMCD == input$selPrmCode) # superassignment operator
+    # dfsub <<- filter(df(),PARAMCD == input$selPrmCode) # superassignment operator
+    
+    chr <- sort(names(dfsub()[ , which(sapply(dfsub(),is.character))])) # all chr
+    fac <- sort(names(dfsub()[ , which(sapply(dfsub(),is.factor   ))])) # all factors
+    num <- sort(names(dfsub()[ , which(sapply(dfsub(),is.numeric  ))])) # all num
+    
+    # groupbyvar is loaded with all the character/factor columns
+    updateSelectInput(session = session, inputId = "groupbyvar", choices = c("",sort(c(chr,fac))), selected = "")
+    
+    # responsevar is loaded with all the numeric columns
+    updateSelectInput(session = session, inputId = "responsevar", choices =  c("",num), selected = "")
     
   }, ignoreInit = TRUE) # observeEvent(input$selPrmCode
   
   output$PlotlyOut <- renderPlotly({
     
-    req(input$selPrmCode != "") 
-    req(!is.null(dfsub))
+    req(!is.null(dfsub()))
     req(!is_empty(input$responsevar) && input$responsevar != "")
     
-    laby <- sjlabelled::get_label(dfsub[[input$responsevar]], def.value = unique(input$responsevar))
+    laby <- sjlabelled::get_label(dfsub()[[input$responsevar]], def.value = unique(input$responsevar))
     
     # correction for overplotting is located in fnboxplot
-    p <- fnboxplot(data = dfsub, input$groupbox, input$groupbyvar, input$responsevar, input$AddPoints)
+    p <- fnboxplot(data = dfsub(), input$groupbox, input$groupbyvar, input$responsevar, input$AddPoints)
     
     # Add labels here
     if (input$groupbox == TRUE) {
@@ -71,9 +79,9 @@ mod_popExpBoxp_server <- function(input, output, session, df){
       req(!is_empty(input$groupbyvar) && input$groupbyvar != "")
       
       # set def.value to use name if the variable has no label attribute
-      labz <- sjlabelled::get_label(dfsub[[input$groupbyvar]], def.value = unique(input$groupbyvar))
+      labz <- sjlabelled::get_label(dfsub()[[input$groupbyvar]], def.value = unique(input$groupbyvar))
       
-      ggtitle <- reactive({ paste("Plot of",laby,"Grouped by",labz,"for",unique(dfsub$PARAM)) })
+      ggtitle <- reactive({ paste("Plot of",laby,"Grouped by",labz,"for",unique(dfsub()$PARAM)) })
       p <- p + labs(title = ggtitle(), x = labz, y = laby)
       
     } else {
@@ -82,7 +90,7 @@ mod_popExpBoxp_server <- function(input, output, session, df){
     }
     
     # https://www.datanovia.com/en/blog/easy-way-to-expand-color-palettes-in-r/
-    nlevs <- nlevels(factor(dfsub[[input$groupbyvar]]))
+    nlevs <- nlevels(factor(dfsub()[[input$groupbyvar]]))
     mycolors <- colorRampPalette(brewer.pal(8, "Set2"))(nlevs)
     p <- p + scale_fill_manual(values = mycolors) 
     
@@ -102,7 +110,7 @@ mod_popExpBoxp_server <- function(input, output, session, df){
     if(input$groupbox == TRUE) {
       # Now, the workaround:
       # ------------------------------------------------------
-      dfflt <- filter(dfsub,!is.na(!!sym(input$groupbyvar)))
+      dfflt <- filter(dfsub(),!is.na(!!sym(input$groupbyvar)))
       p1Names <- unique(dfflt[[input$groupbyvar]]) # we need to know the "true" legend values
       for (i in 1:length(p1$x$data)) { # this goes over all places where legend values are stored
         n1 <- p1$x$data[[i]]$name # and this is how the value is stored in plotly
@@ -121,7 +129,6 @@ mod_popExpBoxp_server <- function(input, output, session, df){
   
   output$DataTable <- DT::renderDataTable({
     
-    req(input$selPrmCode != "") 
     req(!is.null(dfsub))
     req(!is_empty(input$responsevar) && input$responsevar != "")
     
@@ -129,10 +136,12 @@ mod_popExpBoxp_server <- function(input, output, session, df){
       req(!is_empty(input$groupbyvar) && input$groupbyvar != "")
       
       # correction for overplotting
-      dfsub <- fnoverplt(dfsub,input$responsevar, input$groupbyvar)
+      dfsel <- fnoverplt(dfsub(),input$responsevar, input$groupbyvar)
       
-    } 
-    tableout <- fnsummtab(data = dfsub, input$groupbox, input$groupbyvar, input$responsevar)
+    } else {
+      dfsel <- dfsub() 
+    }
+    tableout <- fnsummtab(data = dfsel, input$groupbox, input$groupbyvar, input$responsevar)
     DT::datatable(tableout, options = list(dom = 'ftp', pageLength = 20))
     
   })
