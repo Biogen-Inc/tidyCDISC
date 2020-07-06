@@ -12,6 +12,9 @@
 #' 
 mod_popExp_ui <- function(id, label = "Population Explorer"){
   ns <- NS(id)
+  tagList(
+    h1("Population Explorer", align = "center"),
+    br(), br(), br(),
   sidebarLayout(
     sidebarPanel(width = 2,
                  
@@ -155,6 +158,7 @@ mod_popExp_ui <- function(id, label = "Population Explorer"){
               
     ) # mainPanel
   )  # sidebarLayout
+  ) # taglist
 }
 ## To be copied in the UI -- done
 # mod_popExp_ui("popExp_ui_1")
