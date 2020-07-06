@@ -316,7 +316,8 @@ mod_indvExpPatVisits_server <- function(input, output, session, datafile, loaded
     # update plot_horizontal variable to display
     scr <- plot_dat %>% select(one_of("VISIT"))%>% distinct()%>% pull()
     base <- plot_dat %>% select(one_of("AVISIT"))%>% distinct()%>% pull()
-    hor_choices0 <- c(ifelse("SCREENING" %in% toupper(scr),"Screening",NA), ifelse("BASELINE" %in% toupper(base),"Baseline",NA))
+    hor_choices0 <- c(ifelse(any(regexpr("SCREENING", toupper(scr)) > 0),"Screening",NA),
+                      ifelse(any(regexpr("BASELINE", toupper(base)) > 0),"Baseline",NA))
     hor_choices <- hor_choices0[which(!is.na(hor_choices0))]
     
     if(length(hor_choices) > 0){
@@ -488,7 +489,10 @@ mod_indvExpPatVisits_server <- function(input, output, session, datafile, loaded
           "VISITNUM",
           "AVISITN",
           "VISIT",
-          "AVISIT"),
+          "AVISIT",
+          "ATM",
+          "ATPT"
+          ),
           PARAMCD,
           PARAM,
           AVAL 

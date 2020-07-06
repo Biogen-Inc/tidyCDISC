@@ -79,7 +79,7 @@ mod_indvExpPat_server <- function(input, output, session, datafile, loaded_adams
                , any_of("AGE"), any_of(ifelse("AGEGR" %in% colnames(adsl),"AGEGR","AGEGR1"))
                , any_of("HEIGHTBL"), any_of("HEIGHTU")
                , any_of("WEIGHTBL"), any_of("WEIGHTU")
-               , any_of("SITEID"), any_of("TRT01P")) 
+               , any_of("SITEID"), any_of("TRTP"), any_of("TRT01P")) 
       
       adsl_rec <- as.data.frame((adsl_rec)) # 'data' must be 2-dimensional (e.g. data frame or matrix)
       
@@ -89,7 +89,7 @@ mod_indvExpPat_server <- function(input, output, session, datafile, loaded_adams
                     class="compact",
                     options = list(bSort = FALSE,dom = 't'),
                     rownames = FALSE,
-                    colnames = if("TRT01P" %in% colnames(adsl_rec)) c('Planned Treatment Group' = ncol(adsl_rec)) else colnames(adsl_rec) 
+                    colnames = if(any(c("TRT01P","TRTP") %in% colnames(adsl_rec))) c('Planned Treatment Group' = ncol(adsl_rec)) else colnames(adsl_rec) 
       )
     })
     
