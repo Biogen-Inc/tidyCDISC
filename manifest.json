@@ -4889,25 +4889,25 @@
       "checksum": "6a32ed953f5dfdcbf0397d77d003cfcd"
     },
     "R/mod_indvExp_ui.R": {
-      "checksum": "67f5a80ca88e4c7b8f44db34c8f7d365"
+      "checksum": "f767b5eb240c3f8ebbac0458ee7764d8"
     },
     "R/mod_indvExp_utils_helpers.R": {
       "checksum": "7ed2e7f794c616894626f10ea3532fba"
     },
     "R/mod_indvExpPat.R": {
-      "checksum": "47e8cc86eed481277896e504694b616b"
+      "checksum": "f5107f57f8242bc8bcd00a6da8decef9"
     },
     "R/mod_indvExpPatEvents.R": {
-      "checksum": "b87c102e88a94b61ad8a8be79e04d05f"
+      "checksum": "16da653aab13b455c8b9c634ebe17f4f"
     },
     "R/mod_indvExpPatVisits.R": {
-      "checksum": "6b0ffaf8ebd1b0ce71f229192413b49d"
+      "checksum": "f3ff0a1cb15b59ee926d6ca52ea6ad09"
     },
     "R/mod_indvExpPatVisits_fct_plot.R": {
-      "checksum": "eedf2ceffd7667709ddaf2e675a3fecb"
+      "checksum": "4a2ef27d498985fef1e2432e2e63c994"
     },
     "R/mod_popExp.R": {
-      "checksum": "30128c339f49286eb6abecbee409282b"
+      "checksum": "720bf9653e5ad35934c1422d29e2f8ca"
     },
     "R/mod_popExp_fct_bxplt.R": {
       "checksum": "441b23739f112173a4e71170e9387385"
@@ -4922,13 +4922,13 @@
       "checksum": "adb912b81502a7f02de6ea3ef54644d7"
     },
     "R/mod_popExp_ui.R": {
-      "checksum": "ab2783fe45bfca88644a378d773a0af8"
+      "checksum": "c5907733b340e9e8393666586de000cf"
     },
     "R/mod_popExpBoxp.R": {
       "checksum": "3859fed54a904b4a2f21d6b1278c8be9"
     },
     "R/mod_popExpHBar.R": {
-      "checksum": "9f3ef3d226b9bf4a1763807516d7d3ff"
+      "checksum": "f5c0368f0e7706b7fc0770e758dbeb57"
     },
     "R/mod_popExpHeat.R": {
       "checksum": "3ab9b5a4e1496c192163c4b08b6f1fa1"
@@ -4949,7 +4949,7 @@
       "checksum": "441678f5eca7c7ef1c65806ebe272c40"
     },
     "R/mod_tableGen.R": {
-      "checksum": "c48c908f2024763d4da92194323f2e79"
+      "checksum": "cf57a47c07fa1d937685375180bc1d05"
     },
     "R/mod_tableGen_fct_anova.R": {
       "checksum": "d57471b96eaff2ab434479f99b6f63d2"
@@ -5039,7 +5039,7 @@
       "checksum": "6e2428b015ae2f1fad2a293ef377e76b"
     },
     "vignettes/dev_Indv_Expl_Add_Events.Rmd": {
-      "checksum": "5a4963d589b237212fb4dc4cce0f2ae9"
+      "checksum": "2fa1737859f04fb9d17529fdee1467fc"
     },
     "vignettes/figures/IndvExp/org_df_events_output.PNG": {
       "checksum": "eaad33853f3c4a0563fdef04547cf12f"
