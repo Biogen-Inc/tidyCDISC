@@ -27,19 +27,8 @@ mod_popExpHBar_server <- function(input, output, session, df){
   # show all the widgets using an anonymous function
   map(widgets, function(x) shinyjs::show(x))
   
-  chr <- sort(names(df()[ , which(sapply(df(),is.character))])) # all chr
-  fac <- sort(names(df()[ , which(sapply(df(),is.factor   ))])) # all factors
-  num <- sort(names(df()[ , which(sapply(df(),is.numeric  ))])) # all num
-  
-  # groupbyvar is loaded with all the character/factor columns
-  updateSelectInput(session = session, inputId = "groupbyvar", choices = c("",sort(c(chr,fac))), selected = "")
-  
   # set checkbox to TRUE
   updateCheckboxInput(session = session, inputId = "groupbox", value = TRUE)
-  
-  updateSelectInput(session = session, inputId = "selxvar", choices = c("",sort(c(chr,fac))), selected = character(0))
-  
-  updateSelectInput(session = session, inputId = "selyvar", choices = c("",num),  selected=character(0))
   
   updatePrettyRadioButtons(session = session, inputId = "hbarOptions", selected = "1")
   
@@ -49,12 +38,23 @@ mod_popExpHBar_server <- function(input, output, session, df){
   v <- reactiveValues(selxvar = character(0), selyvar = character(0), groupbyvar = character(0))
   
 
+  chr <- sort(names(df()[ , which(sapply(df(),is.character))])) # all chr
+  fac <- sort(names(df()[ , which(sapply(df(),is.factor   ))])) # all factors
+  num <- sort(names(df()[ , which(sapply(df(),is.numeric  ))])) # all num
+  
+  # groupbyvar is loaded with all the character/factor columns
+  updateSelectInput(session = session, inputId = "groupbyvar", choices = c("",sort(c(chr,fac))), selected = "")
+  
+  updateSelectInput(session = session, inputId = "selxvar", choices = c("",sort(c(chr,fac))), selected = character(0))
+  
+  updateSelectInput(session = session, inputId = "selyvar", choices = c("",num),  selected=character(0))
+  
   dfsub <- reactive({ 
     req(input$selPrmCode != "") 
     filter(df(), PARAMCD == input$selPrmCode) 
   })
   
-  observeEvent(input$hbarOptions, {
+observeEvent(input$hbarOptions, {
     if (input$hbarOptions == "1") {
       shinyjs::hide("selyvar")
     } else {
@@ -139,6 +139,7 @@ mod_popExpHBar_server <- function(input, output, session, df){
              "2" = {     
 
                req(!is_empty(v$selyvar) && v$selyvar != "")
+               labx <- sjlabelled::get_label(dfsel[[v$selxvar]], def.value = unique(v$selxvar))
                laby <- sjlabelled::get_label(dfsel[[v$selyvar]], def.value = unique(v$selyvar))
                
                ggtitle <- paste("Plot of Mean",laby,"versus",labx,"grouped by",labz,"for",PARAM) 
@@ -195,6 +196,7 @@ mod_popExpHBar_server <- function(input, output, session, df){
              "2" = {
                
                req(!is_empty(v$selyvar) && v$selyvar != "")
+               labx <- sjlabelled::get_label(dfsel[[v$selxvar]], def.value = unique(v$selxvar))
                laby <- sjlabelled::get_label(dfsel[[v$selyvar]], def.value = unique(v$selyvar))
                
                ggtitle <- paste("Plot of Mean",laby,"versus",labx,"for",PARAM) 

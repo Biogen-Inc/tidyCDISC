@@ -15,14 +15,14 @@ mod_popExp_ui <- function(id, label = "Population Explorer"){
   sidebarLayout(
     sidebarPanel(width = 2,
                  
-                 fluidRow(
-                   column(width=6,
-                          checkboxInput(ns("adv_filtering"), "Filter data", value = F)
-                   ),
-                   column(width=6,
-                          checkboxInput(ns("clearplot"), "Clear plot", value = F)
-                   )
-                 ),
+                 # fluidRow(
+                 #   column(width=6,
+                 #          checkboxInput(ns("adv_filtering"), "Filter data", value = F)
+                 #   ),
+                 #   column(width=6,
+                 #          checkboxInput(ns("clearplot"), "Clear plot", value = F)
+                 #   )
+                 # ),
                  
                  prettyRadioButtons(
                    inputId = ns("radio"),
@@ -141,10 +141,13 @@ mod_popExp_ui <- function(id, label = "Population Explorer"){
                           tabPanel("Table", id = ns("Table"), DT::dataTableOutput(ns("DataTable"))),
                           tabPanel("Filter", id = ns("Filter"),
                                    fluidRow(
-                                     column(6, # 6 = 4 (half the main panel)
+                                     column(width=1,
+                                            checkboxInput(ns("adv_filtering"), "Filter data", value = F)
+                                       ),
+                                     column(width=5, 
                                             conditionalPanel(condition = "input.adv_filtering == true", ns = ns,
                                                              IDEAFilter::shiny_data_filter_ui(ns("data_filter"))
-                                            )
+                                       )
                                      )
                                    )
                           ) #tabPanel
