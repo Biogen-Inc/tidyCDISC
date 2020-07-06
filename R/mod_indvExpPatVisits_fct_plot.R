@@ -59,11 +59,24 @@ fnIndvExplVisits <- function(
     bds_data %>%
     filter(!(is.na(!!INPUT_visit_var)) & PARAMCD == input_plot_param) # make sure AVISITN is not missing
   
+  # Find the max number of avals for any visit
+  most_avals_per_visit <- 
+    plot_dat %>%
+    group_by(!!INPUT_visit_var) %>%
+    summarize(n = n()) %>%
+    ungroup() %>%
+    summarize(max_avals = max(n, na.rm = T)) %>%
+    pull(max_avals)
+    
+  # initialize man_cols for manual color control
+  man_cols <- character(0)
+  
+  # Create screening or baseline data as necessary
   if("Screening" %in% input_plot_hor){
-    plot_scr <- plot_dat %>% subset(toupper(VISIT) == "SCREENING") %>% distinct(AVAL) %>% mutate(Visit = "Screening")
+    plot_scr <- plot_dat %>% subset(regexpr("SCREENING", toupper(VISIT)) > 0) %>% distinct(AVAL) %>% mutate(Visit = "Screening")
   }
   if("Baseline" %in% input_plot_hor){
-    plot_base <- plot_dat %>% subset(toupper(AVISIT) == "BASELINE") %>% distinct(AVAL) %>% mutate(Visit = "Baseline")
+    plot_base <- plot_dat %>% subset(regexpr("BASELINE", toupper(AVISIT)) > 0) %>% distinct(AVAL) %>% mutate(Visit = "Baseline")
   }
   
   if (nrow(plot_dat) > 0) {
@@ -75,15 +88,9 @@ fnIndvExplVisits <- function(
     }
     
     # GGPLOT2 OBJECT
-    lb_plot <- ggplot(plot_dat, aes(x = !!INPUT_visit_var, y = AVAL)) + 
+    lb_plot <- 
+      ggplot(plot_dat, aes(x = !!INPUT_visit_var, y = AVAL)) + 
       geom_line() +
-      suppressWarnings(geom_point(na.rm = TRUE, 
-                 aes(text =
-                       paste0(AVISIT,
-                              "<br>",input_visit_var, ": ",!!INPUT_visit_var,
-                              "<br>",input_plot_param ,": ",AVAL
-                       )
-                 ))) +
       scale_x_continuous(breaks = seq(min(plot_dat[,input_visit_var]), max(plot_dat[,input_visit_var]), 30)) +
       labs(x = paste0("Study Visit (",input_visit_var,")"),
            y = prm,
@@ -94,6 +101,61 @@ fnIndvExplVisits <- function(
                     ,""),
              "USUBJID: ",usubjid)
       )	
+    
+    # IF there are multiple AVALs for a single USUBJID, PARAMCD, and VISIT
+    #    AND ADTM or ATPT exists... THEN plot those values on the graph as well
+    extra_aval_vars <- c("ATM","ATPT")
+    if(most_avals_per_visit > 1 & any(extra_aval_vars %in% colnames(plot_dat))){
+      # Grab first available variable that exists and could explain why their are extra avals
+      avals_by <- sym(extra_aval_vars[extra_aval_vars %in% colnames(plot_dat)][1])
+      if(avals_by == "ATM") {
+        plot_dat <- plot_dat %>% mutate(ATM = as.POSIXct(paste("1970-01-01",ATM)))
+      }
+      # if discrete atpt, use color aesthetic 
+      if(avals_by == "ATPT"){
+        lb_plot <- lb_plot + 
+          suppressWarnings(
+            geom_point(data = plot_dat, na.rm = TRUE, 
+              aes(x = !!INPUT_visit_var, y = AVAL, 
+                  colour = !!avals_by, # colour aesthetic for for discrete
+                  text = paste0(AVISIT,
+                                "<br>",input_visit_var, ": ",!!INPUT_visit_var,
+                                "<br>",avals_by, ": ",!!avals_by,
+                                "<br>",input_plot_param ,": ",AVAL
+                  )
+              ))
+          )
+        # manually create colors and updates man_cols
+        geom_point_names <- plot_dat %>% distinct(!!avals_by) %>% pull()
+        num_names <- length(geom_point_names)
+        geom_point_cols <- my_gg_color_hue(2 + num_names)[3:(2+num_names)]
+        man_cols <- c(man_cols, setNames(geom_point_cols, geom_point_names))
+      } 
+      else { # if continuous posixct object (like ATM) then use fill aesthetic for color gradient
+        lb_plot <- lb_plot + 
+          suppressWarnings(
+            geom_point(data = plot_dat, na.rm = TRUE, 
+              aes(x = !!INPUT_visit_var, y = AVAL, 
+                  fill = !!avals_by, # fill aesthetic for for continuous will make gradient legend
+                  text = paste0(AVISIT,
+                                "<br>",input_visit_var, ": ",!!INPUT_visit_var,
+                                "<br>",avals_by, ": ",!!avals_by,
+                                "<br>",input_plot_param ,": ",AVAL
+                  )
+              ))
+          )
+      }
+      
+    } else { # no color by variable in legend or hover text
+      lb_plot <- lb_plot + 
+        suppressWarnings(geom_point(na.rm = TRUE, 
+          aes(text = paste0(AVISIT,
+                            "<br>",input_visit_var, ": ",!!INPUT_visit_var,
+                            "<br>",input_plot_param ,": ",AVAL
+              )
+          ))
+        )
+    }
     
     if(watermark & graph_output == "ggplot"){
       
@@ -117,19 +179,6 @@ fnIndvExplVisits <- function(
     }
     
     
-    # if a lengend is needed, let's just define the line colors and types in one place
-    if(length(input_plot_hor) > 0 | length(input_overlay_events) > 0 & input_visit_var %in% vv_dy_name){
-      
-      names2 <- c("Milestones","Concomitant Meds","Adverse Events","Baseline","Screening") # ac: labels
-      vline_eventtype_cols <- c(
-        "#80d1ad", "#f5ae7d", "#a8bde6", # my_cols[1:3]
-        my_gg_color_hue(2))
-      v_event_cols <- setNames(vline_eventtype_cols,names2)
-      
-      lb_plot <- lb_plot +
-        scale_color_manual(values= v_event_cols)
-    }
-    
     
     # plot vlines using events dataset
     if(length(input_overlay_events) > 0 & input_visit_var %in% vv_dy_name){ #& "ADLB" %in% loaded_adams() # overlay checkbox won't appear unless this is true
@@ -144,6 +193,10 @@ fnIndvExplVisits <- function(
                    text = paste0(input_visit_var, ": ",floor(!!INPUT_visit_var),"<br>", DECODE)
                 ), size = .35
             )
+          
+          names2 <- c("Milestones","Concomitant Meds","Adverse Events")
+          vline_eventtype_cols <- c("#80d1ad", "#f5ae7d", "#a8bde6") # dark version of my_cols
+          man_cols <- c(man_cols, setNames(vline_eventtype_cols,names2))
         }
       }
     }
@@ -151,8 +204,8 @@ fnIndvExplVisits <- function(
     # If lab data, plot the normal low and high values for the drug, add a little space in the bottom margin
     if(input_plot_adam == "ADLB"){
       lb_plot <- lb_plot + 
-        geom_hline(aes(yintercept = mean(LBSTNRLO)), colour = "blue") +
-        geom_hline(aes(yintercept = mean(LBSTNRHI)), colour = "blue") +
+        geom_hline(aes(yintercept = mean(LBSTNRLO)), color = "blue") +
+        geom_hline(aes(yintercept = mean(LBSTNRHI)), color = "blue") +
         theme(
           plot.margin = margin(b = 1.2, unit = "cm")
         ) 
@@ -163,15 +216,39 @@ fnIndvExplVisits <- function(
       if(nrow(plot_scr) > 0){
         lb_plot <- lb_plot +
           geom_hline(plot_scr, mapping = aes(yintercept = AVAL, colour = Visit))
+        
+        man_cols <- c(man_cols, setNames(my_gg_color_hue(2)[2],"Screening"))
       }
     }
     if("Baseline" %in% input_plot_hor){
       if(nrow(plot_base) > 0){
         lb_plot <- lb_plot +
           geom_hline(plot_base, mapping = aes(yintercept = AVAL, colour = Visit))
+        
+        man_cols <- c(man_cols, setNames(my_gg_color_hue(2)[1],"Baseline"))
       }
     }
+    
+    # if a lengend is needed, let's just define the line colors and types in one place
+    if(length(input_plot_hor) > 0 | 
+       (most_avals_per_visit > 1 & any(extra_aval_vars %in% colnames(plot_dat)))|
+       (length(input_overlay_events) > 0 & input_visit_var %in% vv_dy_name)){
+
+      lb_plot <- lb_plot +
+        scale_color_manual(values= man_cols)
+    }
     # End: ggplot2 object
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
