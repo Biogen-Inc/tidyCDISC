@@ -44,12 +44,7 @@ mod_popExpBoxp_server <- function(input, output, session, df){
   # update subsequent inputselects based on PARAM code selection
   observeEvent(input$selPrmCode, {
     
-    # req(input$selPrmCode != "") 
     req(!is.null(dfsub()))
-    
-    print("in observeEvent for PrmCode")
-    # subset data based on Parameter Code selection
-    # dfsub <<- filter(df(),PARAMCD == input$selPrmCode) # superassignment operator
     
     chr <- sort(names(dfsub()[ , which(sapply(dfsub(),is.character))])) # all chr
     fac <- sort(names(dfsub()[ , which(sapply(dfsub(),is.factor   ))])) # all factors
