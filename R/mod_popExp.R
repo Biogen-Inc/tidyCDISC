@@ -177,29 +177,21 @@ mod_popExp_server <- function(input, output, session, datafile){
       all_BDSDATA <- bind_rows(BDSOCCDS, .id = "data_from")  
       
       # replace the variable labels lost when doing bind_rows()
-      for (i in 1:length(BDSOCCDS)) (
-        all_BDSDATA <- sjlabelled::copy_labels(all_BDSDATA, as.data.frame(BDSOCCDS[[i]]))
-      )
+      # for (i in 1:length(BDSOCCDS)) (
+      #   all_BDSDATA <- sjlabelled::copy_labels(all_BDSDATA, as.data.frame(BDSOCCDS[[i]]))
+      # )
       
-      # Join ADSL and all_PARAMCD, if it exsits
-      if (exists("ADSL")) {
-        # take by= variable USUBJID plus all the names that are unique to ADSL
-        ADSL.1 <- select(ADSL, USUBJID, dplyr::setdiff(names(ADSL), names(all_BDSDATA)))
-        # Warning: Column `USUBJID` has different attributes on LHS and RHS of join
-        all_data <- suppressWarnings(left_join(all_BDSDATA, ADSL.1, by = "USUBJID"))
-        rm(ADSL.1)
-        
-      } else {
-        # all BDS files without ADSL variables -- really can't happen
-        all_data <- all_BDSDATA
-        
-      }
-      
+      # take by= variable USUBJID plus all the names that are unique to ADSL
+      ADSL.1 <- select(ADSL, USUBJID, dplyr::setdiff(names(ADSL), names(all_BDSDATA)))
+      # Warning: Column `USUBJID` has different attributes on LHS and RHS of join
+      all_data <- suppressWarnings(left_join(all_BDSDATA, ADSL.1, by = "USUBJID"))
+      rm(ADSL.1)
+
     } else {
       # just ADSL by itself
       all_data <- bind_rows(ADSL, .id = "data_from")
       all_data$data_from <- "ADSL" # set to ADSL, defaults to "1" here???
-      all_data <- sjlabelled::copy_labels(all_data, ADSL) 
+      # all_data <- sjlabelled::copy_labels(all_data, ADSL) 
     }
     
     # SAS data uses blanks as character missing; replace blanks with NAs for chr columns
@@ -263,15 +255,23 @@ mod_popExp_server <- function(input, output, session, datafile){
     data = feed_filter,    # the name of your pre-processed data
     verbose = FALSE)
   
-  
   # Update datset, depending on adv_filtering or filtered_data() changing
   dataset <- eventReactive(list(input$adv_filtering,filtered_data()), {
     if (!is.null(filtered_data()) && input$adv_filtering == TRUE ) {
-      filtered_data() 
+      rv$all_data  %>% semi_join(filtered_data()) 
     } else {
-      feed_filter()
+      rv$all_data
     }
-  })
+  }) 
+  
+  # Update datset, depending on adv_filtering or filtered_data() changing
+  # dataset <- eventReactive(list(input$adv_filtering,filtered_data()), {
+  #   if (!is.null(filtered_data()) && input$adv_filtering == TRUE ) {
+  #     filtered_data() 
+  #   } else {
+  #     feed_filter()
+  #   }
+  # })
     
   #
   # input$radio button processing
