@@ -70,7 +70,7 @@ mod_popExp_server <- function(input, output, session, datafile){
   ) 
   
   # hide all the widgets
-  widgets <- c("adv_filtering","clearplot","Parmstag","radio","selPrmCode","groupbox","groupbyvar","selxvar","selyvar","selzvar","seltimevar",
+  widgets <- c("Parmstag","radio","selPrmCode","groupbox","groupbyvar","selxvar","selyvar","selzvar","seltimevar",
                "responsevar","AddPoints","animate","animateby","numBins","AddLine","AddSmooth",
                "DiscrXaxis","fillType","selectvars","runCorr","heatMapFill","errorBars","hbarOptions")
   
@@ -244,22 +244,22 @@ mod_popExp_server <- function(input, output, session, datafile){
   #
   
   # set adv_filtering checkbox to TRUE if user selects the Filter tab panel
-  observeEvent(input$tabset, {
-    # print(paste("You are Viewing tab panel",input$tabset))
-    if (input$tabset == "Filter") {
-     updateCheckboxInput(session = session, "adv_filtering", value = T)
-    }
-  }, ignoreInit = TRUE)
+  # observeEvent(input$tabset, {
+  #   # print(paste("You are Viewing tab panel",input$tabset))
+  #   if (input$tabset == "Filter") {
+  #    updateCheckboxInput(session = session, "adv_filtering", value = T)
+  #   }
+  # }, ignoreInit = TRUE)
   
   # If adv_filtering is checked, switch to Filter tab panel; otherwise, Plot tab panel
-  observeEvent(input$adv_filtering, {
-
-    if (input$adv_filtering == T) {
-      updateTabsetPanel(session = session, "tabset", selected = "Filter")
-    } else {
-      updateTabsetPanel(session = session, "tabset", selected = "Plot")
-    }
-  })
+  # observeEvent(input$adv_filtering, {
+  # 
+  #   if (input$adv_filtering == T) {
+  #     updateTabsetPanel(session = session, "tabset", selected = "Filter")
+  #   } else {
+  #     updateTabsetPanel(session = session, "tabset", selected = "Plot")
+  #   }
+  # })
   
   output$hide_panel <- eventReactive(input$adv_filtering, TRUE, ignoreInit = TRUE)
   outputOptions(output, "hide_panel", suspendWhenHidden = FALSE)
@@ -275,28 +275,29 @@ mod_popExp_server <- function(input, output, session, datafile){
   
   
   # clear the plot area, table, and radio buttons if clear plot has been checked    
-  observeEvent(input$clearplot,{
-    req(input$clearplot == TRUE)
-    # Clear plotoutput
-    output$PlotlyOut <- renderPlotly({
-      NULL
-    })
-    # Clear datatable
-    output$DataTable <- DT::renderDataTable({
-      NULL
-    })
-    RadioUpdate()
-  }, ignoreInit = TRUE)  
+  # observeEvent(input$clearplot,{
+  #   req(input$clearplot == TRUE)
+  #   # Clear plotoutput
+  #   output$PlotlyOut <- renderPlotly({
+  #     NULL
+  #   })
+  #   # Clear datatable
+  #   output$DataTable <- DT::renderDataTable({
+  #     NULL
+  #   })
+  #   RadioUpdate()
+  # }, ignoreInit = TRUE)  
   
+
   # Update datset, depending on adv_filtering or filtered_data() changing
   dataset <- eventReactive(list(input$adv_filtering,filtered_data()), {
-      if (!is.null(filtered_data()) && input$adv_filtering == TRUE ) {
-        filtered_data() 
-      } else {
-        feed_filter()
-      }
+    if (!is.null(filtered_data()) && input$adv_filtering == TRUE ) {
+      filtered_data() 
+    } else {
+      feed_filter()
+    }
   })
-
+    
   #
   # input$radio button processing
   #
@@ -314,7 +315,7 @@ mod_popExp_server <- function(input, output, session, datafile){
     }) 
     
     # set clear plot to FALSE, since we just cleared the plot and table
-    updateCheckboxInput(session = session, "clearplot", value = F)
+    # updateCheckboxInput(session = session, "clearplot", value = F)
     # select Plot tab panel
     updateTabsetPanel(session = session, "tabset", selected = "Plot")
     
@@ -327,7 +328,7 @@ mod_popExp_server <- function(input, output, session, datafile){
       selected = "")
     
     # widgets to show
-    widgets <- c("adv_filtering","clearplot","Parmstag","radio")
+    widgets <- c("Parmstag","radio")
     map(widgets, function(x) shinyjs::show(x))
     
     # widgets to hide
