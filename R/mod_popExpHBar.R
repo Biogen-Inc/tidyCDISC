@@ -35,7 +35,7 @@ mod_popExpHBar_server <- function(input, output, session, df){
   # https://groups.google.com/forum/#!topic/shiny-discuss/4GEJZW0ZDUc
   # suggestion from Joe Cheng
   # create reactive values for selxvar and selyvar
-  v <- reactiveValues(selxvar = character(0), selyvar = character(0), groupbyvar = character(0))
+  rv <- reactiveValues(selxvar = character(0), selyvar = character(0))
   
   dfsub <- reactive({ 
     req(input$selPrmCode != "") 
@@ -57,6 +57,8 @@ observeEvent(input$hbarOptions, {
 
     req(!is.null(dfsub()))
     
+    print("observeEvent for selPrmCode")
+    
     chr <- sort(names(dfsub()[ , which(sapply(dfsub(),is.character))])) # all chr
     fac <- sort(names(dfsub()[ , which(sapply(dfsub(),is.factor   ))])) # all factors
     num <- sort(names(dfsub()[ , which(sapply(dfsub(),is.numeric  ))])) # all num
@@ -64,43 +66,40 @@ observeEvent(input$hbarOptions, {
     # groupbyvar is loaded with all the character/factor columns
     updateSelectInput(session = session, inputId = "groupbyvar", choices = c("",sort(c(chr,fac))), selected = "")
     
-    updateSelectInput(session = session, inputId = "selxvar", choices = c("",sort(c(chr,fac))), selected = character(0))
+    updateSelectInput(session = session, inputId = "selxvar", choices = c("",sort(c(chr,fac))), selected = "")
     
-    updateSelectInput(session = session, inputId = "selyvar", choices = c("",num),  selected=character(0))
+    updateSelectInput(session = session, inputId = "selyvar", choices = c("",num),  selected = "")
+
+    # invalidate selxvar and selyvar 
+    rv$selxvar <- character(0)
+    rv$selyvar <- character(0)
     
-
-    # invalidate selxvar and selyvar and groupbyvar
-    v$selxvar <- character(0)
-    v$selyvar <- character(0)
-    v$groupbyvar <- character(0)
-
   }, ignoreInit = TRUE) # observeEvent(input$selPrmCode
 
-  
   observeEvent(input$selxvar, {
-    v$selxvar <- input$selxvar
+    print(paste("in observeEvent for selxvar:",input$selxvar))
+    rv$selxvar <- input$selxvar
   })
   observeEvent(input$selyvar, {
-    v$selyvar <- input$selyvar
+    print(paste("in observeEvent for selyvar:",input$selyvar))
+    rv$selyvar <- input$selyvar
   })
-  observeEvent(input$groupbyvar, {
-    v$groupbyvar <- input$groupbyvar
-  })
-  
+
   output$PlotlyOut <- renderPlotly({
     
-    req(input$selPrmCode != "") 
     req(!is.null(dfsub()))
     
-    req(!is_empty(v$selxvar) && v$selxvar != "")
+    print("in renderPlotly")
+    req(!is_empty(rv$selxvar) && rv$selxvar != "")
+    print(paste("selxvar is",rv$selxvar))
     
     # remove missing x-values from plot
-    dfsel <- filter(dfsub(), !is.na(!!sym(input$selxvar)), !!sym(v$selxvar) != "")
+    dfsel <- filter(dfsub(), !is.na(!!sym(rv$selxvar)), !!sym(rv$selxvar) != "")
     
     # save PARAm for ggtitle 
     PARAM <- dfsel$PARAM[1]
     
-    labx <- sjlabelled::get_label(dfsel[[v$selxvar]], def.value = unique(v$selxvar))
+    labx <- sjlabelled::get_label(dfsel[[rv$selxvar]], def.value = unique(rv$selxvar))
     
     #
     # note that there are four combinations of plots here: input$groupbox {T|F} X input$hbarOptions {percent|Mean}
@@ -109,13 +108,13 @@ observeEvent(input$hbarOptions, {
     # groupbox == TRUE
     if(input$groupbox == TRUE) {
 
-      req(!is_empty(v$groupbyvar) && v$groupbyvar != "")
+      req(!is_empty(input$groupbyvar) && input$groupbyvar != "")
       
       # remove missing z-values (groupby values) from plot
-      dfsel <- filter(dfsel, !is.na(!!sym(v$groupbyvar)), !!sym(v$groupbyvar) != "", !!sym(v$groupbyvar) != "Missing")
+      dfsel <- filter(dfsel, !is.na(!!sym(input$groupbyvar)), !!sym(input$groupbyvar) != "", !!sym(input$groupbyvar) != "Missing")
 
       # set def.value to use name if the variable has no label attribute
-      labz <- sjlabelled::get_label(dfsub()[[v$groupbyvar]], def.value = unique(v$groupbyvar))
+      labz <- sjlabelled::get_label(dfsub()[[input$groupbyvar]], def.value = unique(input$groupbyvar))
       
       # save PARAm for ggtitle 
       PARAM <- dfsel$PARAM[1]
@@ -127,12 +126,12 @@ observeEvent(input$hbarOptions, {
                
                # order by desc frequency count
                dfsel <- dfsel %>%
-                 mutate(!!sym(v$selxvar) := !!sym(v$selxvar) %>% forcats::fct_infreq() %>% forcats::fct_rev() ) 
+                 mutate(!!sym(rv$selxvar) := !!sym(rv$selxvar) %>% forcats::fct_infreq() %>% forcats::fct_rev() ) 
 
                p <- ggplot(data = dfsel) +
-                 suppressWarnings(geom_bar(mapping = aes(x = !!sym(v$selxvar), y = ..prop.., 
-                                        group = !!sym(v$groupbyvar), fill = get(v$groupbyvar),  
-                                        text = paste0(v$selxvar,": ",get(v$selxvar))), 
+                 suppressWarnings(geom_bar(mapping = aes(x = !!sym(rv$selxvar), y = ..prop.., 
+                                        group = !!sym(input$groupbyvar), fill = get(input$groupbyvar),  
+                                        text = paste0(rv$selxvar,": ",get(rv$selxvar))), 
                           stat = "count", width=0.7, alpha = 0.5, position = "dodge",  na.rm = TRUE) ) +
                  scale_y_continuous(labels = scales::percent_format(), limits=c(0, 1), breaks = seq(0, 1, by=0.1)) +
                  scale_x_discrete(drop = FALSE) +
@@ -142,31 +141,33 @@ observeEvent(input$hbarOptions, {
              },
              "2" = {     
 
-               req(!is_empty(v$selyvar) && v$selyvar != "")
-               labx <- sjlabelled::get_label(dfsel[[v$selxvar]], def.value = unique(v$selxvar))
-               laby <- sjlabelled::get_label(dfsel[[v$selyvar]], def.value = unique(v$selyvar))
+               req(!is_empty(rv$selyvar) && rv$selyvar != "")
+               print(paste("selxvar is",rv$selxvar))
+               
+               labx <- sjlabelled::get_label(dfsel[[rv$selxvar]], def.value = unique(rv$selxvar))
+               laby <- sjlabelled::get_label(dfsel[[rv$selyvar]], def.value = unique(rv$selyvar))
                
                ggtitle <- paste("Plot of Mean",laby,"versus",labx,"grouped by",labz,"for",PARAM) 
               
                # calculate mean value per x-var and groupvar
                dfsel <- dfsel %>%
-                 group_by(PARAM, !!sym(v$selxvar), !!sym(v$groupbyvar)) %>%
-                 mutate(!!sym(v$selyvar) := round(mean(!!sym(v$selyvar), na.rm = TRUE), digits = 2)) %>%
-                 distinct(PARAM, !!sym(v$selxvar), !!sym(v$groupbyvar), .keep_all = TRUE) %>%
+                 group_by(PARAM, !!sym(rv$selxvar), !!sym(input$groupbyvar)) %>%
+                 mutate(!!sym(rv$selyvar) := round(mean(!!sym(rv$selyvar), na.rm = TRUE), digits = 2)) %>%
+                 distinct(PARAM, !!sym(rv$selxvar), !!sym(input$groupbyvar), .keep_all = TRUE) %>%
                  ungroup() %>%
-                 group_by(PARAM, !!sym(v$selxvar)) %>%
-                 mutate(byymean = round(mean(!!sym(v$selyvar), na.rm = TRUE), digits = 2)) %>%
+                 group_by(PARAM, !!sym(rv$selxvar)) %>%
+                 mutate(byymean = round(mean(!!sym(rv$selyvar), na.rm = TRUE), digits = 2)) %>%
                  ungroup()
 
                # order by desc overall mean
                dfsel <- dfsel %>%
-                 mutate(!!sym(v$selxvar) := fct_reorder(!!sym(v$selxvar), byymean))  
+                 mutate(!!sym(rv$selxvar) := fct_reorder(!!sym(rv$selxvar), byymean))  
                
                p <- ggplot(data = dfsel) +
-                 suppressWarnings(geom_bar(mapping = aes(x = !!sym(v$selxvar), y = !!sym(v$selyvar), 
-                                        group = !!sym(v$groupbyvar), fill = get(v$groupbyvar), 
-                                        text = paste0(v$selxvar,": ",get(v$selxvar),
-                                                      "<br>",v$selyvar,": ",get(v$selyvar))), 
+                 suppressWarnings(geom_bar(mapping = aes(x = !!sym(rv$selxvar), y = !!sym(rv$selyvar), 
+                                        group = !!sym(input$groupbyvar), fill = get(input$groupbyvar), 
+                                        text = paste0(rv$selxvar,": ",get(rv$selxvar),
+                                                      "<br>",rv$selyvar,": ",get(rv$selyvar))), 
                           stat = "identity", width=0.7, alpha = 0.5, position = "dodge",  na.rm = TRUE) ) +
                  scale_x_discrete(drop = FALSE) +
                  coord_flip() +
@@ -185,11 +186,11 @@ observeEvent(input$hbarOptions, {
                
                # order by desc frequency count
                dfsel <- dfsel %>%
-                 mutate(!!sym(v$selxvar) := !!sym(v$selxvar) %>% forcats::fct_infreq() %>% forcats::fct_rev() )
+                 mutate(!!sym(rv$selxvar) := !!sym(rv$selxvar) %>% forcats::fct_infreq() %>% forcats::fct_rev() )
 
                p <- ggplot(data = dfsel) +
-                 suppressWarnings(geom_bar(mapping = aes(x = !!sym(v$selxvar), y = ..prop.., group = 1, 
-                                        text = paste0(v$selxvar,": ",get(v$selxvar))), 
+                 suppressWarnings(geom_bar(mapping = aes(x = !!sym(rv$selxvar), y = ..prop.., group = 1, 
+                                        text = paste0(rv$selxvar,": ",get(rv$selxvar))), 
                           stat = "count", width=0.7, alpha = 0.5, position = "dodge",  na.rm = TRUE) ) +
                  scale_y_continuous(labels = scales::percent_format(), limits=c(0, 1), breaks = seq(0, 1, by=0.1)) +
                  scale_x_discrete(drop = FALSE) +
@@ -199,27 +200,27 @@ observeEvent(input$hbarOptions, {
              },
              "2" = {
                
-               req(!is_empty(v$selyvar) && v$selyvar != "")
-               labx <- sjlabelled::get_label(dfsel[[v$selxvar]], def.value = unique(v$selxvar))
-               laby <- sjlabelled::get_label(dfsel[[v$selyvar]], def.value = unique(v$selyvar))
+               req(!is_empty(rv$selyvar) && rv$selyvar != "")
+               labx <- sjlabelled::get_label(dfsel[[rv$selxvar]], def.value = unique(rv$selxvar))
+               laby <- sjlabelled::get_label(dfsel[[rv$selyvar]], def.value = unique(rv$selyvar))
                
                ggtitle <- paste("Plot of Mean",laby,"versus",labx,"for",PARAM) 
                
                # calculate mean value per x-var 
                dfsel <- dfsel %>%
-                 group_by(PARAM, !!sym(input$selxvar)) %>%
-                 mutate(!!sym(v$selyvar) := round(mean(!!sym(v$selyvar), na.rm = TRUE), digits = 2)) %>%
-                 distinct(PARAM, !!sym(input$selxvar), .keep_all = TRUE) %>%
+                 group_by(PARAM, !!sym(rv$selxvar)) %>%
+                 mutate(!!sym(rv$selyvar) := round(mean(!!sym(rv$selyvar), na.rm = TRUE), digits = 2)) %>%
+                 distinct(PARAM, !!sym(rv$selxvar), .keep_all = TRUE) %>%
                  ungroup()
                
                # order by desc mean
                dfsel <- dfsel %>%
-                 mutate(!!sym(v$selxvar) := forcats::fct_reorder(!!sym(v$selxvar), !!sym(v$selyvar))) 
+                 mutate(!!sym(rv$selxvar) := forcats::fct_reorder(!!sym(rv$selxvar), !!sym(rv$selyvar))) 
                
                p <- ggplot(data = dfsel) +
-                 suppressWarnings(geom_bar(mapping = aes(x = !!sym(v$selxvar), y = !!sym(v$selyvar), 
-                                        text = paste0(v$selxvar,": ",get(v$selxvar),
-                                                      "<br>",v$selyvar,": ",get(v$selyvar))), 
+                 suppressWarnings(geom_bar(mapping = aes(x = !!sym(rv$selxvar), y = !!sym(rv$selyvar), 
+                                        text = paste0(rv$selxvar,": ",get(rv$selxvar),
+                                                      "<br>",rv$selyvar,": ",get(rv$selyvar))), 
                           stat = "identity", width=0.7, alpha = 0.5, position = "dodge",  na.rm = TRUE) ) +
                  scale_x_discrete(drop = FALSE) +
                  coord_flip() +
@@ -241,8 +242,8 @@ observeEvent(input$hbarOptions, {
     if(input$groupbox == TRUE) {
       # Now, the workaround:
       # ------------------------------------------------------
-      dfflt <- filter(dfsel,!is.na(!!sym(v$groupbyvar)))
-      p1Names <- unique(dfflt[[v$groupbyvar]]) # we need to know the "true" legend values
+      dfflt <- filter(dfsel,!is.na(!!sym(input$groupbyvar)))
+      p1Names <- unique(dfflt[[input$groupbyvar]]) # we need to know the "true" legend values
       for (i in 1:length(p1$x$data)) { # this goes over all places where legend values are stored
         n1 <- p1$x$data[[i]]$name # and this is how the value is stored in plotly
         n2 <- " "
@@ -260,51 +261,50 @@ observeEvent(input$hbarOptions, {
   
   output$DataTable <- DT::renderDataTable({
     
-    req(input$selPrmCode != "") 
     req(!is.null(dfsub()))
     
-    req(!is_empty(v$selxvar) && v$selxvar != "")
+    req(!is_empty(rv$selxvar) && rv$selxvar != "")
 
     # give missing x-values an explicit factor level
     dfsel <- dfsub() %>%
-      mutate(!!sym(v$selxvar) := forcats::fct_explicit_na(!!sym(v$selxvar), na_level = "Missing"))
+      mutate(!!sym(rv$selxvar) := forcats::fct_explicit_na(!!sym(rv$selxvar), na_level = "Missing"))
     
     dftbl <- reactive({
       
     if(input$groupbox == TRUE) {
       
-      req(!is_empty(v$groupbyvar) && v$groupbyvar != "")
+      req(!is_empty(input$groupbyvar) && input$groupbyvar != "")
       
       switch(input$hbarOptions,
              "1" = {
                # select variables
                dfsel <- dfsel %>%
-                 select(PARAM, !!sym(v$selxvar), !!sym(v$groupbyvar))
+                 select(PARAM, !!sym(rv$selxvar), !!sym(input$groupbyvar))
                
                dfsel <- dfsel %>%
-                 group_by(PARAM, !!sym(v$groupbyvar), !!sym(v$selxvar) ) %>%
+                 group_by(PARAM, !!sym(input$groupbyvar), !!sym(rv$selxvar) ) %>%
                  summarise(count = n()) %>%
                  mutate(prop = count/sum(count) ) %>%
                  ungroup() %>%
-                 arrange(desc(count), !!sym(v$groupbyvar))
+                 arrange(desc(count), !!sym(input$groupbyvar))
 
              },
              "2" = {     
-               req(!is_empty(v$selyvar) && v$selyvar != "")
+               req(!is_empty(rv$selyvar) && rv$selyvar != "")
                
                # select variables
                dfsel <- dfsel %>%
-                 select(PARAM, !!sym(v$selxvar), !!sym(v$selyvar), !!sym(v$groupbyvar))
+                 select(PARAM, !!sym(rv$selxvar), !!sym(rv$selyvar), !!sym(input$groupbyvar))
                
                dfsel <- dfsel %>%
-                 group_by(PARAM, !!sym(v$selxvar), !!sym(v$groupbyvar)) %>%
-                 mutate(!!sym(v$selyvar) := round(mean(!!sym(v$selyvar), na.rm = TRUE), digits = 2)) %>%
-                 distinct(PARAM, !!sym(v$selxvar), !!sym(v$groupbyvar), .keep_all = TRUE) %>%
+                 group_by(PARAM, !!sym(rv$selxvar), !!sym(input$groupbyvar)) %>%
+                 mutate(!!sym(rv$selyvar) := round(mean(!!sym(rv$selyvar), na.rm = TRUE), digits = 2)) %>%
+                 distinct(PARAM, !!sym(rv$selxvar), !!sym(input$groupbyvar), .keep_all = TRUE) %>%
                  ungroup() %>%
-                 group_by(PARAM, !!sym(v$selxvar)) %>%
-                 mutate(byymean = round(mean(!!sym(v$selyvar), na.rm = TRUE), digits = 2)) %>%
+                 group_by(PARAM, !!sym(rv$selxvar)) %>%
+                 mutate(byymean = round(mean(!!sym(rv$selyvar), na.rm = TRUE), digits = 2)) %>%
                  ungroup() %>%
-                 arrange(desc(byymean),!!sym(v$groupbyvar))
+                 arrange(desc(byymean),!!sym(input$groupbyvar))
 
              },
              stop("invalid hbarOptions button: ",input$hbarOptions)
@@ -317,10 +317,10 @@ observeEvent(input$hbarOptions, {
                
                # select variables
                dfsel <- dfsel %>%
-                 select(PARAM, !!sym(v$selxvar))
+                 select(PARAM, !!sym(rv$selxvar))
                
                dfsel <- dfsel %>%
-                 group_by(PARAM, !!sym(v$selxvar)) %>%
+                 group_by(PARAM, !!sym(rv$selxvar)) %>%
                  summarise(count = n()) %>%
                  mutate(prop = count/sum(count) ) %>%
                  ungroup() %>%
@@ -329,18 +329,18 @@ observeEvent(input$hbarOptions, {
              },
              "2" = {
                
-               req(!is_empty(v$selyvar) && v$selyvar != "")
+               req(!is_empty(rv$selyvar) && rv$selyvar != "")
                
                # select variables
                dfsel <- dfsel %>%
-                 select(PARAM, !!sym(v$selxvar), !!sym(v$selyvar))
+                 select(PARAM, !!sym(rv$selxvar), !!sym(rv$selyvar))
                
                dfsel <- dfsel %>%
-                 group_by(PARAM, !!sym(v$selxvar)) %>%
-                 mutate(!!sym(v$selyvar) := round(mean(!!sym(v$selyvar), na.rm = TRUE), digits = 2)) %>%
-                 distinct(PARAM, !!sym(v$selxvar), .keep_all = TRUE) %>%
+                 group_by(PARAM, !!sym(rv$selxvar)) %>%
+                 mutate(!!sym(rv$selyvar) := round(mean(!!sym(rv$selyvar), na.rm = TRUE), digits = 2)) %>%
+                 distinct(PARAM, !!sym(rv$selxvar), .keep_all = TRUE) %>%
                  ungroup() %>%
-                 arrange(desc(!!sym(v$selyvar)))
+                 arrange(desc(!!sym(rv$selyvar)))
 
              },
              stop("invalid hbarOptions button: ",input$hbarOptions)
