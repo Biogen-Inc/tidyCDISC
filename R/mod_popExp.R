@@ -61,11 +61,6 @@ mod_popExp_server <- function(input, output, session, datafile){
     )
   }
   
-  # waiting_screen <- tagList(
-  #   spin_folding_cube(),
-  #   h4("Hold on a bit while we merge datasets...")
-  # ) 
-  
   # hide all the widgets
   widgets <- c("Parmstag","radio","selPrmCode","groupbox","groupbyvar","selxvar","selyvar","selzvar","seltimevar",
                "responsevar","AddPoints","animate","animateby","numBins","AddLine","AddSmooth",
@@ -74,13 +69,9 @@ mod_popExp_server <- function(input, output, session, datafile){
   # hide all the widgets using an anonymous function
   map(widgets, function(x) shinyjs::hide(x))
   
-  # select the data sets
-  # dataselected <- callModule(mod_selectData_server, id = NULL, datafile)
-  
   rv <- reactiveValues(all_data = NULL, df = NULL)
   
   # show/hide checkboxes depending on radiobutton selection
-  # observeEvent(input$done,{
   observeEvent(datafile(), {
     
     # make sure selectData has been run
@@ -88,9 +79,6 @@ mod_popExp_server <- function(input, output, session, datafile){
     
     # wait until ADSL has been selected
     req("ADSL" %in% names(datafile()) )
-    
-    # waiter_show(html = waiting_screen, color = "lightblue")
-    # Sys.sleep(0.5) # wait 1/2 second
     
     # set adv_filtering checkbox to FALSE; select Plot tab panel
     updateCheckboxInput(session = session, "adv_filtering", value = F)
@@ -102,16 +90,15 @@ mod_popExp_server <- function(input, output, session, datafile){
     
     # run the radioUpdate function above
     RadioUpdate()
-    
-    # datakeep <- reactive({ datafile()[dataselected()] })
-    # datakeep <- reactive({ datafile() })
-    
+
+    #####################################################################    
     # The data used by the population explorer is going to be one of:
     # (1) one or more BDS datasets row-joined ("pancaked") together 
     #     and ADSL will be column-joined with the BDS data
     # (2) ADSL data alone
     # 
     # Also, build fake PARAMCDs for ADAE and ADCM, if they were selected.
+    ######################################################################
     
     rv$df <- datafile()
     
@@ -142,7 +129,6 @@ mod_popExp_server <- function(input, output, session, datafile){
       
       rv$df <-  append(isolate(rv$df[!names(rv$df) %in% "ADAE"]),list("ADAE" = ADAE)) 
       datafile <- reactive({ rv$df })
-      
 
     }
     # add a PARAMCD and PARAM to ADCM, if it exists and put it back in the list
@@ -174,7 +160,7 @@ mod_popExp_server <- function(input, output, session, datafile){
       )
       
       # Bind all the BDS (PARAMCD) files and filter them
-      all_BDSDATA <- bind_rows(BDSOCCDS, .id = "data_from")  
+      all_BDSDATA <- suppressMessages(bind_rows(BDSOCCDS, .id = "data_from"))  
       
       # remove any "ADSL" variables lurking in all_BDSDATA
       all_BDSDATA <- all_BDSDATA %>% select(-tidyselect::any_of(c("AGEGR","AGEGRN","RACE","RACEN","SEX","SEXN")))
@@ -228,9 +214,6 @@ mod_popExp_server <- function(input, output, session, datafile){
       # copy SAS labels back into data
       all_data <- sjlabelled::set_label(all_data, label = savelbls)
       
-      str(all_data$AGEGR)
-      str(all_data$TRT01P)
-      
     }
     
     rv$all_data <- all_data 
@@ -258,21 +241,12 @@ mod_popExp_server <- function(input, output, session, datafile){
   # Update datset, depending on adv_filtering or filtered_data() changing
   dataset <- eventReactive(list(input$adv_filtering,filtered_data()), {
     if (!is.null(filtered_data()) && input$adv_filtering == TRUE ) {
-      rv$all_data  %>% semi_join(filtered_data()) 
+      rv$all_data  %>% semi_join(filtered_data())
     } else {
       rv$all_data
     }
   }) 
   
-  # Update datset, depending on adv_filtering or filtered_data() changing
-  # dataset <- eventReactive(list(input$adv_filtering,filtered_data()), {
-  #   if (!is.null(filtered_data()) && input$adv_filtering == TRUE ) {
-  #     filtered_data() 
-  #   } else {
-  #     feed_filter()
-  #   }
-  # })
-    
   #
   # input$radio button processing
   #
