@@ -8,7 +8,7 @@ spaghettiPlot_ui <- function(id, label = "box") {
     
     fluidRow(
       column(12, align = "center",
-             shinyWidgets::radioGroupButtons(ns("value"), "Value", choices = c("AVAL", "CHG"))
+             shinyWidgets::radioGroupButtons(ns("value"), "Value", choices = c("AVAL", "CHG"), selected = "AVAL")
       )
     ),
     
@@ -17,8 +17,9 @@ spaghettiPlot_ui <- function(id, label = "box") {
   )
 }
 
-spaghettiPlot_srv <- function(input, output, session) {
-    ggplot2::ggplot(iris, ggplot2::aes(x = Sepal.Length, y = Sepal.Width)) +
+spaghettiPlot_srv <- function(input, output, session, data) {
+  
+    ggplot2::ggplot(data, ggplot2::aes(x = AGE, y = AGE)) +
       ggplot2::geom_point() +
-      ggplot2::ggtitle("Spaghetti Plot")
+      ggplot2::geom_line()
 }

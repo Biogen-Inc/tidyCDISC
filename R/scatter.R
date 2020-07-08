@@ -28,8 +28,7 @@ scatterPlot_ui <- function(id, label = "scatter") {
   )
 }
 
-scatterPlot_srv <- function(input, output, session) {
-    ggplot2::ggplot(iris, ggplot2::aes(x = Sepal.Length, y = Sepal.Length)) +
-      ggplot2::geom_point() +
-      ggplot2::ggtitle("Scatter Plot")
+scatterPlot_srv <- function(input, output, session, data) {
+    ggplot2::ggplot(data, ggplot2::aes(x = AGE, y = AGE)) +
+      ggplot2::geom_point() 
 }

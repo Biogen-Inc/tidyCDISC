@@ -340,11 +340,11 @@ mod_popExp_server <- function(input, output, session, datafile){
   
   output$plot_output <- renderPlot({
     if (input$plot_type == "Scatter Plot") {
-      callModule(scatterPlot_srv, "scatterPlot")
+      callModule(scatterPlot_srv, "scatterPlot", data = dataset())
     } else if (input$plot_type == "Spaghetti Plot") {
-      callModule(spaghettiPlot_srv, "spaghettiPlot")
+      callModule(spaghettiPlot_srv, "spaghettiPlot", data = dataset())
     } else {
-      callModule(boxPlot_srv, "boxPlot")
+      callModule(boxPlot_srv, "boxPlot", data = dataset())
     }
   })
   

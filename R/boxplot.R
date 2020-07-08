@@ -5,7 +5,7 @@ boxPlot_ui <- function(id, label = "box") {
     
     fluidRow(
       column(12, align = "center",
-             shinyWidgets::radioGroupButtons(ns("value"), "Value", choices = c("AVAL", "CHG"))
+             shinyWidgets::radioGroupButtons(ns("value"), "Value", choices = c("AVAL", "CHG"), selected = "AVAL")
       )
     ),
     selectInput(ns("group"), "Group By", choices = NULL),
@@ -13,8 +13,7 @@ boxPlot_ui <- function(id, label = "box") {
   )
 }
 
-boxPlot_srv <- function(input, output, session) {
-    ggplot2::ggplot(iris, ggplot2::aes(x = Sepal.Width, y = Sepal.Width)) +
-      ggplot2::geom_point() +
-      ggplot2::ggtitle("Box Plot")
+boxPlot_srv <- function(input, output, session, data) {
+  ggplot2::ggplot(data, ggplot2::aes(x = SEX, y = AGE)) +
+    ggplot2::geom_boxplot()
 }
