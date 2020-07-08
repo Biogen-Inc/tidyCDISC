@@ -19,7 +19,7 @@
 #' @return character vector of loaded adams and a filtered dataframe to populate mod_indvExpPat module
 #' 
 #' @noRd
-mod_popExp_server <- function(input, output, session, datafile){
+mod_popExp_server <- function(input, output, session, datafile) {
   ns <- session$ns
  
   rv <- reactiveValues(all_data = NULL, df = NULL)

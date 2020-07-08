@@ -2,7 +2,7 @@ boxPlot_ui <- function(id, label = "box") {
   ns <- NS(id)
   tagList(
     selectInput(ns("yvar"), "Response Variable", choices = "DIABP", selected = "DIABP"),
-    fluidRow(column(12, align = "center", renderUI(ns("include_var")))),
+    fluidRow(column(12, align = "center", uiOutput(ns("include_var")))),
     selectInput(ns("group"), "Group By", choices = NULL),
     checkboxInput(ns("points"), "Add Points?")
   )
@@ -15,7 +15,9 @@ boxPlot_srv <- function(input, output, session, data) {
   # Update Inputs
   # -------------------------------------------------
   
-  # why don't these work!?
+  # this DOES NOT WORK!! 
+  observe({ print(input$points) })
+  
   observe({
     req(data()$PARAMCD)
     # this is working!!!
@@ -29,6 +31,7 @@ boxPlot_srv <- function(input, output, session, data) {
   # why isn't this rendering? 
   # I assume for same reason yvar isn't updating! 
   output$include_var <- renderUI({
+    # this should be true with static "DIABP" input
     req(input$yvar %in% data()$PARAMCD)
     shinyWidgets::radioGroupButtons(ns("value"), "Value", choices = c("AVAL", "CHG"))
   })
