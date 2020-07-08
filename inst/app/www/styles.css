@@ -271,6 +271,24 @@ transition: all .5s linear;
 transform:rotate(180deg);
 }
 
+#popExp_ui_1-adv_filtering {
+  display: none;
+}
+
+.custom_checkbox {
+  width: 100%;
+    padding: 3px;
+    background-color: #008cba !important;
+    color: white;
+    size: 12px;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.form-group.shiny-input-container.custom_shiny_width {
+    width: 100%;
+}
+
 /*
 @media only screen and (max-width: 3000px) {
   body {

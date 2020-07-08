@@ -61,6 +61,11 @@ mod_popExp_server <- function(input, output, session, datafile){
     )
   }
   
+  # waiting_screen <- tagList(
+  #   spin_folding_cube(),
+  #   h4("Hold on a bit while we merge datasets...")
+  # ) 
+  
   # hide all the widgets
   widgets <- c("Parmstag","radio","selPrmCode","groupbox","groupbyvar","selxvar","selyvar","selzvar","seltimevar",
                "responsevar","AddPoints","animate","animateby","numBins","AddLine","AddSmooth",
@@ -69,9 +74,13 @@ mod_popExp_server <- function(input, output, session, datafile){
   # hide all the widgets using an anonymous function
   map(widgets, function(x) shinyjs::hide(x))
   
-  rv <- reactiveValues(all_data = NULL, df = NULL)
+  # select the data sets
+  # dataselected <- callModule(mod_selectData_server, id = NULL, datafile)
+  
+  rv <- reactiveValues(all_data = NULL, df = NULL, processed_data = NULL)
   
   # show/hide checkboxes depending on radiobutton selection
+  # observeEvent(input$done,{
   observeEvent(datafile(), {
     
     # make sure selectData has been run
@@ -80,8 +89,10 @@ mod_popExp_server <- function(input, output, session, datafile){
     # wait until ADSL has been selected
     req("ADSL" %in% names(datafile()) )
     
+    # waiter_show(html = waiting_screen, color = "lightblue")
+    # Sys.sleep(0.5) # wait 1/2 second
+    
     # set adv_filtering checkbox to FALSE; select Plot tab panel
-    updateCheckboxInput(session = session, "adv_filtering", value = F)
     updateTabsetPanel(session = session, "tabset", selected = "Plot")
     
     inputids <- c("groupbyvar","responsevar","seltimevar","selxvar","selyvar","selzvar")
@@ -90,15 +101,16 @@ mod_popExp_server <- function(input, output, session, datafile){
     
     # run the radioUpdate function above
     RadioUpdate()
-
-    #####################################################################    
+    
+    # datakeep <- reactive({ datafile()[dataselected()] })
+    # datakeep <- reactive({ datafile() })
+    
     # The data used by the population explorer is going to be one of:
     # (1) one or more BDS datasets row-joined ("pancaked") together 
     #     and ADSL will be column-joined with the BDS data
     # (2) ADSL data alone
     # 
     # Also, build fake PARAMCDs for ADAE and ADCM, if they were selected.
-    ######################################################################
     
     rv$df <- datafile()
     
@@ -129,6 +141,7 @@ mod_popExp_server <- function(input, output, session, datafile){
       
       rv$df <-  append(isolate(rv$df[!names(rv$df) %in% "ADAE"]),list("ADAE" = ADAE)) 
       datafile <- reactive({ rv$df })
+      
 
     }
     # add a PARAMCD and PARAM to ADCM, if it exists and put it back in the list
@@ -160,10 +173,12 @@ mod_popExp_server <- function(input, output, session, datafile){
       )
       
       # Bind all the BDS (PARAMCD) files and filter them
-      all_BDSDATA <- suppressMessages(bind_rows(BDSOCCDS, .id = "data_from"))  
+      all_BDSDATA <- bind_rows(BDSOCCDS, .id = "data_from")  
       
-      # remove any "ADSL" variables lurking in all_BDSDATA
-      all_BDSDATA <- all_BDSDATA %>% select(-tidyselect::any_of(c("AGEGR","AGEGRN","RACE","RACEN","SEX","SEXN")))
+      # replace the variable labels lost when doing bind_rows()
+      # for (i in 1:length(BDSOCCDS)) (
+      #   all_BDSDATA <- sjlabelled::copy_labels(all_BDSDATA, as.data.frame(BDSOCCDS[[i]]))
+      # )
       
       # take by= variable USUBJID plus all the names that are unique to ADSL
       ADSL.1 <- select(ADSL, USUBJID, dplyr::setdiff(names(ADSL), names(all_BDSDATA)))
@@ -175,6 +190,7 @@ mod_popExp_server <- function(input, output, session, datafile){
       # just ADSL by itself
       all_data <- bind_rows(ADSL, .id = "data_from")
       all_data$data_from <- "ADSL" # set to ADSL, defaults to "1" here???
+      # all_data <- sjlabelled::copy_labels(all_data, ADSL) 
     }
     
     # SAS data uses blanks as character missing; replace blanks with NAs for chr columns
@@ -202,8 +218,8 @@ mod_popExp_server <- function(input, output, session, datafile){
           data[, (varc) := forcats::fct_reorder(get(varc), get(varn))]
         } 
       }
-      varclst <- c("AGEGR", "AGEGR1", "SEX", "RACE", "RACETXT", "TRTA", "TRT01A", "TRT02A", "TRTP", "TRT01P", "TRT02P", "AVISIT", "APHASE", "AETOXGR", "AESEV", "AEREL")
-      varnlst <- c("AGEGRN","AGEGR1N","SEXN","RACEN","RACETXTN","TRTAN","TRT01AN","TRT02AN","TRTPN","TRT01PN","TRT02PN","AVISITN","APHASEN","AETOXGRN","AESEVN","AERELN")
+      varclst <- c("AGEGR","AGEGR1","SEX","RACE","TRTA","TRT01A","TRT02A","TRTP","TRT01P","TRT02P","AVISIT","APHASE","AETOXGR","AESEV","AEREL")
+      varnlst <- c("AGEGRN","AGEGR1N","SEXN","RACEN","TRTAN","TRT01AN","TRT02AN","TRTPN","TRT01PN","TRT02PN","AVISITN","APHASEN","AETOXGRN","AESEVN","AERELN")
       
       # save the variable labels into savelbls vector
       savelbls <- sjlabelled::get_label(all_data)
@@ -222,14 +238,79 @@ mod_popExp_server <- function(input, output, session, datafile){
   
   }, ignoreNULL = FALSE) # observeEvent datafile()
   
+  
+  
+  
   #
   # section for filtering
   #
-  
   output$hide_panel <- eventReactive(input$adv_filtering, TRUE, ignoreInit = TRUE)
   outputOptions(output, "hide_panel", suspendWhenHidden = FALSE)
   
-  feed_filter <- reactive({ rv$all_data })
+  # Only select data that starts with AD followed by one or more alphanumerics or underscore
+  my_loaded_adams <- reactive({
+    req(!is.null(datafile()))
+    sasdata0 <- toupper(names(datafile()))
+    sasdata <- names(which(sapply(sasdata0,function(df) { return(stringr::str_detect(toupper(df),"^AD[A-Z0-9\\_]+")) })))
+    return(sasdata)
+  })
+  
+  # If User wants to perform advance filtering, update drop down of data frames they can filter on
+  observe({
+    req(input$adv_filtering == T)
+    updateSelectInput("filter_df", session = session, choices = as.list(my_loaded_adams()), selected = "ADSL") #
+  })
+  
+  # Prepare a dataset that is really wide, merging together all files that the user wants to filter on
+  processed_data <- eventReactive(input$filter_df, {
+    
+    select_dfs <- datafile()[input$filter_df]
+    
+    # Separate out non BDS and BDS data frames. Note: join may throw some
+    # warnings if labels are different between two datasets, which is fine!
+    # Ignore
+    non_bds <- select_dfs[sapply(select_dfs, function(x) !("PARAMCD" %in% colnames(x)) )] 
+    bds <- select_dfs[sapply(select_dfs, function(x) "PARAMCD" %in% colnames(x) )]
+    
+    # Make CHG var doesn't exist, create the column and populate with NA
+    PARAMCD_dat <- purrr::map(bds, ~ if(!"CHG" %in% names(.)) {purrr::update_list(., CHG = NA)} else {.})
+    
+    # Combine selected data into a 1 usable data frame
+    if (!rlang::is_empty(PARAMCD_dat)) {
+      all_PARAMCD <- bind_rows(PARAMCD_dat, .id = "data_from") %>% distinct(.keep_all = T)
+      
+      if (!rlang::is_empty(non_bds)){
+        combined_data <- inner_join(non_bds %>% purrr::reduce(inner_join), all_PARAMCD)
+      } else {
+        combined_data <-all_PARAMCD
+      }
+    } else {
+      combined_data <- non_bds %>% reduce(inner_join)
+    }
+    return(
+      # if(!rlang::is_empty(input$filter_df)){
+        combined_data
+      # } else{
+      #   datafile()$ADSL
+      # }
+    )
+  })
+  
+  # If not pre-filtering, use ADSL to feed to IDEAFilter
+  observe({
+    req(!is.null(datafile()))
+    if(input$adv_filtering){
+      rv$processed_data <- processed_data()
+    } else {
+      rv$processed_data <- rv$all_data
+    }
+  })
+  
+  # must make reactive
+  feed_filter <- reactive({
+    rv$processed_data
+    # processed_data()
+    })
 
   # IDEAFilter
   filtered_data <- callModule(
@@ -245,8 +326,9 @@ mod_popExp_server <- function(input, output, session, datafile){
     } else {
       rv$all_data
     }
-  }) 
+  })
   
+    
   #
   # input$radio button processing
   #
