@@ -45,7 +45,5 @@ mod_popExp_ui <- function(id, label = "Population Explorer"){
     )
   )
 }
-## To be copied in the UI -- done
-# mod_popExp_ui("popExp_ui_1")
 
 
