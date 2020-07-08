@@ -256,20 +256,20 @@ mod_popExp_server <- function(input, output, session, datafile){
     
   output$plot_ui <- renderUI({
     switch(input$plot_type,
-           "Scatter Plot" = scatterPlot_ui("scatterPlot"),
-           "Spaghetti Plot" = spaghettiPlot_ui("spaghettiPlot"),
-           "Box Plot" = boxPlot_ui("boxPlot")
+           "Scatter Plot" = scatterPlot_ui(ns("scatterPlot")),
+           "Spaghetti Plot" = spaghettiPlot_ui(ns("spaghettiPlot")),
+           "Box Plot" = boxPlot_ui(ns("boxPlot"))
     )
   })
   
   
   output$plot_output <- renderPlot({
     if (input$plot_type == "Scatter Plot") {
-      callModule(scatterPlot_srv, "scatterPlot", data = dataset())
+      callModule(scatterPlot_srv, ns("scatterPlot"), data = dataset())
     } else if (input$plot_type == "Spaghetti Plot") {
-      callModule(spaghettiPlot_srv, "spaghettiPlot", data = dataset())
+      callModule(spaghettiPlot_srv, ns("spaghettiPlot"), data = dataset())
     } else {
-      callModule(boxPlot_srv, "boxPlot", data = dataset())
+      callModule(boxPlot_srv, ns("boxPlot"), data = dataset())
     }
   })
   
