@@ -329,104 +329,24 @@ mod_popExp_server <- function(input, output, session, datafile){
   })
   
     
-  #
-  # input$radio button processing
-  #
-  observeEvent(input$radio,{
-    
-    req(!is.null(rv$all_data))
-    
-    # Clear plotoutput
-    output$PlotlyOut <- renderPlotly({
-      NULL
-    })
-    # Clear datatable
-    output$DataTable <- DT::renderDataTable({
-      NULL
-    }) 
-    
-    # set clear plot to FALSE, since we just cleared the plot and table
-    # updateCheckboxInput(session = session, "clearplot", value = F)
-    # select Plot tab panel
-    updateTabsetPanel(session = session, "tabset", selected = "Plot")
-    
-    # Update Parameter Code choices
-    updateSelectizeInput(
-      session = session,
-      inputId = "selPrmCode",
-      choices = sort(unique(dataset()$PARAMCD)),
-      options = list(maxItems = 1),
-      selected = "")
-    
-    # widgets to show
-    widgets <- c("Parmstag","radio")
-    map(widgets, function(x) shinyjs::show(x))
-    
-    # widgets to hide
-    widgets <- c("selPrmCode","groupbox","groupbyvar","selxvar","selyvar","selzvar","seltimevar",
-                 "responsevar","AddPoints","animate","animateby","numBins","AddLine","AddSmooth",
-                 "DiscrXaxis","fillType","selectvars","runCorr","heatMapFill","errorBars","hbarOptions")
-    map(widgets, function(x) shinyjs::hide(x))
-    
-    
-    switch(input$radio, # use swtich() instead of if/else
-           "0" = {
-             # print("radio button is zero.")
-           },
-           "1" = {
-             # scatter plot module
-             # Update Parameter Code choices
-             # allow users to select up to two PARAMCDs here
-             updateSelectizeInput(
-               session = session,
-               inputId = "selPrmCode",
-               choices = sort(unique(dataset()$PARAMCD)),
-               options = list(maxItems = 2),
-               selected = "")
-             
-             callModule(mod_popExpScat_server, id = NULL, dataset) # ac golem: left id = NULL
-           },
-           "2" = {
-             # spaghetti plot module
-             # if ADSL is in data_from then no BDS datasets were selected
-             if (!"ADSL" %in% unique(dataset()$data_from)) {
-               callModule(mod_popExpSpag_server, id = NULL, dataset) 
-               # ac golem: left id = NULL. Why does this module have the extra "dataSelected" arg?
-               # rk duh! relic from the past.  Not needed.  Removed.
-             } else {
-               message("Spaghetti Plot needs a BDS dataset, not ADSL")
-               shinyjs::alert("An ADaM BDS dataset is required for spaghetti plot")
-             }
-           },
-           "3" = {
-             # box plot module
-             callModule(mod_popExpBoxp_server, id = NULL, dataset) # ac golem: left id = NULL
-           }, 
-           "4" = {
-             # heat map module
-             # commented out for now
-             message("heat map is commented out for now")
-             # updateAwesomeRadio(session=session, inputId = "fillType", selected = "Fill Variable")
-             # callModule(mod_popExpHeat_server, id = NULL, dataset) # ac golem: left id = NULL
-           },
-           "5" = {
-             # histogram module
-             callModule(mod_popExpHist_server, id = NULL, dataset) # ac golem: left id = NULL
-           },
-           "6" = {
-             # Means Plot module
-             callModule(mod_popExpMeans_server, id = NULL, dataset) # ac golem: left id = NULL
-           },
-           "7" = {
-             # Horizontal Bar Plot module
-             callModule(mod_popExpHBar_server, id = NULL, dataset)
-           },
-           
-           # This should not happen
-           stop("invalid radio button: ",input$radio)
+  output$plot_ui <- renderUI({
+    switch(input$plot_type,
+           "Scatter Plot" = scatterPlot_ui("scatterPlot"),
+           "Spaghetti Plot" = spaghettiPlot_ui("spaghettiPlot"),
+           "Box Plot" = boxPlot_ui("boxPlot")
     )
-    
-  }, ignoreNULL = FALSE, ignoreInit = TRUE) # observeEvent input$radio
+  })
+  
+  
+  output$plot_output <- renderPlot({
+    if (input$plot_type == "Scatter Plot") {
+      callModule(scatterPlot_srv, "scatterPlot")
+    } else if (input$plot_type == "Spaghetti Plot") {
+      callModule(spaghettiPlot_srv, "spaghettiPlot")
+    } else {
+      callModule(boxPlot_srv, "boxPlot")
+    }
+  })
   
 }
 
