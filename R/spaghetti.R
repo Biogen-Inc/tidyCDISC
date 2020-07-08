@@ -1,14 +1,10 @@
 spaghettiPlot_ui <- function(id, label = "box") {
   ns <- NS(id)
   tagList(
-    fluidRow(
-      column(6, selectInput(ns("yvar"), "Y Variable", choices = NULL)),
-      column(6, selectInput(ns("week"), "Week", choices = NULL))
-    ),
-    
+    selectInput(ns("yvar"), "Y Variable", choices = NULL),
     fluidRow(
       column(12, align = "center",
-             shinyWidgets::radioGroupButtons(ns("value"), "Value", choices = c("AVAL", "CHG"), selected = "AVAL")
+             shinyWidgets::radioGroupButtons(ns("value"), "Value", choices = c("AVAL", "CHG"))
       )
     ),
     
@@ -19,7 +15,11 @@ spaghettiPlot_ui <- function(id, label = "box") {
 
 spaghettiPlot_srv <- function(input, output, session, data) {
   
-    ggplot2::ggplot(data, ggplot2::aes(x = AGE, y = AGE)) +
+  p <- reactive({
+    ggplot2::ggplot(data(), ggplot2::aes_string(x = "AGE", y = "AGE")) +
       ggplot2::geom_point() +
       ggplot2::geom_line()
+  })
+  
+  return(p)
 }

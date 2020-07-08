@@ -1,11 +1,15 @@
+subset_colclasses <- function(DF, colclasses) {
+  names(DF)[purrr::map(DF, colclasses) %>% unlist()]
+}
+
 boxPlot_ui <- function(id, label = "box") {
   ns <- NS(id)
   tagList(
-    selectInput(ns("yvar"), "Y Variable", choices = NULL),
+    selectInput(ns("yvar"), "Response Variable", choices = NULL),
     
     fluidRow(
       column(12, align = "center",
-             shinyWidgets::radioGroupButtons(ns("value"), "Value", choices = c("AVAL", "CHG"), selected = "AVAL")
+             shinyWidgets::radioGroupButtons(ns("value"), "Value", choices = c("AVAL", "CHG"))
       )
     ),
     selectInput(ns("group"), "Group By", choices = NULL),
@@ -13,18 +17,24 @@ boxPlot_ui <- function(id, label = "box") {
   )
 }
 
-boxPlot_srv <- function(input, output, session, data= reactive(NULL)) {
+boxPlot_srv <- function(input, output, session, data) {
+  ns <- session$ns
   
-  print(subset_colclasses(data(), is.factor))
-  
+  # why don't these work!?
   observe({
-    updateSelectInput(session, "group", choices = subset_colclasses(data(), is.factor))
-    updateSelectInput(session, "yvar", choices = subset_colclasses(data(), is.numeric))
+    print(subset_colclasses(data(), is.numeric))
+    updateSelectInput(session, "group",
+                      choices = as.list(subset_colclasses(data(), is.factor)),
+                      selected = "Species")
+    updateSelectInput(session, "yvar", 
+                      choices = as.list(subset_colclasses(data(), is.numeric)),
+                      selected = "Petal.Length")
   })
   
+  # Create Plot based on inputs
   p <- reactive({
-    ggplot2::ggplot(data(), ggplot2::aes(x = SEX, y = AGE)) +
-    ggplot2::geom_boxplot()
+    ggplot2::ggplot(data(), ggplot2::aes_string(x = "SEX", y = "AGE")) +
+      ggplot2::geom_boxplot()
   })
   
   return(p)
