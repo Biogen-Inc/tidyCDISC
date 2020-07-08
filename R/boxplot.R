@@ -18,10 +18,12 @@ boxPlot_srv <- function(input, output, session, data) {
   
   # why don't these work!?
   observe({
-    updateSelectInput(session, "group",
-                      choices = as.list(subset_colclasses(data(), is.factor)))
-    updateSelectInput(session, "yvar", 
-                      choices = as.list(subset_colclasses(data(), is.numeric)))
+    req(data()$PARAMCD)
+    # this is working!!!
+    print(unique(data()$PARAMCD))
+    # but this doesnt ??? 
+    updateSelectInput(session, "yvar", choices = unique(data()$PARAMCD))
+    updateSelectInput(session, "group", choices = as.list(subset_colclasses(data(), is.character)))
   })
   
   # Create Plot based on inputs
