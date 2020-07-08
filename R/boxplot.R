@@ -1,13 +1,8 @@
 boxPlot_ui <- function(id, label = "box") {
   ns <- NS(id)
   tagList(
-    selectInput(ns("yvar"), "Response Variable", choices = NULL),
-    
-    fluidRow(
-      column(12, align = "center",
-             shinyWidgets::radioGroupButtons(ns("value"), "Value", choices = c("AVAL", "CHG"))
-      )
-    ),
+    selectInput(ns("yvar"), "Response Variable", choices = "DIABP", selected = "DIABP"),
+    fluidRow(column(12, align = "center", renderUI(ns("include_var")))),
     selectInput(ns("group"), "Group By", choices = NULL),
     checkboxInput(ns("points"), "Add Points?")
   )
@@ -15,6 +10,10 @@ boxPlot_ui <- function(id, label = "box") {
 
 boxPlot_srv <- function(input, output, session, data) {
   ns <- session$ns
+  
+  # -------------------------------------------------
+  # Update Inputs
+  # -------------------------------------------------
   
   # why don't these work!?
   observe({
@@ -26,7 +25,18 @@ boxPlot_srv <- function(input, output, session, data) {
     updateSelectInput(session, "group", choices = as.list(subset_colclasses(data(), is.character)))
   })
   
-  # Create Plot based on inputs
+  # if paramcd selected, let user select AVAL or CHG 
+  # why isn't this rendering? 
+  # I assume for same reason yvar isn't updating! 
+  output$include_var <- renderUI({
+    req(input$yvar %in% data()$PARAMCD)
+    shinyWidgets::radioGroupButtons(ns("value"), "Value", choices = c("AVAL", "CHG"))
+  })
+  
+  # -------------------------------------------------
+  # Create boxplot using inputs 
+  # -------------------------------------------------
+  
   p <- reactive({
     ggplot2::ggplot(data(), ggplot2::aes_string(x = "SEX", y = "AGE")) +
       ggplot2::geom_boxplot()
