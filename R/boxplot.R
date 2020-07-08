@@ -13,7 +13,19 @@ boxPlot_ui <- function(id, label = "box") {
   )
 }
 
-boxPlot_srv <- function(input, output, session, data) {
-  ggplot2::ggplot(data, ggplot2::aes(x = SEX, y = AGE)) +
+boxPlot_srv <- function(input, output, session, data= reactive(NULL)) {
+  
+  print(subset_colclasses(data(), is.factor))
+  
+  observe({
+    updateSelectInput(session, "group", choices = subset_colclasses(data(), is.factor))
+    updateSelectInput(session, "yvar", choices = subset_colclasses(data(), is.numeric))
+  })
+  
+  p <- reactive({
+    ggplot2::ggplot(data(), ggplot2::aes(x = SEX, y = AGE)) +
     ggplot2::geom_boxplot()
+  })
+  
+  return(p)
 }

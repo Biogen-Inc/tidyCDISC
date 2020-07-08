@@ -63,12 +63,12 @@ rv <- shiny::reactiveValues
 rvtl <- shiny::reactiveValuesToList
 
 
-#' Subset data frame based on type 
+#' Get column names of data frame based on selected type 
 #' 
 #' @param DF the data frame to subset
 #' @param colclasses the classes to keep
 #' 
 #' @noRd
-subset_colclasses <- function(DF, colclasses="numeric") {
-  DF[,sapply(DF, function(vec, test) class(vec) %in% test, test=colclasses)]
+subset_colclasses <- function(DF, colclasses) {
+  names(DF)[purrr::map(DF, colclasses) %>% unlist()]
 }
