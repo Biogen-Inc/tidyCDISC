@@ -1,7 +1,3 @@
-subset_colclasses <- function(DF, colclasses) {
-  names(DF)[purrr::map(DF, colclasses) %>% unlist()]
-}
-
 boxPlot_ui <- function(id, label = "box") {
   ns <- NS(id)
   tagList(
@@ -22,13 +18,10 @@ boxPlot_srv <- function(input, output, session, data) {
   
   # why don't these work!?
   observe({
-    print(subset_colclasses(data(), is.numeric))
     updateSelectInput(session, "group",
-                      choices = as.list(subset_colclasses(data(), is.factor)),
-                      selected = "Species")
+                      choices = as.list(subset_colclasses(data(), is.factor)))
     updateSelectInput(session, "yvar", 
-                      choices = as.list(subset_colclasses(data(), is.numeric)),
-                      selected = "Petal.Length")
+                      choices = as.list(subset_colclasses(data(), is.numeric)))
   })
   
   # Create Plot based on inputs
