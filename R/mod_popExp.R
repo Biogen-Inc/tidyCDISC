@@ -22,58 +22,6 @@
 mod_popExp_server <- function(input, output, session, datafile){
   ns <- session$ns
  
-  # function for updating the main plot radio buttons
-  RadioUpdate <- function() {
-    
-    # I think what we are up against here is the UI design principle that 
-    # there shouldn't be such a thing as radio button with nothing selected. 
-    # To represent that state you need to add an option called 'None selected' as one of the buttons. 
-    # So here we do it twice, the second time without the 'None selected' choice
-    
-    updatePrettyRadioButtons(
-      session = session,
-      inputId = "radio",
-      choices = list("Scatter Plot  " = "1",
-                     "Spaghetti Plot" = "2",
-                     "Box Plot      " = "3",
-                     # "Heat Map      " = "4",
-                     "Histogram     " = "5",
-                     "Means Plot    " = "6",  
-                     "Hbar Plot     " = "7",
-                     "None selected " = "0"
-      ),
-      selected = "0"
-    )
-    
-    updatePrettyRadioButtons(
-      session = session,
-      inputId = "radio",
-      choices = list("Scatter Plot  " = "1",
-                     "Spaghetti Plot" = "2",
-                     "Box Plot      " = "3",
-                     # "Heat Map      " = "4",
-                     "Histogram     " = "5",
-                     "Means Plot    " = "6",
-                     "Hbar Plot     " = "7"
-                     
-      ),
-      selected = character(0)
-    )
-  }
-  
-  # waiting_screen <- tagList(
-  #   spin_folding_cube(),
-  #   h4("Hold on a bit while we merge datasets...")
-  # ) 
-  
-  # hide all the widgets
-  widgets <- c("Parmstag","radio","selPrmCode","groupbox","groupbyvar","selxvar","selyvar","selzvar","seltimevar",
-               "responsevar","AddPoints","animate","animateby","numBins","AddLine","AddSmooth",
-               "DiscrXaxis","fillType","selectvars","runCorr","heatMapFill","errorBars","hbarOptions")
-  
-  # hide all the widgets using an anonymous function
-  map(widgets, function(x) shinyjs::hide(x))
-  
   # select the data sets
   # dataselected <- callModule(mod_selectData_server, id = NULL, datafile)
   
@@ -89,21 +37,8 @@ mod_popExp_server <- function(input, output, session, datafile){
     # wait until ADSL has been selected
     req("ADSL" %in% names(datafile()) )
     
-    # waiter_show(html = waiting_screen, color = "lightblue")
-    # Sys.sleep(0.5) # wait 1/2 second
-    
     # set adv_filtering checkbox to FALSE; select Plot tab panel
     updateTabsetPanel(session = session, "tabset", selected = "Plot")
-    
-    inputids <- c("groupbyvar","responsevar","seltimevar","selxvar","selyvar","selzvar")
-    # set these to un-selected using map() and an anonymous function
-    map(inputids, function(x) updateSelectInput(session = session, x, choices = " ", selected = character(0)) )
-    
-    # run the radioUpdate function above
-    RadioUpdate()
-    
-    # datakeep <- reactive({ datafile()[dataselected()] })
-    # datakeep <- reactive({ datafile() })
     
     # The data used by the population explorer is going to be one of:
     # (1) one or more BDS datasets row-joined ("pancaked") together 
@@ -233,19 +168,9 @@ mod_popExp_server <- function(input, output, session, datafile){
     }
     
     rv$all_data <- all_data 
-    
-    # waiter_hide()
   
   }, ignoreNULL = FALSE) # observeEvent datafile()
   
-  
-  
-  
-  #
-  # section for filtering
-  #
-  output$hide_panel <- eventReactive(input$adv_filtering, TRUE, ignoreInit = TRUE)
-  outputOptions(output, "hide_panel", suspendWhenHidden = FALSE)
   
   # Only select data that starts with AD followed by one or more alphanumerics or underscore
   my_loaded_adams <- reactive({
@@ -349,6 +274,3 @@ mod_popExp_server <- function(input, output, session, datafile){
   })
   
 }
-
-## To be copied in the server -- done
-# callModule(mod_popExp_server, "popExp_ui_1")
