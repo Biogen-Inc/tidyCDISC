@@ -181,26 +181,19 @@ mod_popExp_server <- function(input, output, session, datafile){
     }
   }) 
   
-    
-  output$plot_ui <- renderUI({
-    switch(input$plot_type,
-           "Scatter Plot" = scatterPlot_ui("scatterPlot"),
-           "Spaghetti Plot" = spaghettiPlot_ui("spaghettiPlot"),
-           "Box Plot" = boxPlot_ui("boxPlot")
-    )
-  })
+  p_scatter <- callModule(scatterPlot_srv, "scatterPlot", data = dataset)
+  p_spaghetti <- callModule(spaghettiPlot_srv, "spaghettiPlot", data = dataset)
+  p_box <- callModule(boxPlot_srv, "boxPlot", data = dataset)
   
-  
-  observe({
+  # use plot output of the module to create the plot 
+  output$plot_output <- renderPlot({
     if (input$plot_type == "Scatter Plot") {
-      callModule(scatterPlot_srv, "scatterPlot", data = dataset())
-    } else if (input$plot_type == "Spaghetti Plot") {
-      callModule(spaghettiPlot_srv, "spaghettiPlot", data = dataset())
+      p_scatter()
+    } else if (input$plot_type == "Box Plot") {
+      p_box()
     } else {
-      p <- callModule(boxPlot_srv, "boxPlot", data = dataset())
+      p_spaghetti()
     }
   })
-  
-  output$plot_output <- renderPlot({ p() })
   
 }
