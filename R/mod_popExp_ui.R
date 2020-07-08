@@ -36,9 +36,9 @@ mod_popExp_ui <- function(id, label = "Population Explorer"){
                       )
                     ),
                     wellPanel(
-                      conditionalPanel("input.plot_type == 'Box Plot'", ns = ns, boxPlot_ui("boxPlot")),
-                      conditionalPanel("input.plot_type == 'Spaghetti Plot'", ns = ns, spaghettiPlot_ui("spaghettiPlot")),
-                      conditionalPanel("input.plot_type == 'Scatter Plot'", ns = ns, scatterPlot_ui("scatterPlot"))
+                      conditionalPanel("input.plot_type === 'Box Plot'", ns = ns, boxPlot_ui("boxPlot")),
+                      conditionalPanel("input.plot_type === 'Spaghetti Plot'", ns = ns, spaghettiPlot_ui("spaghettiPlot")),
+                      conditionalPanel("input.plot_type === 'Scatter Plot'", ns = ns, scatterPlot_ui("scatterPlot"))
                     )
              ),
              column(width = 9, wellPanel(plotOutput(ns("plot_output"))))
