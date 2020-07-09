@@ -40,15 +40,6 @@ mod_popExp_ui <- function(id, label = "Population Explorer"){
              ),
              column(width = 9, 
                     wellPanel(plotOutput(ns("plot_output")))
-                    # ,
-                    # wellPanel(h4("Dataset Used:"),
-                    # DT::dataTableOutput(ns("dataset"))),
-                    # wellPanel(h4("All Data:"),
-                    # DT::dataTableOutput(ns("all_data"))),
-                    # wellPanel(h4("Filtered Data:"),
-                    # DT::dataTableOutput(ns("filtered_data"))),
-                    # wellPanel(h4("Feed Filter:"),
-                    # DT::dataTableOutput(ns("feed_filter")))
                     )
     )
   )

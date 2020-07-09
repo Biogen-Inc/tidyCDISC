@@ -304,19 +304,6 @@ mod_popExp_server <- function(input, output, session, datafile) {
     }
     return(d)
   }) 
-  
-  # output$dataset <- DT::renderDataTable({
-  #   DT::datatable(dataset())
-  # })
-  # output$all_data <- DT::renderDataTable({
-  #   DT::datatable(all_data())
-  # })
-  # output$filtered_data <- DT::renderDataTable({
-  #   DT::datatable(filtered_data())
-  # })
-  # output$feed_filter <- DT::renderDataTable({
-  #   DT::datatable(feed_filter())
-  # })
 
   
   
