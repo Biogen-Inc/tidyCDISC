@@ -22,8 +22,9 @@ mod_popExp_ui <- function(id, label = "Population Explorer"){
                conditionalPanel(condition = "input.adv_filtering == true", ns = ns,
                                 div(id = "custom_checkbox",
                                   selectInput(ns("filter_df"),"Filter on Variable(s) in a loaded ADaM",
-                                            multiple = TRUE, choices = NULL, selected = NULL)),
-                                IDEAFilter::shiny_data_filter_ui(ns("data_filter"))
+                                            multiple = TRUE, choices = NULL, selected = "ADSL"),
+                                  IDEAFilter::shiny_data_filter_ui(ns("data_filter"))),
+                                
                ),
              
              wellPanel(
@@ -37,7 +38,18 @@ mod_popExp_ui <- function(id, label = "Population Explorer"){
                     ),
                     wellPanel(uiOutput(ns("plot_ui")))
              ),
-             column(width = 9, wellPanel(plotOutput(ns("plot_output"))))
+             column(width = 9, 
+                    wellPanel(plotOutput(ns("plot_output")))
+                    # ,
+                    # wellPanel(h4("Dataset Used:"),
+                    # DT::dataTableOutput(ns("dataset"))),
+                    # wellPanel(h4("All Data:"),
+                    # DT::dataTableOutput(ns("all_data"))),
+                    # wellPanel(h4("Filtered Data:"),
+                    # DT::dataTableOutput(ns("filtered_data"))),
+                    # wellPanel(h4("Feed Filter:"),
+                    # DT::dataTableOutput(ns("feed_filter")))
+                    )
     )
   )
 }
