@@ -36,7 +36,7 @@ boxPlot_srv <- function(input, output, session, data) {
   
   output$include_var <- renderUI({
     req(input$yvar %in% data()$PARAMCD)
-    shinyWidgets::radioGroupButtons("value", "Value", choices = c("AVAL", "CHG"))
+    shinyWidgets::radioGroupButtons(ns("value"), "Value", choices = c("AVAL", "CHG"))
   })
   
   
