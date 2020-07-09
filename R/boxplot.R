@@ -1,43 +1,40 @@
 boxPlot_ui <- function(id, label = "box") {
   ns <- NS(id)
   tagList(
-    selectInput(ns("yvar"), "Response Variable", choices = NULL),
+    selectInput(ns("yvar"), "Response Variable", choices = "DIABP", selected = "DIABP"),
     fluidRow(column(12, align = "center", uiOutput(ns("include_var")))),
     selectInput(ns("group"), "Group By", choices = NULL),
     checkboxInput(ns("points"), "Add Points?")
   )
 }
 
-boxPlot_srv <- function(input, output, session, data, plot_type) {
+boxPlot_srv <- function(input, output, session, data) {
   ns <- session$ns
-  # Update Inputs
-  observeEvent(plot_type(),
-               {
-                 if (plot_type() == "Box Plot") {
-                   updateSelectInput(session, "group", choices = "DIABP")
-                   updateSelectInput(session, "yvar", choices = subset_colclasses(data(), is.numeric))
-                   
-                   # # why is this rendering without any dropdowns>
-                   if (input$yvar %in% data()$PARAMCD) {
-                      output$include_var <- renderUI({
-                        shinyWidgets::radioGroupButtons(ns("value"), "Value", choices = c("AVAL", "CHG"))
-                      })
-                    } else {
-                      output$include_var <- NULL
-                    }
-                 }
-               })
   
-  # Create Plot based on inputs, return to parent app.R
-  p <- eventReactive({
-    input$group
-    input$yvar
-  },{
-    req(input$group)
-    req(input$yvar)
-    
-    ggplot2::ggplot(data()) +
-      ggplot2::aes(x = .data[[input$group]], y = .data[[input$yvar]]) +
+  # -------------------------------------------------
+  # Update Inputs
+  # -------------------------------------------------
+  
+  observe({
+    req(data())
+    num_col <- subset_colclasses(data(), is.numeric)
+    paramcd <- data()$PARAMCD
+
+    updateSelectInput(session, "yvar", choices = c(paramcd, num_col))
+    updateSelectInput(session, "group", choices = as.list(subset_colclasses(data(), is.character)))
+  })
+  
+  output$include_var <- renderUI({
+    req(input$yvar %in% data()$PARAMCD)
+    shinyWidgets::radioGroupButtons(ns("value"), "Value", choices = c("AVAL", "CHG"))
+  })
+  
+  # -------------------------------------------------
+  # Create boxplot using inputs 
+  # -------------------------------------------------
+  
+  p <- reactive({
+    ggplot2::ggplot(data(), ggplot2::aes_string(x = input$group, y = input$yvar)) +
       ggplot2::geom_boxplot()
   })
   
