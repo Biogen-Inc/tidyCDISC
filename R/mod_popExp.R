@@ -191,41 +191,6 @@ mod_popExp_server <- function(input, output, session, datafile) {
     updateSelectInput("filter_df", session = session, choices = as.list(my_loaded_adams()), selected = "ADSL") #
   })
   
-  # # Prepare a dataset that is really wide, merging together all files that the user wants to filter on
-  # processed_data <- eventReactive(input$filter_df, {
-  #   
-  #   select_dfs <- datafile()[input$filter_df]
-  #   
-  #   # Separate out non BDS and BDS data frames. Note: join may throw some
-  #   # warnings if labels are different between two datasets, which is fine!
-  #   # Ignore
-  #   non_bds <- select_dfs[sapply(select_dfs, function(x) !("PARAMCD" %in% colnames(x)) )] 
-  #   bds <- select_dfs[sapply(select_dfs, function(x) "PARAMCD" %in% colnames(x) )]
-  #   
-  #   # Make CHG var doesn't exist, create the column and populate with NA
-  #   PARAMCD_dat <- purrr::map(bds, ~ if(!"CHG" %in% names(.)) {purrr::update_list(., CHG = NA)} else {.})
-  #   
-  #   # Combine selected data into a 1 usable data frame
-  #   if (!rlang::is_empty(PARAMCD_dat)) {
-  #     all_PARAMCD <- bind_rows(PARAMCD_dat, .id = "data_from") %>% distinct(.keep_all = T)
-  #     
-  #     if (!rlang::is_empty(non_bds)){
-  #       combined_data <- inner_join(non_bds %>% purrr::reduce(inner_join), all_PARAMCD)
-  #     } else {
-  #       combined_data <-all_PARAMCD
-  #     }
-  #   } else {
-  #     combined_data <- non_bds %>% reduce(inner_join)
-  #   }
-  #   return(
-  #     # if(!rlang::is_empty(input$filter_df)){
-  #     combined_data
-  #     # } else{
-  #     #   datafile()$ADSL
-  #     # }
-  #   )
-  # })
-  
   # must make reactive
   all_data <- reactive({
     process()$all_data
@@ -234,16 +199,6 @@ mod_popExp_server <- function(input, output, session, datafile) {
   adsl_cols <- reactive({
     process()$adsl_cols
   })
-  
-  # # If not pre-filtering, use ADSL to feed to IDEAFilter
-  # observe({
-  #   req(!is.null(datafile()))
-  #   if(input$adv_filtering){
-  #     rv$processed_data <- processed_data()
-  #   } else {
-  #     rv$processed_data <- rv$all_data
-  #   }
-  # })
   
   # must make reactive
   feed_filter <- reactive({
@@ -256,7 +211,6 @@ mod_popExp_server <- function(input, output, session, datafile) {
     }
     # processed_data()
   })
-  # feed_filter <- reactive({ rv$all_data })
   
   # must make reactive
   not_filtered <- reactive({
@@ -304,18 +258,6 @@ mod_popExp_server <- function(input, output, session, datafile) {
     }
     return(d)
   }) 
-
-  
-  
-  # output$plot_ui <- renderUI({
-  #   switch(input$plot_type,
-  #          "Scatter Plot" = scatterPlot_ui("scatterPlot"),
-  #          "Spaghetti Plot" = spaghettiPlot_ui("spaghettiPlot"),
-  #          "Box Plot" = boxPlot_ui("boxPlot")
-  #  )
-  # })
-
-  #plot_type <- reactive({ input$plot_type })
   
   p_scatter <- callModule(scatterPlot_srv, "scatterPlot", data = dataset)
   p_spaghetti <- callModule(spaghettiPlot_srv, "spaghettiPlot", data = dataset)
