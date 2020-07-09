@@ -1,12 +1,7 @@
 boxPlot_ui <- function(id, label = "box") {
   ns <- NS(id)
   tagList(
-    fluidRow(
-      column(6, selectInput(ns("yvar"), "Response Variable", choices = "DIABP", selected = "DIABP")),
-      column(6, conditionalPanel(condition = "output.is_y_week", ns=ns,
-        selectInput(ns("week"), "Select Week", choices = "")))
-    ),
-
+    selectInput(ns("yvar"), "Response Variable", choices = NULL),
     fluidRow(column(12, align = "center", uiOutput(ns("include_var")))),
     selectInput(ns("group"), "Group By", choices = NULL),
     checkboxInput(ns("points"), "Add Points?")
@@ -30,30 +25,19 @@ boxPlot_srv <- function(input, output, session, data) {
     # get unique paramcd
     paramcd <- unique(data()$PARAMCD)
     
-    group <- subset_colclasses(data(), is.character)
+    group_fc <- subset_colclasses(data(), is.factor)
+    group_ch <- subset_colclasses(data(), is.character)
+    group <- c(group_fc, group_ch)
     group <- group[group != "data_from"]
 
     updateSelectInput(session, "yvar", choices = c(paramcd, num_col))
     updateSelectInput(session, "group", choices = group)
-    updateSelectInput(session, "week", choices = weeks_list())
   })
   
   output$include_var <- renderUI({
     req(input$yvar %in% data()$PARAMCD)
     shinyWidgets::radioGroupButtons("value", "Value", choices = c("AVAL", "CHG"))
   })
-  
-  weeks_list <- reactive({
-    req(data()$AVISIT)
-    unique(data() %>% select(AVISIT) %>% filter(AVISIT != "") %>% pull(AVISIT))
-  })
-  
-  output$is_y_week <- reactive({
-    req(data()$PARAMCD)
-    input$yvar %in% data()$PARAMCD
-  })
-  
-  outputOptions(output, "is_y_week", suspendWhenHidden = FALSE) 
   
   
   # -------------------------------------------------
@@ -68,9 +52,9 @@ boxPlot_srv <- function(input, output, session, data) {
           ggplot2::aes_string(x = input$group, y = input$yvar) +
           ggplot2::geom_boxplot()
     } else {
+      print(input$value)
         p <- data() %>% 
           dplyr::filter(PARAMCD == input$yvar) %>%
-          dplyr::filter(AVISIT == input$week) %>%
           ggplot2::ggplot() +
           ggplot2::aes_string(x = input$group, y = input$value) +
           ggplot2::geom_boxplot()
