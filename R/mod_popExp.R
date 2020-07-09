@@ -22,10 +22,13 @@
 mod_popExp_server <- function(input, output, session, datafile) {
   ns <- session$ns
  
-  rv <- reactiveValues(all_data = NULL, df = NULL)
+  rv <- reactiveValues(# all_data = NULL,
+                       df = NULL#,
+                       # processed_data = NULL
+                       )
   
   # show/hide checkboxes depending on radiobutton selection
-  observeEvent(datafile(), {
+  process <- eventReactive(datafile(), {
     
     # make sure selectData has been run
     req(!is.null(datafile()))
@@ -80,7 +83,7 @@ mod_popExp_server <- function(input, output, session, datafile) {
       sjlabelled::set_label(ADCM$PARAMCD) <- "Parameter Code"
       sjlabelled::set_label(ADCM$PARAM)   <- "Parameter"
       
-      rv$df <-  append(isolate(rv$df[!names(rv$df) %in% "ADAE"]),list("ADAE" = ADAE)) 
+      rv$df <-  append(isolate(rv$df[!names(rv$df) %in% "ADCM"]),list("ADCM" = ADCM)) 
       
     }
     
@@ -103,12 +106,23 @@ mod_popExp_server <- function(input, output, session, datafile) {
       
       # take by= variable USUBJID plus all the names that are unique to ADSL
       ADSL.1 <- select(ADSL, USUBJID, dplyr::setdiff(names(ADSL), names(all_BDSDATA)))
+      my_adsl_cols <- c(colnames(ADSL.1))
       # Warning: Column `USUBJID` has different attributes on LHS and RHS of join
-      suppressWarnings(all_data <- left_join(all_BDSDATA, ADSL.1, by = "USUBJID"))
+      # suppressWarnings(all_data <- left_join(all_BDSDATA, ADSL.1, by = "USUBJID"))
+      suppressWarnings( # Warning: Column `USUBJID` has different attributes on LHS and RHS of join
+        all_data <- all_BDSDATA %>%
+          left_join(ADSL.1, by = "USUBJID") %>%
+          bind_rows(
+            ADSL %>%
+            mutate(data_from = 'ADSL') %>%
+            select(data_from, everything())
+          )
+      )
       rm(ADSL.1)
       
     } else {
       # just ADSL by itself
+      my_adsl_cols <- colnames(ADSL)
       all_data <- bind_rows(ADSL, .id = "data_from")
       all_data$data_from <- "ADSL" # set to ADSL, defaults to "1" here???
     }
@@ -152,18 +166,107 @@ mod_popExp_server <- function(input, output, session, datafile) {
       
     }
     
-    rv$all_data <- all_data 
-    
+    # rv$all_data <- all_data 
+    return(list(all_data = all_data, adsl_cols = my_adsl_cols))
   }, ignoreNULL = FALSE) # observeEvent datafile()
   
   #
   # section for filtering
   #
-  
   output$hide_panel <- eventReactive(input$adv_filtering, TRUE, ignoreInit = TRUE)
   outputOptions(output, "hide_panel", suspendWhenHidden = FALSE)
   
-  feed_filter <- reactive({ rv$all_data })
+  # Only select data that starts with AD followed by one or more alphanumerics or underscore
+  my_loaded_adams <- reactive({
+    req(!is.null(datafile()))
+    cat(paste("\nadsl cols:", paste(adsl_cols(), collapse = ", ")))
+    sasdata0 <- toupper(names(datafile()))
+    sasdata <- names(which(sapply(sasdata0,function(df) { return(stringr::str_detect(toupper(df),"^AD[A-Z0-9\\_]+")) })))
+    return(sasdata)
+  })
+  
+  # If User wants to perform advance filtering, update drop down of data frames they can filter on
+  observe({
+    req(input$adv_filtering == T)
+    updateSelectInput("filter_df", session = session, choices = as.list(my_loaded_adams()), selected = "ADSL") #
+  })
+  
+  # # Prepare a dataset that is really wide, merging together all files that the user wants to filter on
+  # processed_data <- eventReactive(input$filter_df, {
+  #   
+  #   select_dfs <- datafile()[input$filter_df]
+  #   
+  #   # Separate out non BDS and BDS data frames. Note: join may throw some
+  #   # warnings if labels are different between two datasets, which is fine!
+  #   # Ignore
+  #   non_bds <- select_dfs[sapply(select_dfs, function(x) !("PARAMCD" %in% colnames(x)) )] 
+  #   bds <- select_dfs[sapply(select_dfs, function(x) "PARAMCD" %in% colnames(x) )]
+  #   
+  #   # Make CHG var doesn't exist, create the column and populate with NA
+  #   PARAMCD_dat <- purrr::map(bds, ~ if(!"CHG" %in% names(.)) {purrr::update_list(., CHG = NA)} else {.})
+  #   
+  #   # Combine selected data into a 1 usable data frame
+  #   if (!rlang::is_empty(PARAMCD_dat)) {
+  #     all_PARAMCD <- bind_rows(PARAMCD_dat, .id = "data_from") %>% distinct(.keep_all = T)
+  #     
+  #     if (!rlang::is_empty(non_bds)){
+  #       combined_data <- inner_join(non_bds %>% purrr::reduce(inner_join), all_PARAMCD)
+  #     } else {
+  #       combined_data <-all_PARAMCD
+  #     }
+  #   } else {
+  #     combined_data <- non_bds %>% reduce(inner_join)
+  #   }
+  #   return(
+  #     # if(!rlang::is_empty(input$filter_df)){
+  #     combined_data
+  #     # } else{
+  #     #   datafile()$ADSL
+  #     # }
+  #   )
+  # })
+  
+  # must make reactive
+  all_data <- reactive({
+    process()$all_data
+  })
+  # must make reactive
+  adsl_cols <- reactive({
+    process()$adsl_cols
+  })
+  
+  # # If not pre-filtering, use ADSL to feed to IDEAFilter
+  # observe({
+  #   req(!is.null(datafile()))
+  #   if(input$adv_filtering){
+  #     rv$processed_data <- processed_data()
+  #   } else {
+  #     rv$processed_data <- rv$all_data
+  #   }
+  # })
+  
+  # must make reactive
+  feed_filter <- reactive({
+    # req(!is.null(datafile()))
+    if(input$adv_filtering == T){
+      all_data() %>% subset(data_from %in% input$filter_df)
+    } else {
+      all_data()
+      # rv$all_data
+    }
+    # processed_data()
+  })
+  # feed_filter <- reactive({ rv$all_data })
+  
+  # must make reactive
+  not_filtered <- reactive({
+    # req(!is.null(datafile()))
+    if(input$adv_filtering){
+      all_data() %>% subset(!(data_from %in% input$filter_df))
+    } else {
+      NULL
+    }
+  })
   
   # IDEAFilter
   filtered_data <- callModule(
@@ -172,14 +275,37 @@ mod_popExp_server <- function(input, output, session, datafile) {
     data = feed_filter,    # the name of your pre-processed data
     verbose = FALSE)
   
+  
   # Update datset, depending on adv_filtering or filtered_data() changing
   dataset <- eventReactive(list(input$adv_filtering,filtered_data()), {
     if (!is.null(filtered_data()) && input$adv_filtering == TRUE ) {
-      suppressMessages(rv$all_data  %>% semi_join(filtered_data()))
+      # extract just the ADSL columns from the filtered data frame so we can
+      # apply those changes to the unfiltered data
+      adsl_filt_cols <- 
+        filtered_data() %>%
+        subset(data_from %in% input$filter_df) %>%
+        select(adsl_cols()) %>%
+        distinct()
+      
+      d <- filtered_data()
+      
+      # If there are any datasets that were not filtered, then semi_join those
+      if(!is.null(not_filtered())){
+        d <- d %>%
+          union(
+            not_filtered()%>%
+              semi_join(adsl_filt_cols)
+          )
+      }
     } else {
-      rv$all_data
+      # d <- filtered_data() # by default, this should be all_data() # if doesn't work, try 
+      # d <- all_data()
+      d <- all_data()
     }
+    return(d)
   }) 
+
+  
   
   # output$plot_ui <- renderUI({
   #   switch(input$plot_type,
