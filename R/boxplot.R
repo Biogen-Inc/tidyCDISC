@@ -14,14 +14,17 @@ boxPlot_srv <- function(input, output, session, data, plot_type) {
   observeEvent(plot_type(),
                {
                  if (plot_type() == "Box Plot") {
-                   updateSelectInput(session, "group", choices = subset_colclasses(data(), is.character))
+                   updateSelectInput(session, "group", choices = "DIABP")
                    updateSelectInput(session, "yvar", choices = subset_colclasses(data(), is.numeric))
                    
-                   # why is this rendering without any dropdowns>
-                   output$include_var <- renderUI({
-                     req(input$yvar %in% data()$PARAMCD)
-                     shinyWidgets::radioGroupButtons(ns("value"), "Value", choices = c("AVAL", "CHG"))
-                   })
+                   # # why is this rendering without any dropdowns>
+                   if (input$yvar %in% data()$PARAMCD) {
+                      output$include_var <- renderUI({
+                        shinyWidgets::radioGroupButtons(ns("value"), "Value", choices = c("AVAL", "CHG"))
+                      })
+                    } else {
+                      output$include_var <- NULL
+                    }
                  }
                })
   

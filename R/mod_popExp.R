@@ -183,9 +183,9 @@ mod_popExp_server <- function(input, output, session, datafile) {
   
   output$plot_ui <- renderUI({
     switch(input$plot_type,
-           "Scatter Plot" = boxPlot_ui("boxPlot"),
-           "Box Plot" = spaghettiPlot_ui("spaghettiPlot"),
-           "Spaghetti Plot" = scatterPlot_ui("scatterPlot")
+           "Scatter Plot" = scatterPlot_ui("scatterPlot"),
+           "Box Plot" = boxPlot_ui("boxPlot"),
+           "Spaghetti Plot" = spaghettiPlot_ui("spaghettiPlot")
     )
   })
   
