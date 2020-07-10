@@ -16,6 +16,7 @@ mod_dataUpload_ui <- function(id){
   tagList(
     h1("Data Upload/Preview", align = "center"),
     br(), br(), br(),
+    actionButton(ns("pilot"), "Use CDISC Pilot Data"),
     fluidRow(
       style = "padding: 20px",
       column(3,
@@ -158,8 +159,21 @@ mod_dataUpload_server <- function(input, output, session){
                   extensions = "Scroller", options = list(scrollY=400, scrollX=TRUE))
   })
   
+  observeEvent( input$pilot, {
+    
+    shinyjs::disable(id = "file")
+    
+    dd$data <- list(
+      ADSL = adsl,
+      ADVS = advs,
+      ADAE = adae,
+      ADLBC = adlbc
+    )
+    
+    shinyjs::hide(id = "pilot")
+  })
+  
   
   ### return all data
   return(reactive(dd$data))
 }
-
