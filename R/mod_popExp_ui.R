@@ -44,7 +44,7 @@ mod_popExp_ui <- function(id, label = "Population Explorer"){
                conditionalPanel("input.plot_type === 'Scatter Plot'", ns = ns, scatterPlot_ui(ns("scatterPlot")))
              )
             ),
-             column(width = 9, wellPanel(plotOutput(ns("plot_output"))))
+             column(width = 9, wellPanel(plotlyOutput(ns("plot_output"))))
     )
   )
 }
