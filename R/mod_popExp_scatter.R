@@ -2,7 +2,7 @@ scatterPlot_ui <- function(id, label = "scatter") {
   ns <- NS(id)
   tagList(
     fluidRow(
-      column(6, selectInput(ns("xvar"), "Select x-axis", choices = NULL)),
+      column(6, selectInput(ns("xvar"), "Explanatory Variable", choices = NULL)),
       column(6, conditionalPanel(
         condition = "output.is_x_week", ns = ns,
         selectInput(ns("week_x"), "Select Week", choices = NULL)))
@@ -10,7 +10,7 @@ scatterPlot_ui <- function(id, label = "scatter") {
     fluidRow(column(12, align = "center", uiOutput(ns("include_xvar")))),
     
     fluidRow(
-      column(6, selectInput(ns("yvar"), "Select y-axis", choices = NULL)),
+      column(6, selectInput(ns("yvar"), "Response Variable", choices = NULL)),
       column(6, conditionalPanel(
         condition = "output.is_y_week", ns = ns,
         selectInput(ns("week_y"), "Select Week", choices = NULL)))
@@ -76,9 +76,48 @@ scatterPlot_srv <- function(input, output, session, data) {
   outputOptions(output, "is_x_week", suspendWhenHidden = FALSE) 
   outputOptions(output, "is_y_week", suspendWhenHidden = FALSE) 
   
+  # create plot object using the numeric column on the yaxis
+  # or by filtering the data by PARAMCD, then using AVAL or CHG for the yaxis
   p <- reactive({
-    ggplot2::ggplot(data(), ggplot2::aes_string(x = "AGE", y = "AGE")) +
-      ggplot2::geom_point()
+    # x and y are numeric columns
+    if (input$yvar %in% colnames(data()) & input$xvar %in% colnames(data())) {
+      p <- ggplot2::ggplot(data()) + 
+        ggplot2::aes_string(x = input$xvar, y = input$yvar) +
+        ggplot2::geom_point()
+      # y numeric, x is paramcd 
+    } else if (input$yvar %in% colnames(data()) & !input$xvar %in% colnames(data())) {
+      p <- data() %>% 
+        dplyr::filter(PARAMCD == input$xvar) %>%
+        dplyr::filter(AVISIT == input$week_x) %>%
+        ggplot2::ggplot() +
+        ggplot2::aes_string(x = input$value_x, y = input$yvar) +
+        ggplot2::geom_line() +
+        ggplot2::geom_point()
+      # x numeric, y paramcd
+    } else if (!input$yvar %in% colnames(data()) & input$xvar %in% colnames(data())) {
+      p <- data() %>% 
+        dplyr::filter(PARAMCD == input$yvar) %>%
+        dplyr::filter(AVISIT == input$week_y) %>%
+        ggplot2::ggplot() +
+        ggplot2::aes_string(x = input$xvar, y = input$value_y) +
+        ggplot2::geom_line() +
+        ggplot2::geom_point()
+      # both paramcds
+    } else {
+      dplyr::filter(PARAMCD == input$yvar | PARAMCD == input$xvar) %>%
+        dplyr::filter(AVISIT == input$week_y | AVISIT == input$week_x) %>%
+        ggplot2::ggplot() +
+        ggplot2::aes_string(x = input$value_x, y = input$value_y) +
+        ggplot2::geom_line() +
+        ggplot2::geom_point()
+    }
+    
+    p <- p + 
+      ggplot2::theme(text = element_text(size = 20),
+                     axis.text = element_text(size = 20)) +
+      ggplot2::theme_bw()
+    
+    return(p)
   })
   
   return(p)
