@@ -20,7 +20,7 @@ boxPlot_srv <- function(input, output, session, data) {
     
     # numeric columns, remove aval, chg, base
     num_col <- subset_colclasses(data(), is.numeric)
-    num_col <- num_col[num_col != "AVAL" | num_col != "CHG" | num_col != "BASE"]
+    num_col <- num_col[num_col != "AVAL" & num_col != "CHG" & num_col != "BASE"]
     
     # get unique paramcd
     paramcd <- unique(data()$PARAMCD)
@@ -30,14 +30,13 @@ boxPlot_srv <- function(input, output, session, data) {
     group <- c(group_fc, group_ch)
     group <- group[group != "data_from"]
 
-    updateSelectInput(session, "yvar", choices = list(`Time Dependent` = paramcd, 
-                                                      `Time Independent` = num_col))
+    updateSelectInput(session, "yvar", choices = list(`Time Dependent` = paramcd, `Time Independent` = num_col))
     updateSelectInput(session, "group", choices = group)
   })
   
   output$include_var <- renderUI({
     req(input$yvar %in% data()$PARAMCD)
-    shinyWidgets::radioGroupButtons(ns("value"), "Value", choices = c("AVAL", "CHG"))
+    shinyWidgets::radioGroupButtons(ns("value"), "Value", choices = c("AVAL", "CHG", "BASE"))
   })
   
   
@@ -59,6 +58,13 @@ boxPlot_srv <- function(input, output, session, data) {
           ggplot2::aes_string(x = input$group, y = input$value) +
           ggplot2::geom_boxplot()
     }
+    
+    p <- p + 
+      ggplot2::xlab("") +
+      ggplot2::theme(text = element_text(size = 20),
+                     axis.text.x = element_text(size = 20),
+                     axis.text.y = element_text(size = 20)) +
+      ggplot2::theme_bw()
     
     if (input$points) { p <- p + ggplot2::geom_jitter() }
     return(p)
