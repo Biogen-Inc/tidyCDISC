@@ -289,9 +289,21 @@ transform:rotate(180deg);
     width: 100%;
 }
 
+#dataUpload_ui_1-pilot {
+  margin-left: 18px;
+}
+
+.disable_button {
+  background-color: grey !important;
+  cursor: no-drop;
+}
+
+.disable_button:hover {
+  background-color: grey !important;
+  cursor: no-drop;
+}
 /*
 @media only screen and (max-width: 3000px) {
   body {
     zoom: 75%;
   */
-}
