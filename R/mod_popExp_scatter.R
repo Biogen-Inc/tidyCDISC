@@ -4,7 +4,7 @@ scatterPlot_ui <- function(id, label = "scatter") {
     fluidRow(
       column(6, selectInput(ns("xvar"), "Select x-axis", choices = NULL)),
       column(6, conditionalPanel(
-        condition = "output.is_x_week",
+        condition = "output.is_x_week", ns = ns,
         selectInput(ns("week_x"), "Select Week", choices = NULL)))
     ),
     fluidRow(column(12, align = "center", uiOutput(ns("include_xvar")))),
@@ -12,7 +12,7 @@ scatterPlot_ui <- function(id, label = "scatter") {
     fluidRow(
       column(6, selectInput(ns("yvar"), "Select y-axis", choices = NULL)),
       column(6, conditionalPanel(
-        condition = "output.is_y_week",
+        condition = "output.is_y_week", ns = ns,
         selectInput(ns("week_y"), "Select Week", choices = NULL)))
     ),
     fluidRow(column(12, align = "center", uiOutput(ns("include_yvar")))),
