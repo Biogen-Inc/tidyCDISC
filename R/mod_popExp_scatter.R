@@ -104,7 +104,8 @@ scatterPlot_srv <- function(input, output, session, data) {
         ggplot2::geom_point()
       # both paramcds
     } else {
-      dplyr::filter(PARAMCD == input$yvar | PARAMCD == input$xvar) %>%
+      p <- data() %>%
+        dplyr::filter(PARAMCD == input$yvar | PARAMCD == input$xvar) %>%
         dplyr::filter(AVISIT == input$week_y | AVISIT == input$week_x) %>%
         ggplot2::ggplot() +
         ggplot2::aes_string(x = input$value_x, y = input$value_y) +
