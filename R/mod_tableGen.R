@@ -22,7 +22,7 @@
 #' @importFrom forcats fct_reorder
 #' @import tidyr
 #'
-#' @noRd 
+#' @family tableGen Functions
 
 
 mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL)) {

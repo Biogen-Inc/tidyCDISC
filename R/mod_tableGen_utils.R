@@ -5,6 +5,7 @@
 #' @param dataset the data to use for all choices - ADSL reactive
 #' @import shiny
 #' 
+#' @family tableGen Functions
 recipe_column <- function(input, dataset, column) {
   selectInput(input, "Group Data By:", choices = c("NONE", colnames(dataset)), selected = column)
 }
@@ -16,6 +17,8 @@ recipe_column <- function(input, dataset, column) {
 #' a help buttom
 #' 
 #' @importFrom cicerone Cicerone
+#' 
+#' @family tableGen Functions
 
 tg_guide <- cicerone::Cicerone$
   new()$

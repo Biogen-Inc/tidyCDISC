@@ -1,14 +1,18 @@
 #' popExp UI Function
 #'
-#' @description A shiny Module.
+#' @description UI for population explorer: the filtering widget
+#' as well as radio buttons for different plots. These radio buttons
+#' are used to toggle between the child modules of each plot type, and 
+#' a conditional panel of widgets based on the plot type
 #'
 #' @param id,input,output,session Internal parameters for {shiny}.
+#' @param label Name of module
 #'
-#' @noRd 
-#'
-#' @importFrom shiny NS tagList 
-#' @importFrom shinyWidgets prettyRadioButtons awesomeRadio
+#' @import shiny
 #' @importFrom plotly plotlyOutput
+#' @importFrom IDEAFilter shiny_data_filter
+#' 
+#' @family popExp Functions
 #' 
 mod_popExp_ui <- function(id, label = "Population Explorer"){
   ns <- NS(id)
@@ -23,7 +27,7 @@ mod_popExp_ui <- function(id, label = "Population Explorer"){
                                 div(id = "custom_checkbox",
                                   selectInput(ns("filter_df"),"Filter on Variable(s) in a loaded ADaM",
                                             multiple = TRUE, choices = NULL, selected = "ADSL"),
-                                  IDEAFilter::shiny_data_filter_ui(ns("data_filter"))),
+                                  IDEAFilter::shiny_data_filter_ui(ns("data_filter")))
                                 
                ),
              
@@ -48,5 +52,3 @@ mod_popExp_ui <- function(id, label = "Population Explorer"){
     )
   )
 }
-
-

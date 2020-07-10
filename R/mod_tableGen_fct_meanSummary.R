@@ -5,7 +5,9 @@
 #' @param to_count is either AVAL or CHG
 #' 
 #' @import dplyr
-
+#' 
+#' @family tableGen Functions
+#' 
 mean_summary <- function(.data, to_count) {
   
   to_count <- sym(to_count)

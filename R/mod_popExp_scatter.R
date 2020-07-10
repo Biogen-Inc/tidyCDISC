@@ -1,3 +1,17 @@
+#' Scatter Plot UI
+#'
+#' This module contains the widgets needed to create
+#' a scatter plot
+#'
+#' @param id module ID
+#' @param label module label
+#'
+#' @import shiny
+#' @import dplyr
+#'
+#' @family popExp Functions
+#'  
+
 scatterPlot_ui <- function(id, label = "scatter") {
   ns <- NS(id)
   tagList(
@@ -22,6 +36,23 @@ scatterPlot_ui <- function(id, label = "scatter") {
   )
 }
 
+
+#' Scatter Plot Server Function
+#'
+#' Using the widgets from the scatter plot UI
+#' create a ggplot object which is returned to the 
+#' parent Population Explorer module
+#'
+#' @param input,output,session Internal parameters for {shiny}.
+#' @param data The combined dataframe from population explorer
+#'
+#' @import shiny
+#' @import dplyr
+#'
+#' @return ggplot object
+#'
+#' @family popExp Functions
+#'  
 scatterPlot_srv <- function(input, output, session, data) {
   ns <- session$ns
   

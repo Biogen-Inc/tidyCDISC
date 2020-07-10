@@ -1,3 +1,17 @@
+#' Spaghetti Plot UI
+#'
+#' This module contains the widgets needed to create
+#' a spaghetti plot
+#'
+#' @param id module ID
+#' @param label module label
+#'
+#' @import shiny
+#' @import dplyr
+#'
+#' @family popExp Functions
+#'  
+
 spaghettiPlot_ui <- function(id, label = "spaghetti") {
   ns <- NS(id)
   tagList(
@@ -7,6 +21,22 @@ spaghettiPlot_ui <- function(id, label = "spaghetti") {
   )
 }
 
+#' Spaghetti Plot Server Function
+#'
+#' Using the widgets from the spaghetti plot UI
+#' create a ggplot object which is returned to the 
+#' parent Population Explorer module
+#'
+#' @param input,output,session Internal parameters for {shiny}.
+#' @param data The combined dataframe from population explorer
+#'
+#' @import shiny
+#' @import dplyr
+#'
+#' @return ggplot object
+#'
+#' @family popExp Functions
+#'  
 spaghettiPlot_srv <- function(input, output, session, data) {
   ns <- session$ns
   

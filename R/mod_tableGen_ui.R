@@ -14,6 +14,8 @@
 #' @importFrom IDEAFilter shiny_data_filter_ui
 #' @importFrom tippy tippy
 #' @importFrom gt gt_output
+#' 
+#' @family tableGen Functions
 
 mod_tableGen_ui <- function(id){
   ns <- NS(id)

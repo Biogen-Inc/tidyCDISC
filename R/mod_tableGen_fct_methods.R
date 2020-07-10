@@ -13,6 +13,8 @@
 #' to perform given the supplied column.
 #' This is used within a map to apply to all blocks
 #' inside the table generator module.
+#' 
+#' @family tableGen Functions
 
 IDEA_methods <- function(agg, column, week, group, data) {
   if (agg == "MEAN") {
@@ -34,6 +36,9 @@ IDEA_methods <- function(agg, column, week, group, data) {
 #' 
 #' @import shiny
 #' @importFrom dplyr case_when
+#' 
+#' @family tableGen Functions
+#' 
 custom_class <- function(x, df) {
   class(x) <- 
     case_when(
@@ -60,6 +65,9 @@ custom_class <- function(x, df) {
 #' to apply to the column
 #' @param blocks the block corresponding 
 #' to the column name to apply statistic on
+#' 
+#' @family tableGen Functions
+#' 
 convertTGOutput <- function(agg, blocks) {
   
   agg <- unlist(agg, recursive = FALSE)
