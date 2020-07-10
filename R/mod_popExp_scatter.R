@@ -119,7 +119,7 @@ scatterPlot_srv <- function(input, output, session, data) {
       ggplot2::theme_bw()
     
     if (input$separate != "NONE") { p <- p + ggplot2::facet_wrap(as.formula(paste(".~", input$separate))) }
-    
+    if (input$color != "NONE") { p <- p + ggplot2::aes_string(color = input$color)}
     return(p)
   })
   
