@@ -57,7 +57,7 @@ scatterPlot_srv <- function(input, output, session, data) {
   })
   
   weeks_list <- reactive({
-    unique(dataset %>% select(AVISIT) %>% filter(AVISIT != "") %>% pull(AVISIT))
+    unique(data() %>% select(AVISIT) %>% filter(AVISIT != "") %>% pull(AVISIT))
   })
   
   observeEvent(input$xvar, {
