@@ -47,6 +47,7 @@ boxPlot_srv <- function(input, output, session, data) {
   # create plot object using the numeric column on the yaxis
   # or by filtering the data by PARAMCD, then using AVAL or CHG for the yaxis
   p <- reactive({
+    req(data())
     if (input$yvar %in% colnames(data())) {
         p <- ggplot2::ggplot(data()) + 
           ggplot2::aes_string(x = input$group, y = input$yvar) +

@@ -79,6 +79,7 @@ scatterPlot_srv <- function(input, output, session, data) {
   # create plot object using the numeric column on the yaxis
   # or by filtering the data by PARAMCD, then using AVAL or CHG for the yaxis
   p <- reactive({
+    req(data())
     # x and y are numeric columns
     if (input$yvar %in% colnames(data()) & input$xvar %in% colnames(data())) {
       p <- ggplot2::ggplot(data()) + 
