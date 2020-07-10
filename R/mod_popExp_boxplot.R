@@ -30,7 +30,8 @@ boxPlot_srv <- function(input, output, session, data) {
     group <- c(group_fc, group_ch)
     group <- group[group != "data_from"]
 
-    updateSelectInput(session, "yvar", choices = c(paramcd, num_col))
+    updateSelectInput(session, "yvar", choices = list(`Time Dependent` = paramcd, 
+                                                      `Time Independent` = num_col))
     updateSelectInput(session, "group", choices = group)
   })
   
@@ -52,7 +53,6 @@ boxPlot_srv <- function(input, output, session, data) {
           ggplot2::aes_string(x = input$group, y = input$yvar) +
           ggplot2::geom_boxplot()
     } else {
-      print(input$value)
         p <- data() %>% 
           dplyr::filter(PARAMCD == input$yvar) %>%
           ggplot2::ggplot() +
