@@ -3,8 +3,7 @@ spaghettiPlot_ui <- function(id, label = "spaghetti") {
   tagList(
     selectInput(ns("yvar"), "Response Variable", choices = NULL),
     fluidRow(column(12, align = "center", uiOutput(ns("include_var")))),
-    selectInput(ns("time"), "Time Variable", choices = NULL),
-    checkboxInput(ns("animate"), "Animate Plot?")
+    selectInput(ns("time"), "Time Variable", choices = NULL)
   )
 }
 
@@ -68,8 +67,6 @@ spaghettiPlot_srv <- function(input, output, session, data) {
                      axis.text = element_text(size = 20)) +
       ggplot2::theme_bw()
     
-    # add feature to animate plots
-    # if (input$anmate) { p <- p + ggplot2::geom_jitter() }
     return(p)
   })
   
