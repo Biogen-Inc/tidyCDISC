@@ -221,4 +221,10 @@ $(function() {
 
 $("#popExp_ui_1-adv_filtering").parent().parent().addClass('custom_checkbox');
 $("#popExp_ui_1-adv_filtering").parent().parent().parent().addClass('custom_shiny_width');
+
+/*Change file input css */
+$('#dataUpload_ui_1-pilot').on('click',  function () {
+   $(".btn-file").addClass('disable_button');
+});
+});
 });
