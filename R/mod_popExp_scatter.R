@@ -118,6 +118,8 @@ scatterPlot_srv <- function(input, output, session, data) {
                      axis.text = element_text(size = 20)) +
       ggplot2::theme_bw()
     
+    if (input$separate != "NONE") { p <- p + ggplot2::facet_wrap(as.formula(paste(".~", input$separate))) }
+    
     return(p)
   })
   
