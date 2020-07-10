@@ -9,12 +9,16 @@
 #' @param data the data to use 
 #'
 #' @return a frequency table of grouped variables
+#' 
+#' @family tableGen Functions
 IDEA_freq <- function(column, week, group, data) {
   UseMethod("IDEA_freq", column)
 }
 
 #' @return NULL
 #' @rdname IDEA_freq
+#' 
+#' @family tableGen Functions
 IDEA_freq.default <- function(column, week, group, data) {
   rlang::abort(glue::glue(
     "Can't calculate mean because data is not classified as ADLB, BDS or OCCDS"
@@ -29,6 +33,8 @@ IDEA_freq.default <- function(column, week, group, data) {
 #' 
 #' @return frequency table of ADSL column
 #' @rdname IDEA_freq
+#' 
+#' @family tableGen Functions
 IDEA_freq.ADSL <- function(column, week, group = NULL, data) {
   
   column <- rlang::sym(as.character(column))
@@ -67,6 +73,8 @@ IDEA_freq.ADSL <- function(column, week, group = NULL, data) {
 
 #' @return NULL
 #' @rdname IDEA_freq
+#' 
+#' @family tableGen Functions
 IDEA_freq.BDS <- function(column, week, group = NULL, data) {
   rlang::abort(glue::glue(
     "Can't calculate frequency for BDS - {column} is numeric"
@@ -75,6 +83,8 @@ IDEA_freq.BDS <- function(column, week, group = NULL, data) {
 
 #' @return NULL
 #' @rdname IDEA_freq
+#' 
+#' @family tableGen Functions
 IDEA_freq.OCCDS <- function(column, week = NULL, group, data) {
   rlang::abort(glue::glue(
     "Currently no method to perform frequency statistics on OCCDS"
@@ -83,6 +93,8 @@ IDEA_freq.OCCDS <- function(column, week = NULL, group, data) {
 
 #' @return NULL
 #' @rdname IDEA_freq
+#' 
+#' @family tableGen Functions
 IDEA_freq.custom <- function(column, week = NULL, group, data) {
   rlang::abort(glue::glue(
     "Can't calculate mean, data is not classified as ADLB, BDS or OCCDS"

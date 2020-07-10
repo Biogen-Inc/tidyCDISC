@@ -4,21 +4,15 @@
 #'
 #' @param input,output,session Internal parameters for {shiny}. 
 #' @param datafile A list of dataframes
-
-#'   DO NOT REMOVE.
+#' 
 #' @import shiny
 #' @import dplyr
 #' @import IDEAFilter
-#' @import waiter
-#' @importFrom rlang sym
 #' @importFrom haven zap_label zap_formats
 #' @importFrom purrr map walk2
-#' @importFrom shinyjs show hide
-#' @importFrom shinyWidgets updatePrettyRadioButtons
 #' 
-#' @return character vector of loaded adams and a filtered dataframe to populate mod_indvExpPat module
+#' @family popExp Functions
 #' 
-#' @noRd
 mod_popExp_server <- function(input, output, session, datafile) {
   ns <- session$ns
  
