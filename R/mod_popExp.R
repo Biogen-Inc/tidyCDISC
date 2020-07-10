@@ -267,9 +267,9 @@ mod_popExp_server <- function(input, output, session, datafile) {
   # use plot output of the module to create the plot 
   output$plot_output <- renderPlotly({
     switch(input$plot_type,
-           `Scatter Plot` = p_scatter() %>% plotly::ggplotly(),
-           `Box Plot` = p_box() %>% plotly::ggplotly(),
-           `Spaghetti Plot` = p_spaghetti() %>% plotly::ggplotly()
+           `Scatter Plot` = p_scatter() %>% plotly::ggplotly() %>% config(displayModeBar = F),
+           `Box Plot` = p_box() %>% plotly::ggplotly() %>% config(displayModeBar = F),
+           `Spaghetti Plot` = p_spaghetti() %>% plotly::ggplotly() %>% config(displayModeBar = F)
            )
   })
   
