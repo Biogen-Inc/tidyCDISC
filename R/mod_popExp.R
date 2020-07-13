@@ -100,7 +100,7 @@ mod_popExp_server <- function(input, output, session, datafile) {
       
       # take by= variable USUBJID plus all the names that are unique to ADSL
       ADSL.1 <- select(ADSL, USUBJID, dplyr::setdiff(names(ADSL), names(all_BDSDATA)))
-      my_adsl_cols <- c(colnames(ADSL.1))
+      my_adsl_cols <- colnames(ADSL.1)
       # Warning: Column `USUBJID` has different attributes on LHS and RHS of join
       # suppressWarnings(all_data <- left_join(all_BDSDATA, ADSL.1, by = "USUBJID"))
       suppressWarnings( # Warning: Column `USUBJID` has different attributes on LHS and RHS of join
@@ -173,7 +173,7 @@ mod_popExp_server <- function(input, output, session, datafile) {
   # Only select data that starts with AD followed by one or more alphanumerics or underscore
   my_loaded_adams <- reactive({
     req(!is.null(datafile()))
-    cat(paste("\nadsl cols:", paste(adsl_cols(), collapse = ", ")))
+    # cat(paste("\nadsl cols:", paste(adsl_cols(), collapse = ", ")))
     sasdata0 <- toupper(names(datafile()))
     sasdata <- names(which(sapply(sasdata0,function(df) { return(stringr::str_detect(toupper(df),"^AD[A-Z0-9\\_]+")) })))
     return(sasdata)
@@ -227,22 +227,30 @@ mod_popExp_server <- function(input, output, session, datafile) {
   # Update datset, depending on adv_filtering or filtered_data() changing
   dataset <- eventReactive(list(input$adv_filtering,filtered_data()), {
     if (!is.null(filtered_data()) && input$adv_filtering == TRUE ) {
+      
+      req(input$filter_df) # needed 100% as this can be slow to update
+      
       # extract just the ADSL columns from the filtered data frame so we can
       # apply those changes to the unfiltered data
       adsl_filt_cols <- 
         filtered_data() %>%
         subset(data_from %in% input$filter_df) %>%
-        select("data_from", all_of(adsl_cols)) %>%
+        select(data_from, all_of(adsl_cols())) %>%
         distinct()
       
       # grab distinct adsl_filt_col values among any dataset (data_from) in case more
       # than 1 was selected
-      adsl_filt <- split(adsl_filt_cols %>% select(-data_from), adsl_filt_cols$data_from) %>%
+      adsl_filt <-
+        # adsl_filt_cols %>% select(-data_from)
+      # df_list <- 
+        split(adsl_filt_cols %>% select(-data_from), adsl_filt_cols$data_from) %>%
         purrr::reduce(inner_join)
+      # cat(paste("\nclass(df_list):",class(df_list)))
+      # cat(paste("\nnames(df_list):",names(df_list)))
       
       d <- filtered_data() %>%
         semi_join(adsl_filt)
-      
+
       # If there are any datasets that were not filtered, then semi_join those
       if(!is.null(not_filtered())){
         d <- d %>%
@@ -251,6 +259,7 @@ mod_popExp_server <- function(input, output, session, datafile) {
               semi_join(adsl_filt)
           )
       }
+      # d <- all_data() #temp... delete me
     } else {
       # d <- filtered_data() # by default, this should be all_data() # if doesn't work, try 
       # d <- all_data()
@@ -258,6 +267,33 @@ mod_popExp_server <- function(input, output, session, datafile) {
     }
     return(d)
   }) 
+  
+  output$dataset <- DT::renderDataTable({
+    DT::datatable(dataset()
+                  , extensions = "Buttons"
+                  , options = list(  
+                    dom = 'Blftpr'
+                    , pageLength = 15
+                    , lengthMenu = list(c(15, 50, 100, -1),c('15', '50', '100', "All"))
+                    , buttons = list(list(
+                      extend = "excel", 
+                      filename = paste("dataset_dwnd",str_replace_all(str_replace(Sys.time(), " ", "_"),":", "-"), sep = "_")
+                    ))
+                  ))
+  })
+  output$dataset_u <- DT::renderDataTable({
+    DT::datatable(dataset() %>% distinct(USUBJID)
+                  , extensions = "Buttons"
+                  , options = list(  
+                    dom = 'Blftpr'
+                    , pageLength = 15
+                    , lengthMenu = list(c(15, 50, 100, -1),c('15', '50', '100', "All"))
+                    , buttons = list(list(
+                      extend = "excel", 
+                      filename = paste("dataset_u_dwnd",str_replace_all(str_replace(Sys.time(), " ", "_"),":", "-"), sep = "_")
+                    ))
+                  ))
+  })
   
   p_scatter <- callModule(scatterPlot_srv, "scatterPlot", data = dataset)
   p_spaghetti <- callModule(spaghettiPlot_srv, "spaghettiPlot", data = dataset)
