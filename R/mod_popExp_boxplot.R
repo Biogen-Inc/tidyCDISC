@@ -77,28 +77,8 @@ boxPlot_srv <- function(input, output, session, data) {
   # create plot object using the numeric column on the yaxis
   # or by filtering the data by PARAMCD, then using AVAL or CHG for the yaxis
   p <- reactive({
-    req(data())
-    if (input$yvar %in% colnames(data())) {
-        p <- ggplot2::ggplot(data()) + 
-          ggplot2::aes_string(x = input$group, y = input$yvar) +
-          ggplot2::geom_boxplot()
-    } else {
-        p <- data() %>% 
-          dplyr::filter(PARAMCD == input$yvar) %>%
-          ggplot2::ggplot() +
-          ggplot2::aes_string(x = input$group, y = input$value) +
-          ggplot2::geom_boxplot()
-    }
-    
-    p <- p + 
-      ggplot2::xlab("") +
-      ggplot2::theme(text = element_text(size = 20),
-                     axis.text.x = element_text(size = 20),
-                     axis.text.y = element_text(size = 20)) +
-      ggplot2::theme_bw()
-    
-    if (input$points) { p <- p + ggplot2::geom_jitter() }
-    return(p)
+    req(data(), input$yvar, input$group, input$value, input$points)
+    IDEA_boxplot(data(), input$yvar, input$group, input$value, input$points)
   })
   
   # return the plot object to parent module

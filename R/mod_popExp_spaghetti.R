@@ -11,7 +11,6 @@
 #'
 #' @family popExp Functions
 #'  
-
 spaghettiPlot_ui <- function(id, label = "spaghetti") {
   ns <- NS(id)
   tagList(
@@ -77,27 +76,8 @@ spaghettiPlot_srv <- function(input, output, session, data) {
   # create plot object using the numeric column on the yaxis
   # or by filtering the data by PARAMCD, then using AVAL or CHG for the yaxis
   p <- reactive({
-    req(data())
-    if (input$yvar %in% colnames(data())) {
-      p <- ggplot2::ggplot(data()) + 
-        ggplot2::aes_string(x = input$time, y = input$yvar, group = "USUBJID") +
-        ggplot2::geom_line() +
-        ggplot2::geom_point()
-    } else {
-      p <- data() %>% 
-        dplyr::filter(PARAMCD == input$yvar) %>%
-        ggplot2::ggplot() +
-        ggplot2::aes_string(x = input$time, y = input$value, group = "USUBJID") +
-        ggplot2::geom_line() +
-        ggplot2::geom_point()
-    }
-    
-    p <- p + 
-      ggplot2::theme(text = element_text(size = 20),
-                     axis.text = element_text(size = 20)) +
-      ggplot2::theme_bw()
-    
-    return(p)
+    req(data(), input$yvar, input$time, input$value)
+    IDEA_spaghettiplot(data(), input$yvar, input$time, input$value)
   })
   
   # return the plot object to parent module

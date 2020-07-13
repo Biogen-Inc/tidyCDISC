@@ -110,49 +110,16 @@ scatterPlot_srv <- function(input, output, session, data) {
   # create plot object using the numeric column on the yaxis
   # or by filtering the data by PARAMCD, then using AVAL or CHG for the yaxis
   p <- reactive({
-    req(data())
-    # x and y are numeric columns
-    if (input$yvar %in% colnames(data()) & input$xvar %in% colnames(data())) {
-      p <- ggplot2::ggplot(data()) + 
-        ggplot2::aes_string(x = input$xvar, y = input$yvar) +
-        ggplot2::geom_point()
-      # y numeric, x is paramcd 
-    } else if (input$yvar %in% colnames(data()) & !input$xvar %in% colnames(data())) {
-      p <- data() %>% 
-        dplyr::filter(PARAMCD == input$xvar) %>%
-        dplyr::filter(AVISIT == input$week_x) %>%
-        ggplot2::ggplot() +
-        ggplot2::aes_string(x = input$value_x, y = input$yvar) +
-        ggplot2::geom_line() +
-        ggplot2::geom_point()
-      # x numeric, y paramcd
-    } else if (!input$yvar %in% colnames(data()) & input$xvar %in% colnames(data())) {
-      p <- data() %>% 
-        dplyr::filter(PARAMCD == input$yvar) %>%
-        dplyr::filter(AVISIT == input$week_y) %>%
-        ggplot2::ggplot() +
-        ggplot2::aes_string(x = input$xvar, y = input$value_y) +
-        ggplot2::geom_line() +
-        ggplot2::geom_point()
-      # both paramcds
-    } else {
-      p <- data() %>%
-        dplyr::filter(PARAMCD == input$yvar | PARAMCD == input$xvar) %>%
-        dplyr::filter(AVISIT == input$week_y | AVISIT == input$week_x) %>%
-        ggplot2::ggplot() +
-        ggplot2::aes_string(x = input$value_x, y = input$value_y) +
-        ggplot2::geom_line() +
-        ggplot2::geom_point()
-    }
-    
-    p <- p + 
-      ggplot2::theme(text = element_text(size = 20),
-                     axis.text = element_text(size = 20)) +
-      ggplot2::theme_bw()
-    
-    if (input$separate != "NONE") { p <- p + ggplot2::facet_wrap(as.formula(paste(".~", input$separate))) }
-    if (input$color != "NONE") { p <- p + ggplot2::aes_string(color = input$color)}
-    return(p)
+    req(data(), input$yvar, input$xvar, input$week_x, input$value_x, input$week_y, input$value_y, input$separate, input$color)
+    IDEA_scatterplot(data(), 
+                 input$yvar, 
+                 input$xvar, 
+                 input$week_x, 
+                 input$value_x, 
+                 input$week_y, 
+                 input$value_y, 
+                 input$separate, 
+                 input$color)
   })
   
   return(p)
