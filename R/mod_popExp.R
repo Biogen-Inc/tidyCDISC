@@ -228,7 +228,7 @@ mod_popExp_server <- function(input, output, session, datafile) {
   dataset <- eventReactive(list(input$adv_filtering,filtered_data()), {
     if (!is.null(filtered_data()) && input$adv_filtering == TRUE ) {
       
-      req(input$filter_df) # needed 100% as this can be slow to update
+      req(input$filter_df) # needed 100% as this can be slow to update, causing an error
       
       # extract just the ADSL columns from the filtered data frame so we can
       # apply those changes to the unfiltered data
@@ -241,12 +241,8 @@ mod_popExp_server <- function(input, output, session, datafile) {
       # grab distinct adsl_filt_col values among any dataset (data_from) in case more
       # than 1 was selected
       adsl_filt <-
-        # adsl_filt_cols %>% select(-data_from)
-      # df_list <- 
         split(adsl_filt_cols %>% select(-data_from), adsl_filt_cols$data_from) %>%
         purrr::reduce(inner_join)
-      # cat(paste("\nclass(df_list):",class(df_list)))
-      # cat(paste("\nnames(df_list):",names(df_list)))
       
       d <- filtered_data() %>%
         semi_join(adsl_filt)
@@ -259,41 +255,11 @@ mod_popExp_server <- function(input, output, session, datafile) {
               semi_join(adsl_filt)
           )
       }
-      # d <- all_data() #temp... delete me
     } else {
-      # d <- filtered_data() # by default, this should be all_data() # if doesn't work, try 
-      # d <- all_data()
       d <- all_data()
     }
     return(d)
   }) 
-  
-  output$dataset <- DT::renderDataTable({
-    DT::datatable(dataset()
-                  , extensions = "Buttons"
-                  , options = list(  
-                    dom = 'Blftpr'
-                    , pageLength = 15
-                    , lengthMenu = list(c(15, 50, 100, -1),c('15', '50', '100', "All"))
-                    , buttons = list(list(
-                      extend = "excel", 
-                      filename = paste("dataset_dwnd",str_replace_all(str_replace(Sys.time(), " ", "_"),":", "-"), sep = "_")
-                    ))
-                  ))
-  })
-  output$dataset_u <- DT::renderDataTable({
-    DT::datatable(dataset() %>% distinct(USUBJID)
-                  , extensions = "Buttons"
-                  , options = list(  
-                    dom = 'Blftpr'
-                    , pageLength = 15
-                    , lengthMenu = list(c(15, 50, 100, -1),c('15', '50', '100', "All"))
-                    , buttons = list(list(
-                      extend = "excel", 
-                      filename = paste("dataset_u_dwnd",str_replace_all(str_replace(Sys.time(), " ", "_"),":", "-"), sep = "_")
-                    ))
-                  ))
-  })
   
   p_scatter <- callModule(scatterPlot_srv, "scatterPlot", data = dataset)
   p_spaghetti <- callModule(spaghettiPlot_srv, "spaghettiPlot", data = dataset)

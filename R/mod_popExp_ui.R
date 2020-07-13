@@ -48,14 +48,7 @@ mod_popExp_ui <- function(id, label = "Population Explorer"){
                conditionalPanel("input.plot_type === 'Scatter Plot'", ns = ns, scatterPlot_ui(ns("scatterPlot")))
              )
             ),
-             column(width = 9, wellPanel(plotlyOutput(ns("plot_output"))),
-                    wellPanel(
-                      h4("Dataset:"),
-                      DT::dataTableOutput(ns("dataset"))),
-                    wellPanel(
-                      h4("Dataset USUBJID:"),
-                      DT::dataTableOutput(ns("dataset_u")))
-                    )
+             column(width = 9, wellPanel(plotlyOutput(ns("plot_output"))))
     )
   )
 }
