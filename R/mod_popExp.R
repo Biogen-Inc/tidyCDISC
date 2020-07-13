@@ -100,7 +100,7 @@ mod_popExp_server <- function(input, output, session, datafile) {
       
       # take by= variable USUBJID plus all the names that are unique to ADSL
       ADSL.1 <- select(ADSL, USUBJID, dplyr::setdiff(names(ADSL), names(all_BDSDATA)))
-      my_adsl_cols <- c(colnames(ADSL.1))
+      my_adsl_cols <- colnames(ADSL.1)
       # Warning: Column `USUBJID` has different attributes on LHS and RHS of join
       # suppressWarnings(all_data <- left_join(all_BDSDATA, ADSL.1, by = "USUBJID"))
       suppressWarnings( # Warning: Column `USUBJID` has different attributes on LHS and RHS of join
@@ -173,7 +173,7 @@ mod_popExp_server <- function(input, output, session, datafile) {
   # Only select data that starts with AD followed by one or more alphanumerics or underscore
   my_loaded_adams <- reactive({
     req(!is.null(datafile()))
-    cat(paste("\nadsl cols:", paste(adsl_cols(), collapse = ", ")))
+    # cat(paste("\nadsl cols:", paste(adsl_cols(), collapse = ", ")))
     sasdata0 <- toupper(names(datafile()))
     sasdata <- names(which(sapply(sasdata0,function(df) { return(stringr::str_detect(toupper(df),"^AD[A-Z0-9\\_]+")) })))
     return(sasdata)
@@ -227,27 +227,35 @@ mod_popExp_server <- function(input, output, session, datafile) {
   # Update datset, depending on adv_filtering or filtered_data() changing
   dataset <- eventReactive(list(input$adv_filtering,filtered_data()), {
     if (!is.null(filtered_data()) && input$adv_filtering == TRUE ) {
+      
+      req(input$filter_df) # needed 100% as this can be slow to update, causing an error
+      
       # extract just the ADSL columns from the filtered data frame so we can
       # apply those changes to the unfiltered data
       adsl_filt_cols <- 
         filtered_data() %>%
         subset(data_from %in% input$filter_df) %>%
-        select(adsl_cols()) %>%
+        select(data_from, all_of(adsl_cols())) %>%
         distinct()
       
-      d <- filtered_data()
+      # grab distinct adsl_filt_col values among any dataset (data_from) in case more
+      # than 1 was selected
+      adsl_filt <-
+        split(adsl_filt_cols %>% select(-data_from), adsl_filt_cols$data_from) %>%
+        purrr::reduce(inner_join)
       
+      d <- filtered_data() %>%
+        semi_join(adsl_filt)
+
       # If there are any datasets that were not filtered, then semi_join those
       if(!is.null(not_filtered())){
         d <- d %>%
           union(
             not_filtered()%>%
-              semi_join(adsl_filt_cols)
+              semi_join(adsl_filt)
           )
       }
     } else {
-      # d <- filtered_data() # by default, this should be all_data() # if doesn't work, try 
-      # d <- all_data()
       d <- all_data()
     }
     return(d)
