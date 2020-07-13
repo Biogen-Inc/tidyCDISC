@@ -72,7 +72,7 @@ IDEA_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y,
       ggplot2::geom_line() +
       ggplot2::geom_point()
     # x numeric, y paramcd
-  } else if (yvar %in% colnames(data) & xvar %in% colnames(data)) {
+  } else if (!yvar %in% colnames(data) & xvar %in% colnames(data)) {
     p <- data %>% 
       dplyr::filter(PARAMCD == yvar) %>%
       dplyr::filter(AVISIT == week_y) %>%
