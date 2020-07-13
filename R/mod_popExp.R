@@ -237,8 +237,8 @@ mod_popExp_server <- function(input, output, session, datafile) {
       
       # grab distinct adsl_filt_col values among any dataset (data_from) in case more
       # than 1 was selected
-      filt_df_list <- split(adsl_filt_cols %>% select(-data_from), adsl_filt_cols$data_from)
-      adsl_filt <- filt_df_list %>% purrr::reduce(inner_join)
+      adsl_filt <- split(adsl_filt_cols %>% select(-data_from), adsl_filt_cols$data_from) %>%
+        purrr::reduce(inner_join)
       
       d <- filtered_data() %>%
         semi_join(adsl_filt)
