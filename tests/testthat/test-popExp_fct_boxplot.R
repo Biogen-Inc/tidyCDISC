@@ -2,14 +2,14 @@ context("Create popExp Boxplot")
 
 test_that("numeric response variable works", {
   plot <- IDEA_boxplot(tg_data, "AGE", "SEX")
-  expect_equal(plot$mapping$x[[2]], sym("SEX"))
-  expect_equal(plot$mapping$y[[2]], sym("AGE"))
+  expect_equal(quo_get_expr(plot$mapping$x), sym("SEX"))
+  expect_equal(quo_get_expr(plot$mapping$y), sym("AGE"))
 })
 
 test_that("PARAMCD response variable works", {
   plot <- IDEA_boxplot(tg_data, "DIABP", "SEX", value = "AVAL")
-  expect_equal(plot$mapping$x[[2]], sym("SEX"))
-  expect_equal(plot$mapping$y[[2]], sym("AVAL"))
+  expect_equal(quo_get_expr(plot$mapping$x), sym("SEX"))
+  expect_equal(quo_get_expr(plot$mapping$y), sym("AVAL"))
 })
 
 test_that("adding jitter works", {
