@@ -257,17 +257,7 @@ mod_popExp_server <- function(input, output, session, datafile) {
   p_spaghetti <- callModule(spaghettiPlot_srv, "spaghettiPlot", data = dataset)
   p_box <- callModule(boxPlot_srv, "boxPlot", data = dataset)
   
-  
-  observeEvent(input$plot_type, {
-    
-    waiter_show( # show the waiter
-      spin_fading_circles() # use a spinner
-    )
-    
-    Sys.sleep(3) # do something that takes time
-    
-    waiter_hide() # hide the waiter
-  })
+
   # use plot output of the module to create the plot 
   output$plot_output <- renderPlotly({
         switch(input$plot_type,
