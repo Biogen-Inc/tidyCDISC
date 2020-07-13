@@ -114,7 +114,7 @@ IDEA_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y,
 #' @param value If yvar is a PARAMCD then the user must select 
 #' AVAL, CHG, or BASE to be plotted on the y-axis
 #' 
-#' @family popExp Functions\
+#' @family popExp Functions
 IDEA_spaghettiplot <- function(data, yvar, time, value) {
   if (yvar %in% colnames(data)) {
     p <- ggplot2::ggplot(data) + 
