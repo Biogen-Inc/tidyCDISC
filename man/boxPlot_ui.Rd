@@ -17,6 +17,7 @@ a box plot
 }
 \seealso{
 Other popExp Functions: 
+\code{\link{IDEA_boxplot}()},
 \code{\link{boxPlot_srv}()},
 \code{\link{mod_popExp_server}()},
 \code{\link{mod_popExp_ui}()},

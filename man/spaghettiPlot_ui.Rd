@@ -17,6 +17,7 @@ a spaghetti plot
 }
 \seealso{
 Other popExp Functions: 
+\code{\link{IDEA_boxplot}()},
 \code{\link{boxPlot_srv}()},
 \code{\link{boxPlot_ui}()},
 \code{\link{mod_popExp_server}()},
