@@ -25,6 +25,7 @@ and filter the data by week
 }
 \seealso{
 Other popExp Functions: 
+\code{\link{IDEA_spaghettiplot}()},
 \code{\link{boxPlot_srv}()},
 \code{\link{boxPlot_ui}()},
 \code{\link{mod_popExp_server}()},

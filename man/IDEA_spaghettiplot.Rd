@@ -22,4 +22,16 @@ and using either the selected response variable
 or if a PARAMCD is selected, then plot the corresponding value. 
 Lines are plotted by patient
 }
-\concept{}
+\seealso{
+Other popExp Functions: 
+\code{\link{IDEA_boxplot}()},
+\code{\link{boxPlot_srv}()},
+\code{\link{boxPlot_ui}()},
+\code{\link{mod_popExp_server}()},
+\code{\link{mod_popExp_ui}()},
+\code{\link{scatterPlot_srv}()},
+\code{\link{scatterPlot_ui}()},
+\code{\link{spaghettiPlot_srv}()},
+\code{\link{spaghettiPlot_ui}()}
+}
+\concept{popExp Functions}
