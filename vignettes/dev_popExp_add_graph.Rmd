@@ -1,0 +1,21 @@
+---
+title: "Add a Graph to the Population Explorer"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Creating Tables}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+Each plot in the Population Explorer is a submodule `mod_popExp_*.R` (where * is the plot name to be added) that is conditionally called within `mod_popExp.R` and `mod_popExp_ui.R`. The plotting module is used for the reactivity logic of the plot; the widgets needed as well as how to render them. The plot function itself is found within `mod_popExp_fct.R`
+
+This tutorial will walk you through adding a plot module and a plot function, then applying it to the Population Explorer module using `mod_popExp_boxplot.R` as an example.
+
+![](figures/popExp/create_plot.png)
+
+Inside `mod_popExp_boxplot.R` we havew two functions: `boxPlot_ui` which is where we specify the widgets we need to create a boxplot and `boxPlot_srv` which populates the widget dropdown based on the user's data, as well as creates a graph using the `IDEA_boxplot()` function, located in `mod_popExp_fct.R`
+
+```{r}
+```
+
+1
