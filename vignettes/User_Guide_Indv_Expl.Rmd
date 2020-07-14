@@ -1,239 +1,336 @@
 ---
-title: "Integrate New OCCD Events in Individual Explorer"
+title: "IDEA: A Users Guide to the Individual Explorer Tab"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Integrate New OCCD Events in Individual Explorer}
+  %\VignetteIndexEntry{User Guide to Individual Explorer}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-This tutorial will walk you through how to add additional OCCD events to the app. Currently, the app supports events from ADMH, ADAE, ADCM, ADSL, and ADLB. You'll note that ADSL and ADLB are not really OCCD class data sets, but the app still extracts important dates from those sources to be displayed as "events". Besides including additional UI elements, there are two R functions to become familar with, all introduced below.
+This tutorial will walk through how to leverage the IDEA app's Individual Explorer tab to establish powerful patient narratives and explore outlier data from specific patients. The Individual Explorer tab will interface with ADSL, BDS, and OCCDs class data files. This tutorial will use 4 files: An ADSL, two BDS' (ADVS & ADLBC), and 1 OCCD (an ADAE). 
 
-## UI considerations
+<br>
 
-In `mod_indvExp_ui.R`, the input called "checkGroup" & "overlay_events" are introduced to the app's user interface. The former is for the `Events` tab and the latter is for the `Visits` tab. 
+```{r, out.height="60%", echo=FALSE}
+knitr::include_graphics("figures/IndvExp/01_dataUpload.PNG")
+```
 
-```{r, eval=FALSE}
-# Events Tab
-checkboxGroupInput(
-  inputId = ns("checkGroup"),
-  label = "For additional patient events, load an AE, LB, CM, or MH",
-  choices = c(" "),
-  selected = NULL,
-  inline = TRUE
-)
+<br>
+
+
+## Patient Oriented from the Start
+
+Upon selecting the `Individual Explorer` tab, you'll be greeted with the following prompt (below) asking to select a patient, by UBSUBJID. All the data presented from here out will be tied directly the patient you select. If you ever need help while navigating the patient selection widget, feel free to click the blue question mark in the upper right hand corner for a step-by-step guide through the widget, or keep reading this tutorial.
+
+<br>
+
+
+```{r, out.width="100%", out.height="100%", echo=FALSE}
+knitr::include_graphics("figures/IndvExp/02_start.PNG")
+```
+
+<br>
+
+## Advanced Pre-Filtering
+
+Sometimes you may have a specific patient whose data you wish to explore. However, other times you may want to explore any patient's data from a specific subgroup. To subset the patients list prior to selecting a USUBJID, we recommend using "Advanced Pre-filtering". When selecting the `Advanced Pre-Filtering` check box, additional fields will appear (see below) to filter the population to the subgroup of interest.
+
+
+<br>
+
+
+```{r, out.height="60%", echo=FALSE}
+knitr::include_graphics("figures/IndvExp/03_adv_filt.PNG")
+```
+
+<br>
+
+
+The first input field accepts the name of the data file that contains the variable you'd like to filter on. As you can see, it defaults to the ADSL. Feel free to delete `ADSL` and/or select another loaded data set. Let's say we're interested in patients with abdominal discomfort / pain or nausea that are younger than 70 years old. Thus, we'll filter on variables from both an ADSL and ADAE. Specifically, we'll filter on the `AGE` variable from the `ADSL` file & the `AEDECOD` variable from the `ADAE` file. Once both files are selected, you'll notice that the `Add Filter` drop-down is populated with variables from both data sets. You are welcome to scroll through this list and browse the variable names (with informative labels) or start typing the variable name of interest to save time. When typing, the drop-down will auto suggest the names of variable(s) that match what you type.
+
+<br>
+
+```{r, out.height="60%", echo=FALSE}
+knitr::include_graphics("figures/IndvExp/04_adv_filt_2_dfs.PNG")
+```
+
+<br>
+
+`AEDECOD` is the name of the variable that contains all the adverse events experience by patient's from this study. Since `AEDECOD` is a "character" variable, a drop-down list will appear containing all the unique values when selected. You may scroll through the list of adverse events or start typing "Abdominal" to have the drop-down selector auto-suggest existing variable names that match what you type. You'll notice that the number of rows of data is displayed to the right of the variable name. In this case, there is 1,191 rows of data when you combine the `ADSL` and `ADAE` data sets. However, after selecting both "Abdominal Discomfort", "Abdominal Pain", & "Nausea", there are only 28 rows remaining. This is a useful feature to understand the size of your sub-population when filtering.
+
+<br>
+
+
+```{r, out.height="60%", echo=FALSE}
+knitr::include_graphics("figures/IndvExp/05_adv_filt_2_dfs_abs.PNG")
+```
+
+<br>
+
+Next, we select the age variable. Since `AGE` is numeric, a slider will appear displaying the age range remaining in our sub-population of 28 subjects. As such, we can observe that age range is from 61 years old to 86 years old. As desired, we adjust the slider's upper limit to cap `AGE` at 70 years old. As a result, the parenthesis next to AGE shows there are 4 rows of data meet the criterion of this subgroup.
+
+There is one exception when a slider will not be displayed for numeric variables, and that is when there are fewer than 7 unique values left in the sub-population. For example, if there were only 2 subjects left after some initial filtering, the ages of the remaining patients would display as check boxes.
+
+<br>
+
+```{r, out.height="60%", echo=FALSE}
+knitr::include_graphics("figures/IndvExp/06_adv_filt_2_dfs_age.PNG")
+```
+
+<br>
+
+Note that the order these filters are applied will affect the order in which they are applied to the underlying data. You can also drag and drop these filters by clicking the the 6 grey dots to the left of the variable name, holding the click, and dragging them into the desired order where filters at the top execute first and filters at the bottom execute last.
+
+Now that we have our sub population of interest, it's time to select one of our patients that meet the desire criteria. After opening up the USUBJID drop-down list, you'll see there are only a few patients available to select.
+
+## Patient Selection
+
+We'll select patient `01-718-1371`. Upon doing so, additional info populates the screen: 
+
+<br>
+
+```{r, out.width="100%", out.height="100%", echo=FALSE}
+knitr::include_graphics("figures/IndvExp/07_selPatNo.PNG")
+```
+
+<br>
+
+First take note of the brief `Patient Demographic Info` table that contains handy data about the patient selected (if these variables exists in the ADSL), including physical, geographic, and study characteristics. Immediately below that, two tabs display which contain visualizations for both Events and Visits. The `Events` tab plots dates on an interactive timeline (designed for OCCDs files) while the `Visits` tab plots PARAMs by Study Visit (using solely BDS files). No matter what tab you've selected, the basic demographic table is conveniently located just above for reference.
+
+<br>
+
+## Events
+
+The primary objective of the events tab is to take important dates from the `ADSL` and any other date-oriented data sets to plot on an interactive timeline. What is displayed on the timeline is directly correlated with (1) the data sets uploaded and (2) which data sets you've selected in the check boxes below. Because we have an `ADSL` uploaded, the `Milestones` check box appears. It contains any date variable in the `ADSL` data set. Similarly, because we have an `ADAE` data set loaded, that check box appears. Last, we uploaded an `ADLBC` which contains dates blood chemistry labs were drawn. Other data supported are Con Meds or even medical history files, as denoted above the check boxes. Remember: if you ever need help while navigating the `Events` tab, feel free to click the blue question mark in the upper right-hand corner for a step-by-step guide through the tab, or just keep reading this tutorial.
+
+<br>
+
+```{r, out.width="100%", out.height="100%", echo=FALSE}
+knitr::include_graphics("figures/IndvExp/08_events_sel.PNG")
+```
+
+<br>
+
+Next, we'll select all available check boxes to show off the interactive timeline visual.
+
+### Timeline Visual
+
+When each check box is selected, a new "swim-lane" is added to the plot, populated with that file's date data. Each data element in the swim-lane are color coded for easy identification. In this case: Milestones are green, chemistry labs grey, and adverse events purple. Each box has a line that extends down to the x-axis. The "x-axis" contains dates that span the length of the study. 
+
+<br>
+
+
+```{r, out.width="100%", out.height="100%", echo=FALSE}
+knitr::include_graphics("figures/IndvExp/09_events_all.PNG")
+```
+
+<br>
+
+However, the date range displayed is subject to where the user wishes to zoom & pan. The user can either "hover and scroll" or leverage the small `+` or `-` sign on the top-right corner of the plot to zoom. To pan, the you can click and drag the timeline plot's screen to the left or right. As you zoom & pan, you'll see more and more detail in the x-axis and the events plotted will begin to spread out. See animation below:
+
+<br>
+
+
+
+```{r, out.width="100%", out.height="100%", echo=FALSE}
+knitr::include_graphics("figures/IndvExp/Events_Plot_Interactivity.gif")
 ```
 
 
-```{r, eval=FALSE}
-# Visits Tab
-checkboxGroupInput(
-  ns("overlay_events"),
-  label = HTML("<br/>Overlay Events:"),
-  choices = c(" ")
-)
+<br>
+
+If you noticed, the timeline plot is currently showing all adverse events that this patient incurred. Yet, previously we used `Advanced Pre-Filtering` to identify a sub-population of interest based off of certain adverse events: "Abdominal Discomfort", "Abdominal Pain", & "Nausea". You may apply those filters to this plot by toggling the `Apply Filters` switch next to the small blue question mark. When toggled, only the adverse events-of-interest display in the timeline plot. Specifically, this patient had mild nausea in early May. A list of the pre-filters will be displayed (in blue text) beneath the graph as a reminder of what events were filtered out of the data.
+
+<br>
+
+
+```{r, out.width="100%", out.height="100%", echo=FALSE}
+knitr::include_graphics("figures/IndvExp/10_events_applyFilters.PNG")
 ```
 
-Later, these values will get populated with server side logic that depends on what the ADaMs the user uploads & the USUBJID selected. That logic can be found in `mod_indvExpPat.R` and a snapshot is shown below. To summarize, the code checks if a supported ADaM exists, and if it does, that ADaM is assigned an domain abbreviation to be fed to the `choices` argument for our two inputs: checkGroup and overlay_events. Notice how overlay_events only recieves a subset of these choices, because Labs and Medical History aren't terribly valuable vertical lines to overlay on the `Visits` tab.
+<br>
 
-```{r, eval=FALSE}
-# update checkboxes on both Events and Visits Tabs
-# Initialize
-checked1 <- NA
-checked2 <- NA
-checked3 <- NA
-checked4 <- NA
-checked5 <- NA
-mh_names <- NA
+### Data table
 
-# check for "adsl" (required), "adae", "adcm", and "adlb"
-if ("ADSL" %in% loaded_adams()) { checked1 <- "DS" }
-if ("ADAE" %in% loaded_adams()) { checked2 <- "AE" }
-if ("ADCM" %in% loaded_adams()) { checked3 <- "CM" }
-if ("ADLB" %in% loaded_adams()) { checked4 <- "LB" }
-if ("ADMH" %in% loaded_adams()) {
-  # For ADMH, we want to create separate checkboxes for each type of 
-  # Medical History Category that exist in the ADMH for the selected patient.
-  mh_names <-
-    datafile()[["ADMH"]] %>%
-    filter(USUBJID == input$selPatNo) %>%
-    distinct(MHCAT) %>%
-    pull()%>%
-    stringr::str_to_title()
-  checked5 <- paste0("MH_",sapply(strsplit(mh_names, " "), function(x){
-    toupper(paste(substring(x, 1, 1), collapse = ""))}))
-}
+Directly beneath the timeline visual is the data table used to plot these events. Just like the timeline plot, the data contained here depends on what check boxes are selected. The user can sort this data by any column and easily output the results to MS Excel by selecting the `Excel` button in the top left corner. Adjacent that button, the user can display more entries per page, instead of the default value of 15 rows or simply page through the results by clicking the `Next` button in the bottom right-hand corner.
 
-# Combine all into a list
-choices <- as.list(unlist(c(list(checked1,checked2,checked3,checked4,as.list(checked5)))))
-names <- c("Milestones","Adverse Events","Concomitant Meds","Labs",mh_names) # ac: labels
+<br>
 
-# build a named list & Remove NULLs from the list
-choices <- setNames(choices,names)
-choices <- choices[!sapply(choices,is.na)]
 
-# update the checkbox group
-updateCheckboxGroupInput(
-  session = session,
-  inputId = "checkGroup",
-  choices = unlist(choices),
-  selected = NULL,
-  inline = TRUE)
-
-#######################################
-# Version for vlines on Visits Graph
-#######################################
-# You can only overlay Milestones, Adverse Events, and Con Meds (currently)
-choices2 <- as.list(unlist(c(list(checked1,checked2,checked3))))
-names2 <- names[1:3]
-
-# Setting up colors too
-vline_eventtype_cols <- my_cols[1:3] # my_cols defined in utils_strObjs.R
-v_event_cols <- setNames(vline_eventtype_cols,names2)
-dashes <- c("solid","dotted","dashed")
-v_event_lines <- setNames(dashes,names2)
-
-# build a named list & Remove NULLs from the list
-choices2 <- setNames(choices2,names2)
-choices2 <- choices2[!sapply(choices2,is.na)]
-
-updateCheckboxGroupInput(
-  session = session,
-  inputId = "overlay_events",
-  choices = unlist(choices2), # optionally convert list to array
-  selected = NULL)
-
+```{r, out.width="100%", out.height="100%", echo=FALSE}
+knitr::include_graphics("figures/IndvExp/11_events_datatable.PNG")
 ```
 
-Noteably, to add another OCCDs events data frame into the mix, you (the developer) will have to add an additional `checkedx` where `x` is the next sequential number of "checked" objects. For example, if your data set is called "ADMD" where "MD" is the abbreviation for "My Data", then you'd need to add these chunks of code into their respective positions above: 
+<br>
 
-```{r, eval=FALSE}
-checked6 <- NA
 
-# ...
+## Visits
 
-if ("ADMD" %in% loaded_adams()) { checked6 <- "MD" }
+Select the `Visits` tab. Recall, the `Visits` tab plots `PARAM`s by Study Visit using data from BDS-class data sets. Upon arrival, default selections are chosen for you if at least one BDS file is uploaded in the app. Off the bat, you'll see we are looking at a plot of Sodium (mmol/L) against Study Visit (ADY) for patient `01-718-1371`.
 
-# ...
-choices <- as.list(unlist(c(list(checked1,checked2,checked3,checked4,as.list(checked5),checked6))))
-names <- c("Milestones","Adverse Events","Concomitant Meds","Labs",mh_names, "My Data") # ac: labels
+<br>
 
-# ...
 
-choices2 <- as.list(unlist(c(list(checked1,checked2,checked3,checked6))))
-names2 <- c(names[1:3],"My Data")
-
+```{r, out.width="100%", out.height="100%", echo=FALSE}
+knitr::include_graphics("figures/IndvExp/12_visits_default.PNG")
 ```
 
-Note that adjusting the objects `choices2` & `names2` are optional; only ajust if you (the developer) or subject matter experts (SMEs) deem it's appropriate to overlay these types of events on the plot in the `Visits` tab.
+<br>
 
-## Standarize the format of your Event data
+### The Visits Plot
 
-Now that the groundwork has been established, it's time to introduce the function called `org_df_events()` which has various (well documented) arguments in the `mod_indvExp_fct_organizeEvent.R` file. This function takes a data set and manipulates it into a standard form. After being standardized, the app can (and will) combine it with other standarized event data frames as necessary.
+The user can interact with the plot by hovering the cursor over plotted points to glean more information about the data presented. In addition, the user can easily zoom & pan around the graph as needed. Last the user can download the plot to a PNG with the click of a button. See animated demonstration below:
 
-## What It Does
-Essentially, this function uses lots of shiny inputs to execute the following (among other things):
-
-- Validate that the date variable(s)-of-interest exist in the data set provided
-- Selects the preferred date variable, allowing for back-ups in case the user uploads a dataset where that date variable doesn't exist
-- Toggles the data source if advanced pre-filters exist
-- Filters to a specific USUBJID and non-missing date variable
-- Evaluates an expression to display a custom event Description based on other columns in the data set
-- Produces a tidy tibble, in a standard format
-
-### An Example
-
-In the example below, an Adverse Events (ADAE) is standardized using `org_df_events()`. The arguments that are pre-fixed with mi_ all come from shiny, but below they've been populated with examples to show the typical values they accept. That said, when implementing a new events data set, you (the developer) will need to concern yourself with the first 6 arugments, all of which are well documented on the function's help page.
-
-```{r, eval=FALSE}
-
-  ae_dat <- org_df_events(
-      df_name = "ADAE"
-    , df_domain_abbr = "AE"
-    , df_desc = "Adverse Events"
-    , df_st_date_vars = c("AESTDT","ASTDT")
-    , event_desc_vars = c("AEDECOD","AESEV","AESER")
-    , event_desc = 'paste0(AEDECOD, ", AESEV: ", AESEV, ", AESER: ", AESER)'
-    , mi_input_checkbox = c("DS","AE")
-    , mi_input_apply_filter = FALSE
-    , mi_usubjid = "01-701-1015"
-    , mi_loaded_adams = c("ADSL","ADAE")
-    , mi_datafile = list(ADSL = adsl, ADAE = adae)
-    , mi_filtered_dat = filtered_dat
-  )
-```
-
-What's absolutely imperative when calling this function is that the `df_domain_abbr` matches the values for the named-list of choices passed to the `updateCheckGroupInput()` function used to update `input$checkGroup` and `input$overlay_events` discussed in `UI Considerations`.
+<br> 
 
 
-Running a publically available ADAE dataset (available through [PHUSE's gitHub](https://github.com/phuse-org/TestDataFactory/tree/master/Updated/TDF_ADaM)) through `org_df_events()`, the output `ae_dat` might look something like the data frame below. 
 
-```{r, out.width="90%", out.height="90%", echo=FALSE}
-knitr::include_graphics("figures/IndvExp/org_df_events_output.PNG")
-```
 
-It will always contain these variables, but the amount of rows will certainly vary. In the example output below, we see that the column "EVENTTYP" was populated with the `df_desc` argument. Later, this will be the Event type label in the `timevis` object displayed on the `Events` tab.
-
-The next column is START which used the "ASTDT" column, which makes it evident that the ADAE data frame we provided in `mi_datafile` (the list of data frames uploaded by the user), didn't have the preferred "AESTDT", so the function selected the next best date choice: "ASTDT". It's important that no matter how many potential dates you provide in the `df_st_date_vars` vector, that at least one of them is a required field according to the current ADaMIG.
-
-Continuing on, the END variable exists only for OCCDs event data sets that would benefit from seeing a visual start and end of an event. Typically, "events" happen in one day/ instant. However, an exception to this would be medical history data where events could include medical conditions that last several days, months, or years. As such, if you (the developer) wish to implement new event data that requires showing the start AND the end of an event, follow the precedent the Medical History code establishes in the next section called `Build Events`. At the end of the day, you just want to ensure the final output mimics the output above, for reasons that will also become obvious in the next section.
-
-tab_st and tab_en are just character versions of START and END which play better with DT output tables in the app.
-
-Last, DECODE contains the event description (`event_desc`) you want attached to those dates. So, in this instance, the app will actually display lots of information. Above, the function weaves together content from 3 different variables using the paste function: the adverse event itself, it's severity and seriousness. However, a single column that summarizes the event would be sufficient. If you (the developer) want to supply your own static description for an event, you should include single quotes within your double quotes. For example: `event_desc = "'Headache'"`. Doing so, will make all your adverse events take the string 'Headache'.
-
-## Build Events
-
-Now that we've organized our data into a standard format, we need to combine the events the user selects into a singular data frame to be used in the app. This task is performed in the `mod_indvExp_fct_buildEvents.R` file. By browsing this file, you'll witness the function just runs `org_df_events()` on all the applicable OCCDs events data sets currently supported (ADMH, ADAE, ADCM, ADSL, and ADLB). The only exception to these is the ADSL and ADMH files, which require custom considerations when building the standardized data frame shown above. Therefore, if you (the developer) wish to add another OCCD event data set into the mix, add your new org_df_events() function. Then, include the name of your data frame (let's say it's called "md_rec") when creating this list:
-
-```{r, eval=FALSE}
-uni_list <- list(ds_rec, ae_rec, cm_rec, lb_rec, mh_rec, md_rec)
+```{r, out.width="100%", out.height="100%", echo=FALSE}
+knitr::include_graphics("figures/IndvExp/Visits_Plot_Interactivity.gif")
 ```
 
 
 
-That's all it takes! A few lines later, `uni_list` is rbind-ed into a single data frame (hence the need for uniformity) that `build_events()` will sort and return in the app. Once that data is in the app, it will automatically flow through to the `timevis` object on the `Events` tab or the `Visits` tab, if you (the developer) allowed it to do so.
+<br> 
 
-## Color Aesthetics
-The absolutely last steps is going to be just adjust a few colors schemes on both the `timeviz` object on the `Events` tab and the plot on the `Visits` tab. Why? Because consistency between the tabs will help the users quickly recognize what type of data they're observing when the color is always consistent.
 
-First, to update the colors on the `timeviz` object on the `Events` tab, find the file called `utils_strObjs.R` in the R directory. It's there you'll find the following code:
+Let's walk through each input and how it impacts the plot. Remember, if you ever need help while navigating the `Visits` tab, feel free to click the blue question mark in the upper right hand corner for a step-by-step guide through the tab, or continue reading this tutorial.
 
-```{r, eval=FALSE}
-my_cols <- RColorBrewer::brewer.pal(7,"Pastel2")
+First: the "Select a loaded ADaM with columns 'PARAM' & 'AVAL'" input is hinting that only data sets of the BDS-class format will populate the drop-down. Notice that the lab and vital signs data meet these requirements. Once a data set is selected, we'll use it's data for plotting. We'll continue on with the `ADLBC` data set.
 
-css <- paste0("
-              .nav li a.disabled {
-              background-color: #aaa !important;
-              color: #333 !important;
-              cursor: not-allowed !important;
-              border-color: #aaa !important;
-              }
-              
-              .vis-item.DS { background-color: ",my_cols[1],"; }
-              .vis-item.CM { background-color: ",my_cols[2],"; }
-              .vis-item.AE { background-color: ",my_cols[3],"; }
-              .vis-item.LB { background-color: ",my_cols[4],"; }
-              .vis-item.MH_MH { background-color: ",my_cols[5],"; }
-              .vis-item.MH_FDH { background-color: ",my_cols[6],"; }
-              .vis-item.MH_DH { background-color: ",my_cols[7],"; }
-              ")
+
+<br>
+
+
+```{r, out.height="50%", echo=FALSE}
+knitr::include_graphics("figures/IndvExp/13_visits_sel_adam.PNG")
 ```
 
-If you are adding another OCCD Events class data type, you'll manually add a new color by increasing brewer.pal's first argument by 1 (from 7 to 8 in this case). Then, you'll add another row at the bottom. Continuing with our example, an ADMD would add a row that looks like this:
+<br> 
 
-```{r, eval=FALSE}
-".vis-item.MH_DH { background-color: ",my_cols[8],"; }"
+Next, we must select which parameter (or metric) to plot. The drop-down list will automatically populate with all the parameter codes (`PARAMCD`s) that exist in the selected ADaM. The parameter selected will plot the param results (`AVAL` variable) onto the y-axis. Recall that this data set contains blood chemistry metrics. We'll select "Sodium".
+
+<br>
+
+
+```{r, out.height="50%", echo=FALSE}
+knitr::include_graphics("figures/IndvExp/14_visits_sel_paramcd.PNG")
 ```
 
-Similarly, for the `Visits` tab, you'll need to add the name of the new event description to an object called `names2`, found in `R/mod_indvExpPatVisits_fct_plot.R`, assuming this type of event is approprate to overlay on such a plot. Here, we've actually taken the same colors as found in the `my_cols` vector above, but tinted them slightly darker so that they are more visible on the default grey ggplot2 background. Use your discretion whether you should tint or not. When ready, add the hex digit color to the vector below called vline_eventtype_cols, in the same element position as in `names2`.
+<br> 
 
-```{r, eval=FALSE}
-# mod_indvExpPatVisits_fct_plot
-names2 <- c("Milestones","Concomitant Meds","Adverse Events")
-vline_eventtype_cols <- c("#80d1ad", "#f5ae7d", "#a8bde6") # dark version of my_cols
+Next, we'll select a numeric visit variable to plot on the x-axis. If available in the data set, `AVISITN` and `VISITNUM` will appear here, plus any other variables ending in "DY". In this example, the analysis day variable (`ADY`) is available. We'll select `ADY`.
+
+<br>
+
+
+```{r, out.height="50%", echo=FALSE}
+knitr::include_graphics("figures/IndvExp/15_visits_sel_visit.PNG")
+```
+
+<br> 
+
+You should see the plot start to take shape, and the remaining inputs / options allow the user to further customize the plot by overlaying additional data. Specifically, "Plot line for... `Screening` or `Baseline`" will plot a horizontal line across the entire plot with a y-intercept equal to the baseline visit's `AVAL` for the selected `PARAMCD`. Notice when `Baseline` is selected, a horizontal line is plotted through the 1st point on the graph (the baseline visit) and extends all the way the right-hand side of the graph. This is designed to help the user visually see the difference in the metric at each visit compared to patient's baseline value.
+
+<br>
+
+
+```{r, out.width="15%", out.height="15%", echo=FALSE}
+knitr::include_graphics("figures/IndvExp/16_visits_sel_overlay_hor.PNG")
+```
+
+```{r, out.width="100%", out.height="100%", echo=FALSE}
+knitr::include_graphics("figures/IndvExp/16_visits_sel_overlay_hor_graph.PNG")
 ```
 
 
-Congratulations! After completing the above steps, you should now have access to the pertinent event/dates information in the app. With any questions, please feel free to reach out to app authors/ maintainers listed in the package documentation.
+<br>
+
+The next set of inputs / options are really useful because they allow the user to overlay event data from the `Events` tab onto our "visits plot". Note that this is only possible when lab data is uploaded (IE. an ADLB or ADLBC). As soon as you select one of the `Overlay Events` check boxes, vertical lines appear on the plot where the event dates are translated directly into the "DY" variable displayed on the x-axis (`ADY` in this case). These lines also allow for interactivity when you hover over the very top or bottom of each vertical line for a description of the event displayed in a small box (as shown below).
+
+
+<br>
+
+```{r, out.width="70%", out.height="70%", echo=FALSE}
+knitr::include_graphics("figures/IndvExp/17_visits_sel_overlay_events.PNG")
+```
+
+
+```{r, out.width="100%", out.height="100%", echo=FALSE}
+knitr::include_graphics("figures/IndvExp/18_visits_sel_overlay_events_graph.PNG")
+```
+
+
+<br>
+
+When any events are overlain on the plot, more inputs / options appear to the right of the check boxes allowing the user to either apply pre-filters (when applicable) or manually filter through the events displayed. As seen below, when `Pre-Filters` is selected, a reminder of the pre-filters used to subset our patient list is displayed next to the inputs and again below the plot. Notice how only the "Nausea" adverse event is now visible below. The other two adverse events were unrelated to our pre-filters.
+
+
+<br>
+
+```{r, out.width="50%", out.height="50%", echo=FALSE}
+knitr::include_graphics("figures/IndvExp/19_visits_sel_overlay_events_prefilters.PNG")
+```
+
+
+```{r, out.width="100%", out.height="100%", echo=FALSE}
+knitr::include_graphics("figures/IndvExp/20_visits_sel_overlay_events_prefilters_graph.PNG")
+```
+
+<br>
+
+If we'd like to filter the displayed events in a manner that's not consistent with out advanced pre-filters, we can instead select `Manually Filter` and scroll through a list of adverse events this patient has experienced during the study. Or, when there are too many to scroll through, just start typing the name of an adverse event and the drop-down list will auto-suggest the event you are looking for. When we select "Application Site Irritation", notice how that is the only vertical line present on the graph below:
+
+<br>
+
+```{r,out.width="50%", out.height="50%", echo=FALSE}
+knitr::include_graphics("figures/IndvExp/21_visits_sel_overlay_events_manfilt.PNG")
+```
+
+
+```{r, out.width="100%", out.height ="100%", echo=FALSE}
+knitr::include_graphics("figures/IndvExp/22_visits_sel_overlay_events_manfilt_plot.PNG")
+```
+
+
+
+<br>
+
+### Data table
+
+Directly beneath the visual is the data table used to plot these events. As such, the data displayed depends on the inputs selected above the plot. The user can sort this data by any column and easily output the results to MS Excel by selected the `Excel` button in the top left corner. Adjacent that button, you can display more entries per page, instead of the default value of 15 rows. Or to page through the results, click the `Next` button in the bottom right-hand corner.
+
+<br>
+
+
+```{r, out.width="100%", echo=FALSE}
+knitr::include_graphics("figures/IndvExp/23_visits_datatable.PNG")
+```
+
+<br>
+
+### Batch Downloading Plots
+
+The `Visits` tab allows users to produce a multitude of plots with one click. You can create an HTML report (which maintains interactivity) or PDF that includes plots generated for every PARAMCD of the selected ADaM. The plots will inherit all the options you've selected in the app. Optionally, you may add your unique notes to be included in the final report.
+
+<br>
+
+```{r, out.width="60%", out.height="60%", echo=FALSE}
+knitr::include_graphics("figures/IndvExp/24_bd.PNG")
+```
+
+Clicking the `Download` button will produce the following report (below), downloaded straight to your browser window. Notice how there is an interactive table of content on the left-hand side to skip ahead to your favorite parameter / metric. And if you download more than 1 report, the `Report Summary` and your `Notes` come in handy to identify why you downloaded this report in the first place! Go ahead and save these reports wherever you'd like for future reference which means there is no need to re-open the IDEA app and rebuild your plots.
+
+<br> 
+
+```{r, out.width="100%", echo=FALSE}
+knitr::include_graphics("figures/IndvExp/25_bd_report.PNG")
+```
+
+
+
+
+
+
 
