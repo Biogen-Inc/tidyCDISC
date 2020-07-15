@@ -79,21 +79,13 @@ scatterPlot_srv <- function(input, output, session, data) {
     char_col <- subset_colclasses(data(), is.character)
     fac_col <- subset_colclasses(data(), is.factor)
     
-    # most_avals_per_visit <- 
-    #   data() %>%
-    #   group_by(!!INPUT_visit_var) %>%
-    #   summarize(n = n()) %>%
-    #   ungroup() %>%
-    #   summarize(max_avals = max(n, na.rm = T)) %>%
-    #   pull(max_avals)
     extra_aval_vars <- c("ATM","ATPT")
-    
     updateSelectInput(session, "color",
       choices = c("NONE", fac_col, char_col),
       selected =
         if(any(extra_aval_vars %in% colnames(data()))){
           extra_aval_vars[extra_aval_vars %in% colnames(data())][1]
-        }
+        } else { "NONE"}
     )
     updateSelectInput(session, "separate", choices = c("NONE", fac_col, char_col))
     
