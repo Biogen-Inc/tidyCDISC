@@ -53,15 +53,13 @@ mod_popExp_ui <- function(id, label = "Population Explorer"){
                     wellPanel(
                       plotlyOutput(ns("plot_output")),
                       div(style = "color: #0275d8; font-size: 12px;", htmlOutput(ns("applied_filters")))
-                    ),
-                    wellPanel(
-                      h4("Dataset:"),
-                      DT::dataTableOutput(ns("dataset"))
-                      ),
-                    wellPanel(
-                      h4("Feed Filter:"),
-                      DT::dataTableOutput(ns("feed_filter"))
                     )
+                    # # Preview dataset sent to plots
+                    # ,wellPanel(
+                    #   h4("Dataset:"),
+                    #   DT::dataTableOutput(ns("dataset"))
+                    #   ),
+                    
                     )
     )
   )

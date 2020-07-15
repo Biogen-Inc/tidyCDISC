@@ -15,11 +15,6 @@
 #' 
 mod_popExp_server <- function(input, output, session, datafile) {
   ns <- session$ns
- 
-  # rv <- reactiveValues(# all_data = NULL,
-  #                      df = NULL#,
-  #                      # processed_data = NULL
-  #                      )
   
   # show/hide checkboxes depending on radiobutton selection
   process <- eventReactive(datafile(), {
@@ -35,12 +30,8 @@ mod_popExp_server <- function(input, output, session, datafile) {
     # (1) one or more BDS datasets row-joined ("pancaked") together 
     #     and ADSL will be column-joined with the BDS data or...
     # (2) ADSL data alone
-    # 
-    # Also, build fake PARAMCDs for ADAE and ADCM, if they were selected.
     ######################################################################
-    
-    # rv$df <- datafile()
-    
+
     # Isolate ADSL 
     if ("ADSL" %in% names(datafile())) {
       ADSL <- datafile()$ADSL %>%
@@ -96,7 +87,6 @@ mod_popExp_server <- function(input, output, session, datafile) {
         # set CHG to zero instead of NA at Baseline
         all_data <- mutate(all_data, CHG = ifelse(AVISIT == "Baseline", replace_na(CHG, 0), CHG))
       }
-      
       varclst <- c("AGEGR", "AGEGR1", "SEX", "RACE", "RACETXT", "TRTA", "TRT01A", "TRT02A", "TRTP", "TRT01P", "TRT02P", "AVISIT", "APHASE", "AETOXGR", "AESEV", "AEREL")
       varnlst <- c("AGEGRN","AGEGR1N","SEXN","RACEN","RACETXTN","TRTAN","TRT01AN","TRT02AN","TRTPN","TRT01PN","TRT02PN","AVISITN","APHASEN","AETOXGRN","AESEVN","AERELN")
       
@@ -114,9 +104,13 @@ mod_popExp_server <- function(input, output, session, datafile) {
     
   }, ignoreNULL = FALSE) # end of observeEvent on datafile()
   
+  
   ############################
+  #
   # Filtering Pre-processing
+  #
   ############################
+  
   output$hide_panel <- eventReactive(input$apply_filters, TRUE, ignoreInit = TRUE)
   outputOptions(output, "hide_panel", suspendWhenHidden = FALSE)
   
@@ -156,7 +150,7 @@ mod_popExp_server <- function(input, output, session, datafile) {
     }
   })
   
-  # IDEAFilter
+  # Call IDEAFilter Module
   filtered_data <- callModule(
     shiny_data_filter,
     "data_filter",         # whatever you named the widget
@@ -201,12 +195,11 @@ mod_popExp_server <- function(input, output, session, datafile) {
     return(d)
   })
   
-  output$dataset <- DT::renderDataTable({
-    DT::datatable(dataset())
-  })
-  output$feed_filter <- DT::renderDataTable({
-    DT::datatable(feed_filter())
-  })
+  # Preview Dataset sent to plots
+  # output$dataset <- DT::renderDataTable({
+  #   DT::datatable(dataset())
+  # })
+
   p_scatter <- callModule(scatterPlot_srv, "scatterPlot", data = dataset)
   p_spaghetti <- callModule(spaghettiPlot_srv, "spaghettiPlot", data = dataset)
   p_box <- callModule(boxPlot_srv, "boxPlot", data = dataset)
