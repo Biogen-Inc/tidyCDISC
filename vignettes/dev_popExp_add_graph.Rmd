@@ -66,12 +66,21 @@ p_box <- callModule(boxPlot_srv, "boxPlot", data = dataset)
 Now that we have our module outputs, we can pass the graph object to Population Explorers plot_output. This takes on a switch statement where we render the module object based on which plot is selected. 
 
 ```{r, eval=FALSE}
-  output$plot_output <- renderPlotly({
+output$plot_output <- renderPlotly({
         switch(input$plot_type,
-               `Scatter Plot` = p_scatter() %>% plotly::ggplotly(),
-               `Box Plot` = p_box() %>% plotly::ggplotly(),
-               `Spaghetti Plot` = p_spaghetti() %>% plotly::ggplotly()
-        )
+               `Scatter Plot` = p_scatter(),
+               `Box Plot` = p_box(),
+               `Spaghetti Plot` = p_spaghetti(),
+               `New Plot` = p_new()
+        )%>% 
+        plotly::ggplotly() %>%
+          config(displaylogo = FALSE, 
+                modeBarButtonsToRemove = 
+                  c('sendDataToCloud', 'hoverCompareCartesian','hoverClosestCartesian',
+                    'autoScale2d', 'select2d', 'lasso2d', 'toggleSpikelines'
+                  # , 'toImage', 'resetScale2d', 'zoomIn2d', 'zoomOut2d','zoom2d', 'pan2d'
+                )
+          )
   })
 ```
 
