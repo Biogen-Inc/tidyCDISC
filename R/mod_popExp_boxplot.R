@@ -59,7 +59,7 @@ boxPlot_srv <- function(input, output, session, data) {
     group_ch <- subset_colclasses(data(), is.character)
     group <- c(group_fc, group_ch)
     group <- group[group != "data_from"]
-
+    
     updateSelectInput(session, "yvar", choices = list(`Time Dependent` = paramcd, `Time Independent` = num_col))
     updateSelectInput(session, "group", choices = group)
   })

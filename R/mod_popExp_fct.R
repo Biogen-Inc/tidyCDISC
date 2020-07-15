@@ -89,7 +89,6 @@ IDEA_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y,
       dplyr::filter(AVISIT == week_x) %>%
       ggplot2::ggplot() +
       ggplot2::aes_string(x = value_x, y = yvar) +
-      ggplot2::geom_line() +
       ggplot2::geom_point()
     # x numeric, y paramcd
   } else if (!yvar %in% colnames(data) & xvar %in% colnames(data)) {
@@ -98,7 +97,6 @@ IDEA_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y,
       dplyr::filter(AVISIT == week_y) %>%
       ggplot2::ggplot() +
       ggplot2::aes_string(x = xvar, y = value_y) +
-      ggplot2::geom_line() +
       ggplot2::geom_point()
     # both paramcds
   } else {
@@ -107,10 +105,9 @@ IDEA_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y,
       dplyr::filter(AVISIT == week_y | AVISIT == week_x) %>%
       ggplot2::ggplot() +
       ggplot2::aes_string(x = value_x, y = value_y) +
-      ggplot2::geom_line() +
       ggplot2::geom_point()
   }
-  
+  print(p)
   p <- p + 
     ggplot2::theme(text = element_text(size = 20),
                    axis.text = element_text(size = 20)) +
