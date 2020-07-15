@@ -76,7 +76,7 @@ spaghettiPlot_srv <- function(input, output, session, data) {
   # create plot object using the numeric column on the yaxis
   # or by filtering the data by PARAMCD, then using AVAL or CHG for the yaxis
   p <- reactive({
-    req(data(), input$yvar, input$time, input$value)
+    req(data(), input$yvar, input$time)
     IDEA_spaghettiplot(data(), input$yvar, input$time, input$value)
   })
   
