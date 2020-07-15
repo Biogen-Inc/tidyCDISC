@@ -53,7 +53,7 @@ boxPlot_srv <- function(input, output, session, data) {
     num_col <- num_col[num_col != "AVAL" & num_col != "CHG" & num_col != "BASE"]
     
     # get unique paramcd
-    paramcd <- unique(data()$PARAMCD)
+    paramcd <- na.omit(unique(data()$PARAMCD))
     
     group_fc <- subset_colclasses(data(), is.factor)
     group_ch <- subset_colclasses(data(), is.character)

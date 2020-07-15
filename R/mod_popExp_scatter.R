@@ -70,7 +70,7 @@ scatterPlot_srv <- function(input, output, session, data) {
     num_col <- num_col[num_col != "AVAL" & num_col != "CHG" & num_col != "BASE"]
     
     # get unique paramcd
-    paramcd <- unique(data()$PARAMCD)
+    paramcd <- na.omit(unique(data()$PARAMCD))
     
     updateSelectInput(session, "yvar", choices = list(`Time Dependent` = paramcd, `Time Independent` = num_col))
     updateSelectInput(session, "xvar", choices = list(`Time Dependent` = paramcd, `Time Independent` = num_col))
