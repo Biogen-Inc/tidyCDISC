@@ -73,14 +73,7 @@ output$plot_output <- renderPlotly({
                `Spaghetti Plot` = p_spaghetti(),
                `New Plot` = p_new()
         )%>% 
-        plotly::ggplotly() %>%
-          config(displaylogo = FALSE, 
-                modeBarButtonsToRemove = 
-                  c('sendDataToCloud', 'hoverCompareCartesian','hoverClosestCartesian',
-                    'autoScale2d', 'select2d', 'lasso2d', 'toggleSpikelines'
-                  # , 'toImage', 'resetScale2d', 'zoomIn2d', 'zoomOut2d','zoom2d', 'pan2d'
-                )
-          )
+    ...
   })
 ```
 
