@@ -24,11 +24,14 @@ mod_popExp_ui <- function(id, label = "Population Explorer"){
       column(width = 3,
                checkboxInput(ns("adv_filtering"), span("Filter Data   ", icon("chevron-down w3-tiny")),  value = F),
                conditionalPanel(condition = "input.adv_filtering == true", ns = ns,
-                                div(id = "custom_checkbox",
-                                  selectInput(ns("filter_df"),"Filter on Variable(s) in a loaded ADaM",
-                                            multiple = TRUE, choices = NULL, selected = "ADSL"),
-                                  IDEAFilter::shiny_data_filter_ui(ns("data_filter")))
-                                
+                  div(id = "custom_checkbox",
+                      materialSwitch(ns("apply_filters")
+                                     , label = strong(em(h5("Apply Filters")))
+                                     , status = "primary"
+                                     , value = F),
+                      selectInput(ns("filter_df"),"Filter on Variable(s) in a loaded ADaM",
+                                multiple = TRUE, choices = NULL, selected = "ADSL"),
+                      IDEAFilter::shiny_data_filter_ui(ns("data_filter")))
                ),
              
              wellPanel(
@@ -46,7 +49,16 @@ mod_popExp_ui <- function(id, label = "Population Explorer"){
                conditionalPanel("input.plot_type === 'Spaghetti Plot'", ns = ns, spaghettiPlot_ui(ns("spaghettiPlot"))),
                conditionalPanel("input.plot_type === 'Scatter Plot'", ns = ns, scatterPlot_ui(ns("scatterPlot")))
             ),
-             column(width = 9, wellPanel(plotlyOutput(ns("plot_output"))))
+             column(width = 9,
+                    wellPanel(
+                      plotlyOutput(ns("plot_output")),
+                      div(style = "color: #0275d8; font-size: 12px;", htmlOutput(ns("applied_filters")))
+                    ),
+                    wellPanel(
+                      h4("Dataset:"),
+                      DT::dataTableOutput(ns("dataset"))
+                      )
+                    )
     )
   )
 }
