@@ -87,7 +87,7 @@ IDEA_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y,
       ggplot2::aes_string(x = value_x, y = value_y) +
       ggplot2::geom_point()
   }
-  
+  print(p)
   p <- p + 
     ggplot2::theme(text = element_text(size = 20),
                    axis.text = element_text(size = 20)) +
