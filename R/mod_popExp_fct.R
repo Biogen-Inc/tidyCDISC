@@ -100,12 +100,40 @@ IDEA_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y,
       ggplot2::geom_point()
     # both paramcds
   } else {
-    p <- data %>%
-      dplyr::filter(PARAMCD == yvar | PARAMCD == xvar) %>%
-      dplyr::filter(AVISIT == week_y | AVISIT == week_x) %>%
+    # p <- data %>%
+    #   dplyr::filter(PARAMCD == yvar | PARAMCD == xvar) %>%
+    #   dplyr::filter(AVISIT == week_y | AVISIT == week_x) %>%
+    #   ggplot2::ggplot() +
+    #   ggplot2::aes_string(x = value_x, y = value_y) +
+    #   ggplot2::geom_point()
+    
+    # yvar <- "DIABP"
+    # xvar <- "SYSBP"
+    # week_y <- "Baseline"
+    # week_x <- "Week 2"
+    # value_y <- value_x <- "AVAL"
+    
+    y_dat <- data %>%
+      dplyr::filter(PARAMCD == yvar & AVISIT == week_y) %>%
+      dplyr::select(USUBJID, PARAMCD, value_y, one_of(color, separate)) %>%
+      tidyr::pivot_wider(names_from = PARAMCD, values_from = value_y) %>%
+      tidyr::unnest(yvar)
+    y_dat
+    
+    x_dat <- data %>%
+      dplyr::filter(PARAMCD == xvar & AVISIT == week_x) %>%
+      dplyr::select(USUBJID, PARAMCD, value_x, one_of(color, separate)) %>%
+      tidyr::pivot_wider(names_from = PARAMCD, values_from = value_x) %>%
+      tidyr::unnest(xvar)
+    x_dat
+    
+    p <-
+      y_dat %>%
+      inner_join(x_dat) %>%
       ggplot2::ggplot() +
-      ggplot2::aes_string(x = value_x, y = value_y) +
+      ggplot2::aes_string(x = yvar, y = xvar) +
       ggplot2::geom_point()
+    
   }
   print(p)
   p <- p + 
