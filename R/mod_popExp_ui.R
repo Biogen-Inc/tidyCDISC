@@ -30,7 +30,7 @@ mod_popExp_ui <- function(id, label = "Population Explorer"){
                                      , status = "primary"
                                      , value = F),
                       selectInput(ns("filter_df"),"Filter on Variable(s) in a loaded ADaM",
-                                multiple = TRUE, choices = NULL, selected = "ADSL"),
+                                multiple = TRUE, choices = "ADSL", selected = "ADSL"),
                       IDEAFilter::shiny_data_filter_ui(ns("data_filter")))
                ),
              
@@ -57,7 +57,11 @@ mod_popExp_ui <- function(id, label = "Population Explorer"){
                     wellPanel(
                       h4("Dataset:"),
                       DT::dataTableOutput(ns("dataset"))
-                      )
+                      ),
+                    wellPanel(
+                      h4("Feed Filter:"),
+                      DT::dataTableOutput(ns("feed_filter"))
+                    )
                     )
     )
   )

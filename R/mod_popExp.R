@@ -16,10 +16,10 @@
 mod_popExp_server <- function(input, output, session, datafile) {
   ns <- session$ns
  
-  rv <- reactiveValues(# all_data = NULL,
-                       df = NULL#,
-                       # processed_data = NULL
-                       )
+  # rv <- reactiveValues(# all_data = NULL,
+  #                      df = NULL#,
+  #                      # processed_data = NULL
+  #                      )
   
   # show/hide checkboxes depending on radiobutton selection
   process <- eventReactive(datafile(), {
@@ -39,66 +39,26 @@ mod_popExp_server <- function(input, output, session, datafile) {
     # Also, build fake PARAMCDs for ADAE and ADCM, if they were selected.
     ######################################################################
     
-    rv$df <- datafile()
+    # rv$df <- datafile()
     
     # Isolate ADSL 
-    if ("ADSL" %in% names(rv$df)) {
-      
-      ADSL <- rv$df$ADSL %>%
-        haven::zap_formats() %>%
-        mutate(PARAMCD = "ADSL", PARAM = "Subject-Level Data", AVISIT = "Baseline", AVISITN = 0) 
-      sjlabelled::set_label(ADSL$PARAMCD) <- "Parameter Code"
-      sjlabelled::set_label(ADSL$PARAM)   <- "Parameter"
-      sjlabelled::set_label(ADSL$AVISIT)  <- "Analysis Visit"
-      sjlabelled::set_label(ADSL$AVISITN) <- "Analysis Visit (N)"
-    }
-    
-    # add a PARAMCD and PARAM to ADAE, if it exists and put it back in the list
-    if ("ADAE" %in% names(rv$df)) {
-      ADAE <- rv$df$ADAE %>%
-        haven::zap_formats() %>%
-        filter(!AETERM %in% c(""," ",".")) %>%  # drop records where AETERM is missing
-        mutate_if(is.character, list(~na_if(., ""))) %>%
-        mutate(PARAMCD = "ADAE", PARAM = "Adverse Events")
-      
-      sjlabelled::set_label(ADAE$PARAMCD) <- "Parameter Code"
-      sjlabelled::set_label(ADAE$PARAM)   <- "Parameter"
-      
-      rv$df <-  append(isolate(rv$df[!names(rv$df) %in% "ADAE"]),list("ADAE" = ADAE)) 
-      
-    }
-    # add a PARAMCD and PARAM to ADCM, if it exists and put it back in the list
-    if ("ADCM" %in% names(rv$df)) {
-      ADCM <- datafile()$ADCM %>%
-        haven::zap_formats() %>%
-        mutate_if(is.character, list(~na_if(., ""))) %>%
-        mutate(PARAMCD = "ADCM", PARAM = "Concomitant Meds")
-      
-      sjlabelled::set_label(ADCM$PARAMCD) <- "Parameter Code"
-      sjlabelled::set_label(ADCM$PARAM)   <- "Parameter"
-      
-      rv$df <-  append(isolate(rv$df[!names(rv$df) %in% "ADCM"]),list("ADCM" = ADCM)) 
-      
+    if ("ADSL" %in% names(datafile())) {
+      ADSL <- datafile()$ADSL %>%
+        haven::zap_formats()
     }
     
     # split the non-ADSL data into those which have a USUBJID or not
-    NOTADSL <- rv$df[names(rv$df) != "ADSL" ]
+    NOTADSL <- datafile()[names(datafile()) != "ADSL" ]
     if (!is_empty(NOTADSL)) {
-      # keep only BDS/OCCDS datasets -- one of the colnames has to be "PARAMCD"
-      BDSOCCDS <- NOTADSL[which(sapply(NOTADSL, function(df) "PARAMCD" %in% colnames(df)))]
       
       # zap formats
-      for (i in 1:length(BDSOCCDS)) (
-        BDSOCCDS[[i]] <- haven::zap_formats(BDSOCCDS[[i]])
-      )
+      for (i in 1:length(NOTADSL)) ( NOTADSL[[i]] <- haven::zap_formats(NOTADSL[[i]]) )
       
-      # Bind all the BDS (PARAMCD) files and filter them
-      all_BDSDATA <- bind_rows(BDSOCCDS, .id = "data_from")  
+      # Bind all the BDS (PARAMCD) files and filter them & remove any "ADSL" variables lurking
+      all_BDSDATA <- bind_rows(NOTADSL, .id = "data_from")  %>%
+        select(-tidyselect::any_of(c("AGEGR","AGEGRN","RACE","RACEN","SEX","SEXN")))
       
-      # remove any "ADSL" variables lurking in all_BDSDATA
-      all_BDSDATA <- all_BDSDATA %>% select(-tidyselect::any_of(c("AGEGR","AGEGRN","RACE","RACEN","SEX","SEXN")))
-      
-      # take by= variable USUBJID plus all the names that are unique to ADSL
+      # Manipulate ADSL to contain USUBJID plus all the names that are unique to ADSL
       ADSL.1 <- select(ADSL, USUBJID, dplyr::setdiff(names(ADSL), names(all_BDSDATA)))
       my_adsl_cols <- colnames(ADSL.1)
       suppressWarnings( # Warning: Column `USUBJID` has different attributes on LHS and RHS of join
@@ -112,8 +72,7 @@ mod_popExp_server <- function(input, output, session, datafile) {
       )
       rm(ADSL.1)
       
-    } else {
-      # just ADSL by itself
+    } else { # just ADSL loaded by itself
       my_adsl_cols <- colnames(ADSL)
       all_data <- bind_rows(ADSL, .id = "data_from")
       all_data$data_from <- "ADSL" # set to ADSL, defaults to "1" here???
@@ -122,9 +81,10 @@ mod_popExp_server <- function(input, output, session, datafile) {
     # SAS data uses blanks as character missing; replace blanks with NAs for chr columns
     # na_if can also be used with scoped variants of mutate
     # like mutate_if to mutate multiple columns
-    all_data <- all_data %>%
-      mutate_if(is.character, list(~na_if(., "")))
-    
+    all_data <- all_data %>% mutate_if(is.character, list(~na_if(., "")))
+    if ("ADAE" %in% names(datafile())) {
+      all_data <- all_data %>% filter(!AETERM %in% c(""," ","."))
+    }
     # copy SAS labels back into data
     for (i in seq_along(datafile())) {
       all_data <- sjlabelled::copy_labels(all_data, as.data.frame(datafile()[[i]]))
@@ -137,13 +97,6 @@ mod_popExp_server <- function(input, output, session, datafile) {
         all_data <- mutate(all_data, CHG = ifelse(AVISIT == "Baseline", replace_na(CHG, 0), CHG))
       }
       
-      refact <- function(data, varc, varn) {
-        datac <- deparse(substitute(data))
-        if (varc %in% colnames(data) && varn %in% colnames(data)) {
-          message(paste("A factor was created for", varc, "based on", varn, "levels"))
-          data[, (varc) := forcats::fct_reorder(get(varc), get(varn))]
-        } 
-      }
       varclst <- c("AGEGR", "AGEGR1", "SEX", "RACE", "RACETXT", "TRTA", "TRT01A", "TRT02A", "TRTP", "TRT01P", "TRT02P", "AVISIT", "APHASE", "AETOXGR", "AESEV", "AEREL")
       varnlst <- c("AGEGRN","AGEGR1N","SEXN","RACEN","RACETXTN","TRTAN","TRT01AN","TRT02AN","TRTPN","TRT01PN","TRT02PN","AVISITN","APHASEN","AETOXGRN","AESEVN","AERELN")
       
@@ -158,7 +111,8 @@ mod_popExp_server <- function(input, output, session, datafile) {
       
     }
     return(list(all_data = all_data, adsl_cols = my_adsl_cols))
-  }, ignoreNULL = FALSE) # observeEvent datafile()
+    
+  }, ignoreNULL = FALSE) # end of observeEvent on datafile()
   
   ############################
   # Filtering Pre-processing
@@ -176,10 +130,7 @@ mod_popExp_server <- function(input, output, session, datafile) {
   
   # If User wants to perform advance filtering, update drop down of data frames they can filter on
   observe({
-    req(input$adv_filtering == T)
-    updateSelectInput("filter_df", session = session,
-                      choices = as.list(my_loaded_adams()),
-                      selected = "ADSL") #
+    updateSelectInput("filter_df", session = session, choices = as.list(my_loaded_adams()))
   })
   
   # must make reactive
@@ -189,6 +140,7 @@ mod_popExp_server <- function(input, output, session, datafile) {
   # Data to provide IDEAFilter
   feed_filter <- reactive({
     if(input$apply_filters == T){
+      req(input$filter_df)
       all_data() %>% subset(data_from %in% input$filter_df)
     } else {
       all_data()
@@ -252,7 +204,9 @@ mod_popExp_server <- function(input, output, session, datafile) {
   output$dataset <- DT::renderDataTable({
     DT::datatable(dataset())
   })
-  
+  output$feed_filter <- DT::renderDataTable({
+    DT::datatable(feed_filter())
+  })
   p_scatter <- callModule(scatterPlot_srv, "scatterPlot", data = dataset)
   p_spaghetti <- callModule(spaghettiPlot_srv, "spaghettiPlot", data = dataset)
   p_box <- callModule(boxPlot_srv, "boxPlot", data = dataset)
@@ -261,10 +215,18 @@ mod_popExp_server <- function(input, output, session, datafile) {
   # use plot output of the module to create the plot 
   output$plot_output <- renderPlotly({
         switch(input$plot_type,
-               `Scatter Plot` = p_scatter() %>% plotly::ggplotly() %>% config(displayModeBar = F),
-               `Box Plot` = p_box() %>% plotly::ggplotly() %>% config(displayModeBar = F),
-               `Spaghetti Plot` = p_spaghetti() %>% plotly::ggplotly() %>% config(displayModeBar = F)
-        )
+               `Scatter Plot` = p_scatter(),
+               `Box Plot` = p_box(),
+               `Spaghetti Plot` = p_spaghetti()
+        )%>% 
+        plotly::ggplotly() %>%
+          config(displaylogo = FALSE, 
+                modeBarButtonsToRemove = 
+                  c('sendDataToCloud', 'hoverCompareCartesian','hoverClosestCartesian',
+                    'autoScale2d', 'select2d', 'lasso2d', 'toggleSpikelines'
+                  # , 'toImage', 'resetScale2d', 'zoomIn2d', 'zoomOut2d','zoom2d', 'pan2d'
+                )
+          )
   })
   
   # Output text string of what was filtered in IDEAFilter widget/ module

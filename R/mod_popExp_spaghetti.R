@@ -56,7 +56,7 @@ spaghettiPlot_srv <- function(input, output, session, data) {
     num_col <- c(setdiff(seltime, num_col), setdiff(num_col, seltime))
     
     # add paramcds to y-axis options
-    paramcd <- unique(data()$PARAMCD)
+    paramcd <- na.omit(unique(data()$PARAMCD))
     
     updateSelectInput(session, "yvar", choices = list(`Time Dependent` = paramcd, 
                                                       `Time Independent` = num_col))
