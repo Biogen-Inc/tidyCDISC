@@ -33,7 +33,7 @@ mod_popExp_server <- function(input, output, session, datafile) {
     #####################################################################    
     # The data used by the population explorer is going to be one of:
     # (1) one or more BDS datasets row-joined ("pancaked") together 
-    #     and ADSL will be column-joined with the BDS data
+    #     and ADSL will be column-joined with the BDS data or...
     # (2) ADSL data alone
     # 
     # Also, build fake PARAMCDs for ADAE and ADCM, if they were selected.
@@ -101,8 +101,6 @@ mod_popExp_server <- function(input, output, session, datafile) {
       # take by= variable USUBJID plus all the names that are unique to ADSL
       ADSL.1 <- select(ADSL, USUBJID, dplyr::setdiff(names(ADSL), names(all_BDSDATA)))
       my_adsl_cols <- colnames(ADSL.1)
-      # Warning: Column `USUBJID` has different attributes on LHS and RHS of join
-      # suppressWarnings(all_data <- left_join(all_BDSDATA, ADSL.1, by = "USUBJID"))
       suppressWarnings( # Warning: Column `USUBJID` has different attributes on LHS and RHS of join
         all_data <- all_BDSDATA %>%
           left_join(ADSL.1, by = "USUBJID") %>%
@@ -159,21 +157,18 @@ mod_popExp_server <- function(input, output, session, datafile) {
       all_data <- sjlabelled::set_label(all_data, label = savelbls)
       
     }
-    
-    # rv$all_data <- all_data 
     return(list(all_data = all_data, adsl_cols = my_adsl_cols))
   }, ignoreNULL = FALSE) # observeEvent datafile()
   
-  #
-  # section for filtering
-  #
-  output$hide_panel <- eventReactive(input$adv_filtering, TRUE, ignoreInit = TRUE)
+  ############################
+  # Filtering Pre-processing
+  ############################
+  output$hide_panel <- eventReactive(input$apply_filters, TRUE, ignoreInit = TRUE)
   outputOptions(output, "hide_panel", suspendWhenHidden = FALSE)
   
   # Only select data that starts with AD followed by one or more alphanumerics or underscore
   my_loaded_adams <- reactive({
     req(!is.null(datafile()))
-    # cat(paste("\nadsl cols:", paste(adsl_cols(), collapse = ", ")))
     sasdata0 <- toupper(names(datafile()))
     sasdata <- names(which(sapply(sasdata0,function(df) { return(stringr::str_detect(toupper(df),"^AD[A-Z0-9\\_]+")) })))
     return(sasdata)
@@ -182,34 +177,27 @@ mod_popExp_server <- function(input, output, session, datafile) {
   # If User wants to perform advance filtering, update drop down of data frames they can filter on
   observe({
     req(input$adv_filtering == T)
-    updateSelectInput("filter_df", session = session, choices = as.list(my_loaded_adams()), selected = "ADSL") #
+    updateSelectInput("filter_df", session = session,
+                      choices = as.list(my_loaded_adams()),
+                      selected = "ADSL") #
   })
   
   # must make reactive
-  all_data <- reactive({
-    process()$all_data
-  })
-  # must make reactive
-  adsl_cols <- reactive({
-    process()$adsl_cols
-  })
+  all_data <- reactive({ process()$all_data })
+  adsl_cols <- reactive({ process()$adsl_cols })
   
-  # must make reactive
+  # Data to provide IDEAFilter
   feed_filter <- reactive({
-    # req(!is.null(datafile()))
-    if(input$adv_filtering == T){
+    if(input$apply_filters == T){
       all_data() %>% subset(data_from %in% input$filter_df)
     } else {
       all_data()
-      # rv$all_data
     }
-    # processed_data()
   })
   
-  # must make reactive
+  # Data NOT provided to IDEAFilter... will need to subset later
   not_filtered <- reactive({
-    # req(!is.null(datafile()))
-    if(input$adv_filtering){
+    if(input$apply_filters){
       all_data() %>% subset(!(data_from %in% input$filter_df))
     } else {
       NULL
@@ -224,9 +212,9 @@ mod_popExp_server <- function(input, output, session, datafile) {
     verbose = FALSE)
   
   
-  # Update datset, depending on adv_filtering or filtered_data() changing
-  dataset <- eventReactive(list(input$adv_filtering,filtered_data()), {
-    if (!is.null(filtered_data()) && input$adv_filtering == TRUE ) {
+  # Update datset, depending on apply_filters or filtered_data() changing
+  dataset <- eventReactive(list(input$apply_filters,filtered_data()), {
+    if (!is.null(filtered_data()) && input$apply_filters == TRUE ) {
       
       req(input$filter_df) # needed 100% as this can be slow to update, causing an error
       
@@ -259,7 +247,11 @@ mod_popExp_server <- function(input, output, session, datafile) {
       d <- all_data()
     }
     return(d)
-  }) 
+  })
+  
+  output$dataset <- DT::renderDataTable({
+    DT::datatable(dataset())
+  })
   
   p_scatter <- callModule(scatterPlot_srv, "scatterPlot", data = dataset)
   p_spaghetti <- callModule(spaghettiPlot_srv, "spaghettiPlot", data = dataset)
@@ -275,4 +267,12 @@ mod_popExp_server <- function(input, output, session, datafile) {
         )
   })
   
+  # Output text string of what was filtered in IDEAFilter widget/ module
+  output$applied_filters <- renderUI({
+    req(
+      any(regexpr("%>%",capture.output(attr(filtered_data(), "code"))) > 0)
+      & input$apply_filters == T
+    )
+    filters_in_english(filtered_data())
+  })
 }
