@@ -79,7 +79,7 @@ scatterPlot_srv <- function(input, output, session, data) {
     char_col <- subset_colclasses(data(), is.character)
     fac_col <- subset_colclasses(data(), is.factor)
     
-    extra_aval_vars <- c("ATM","ATPT")
+    extra_aval_vars <- c("ATPT") # Add additional vars here
     updateSelectInput(session, "color",
       choices = c("NONE", fac_col, char_col),
       selected =
