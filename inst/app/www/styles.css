@@ -302,6 +302,10 @@ transform:rotate(180deg);
   background-color: grey !important;
   cursor: no-drop;
 }
+
+.btn.radiobtn.btn-default.active {
+  background-color: #266093 !important;
+}
 /*
 @media only screen and (max-width: 3000px) {
   body {

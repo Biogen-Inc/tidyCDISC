@@ -13,10 +13,13 @@
 #'  
 spaghettiPlot_ui <- function(id, label = "spaghetti") {
   ns <- NS(id)
+  tagList(
+  h4("Select axes:"),
   wellPanel(
     selectInput(ns("yvar"), "Select y-axis", choices = NULL),
     fluidRow(column(12, align = "center", uiOutput(ns("include_var")))),
     selectInput(ns("time"), "Time Variable", choices = NULL)
+    )
   )
 }
 
