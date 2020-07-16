@@ -22,7 +22,8 @@ mod_popExp_ui <- function(id, label = "Population Explorer"){
     
     fluidRow(
       column(width = 3,
-               checkboxInput(ns("adv_filtering"), span("Filter Data   ", icon("chevron-down w3-tiny")),  value = F),
+               checkboxInput(ns("adv_filtering"), 
+                             span("Filter Data   ", icon("chevron-down w3-tiny"), style="font-size:1.5em;"),value = F),
                conditionalPanel(condition = "input.adv_filtering == true", ns = ns,
                   div(id = "custom_checkbox",
                       materialSwitch(ns("apply_filters")
