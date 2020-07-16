@@ -215,8 +215,18 @@ mod_popExp_server <- function(input, output, session, datafile) {
         plotly::ggplotly() %>%
           config(displaylogo = FALSE, 
                 modeBarButtonsToRemove = 
-                  c('sendDataToCloud', 'hoverCompareCartesian','hoverClosestCartesian',
-                    'autoScale2d', 'select2d', 'lasso2d', 'toggleSpikelines'
+                  c("zoom2d", "pan2d", "select2d", "lasso2d", "zoomIn2d", "zoomOut2d", "autoScale2d", "resetScale2d",
+                    "hoverClosestCartesian", "hoverCompareCartesian",
+                    "zoom3d", "pan3d", "resetCameraDefault3d", "resetCameraLastSave3d", "hoverClosest3d",
+                    "orbitRotation", "tableRotation",
+                    "zoomInGeo", "zoomOutGeo", "resetGeo", "hoverClosestGeo",
+                    "sendDataToCloud",
+                    "hoverClosestGl2d",
+                    "hoverClosestPie",
+                    "toggleHover",
+                    "resetViews",
+                    "toggleSpikelines",
+                    "resetViewMapbox"
                   # , 'toImage', 'resetScale2d', 'zoomIn2d', 'zoomOut2d','zoom2d', 'pan2d'
                 )
           )
