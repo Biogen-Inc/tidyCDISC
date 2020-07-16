@@ -139,6 +139,8 @@ IDEA_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y,
     
     # both paramcds
   } else {
+    
+    # Build plot data for y variable
     y_data <- data %>%
       dplyr::filter(PARAMCD == yvar & AVISIT == week_y)
     suppressWarnings(  
@@ -147,6 +149,9 @@ IDEA_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y,
         tidyr::pivot_wider(names_from = PARAMCD, values_from = value_y) %>%
         tidyr::unnest(yvar)
     )
+    y_dat <- y_dat[colSums(!is.na(y_dat)) > 0]
+    
+    # Build plot data for x variable
     x_data <- data %>%
       dplyr::filter(PARAMCD == xvar & AVISIT == week_x)
     suppressWarnings(
@@ -155,6 +160,8 @@ IDEA_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y,
         tidyr::pivot_wider(names_from = PARAMCD, values_from = value_x) %>%
         tidyr::unnest(xvar)
     )
+    x_dat <- x_dat[colSums(!is.na(x_dat)) > 0]
+    
     var_title <- paste(unique(y_data$PARAM),"versus", unique(x_data$PARAM))
     suppressMessages(
       p <-
