@@ -36,8 +36,8 @@ scatterPlot_ui <- function(id, label = "scatter") {
       fluidRow(column(12, align = "center", uiOutput(ns("include_yvar"))))
     ),
     wellPanel(
-      selectInput(ns("separate"), "Separate Plots By", choices = NULL),
-      selectInput(ns("color"), "Color Plots By", choices = NULL)
+      selectInput(ns("separate"), "Separate Plots By", choices = "NONE", selected = "NONE"),
+      selectInput(ns("color"), "Color Plots By", choices = "NONE", selected = "NONE")
     )
   )
 }
@@ -89,11 +89,11 @@ scatterPlot_srv <- function(input, output, session, data) {
     updateSelectInput(session, "color",
       choices = c("NONE", fac_col, char_col),
       selected =
-        if(any(extra_aval_vars %in% colnames(data()))){
+        if(any(extra_aval_vars %in% colnames(data())) & isolate(input$color) == "NONE"){
           extra_aval_vars[extra_aval_vars %in% colnames(data())][1]
-        } else { "NONE"}
+        } else { isolate(input$color)}
     )
-    updateSelectInput(session, "separate", choices = c("NONE", fac_col, char_col))
+    updateSelectInput(session, "separate", choices = c("NONE", fac_col, char_col), selected = isolate(input$separate))
     
   })
   
