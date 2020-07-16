@@ -60,13 +60,18 @@ boxPlot_srv <- function(input, output, session, data) {
     group <- c(group_fc, group_ch)
     group <- group[group != "data_from"]
     
-    updateSelectInput(session, "yvar", choices = list(`Time Dependent` = paramcd, `Time Independent` = num_col))
-    updateSelectInput(session, "group", choices = group)
+    updateSelectInput(session, "yvar",
+                      choices = list(`Time Dependent` = paramcd, `Time Independent` = num_col),
+                      selected = isolate(input$yvar))
+    updateSelectInput(session, "group", choices = group,
+                      selected = isolate(input$group))
   })
   
   output$include_var <- renderUI({
     req(input$yvar %in% data()$PARAMCD)
-    shinyWidgets::radioGroupButtons(ns("value"), "Value", choices = c("AVAL", "CHG", "BASE"))
+    shinyWidgets::radioGroupButtons(ns("value"), "Value",
+                                    choices = c("AVAL", "CHG", "BASE"),
+                                    selected = isolate(input$value))
   })
   
   
