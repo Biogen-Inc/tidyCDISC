@@ -37,7 +37,7 @@ IDEA_boxplot <- function(data, yvar, group, value, points = FALSE) {
   if (yvar %in% colnames(data)) {
     p <- ggplot2::ggplot(data) + 
       ggplot2::aes_string(x = group, y = yvar) +
-      ggplot2::ylab(attr(adsl[[yvar]], "label"))
+      ggplot2::ylab(attr(d[[yvar]], "label"))
   } else {
     d <- data %>% 
       dplyr::filter(PARAMCD == yvar)
@@ -47,7 +47,7 @@ IDEA_boxplot <- function(data, yvar, group, value, points = FALSE) {
     p <- d %>%
       ggplot2::ggplot() +
       ggplot2::aes_string(x = group, y = value) +
-      ggplot2::ylab(var_title)
+      ggplot2::ylab(glue::glue("{var_title} ({attr(d[[value]], 'label')}"))
   }
   
   p <- p + 
@@ -96,7 +96,7 @@ IDEA_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y,
       ggplot2::aes_string(x = xvar, y = yvar) +
       ggplot2::xlab(xvar) + ggplot2::ylab(yvar) +
       ggplot2::geom_point(na.rm = T)
-    var_title <- paste(attr(adsl[[yvar]], "label"), "versus", attr(adsl[[xvar]], "label"))
+    var_title <- paste(attr(d[[yvar]], "label"), "versus", attr(d[[xvar]], "label"))
     
     # y numeric, x is paramcd 
   } else if (yvar %in% colnames(data) & !xvar %in% colnames(data)) {
@@ -110,8 +110,10 @@ IDEA_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y,
     p <- d %>%
       ggplot2::ggplot() +
       ggplot2::aes_string(x = value_x, y = yvar) +
-      ggplot2::xlab(paste0(unique(d$PARAM)," (",week_x,")")) +
-      ggplot2::ylab(attr(adsl[[yvar]], "label")) +
+      ggplot2::xlab(
+        glue::glue("{unique(d$PARAM)}: {week_x} ({attr(d[[value]], 'label')}")
+      ) +
+      ggplot2::ylab(attr(d[[yvar]], "label")) +
       ggplot2::geom_point(na.rm = T)
     
     
@@ -127,8 +129,10 @@ IDEA_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y,
     p <- d %>%
       ggplot2::ggplot() +
       ggplot2::aes_string(x = xvar, y = value_y) +
-      ggplot2::xlab(attr(adsl[[xvar]], "label")) + 
-      ggplot2::ylab(paste0(unique(d$PARAM)," (",week_y,")")) +
+      ggplot2::xlab(attr(d[[xvar]], "label")) + 
+      ggplot2::ylab(
+        glue::glue("{unique(d$PARAM)}: {week_y} ({attr(d[[value]], 'label')}")
+      ) +
       ggplot2::geom_point(na.rm = T)
     
     # both paramcds
@@ -156,8 +160,12 @@ IDEA_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y,
         inner_join(x_dat) %>%
         ggplot2::ggplot() +
         ggplot2::aes_string(x = xvar, y = yvar) +
-        ggplot2::xlab(paste0(unique(x_data$PARAM)," (",week_x,")")) + 
-        ggplot2::ylab(paste0(unique(y_data$PARAM)," (",week_y,")")) +
+        ggplot2::xlab(
+          glue::glue("{unique(d$PARAM)}: {week_x} ({attr(d[[value]], 'label')}")
+        ) + 
+        ggplot2::ylab(
+          glue::glue("{unique(d$PARAM)}: {week_y} ({attr(d[[value]], 'label')}")
+        ) +
         ggplot2::geom_point(na.rm = T)
     )
   }
@@ -198,12 +206,22 @@ IDEA_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y,
 IDEA_spaghettiplot <- function(data, yvar, time, value) {
   if (yvar %in% colnames(data)) {
     p <- ggplot2::ggplot(data) + 
-      ggplot2::aes_string(x = time, y = yvar, group = "USUBJID")
+      ggplot2::aes_string(x = time, y = yvar, group = "USUBJID") +
+      ggplot2::ylab(attr(d[[yvar]], "label")) +
+      ggplot2::xlab(attr(d[[time]], "label"))
   } else {
-    p <- data %>% 
-      dplyr::filter(PARAMCD == yvar) %>%
+    d <- data %>% 
+      dplyr::filter(PARAMCD == yvar) 
+    
+    ylab <- unique(d[["PARAM"]])
+    
+    p <- d %>%
       ggplot2::ggplot() +
-      ggplot2::aes_string(x = time, y = value, group = "USUBJID") 
+      ggplot2::aes_string(x = time, y = value, group = "USUBJID")  +
+      ggplot2::ylab(
+        glue::glue("{ylab} ({attr(d[[value]], 'label')}")
+      ) +
+      ggplot2::xlab(attr(d[[time]], "label"))
   }
   
   p <- p + 
