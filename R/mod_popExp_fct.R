@@ -47,7 +47,7 @@ IDEA_boxplot <- function(data, yvar, group, value = NULL, points = FALSE) {
     p <- d %>%
       ggplot2::ggplot() +
       ggplot2::aes_string(x = group, y = value) +
-      ggplot2::ylab(glue::glue("{var_title} ({attr(data[[value]], 'label')}"))
+      ggplot2::ylab(glue::glue("{var_title} ({attr(data[[value]], 'label')})"))
   }
   
   p <- p + 
@@ -221,7 +221,7 @@ IDEA_spaghettiplot <- function(data, yvar, time, value = NULL) {
       ggplot2::ggplot() +
       ggplot2::aes_string(x = time, y = value, group = "USUBJID")  +
       ggplot2::ylab(
-        glue::glue("{ylab} ({attr(data[[value]], 'label')}")
+        glue::glue("{ylab} ({attr(d[[value]], 'label')})")
       ) +
       ggplot2::xlab(attr(data[[time]], "label"))
   }
