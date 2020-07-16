@@ -4,7 +4,7 @@
 \alias{IDEA_boxplot}
 \title{IDEA boxplot}
 \usage{
-IDEA_boxplot(data, yvar, group, value, points = FALSE)
+IDEA_boxplot(data, yvar, group, value = NULL, points = FALSE)
 }
 \arguments{
 \item{data}{Merged data to be used in plot}

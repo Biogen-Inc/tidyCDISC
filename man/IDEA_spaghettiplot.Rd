@@ -4,7 +4,7 @@
 \alias{IDEA_spaghettiplot}
 \title{IDEA spaghetti plot}
 \usage{
-IDEA_spaghettiplot(data, yvar, time, value)
+IDEA_spaghettiplot(data, yvar, time, value = NULL)
 }
 \arguments{
 \item{data}{Merged data to be used in plot}
