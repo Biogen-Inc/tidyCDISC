@@ -16,3 +16,4 @@ test_that("adding jitter works", {
   plot <- IDEA_boxplot(tg_data, "AGE", "SEX", points = TRUE)
   expect_equal("PositionJitter", class(plot$layers[[2]]$position)[1])
 })
+
