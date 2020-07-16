@@ -23,8 +23,8 @@ test_that("PARAMCD x-axis and PARAMCD y-axis", {
   plot <- IDEA_scatterplot(tg_data, 
                            yvar = "DIABP", week_y = "Week 2", value_y = "AVAL",
                            xvar = "DIABP", week_x = "Week 2", value_x = "AVAL")
-  expect_equal(quo_get_expr(plot$mapping$y), sym("AVAL"))
-  expect_equal(quo_get_expr(plot$mapping$x), sym("AVAL"))
+  expect_equal(quo_get_expr(plot$mapping$y), sym("DIABP"))
+  expect_equal(quo_get_expr(plot$mapping$x), sym("DIABP"))
 })
 
 test_that("facet by group", {
