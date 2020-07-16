@@ -112,18 +112,22 @@ scatterPlot_srv <- function(input, output, session, data) {
                                     selected = isolate(input$value_y))
   })
   
-  weeks_list <- reactive({
-    unique(data() %>% select(AVISIT) %>% filter(AVISIT != "") %>% pull(AVISIT))
-  })
-  
   observeEvent(input$xvar, {
     if(!input$xvar %in% colnames(data()))
-      updateSelectInput(session, "week_x", choices = weeks_list(), selected = weeks_list()[1])
+      x_week_list <- data() %>%
+        subset(PARAMCD == input$xvar) %>%
+        distinct(AVISIT) %>%
+        pull() %>% na.omit()
+      updateSelectInput(session, "week_x", choices = x_week_list, selected = x_week_list[1])
   })
   
   observeEvent(input$yvar, {
     if(!input$yvar %in% colnames(data()))
-      updateSelectInput(session, "week_y", choices = weeks_list(), selected = weeks_list()[1])
+      y_week_list <- data() %>%
+        subset(PARAMCD == input$yvar) %>%
+        distinct(AVISIT) %>%
+        pull() %>% na.omit()
+      updateSelectInput(session, "week_y", choices = y_week_list, selected = y_week_list[1])
   })
   
   output$is_x_week <- reactive(!input$xvar %in% colnames(data()))
