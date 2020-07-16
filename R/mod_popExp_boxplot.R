@@ -13,11 +13,14 @@
 #'  
 boxPlot_ui <- function(id, label = "box") {
   ns <- NS(id)
-  wellPanel(
-    selectInput(ns("yvar"), "Select y-axis", choices = NULL),
-    fluidRow(column(12, align = "center", uiOutput(ns("include_var")))),
-    selectInput(ns("group"), "Group By", choices = NULL),
-    checkboxInput(ns("points"), "Add Points?")
+  tagList(
+    h4("Select axes:"),
+    wellPanel(
+      selectInput(ns("yvar"), "Select y-axis", choices = NULL),
+      fluidRow(column(12, align = "center", uiOutput(ns("include_var")))),
+      selectInput(ns("group"), "Group By", choices = NULL),
+      checkboxInput(ns("points"), "Add Points?")
+    )
   )
 }
 
