@@ -58,14 +58,18 @@ spaghettiPlot_srv <- function(input, output, session, data) {
     # add paramcds to y-axis options
     paramcd <- na.omit(unique(data()$PARAMCD))
     
-    updateSelectInput(session, "yvar", choices = list(`Time Dependent` = paramcd, 
-                                                      `Time Independent` = num_col))
-    updateSelectInput(session, "time", choices = seltime)
+    updateSelectInput(session, "yvar",
+                      choices = list(`Time Dependent` = paramcd,`Time Independent` = num_col),
+                      selected = isolate(input$yvar))
+    updateSelectInput(session, "time", choices = seltime, selected = isolate(input$time))
   })
   
   output$include_var <- renderUI({
     req(input$yvar %in% data()$PARAMCD)
-    shinyWidgets::radioGroupButtons(ns("value"), "Value", choices = c("AVAL", "CHG", "BASE"))
+    shinyWidgets::radioGroupButtons(ns("value"), "Value",
+                                    choices = c("AVAL", "CHG", "BASE"),
+                                    selected = isolate(input$value)
+                                    )
   })
   
   

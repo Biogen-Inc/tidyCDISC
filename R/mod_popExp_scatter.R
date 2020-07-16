@@ -36,8 +36,8 @@ scatterPlot_ui <- function(id, label = "scatter") {
       fluidRow(column(12, align = "center", uiOutput(ns("include_yvar"))))
     ),
     wellPanel(
-      selectInput(ns("separate"), "Separate Plots By", choices = NULL),
-      selectInput(ns("color"), "Color Plots By", choices = NULL)
+      selectInput(ns("separate"), "Separate Plots By", choices = "NONE", selected = "NONE"),
+      selectInput(ns("color"), "Color Plots By", choices = "NONE", selected = "NONE")
     )
   )
 }
@@ -72,8 +72,14 @@ scatterPlot_srv <- function(input, output, session, data) {
     # get unique paramcd
     paramcd <- na.omit(unique(data()$PARAMCD))
     
-    updateSelectInput(session, "yvar", choices = list(`Time Dependent` = paramcd, `Time Independent` = num_col))
-    updateSelectInput(session, "xvar", choices = list(`Time Dependent` = paramcd, `Time Independent` = num_col))
+    updateSelectInput(session, "xvar",
+                      choices = list(`Time Dependent` = paramcd, `Time Independent` = num_col),
+                      selected = isolate(input$xvar)
+    )
+    updateSelectInput(session, "yvar",
+                      choices = list(`Time Dependent` = paramcd, `Time Independent` = num_col),
+                      selected = isolate(input$yvar)
+    )
     
     # character and factor columns for coloring or separating
     char_col <- subset_colclasses(data(), is.character)
@@ -83,22 +89,26 @@ scatterPlot_srv <- function(input, output, session, data) {
     updateSelectInput(session, "color",
       choices = c("NONE", fac_col, char_col),
       selected =
-        if(any(extra_aval_vars %in% colnames(data()))){
+        if(any(extra_aval_vars %in% colnames(data())) & isolate(input$color) == "NONE"){
           extra_aval_vars[extra_aval_vars %in% colnames(data())][1]
-        } else { "NONE"}
+        } else { isolate(input$color)}
     )
-    updateSelectInput(session, "separate", choices = c("NONE", fac_col, char_col))
+    updateSelectInput(session, "separate", choices = c("NONE", fac_col, char_col), selected = isolate(input$separate))
     
   })
   
   output$include_yvar <- renderUI({
     req(input$yvar %in% data()$PARAMCD)
-    shinyWidgets::radioGroupButtons(ns("value_y"), "Value", choices = c("AVAL", "CHG", "BASE"))
+    shinyWidgets::radioGroupButtons(ns("value_y"), "Value",
+                                    choices = c("AVAL", "CHG", "BASE"),
+                                    selected = isolate(input$value_y))
   })
   
   output$include_xvar <- renderUI({
     req(input$xvar %in% data()$PARAMCD)
-    shinyWidgets::radioGroupButtons(ns("value_x"), "Value", choices = c("AVAL", "CHG", "BASE"))
+    shinyWidgets::radioGroupButtons(ns("value_x"), "Value",
+                                    choices = c("AVAL", "CHG", "BASE"),
+                                    selected = isolate(input$value_y))
   })
   
   weeks_list <- reactive({
