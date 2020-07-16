@@ -51,7 +51,7 @@ mod_popExp_ui <- function(id, label = "Population Explorer"){
             ),
              column(width = 9,
                     wellPanel(
-                      plotlyOutput(ns("plot_output")),
+                      plotlyOutput(ns("plot_output"), height = 700),
                       div(style = "color: #0275d8; font-size: 12px;", htmlOutput(ns("applied_filters")))
                     )
                     # # Preview dataset sent to plots
