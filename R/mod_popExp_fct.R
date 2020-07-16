@@ -79,36 +79,51 @@ IDEA_boxplot <- function(data, yvar, group, value, points = FALSE) {
 IDEA_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y, separate = "NONE", color = "NONE") {
   # x and y are numeric columns
   if (yvar %in% colnames(data) & xvar %in% colnames(data)) {
-    p <- ggplot2::ggplot(data) + 
+    suppressWarnings(
+      d <- data %>%
+        filter(AVISITN == min(AVISITN, na.rm = TRUE)) %>%
+        select(USUBJID, xvar, yvar, one_of(color, separate)) %>%
+        distinct()
+    )
+    p <- d %>%
+      ggplot2::ggplot() + 
       ggplot2::aes_string(x = xvar, y = yvar) +
       ggplot2::xlab(xvar) + ggplot2::ylab(yvar) +
-      ggplot2::geom_point()
+      ggplot2::geom_point(na.rm = T)
     var_title <- paste(yvar, "versus", xvar)
     
     # y numeric, x is paramcd 
   } else if (yvar %in% colnames(data) & !xvar %in% colnames(data)) {
-    d <- data %>% 
-      dplyr::filter(PARAMCD == xvar & AVISIT == week_x)
+    suppressWarnings(
+      d <- data %>% 
+        dplyr::filter(PARAMCD == xvar & AVISIT == value_x) %>%
+        dplyr::select(USUBJID, PARAM, PARAMCD, AVISIT, VALUE_X, yvar, one_of(color, separate)) %>%
+        dplyr::distinct()
+    )
     var_title <- paste(yvar, "versus", unique(d$PARAM), "at", week_x)
     p <- d %>%
       ggplot2::ggplot() +
       ggplot2::aes_string(x = value_x, y = yvar) +
       ggplot2::xlab(paste0(unique(d$PARAM)," (",week_x,")")) +
       ggplot2::ylab(yvar) +
-      ggplot2::geom_point()
+      ggplot2::geom_point(na.rm = T)
     
     
     # x numeric, y paramcd
   } else if (!yvar %in% colnames(data) & xvar %in% colnames(data)) {
-    d <- data %>% 
-      dplyr::filter(PARAMCD == yvar & AVISIT == week_y)
+    suppressWarnings(
+      d <- data %>% 
+        dplyr::filter(PARAMCD == yvar & AVISIT == week_y) %>%
+        dplyr::select(USUBJID, PARAM, PARAMCD, AVISIT, value_y, xvar, one_of(color, separate)) %>%
+        dplyr::distinct()
+    )
     var_title <- paste(unique(d$PARAM), "at", week_y, "versus", xvar)
     p <- d %>%
       ggplot2::ggplot() +
       ggplot2::aes_string(x = xvar, y = value_y) +
       ggplot2::xlab(xvar) + 
       ggplot2::ylab(paste0(unique(d$PARAM)," (",week_y,")")) +
-      ggplot2::geom_point()
+      ggplot2::geom_point(na.rm = T)
     
     # both paramcds
   } else {
@@ -137,7 +152,7 @@ IDEA_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y,
         ggplot2::aes_string(x = xvar, y = yvar) +
         ggplot2::xlab(paste0(unique(x_data$PARAM)," (",week_x,")")) + 
         ggplot2::ylab(paste0(unique(y_data$PARAM)," (",week_y,")")) +
-        ggplot2::geom_point()
+        ggplot2::geom_point(na.rm = T)
     )
   }
   print(p)
