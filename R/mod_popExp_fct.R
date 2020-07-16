@@ -81,55 +81,82 @@ IDEA_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y,
   if (yvar %in% colnames(data) & xvar %in% colnames(data)) {
     p <- ggplot2::ggplot(data) + 
       ggplot2::aes_string(x = xvar, y = yvar) +
+      ggplot2::xlab(xvar) + ggplot2::ylab(yvar) +
       ggplot2::geom_point()
+    var_title <- paste(yvar, "versus", xvar)
+    
     # y numeric, x is paramcd 
   } else if (yvar %in% colnames(data) & !xvar %in% colnames(data)) {
-    p <- data %>% 
-      dplyr::filter(PARAMCD == xvar) %>%
-      dplyr::filter(AVISIT == week_x) %>%
+    d <- data %>% 
+      dplyr::filter(PARAMCD == xvar & AVISIT == week_x)
+    var_title <- paste(yvar, "versus", unique(d$PARAM), "at", week_x)
+    p <- d %>%
       ggplot2::ggplot() +
       ggplot2::aes_string(x = value_x, y = yvar) +
+      ggplot2::xlab(paste0(unique(d$PARAM)," (",week_x,")")) +
+      ggplot2::ylab(yvar) +
       ggplot2::geom_point()
+    
+    
     # x numeric, y paramcd
   } else if (!yvar %in% colnames(data) & xvar %in% colnames(data)) {
-    p <- data %>% 
-      dplyr::filter(PARAMCD == yvar) %>%
-      dplyr::filter(AVISIT == week_y) %>%
+    d <- data %>% 
+      dplyr::filter(PARAMCD == yvar & AVISIT == week_y)
+    var_title <- paste(unique(d$PARAM), "at", week_y, "versus", xvar)
+    p <- d %>%
       ggplot2::ggplot() +
       ggplot2::aes_string(x = xvar, y = value_y) +
+      ggplot2::xlab(xvar) + 
+      ggplot2::ylab(paste0(unique(d$PARAM)," (",week_y,")")) +
       ggplot2::geom_point()
+    
     # both paramcds
   } else {
-    y_dat <- data %>%
-      dplyr::filter(PARAMCD == yvar & AVISIT == week_y) %>%
-      dplyr::select(USUBJID, PARAMCD, value_y, one_of(color, separate)) %>%
-      tidyr::pivot_wider(names_from = PARAMCD, values_from = value_y) %>%
-      tidyr::unnest(yvar)
-    y_dat
-    
-    x_dat <- data %>%
-      dplyr::filter(PARAMCD == xvar & AVISIT == week_x) %>%
-      dplyr::select(USUBJID, PARAMCD, value_x, one_of(color, separate)) %>%
-      tidyr::pivot_wider(names_from = PARAMCD, values_from = value_x) %>%
-      tidyr::unnest(xvar)
-    x_dat
-    
-    p <-
-      y_dat %>%
-      inner_join(x_dat) %>%
-      ggplot2::ggplot() +
-      ggplot2::aes_string(x = yvar, y = xvar) +
-      ggplot2::geom_point()
-    
+    y_data <- data %>%
+      dplyr::filter(PARAMCD == yvar & AVISIT == week_y)
+    suppressWarnings(  
+      y_dat <- y_data %>%
+        dplyr::select(USUBJID, PARAMCD, value_y, one_of(color, separate)) %>%
+        tidyr::pivot_wider(names_from = PARAMCD, values_from = value_y) %>%
+        tidyr::unnest(yvar)
+    )
+    x_data <- data %>%
+      dplyr::filter(PARAMCD == xvar & AVISIT == week_x)
+    suppressWarnings(
+      x_dat <- x_data %>%
+        dplyr::select(USUBJID, PARAMCD, value_x, one_of(color, separate)) %>%
+        tidyr::pivot_wider(names_from = PARAMCD, values_from = value_x) %>%
+        tidyr::unnest(xvar)
+    )
+    var_title <- paste(unique(y_data$PARAM),"at", week_y, "versus", unique(x_data$PARAM),"at", week_x)
+    suppressMessages(
+      p <-
+        y_dat %>%
+        inner_join(x_dat) %>%
+        ggplot2::ggplot() +
+        ggplot2::aes_string(x = xvar, y = yvar) +
+        ggplot2::xlab(paste0(unique(x_data$PARAM)," (",week_x,")")) + 
+        ggplot2::ylab(paste0(unique(y_data$PARAM)," (",week_y,")")) +
+        ggplot2::geom_point()
+    )
   }
   print(p)
   p <- p + 
     ggplot2::theme(text = element_text(size = 20),
                    axis.text = element_text(size = 20)) +
-    ggplot2::theme_bw()
-  
+    ggplot2::theme_bw() +
+    ggplot2::ggtitle(
+      paste(var_title, 
+            case_when(
+              separate != "NONE" & color != "NONE" ~ paste("by", color, "and", separate),
+              separate != "NONE" ~ paste("by", separate), # should grab var label
+              color != "NONE" ~ paste("by", color), # should grab var label
+              TRUE ~ ""
+              ) 
+            ))
   if (separate != "NONE") { p <- p + ggplot2::facet_wrap(as.formula(paste(".~", separate))) }
   if (color != "NONE") { p <- p + ggplot2::aes_string(color = color)}
+  
   return(p)
 }
 
