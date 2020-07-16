@@ -33,11 +33,11 @@ refact <- function(data, varc, varn) {
 #' 
 #' @family popExp Functions
 
-IDEA_boxplot <- function(data, yvar, group, value, points = FALSE) {
+IDEA_boxplot <- function(data, yvar, group, value = NULL, points = FALSE) {
   if (yvar %in% colnames(data)) {
     p <- ggplot2::ggplot(data) + 
       ggplot2::aes_string(x = group, y = yvar) +
-      ggplot2::ylab(attr(d[[yvar]], "label"))
+      ggplot2::ylab(attr(data[[yvar]], "label"))
   } else {
     d <- data %>% 
       dplyr::filter(PARAMCD == yvar)
@@ -47,7 +47,7 @@ IDEA_boxplot <- function(data, yvar, group, value, points = FALSE) {
     p <- d %>%
       ggplot2::ggplot() +
       ggplot2::aes_string(x = group, y = value) +
-      ggplot2::ylab(glue::glue("{var_title} ({attr(d[[value]], 'label')}"))
+      ggplot2::ylab(glue::glue("{var_title} ({attr(data[[value]], 'label')}"))
   }
   
   p <- p + 
@@ -81,6 +81,7 @@ IDEA_boxplot <- function(data, yvar, group, value, points = FALSE) {
 #' @param color whether to color plots by categorical or factor
 #' 
 #' @family popExp functions
+#' 
 
 IDEA_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y, separate = "NONE", color = "NONE") {
   # x and y are numeric columns
@@ -94,26 +95,27 @@ IDEA_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y,
     p <- d %>%
       ggplot2::ggplot() + 
       ggplot2::aes_string(x = xvar, y = yvar) +
-      ggplot2::xlab(xvar) + ggplot2::ylab(yvar) +
+      ggplot2::xlab(attr(data[[xvar]], 'label')) + 
+      ggplot2::ylab(attr(data[[yvar]], 'label')) +
       ggplot2::geom_point(na.rm = T)
-    var_title <- paste(attr(d[[yvar]], "label"), "versus", attr(d[[xvar]], "label"))
+    var_title <- paste(attr(data[[yvar]], 'label'), "versus", attr(data[[xvar]], 'label'))
     
     # y numeric, x is paramcd 
   } else if (yvar %in% colnames(data) & !xvar %in% colnames(data)) {
     suppressWarnings(
       d <- data %>% 
         dplyr::filter(PARAMCD == xvar & AVISIT == value_x) %>%
-        dplyr::select(USUBJID, PARAM, PARAMCD, AVISIT, VALUE_X, yvar, one_of(color, separate)) %>%
+        dplyr::select(USUBJID, PARAM, PARAMCD, AVISIT, value_x, yvar, one_of(color, separate)) %>%
         dplyr::distinct()
     )
-    var_title <- paste(yvar, "versus", unique(d$PARAM), "at", week_x)
+    var_title <- paste(attr(data[[yvar]], 'label'), "versus", unique(d$PARAM), "at", week_x)
     p <- d %>%
       ggplot2::ggplot() +
       ggplot2::aes_string(x = value_x, y = yvar) +
       ggplot2::xlab(
-        glue::glue("{unique(d$PARAM)}: {week_x} ({attr(d[[value]], 'label')}")
+        glue::glue("{unique(d$PARAM)}: {week_x} ({attr(data[[value_x]], 'label')})")
       ) +
-      ggplot2::ylab(attr(d[[yvar]], "label")) +
+      ggplot2::ylab(attr(data[[yvar]], 'label')) +
       ggplot2::geom_point(na.rm = T)
     
     
@@ -125,13 +127,13 @@ IDEA_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y,
         dplyr::select(USUBJID, PARAM, PARAMCD, AVISIT, value_y, xvar, one_of(color, separate)) %>%
         dplyr::distinct()
     )
-    var_title <- paste(unique(d$PARAM), "at", week_y, "versus", xvar)
+    var_title <- paste(unique(d$PARAM), "at", week_y, "versus", attr(data[[xvar]], 'label'))
     p <- d %>%
       ggplot2::ggplot() +
       ggplot2::aes_string(x = xvar, y = value_y) +
-      ggplot2::xlab(attr(d[[xvar]], "label")) + 
+      ggplot2::xlab(attr(data[[xvar]], 'label')) + 
       ggplot2::ylab(
-        glue::glue("{unique(d$PARAM)}: {week_y} ({attr(d[[value]], 'label')}")
+        glue::glue("{unique(d$PARAM)}: {week_y} ({attr(data[[value_y]], 'label')})")
       ) +
       ggplot2::geom_point(na.rm = T)
     
@@ -153,7 +155,7 @@ IDEA_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y,
         tidyr::pivot_wider(names_from = PARAMCD, values_from = value_x) %>%
         tidyr::unnest(xvar)
     )
-    var_title <- paste(unique(y_data$PARAM),"at", week_y, "versus", unique(x_data$PARAM),"at", week_x)
+    var_title <- paste(unique(y_data$PARAM),"versus", unique(x_data$PARAM))
     suppressMessages(
       p <-
         y_dat %>%
@@ -161,10 +163,10 @@ IDEA_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y,
         ggplot2::ggplot() +
         ggplot2::aes_string(x = xvar, y = yvar) +
         ggplot2::xlab(
-          glue::glue("{unique(d$PARAM)}: {week_x} ({attr(d[[value]], 'label')}")
+          glue::glue("{unique(x_data$PARAM)}: {week_x} ({attr(data[[value_x]], 'label')})")
         ) + 
         ggplot2::ylab(
-          glue::glue("{unique(d$PARAM)}: {week_y} ({attr(d[[value]], 'label')}")
+          glue::glue("{unique(y_data$PARAM)}: {week_y} ({attr(data[[value_y]], 'label')})")
         ) +
         ggplot2::geom_point(na.rm = T)
     )
@@ -177,12 +179,12 @@ IDEA_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y,
     ggplot2::ggtitle(
       paste(var_title, 
             case_when(
-              separate != "NONE" & color != "NONE" ~ paste("by", color, "and", separate),
-              separate != "NONE" ~ paste("by", separate), # should grab var label
-              color != "NONE" ~ paste("by", color), # should grab var label
+              separate != "NONE" & color != "NONE" ~ paste("by", attr(data[[color]], "label"), "and", attr(data[[separate]], "label")),
+              separate != "NONE" ~ paste("by", attr(data[[separate]], "label")), # should grab var label
+              color != "NONE" ~ paste("by", attr(data[[color]], "label")), # should grab var label
               TRUE ~ ""
-              ) 
-            ))
+            ) 
+      ))
   if (separate != "NONE") { p <- p + ggplot2::facet_wrap(as.formula(paste(".~", separate))) }
   if (color != "NONE") { p <- p + ggplot2::aes_string(color = color)}
   
@@ -203,12 +205,12 @@ IDEA_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y,
 #' AVAL, CHG, or BASE to be plotted on the y-axis
 #' 
 #' @family popExp Functions
-IDEA_spaghettiplot <- function(data, yvar, time, value) {
+IDEA_spaghettiplot <- function(data, yvar, time, value = NULL) {
   if (yvar %in% colnames(data)) {
     p <- ggplot2::ggplot(data) + 
       ggplot2::aes_string(x = time, y = yvar, group = "USUBJID") +
-      ggplot2::ylab(attr(d[[yvar]], "label")) +
-      ggplot2::xlab(attr(d[[time]], "label"))
+      ggplot2::ylab(attr(data[[yvar]], "label")) +
+      ggplot2::xlab(attr(data[[time]], "label"))
   } else {
     d <- data %>% 
       dplyr::filter(PARAMCD == yvar) 
@@ -219,9 +221,9 @@ IDEA_spaghettiplot <- function(data, yvar, time, value) {
       ggplot2::ggplot() +
       ggplot2::aes_string(x = time, y = value, group = "USUBJID")  +
       ggplot2::ylab(
-        glue::glue("{ylab} ({attr(d[[value]], 'label')}")
+        glue::glue("{ylab} ({attr(data[[value]], 'label')}")
       ) +
-      ggplot2::xlab(attr(d[[time]], "label"))
+      ggplot2::xlab(attr(data[[time]], "label"))
   }
   
   p <- p + 
