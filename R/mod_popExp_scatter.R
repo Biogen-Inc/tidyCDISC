@@ -72,8 +72,14 @@ scatterPlot_srv <- function(input, output, session, data) {
     # get unique paramcd
     paramcd <- na.omit(unique(data()$PARAMCD))
     
-    updateSelectInput(session, "yvar", choices = list(`Time Dependent` = paramcd, `Time Independent` = num_col))
-    updateSelectInput(session, "xvar", choices = list(`Time Dependent` = paramcd, `Time Independent` = num_col))
+    updateSelectInput(session, "xvar",
+                      choices = list(`Time Dependent` = paramcd, `Time Independent` = num_col),
+                      selected = isolate(input$xvar)
+    )
+    updateSelectInput(session, "yvar",
+                      choices = list(`Time Dependent` = paramcd, `Time Independent` = num_col),
+                      selected = isolate(input$yvar)
+    )
     
     # character and factor columns for coloring or separating
     char_col <- subset_colclasses(data(), is.character)
