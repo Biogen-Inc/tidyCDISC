@@ -99,12 +99,16 @@ scatterPlot_srv <- function(input, output, session, data) {
   
   output$include_yvar <- renderUI({
     req(input$yvar %in% data()$PARAMCD)
-    shinyWidgets::radioGroupButtons(ns("value_y"), "Value", choices = c("AVAL", "CHG", "BASE"))
+    shinyWidgets::radioGroupButtons(ns("value_y"), "Value",
+                                    choices = c("AVAL", "CHG", "BASE"),
+                                    selected = isolate(input$value_y))
   })
   
   output$include_xvar <- renderUI({
     req(input$xvar %in% data()$PARAMCD)
-    shinyWidgets::radioGroupButtons(ns("value_x"), "Value", choices = c("AVAL", "CHG", "BASE"))
+    shinyWidgets::radioGroupButtons(ns("value_x"), "Value",
+                                    choices = c("AVAL", "CHG", "BASE"),
+                                    selected = isolate(input$value_y))
   })
   
   weeks_list <- reactive({
