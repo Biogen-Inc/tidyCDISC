@@ -102,9 +102,10 @@ IDEA_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y,
     
     # y numeric, x is paramcd 
   } else if (yvar %in% colnames(data) & !xvar %in% colnames(data)) {
+    d <- data %>% dplyr::filter(PARAMCD == xvar) 
+    if(xvar != "HEIGHT"){ d <- d %>% filter(AVISIT == week_x) }
     suppressWarnings(
-      d <- data %>% 
-        dplyr::filter(PARAMCD == xvar & AVISIT == week_x) %>%
+      d <- d %>%
         dplyr::select(USUBJID, PARAM, PARAMCD, AVISIT, value_x, yvar, one_of(color, separate)) %>%
         dplyr::distinct()
     )
@@ -121,9 +122,11 @@ IDEA_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y,
     
     # x numeric, y paramcd
   } else if (!yvar %in% colnames(data) & xvar %in% colnames(data)) {
+    
+    d <- data %>% dplyr::filter(PARAMCD == yvar)
+    if(yvar != "HEIGHT"){ d <- d %>% filter(AVISIT == week_y) }
     suppressWarnings(
-      d <- data %>% 
-        dplyr::filter(PARAMCD == yvar & AVISIT == week_y) %>%
+      d <- d %>%
         dplyr::select(USUBJID, PARAM, PARAMCD, AVISIT, value_y, xvar, one_of(color, separate)) %>%
         dplyr::distinct()
     )
@@ -141,8 +144,9 @@ IDEA_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y,
   } else {
     
     # Build plot data for y variable
-    y_data <- data %>%
-      dplyr::filter(PARAMCD == yvar & AVISIT == week_y)
+    y_data <- data %>% dplyr::filter(PARAMCD == yvar)
+    if(yvar != "HEIGHT"){ y_data <- y_data %>% filter(AVISIT == week_y) }
+
     suppressWarnings(  
       y_dat <- y_data %>%
         dplyr::select(USUBJID, PARAMCD, value_y, one_of(color, separate)) %>%
@@ -152,8 +156,9 @@ IDEA_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y,
     y_dat <- y_dat[colSums(!is.na(y_dat)) > 0]
     
     # Build plot data for x variable
-    x_data <- data %>%
-      dplyr::filter(PARAMCD == xvar & AVISIT == week_x)
+    x_data <-  data %>% dplyr::filter(PARAMCD == xvar)
+    if(xvar != "HEIGHT"){ x_data <- x_data %>% filter(AVISIT == week_x) }
+
     suppressWarnings(
       x_dat <- x_data %>%
         dplyr::select(USUBJID, PARAMCD, value_x, one_of(color, separate)) %>%
