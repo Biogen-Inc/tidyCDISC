@@ -104,7 +104,7 @@ IDEA_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y,
   } else if (yvar %in% colnames(data) & !xvar %in% colnames(data)) {
     suppressWarnings(
       d <- data %>% 
-        dplyr::filter(PARAMCD == xvar & AVISIT == value_x) %>%
+        dplyr::filter(PARAMCD == xvar & AVISIT == week_x) %>%
         dplyr::select(USUBJID, PARAM, PARAMCD, AVISIT, value_x, yvar, one_of(color, separate)) %>%
         dplyr::distinct()
     )
