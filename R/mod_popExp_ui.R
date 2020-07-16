@@ -34,9 +34,8 @@ mod_popExp_ui <- function(id, label = "Population Explorer"){
                                 multiple = TRUE, choices = "ADSL", selected = "ADSL"),
                       IDEAFilter::shiny_data_filter_ui(ns("data_filter")))
                ),
-             
+             h4("Type of Chart:"),
              wellPanel(
-                      h4("Type of Chart:"),
                       br(),
                       radioButtons(ns("plot_type"), NULL, 
                                    choices = c("Scatter Plot", 

@@ -15,8 +15,8 @@
 scatterPlot_ui <- function(id, label = "scatter") {
   ns <- NS(id)
   tagList(
+    h4("Select x-axis:"),
     wellPanel(
-      h4("Select x-axis:"),
       fluidRow(
         column(6, selectInput(ns("xvar"), "Explanatory Variable", choices = NULL)),
         column(6, conditionalPanel(
@@ -25,8 +25,8 @@ scatterPlot_ui <- function(id, label = "scatter") {
       ),
       fluidRow(column(12, align = "center", uiOutput(ns("include_xvar"))))
     ),
+    h4("Select y-axis:"),
     wellPanel(
-      h4("Select y-axis:"),
       fluidRow(
         column(6, selectInput(ns("yvar"), "Response Variable", choices = NULL)),
         column(6, conditionalPanel(
@@ -35,6 +35,7 @@ scatterPlot_ui <- function(id, label = "scatter") {
       ),
       fluidRow(column(12, align = "center", uiOutput(ns("include_yvar"))))
     ),
+    h4("Group data:"),
     wellPanel(
       selectInput(ns("separate"), "Separate Plots By", choices = "NONE", selected = "NONE"),
       selectInput(ns("color"), "Color Plots By", choices = "NONE", selected = "NONE")
