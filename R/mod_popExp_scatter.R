@@ -78,9 +78,17 @@ scatterPlot_srv <- function(input, output, session, data) {
     # character and factor columns for coloring or separating
     char_col <- subset_colclasses(data(), is.character)
     fac_col <- subset_colclasses(data(), is.factor)
-  
+    
+    extra_aval_vars <- c("ATPT") # Add additional vars here
+    updateSelectInput(session, "color",
+      choices = c("NONE", fac_col, char_col),
+      selected =
+        if(any(extra_aval_vars %in% colnames(data()))){
+          extra_aval_vars[extra_aval_vars %in% colnames(data())][1]
+        } else { "NONE"}
+    )
     updateSelectInput(session, "separate", choices = c("NONE", fac_col, char_col))
-    updateSelectInput(session, "color", choices = c("NONE", fac_col, char_col))
+    
   })
   
   output$include_yvar <- renderUI({
