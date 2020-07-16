@@ -13,7 +13,7 @@
 refact <- function(data, varc, varn) {
   datac <- deparse(substitute(data))
   if (varc %in% colnames(data) && varn %in% colnames(data)) {
-    message(paste("A factor was created for", varc, "based on", varn, "levels"))
+    #message(paste("A factor was created for", varc, "based on", varn, "levels"))
     data[, (varc) := forcats::fct_reorder(get(varc), get(varn))]
   } 
 }
@@ -36,12 +36,18 @@ refact <- function(data, varc, varn) {
 IDEA_boxplot <- function(data, yvar, group, value, points = FALSE) {
   if (yvar %in% colnames(data)) {
     p <- ggplot2::ggplot(data) + 
-      ggplot2::aes_string(x = group, y = yvar)
+      ggplot2::aes_string(x = group, y = yvar) +
+      ggplot2::ylab(attr(adsl[[yvar]], "label"))
   } else {
-    p <- data %>% 
-      dplyr::filter(PARAMCD == yvar) %>%
+    d <- data %>% 
+      dplyr::filter(PARAMCD == yvar)
+    
+    var_title <- paste(unique(d$PARAM))
+    
+    p <- d %>%
       ggplot2::ggplot() +
-      ggplot2::aes_string(x = group, y = value)
+      ggplot2::aes_string(x = group, y = value) +
+      ggplot2::ylab(var_title)
   }
   
   p <- p + 
@@ -90,7 +96,7 @@ IDEA_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y,
       ggplot2::aes_string(x = xvar, y = yvar) +
       ggplot2::xlab(xvar) + ggplot2::ylab(yvar) +
       ggplot2::geom_point(na.rm = T)
-    var_title <- paste(yvar, "versus", xvar)
+    var_title <- paste(attr(adsl[[yvar]], "label"), "versus", attr(adsl[[xvar]], "label"))
     
     # y numeric, x is paramcd 
   } else if (yvar %in% colnames(data) & !xvar %in% colnames(data)) {
@@ -105,7 +111,7 @@ IDEA_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y,
       ggplot2::ggplot() +
       ggplot2::aes_string(x = value_x, y = yvar) +
       ggplot2::xlab(paste0(unique(d$PARAM)," (",week_x,")")) +
-      ggplot2::ylab(yvar) +
+      ggplot2::ylab(attr(adsl[[yvar]], "label")) +
       ggplot2::geom_point(na.rm = T)
     
     
@@ -121,7 +127,7 @@ IDEA_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y,
     p <- d %>%
       ggplot2::ggplot() +
       ggplot2::aes_string(x = xvar, y = value_y) +
-      ggplot2::xlab(xvar) + 
+      ggplot2::xlab(attr(adsl[[xvar]], "label")) + 
       ggplot2::ylab(paste0(unique(d$PARAM)," (",week_y,")")) +
       ggplot2::geom_point(na.rm = T)
     
