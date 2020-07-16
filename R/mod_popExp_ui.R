@@ -22,7 +22,8 @@ mod_popExp_ui <- function(id, label = "Population Explorer"){
     
     fluidRow(
       column(width = 3,
-               checkboxInput(ns("adv_filtering"), span("Filter Data   ", icon("chevron-down w3-tiny")),  value = F),
+               checkboxInput(ns("adv_filtering"), 
+                             span("Filter Data   ", icon("chevron-down w3-tiny"), style="font-size:1.5em;"),value = F),
                conditionalPanel(condition = "input.adv_filtering == true", ns = ns,
                   div(id = "custom_checkbox",
                       materialSwitch(ns("apply_filters")
@@ -33,9 +34,8 @@ mod_popExp_ui <- function(id, label = "Population Explorer"){
                                 multiple = TRUE, choices = "ADSL", selected = "ADSL"),
                       IDEAFilter::shiny_data_filter_ui(ns("data_filter")))
                ),
-             
+             h4("Type of Chart:"),
              wellPanel(
-                      h4("Type of Chart:"),
                       br(),
                       radioButtons(ns("plot_type"), NULL, 
                                    choices = c("Scatter Plot", 
@@ -51,7 +51,7 @@ mod_popExp_ui <- function(id, label = "Population Explorer"){
             ),
              column(width = 9,
                     wellPanel(
-                      plotlyOutput(ns("plot_output")),
+                      plotlyOutput(ns("plot_output"), height = 700),
                       div(style = "color: #0275d8; font-size: 12px;", htmlOutput(ns("applied_filters")))
                     )
                     # # Preview dataset sent to plots

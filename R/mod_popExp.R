@@ -85,7 +85,9 @@ mod_popExp_server <- function(input, output, session, datafile) {
     if ("STUDYID" %in% colnames(all_data)) {
       if ("CHG" %in% colnames(all_data) ) {
         # set CHG to zero instead of NA at Baseline
+        chg_lab <- sjlabelled::get_label(all_data$CHG)
         all_data <- mutate(all_data, CHG = ifelse(AVISIT == "Baseline", replace_na(CHG, 0), CHG))
+        all_data$CHG <- sjlabelled::set_label(all_data$CHG, label = chg_lab)
       }
       varclst <- c("AGEGR", "AGEGR1", "SEX", "RACE", "RACETXT", "TRTA", "TRT01A", "TRT02A", "TRTP", "TRT01P", "TRT02P", "AVISIT", "APHASE", "AETOXGR", "AESEV", "AEREL")
       varnlst <- c("AGEGRN","AGEGR1N","SEXN","RACEN","RACETXTN","TRTAN","TRT01AN","TRT02AN","TRTPN","TRT01PN","TRT02PN","AVISITN","APHASEN","AETOXGRN","AESEVN","AERELN")
@@ -207,6 +209,7 @@ mod_popExp_server <- function(input, output, session, datafile) {
 
   # use plot output of the module to create the plot 
   output$plot_output <- renderPlotly({
+    print(p_scatter())
         switch(input$plot_type,
                `Scatter Plot` = p_scatter(),
                `Box Plot` = p_box(),
@@ -215,8 +218,18 @@ mod_popExp_server <- function(input, output, session, datafile) {
         plotly::ggplotly() %>%
           config(displaylogo = FALSE, 
                 modeBarButtonsToRemove = 
-                  c('sendDataToCloud', 'hoverCompareCartesian','hoverClosestCartesian',
-                    'autoScale2d', 'select2d', 'lasso2d', 'toggleSpikelines'
+                  c("zoom2d", "pan2d", "select2d", "lasso2d", "zoomIn2d", "zoomOut2d", "autoScale2d", "resetScale2d",
+                    "hoverClosestCartesian", "hoverCompareCartesian",
+                    "zoom3d", "pan3d", "resetCameraDefault3d", "resetCameraLastSave3d", "hoverClosest3d",
+                    "orbitRotation", "tableRotation",
+                    "zoomInGeo", "zoomOutGeo", "resetGeo", "hoverClosestGeo",
+                    "sendDataToCloud",
+                    "hoverClosestGl2d",
+                    "hoverClosestPie",
+                    "toggleHover",
+                    "resetViews",
+                    "toggleSpikelines",
+                    "resetViewMapbox"
                   # , 'toImage', 'resetScale2d', 'zoomIn2d', 'zoomOut2d','zoom2d', 'pan2d'
                 )
           )
