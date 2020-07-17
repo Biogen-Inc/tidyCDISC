@@ -209,7 +209,7 @@ mod_popExp_server <- function(input, output, session, datafile) {
 
   # use plot output of the module to create the plot 
   output$plot_output <- renderPlotly({
-    print(p_scatter())
+    # print(p_scatter())
         switch(input$plot_type,
                `Scatter Plot` = p_scatter(),
                `Box Plot` = p_box(),
