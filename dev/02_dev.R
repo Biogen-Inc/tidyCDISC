@@ -68,7 +68,7 @@ golem::add_module( name = "dataComplyRules" ) # ran
 
 golem::add_module( name = "tableGen" ) #ran
 
-golem::add_module( name = "selectData" )  #ran
+# golem::add_module( name = "selectData" )  #ran
 golem::add_module( name = "popExp" )      #ran
 golem::add_module( name = "popExpScat" )  #ran
 golem::add_module( name = "popExpSpag" )  #ran
@@ -106,11 +106,14 @@ golem::add_fct( "buildEvents", module = "indvExp" ) # ran: used in modules: indv
 golem::add_fct( "organizeEvent", module = "indvExp" ) # ran
 golem::add_fct( "plot", module = "indvExpPatVisits" ) # ran
 
-golem::add_fct( "scttr", module = "popExp") #ran
-golem::add_fct( "bxplt", module = "popExp") #ran
-golem::add_fct( "sumtb", module = "popExp") #ran
-golem::add_fct( "ovrpl", module = "popExp") #ran
-golem::add_fct( "corrm", module = "popExp") #ran
+golem::add_utils( "helpers" ) # ran
+
+# golem::add_fct( "scttr", module = "popExp") #ran
+# golem::add_fct( "bxplt", module = "popExp") #ran
+# golem::add_fct( "sumtb", module = "popExp") #ran
+# golem::add_fct( "ovrpl", module = "popExp") #ran
+# golem::add_fct( "corrm", module = "popExp") #ran
+# golem::add_fct( "corrm", module = "popExp") #ran
 
 
 ## External resources - ran

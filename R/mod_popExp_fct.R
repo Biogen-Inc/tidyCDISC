@@ -34,29 +34,35 @@ refact <- function(data, varc, varn) {
 #' @family popExp Functions
 
 IDEA_boxplot <- function(data, yvar, group, value = NULL, points = FALSE) {
+  
   if (yvar %in% colnames(data)) {
     p <- ggplot2::ggplot(data) + 
       ggplot2::aes_string(x = group, y = yvar) +
       ggplot2::ylab(attr(data[[yvar]], "label"))
-  } else {
-    d <- data %>% 
-      dplyr::filter(PARAMCD == yvar)
     
-    var_title <- paste(unique(d$PARAM))
+    var_title <- paste(attr(data[[yvar]], 'label'), "by", attr(data[[group]], "label"))
+    
+  } else {
+    d <- data %>% dplyr::filter(PARAMCD == yvar)
+    
+    var_label <- paste(unique(d$PARAM))
+    var_title <- paste(var_label, "by", attr(data[[group]], "label"))
     
     p <- d %>%
       ggplot2::ggplot() +
       ggplot2::aes_string(x = group, y = value) +
-      ggplot2::ylab(glue::glue("{var_title} ({attr(data[[value]], 'label')})"))
+      ggplot2::ylab(glue::glue("{var_label} ({attr(data[[value]], 'label')})"))
   }
   
   p <- p + 
     ggplot2::geom_boxplot() +
     ggplot2::xlab("") +
-    ggplot2::theme(text = element_text(size = 20),
-                   axis.text.x = element_text(size = 20),
-                   axis.text.y = element_text(size = 20)) +
-    ggplot2::theme_bw()
+    ggplot2::theme_bw() +
+    ggplot2::theme(text = element_text(size = 12),
+                   axis.text = element_text(size = 12),
+                   plot.title = element_text(size = 16)) +
+    ggplot2::ggtitle(var_title)
+    
   
   if (points) { p <- p + ggplot2::geom_jitter() }
   return(p)
@@ -183,22 +189,30 @@ IDEA_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y,
         ggplot2::geom_point(na.rm = T)
     )
   }
-  print(p)
+  
+  by_title <- case_when(
+    separate != "NONE" & color != "NONE" ~ paste("\nby", attr(data[[color]], "label"), "and", attr(data[[separate]], "label")),
+    separate != "NONE" ~ paste("\nby", attr(data[[separate]], "label")),
+    color != "NONE" ~ paste("\nby", attr(data[[color]], "label")), 
+    TRUE ~ ""
+  )
   p <- p + 
-    ggplot2::theme(text = element_text(size = 20),
-                   axis.text = element_text(size = 20)) +
     ggplot2::theme_bw() +
-    ggplot2::ggtitle(
-      paste(var_title, 
-            case_when(
-              separate != "NONE" & color != "NONE" ~ paste("by", attr(data[[color]], "label"), "and", attr(data[[separate]], "label")),
-              separate != "NONE" ~ paste("by", attr(data[[separate]], "label")), # should grab var label
-              color != "NONE" ~ paste("by", attr(data[[color]], "label")), # should grab var label
-              TRUE ~ ""
-            ) 
-      ))
+    theme(
+      text = element_text(size = 12),
+      axis.text = element_text(size = 12),
+      plot.title = element_text(size = 16)
+      ) +
+    ggplot2::ggtitle(paste(var_title, by_title)
+                     # ,subtitle = paste(by_title) # plotly won't automatically accept this
+    )
   if (separate != "NONE") { p <- p + ggplot2::facet_wrap(as.formula(paste(".~", separate))) }
   if (color != "NONE") { p <- p + ggplot2::aes_string(color = color)}
+  if (by_title != "") {
+    p <- p + theme(plot.margin = margin(t = 1.2, unit = "cm")
+                   # ,axis.title.y = element_text(margin = margin(t = 0, r = 20, b = 0, l = 0))
+                  )
+    }
   
   return(p)
 }
@@ -223,17 +237,20 @@ IDEA_spaghettiplot <- function(data, yvar, time, value = NULL) {
       ggplot2::aes_string(x = time, y = yvar, group = "USUBJID") +
       ggplot2::ylab(attr(data[[yvar]], "label")) +
       ggplot2::xlab(attr(data[[time]], "label"))
-  } else {
-    d <- data %>% 
-      dplyr::filter(PARAMCD == yvar) 
     
-    ylab <- unique(d[["PARAM"]])
+    var_title <- paste(attr(data[[yvar]], 'label'), "by", attr(data[[time]], "label"))
+    
+  } else {
+    d <- data %>% dplyr::filter(PARAMCD == yvar) 
+    
+    var_label <- paste(unique(d$PARAM))
+    var_title <- paste(var_label, "by", attr(data[[time]], "label"))
     
     p <- d %>%
       ggplot2::ggplot() +
       ggplot2::aes_string(x = time, y = value, group = "USUBJID")  +
       ggplot2::ylab(
-        glue::glue("{ylab} ({attr(d[[value]], 'label')})")
+        glue::glue("{var_label} ({attr(d[[value]], 'label')})")
       ) +
       ggplot2::xlab(attr(data[[time]], "label"))
   }
@@ -241,9 +258,11 @@ IDEA_spaghettiplot <- function(data, yvar, time, value = NULL) {
   p <- p + 
     ggplot2::geom_line() +
     ggplot2::geom_point() +
-    ggplot2::theme(text = element_text(size = 20),
-                   axis.text = element_text(size = 20)) +
-    ggplot2::theme_bw()
+    ggplot2::theme_bw() +
+    ggplot2::theme(text = element_text(size = 12),
+                   axis.text = element_text(size = 12),
+                   plot.title = element_text(size = 16)) +
+    ggplot2::ggtitle(var_title)
   
   return(p)
 }
