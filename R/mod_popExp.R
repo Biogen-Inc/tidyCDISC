@@ -16,6 +16,15 @@
 mod_popExp_server <- function(input, output, session, datafile) {
   ns <- session$ns
   
+  # When the user asks for help, guide them through the UI
+  observeEvent( input$help_sel, {
+    if(input$adv_filtering == TRUE){
+      guide_popex_sel_adv$init()$start() # guide includes IDEAFilter
+    } else {
+      guide_popex$init()$start()
+    }
+  })
+  
   # show/hide checkboxes depending on radiobutton selection
   process <- eventReactive(datafile(), {
     
