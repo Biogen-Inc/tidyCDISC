@@ -54,7 +54,7 @@ guide_popex_sel_adv <-
   step(
     "pop_cic_apply_filters",
     "Toggle filters ON or OFF",
-    "When ON, filters subset population data using data set(s) & variable(s) defined below."
+    "When ON, filters subset population data using data set(s) & variable(s) defined below. To save re-rendering the plot multiple times while building your filters, best practice is to define your filters first and finish up by toggling them ON."
   )$
   step(
     "pop_cic_filter_df",
