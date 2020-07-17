@@ -237,17 +237,20 @@ IDEA_spaghettiplot <- function(data, yvar, time, value = NULL) {
       ggplot2::aes_string(x = time, y = yvar, group = "USUBJID") +
       ggplot2::ylab(attr(data[[yvar]], "label")) +
       ggplot2::xlab(attr(data[[time]], "label"))
-  } else {
-    d <- data %>% 
-      dplyr::filter(PARAMCD == yvar) 
     
-    ylab <- unique(d[["PARAM"]])
+    var_title <- paste(attr(data[[yvar]], 'label'), "by", attr(data[[time]], "label"))
+    
+  } else {
+    d <- data %>% dplyr::filter(PARAMCD == yvar) 
+    
+    var_label <- paste(unique(d$PARAM))
+    var_title <- paste(var_label, "by", attr(data[[time]], "label"))
     
     p <- d %>%
       ggplot2::ggplot() +
       ggplot2::aes_string(x = time, y = value, group = "USUBJID")  +
       ggplot2::ylab(
-        glue::glue("{ylab} ({attr(d[[value]], 'label')})")
+        glue::glue("{var_label} ({attr(d[[value]], 'label')})")
       ) +
       ggplot2::xlab(attr(data[[time]], "label"))
   }
@@ -258,7 +261,8 @@ IDEA_spaghettiplot <- function(data, yvar, time, value = NULL) {
     ggplot2::theme_bw() +
     ggplot2::theme(text = element_text(size = 12),
                    axis.text = element_text(size = 12),
-                   plot.title = element_text(size = 16))
+                   plot.title = element_text(size = 16)) +
+    ggplot2::ggtitle(var_title)
   
   return(p)
 }
