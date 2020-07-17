@@ -17,50 +17,68 @@
 mod_popExp_ui <- function(id, label = "Population Explorer"){
   ns <- NS(id)
   tagList(
+    div(style="display: inline-block; float:right;",
+        actionButton(ns("help_sel") 
+                     , label = NULL
+                     , icon = icon("question-circle")
+                     , class = "btn-start"
+                     , style = "display: inline-block; float:right; margin-bottom:15px;"
+        )),
     h1("Population Explorer", align = "center"),
     br(), br(), br(),
     
     fluidRow(
       column(width = 3,
-               checkboxInput(ns("adv_filtering"), 
-                             span("Filter Data   ", icon("chevron-down w3-tiny"), style="font-size:1.5em;"),value = F),
+               div(id = "pop_cic_adv_filtering", 
+                 checkboxInput(ns("adv_filtering"), 
+                   span("Filter Data   ", icon("chevron-down w3-tiny"), style="font-size:1.5em;"),
+                   value = F)
+               ),
                conditionalPanel(condition = "input.adv_filtering == true", ns = ns,
                   div(id = "custom_checkbox",
-                      materialSwitch(ns("apply_filters")
+                      
+                      div(id = "pop_cic_apply_filters", materialSwitch(ns("apply_filters")
                                      , label = strong(em(h5("Apply Filters")))
                                      , status = "primary"
-                                     , value = F),
-                      selectInput(ns("filter_df"),"Filter on Variable(s) in a loaded ADaM",
-                                multiple = TRUE, choices = "ADSL", selected = "ADSL"),
-                      IDEAFilter::shiny_data_filter_ui(ns("data_filter")))
+                                     , value = F)),
+                      div(id = "pop_cic_filter_df", selectInput(ns("filter_df"),"Filter on Variable(s) in a loaded ADaM",
+                                multiple = TRUE, choices = "ADSL", selected = "ADSL") ),
+                      div(id = "pop_cic_data_filter", IDEAFilter::shiny_data_filter_ui(ns("data_filter"))))
                ),
-             h4("Type of Chart:"),
-             wellPanel(
-                      br(),
-                      radioButtons(ns("plot_type"), NULL, 
-                                   choices = c("Scatter Plot", 
-                                               "Spaghetti Plot", 
-                                               "Box Plot")
+             
+             div(id = "pop_cic_chart_type", 
+               h4("Type of Chart:"),
+               wellPanel(
+                        br(),
+                        radioButtons(ns("plot_type"), NULL, 
+                                     choices = c("Scatter Plot", 
+                                                 "Spaghetti Plot", 
+                                                 "Box Plot")
+                        )
                       )
-                    ),
+             ),
 
-                    #wellPanel(uiOutput(ns("plot_ui")))
+             #wellPanel(uiOutput(ns("plot_ui")))
+             div(id = "pop_cic_chart_inputs", 
                conditionalPanel("input.plot_type === 'Box Plot'", ns = ns, boxPlot_ui(ns("boxPlot"))),
                conditionalPanel("input.plot_type === 'Spaghetti Plot'", ns = ns, spaghettiPlot_ui(ns("spaghettiPlot"))),
                conditionalPanel("input.plot_type === 'Scatter Plot'", ns = ns, scatterPlot_ui(ns("scatterPlot")))
-            ),
-             column(width = 9,
+             )
+           ),
+           column(width = 9,
+                  div(id = "pop_cic_plot", 
                     wellPanel(
                       plotlyOutput(ns("plot_output"), height = 700),
                       div(style = "color: #0275d8; font-size: 12px;", htmlOutput(ns("applied_filters")))
                     )
-                    # # Preview dataset sent to plots
-                    # ,wellPanel(
-                    #   h4("Dataset:"),
-                    #   DT::dataTableOutput(ns("dataset"))
-                    #   ),
-                    
-                    )
+                  )
+                  # # Preview dataset sent to plots
+                  # ,wellPanel(
+                  #   h4("Dataset:"),
+                  #   DT::dataTableOutput(ns("dataset"))
+                  #   ),
+                  
+                  )
     )
   )
 }
