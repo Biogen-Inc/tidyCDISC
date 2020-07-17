@@ -32,7 +32,7 @@ test_that("facet by group", {
   expect_equal("FacetWrap", class(plot$facet)[1])
 })
 
-test_that("facet by group", {
+test_that("color by group", {
   plot <- IDEA_scatterplot(tg_data, "AGE", "CHG", color = "SEX")
   expect_equal(sym("SEX"), quo_get_expr(plot$mapping$colour))
 })
