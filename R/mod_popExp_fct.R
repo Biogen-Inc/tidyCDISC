@@ -92,7 +92,7 @@ IDEA_boxplot <- function(data, yvar, group, value = NULL, points = FALSE) {
 IDEA_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y, separate = "NONE", color = "NONE") {
   # x and y are numeric columns
   if (yvar %in% colnames(data) & xvar %in% colnames(data)) {
-    if(AVISITN %in% colnames(data)){
+    if("AVISITN" %in% colnames(data)){
       suppressWarnings(
         d <- data %>%
           filter(AVISITN == min(AVISITN, na.rm = TRUE)) %>%
