@@ -92,12 +92,21 @@ IDEA_boxplot <- function(data, yvar, group, value = NULL, points = FALSE) {
 IDEA_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y, separate = "NONE", color = "NONE") {
   # x and y are numeric columns
   if (yvar %in% colnames(data) & xvar %in% colnames(data)) {
-    suppressWarnings(
-      d <- data %>%
-        filter(AVISITN == min(AVISITN, na.rm = TRUE)) %>%
-        select(USUBJID, xvar, yvar, one_of(color, separate)) %>%
-        distinct()
-    )
+    if(AVISITN %in% colnames(data)){
+      suppressWarnings(
+        d <- data %>%
+          filter(AVISITN == min(AVISITN, na.rm = TRUE)) %>%
+          select(USUBJID, xvar, yvar, one_of(color, separate)) %>%
+          distinct()
+      )
+    } else {
+      suppressWarnings(
+        d <- data %>%
+          select(USUBJID, xvar, yvar, one_of(color, separate)) %>%
+          distinct()
+      )
+    }
+    
     p <- d %>%
       ggplot2::ggplot() + 
       ggplot2::aes_string(x = xvar, y = yvar) +
