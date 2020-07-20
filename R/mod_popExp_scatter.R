@@ -90,16 +90,22 @@ scatterPlot_srv <- function(input, output, session, data) {
     if(input$yvar %in% colnames(data()) & input$xvar %in% colnames(data())){ # neither paramcd
       group_dat <- data()
     } else if(!(input$yvar %in% colnames(data())) & input$xvar %in% colnames(data())){ # yvar paramcd
-      group_dat <- data() %>% dplyr::filter(PARAMCD == input$yvar)
-      group_dat <- group_dat[colSums(!is.na(group_dat)) > 0] # remove NA cols
+      group_dat <- data() %>% 
+        dplyr::filter(PARAMCD == input$yvar) %>% 
+        select_if(~!all(is.na(.))) # remove NA cols
     } else if(input$yvar %in% colnames(data()) & !(input$xvar %in% colnames(data()))){ # xvar paramcd
-      group_dat <- data() %>% dplyr::filter(PARAMCD == input$xvar)
-      group_dat <- group_dat[colSums(!is.na(group_dat)) > 0] # remove NA cols
+      group_dat <- data() %>% 
+        dplyr::filter(PARAMCD == input$xvar) %>% 
+        select_if(~!all(is.na(.))) # remove NA cols
     } else { # both paramcds
-      x_dat <- data() %>% dplyr::filter(PARAMCD == input$xvar)
-      x_cols <- x_dat[colSums(!is.na(x_dat)) > 0] # remove NA cols
-      y_dat <- data() %>% dplyr::filter(PARAMCD == input$yvar)
-      y_cols <- y_dat[colSums(!is.na(y_dat)) > 0] # remove NA cols
+      x_cols <- data() %>% 
+        dplyr::filter(PARAMCD == input$xvar) %>% 
+        select_if(~!all(is.na(.))) # remove NA cols
+      # x_cols <- x_dat[colSums(!is.na(x_dat)) > 0] # remove NA cols
+      y_cols <- data() %>%
+        dplyr::filter(PARAMCD == input$yvar) %>% 
+        select_if(~!all(is.na(.))) # remove NA cols
+      # y_cols <- y_dat[colSums(!is.na(y_dat)) > 0] # remove NA cols
       group_dat <- x_cols %>% full_join(y_cols)
     }
     
