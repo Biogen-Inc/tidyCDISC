@@ -66,10 +66,11 @@ spaghettiPlot_srv <- function(input, output, session, data) {
                       selected = isolate(input$yvar))
     
     # Update time variable based on yvar selection
-    if(!input$yvar %in% colnames(data())){
-      seltime_dat <- data() %>% dplyr::filter(PARAMCD == input$yvar) # subset data
-
-      seltime <- seltime_dat[colSums(!is.na(seltime_dat)) > 0] %>% # remove NA cols
+    if(input$yvar != "" & !(input$yvar %in% colnames(data()))){
+      seltime <- data() %>%
+        dplyr::filter(PARAMCD == input$yvar) %>% # subset data
+        select_if(~!all(is.na(.))) %>%
+        #seltime <- seltime_dat[colSums(!is.na(seltime_dat)) > 0] %>% # remove NA cols
         dplyr::select(ends_with("DY"), contains("VIS")) %>% # grab time vars remaining
         colnames() %>% sort()
     } else {
