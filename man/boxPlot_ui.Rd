@@ -22,6 +22,7 @@ Other popExp Functions:
 \code{\link{boxPlot_srv}()},
 \code{\link{mod_popExp_server}()},
 \code{\link{mod_popExp_ui}()},
+\code{\link{refact}()},
 \code{\link{scatterPlot_srv}()},
 \code{\link{scatterPlot_ui}()},
 \code{\link{spaghettiPlot_srv}()},
