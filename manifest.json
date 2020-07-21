@@ -4211,13 +4211,13 @@
       "checksum": "6992ea42b2ce8c44c53dd72e75724aac"
     },
     "dev/02_dev.R": {
-      "checksum": "afd71d0bccfe34a9ad7a22c56fa6218c"
+      "checksum": "fb953f10ecf22473de1ef8d0152037d8"
     },
     "dev/03_deploy.R": {
       "checksum": "7b413fcf3e7273e8b80cb6971b2190a4"
     },
     "dev/run_dev.R": {
-      "checksum": "355d6d13bbcb15341a38bf508f44e6c8"
+      "checksum": "f5180ee585cfa4281e32f3d4ae113122"
     },
     "inst/app/www/accordian2.js": {
       "checksum": "ad36ddd68cf31b028b2752f144407f9c"
@@ -4250,10 +4250,10 @@
       "checksum": "71ee35ce4c01cb0435f41f91f646eac6"
     },
     "inst/app/www/script2.js": {
-      "checksum": "b2b6f2d813317905f0c10dd513526e74"
+      "checksum": "ecdc41fc2a93de86beb267d56d8d39bc"
     },
     "inst/app/www/styles.css": {
-      "checksum": "ef288f56148e4aaa13d52bc0042934b2"
+      "checksum": "cce12a3023357ddcffbaae01e7d4d5c8"
     },
     "inst/app/www/sync_divs.js": {
       "checksum": "23e76c85900525440527df79163e813b"
@@ -4282,6 +4282,12 @@
     "man/advs.Rd": {
       "checksum": "ee89343a9e63fa9a668a57d8698f7fad"
     },
+    "man/boxPlot_srv.Rd": {
+      "checksum": "f8b3b8405da51ea260b93b0bba8746b2"
+    },
+    "man/boxPlot_ui.Rd": {
+      "checksum": "f9ee044790122d649663702f28781987"
+    },
     "man/build_events.Rd": {
       "checksum": "38d15da06bc8d975d2d6d0cde2b9c4ed"
     },
@@ -4292,13 +4298,13 @@
       "checksum": "e6433da9057e5d7e1a07d7f2cb46e644"
     },
     "man/convertTGOutput.Rd": {
-      "checksum": "d7fcca3de6e03d2fb36ce4f109196c8f"
+      "checksum": "4b384b7ecd54c58ef7f084f368b49685"
     },
     "man/custom_class.Rd": {
-      "checksum": "bd17c05dd252afd267daf566606ef71b"
+      "checksum": "c51f23e321699733f55b39651be62907"
     },
     "man/dropArea.Rd": {
-      "checksum": "58898ff45aa21ff8680afae542918ab0"
+      "checksum": "852c1f56baa8948167a743a79078a111"
     },
     "man/fnIndvExplVisits.Rd": {
       "checksum": "0a20ab9e1c32c63f43c4eb27ee3046d8"
@@ -4336,29 +4342,44 @@
     "man/guide_ind_exp_visits_blank.Rd": {
       "checksum": "cef960d45b04942d80eb25d9eedeac6b"
     },
+    "man/guide_popex.Rd": {
+      "checksum": "0841c6dc78ed6bbb2879bf298dab56a5"
+    },
+    "man/guide_popex_sel_adv.Rd": {
+      "checksum": "593bde15b15bbac93832f847a04332e6"
+    },
     "man/IDEA_anova.Rd": {
-      "checksum": "6d91912e6ec51e89d7a5bc861be6a035"
+      "checksum": "a08efe2be94e43fe20593914cd2969fc"
+    },
+    "man/IDEA_boxplot.Rd": {
+      "checksum": "85d7fde9fcfb0eb466c4c58da8a8e9ef"
     },
     "man/IDEA_chg.Rd": {
-      "checksum": "127c693be52f448691d169f4c78a2171"
+      "checksum": "92d328a52ad7b9be361fe7b3caf5fede"
     },
     "man/IDEA_freq.Rd": {
-      "checksum": "410d9651b020f8a794e4e38b56d5e931"
+      "checksum": "8fe96c9736050de511278ed32225796f"
     },
     "man/IDEA_mean.ADSL.Rd": {
-      "checksum": "a1164317ab12ce110d08dbf7721b8f49"
+      "checksum": "09fb19e4201b3bd74bdb1e5d93a885f0"
     },
     "man/IDEA_mean.BDS.Rd": {
-      "checksum": "a7dcf0d637e577cb3e653cc95c268af7"
+      "checksum": "75439f4c4213e121f0de0fd3fbeb1c3c"
     },
     "man/IDEA_mean.Rd": {
-      "checksum": "29f4642249574a847513d88511588664"
+      "checksum": "11e38b43e25783dd8338accc82dfbec6"
     },
     "man/IDEA_methods.Rd": {
-      "checksum": "6c315a71e116b68645acda3449f5807f"
+      "checksum": "e3867a8f1bd1c9eac89d4d6dca3029cd"
+    },
+    "man/IDEA_scatterplot.Rd": {
+      "checksum": "14bc72893a23d97987e30cf004fbd4ee"
+    },
+    "man/IDEA_spaghettiplot.Rd": {
+      "checksum": "b7b9102476a5955f9ee9a595de7625b0"
     },
     "man/mean_summary.Rd": {
-      "checksum": "35aa4cb98be98f89442b1d746126fa80"
+      "checksum": "a7891c15b753d65b3ad75f16e6e708b7"
     },
     "man/mod_dataComply_server.Rd": {
       "checksum": "c317febea54b608863263c62c9d2164d"
@@ -4393,8 +4414,17 @@
     "man/mod_indvExpPatVisits_server.Rd": {
       "checksum": "90ab757e94ac6a82f19479ca0150b840"
     },
+    "man/mod_popExp_server.Rd": {
+      "checksum": "e9259f212d5297e3ad6596de4e4856f8"
+    },
+    "man/mod_popExp_ui.Rd": {
+      "checksum": "971cb8a2156843baff4a2245a1731011"
+    },
+    "man/mod_tableGen_server.Rd": {
+      "checksum": "36b2ea224844fb3826535e2c04cc6cda"
+    },
     "man/mod_tableGen_ui.Rd": {
-      "checksum": "ff75237473b275d0c7f1fd4d49f988dc"
+      "checksum": "0d49791ab5661bd54101cc66dbcd0ce2"
     },
     "man/my_gg_color_hue.Rd": {
       "checksum": "40beccf24f4bbbaad8c49e5fae7c54d1"
@@ -4406,34 +4436,49 @@
       "checksum": "de570f4bd2659c8f2cd27a85c5f92d4f"
     },
     "man/recipe.Rd": {
-      "checksum": "cd713278cf4d915fb6626543e03991c8"
+      "checksum": "98f3395464d4bd8bd8e52a95b97ca3aa"
     },
     "man/recipe_column.Rd": {
-      "checksum": "7068aa0610dbb1a88d43ac1df633dcdc"
+      "checksum": "8ef53998943cdff35c5987b70ceb7884"
+    },
+    "man/refact.Rd": {
+      "checksum": "929e42dafeb5efd3fc34826db73a3fd1"
     },
     "man/rowArea.Rd": {
-      "checksum": "ca7eef22baef0fb2402bc30c0179a21c"
+      "checksum": "da957ffcc509da02ace62dcb6b66893c"
     },
     "man/rowBlock.Rd": {
-      "checksum": "9d0a7883f2f2761848189c295f7cdf5a"
+      "checksum": "ef23bc50242a82187d1ae8ef0b380d38"
     },
     "man/rowPallete.Rd": {
-      "checksum": "b95fc85bb9b34099d316a848bdab864b"
+      "checksum": "3375b0339d09e3c801473d1b5b46660b"
     },
     "man/run_app.Rd": {
       "checksum": "7a396c0f003ae12fe3889dfc297a7d75"
     },
+    "man/scatterPlot_srv.Rd": {
+      "checksum": "dace487fdac226d0cb66a9678b6e73ed"
+    },
+    "man/scatterPlot_ui.Rd": {
+      "checksum": "2945746e05dcc08767ee6c9675413fea"
+    },
+    "man/spaghettiPlot_srv.Rd": {
+      "checksum": "1b59f2e03b928329caa17ffb66e6769c"
+    },
+    "man/spaghettiPlot_ui.Rd": {
+      "checksum": "acdcbdf27824038d9fe5917b13b9e0df"
+    },
     "man/tg_data.Rd": {
-      "checksum": "1e49dcfe161adab28f42ef52a476b307"
+      "checksum": "c09a29c5ccb348311298cf237481d38a"
     },
     "man/tg_guide.Rd": {
-      "checksum": "219c9fcee2b567f4307bbe1a56904336"
+      "checksum": "95fdc2a422a4f92484721527b30aee71"
     },
     "man/transpose_df.Rd": {
       "checksum": "ba5f6fe66141ebcc5508500a0aba8d10"
     },
     "NAMESPACE": {
-      "checksum": "ef2687a27d34c3956145631a378af5fd"
+      "checksum": "be127e61146ebb42d320966f5ae827c5"
     },
     "NEWS.md": {
       "checksum": "21f8e405477b1f0ed1d22ae9407c1f68"
@@ -4847,19 +4892,19 @@
       "checksum": "1ddb423777ca07376c047cdc25d544ae"
     },
     "R/app_ui.R": {
-      "checksum": "9c2b67397a36ddd2d67b14b187fa862f"
+      "checksum": "04537717dfc0471b887a0384ff68793e"
     },
     "R/data-phuse_TDF_ADaM.R": {
       "checksum": "dd6bbb4ce77ce6a0f0ac5f8d75995dce"
     },
     "R/data-tg_data.R": {
-      "checksum": "1dc6162be19a6a317f131096fdddd385"
+      "checksum": "1629af3608d959eab0c488a890bcf34f"
     },
     "R/global.R": {
-      "checksum": "61e2a6b4dce5d0af777025fb6e8af796"
+      "checksum": "2d0388fbcc172194c9ecf41f8d139610"
     },
     "R/golem_utils_server.R": {
-      "checksum": "2303a1260fa755a7ce0f24b3d4ad8cb5"
+      "checksum": "9e1b215ed4fbce8f5176b982dad17bc8"
     },
     "R/golem_utils_ui.R": {
       "checksum": "a97d737c89111d4834c7390d151e4660"
@@ -4868,16 +4913,16 @@
       "checksum": "704d86ffbdf003d4f7572608d14ebe47"
     },
     "R/mod_dataComply_fct_helpers.R": {
-      "checksum": "abfa92fbdf0d293128cd486d49dea663"
+      "checksum": "a47403dfc507fd97296862d9875761bd"
     },
     "R/mod_dataComplyRules.R": {
       "checksum": "e418bb8e3cea35522421c05e967dd79c"
     },
     "R/mod_dataComplyRules_fct_helpers.R": {
-      "checksum": "561fa196ee12bf3c49acf483126a5b61"
+      "checksum": "434e7e8f6474efba298c2d98495b8e53"
     },
     "R/mod_dataUpload.R": {
-      "checksum": "407f592a74aa9b392965a7b4856233d0"
+      "checksum": "5faa47e8c72ea41b400d4a2d73411bf6"
     },
     "R/mod_indvExp_fct_buildEvents.R": {
       "checksum": "66d6d526b3767fc5de25155e95fc45af"
@@ -4907,76 +4952,58 @@
       "checksum": "4a2ef27d498985fef1e2432e2e63c994"
     },
     "R/mod_popExp.R": {
-      "checksum": "720bf9653e5ad35934c1422d29e2f8ca"
+      "checksum": "faf5e32f43079b375670f6657ff98bc9"
     },
-    "R/mod_popExp_fct_bxplt.R": {
-      "checksum": "441b23739f112173a4e71170e9387385"
+    "R/mod_popExp_boxplot.R": {
+      "checksum": "fb91ac849067b34ddba1ecc454e1cfd2"
     },
-    "R/mod_popExp_fct_ovrpl.R": {
-      "checksum": "4346288d4377f230a773d14b78881cb5"
+    "R/mod_popExp_fct.R": {
+      "checksum": "82a0284b5d603c26fb9a5447128c1e0b"
     },
-    "R/mod_popExp_fct_scttr.R": {
-      "checksum": "b343a096e46d1c002e5528c068b27ae1"
+    "R/mod_popExp_scatter.R": {
+      "checksum": "daf1def06c35187428ebd321e0a9608f"
     },
-    "R/mod_popExp_fct_sumtb.R": {
-      "checksum": "adb912b81502a7f02de6ea3ef54644d7"
+    "R/mod_popExp_spaghetti.R": {
+      "checksum": "730959ec36da454ee64208cf368b7d6a"
     },
     "R/mod_popExp_ui.R": {
-      "checksum": "c5907733b340e9e8393666586de000cf"
+      "checksum": "acd2d2cc35834bf0b1880e81b25424bb"
     },
-    "R/mod_popExpBoxp.R": {
-      "checksum": "3859fed54a904b4a2f21d6b1278c8be9"
-    },
-    "R/mod_popExpHBar.R": {
-      "checksum": "f5c0368f0e7706b7fc0770e758dbeb57"
-    },
-    "R/mod_popExpHeat.R": {
-      "checksum": "3ab9b5a4e1496c192163c4b08b6f1fa1"
-    },
-    "R/mod_popExpHist.R": {
-      "checksum": "c6d7bb378259ce0a3d47636e6add89b1"
-    },
-    "R/mod_popExpMeans.R": {
-      "checksum": "b9fc991f52da112c3da7b049477cc571"
-    },
-    "R/mod_popExpScat.R": {
-      "checksum": "7f2e81bdb6e35a1b41923d257638296f"
-    },
-    "R/mod_popExpSpag.R": {
-      "checksum": "d8e869ab5a598881e48b1feaecf2e2c6"
+    "R/mod_popExp_utils.R": {
+      "checksum": "cc56abd502009cd9b0b34e751474e610"
     },
     "R/mod_selectData.R": {
-      "checksum": "441678f5eca7c7ef1c65806ebe272c40"
+      "checksum": "5ff77fa3b4d84afeaeafa910bbea01e5"
     },
     "R/mod_tableGen.R": {
-      "checksum": "cf57a47c07fa1d937685375180bc1d05"
+      "checksum": "bd78781fb7b1221553038cecae4cd728"
     },
     "R/mod_tableGen_fct_anova.R": {
-      "checksum": "d57471b96eaff2ab434479f99b6f63d2"
+      "checksum": "cbbc0c8ae13e7694608f1ef0f0567c4c"
     },
     "R/mod_tableGen_fct_blocks.R": {
-      "checksum": "2873c5cee5a04474889813fbe845b616"
+      "checksum": "f98a4b9067a8ad6de60a287780edcae3"
     },
     "R/mod_tableGen_fct_chg.R": {
-      "checksum": "07030726700d5b0314343916b2963aae"
+      "checksum": "45fcd8b0ce6bbfa6b5535d0abd8eba78"
     },
     "R/mod_tableGen_fct_freq.R": {
-      "checksum": "2ff71b542b9ec7203ff573bdb199900f"
+      "checksum": "48a0eb8d127773d43ad7377604240764"
     },
     "R/mod_tableGen_fct_mean.R": {
-      "checksum": "1357b162816e22ce385a1d06b50a45c9"
+      "checksum": "741df06fbc8962505bb902110a9b78a1"
     },
     "R/mod_tableGen_fct_meanSummary.R": {
-      "checksum": "51bd3986cf06b9b85cfe8e04ffc61e6d"
+      "checksum": "66bda8b42fe42105eddfdbd439b29c23"
     },
     "R/mod_tableGen_fct_methods.R": {
-      "checksum": "e918ca31cae85719f65484a5671b8dd7"
+      "checksum": "96bd50e13be514022abb3ae72cc97648"
     },
     "R/mod_tableGen_ui.R": {
-      "checksum": "277c15d0cc161bf63d31ed81245a5a1d"
+      "checksum": "eafb26fd8a0aff6f58aeeab78d2a1653"
     },
     "R/mod_tableGen_utils.R": {
-      "checksum": "cf34d82cea398e5754808586e9f93616"
+      "checksum": "dc24dcdf0af336fbaccd5cc6decb493d"
     },
     "R/run_app.R": {
       "checksum": "84781c4a639edd105b3236fbf9b4390a"
@@ -4999,6 +5026,9 @@
     "tests/testthat.R": {
       "checksum": "2eb28556011a6f31c1f128a098a570ad"
     },
+    "tests/testthat/Rplots.pdf": {
+      "checksum": "bfbb7dfc7743310de8a37cf165f25a4a"
+    },
     "tests/testthat/test-mod_dataComply_fct_helpers.R": {
       "checksum": "a47e5d76969d9a237940320e67a0a87e"
     },
@@ -5016,6 +5046,15 @@
     },
     "tests/testthat/test-mod_tableGen_fct_chg.R": {
       "checksum": "81bf2f250a1eac7f9a50f87374afa9e7"
+    },
+    "tests/testthat/test-popExp_fct_boxplot.R": {
+      "checksum": "5f6a61cda1e1ebe636ce14f51e777db9"
+    },
+    "tests/testthat/test-popExp_fct_scatterplot.R": {
+      "checksum": "427e625cc59a1e08b14090ac90432684"
+    },
+    "tests/testthat/test-popExp_fct_spaghettiplot.R": {
+      "checksum": "9a24f01a4ffb790db9b0dfa026d66601"
     },
     "tests/testthat/test-tableGen_fct_blocks.R": {
       "checksum": "d4c511bfeff7886ee329008c22c2ea0d"
@@ -5039,10 +5078,109 @@
       "checksum": "6e2428b015ae2f1fad2a293ef377e76b"
     },
     "vignettes/dev_Indv_Expl_Add_Events.Rmd": {
-      "checksum": "2fa1737859f04fb9d17529fdee1467fc"
+      "checksum": "098e15f79a2c8c253739d00f0c92ef04"
+    },
+    "vignettes/dev_popExp_add_graph.Rmd": {
+      "checksum": "40839c78c3d381446da0372702b6ff54"
+    },
+    "vignettes/figures/IndvExp/01_dataUpload.PNG": {
+      "checksum": "5503d8b1d7c7da5fc7900c6d2c613291"
+    },
+    "vignettes/figures/IndvExp/02_start.PNG": {
+      "checksum": "9b0b9cc1f73a2d65bedd9e013f96eea4"
+    },
+    "vignettes/figures/IndvExp/03_adv_filt.PNG": {
+      "checksum": "95e06d6409c4ab28af59cc90c5554eb4"
+    },
+    "vignettes/figures/IndvExp/04_adv_filt_2_dfs.PNG": {
+      "checksum": "d4ce17424600dcca822478eb34208984"
+    },
+    "vignettes/figures/IndvExp/05_adv_filt_2_dfs_abs.PNG": {
+      "checksum": "085f0fcbaaec5e57538d0fe8015e6cad"
+    },
+    "vignettes/figures/IndvExp/06_adv_filt_2_dfs_age.PNG": {
+      "checksum": "50bdcfa3eba626a9667a073e5d4ec24d"
+    },
+    "vignettes/figures/IndvExp/07_selPatNo.PNG": {
+      "checksum": "fb131c236c66de28977be25e8fad95d6"
+    },
+    "vignettes/figures/IndvExp/08_events_sel.PNG": {
+      "checksum": "6dc99f9a1c7f31e8d75aa568f8919260"
+    },
+    "vignettes/figures/IndvExp/09_events_all.PNG": {
+      "checksum": "82899ee3ff446e771b5553eb20aaf927"
+    },
+    "vignettes/figures/IndvExp/10_events_applyFilters.PNG": {
+      "checksum": "c85097e749c8eb00254e625a8c83eeac"
+    },
+    "vignettes/figures/IndvExp/11_events_datatable.PNG": {
+      "checksum": "9bc82003515139c5b8d840da1e2372e5"
+    },
+    "vignettes/figures/IndvExp/11_visits_default.PNG": {
+      "checksum": "244c9b6e467d4ca752583bad8b9065f3"
+    },
+    "vignettes/figures/IndvExp/12_visits_default.PNG": {
+      "checksum": "244c9b6e467d4ca752583bad8b9065f3"
+    },
+    "vignettes/figures/IndvExp/13_visits_sel_adam.PNG": {
+      "checksum": "5a00c3007511f0370b85f0b2a2b0a9d3"
+    },
+    "vignettes/figures/IndvExp/14_visits_sel_paramcd.PNG": {
+      "checksum": "9a8084db7f659b3f5e2c753391d16d16"
+    },
+    "vignettes/figures/IndvExp/15_visits_sel_visit.PNG": {
+      "checksum": "18d9f5dd8bab972d5a0e4677914b42e5"
+    },
+    "vignettes/figures/IndvExp/16_visits_sel_overlay.PNG": {
+      "checksum": "d096fd29dc95a0b4343d2def738b1795"
+    },
+    "vignettes/figures/IndvExp/16_visits_sel_overlay_hor.PNG": {
+      "checksum": "52ef25bf2334331584781519b1a7a9a8"
+    },
+    "vignettes/figures/IndvExp/16_visits_sel_overlay_hor_graph.PNG": {
+      "checksum": "d318c5d16d36ca3edd9152e1bbaa803b"
+    },
+    "vignettes/figures/IndvExp/17_visits_sel_overlay_events.PNG": {
+      "checksum": "e949b136c9bb6b01f454819c0d4511f3"
+    },
+    "vignettes/figures/IndvExp/18_visits_sel_overlay_events_graph.PNG": {
+      "checksum": "17ed0a5dd3b7f40d8573f06b5e41f75b"
+    },
+    "vignettes/figures/IndvExp/19_visits_sel_overlay_events_prefilters.PNG": {
+      "checksum": "25570828f5cf72897ab8266872d75c74"
+    },
+    "vignettes/figures/IndvExp/20_visits_sel_overlay_events_prefilters_graph.PNG": {
+      "checksum": "fda9b28d18e1dbc0956c768f651822eb"
+    },
+    "vignettes/figures/IndvExp/21_visits_sel_overlay_events_manfilt.PNG": {
+      "checksum": "43eb73318facd59ee9dfa21261d04d03"
+    },
+    "vignettes/figures/IndvExp/22_visits_sel_overlay_events_manfilt_plot.PNG": {
+      "checksum": "752bdbe5728b94e802938dfb0c6b1a53"
+    },
+    "vignettes/figures/IndvExp/23_visits_datatable.PNG": {
+      "checksum": "68c66337bd5b7468ddb15686fc54f645"
+    },
+    "vignettes/figures/IndvExp/24_bd.PNG": {
+      "checksum": "001277ddcef1c9aa2ec7faf842d0e7d8"
+    },
+    "vignettes/figures/IndvExp/25_bd_report.PNG": {
+      "checksum": "1b51d3a152a6f00151f44ba1507c82a2"
+    },
+    "vignettes/figures/IndvExp/Events_Plot_Interactivity.gif": {
+      "checksum": "c8e1ed043eb01a08ff6282998e381928"
     },
     "vignettes/figures/IndvExp/org_df_events_output.PNG": {
       "checksum": "eaad33853f3c4a0563fdef04547cf12f"
+    },
+    "vignettes/figures/IndvExp/q.PNG": {
+      "checksum": "05caa3d9a7a41c9bfea81811c7b38f94"
+    },
+    "vignettes/figures/IndvExp/Visits_Plot_Interactivity.gif": {
+      "checksum": "65c4e21e04b5ecf4551b5329beb5eb03"
+    },
+    "vignettes/figures/popExp/create_plot.png": {
+      "checksum": "df99dd15091d0e7a4044ec1e6d117aed"
     },
     "vignettes/figures/tableGen/01-dataupload.png": {
       "checksum": "7804e9f2b04b8dc4f2acb9e83e43d31b"
@@ -5058,6 +5196,9 @@
     },
     "vignettes/figures/tableGen/05-grouping.png": {
       "checksum": "be16438f8ca9a0d54f22d355fece1628"
+    },
+    "vignettes/User_Guide_Indv_Expl.Rmd": {
+      "checksum": "f5b106906063b560d839a34a54cb277b"
     }
   },
   "users": null
