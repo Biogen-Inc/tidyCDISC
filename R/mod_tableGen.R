@@ -241,8 +241,8 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   
   # Create the tables subtitle if the table has been filtered
   subtitle <- reactive({
-    if (any(regexpr("%>%", capture.output(attr(all_data(), "code"))) > 0)) {
-      filters_in_english(all_data()) 
+    if (any(regexpr("%>%", capture.output(attr(filtered_data(), "code"))) > 0)) {
+      filters_in_english(filtered_data()) 
     } else {
       " "
     }
