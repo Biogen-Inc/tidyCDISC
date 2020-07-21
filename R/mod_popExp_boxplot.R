@@ -63,7 +63,7 @@ boxPlot_srv <- function(input, output, session, data) {
                       selected = isolate(input$yvar))
     
     # Update grouping variable based on yvar selection
-    if(input$yvar != "" & !(input$yvar %in% colnames(data()))){
+    if(input$yvar != "" && !(input$yvar %in% colnames(data()))){
       group_dat <- data() %>% dplyr::filter(PARAMCD == input$yvar)
     } else {
       group_dat <- data()

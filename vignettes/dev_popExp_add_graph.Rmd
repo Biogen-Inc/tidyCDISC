@@ -2,7 +2,7 @@
 title: "Add a Graph to the Population Explorer"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Creating Tables}
+  %\VignetteIndexEntry{Add a Graph to the Population Explorer}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
