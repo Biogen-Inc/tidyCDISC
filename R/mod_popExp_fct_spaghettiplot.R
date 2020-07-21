@@ -14,19 +14,26 @@
 #' @family popExp Functions
 IDEA_spaghettiplot <- function(data, yvar, time, value = NULL) {
   if (yvar %in% colnames(data)) {
+    
+    # initialize plot
     p <- ggplot2::ggplot(data) + 
       ggplot2::aes_string(x = time, y = yvar, group = "USUBJID") +
       ggplot2::ylab(attr(data[[yvar]], "label")) +
       ggplot2::xlab(attr(data[[time]], "label"))
     
+    # initialize title with variables plotted
     var_title <- paste(attr(data[[yvar]], 'label'), "by", attr(data[[time]], "label"))
     
   } else {
+    
+    # Filter data based on param var selected
     d <- data %>% dplyr::filter(PARAMCD == yvar) 
     
+    # initialize title with variables plotted
     var_label <- paste(unique(d$PARAM))
     var_title <- paste(var_label, "by", attr(data[[time]], "label"))
     
+    # initialize plot
     p <- d %>%
       ggplot2::ggplot() +
       ggplot2::aes_string(x = time, y = value, group = "USUBJID")  +
@@ -36,9 +43,10 @@ IDEA_spaghettiplot <- function(data, yvar, time, value = NULL) {
       ggplot2::xlab(attr(data[[time]], "label"))
   }
   
+  # Add common layers to plot
   p <- p + 
     ggplot2::geom_line() +
-    ggplot2::geom_point() +
+    ggplot2::geom_point(na.rm = TRUE) +
     ggplot2::theme_bw() +
     ggplot2::theme(text = element_text(size = 12),
                    axis.text = element_text(size = 12),

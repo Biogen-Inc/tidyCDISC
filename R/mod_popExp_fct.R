@@ -1,6 +1,6 @@
-#' Refactor common variables by their "N" counterparts
+#' Refactor variables
 #'
-#' Neat trick to first set the selected choice to "0", then to character(0)
+#' Refactor variables by their common "N" counterparts
 #' 
 #' @param data A data frames
 #' @param varc A character vector of variables names with character values
@@ -10,6 +10,8 @@
 #' @importFrom data.table := 
 #' @importFrom forcats fct_reorder
 #' 
+#' @family popExp Functions
+#' 
 refact <- function(data, varc, varn) {
   datac <- deparse(substitute(data))
   if (varc %in% colnames(data) && varn %in% colnames(data)) {
@@ -17,3 +19,10 @@ refact <- function(data, varc, varn) {
     data[, (varc) := forcats::fct_reorder(get(varc), get(varn))]
   } 
 }
+
+
+
+
+
+
+

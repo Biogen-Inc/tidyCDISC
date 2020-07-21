@@ -23,6 +23,7 @@ Other popExp Functions:
 \code{\link{boxPlot_ui}()},
 \code{\link{mod_popExp_server}()},
 \code{\link{mod_popExp_ui}()},
+\code{\link{refact}()},
 \code{\link{scatterPlot_srv}()},
 \code{\link{spaghettiPlot_srv}()},
 \code{\link{spaghettiPlot_ui}()}

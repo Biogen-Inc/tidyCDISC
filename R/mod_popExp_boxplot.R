@@ -63,12 +63,12 @@ boxPlot_srv <- function(input, output, session, data) {
                       selected = isolate(input$yvar))
     
     # Update grouping variable based on yvar selection
-    if(input$yvar != "" & !(input$yvar %in% colnames(data()))){
+    if(input$yvar != "" && !(input$yvar %in% colnames(data()))){
       group_dat <- data() %>% dplyr::filter(PARAMCD == input$yvar)
     } else {
       group_dat <- data()
     }
-    # group_dat <- group_dat[colSums(!is.na(group_dat)) > 0] # error prone
+
     group_dat <- group_dat %>% select_if(~!all(is.na(.))) # remove NA cols
     group_fc <- subset_colclasses(group_dat, is.factor)
     group_ch <- subset_colclasses(group_dat, is.character)
