@@ -5,7 +5,7 @@
 #' are used to toggle between the child modules of each plot type, and 
 #' a conditional panel of widgets based on the plot type
 #'
-#' @param id,input,output,session Internal parameters for {shiny}.
+#' @param id Internal parameters for {shiny}.
 #' @param label Name of module
 #'
 #' @import shiny

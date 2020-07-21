@@ -7,7 +7,7 @@
 mod_popExp_ui(id, label = "Population Explorer")
 }
 \arguments{
-\item{id, input, output, session}{Internal parameters for {shiny}.}
+\item{id}{Internal parameters for {shiny}.}
 
 \item{label}{Name of module}
 }

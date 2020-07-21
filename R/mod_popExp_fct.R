@@ -98,6 +98,8 @@ IDEA_boxplot <- function(data, yvar, group, value = NULL, points = FALSE) {
 #' @param separate whether to facet plots by categorical or factor
 #' @param color whether to color plots by categorical or factor
 #' 
+#' @importFrom stats as.formula
+#' 
 #' @family popExp functions
 #' 
 IDEA_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y, separate = "NONE", color = "NONE") {
@@ -267,7 +269,7 @@ IDEA_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y,
     )
   
   # Add in plot layers conditional upon user selection
-  if (separate != "NONE") { p <- p + ggplot2::facet_wrap(as.formula(paste(".~", separate))) }
+  if (separate != "NONE") { p <- p + ggplot2::facet_wrap(stats::as.formula(paste(".~", separate))) }
   if (color != "NONE") { p <- p + ggplot2::aes_string(color = color)}
   if (by_title != "") {p <- p + theme(plot.margin = margin(t = 1.2, unit = "cm"))}
   

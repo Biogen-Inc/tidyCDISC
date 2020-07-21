@@ -104,5 +104,6 @@ utils::globalVariables(c(
   "write.csv",
   "x",
   "js",
-  "byymean"
+  "byymean",
+  "max_avals","ATM","adsl","advs","adae","adlbc",""
 ))
