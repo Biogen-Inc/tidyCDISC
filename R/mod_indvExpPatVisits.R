@@ -40,7 +40,7 @@ mod_indvExpPatVisits_server <- function(input, output, session, datafile, loaded
       guide_ind_exp_visits_blank$init()$start()
     } else {
       # if no adlb, then
-      if(!("ADLB" %in% plotable_adams()) | !(input$visit_var %in% vv_dy_name())){
+      if(!(any(c("ADLB","ADLBC") %in% plotable_adams())) | !(input$visit_var %in% vv_dy_name())){
         guide_ind_exp_visits$init()$start()
       } else {
         if(length(input$overlay_events) == 0){
@@ -145,7 +145,8 @@ mod_indvExpPatVisits_server <- function(input, output, session, datafile, loaded
     
     # If a dy variable is vhose and an ADLB is loaded, show overlay_events widget and hide ADLB & DY reminder.
     # Else, do the opposite, and create those outputs
-    if(substr(input$visit_var,nchar(input$visit_var)-1,nchar(input$visit_var)) == "DY" & "ADLB" %in% loaded_adams()){
+    if(substr(input$visit_var,nchar(input$visit_var)-1,nchar(input$visit_var)) == "DY" &
+       any(c("ADLB","ADLBC") %in% loaded_adams())){
       shinyjs::hide(id = "display_dy")
       shinyjs::show(id = "overlay_events")
     } else {
@@ -345,10 +346,35 @@ mod_indvExpPatVisits_server <- function(input, output, session, datafile, loaded
         
         # calbrating new "DY" imputation for vlines based on ADLB since it
         # contains both dates and "DY" var LBDY
-        day1 <-
-          datafile()[["ADLB"]] %>%
-          filter(USUBJID == usubjid() & LBDY == 1) %>%
-          summarize(min_lbdt = min(LBDT)) %>% # lbdt does not vary for a patient's 1st lbdy, but use min just to grab val
+        
+        # Which one 
+        lab_dfs <- c('ADLB','ADLBC')
+        lab_df <- lab_dfs[lab_dfs %in% loaded_adams()][1]
+        
+        # namne of 1st dy var?
+        dys <- datafile()[[lab_df]]%>%
+          select(ends_with("DY")) %>%
+          colnames()
+        dy <- sym(dys[1])
+        
+        # filter by usubjid
+        temp <-
+          datafile()[[lab_df]] %>%
+          filter(USUBJID == usubjid())
+        
+        # find min dy value
+        min_dy <- temp %>%
+          summarize(dy_min = min(!!dy, na.rm = T)) %>%
+          pull(dy_min)
+        
+        # name of (first) date when lab drawn
+        lab_dts <- c('LBDT','ADT')
+        lab_dt <- sym(lab_dts[lab_dts %in% colnames(temp)][1])
+        
+        day1 <- 
+          temp %>%
+          filter(!!dy == min_dy) %>%
+          summarize(min_lbdt = min(!!lab_dt)) %>% # lbdt does not vary for a patient's 1st lbdy, but use min just to grab val
           pull(min_lbdt)
         
         # if overlay events data frame exists and day1 exists, build vlines data frame for plotting
