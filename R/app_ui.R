@@ -3,6 +3,8 @@
 #' @param request Internal parameter for `{shiny}`. 
 #' 
 #' @import shiny
+#' @ImportFrom magrittr %>%
+#' 
 #' @noRd
 app_ui <- function(request) {
   
