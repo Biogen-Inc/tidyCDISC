@@ -10,6 +10,7 @@
 #' @importFrom rlang !!
 #' @importFrom rlang call2
 #' @importFrom rlang as_quosure
+#' @importFrom rlang set_names
 #' @import shiny
 #' @import dplyr
 #' @importFrom purrr map
@@ -240,8 +241,8 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   
   # Create the tables subtitle if the table has been filtered
   subtitle <- reactive({
-    if (any(regexpr("%>%", capture.output(attr(all_data(), "code"))) > 0)) {
-      filters_in_english(all_data()) 
+    if (any(regexpr("%>%", capture.output(attr(filtered_data(), "code"))) > 0)) {
+      filters_in_english(filtered_data()) 
     } else {
       " "
     }
@@ -315,7 +316,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     )
     
     test <- block_data() %>%
-      map(set_names, c("Pattern", "Replacement")) %>%
+      map(rlang::set_names, c("Pattern", "Replacement")) %>%
       bind_rows() %>%
       rbind(pretty_blocks)
   })

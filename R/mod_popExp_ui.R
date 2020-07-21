@@ -5,7 +5,7 @@
 #' are used to toggle between the child modules of each plot type, and 
 #' a conditional panel of widgets based on the plot type
 #'
-#' @param id,input,output,session Internal parameters for {shiny}.
+#' @param id Internal parameters for {shiny}.
 #' @param label Name of module
 #'
 #' @import shiny
@@ -58,7 +58,6 @@ mod_popExp_ui <- function(id, label = "Population Explorer"){
                       )
              ),
 
-             #wellPanel(uiOutput(ns("plot_ui")))
              div(id = "pop_cic_chart_inputs", 
                conditionalPanel("input.plot_type === 'Box Plot'", ns = ns, boxPlot_ui(ns("boxPlot"))),
                conditionalPanel("input.plot_type === 'Spaghetti Plot'", ns = ns, spaghettiPlot_ui(ns("spaghettiPlot"))),
@@ -66,18 +65,12 @@ mod_popExp_ui <- function(id, label = "Population Explorer"){
              )
            ),
            column(width = 9,
-                  div(id = "pop_cic_plot", 
-                    wellPanel(
-                      plotlyOutput(ns("plot_output"), height = 700),
-                      div(style = "color: #0275d8; font-size: 12px;", htmlOutput(ns("applied_filters")))
+                    div(id = "pop_cic_plot", 
+                      wellPanel(
+                        plotlyOutput(ns("plot_output"), height = 700),
+                        div(style = "color: #0275d8; font-size: 12px;", htmlOutput(ns("applied_filters")))
+                      )
                     )
-                  )
-                  # # Preview dataset sent to plots
-                  # ,wellPanel(
-                  #   h4("Dataset:"),
-                  #   DT::dataTableOutput(ns("dataset"))
-                  #   ),
-                  
                   )
     )
   )

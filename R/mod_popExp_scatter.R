@@ -89,23 +89,26 @@ scatterPlot_srv <- function(input, output, session, data) {
     # Update grouping variable based on xvar & yvar selection
     if(input$yvar %in% colnames(data()) & input$xvar %in% colnames(data())){ # neither paramcd
       group_dat <- data()
+      
     } else if(!(input$yvar %in% colnames(data())) & input$xvar %in% colnames(data())){ # yvar paramcd
       group_dat <- data() %>% 
         dplyr::filter(PARAMCD == input$yvar) %>% 
         select_if(~!all(is.na(.))) # remove NA cols
+      
     } else if(input$yvar %in% colnames(data()) & !(input$xvar %in% colnames(data()))){ # xvar paramcd
       group_dat <- data() %>% 
         dplyr::filter(PARAMCD == input$xvar) %>% 
         select_if(~!all(is.na(.))) # remove NA cols
+      
     } else { # both paramcds
       x_cols <- data() %>% 
         dplyr::filter(PARAMCD == input$xvar) %>% 
         select_if(~!all(is.na(.))) # remove NA cols
-      # x_cols <- x_dat[colSums(!is.na(x_dat)) > 0] # remove NA cols
+
       y_cols <- data() %>%
         dplyr::filter(PARAMCD == input$yvar) %>% 
         select_if(~!all(is.na(.))) # remove NA cols
-      # y_cols <- y_dat[colSums(!is.na(y_dat)) > 0] # remove NA cols
+
       group_dat <- x_cols %>% full_join(y_cols)
     }
     
@@ -114,17 +117,13 @@ scatterPlot_srv <- function(input, output, session, data) {
     fac_col <- subset_colclasses(group_dat, is.factor)
     group <- sort(c(fac_col, char_col))
                   
-    # extra_aval_vars <- c("ATPT") # Add additional vars here
+    # populate dropdowns with choices
     updateSelectInput(session, "color",
-      choices = c("NONE", group),
-      selected =
-        # if(any(extra_aval_vars %in% colnames(group_dat())) & isolate(input$color) == "NONE"){
-        #   extra_aval_vars[extra_aval_vars %in% colnames(group_dat())][1]
-        # } else {
-          isolate(input$color)
-        # }
-    )
-    updateSelectInput(session, "separate", choices = c("NONE", group), selected = isolate(input$separate))
+                      choices = c("NONE", group),
+                      selected = isolate(input$color))
+    updateSelectInput(session, "separate",
+                      choices = c("NONE", group),
+                      selected = isolate(input$separate))
     
   })
   
