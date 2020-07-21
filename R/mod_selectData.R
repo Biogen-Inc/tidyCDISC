@@ -2,7 +2,7 @@
 #'
 #' @description UI for selecting datasets.
 #'
-#' @param id,input,output,session Internal parameters for {shiny}.
+#' @param id Internal parameters for {shiny}.
 #' @param datafile A list of dataframes
 #'
 #' @noRd 

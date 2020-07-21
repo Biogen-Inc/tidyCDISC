@@ -27,7 +27,7 @@ IDEA_anova.default <- function(column, week, group, data) {
 #' and look for a grouping variable to group_by
 #' 
 #' @importFrom broom tidy
-#' @import rlang
+#' @importFrom rlang sym !! 
 #' @import dplyr
 #' @return an ANOVA table of grouped variables
 #' @rdname IDEA_anova
@@ -79,7 +79,7 @@ IDEA_anova.ADSL <- function(column, week, group = NULL, data) {
 #' and report missing values from the mean if any
 #' 
 #' @importFrom broom tidy
-#' @import rlang
+#' @importFrom rlang sym !!
 #' @import dplyr
 #' @return an ANOVA table of grouped variables
 #' @rdname IDEA_anova
