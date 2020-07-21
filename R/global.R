@@ -105,5 +105,11 @@ utils::globalVariables(c(
   "x",
   "js",
   "byymean",
-  "max_avals","ATM","adsl","advs","adae","adlbc",""
+  "max_avals",
+  "ATM",
+  "adsl",
+  "advs",
+  "adae",
+  "adlbc",
+  "warn"
 ))
