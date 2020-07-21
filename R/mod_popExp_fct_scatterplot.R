@@ -1,0 +1,156 @@
+#' IDEA scatterplot
+#' 
+#' Create scatter plot where if the variables are numeric then they
+#' are plotted, and if they are PARAMCD's then a week and value 
+#' must be selected for plotting.
+#' 
+#' @param data Merged data to be used in plot
+#' @param xvar Selected x-axis 
+#' @param week_x Selected x axis week if \code{xvar} is a PARAMCD
+#' @param value_x Selected x-axis value if \code{xvar} is a PARAMCD: 
+#' either AVAL, CHG, or BASE
+#' @param yvar Selected xy-axis 
+#' @param week_y Selected y-axis week if \code{yvar} is a PARAMCD
+#' @param value_y Selected y-axis value if \code{yvar} is a PARAMCD: 
+#' either AVAL, CHG, or BASE
+#' @param separate whether to facet plots by categorical or factor
+#' @param color whether to color plots by categorical or factor
+#' 
+#' @family popExp functions
+#' 
+IDEA_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y, separate = "NONE", color = "NONE") {
+  # x and y are numeric columns
+  if (yvar %in% colnames(data) & xvar %in% colnames(data)) {
+    if("AVISITN" %in% colnames(data)){
+      suppressWarnings(
+        d <- data %>%
+          filter(AVISITN == min(AVISITN, na.rm = TRUE)) %>%
+          select(USUBJID, xvar, yvar, one_of(color, separate)) %>%
+          distinct()
+      )
+    } else {
+      suppressWarnings(
+        d <- data %>%
+          select(USUBJID, xvar, yvar, one_of(color, separate)) %>%
+          distinct()
+      )
+    }
+    
+    p <- d %>%
+      ggplot2::ggplot() + 
+      ggplot2::aes_string(x = xvar, y = yvar) +
+      ggplot2::xlab(attr(data[[xvar]], 'label')) + 
+      ggplot2::ylab(attr(data[[yvar]], 'label')) +
+      ggplot2::geom_point(na.rm = T)
+    var_title <- paste(attr(data[[yvar]], 'label'), "versus", attr(data[[xvar]], 'label'))
+    
+    # y numeric, x is paramcd 
+  } else if (yvar %in% colnames(data) & !xvar %in% colnames(data)) {
+    d <- data %>% dplyr::filter(PARAMCD == xvar) 
+    if(xvar != "HEIGHT"){ d <- d %>% filter(AVISIT == week_x) }
+    suppressWarnings(
+      d <- d %>%
+        dplyr::select(USUBJID, PARAM, PARAMCD, AVISIT, value_x, yvar, one_of(color, separate)) %>%
+        dplyr::distinct()
+    )
+    var_title <- paste(attr(data[[yvar]], 'label'), "versus", unique(d$PARAM), "at", week_x)
+    p <- d %>%
+      ggplot2::ggplot() +
+      ggplot2::aes_string(x = value_x, y = yvar) +
+      ggplot2::xlab(
+        glue::glue("{unique(d$PARAM)}: {week_x} ({attr(data[[value_x]], 'label')})")
+      ) +
+      ggplot2::ylab(attr(data[[yvar]], 'label')) +
+      ggplot2::geom_point(na.rm = T)
+    
+    
+    # x numeric, y paramcd
+  } else if (!yvar %in% colnames(data) & xvar %in% colnames(data)) {
+    
+    d <- data %>% dplyr::filter(PARAMCD == yvar)
+    if(yvar != "HEIGHT"){ d <- d %>% filter(AVISIT == week_y) }
+    suppressWarnings(
+      d <- d %>%
+        dplyr::select(USUBJID, PARAM, PARAMCD, AVISIT, value_y, xvar, one_of(color, separate)) %>%
+        dplyr::distinct()
+    )
+    var_title <- paste(unique(d$PARAM), "at", week_y, "versus", attr(data[[xvar]], 'label'))
+    p <- d %>%
+      ggplot2::ggplot() +
+      ggplot2::aes_string(x = xvar, y = value_y) +
+      ggplot2::xlab(attr(data[[xvar]], 'label')) + 
+      ggplot2::ylab(
+        glue::glue("{unique(d$PARAM)}: {week_y} ({attr(data[[value_y]], 'label')})")
+      ) +
+      ggplot2::geom_point(na.rm = T)
+    
+    # both paramcds
+  } else {
+    
+    # Build plot data for y variable
+    y_data <- data %>% dplyr::filter(PARAMCD == yvar)
+    if(yvar != "HEIGHT"){ y_data <- y_data %>% filter(AVISIT == week_y) }
+    
+    suppressWarnings(  
+      y_dat <- y_data %>%
+        dplyr::select(USUBJID, PARAMCD, value_y, one_of(color, separate)) %>%
+        tidyr::pivot_wider(names_from = PARAMCD, values_from = value_y) %>%
+        tidyr::unnest(yvar)
+    )
+    y_dat <- y_dat[colSums(!is.na(y_dat)) > 0]
+    
+    # Build plot data for x variable
+    x_data <-  data %>% dplyr::filter(PARAMCD == xvar)
+    if(xvar != "HEIGHT"){ x_data <- x_data %>% filter(AVISIT == week_x) }
+    
+    suppressWarnings(
+      x_dat <- x_data %>%
+        dplyr::select(USUBJID, PARAMCD, value_x, one_of(color, separate)) %>%
+        tidyr::pivot_wider(names_from = PARAMCD, values_from = value_x) %>%
+        tidyr::unnest(xvar)
+    )
+    x_dat <- x_dat[colSums(!is.na(x_dat)) > 0]
+    
+    var_title <- paste(unique(y_data$PARAM),"versus", unique(x_data$PARAM))
+    suppressMessages(
+      p <-
+        y_dat %>%
+        inner_join(x_dat) %>%
+        ggplot2::ggplot() +
+        ggplot2::aes_string(x = xvar, y = yvar) +
+        ggplot2::xlab(
+          glue::glue("{unique(x_data$PARAM)}: {week_x} ({attr(data[[value_x]], 'label')})")
+        ) + 
+        ggplot2::ylab(
+          glue::glue("{unique(y_data$PARAM)}: {week_y} ({attr(data[[value_y]], 'label')})")
+        ) +
+        ggplot2::geom_point(na.rm = T)
+    )
+  }
+  
+  by_title <- case_when(
+    separate != "NONE" & color != "NONE" ~ paste("\nby", attr(data[[color]], "label"), "and", attr(data[[separate]], "label")),
+    separate != "NONE" ~ paste("\nby", attr(data[[separate]], "label")),
+    color != "NONE" ~ paste("\nby", attr(data[[color]], "label")), 
+    TRUE ~ ""
+  )
+  p <- p + 
+    ggplot2::theme_bw() +
+    theme(
+      text = element_text(size = 12),
+      axis.text = element_text(size = 12),
+      plot.title = element_text(size = 16)
+    ) +
+    ggplot2::ggtitle(paste(var_title, by_title)
+                     # ,subtitle = paste(by_title) # plotly won't automatically accept this
+    )
+  if (separate != "NONE") { p <- p + ggplot2::facet_wrap(as.formula(paste(".~", separate))) }
+  if (color != "NONE") { p <- p + ggplot2::aes_string(color = color)}
+  if (by_title != "") {
+    p <- p + theme(plot.margin = margin(t = 1.2, unit = "cm")
+                   # ,axis.title.y = element_text(margin = margin(t = 0, r = 20, b = 0, l = 0))
+    )
+  }
+  
+  return(p)
+}
