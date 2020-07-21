@@ -111,5 +111,6 @@ utils::globalVariables(c(
   "advs",
   "adae",
   "adlbc",
-  "warn"
+  "warn",
+  "dy_min"
 ))
