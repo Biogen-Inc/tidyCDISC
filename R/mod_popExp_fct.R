@@ -1,6 +1,6 @@
-#' Refactor common variables by their "N" counterparts
+#' Refactor variables
 #'
-#' Neat trick to first set the selected choice to "0", then to character(0)
+#' Refactor variables by their common "N" counterparts
 #' 
 #' @param data A data frames
 #' @param varc A character vector of variables names with character values
@@ -9,6 +9,8 @@
 #' @import dplyr
 #' @importFrom data.table := 
 #' @importFrom forcats fct_reorder
+#' 
+#' @family popExp Functions
 #' 
 refact <- function(data, varc, varn) {
   datac <- deparse(substitute(data))
@@ -32,28 +34,37 @@ refact <- function(data, varc, varn) {
 #' @param points \code{logical} whether to add a jitter to the plot
 #' 
 #' @family popExp Functions
-
+#' 
 IDEA_boxplot <- function(data, yvar, group, value = NULL, points = FALSE) {
   
+  # BDS Parameter not selected
   if (yvar %in% colnames(data)) {
+    
+    # initialize plot
     p <- ggplot2::ggplot(data) + 
       ggplot2::aes_string(x = group, y = yvar) +
       ggplot2::ylab(attr(data[[yvar]], "label"))
     
+    # initialize title with variable of interst
     var_title <- paste(attr(data[[yvar]], 'label'), "by", attr(data[[group]], "label"))
-    
+  
+  # BDS Param selected
   } else {
+    # Filter data on PARAMCD
     d <- data %>% dplyr::filter(PARAMCD == yvar)
     
+    # Initialize title with variable selected
     var_label <- paste(unique(d$PARAM))
     var_title <- paste(var_label, "by", attr(data[[group]], "label"))
     
+    # Initialize plot
     p <- d %>%
       ggplot2::ggplot() +
       ggplot2::aes_string(x = group, y = value) +
       ggplot2::ylab(glue::glue("{var_label} ({attr(data[[value]], 'label')})"))
   }
   
+  # Add layer of common plot elements
   p <- p + 
     ggplot2::geom_boxplot() +
     ggplot2::xlab("") +
@@ -63,8 +74,9 @@ IDEA_boxplot <- function(data, yvar, group, value = NULL, points = FALSE) {
                    plot.title = element_text(size = 16)) +
     ggplot2::ggtitle(var_title)
     
-  
+  # Conditionally add jittered points to plot
   if (points) { p <- p + ggplot2::geom_jitter() }
+  
   return(p)
 }
 
@@ -88,10 +100,12 @@ IDEA_boxplot <- function(data, yvar, group, value = NULL, points = FALSE) {
 #' 
 #' @family popExp functions
 #' 
-
 IDEA_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y, separate = "NONE", color = "NONE") {
+  # ---------------------------
   # x and y are numeric columns
   if (yvar %in% colnames(data) & xvar %in% colnames(data)) {
+    
+    # If not displaying param var, but a BDS data set is loaded, filter to the first visit
     if("AVISITN" %in% colnames(data)){
       suppressWarnings(
         d <- data %>%
@@ -99,7 +113,7 @@ IDEA_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y,
           select(USUBJID, xvar, yvar, one_of(color, separate)) %>%
           distinct()
       )
-    } else {
+    } else { # otherwise, no need to filter
       suppressWarnings(
         d <- data %>%
           select(USUBJID, xvar, yvar, one_of(color, separate)) %>%
@@ -107,24 +121,38 @@ IDEA_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y,
       )
     }
     
+    # Initialize plot
     p <- d %>%
       ggplot2::ggplot() + 
       ggplot2::aes_string(x = xvar, y = yvar) +
       ggplot2::xlab(attr(data[[xvar]], 'label')) + 
       ggplot2::ylab(attr(data[[yvar]], 'label')) +
-      ggplot2::geom_point(na.rm = T)
-    var_title <- paste(attr(data[[yvar]], 'label'), "versus", attr(data[[xvar]], 'label'))
+      ggplot2::geom_point(na.rm = TRUE)
     
-    # y numeric, x is paramcd 
+    # Initialize title of variables plotted
+    var_title <- paste(attr(data[[yvar]], 'label'), "versus", attr(data[[xvar]], 'label'))
+  
+  # --------------------------- 
+  # y numeric, x is paramcd 
   } else if (yvar %in% colnames(data) & !xvar %in% colnames(data)) {
+    
+    # Filter data by param selected
     d <- data %>% dplyr::filter(PARAMCD == xvar) 
+    
+    # If yvar is HEIGHT, then don't filter by AVISIT
     if(xvar != "HEIGHT"){ d <- d %>% filter(AVISIT == week_x) }
+    
+    # select the variables that matter, and get distinct rows to duplicate points aren't plotted
     suppressWarnings(
       d <- d %>%
         dplyr::select(USUBJID, PARAM, PARAMCD, AVISIT, value_x, yvar, one_of(color, separate)) %>%
         dplyr::distinct()
     )
+    
+    # Initialize title of variables plotted
     var_title <- paste(attr(data[[yvar]], 'label'), "versus", unique(d$PARAM), "at", week_x)
+    
+    # initialize plot
     p <- d %>%
       ggplot2::ggplot() +
       ggplot2::aes_string(x = value_x, y = yvar) +
@@ -132,20 +160,29 @@ IDEA_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y,
         glue::glue("{unique(d$PARAM)}: {week_x} ({attr(data[[value_x]], 'label')})")
       ) +
       ggplot2::ylab(attr(data[[yvar]], 'label')) +
-      ggplot2::geom_point(na.rm = T)
-    
-    
-    # x numeric, y paramcd
+      ggplot2::geom_point(na.rm = TRUE)
+
+  # --------------------------- 
+  # x numeric, y paramcd
   } else if (!yvar %in% colnames(data) & xvar %in% colnames(data)) {
     
+    # Filter data by param selected
     d <- data %>% dplyr::filter(PARAMCD == yvar)
+    
+    # If yvar is HEIGHT, then don't filter by AVISIT
     if(yvar != "HEIGHT"){ d <- d %>% filter(AVISIT == week_y) }
+    
+    # select the variables that matter, and get distinct rows to duplicate points aren't plotted
     suppressWarnings(
       d <- d %>%
         dplyr::select(USUBJID, PARAM, PARAMCD, AVISIT, value_y, xvar, one_of(color, separate)) %>%
         dplyr::distinct()
     )
+    
+    # Initialize title of variables plotted
     var_title <- paste(unique(d$PARAM), "at", week_y, "versus", attr(data[[xvar]], 'label'))
+    
+    # initialize plot
     p <- d %>%
       ggplot2::ggplot() +
       ggplot2::aes_string(x = xvar, y = value_y) +
@@ -153,36 +190,46 @@ IDEA_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y,
       ggplot2::ylab(
         glue::glue("{unique(d$PARAM)}: {week_y} ({attr(data[[value_y]], 'label')})")
       ) +
-      ggplot2::geom_point(na.rm = T)
-    
-    # both paramcds
+      ggplot2::geom_point(na.rm = TRUE)
+  
+  # ---------------------------
+  # both paramcds
   } else {
     
     # Build plot data for y variable
     y_data <- data %>% dplyr::filter(PARAMCD == yvar)
+    
+    # If yvar is HEIGHT, then don't filter by AVISIT
     if(yvar != "HEIGHT"){ y_data <- y_data %>% filter(AVISIT == week_y) }
 
+    # Select the variables that matter and pivot aval into new column
     suppressWarnings(  
       y_dat <- y_data %>%
         dplyr::select(USUBJID, PARAMCD, value_y, one_of(color, separate)) %>%
         tidyr::pivot_wider(names_from = PARAMCD, values_from = value_y) %>%
-        tidyr::unnest(yvar)
+        tidyr::unnest(yvar) %>% # if their are more than 1 AVAL per Patient, per Visit
+        select_if(~!all(is.na(.))) # remove NA cols
     )
-    y_dat <- y_dat[colSums(!is.na(y_dat)) > 0]
     
     # Build plot data for x variable
     x_data <-  data %>% dplyr::filter(PARAMCD == xvar)
+    
+    # If yvar is HEIGHT, then don't filter by AVISIT
     if(xvar != "HEIGHT"){ x_data <- x_data %>% filter(AVISIT == week_x) }
 
+    # Select the variables that matter and pivot aval into new column
     suppressWarnings(
       x_dat <- x_data %>%
         dplyr::select(USUBJID, PARAMCD, value_x, one_of(color, separate)) %>%
         tidyr::pivot_wider(names_from = PARAMCD, values_from = value_x) %>%
-        tidyr::unnest(xvar)
+        tidyr::unnest(xvar) %>% # if their are more than 1 AVAL per Patient, per Visit
+        select_if(~!all(is.na(.))) # remove NA cols
     )
-    x_dat <- x_dat[colSums(!is.na(x_dat)) > 0]
     
+    # Initialize title of variables plotted
     var_title <- paste(unique(y_data$PARAM),"versus", unique(x_data$PARAM))
+    
+    # initialize plot
     suppressMessages(
       p <-
         y_dat %>%
@@ -195,16 +242,19 @@ IDEA_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y,
         ggplot2::ylab(
           glue::glue("{unique(y_data$PARAM)}: {week_y} ({attr(data[[value_y]], 'label')})")
         ) +
-        ggplot2::geom_point(na.rm = T)
+        ggplot2::geom_point(na.rm = TRUE)
     )
   }
   
+  # if separate or color used, include those "by" variables in title
   by_title <- case_when(
     separate != "NONE" & color != "NONE" ~ paste("\nby", attr(data[[color]], "label"), "and", attr(data[[separate]], "label")),
     separate != "NONE" ~ paste("\nby", attr(data[[separate]], "label")),
     color != "NONE" ~ paste("\nby", attr(data[[color]], "label")), 
     TRUE ~ ""
   )
+  
+  # Add plot layers common to all graphs
   p <- p + 
     ggplot2::theme_bw() +
     theme(
@@ -215,16 +265,16 @@ IDEA_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y,
     ggplot2::ggtitle(paste(var_title, by_title)
                      # ,subtitle = paste(by_title) # plotly won't automatically accept this
     )
+  
+  # Add in plot layers conditional upon user selection
   if (separate != "NONE") { p <- p + ggplot2::facet_wrap(as.formula(paste(".~", separate))) }
   if (color != "NONE") { p <- p + ggplot2::aes_string(color = color)}
-  if (by_title != "") {
-    p <- p + theme(plot.margin = margin(t = 1.2, unit = "cm")
-                   # ,axis.title.y = element_text(margin = margin(t = 0, r = 20, b = 0, l = 0))
-                  )
-    }
+  if (by_title != "") {p <- p + theme(plot.margin = margin(t = 1.2, unit = "cm"))}
   
   return(p)
 }
+
+
 
 #' IDEA spaghetti plot
 #' 
@@ -242,19 +292,26 @@ IDEA_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y,
 #' @family popExp Functions
 IDEA_spaghettiplot <- function(data, yvar, time, value = NULL) {
   if (yvar %in% colnames(data)) {
+    
+    # initialize plot
     p <- ggplot2::ggplot(data) + 
       ggplot2::aes_string(x = time, y = yvar, group = "USUBJID") +
       ggplot2::ylab(attr(data[[yvar]], "label")) +
       ggplot2::xlab(attr(data[[time]], "label"))
     
+    # initialize title with variables plotted
     var_title <- paste(attr(data[[yvar]], 'label'), "by", attr(data[[time]], "label"))
     
   } else {
+    
+    # Filter data based on param var selected
     d <- data %>% dplyr::filter(PARAMCD == yvar) 
     
+    # initialize title with variables plotted
     var_label <- paste(unique(d$PARAM))
     var_title <- paste(var_label, "by", attr(data[[time]], "label"))
     
+    # initialize plot
     p <- d %>%
       ggplot2::ggplot() +
       ggplot2::aes_string(x = time, y = value, group = "USUBJID")  +
@@ -264,9 +321,10 @@ IDEA_spaghettiplot <- function(data, yvar, time, value = NULL) {
       ggplot2::xlab(attr(data[[time]], "label"))
   }
   
+  # Add common layers to plot
   p <- p + 
     ggplot2::geom_line() +
-    ggplot2::geom_point() +
+    ggplot2::geom_point(na.rm = TRUE) +
     ggplot2::theme_bw() +
     ggplot2::theme(text = element_text(size = 12),
                    axis.text = element_text(size = 12),

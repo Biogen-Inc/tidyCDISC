@@ -70,7 +70,6 @@ spaghettiPlot_srv <- function(input, output, session, data) {
       seltime <- data() %>%
         dplyr::filter(PARAMCD == input$yvar) %>% # subset data
         select_if(~!all(is.na(.))) %>%
-        #seltime <- seltime_dat[colSums(!is.na(seltime_dat)) > 0] %>% # remove NA cols
         dplyr::select(ends_with("DY"), contains("VIS")) %>% # grab time vars remaining
         colnames() %>% sort()
     } else {
