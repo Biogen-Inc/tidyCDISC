@@ -2,7 +2,8 @@
 # To deploy, run: rsconnect::deployApp()
 # Or use the blue button on top of this file
 
-pkgload::load_all(helpers = FALSE,attach_testthat = FALSE)
+pkgload::load_all(helpers = FALSE,attach_testthat = FALSE) # export_all = FALSE,
 options( "golem.app.prod" = TRUE)
 options(shiny.sanitize.errors = FALSE)
+# rsconnect::writeManifest() # ac added
 IDEA::run_app() # add parameters here (if any)
