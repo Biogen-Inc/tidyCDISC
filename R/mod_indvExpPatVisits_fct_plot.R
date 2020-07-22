@@ -83,7 +83,7 @@ fnIndvExplVisits <- function(
     
     prm   <- unique(plot_dat$PARAM)
     
-    if(input_plot_adam == c("ADLB","ADLBC") &
+    if(input_plot_adam %in% c("ADLB","ADLBC") &
        all(c("LBSTNRLO","LBSTNRHI") %in% colnames(plot_dat))){
       lohi <- paste("LO:",unique(plot_dat$LBSTNRLO),"HI:",unique(plot_dat$LBSTNRHI))
     }
@@ -183,7 +183,7 @@ fnIndvExplVisits <- function(
     
     
     # plot vlines using events dataset
-    if(length(input_overlay_events) > 0 & input_visit_var %in% vv_dy_name){ #& "ADLB" %in% loaded_adams() # overlay checkbox won't appear unless this is true
+    if(length(input_overlay_events) > 0 & input_visit_var %in% vv_dy_name){ #& any(c("ADLB","ADLBC") %in% loaded_adams()) # overlay checkbox won't appear unless this is true
       if (!is.null(vline_dat)){
         if(nrow(vline_dat) > 0){
           
