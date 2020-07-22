@@ -30,7 +30,7 @@ np <- length(paramcds)
 # pat <- dat$USUBJID[1]
 # study <- sub("\\/.*", "", dat$USUBJID[1])
 print_report_summary <- !is.na(params$report_summary)
-print_user_notes <- (!is.na(params$user_notes) & !is_null(params$user_notes) & params$user_notes != "")
+print_user_notes <- (!is.na(params$user_notes) & !rlang::is_null(params$user_notes) & params$user_notes != "")
 progress$inc(1) # second increment - after libraries & light data work
 ```
 
