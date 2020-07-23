@@ -1,4 +1,4 @@
-#' IDEA scatterplot
+#' tidyCDISC scatterplot
 #' 
 #' Create scatter plot where if the variables are numeric then they
 #' are plotted, and if they are PARAMCD's then a week and value 
@@ -20,7 +20,7 @@
 #' 
 #' @family popExp functions
 #' 
-IDEA_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y, separate = "NONE", color = "NONE") {
+CDISC_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y, separate = "NONE", color = "NONE") {
   # ---------------------------
   # x and y are numeric columns
   if (yvar %in% colnames(data) & xvar %in% colnames(data)) {

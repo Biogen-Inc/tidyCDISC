@@ -1,4 +1,4 @@
-#' IDEA boxplot
+#' tidyCDISC boxplot
 #' 
 #' Create boxplot using either the selected response variable
 #' or if a PARAMCD is selected, then plot the corresponding value
@@ -13,7 +13,7 @@
 #' 
 #' @family popExp Functions
 #' 
-IDEA_boxplot <- function(data, yvar, group, value = NULL, points = FALSE) {
+CDISC_boxplot <- function(data, yvar, group, value = NULL, points = FALSE) {
   
   # BDS Parameter not selected
   if (yvar %in% colnames(data)) {

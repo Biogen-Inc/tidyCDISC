@@ -1,19 +1,18 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-IDEA
-====
 
-The purpose of IDEA is a shiny app to easily create custom tables and figures from ADaM datasets.
+# tidyCDISC
 
-Installation
-============
+The purpose of tidyCDISC is a shiny app to easily create custom tables
+and figures from ADaM datasets.
+
+# Installation
 
 ``` r
-remotes::install_github("IDEA")
+remotes::install_github("tidyCDISC")
 ```
 
-Use Case
-========
+# Use Case
 
 Using the dev/run\_dev.R file, you can run the application locally:
 

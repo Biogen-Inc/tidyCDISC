@@ -17,13 +17,13 @@ a help buttom
 }
 \seealso{
 Other tableGen Functions: 
-\code{\link{IDEA_anova}()},
-\code{\link{IDEA_chg}()},
-\code{\link{IDEA_freq}()},
-\code{\link{IDEA_mean.ADSL}()},
-\code{\link{IDEA_mean.BDS}()},
-\code{\link{IDEA_mean}()},
-\code{\link{IDEA_methods}()},
+\code{\link{CDISC_anova}()},
+\code{\link{CDISC_chg}()},
+\code{\link{CDISC_freq}()},
+\code{\link{CDISC_mean.ADSL}()},
+\code{\link{CDISC_mean.BDS}()},
+\code{\link{CDISC_mean}()},
+\code{\link{CDISC_methods}()},
 \code{\link{convertTGOutput}()},
 \code{\link{custom_class}()},
 \code{\link{dropArea}()},

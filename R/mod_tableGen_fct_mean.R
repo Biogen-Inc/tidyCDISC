@@ -12,15 +12,15 @@
 #' 
 #' @family tableGen Functions
 #' 
-IDEA_mean <- function(column, week, group, data) {
-  UseMethod("IDEA_mean", column)
+CDISC_mean <- function(column, week, group, data) {
+  UseMethod("CDISC_mean", column)
 }
 
 
 #' @return NULL
-#' @rdname IDEA_mean
+#' @rdname CDISC_mean
 #' @family tableGen Functions
-IDEA_mean.default <- function(column, week, group, data) {
+CDISC_mean.default <- function(column, week, group, data) {
   rlang::abort(glue::glue(
     "Can't calculate mean because data is not classified as ADLB, BDS or OCCDS",
   ))
@@ -42,7 +42,7 @@ IDEA_mean.default <- function(column, week, group, data) {
 #' @param data the data to use 
 #' 
 #' @family tableGen Functions
-IDEA_mean.ADSL <- function(column, week, group = NULL, data) {
+CDISC_mean.ADSL <- function(column, week, group = NULL, data) {
   
   column <- as.character(column)
   
@@ -81,7 +81,7 @@ IDEA_mean.ADSL <- function(column, week, group = NULL, data) {
 #' @param data the data to use 
 #' 
 #' @family tableGen Functions
-IDEA_mean.BDS <- function(column, week, group = NULL, data) {
+CDISC_mean.BDS <- function(column, week, group = NULL, data) {
   
   column <- as.character(column)
   
@@ -111,20 +111,20 @@ IDEA_mean.BDS <- function(column, week, group = NULL, data) {
 }
 
 #' @return NULL
-#' @rdname IDEA_mean
+#' @rdname CDISC_mean
 #' 
 #' @family tableGen Functions
-IDEA_mean.OCCDS <- function(column, week = NULL, group, data) {
+CDISC_mean.OCCDS <- function(column, week = NULL, group, data) {
   rlang::abort(glue::glue(
     "Currently no method to perform summary statistics on OCCDS"
   ))
 }
 
 #' @return NULL
-#' @rdname IDEA_mean
+#' @rdname CDISC_mean
 #' 
 #' @family tableGen Functions
-IDEA_mean.custom <- function(column, week = NULL, group, data) {
+CDISC_mean.custom <- function(column, week = NULL, group, data) {
   rlang::abort(glue::glue(
     "Can't calculate mean, data is not classified as ADLB, BDS or OCCDS"
   ))
