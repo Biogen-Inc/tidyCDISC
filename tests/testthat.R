@@ -1,5 +1,5 @@
 library(testthat)
-library(IDEA)
+library(tidyCDISC)
 library(shinyjs)
 
 test_check("IDEA")
