@@ -16,8 +16,8 @@ Prepare Individual Explorer Tab with some of the basics
 }
 \seealso{
 Other popExp Functions: 
-\code{\link{IDEA_boxplot}()},
-\code{\link{IDEA_spaghettiplot}()},
+\code{\link{CDISC_boxplot}()},
+\code{\link{CDISC_spaghettiplot}()},
 \code{\link{boxPlot_srv}()},
 \code{\link{boxPlot_ui}()},
 \code{\link{mod_popExp_ui}()},

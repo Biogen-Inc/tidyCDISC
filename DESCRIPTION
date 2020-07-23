@@ -1,12 +1,13 @@
-Package: IDEA
-Title: IDEA: Quick Exploratory Data Analyses on ADaM-ish Datasets
+Package: tidyCDISC
+Title: tidyCDISC: Quick Exploratory Data Analyses on ADaM-ish Datasets
 Version: 0.0.0.9000
 Authors@R: as.person(c(
     "Maya Gans <maya.gans@biogen.com> [aut, cre]", 
     "Aaron Clark <aaron.clark@biogen.com> [aut]",
-    "Robert Krajcik <robert.krajcik@biogen.com> [aut]"
+    "Robert Krajcik <robert.krajcik@biogen.com> [aut]",
+    "Nate Mockler <nate.mockler@biogen.com> [aut]"
   ))
-Description: The IDEA application relies on sas7bdat files in the ADaM-ish data structure to provide users a quick exploratory dive into common visualizations without writing a sinlge line of code. Prominent modules/ features of the application are the Table Generator, Population Explorer, and the Individual Explorer. The Table Generator allows users to drag and drop variables and desired statistics (frequencies, means, Anova, t-test, and other summary statistics) into bins that automagically create stunning tables with validated information. The Population Explorer offers various plots to visualize general trends in the population from various vantage points. Plot modules currently include scatter plot, spaghetti plot, box plot, historgram, means plot, and bar plot. Each plot type allows the user to plot uploaded variables against one another, and dissect the population by filtering out certain subjects. Last, the Individual Explorer establishes a cohesive patient narrative, allowing the user to interact with patient metrics (params) by visit or plotting important patient events on a timeline. All modules allow for concise filtering & downloading bulk outputs into html or pdf formats to save for later.
+Description: The tidyCDISC application relies on sas7bdat files in the ADaM-ish data structure to provide users a quick exploratory dive into common visualizations without writing a sinlge line of code. Prominent modules/ features of the application are the Table Generator, Population Explorer, and the Individual Explorer. The Table Generator allows users to drag and drop variables and desired statistics (frequencies, means, Anova, t-test, and other summary statistics) into bins that automagically create stunning tables with validated information. The Population Explorer offers various plots to visualize general trends in the population from various vantage points. Plot modules currently include scatter plot, spaghetti plot, box plot, historgram, means plot, and bar plot. Each plot type allows the user to plot uploaded variables against one another, and dissect the population by filtering out certain subjects. Last, the Individual Explorer establishes a cohesive patient narrative, allowing the user to interact with patient metrics (params) by visit or plotting important patient events on a timeline. All modules allow for concise filtering & downloading bulk outputs into html or pdf formats to save for later.
 License: MIT + file LICENSE
 Imports: 
     config,
@@ -50,13 +51,12 @@ Imports:
     tidyselect,
     broom,
     pkgload,
-    rsconnect (>= 0.8.16.9001),
-    V8
+    rsconnect (>= 0.8.16.9001)
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1
 URL: https://cloudhub.corp.biogen.com/biometrics/SEER
-BugReports: https://cloudhub.corp.biogen.com/biometrics/SEER/issues
+BugReports: https://github.com/MayaGans/tidyCDISC
 Suggests: 
     testthat,
     lazyeval,

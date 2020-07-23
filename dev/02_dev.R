@@ -54,7 +54,6 @@ usethis::use_package("cicerone")
 usethis::use_package("glue")
 usethis::use_package("lazyeval",type="Suggests")
 usethis::use_package("scales",type = "Suggests")
-usethis::use_package("V8")
 usethis::use_pipe()
 
 

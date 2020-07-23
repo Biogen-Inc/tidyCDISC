@@ -1,35 +1,3 @@
-Skip to content
-Search or jump to…
-
-Pull requests
-Issues
-Marketplace
-Explore
-
-@MayaGans 
-MayaGans
-/
-  tidyCDISC
-Private
-2
-0
-0
-Code
-Issues
-Pull requests
-Actions
-Projects
-Security
-Insights
-Settings
-tidyCDISC/manifest.json
-@MayaGans
-MayaGans adding aarons v8 req
-Latest commit 8b75bb8 7 hours ago
-History
-1 contributor
-5196 lines (5196 sloc)  320 KB
-
 {
   "version": 1,
   "locale": "en_US",
@@ -4195,7 +4163,7 @@ History
       "checksum": "ebcc56144abaa5f7e0c57dcf20d0f87d"
     },
     "app.R": {
-      "checksum": "4e39a6860c096afcafc3530f60e61416"
+      "checksum": "cf0480fce43cf72098b6ad9a512493ff"
     },
     "CODE_OF_CONDUCT.md": {
       "checksum": "2e8c60771c15eeca105d658c3523b2af"
@@ -4237,13 +4205,13 @@ History
       "checksum": "61efa82920fa062e23d6215dfbdb74be"
     },
     "DESCRIPTION": {
-      "checksum": "15031a08cbc6d1541c6f6e833b675049"
+      "checksum": "179c29284f633effc3808ee6bb41559e"
     },
     "dev/01_start.R": {
       "checksum": "6992ea42b2ce8c44c53dd72e75724aac"
     },
     "dev/02_dev.R": {
-      "checksum": "afd71d0bccfe34a9ad7a22c56fa6218c"
+      "checksum": "fb953f10ecf22473de1ef8d0152037d8"
     },
     "dev/03_deploy.R": {
       "checksum": "7b413fcf3e7273e8b80cb6971b2190a4"
@@ -4276,7 +4244,7 @@ History
       "checksum": "deef254862ca7318d0738e95d6fac2b0"
     },
     "inst/app/www/recipe2.js": {
-      "checksum": "9cc5a3213d6585aa2dfa2ad86abb01ae"
+      "checksum": "b293d8a542c8ffd5478b8d5559617e94"
     },
     "inst/app/www/red_x.png": {
       "checksum": "71ee35ce4c01cb0435f41f91f646eac6"
@@ -4315,10 +4283,10 @@ History
       "checksum": "ee89343a9e63fa9a668a57d8698f7fad"
     },
     "man/boxPlot_srv.Rd": {
-      "checksum": "4fa39e29c5bd452b376694f66204c3ae"
+      "checksum": "f8b3b8405da51ea260b93b0bba8746b2"
     },
     "man/boxPlot_ui.Rd": {
-      "checksum": "60e94874844c886195fa995c24e31f1a"
+      "checksum": "f9ee044790122d649663702f28781987"
     },
     "man/build_events.Rd": {
       "checksum": "38d15da06bc8d975d2d6d0cde2b9c4ed"
@@ -4374,11 +4342,17 @@ History
     "man/guide_ind_exp_visits_blank.Rd": {
       "checksum": "cef960d45b04942d80eb25d9eedeac6b"
     },
+    "man/guide_popex.Rd": {
+      "checksum": "0841c6dc78ed6bbb2879bf298dab56a5"
+    },
+    "man/guide_popex_sel_adv.Rd": {
+      "checksum": "593bde15b15bbac93832f847a04332e6"
+    },
     "man/IDEA_anova.Rd": {
       "checksum": "a08efe2be94e43fe20593914cd2969fc"
     },
     "man/IDEA_boxplot.Rd": {
-      "checksum": "3d2b720135da93e3f9d9312d2660777a"
+      "checksum": "85d7fde9fcfb0eb466c4c58da8a8e9ef"
     },
     "man/IDEA_chg.Rd": {
       "checksum": "92d328a52ad7b9be361fe7b3caf5fede"
@@ -4402,7 +4376,7 @@ History
       "checksum": "14bc72893a23d97987e30cf004fbd4ee"
     },
     "man/IDEA_spaghettiplot.Rd": {
-      "checksum": "568f0056dde2cc4ed6bc76d196f486bb"
+      "checksum": "b7b9102476a5955f9ee9a595de7625b0"
     },
     "man/mean_summary.Rd": {
       "checksum": "a7891c15b753d65b3ad75f16e6e708b7"
@@ -4441,10 +4415,10 @@ History
       "checksum": "90ab757e94ac6a82f19479ca0150b840"
     },
     "man/mod_popExp_server.Rd": {
-      "checksum": "76ccce82f1762fc6dea39b339035e9e3"
+      "checksum": "e9259f212d5297e3ad6596de4e4856f8"
     },
     "man/mod_popExp_ui.Rd": {
-      "checksum": "557156148ef5b5006e65e0c8fa7a7a24"
+      "checksum": "971cb8a2156843baff4a2245a1731011"
     },
     "man/mod_tableGen_server.Rd": {
       "checksum": "36b2ea224844fb3826535e2c04cc6cda"
@@ -4468,7 +4442,7 @@ History
       "checksum": "8ef53998943cdff35c5987b70ceb7884"
     },
     "man/refact.Rd": {
-      "checksum": "0720c60afd2bd0f2cdfeb42688c733d5"
+      "checksum": "929e42dafeb5efd3fc34826db73a3fd1"
     },
     "man/rowArea.Rd": {
       "checksum": "da957ffcc509da02ace62dcb6b66893c"
@@ -4483,16 +4457,16 @@ History
       "checksum": "7a396c0f003ae12fe3889dfc297a7d75"
     },
     "man/scatterPlot_srv.Rd": {
-      "checksum": "02fc612c1ca7dfa1728682cd5219d70f"
+      "checksum": "dace487fdac226d0cb66a9678b6e73ed"
     },
     "man/scatterPlot_ui.Rd": {
-      "checksum": "3375f33dbd962d3f371f18cc1c01056d"
+      "checksum": "2945746e05dcc08767ee6c9675413fea"
     },
     "man/spaghettiPlot_srv.Rd": {
-      "checksum": "628becc29804ecbcf879d8c0245dbec6"
+      "checksum": "1b59f2e03b928329caa17ffb66e6769c"
     },
     "man/spaghettiPlot_ui.Rd": {
-      "checksum": "83a20285ba2d5a3a6a5219183b15f2fc"
+      "checksum": "acdcbdf27824038d9fe5917b13b9e0df"
     },
     "man/tg_data.Rd": {
       "checksum": "c09a29c5ccb348311298cf237481d38a"
@@ -4504,7 +4478,7 @@ History
       "checksum": "ba5f6fe66141ebcc5508500a0aba8d10"
     },
     "NAMESPACE": {
-      "checksum": "63002988c3fc8fed5f7726ce834124c2"
+      "checksum": "be127e61146ebb42d320966f5ae827c5"
     },
     "NEWS.md": {
       "checksum": "21f8e405477b1f0ed1d22ae9407c1f68"
@@ -4918,7 +4892,7 @@ History
       "checksum": "1ddb423777ca07376c047cdc25d544ae"
     },
     "R/app_ui.R": {
-      "checksum": "21494c17150feec41adf4be3887e7669"
+      "checksum": "04537717dfc0471b887a0384ff68793e"
     },
     "R/data-phuse_TDF_ADaM.R": {
       "checksum": "dd6bbb4ce77ce6a0f0ac5f8d75995dce"
@@ -4927,7 +4901,7 @@ History
       "checksum": "1629af3608d959eab0c488a890bcf34f"
     },
     "R/global.R": {
-      "checksum": "61e2a6b4dce5d0af777025fb6e8af796"
+      "checksum": "2d0388fbcc172194c9ecf41f8d139610"
     },
     "R/golem_utils_server.R": {
       "checksum": "9e1b215ed4fbce8f5176b982dad17bc8"
@@ -4939,16 +4913,16 @@ History
       "checksum": "704d86ffbdf003d4f7572608d14ebe47"
     },
     "R/mod_dataComply_fct_helpers.R": {
-      "checksum": "abfa92fbdf0d293128cd486d49dea663"
+      "checksum": "a47403dfc507fd97296862d9875761bd"
     },
     "R/mod_dataComplyRules.R": {
       "checksum": "e418bb8e3cea35522421c05e967dd79c"
     },
     "R/mod_dataComplyRules_fct_helpers.R": {
-      "checksum": "561fa196ee12bf3c49acf483126a5b61"
+      "checksum": "434e7e8f6474efba298c2d98495b8e53"
     },
     "R/mod_dataUpload.R": {
-      "checksum": "118e9bcd959603a544fdf9ed28f7ffd2"
+      "checksum": "5faa47e8c72ea41b400d4a2d73411bf6"
     },
     "R/mod_indvExp_fct_buildEvents.R": {
       "checksum": "66d6d526b3767fc5de25155e95fc45af"
@@ -4978,43 +4952,46 @@ History
       "checksum": "4a2ef27d498985fef1e2432e2e63c994"
     },
     "R/mod_popExp.R": {
-      "checksum": "fc0482aa07a8df0740aa873152ea3fb1"
+      "checksum": "faf5e32f43079b375670f6657ff98bc9"
     },
     "R/mod_popExp_boxplot.R": {
-      "checksum": "caab628f81421e3245db2924ec11ea4e"
+      "checksum": "fb91ac849067b34ddba1ecc454e1cfd2"
     },
     "R/mod_popExp_fct.R": {
-      "checksum": "73da2f6f4062aaa18c253f5ac0da5262"
+      "checksum": "82a0284b5d603c26fb9a5447128c1e0b"
     },
     "R/mod_popExp_scatter.R": {
-      "checksum": "83b7677943fa9e67ff8b3798604d3552"
+      "checksum": "daf1def06c35187428ebd321e0a9608f"
     },
     "R/mod_popExp_spaghetti.R": {
-      "checksum": "dcc3d1963841bdd73ea91e3993e553ef"
+      "checksum": "730959ec36da454ee64208cf368b7d6a"
     },
     "R/mod_popExp_ui.R": {
-      "checksum": "586603aea073034dc7c76843ecaa1b58"
+      "checksum": "acd2d2cc35834bf0b1880e81b25424bb"
+    },
+    "R/mod_popExp_utils.R": {
+      "checksum": "cc56abd502009cd9b0b34e751474e610"
     },
     "R/mod_selectData.R": {
-      "checksum": "441678f5eca7c7ef1c65806ebe272c40"
+      "checksum": "5ff77fa3b4d84afeaeafa910bbea01e5"
     },
     "R/mod_tableGen.R": {
-      "checksum": "5e0ae3a32d5c4975a1860b9dd5b951c1"
+      "checksum": "bd78781fb7b1221553038cecae4cd728"
     },
     "R/mod_tableGen_fct_anova.R": {
-      "checksum": "9a62cb4d8540862d9099f539ed7f830d"
+      "checksum": "cbbc0c8ae13e7694608f1ef0f0567c4c"
     },
     "R/mod_tableGen_fct_blocks.R": {
       "checksum": "f98a4b9067a8ad6de60a287780edcae3"
     },
     "R/mod_tableGen_fct_chg.R": {
-      "checksum": "87a2cea3c55833b61e3eb9bbd875713a"
+      "checksum": "45fcd8b0ce6bbfa6b5535d0abd8eba78"
     },
     "R/mod_tableGen_fct_freq.R": {
-      "checksum": "60a67fcae8a0f97d0ca5a15433a8e97e"
+      "checksum": "48a0eb8d127773d43ad7377604240764"
     },
     "R/mod_tableGen_fct_mean.R": {
-      "checksum": "74aeaa05fb2ce5813f56a1d49c0725d5"
+      "checksum": "741df06fbc8962505bb902110a9b78a1"
     },
     "R/mod_tableGen_fct_meanSummary.R": {
       "checksum": "66bda8b42fe42105eddfdbd439b29c23"
@@ -5023,7 +5000,7 @@ History
       "checksum": "96bd50e13be514022abb3ae72cc97648"
     },
     "R/mod_tableGen_ui.R": {
-      "checksum": "3ccf7b352980a67777209d1bb42bc640"
+      "checksum": "eafb26fd8a0aff6f58aeeab78d2a1653"
     },
     "R/mod_tableGen_utils.R": {
       "checksum": "dc24dcdf0af336fbaccd5cc6decb493d"
@@ -5074,7 +5051,7 @@ History
       "checksum": "5f6a61cda1e1ebe636ce14f51e777db9"
     },
     "tests/testthat/test-popExp_fct_scatterplot.R": {
-      "checksum": "b255be149713150ab68c6794844ea9b6"
+      "checksum": "427e625cc59a1e08b14090ac90432684"
     },
     "tests/testthat/test-popExp_fct_spaghettiplot.R": {
       "checksum": "9a24f01a4ffb790db9b0dfa026d66601"
@@ -5104,7 +5081,7 @@ History
       "checksum": "098e15f79a2c8c253739d00f0c92ef04"
     },
     "vignettes/dev_popExp_add_graph.Rmd": {
-      "checksum": "ceacf77b35d828ccbcac80c3f5cf15fb"
+      "checksum": "40839c78c3d381446da0372702b6ff54"
     },
     "vignettes/figures/IndvExp/01_dataUpload.PNG": {
       "checksum": "5503d8b1d7c7da5fc7900c6d2c613291"
@@ -5221,7 +5198,7 @@ History
       "checksum": "be16438f8ca9a0d54f22d355fece1628"
     },
     "vignettes/User_Guide_Indv_Expl.Rmd": {
-      "checksum": "36690a6c3f66d891abcfc85cf2800aa0"
+      "checksum": "f5b106906063b560d839a34a54cb277b"
     }
   },
   "users": null

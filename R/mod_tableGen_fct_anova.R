@@ -9,15 +9,15 @@
 #'
 #' @return an ANOVA table of grouped variables
 #' @family tableGen Functions
-IDEA_anova <- function(column, week, group, data) {
-  UseMethod("IDEA_anova", column)
+CDISC_anova <- function(column, week, group, data) {
+  UseMethod("CDISC_anova", column)
 }
 
 
 #' @return NULL
-#' @rdname IDEA_anova
+#' @rdname CDISC_anova
 #' @family tableGen Functions
-IDEA_anova.default <- function(column, week, group, data) {
+CDISC_anova.default <- function(column, week, group, data) {
   rlang::abort(glue::glue(
     "Can't calculate mean because data is not classified as ADLB, BDS or OCCDS",
   ))
@@ -30,9 +30,9 @@ IDEA_anova.default <- function(column, week, group, data) {
 #' @importFrom rlang sym !! 
 #' @import dplyr
 #' @return an ANOVA table of grouped variables
-#' @rdname IDEA_anova
+#' @rdname CDISC_anova
 #' @family tableGen Functions
-IDEA_anova.ADSL <- function(column, week, group = NULL, data) {
+CDISC_anova.ADSL <- function(column, week, group = NULL, data) {
   
   column <- as.character(column)
   
@@ -82,9 +82,9 @@ IDEA_anova.ADSL <- function(column, week, group = NULL, data) {
 #' @importFrom rlang sym !!
 #' @import dplyr
 #' @return an ANOVA table of grouped variables
-#' @rdname IDEA_anova
+#' @rdname CDISC_anova
 #' @family tableGen Functions
-IDEA_anova.BDS <- function(column, week, group = NULL, data) {
+CDISC_anova.BDS <- function(column, week, group = NULL, data) {
   
   column <- as.character(column)
   
@@ -128,9 +128,9 @@ IDEA_anova.BDS <- function(column, week, group = NULL, data) {
 }
 
 #' @return NULL
-#' @rdname IDEA_anova
+#' @rdname CDISC_anova
 #' @family tableGen Functions
-IDEA_anova.OCCDS <- function(column, week = NULL, group = NULL, data) {
+CDISC_anova.OCCDS <- function(column, week = NULL, group = NULL, data) {
   rlang::abort(glue::glue(
     "Currently no method to perform ANOVA on OCCDS"
   ))
@@ -138,9 +138,9 @@ IDEA_anova.OCCDS <- function(column, week = NULL, group = NULL, data) {
 
 
 #' @return NULL
-#' @rdname IDEA_anova
+#' @rdname CDISC_anova
 #' @family tableGen Functions
-IDEA_anova.custom <- function(column, week = NULL, group = NULL, data) {
+CDISC_anova.custom <- function(column, week = NULL, group = NULL, data) {
   rlang::abort(glue::glue(
     "Can't calculate ANOVA, data is not classified as ADLB, BDS or OCCDS"
   ))

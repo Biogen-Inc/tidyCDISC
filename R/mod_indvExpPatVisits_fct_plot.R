@@ -171,10 +171,10 @@ fnIndvExplVisits <- function(
       
       lb_plot <- lb_plot +
         # annotation_custom(xmin=-Inf, ymin=-Inf, xmax=Inf, ymax=Inf,
-        #                   grob(lab="IDEA: PROOF ONLY", cl="watermark"))
+        #                   grob(lab="tidyCDISC: PROOF ONLY", cl="watermark"))
         
         # Smaller watermark
-        annotate("text", x = Inf, y = -Inf, label = "IDEA: PROOF ONLY",
+        annotate("text", x = Inf, y = -Inf, label = "tidyCDISC: PROOF ONLY",
                  hjust=1.1, vjust=-3.3, col="white", cex=20,
                  fontface = "bold", alpha = 0.8)
       
@@ -284,7 +284,7 @@ fnIndvExplVisits <- function(
       if(watermark){
         ly <- ly %>%
           plotly::layout(annotations = 
-                           list(text="IDEA: PROOF ONLY",
+                           list(text="tidyCDISC: PROOF ONLY",
                                 xref = "paper",
                                 yref = "paper",
                                 opacity = 0.1,

@@ -171,7 +171,7 @@ scatterPlot_srv <- function(input, output, session, data) {
   # or by filtering the data by PARAMCD, then using AVAL or CHG for the yaxis
   p <- reactive({
     req(data(), input$yvar, input$xvar)
-    IDEA_scatterplot(data(), 
+    CDISC_scatterplot(data(), 
                  input$yvar, 
                  input$xvar, 
                  input$week_x, 
