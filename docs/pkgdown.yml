@@ -1,0 +1,11 @@
+pandoc: 2.7.3
+pkgdown: 1.5.1
+pkgdown_sha: ~
+articles:
+  Building_TG_Blocks: Building_TG_Blocks.html
+  Create_TG_Table: Create_TG_Table.html
+  dev_Indv_Expl_Add_Events: dev_Indv_Expl_Add_Events.html
+  dev_popExp_add_graph: dev_popExp_add_graph.html
+  User_Guide_Indv_Expl: User_Guide_Indv_Expl.html
+last_built: 2020-07-23T19:26Z
+
