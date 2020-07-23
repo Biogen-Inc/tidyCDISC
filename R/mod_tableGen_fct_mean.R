@@ -30,7 +30,7 @@ IDEA_mean.default <- function(column, week, group, data) {
 #' and look for a grouping variable to group_by
 #'
 #' @import dplyr
-#' @import rlang
+#' @importFrom rlang sym !! 
 #' 
 #' @return an summary statistic table of grouped variables
 #' 
@@ -69,7 +69,7 @@ IDEA_mean.ADSL <- function(column, week, group = NULL, data) {
 #' We need to calculate the difference in N for this
 #' and report missing values from the mean if any
 #' @import dplyr
-#' @import rlang
+#' @importFrom rlang sym !!
 #' 
 #' @return an summary statistic table of grouped variables
 #' 

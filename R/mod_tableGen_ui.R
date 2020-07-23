@@ -20,20 +20,20 @@
 mod_tableGen_ui <- function(id){
   ns <- NS(id)
   tagList(
+    actionButton(ns("help") 
+                       , label = NULL
+                       , icon = icon("question-circle")
+                       , class = "btn-start"
+                       , style = "display: inline-block; float:right; margin-bottom:15px;"
+    ),
+    h1("Table Generator", align = "center"),
+    br(), br(), br(),
     fluidPage(
-      h1("Table Generator", align = "center"),
-      br(), br(), br(),
       fluidRow(
         style = "padding: 20px",
         column(width = 6,
                # Wrangle data.
                wellPanel(
-                 actionButton(ns("help") 
-                              , label = NULL
-                              , icon = icon("question-circle")
-                              , class = "btn-start"
-                              , style = "display: inline-block; float:right; margin-bottom:15px;"
-                 ),
                  fluidRow(column(width = 12,
                                  div(
                                    id = "COLUMN-wrapper",

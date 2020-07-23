@@ -129,6 +129,21 @@ build_events <- function(
     , mi_filtered_dat = my_filtered_dat
   )
   
+  # If Chem Lab (adlbc) selected & loaded, and If correct date variable exists
+  # then convert the adae data frame to a standard format.
+  lc_rec <- org_df_events(
+    df_name = "ADLBC", df_domain_abbr = "LC", df_desc = "Chem Lab Results"
+    , df_st_date_vars = c("ADT") # from left to right
+    , event_desc_vars = ""
+    , event_desc = "'Chem Labs Drawn'"
+    , mi_input_checkbox = input_checkbox
+    , mi_input_apply_filter = input_apply_filter
+    , mi_usubjid = my_usubjid
+    , mi_loaded_adams = my_loaded_adams
+    , mi_datafile = my_datafile
+    , mi_filtered_dat = my_filtered_dat
+  )
+  
   # Medical history (which contains several categories that get treated as their own group)
   if ("ADMH" %in% my_loaded_adams & "MH_" %in% substring(input_checkbox, 1, 3)) {
     # if the date column exists in the data set, build the data
@@ -177,7 +192,7 @@ build_events <- function(
   strng <- input_checkbox
   
   # Remove NULLs from the list
-  uni_list <- list(ds_rec, ae_rec, cm_rec, lb_rec, mh_rec)
+  uni_list <- list(ds_rec, ae_rec, cm_rec, lb_rec, mh_rec, lc_rec)
   uni_list <- uni_list[!sapply(uni_list,is.null)]
   
   

@@ -102,6 +102,7 @@ mod_indvExpPat_server <- function(input, output, session, datafile, loaded_adams
     checked4 <- NA
     checked5 <- NA
     mh_names <- NA
+    checked6 <- NA
 
     # check for "adsl" (required), "adae", "adcm", and "adlb"
     if ("ADSL" %in% loaded_adams()) { checked1 <- "DS" }
@@ -120,10 +121,11 @@ mod_indvExpPat_server <- function(input, output, session, datafile, loaded_adams
       checked5 <- paste0("MH_",sapply(strsplit(mh_names, " "), function(x){
         toupper(paste(substring(x, 1, 1), collapse = ""))}))
     }
+    if ("ADLBC" %in% loaded_adams()) { checked6 <- "LC" }
     
     # Combine all into a list
-    choices <- as.list(unlist(c(list(checked1,checked2,checked3,checked4,as.list(checked5)))))
-    names <- c("Milestones","Adverse Events","Concomitant Meds","Labs",mh_names) # ac: labels
+    choices <- as.list(unlist(c(list(checked1,checked2,checked3,checked4,as.list(checked5),checked6))))
+    names <- c("Milestones","Adverse Events","Concomitant Meds","Labs",mh_names,"Chem Labs") # ac: labels
     
     # build a named list & Remove NULLs from the list
     choices <- setNames(choices,names)

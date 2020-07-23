@@ -28,7 +28,7 @@ IDEA_freq.default <- function(column, week, group, data) {
 #' if ADSL supplied look for the column to take frequency of
 #' and look for a grouping variable to group_by
 #' 
-#' @import rlang
+#' @importFrom rlang sym !!
 #' @import dplyr
 #' 
 #' @return frequency table of ADSL column

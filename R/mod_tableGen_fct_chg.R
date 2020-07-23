@@ -44,7 +44,7 @@ IDEA_chg.ADSL <- function(column, week, group = NULL, data) {
 #' and report missing values from the mean if any
 #' 
 #' @import dplyr
-#' @import rlang
+#' @importFrom rlang sym !! 
 #' @return change from baseline summary statistics table
 #' 
 #' @rdname IDEA_chg

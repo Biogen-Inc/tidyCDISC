@@ -68,10 +68,10 @@ scatterPlot_srv <- function(input, output, session, data) {
     
     # numeric columns, remove aval, chg, base
     num_col <- subset_colclasses(data(), is.numeric)
-    num_col <- num_col[num_col != "AVAL" & num_col != "CHG" & num_col != "BASE"]
+    num_col <- sort(num_col[num_col != "AVAL" & num_col != "CHG" & num_col != "BASE"])
     
     # get unique paramcd
-    paramcd <- na.omit(unique(data()$PARAMCD))
+    paramcd <- sort(na.omit(unique(data()$PARAMCD)))
     
     updateSelectInput(session, "xvar",
                       choices = list(`Time Dependent` = paramcd, `Time Independent` = num_col),
@@ -81,20 +81,49 @@ scatterPlot_srv <- function(input, output, session, data) {
                       choices = list(`Time Dependent` = paramcd, `Time Independent` = num_col),
                       selected = isolate(input$yvar)
     )
+  })
+  
+  observeEvent(list(input$xvar, input$yvar), {
+    req(input$xvar != "" & input$yvar != "")
+    
+    # Update grouping variable based on xvar & yvar selection
+    if(input$yvar %in% colnames(data()) & input$xvar %in% colnames(data())){ # neither paramcd
+      group_dat <- data()
+      
+    } else if(!(input$yvar %in% colnames(data())) & input$xvar %in% colnames(data())){ # yvar paramcd
+      group_dat <- data() %>% 
+        dplyr::filter(PARAMCD == input$yvar) %>% 
+        select_if(~!all(is.na(.))) # remove NA cols
+      
+    } else if(input$yvar %in% colnames(data()) & !(input$xvar %in% colnames(data()))){ # xvar paramcd
+      group_dat <- data() %>% 
+        dplyr::filter(PARAMCD == input$xvar) %>% 
+        select_if(~!all(is.na(.))) # remove NA cols
+      
+    } else { # both paramcds
+      x_cols <- data() %>% 
+        dplyr::filter(PARAMCD == input$xvar) %>% 
+        select_if(~!all(is.na(.))) # remove NA cols
+
+      y_cols <- data() %>%
+        dplyr::filter(PARAMCD == input$yvar) %>% 
+        select_if(~!all(is.na(.))) # remove NA cols
+
+      group_dat <- x_cols %>% full_join(y_cols)
+    }
     
     # character and factor columns for coloring or separating
-    char_col <- subset_colclasses(data(), is.character)
-    fac_col <- subset_colclasses(data(), is.factor)
-    
-    extra_aval_vars <- c("ATPT") # Add additional vars here
+    char_col <- subset_colclasses(group_dat, is.character)
+    fac_col <- subset_colclasses(group_dat, is.factor)
+    group <- sort(c(fac_col, char_col))
+                  
+    # populate dropdowns with choices
     updateSelectInput(session, "color",
-      choices = c("NONE", fac_col, char_col),
-      selected =
-        if(any(extra_aval_vars %in% colnames(data())) & isolate(input$color) == "NONE"){
-          extra_aval_vars[extra_aval_vars %in% colnames(data())][1]
-        } else { isolate(input$color)}
-    )
-    updateSelectInput(session, "separate", choices = c("NONE", fac_col, char_col), selected = isolate(input$separate))
+                      choices = c("NONE", group),
+                      selected = isolate(input$color))
+    updateSelectInput(session, "separate",
+                      choices = c("NONE", group),
+                      selected = isolate(input$separate))
     
   })
   
@@ -112,18 +141,24 @@ scatterPlot_srv <- function(input, output, session, data) {
                                     selected = isolate(input$value_y))
   })
   
-  weeks_list <- reactive({
-    unique(data() %>% select(AVISIT) %>% filter(AVISIT != "") %>% pull(AVISIT))
-  })
-  
   observeEvent(input$xvar, {
-    if(!input$xvar %in% colnames(data()))
-      updateSelectInput(session, "week_x", choices = weeks_list(), selected = weeks_list()[1])
+    if(!input$xvar %in% colnames(data())){
+      x_week_list <- data() %>%
+        subset(PARAMCD == input$xvar) %>%
+        distinct(AVISIT) %>%
+        pull() %>% na.omit()
+      updateSelectInput(session, "week_x", choices = x_week_list, selected = x_week_list[1])
+    }
   })
   
   observeEvent(input$yvar, {
-    if(!input$yvar %in% colnames(data()))
-      updateSelectInput(session, "week_y", choices = weeks_list(), selected = weeks_list()[1])
+    if(!input$yvar %in% colnames(data())){
+      y_week_list <- data() %>%
+        subset(PARAMCD == input$yvar) %>%
+        distinct(AVISIT) %>%
+        pull() %>% na.omit()
+      updateSelectInput(session, "week_y", choices = y_week_list, selected = y_week_list[1])
+    }
   })
   
   output$is_x_week <- reactive(!input$xvar %in% colnames(data()))

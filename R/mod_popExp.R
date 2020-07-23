@@ -16,6 +16,15 @@
 mod_popExp_server <- function(input, output, session, datafile) {
   ns <- session$ns
   
+  # When the user asks for help, guide them through the UI
+  observeEvent( input$help_sel, {
+    if(input$adv_filtering == TRUE){
+      guide_popex_sel_adv$init()$start() # guide includes IDEAFilter
+    } else {
+      guide_popex$init()$start()
+    }
+  })
+  
   # show/hide checkboxes depending on radiobutton selection
   process <- eventReactive(datafile(), {
     
@@ -196,11 +205,6 @@ mod_popExp_server <- function(input, output, session, datafile) {
     }
     return(d)
   })
-  
-  # Preview Dataset sent to plots
-  # output$dataset <- DT::renderDataTable({
-  #   DT::datatable(dataset())
-  # })
 
   p_scatter <- callModule(scatterPlot_srv, "scatterPlot", data = dataset)
   p_spaghetti <- callModule(spaghettiPlot_srv, "spaghettiPlot", data = dataset)
@@ -209,7 +213,7 @@ mod_popExp_server <- function(input, output, session, datafile) {
 
   # use plot output of the module to create the plot 
   output$plot_output <- renderPlotly({
-    print(p_scatter())
+
         switch(input$plot_type,
                `Scatter Plot` = p_scatter(),
                `Box Plot` = p_box(),
@@ -219,17 +223,11 @@ mod_popExp_server <- function(input, output, session, datafile) {
           config(displaylogo = FALSE, 
                 modeBarButtonsToRemove = 
                   c("zoom2d", "pan2d", "select2d", "lasso2d", "zoomIn2d", "zoomOut2d", "autoScale2d", "resetScale2d",
-                    "hoverClosestCartesian", "hoverCompareCartesian",
-                    "zoom3d", "pan3d", "resetCameraDefault3d", "resetCameraLastSave3d", "hoverClosest3d",
-                    "orbitRotation", "tableRotation",
-                    "zoomInGeo", "zoomOutGeo", "resetGeo", "hoverClosestGeo",
-                    "sendDataToCloud",
-                    "hoverClosestGl2d",
-                    "hoverClosestPie",
-                    "toggleHover",
-                    "resetViews",
-                    "toggleSpikelines",
-                    "resetViewMapbox"
+                    "hoverClosestCartesian", "hoverCompareCartesian", "zoom3d", "pan3d",
+                     "resetCameraDefault3d", "resetCameraLastSave3d", "hoverClosest3d",
+                    "orbitRotation", "tableRotation", "zoomInGeo", "zoomOutGeo",
+                     "resetGeo", "hoverClosestGeo", "sendDataToCloud","hoverClosestGl2d",
+                    "hoverClosestPie", "toggleHover","resetViews","toggleSpikelines","resetViewMapbox"
                   # , 'toImage', 'resetScale2d', 'zoomIn2d', 'zoomOut2d','zoom2d', 'pan2d'
                 )
           )
