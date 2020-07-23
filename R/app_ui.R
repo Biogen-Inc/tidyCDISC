@@ -11,15 +11,15 @@ app_ui <- function(request) {
     golem_add_external_resources(),
     
     # List the first level UI elements here 
-    navbarPage(title = div(id="logo-id","IDEA", img(src="www/IDEA_ICON.png", style="float:left; padding-right:3px; height:25px; width:30px")), 
+    navbarPage(title = div(id="logo-id","tidyCDISC", img(src="www/tidyCDISC_ICON.png", style="float:left; padding-right:3px; height:25px; width:30px")), 
                id = "navbarID",
-               windowTitle = "IDEA",
+               windowTitle = "tidyCDISC",
                tabPanel(
                  title = "Data",
                  mod_dataUpload_ui("dataUpload_ui_1")
                ),
                tabPanel(
-                 title = "TableGenerator",
+                 title = "Table Generator",
                  div(mod_tableGen_ui("tableGen_ui_1"), id = "tableGen")
                ),
                tabPanel(
@@ -63,7 +63,7 @@ golem_add_external_resources <- function(){
     favicon(),
     bundle_resources(
       path = app_sys('app/www'),
-      app_title = 'IDEA'
+      app_title = 'tidyCDISC'
     ),
     
     tags$script(HTML(htmljs)),

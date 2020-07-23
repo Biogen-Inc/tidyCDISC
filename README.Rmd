@@ -13,15 +13,15 @@ knitr::opts_chunk$set(
 )
 ```
 
-# IDEA
+# tidyCDISC
 
-The purpose of IDEA is a shiny app to easily create custom tables and figures from ADaM datasets.
+The purpose of tidyCDISC is a shiny app to easily create custom tables and figures from ADaM datasets.
 
 
 # Installation
 
 ```{r, eval=FALSE}
-remotes::install_github("IDEA")
+remotes::install_github("tidyCDISC")
 ```
 
 # Use Case
