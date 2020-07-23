@@ -2,4 +2,4 @@ library(testthat)
 library(tidyCDISC)
 library(shinyjs)
 
-test_check("IDEA")
+test_check("tidyCDISC")
