@@ -18,6 +18,7 @@
 # usethis::use_package("shiny") # already added as a recommended package
 # usethis::use_package("DT") # already added as a recommended package
 # usethis::use_package("glue") # already added as a recommended package
+usethis::use_package("V8")
 usethis::use_package("shinyjs")
 usethis::use_package("rvest")
 usethis::use_package("haven")
