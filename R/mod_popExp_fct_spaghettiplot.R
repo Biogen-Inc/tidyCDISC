@@ -1,4 +1,4 @@
-#' IDEA spaghetti plot
+#' tidyCDISC spaghetti plot
 #' 
 #' Create a spaghetti plot with a time dependent variable as the x-axis
 #' and using either the selected response variable
@@ -12,7 +12,7 @@
 #' AVAL, CHG, or BASE to be plotted on the y-axis
 #' 
 #' @family popExp Functions
-IDEA_spaghettiplot <- function(data, yvar, time, value = NULL) {
+CDISC_spaghettiplot <- function(data, yvar, time, value = NULL) {
   if (yvar %in% colnames(data)) {
     
     # initialize plot
