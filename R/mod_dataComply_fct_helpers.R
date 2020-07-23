@@ -29,7 +29,6 @@
 #' @import shiny
 #' @import dplyr
 #' @import gt
-#' @import rlang
 #' @importFrom purrr map map2 pmap 
 #' @importFrom data.table rbindlist
 #' 

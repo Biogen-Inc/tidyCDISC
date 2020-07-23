@@ -83,7 +83,8 @@ fnIndvExplVisits <- function(
     
     prm   <- unique(plot_dat$PARAM)
     
-    if(input_plot_adam == "ADLB"){
+    if(input_plot_adam %in% c("ADLB","ADLBC") &
+       all(c("LBSTNRLO","LBSTNRHI") %in% colnames(plot_dat))){
       lohi <- paste("LO:",unique(plot_dat$LBSTNRLO),"HI:",unique(plot_dat$LBSTNRHI))
     }
     
@@ -96,7 +97,8 @@ fnIndvExplVisits <- function(
            y = prm,
            title = paste(prm,"by Relative Study Day"),
            subtitle = paste0(
-             ifelse(input_plot_adam == "ADLB",
+             ifelse(input_plot_adam %in% c("ADLB","ADLBC") & 
+                      all(c("LBSTNRLO","LBSTNRHI") %in% colnames(plot_dat)),
                     paste0("Note: Study's average ",input_plot_param," range shown in blue - ",lohi,"\n")
                     ,""),
              "USUBJID: ",usubjid)
@@ -181,7 +183,7 @@ fnIndvExplVisits <- function(
     
     
     # plot vlines using events dataset
-    if(length(input_overlay_events) > 0 & input_visit_var %in% vv_dy_name){ #& "ADLB" %in% loaded_adams() # overlay checkbox won't appear unless this is true
+    if(length(input_overlay_events) > 0 & input_visit_var %in% vv_dy_name){ #& any(c("ADLB","ADLBC") %in% loaded_adams()) # overlay checkbox won't appear unless this is true
       if (!is.null(vline_dat)){
         if(nrow(vline_dat) > 0){
           
@@ -202,7 +204,8 @@ fnIndvExplVisits <- function(
     }
     
     # If lab data, plot the normal low and high values for the drug, add a little space in the bottom margin
-    if(input_plot_adam == "ADLB"){
+    if(input_plot_adam %in% c("ADLB","ADLBC") &
+       all(c("LBSTNRLO","LBSTNRHI") %in% colnames(plot_dat))){
       lb_plot <- lb_plot + 
         geom_hline(aes(yintercept = mean(LBSTNRLO)), color = "blue") +
         geom_hline(aes(yintercept = mean(LBSTNRHI)), color = "blue") +
@@ -266,7 +269,8 @@ fnIndvExplVisits <- function(
                ))
       
       # instead, request was made to add caption to bottom of graph
-      if(input_plot_adam == "ADLB"){
+      if(input_plot_adam %in% c("ADLB","ADLBC") &
+         all(c("LBSTNRLO","LBSTNRHI") %in% colnames(plot_dat))){
         ly <- ly %>%
           plotly::add_annotations(x = ggplot_build(lb_plot)$layout$panel_params[[1]]$x.range[1],
                           y = -.15, # 15% below graph

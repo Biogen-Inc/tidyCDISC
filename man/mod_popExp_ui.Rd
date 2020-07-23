@@ -7,7 +7,7 @@
 mod_popExp_ui(id, label = "Population Explorer")
 }
 \arguments{
-\item{id, input, output, session}{Internal parameters for {shiny}.}
+\item{id}{Internal parameters for {shiny}.}
 
 \item{label}{Name of module}
 }
@@ -24,6 +24,7 @@ Other popExp Functions:
 \code{\link{boxPlot_srv}()},
 \code{\link{boxPlot_ui}()},
 \code{\link{mod_popExp_server}()},
+\code{\link{refact}()},
 \code{\link{scatterPlot_srv}()},
 \code{\link{scatterPlot_ui}()},
 \code{\link{spaghettiPlot_srv}()},

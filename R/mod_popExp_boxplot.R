@@ -53,21 +53,29 @@ boxPlot_srv <- function(input, output, session, data) {
     
     # numeric columns, remove aval, chg, base
     num_col <- subset_colclasses(data(), is.numeric)
-    num_col <- num_col[num_col != "AVAL" & num_col != "CHG" & num_col != "BASE"]
+    num_col <- sort(num_col[num_col != "AVAL" & num_col != "CHG" & num_col != "BASE"])
     
     # get unique paramcd
-    paramcd <- na.omit(unique(data()$PARAMCD))
-    
-    group_fc <- subset_colclasses(data(), is.factor)
-    group_ch <- subset_colclasses(data(), is.character)
-    group <- c(group_fc, group_ch)
-    group <- group[group != "data_from"]
+    paramcd <- sort(na.omit(unique(data()$PARAMCD)))
     
     updateSelectInput(session, "yvar",
                       choices = list(`Time Dependent` = paramcd, `Time Independent` = num_col),
                       selected = isolate(input$yvar))
-    updateSelectInput(session, "group", choices = group,
-                      selected = isolate(input$group))
+    
+    # Update grouping variable based on yvar selection
+    if(input$yvar != "" && !(input$yvar %in% colnames(data()))){
+      group_dat <- data() %>% dplyr::filter(PARAMCD == input$yvar)
+    } else {
+      group_dat <- data()
+    }
+
+    group_dat <- group_dat %>% select_if(~!all(is.na(.))) # remove NA cols
+    group_fc <- subset_colclasses(group_dat, is.factor)
+    group_ch <- subset_colclasses(group_dat, is.character)
+    group <- c(group_fc, group_ch)
+    group <- sort(group[group != "data_from"])
+    
+    updateSelectInput(session, "group", choices = group, selected = isolate(input$group))
   })
   
   output$include_var <- renderUI({

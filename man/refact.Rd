@@ -2,7 +2,7 @@
 % Please edit documentation in R/mod_popExp_fct.R
 \name{refact}
 \alias{refact}
-\title{Refactor common variables by their "N" counterparts}
+\title{Refactor variables}
 \usage{
 refact(data, varc, varn)
 }
@@ -14,5 +14,19 @@ refact(data, varc, varn)
 \item{varn}{A character vector of variables names with numeric values}
 }
 \description{
-Neat trick to first set the selected choice to "0", then to character(0)
+Refactor variables by their common "N" counterparts
 }
+\seealso{
+Other popExp Functions: 
+\code{\link{IDEA_boxplot}()},
+\code{\link{IDEA_spaghettiplot}()},
+\code{\link{boxPlot_srv}()},
+\code{\link{boxPlot_ui}()},
+\code{\link{mod_popExp_server}()},
+\code{\link{mod_popExp_ui}()},
+\code{\link{scatterPlot_srv}()},
+\code{\link{scatterPlot_ui}()},
+\code{\link{spaghettiPlot_srv}()},
+\code{\link{spaghettiPlot_ui}()}
+}
+\concept{popExp Functions}

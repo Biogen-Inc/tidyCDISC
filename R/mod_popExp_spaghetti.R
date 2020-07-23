@@ -50,20 +50,31 @@ spaghettiPlot_srv <- function(input, output, session, data) {
     req(data())
     
     # get time based column names
-    seltime <- colnames(dplyr::select(data(), ends_with("DY"), contains("VIS")))
+    seltime_init <- sort(colnames(dplyr::select(data(), ends_with("DY"), contains("VIS"))))
     
     # numeric columns, remove aval, chg, base
     # then remove the x-axis selectors
     num_col <- subset_colclasses(data(), is.numeric)
     num_col <- num_col[num_col != "AVAL" & num_col != "CHG" & num_col != "BASE"]
-    num_col <- c(setdiff(seltime, num_col), setdiff(num_col, seltime))
+    num_col <- sort(c(setdiff(seltime_init, num_col), setdiff(num_col, seltime_init)))
     
     # add paramcds to y-axis options
-    paramcd <- na.omit(unique(data()$PARAMCD))
+    paramcd <- sort(na.omit(unique(data()$PARAMCD)))
     
     updateSelectInput(session, "yvar",
                       choices = list(`Time Dependent` = paramcd,`Time Independent` = num_col),
                       selected = isolate(input$yvar))
+    
+    # Update time variable based on yvar selection
+    if(input$yvar != "" & !(input$yvar %in% colnames(data()))){
+      seltime <- data() %>%
+        dplyr::filter(PARAMCD == input$yvar) %>% # subset data
+        select_if(~!all(is.na(.))) %>%
+        dplyr::select(ends_with("DY"), contains("VIS")) %>% # grab time vars remaining
+        colnames() %>% sort()
+    } else {
+      seltime <- seltime_init
+    }
     updateSelectInput(session, "time", choices = seltime, selected = isolate(input$time))
   })
   
