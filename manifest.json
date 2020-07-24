@@ -1423,34 +1423,6 @@
         "Built": "R 3.6.2; ; 2020-07-21 03:13:35 UTC; unix"
       }
     },
-    "gridExtra": {
-      "Source": "CRAN",
-      "Repository": "https://cran.rstudio.com/",
-      "GithubRepo": null,
-      "GithubUsername": null,
-      "GithubRef": null,
-      "GithubSha1": null,
-      "description": {
-        "Package": "gridExtra",
-        "Authors@R": "c(person(\"Baptiste\", \"Auguie\",\n    email = \"baptiste.auguie@gmail.com\",\n    role = c(\"aut\", \"cre\")), person(\"Anton\", \"Antonov\",\n    email = \"tonytonov@gmail.com\",\n    role = c(\"ctb\")))",
-        "License": "GPL (>= 2)",
-        "Title": "Miscellaneous Functions for \"Grid\" Graphics",
-        "Type": "Package",
-        "Description": "Provides a number of user-level functions to work with \"grid\"\n    graphics, notably to arrange multiple grid-based plots on a page, and draw\n    tables.",
-        "Version": "2.3",
-        "VignetteBuilder": "knitr",
-        "Imports": "gtable, grid, grDevices, graphics, utils",
-        "Suggests": "ggplot2, egg, lattice, knitr, testthat",
-        "RoxygenNote": "6.0.1",
-        "NeedsCompilation": "no",
-        "Packaged": "2017-09-08 22:52:09 UTC; baptiste",
-        "Author": "Baptiste Auguie [aut, cre],\n  Anton Antonov [ctb]",
-        "Maintainer": "Baptiste Auguie <baptiste.auguie@gmail.com>",
-        "Repository": "CRAN",
-        "Date/Publication": "2017-09-09 14:12:08 UTC",
-        "Built": "R 3.6.0; ; 2019-04-26 19:51:13 UTC; unix"
-      }
-    },
     "gt": {
       "Source": "CRAN",
       "Repository": "https://cran.rstudio.com/",
@@ -3326,33 +3298,6 @@
         "Built": "R 3.6.0; ; 2020-01-14 15:40:53 UTC; unix"
       }
     },
-    "shinythemes": {
-      "Source": "CRAN",
-      "Repository": "https://cran.rstudio.com/",
-      "GithubRepo": null,
-      "GithubUsername": null,
-      "GithubRef": null,
-      "GithubSha1": null,
-      "description": {
-        "Package": "shinythemes",
-        "Title": "Themes for Shiny",
-        "Version": "1.1.2",
-        "Authors@R": "c(\n    person(\"Winston\", \"Chang\", role = c(\"aut\", \"cre\"), email = \"winston@rstudio.com\"),\n    person(family = \"RStudio\", role = \"cph\"),\n    person(\"Thomas\", \"Park\", role = c(\"ctb\", \"cph\"), comment = \"Bootswatch themes\"),\n    person(\"Lukasz\", \"Dziedzic\", role = c(\"ctb\", \"cph\"), comment = \"Lato font\"),\n    person(\"Nathan\", \"Willis\", role = c(\"ctb\", \"cph\"), comment = \"News Cycle font\"),\n    person(family = \"Google Corporation\", role = c(\"ctb\", \"cph\"), comment = \"Open Sans and Roboto fonts\"),\n    person(\"Matt\", \"McInerney\", role = c(\"ctb\", \"cph\"), comment = \"Raleway font\"),\n    person(family = \"Adobe Systems Incorporated\", role = c(\"ctb\", \"cph\"), comment = \"Source Sans Pro font\"),\n    person(family = \"Canonical Ltd\", role = c(\"ctb\", \"cph\"), comment = \"Ubuntu font\")\n    )",
-        "Description": "Themes for use with Shiny. Includes several Bootstrap themes\n    from <http://bootswatch.com/>, which are packaged for use with Shiny\n    applications.",
-        "Depends": "R (>= 3.0.0)",
-        "Imports": "shiny (>= 0.11)",
-        "URL": "http://rstudio.github.io/shinythemes/",
-        "License": "GPL-3 | file LICENSE",
-        "RoxygenNote": "6.1.0.9000",
-        "NeedsCompilation": "no",
-        "Packaged": "2018-11-06 16:28:32 UTC; winston",
-        "Author": "Winston Chang [aut, cre],\n  RStudio [cph],\n  Thomas Park [ctb, cph] (Bootswatch themes),\n  Lukasz Dziedzic [ctb, cph] (Lato font),\n  Nathan Willis [ctb, cph] (News Cycle font),\n  Google Corporation [ctb, cph] (Open Sans and Roboto fonts),\n  Matt McInerney [ctb, cph] (Raleway font),\n  Adobe Systems Incorporated [ctb, cph] (Source Sans Pro font),\n  Canonical Ltd [ctb, cph] (Ubuntu font)",
-        "Maintainer": "Winston Chang <winston@rstudio.com>",
-        "Repository": "CRAN",
-        "Date/Publication": "2018-11-06 17:00:03 UTC",
-        "Built": "R 3.6.0; ; 2019-04-27 04:16:11 UTC; unix"
-      }
-    },
     "sjlabelled": {
       "Source": "CRAN",
       "Repository": "https://cran.rstudio.com/",
@@ -4168,13 +4113,13 @@
       "checksum": "61efa82920fa062e23d6215dfbdb74be"
     },
     "DESCRIPTION": {
-      "checksum": "cf8d7b7abf01bb81f0ae939256ec6236"
+      "checksum": "4b523b68236664ae766be1c7f46e51db"
     },
     "dev/01_start.R": {
       "checksum": "ba38c7de185d322c3605977264d648b0"
     },
     "dev/02_dev.R": {
-      "checksum": "ff422b518505a4ef2287158fd9abd745"
+      "checksum": "8202e756510abdf53217743528d4c2ec"
     },
     "dev/03_deploy.R": {
       "checksum": "7b413fcf3e7273e8b80cb6971b2190a4"
@@ -4183,31 +4128,31 @@
       "checksum": "f5180ee585cfa4281e32f3d4ae113122"
     },
     "docs/404.html": {
-      "checksum": "fc8670247ff2650381792e1b570287e0"
+      "checksum": "2ecac138bf821a48f28e0fa8e8aaf181"
     },
     "docs/articles/Building_TG_Blocks_files/accessible-code-block-0.0.1/empty-anchor.js": {
       "checksum": "53c42ac72d71beb8e6dbffe86ab543d6"
     },
     "docs/articles/Building_TG_Blocks.html": {
-      "checksum": "1314c21e53e56f75da0f6076db141a10"
+      "checksum": "9679ac6cf9c9b68cb2d05d3efd1825a8"
     },
     "docs/articles/Create_TG_Table_files/accessible-code-block-0.0.1/empty-anchor.js": {
       "checksum": "53c42ac72d71beb8e6dbffe86ab543d6"
     },
     "docs/articles/Create_TG_Table.html": {
-      "checksum": "e8bb5b2ef088f37030549df6d0d48cd5"
+      "checksum": "4735dc808e983cf02c44de96acb030e5"
     },
     "docs/articles/dev_Indv_Expl_Add_Events_files/accessible-code-block-0.0.1/empty-anchor.js": {
       "checksum": "53c42ac72d71beb8e6dbffe86ab543d6"
     },
     "docs/articles/dev_Indv_Expl_Add_Events.html": {
-      "checksum": "48b57ed8afdb88e844196f557b17e223"
+      "checksum": "a9e6c846130b94f325d5a315cc3569b8"
     },
     "docs/articles/dev_popExp_add_graph_files/accessible-code-block-0.0.1/empty-anchor.js": {
       "checksum": "53c42ac72d71beb8e6dbffe86ab543d6"
     },
     "docs/articles/dev_popExp_add_graph.html": {
-      "checksum": "7b1ff8fff61eda7303ace7ee498f753f"
+      "checksum": "f6249c08a8a7eed4bdf8e8c39ec185d8"
     },
     "docs/articles/figures/IndvExp/01_dataUpload.PNG": {
       "checksum": "5503d8b1d7c7da5fc7900c6d2c613291"
@@ -4318,16 +4263,16 @@
       "checksum": "be16438f8ca9a0d54f22d355fece1628"
     },
     "docs/articles/index.html": {
-      "checksum": "f0d919bdfb8ccb02298655dc3bd86a19"
+      "checksum": "9f183d09dd9094b37b911bb8362ffec4"
     },
     "docs/articles/User_Guide_Indv_Expl_files/accessible-code-block-0.0.1/empty-anchor.js": {
       "checksum": "53c42ac72d71beb8e6dbffe86ab543d6"
     },
     "docs/articles/User_Guide_Indv_Expl.html": {
-      "checksum": "bc5cbdc9ee6de0cf9b4767a1d5c6666a"
+      "checksum": "ca5313252135b051b1ad61779a32969f"
     },
     "docs/authors.html": {
-      "checksum": "d08ccb4968ecb1d1fdeb5aa5a0d5270d"
+      "checksum": "a42e0a95453cdceb0750c87d5cfa1d91"
     },
     "docs/bootstrap-toc.css": {
       "checksum": "5eec6702c35b15a8c2c123301987735d"
@@ -4335,8 +4280,11 @@
     "docs/bootstrap-toc.js": {
       "checksum": "aaa610b29d895e1128447e76b9bc0076"
     },
+    "docs/CNAME": {
+      "checksum": "37eb3bb9ecc2289a180cf881cb800ce8"
+    },
     "docs/CODE_OF_CONDUCT.html": {
-      "checksum": "f2a36082591dbceecdc56fcfd62e346d"
+      "checksum": "0581d74314f11f929c06b5836fe16ee6"
     },
     "docs/docsearch.css": {
       "checksum": "828dbea96017a994efccb7c30c041577"
@@ -4345,19 +4293,19 @@
       "checksum": "2f3c1f7995c9f4f966323f008e3984ad"
     },
     "docs/index.html": {
-      "checksum": "349ae88335cd65545f4e98b3a7362469"
+      "checksum": "cc5926211c2aab2df1fb116acaa82df2"
     },
     "docs/LICENSE-text.html": {
-      "checksum": "7c45d7b18671590a644acffb417d48a8"
+      "checksum": "ee96da7875b586cd5475a4fdb18d0925"
     },
     "docs/LICENSE.html": {
-      "checksum": "72ce319d3438136b89a166f830d77cc8"
+      "checksum": "ac75b9a0a4f2e6d7b554429c4e79a783"
     },
     "docs/link.svg": {
       "checksum": "4759f31f8a585e9af173fc579d730265"
     },
     "docs/news/index.html": {
-      "checksum": "dce0c4f906487954946816a7804547c9"
+      "checksum": "b0bda4d7190a6f677d565744e5960a4f"
     },
     "docs/pkgdown.css": {
       "checksum": "0bfb8788900f85687f12d33c3a75c9f0"
@@ -4366,217 +4314,217 @@
       "checksum": "e0bdbf3c19a222385db6b4dae0682e5b"
     },
     "docs/pkgdown.yml": {
-      "checksum": "73381a1a285284bd35b7c38891c00d3d"
+      "checksum": "4c6b407eacd80237ccd6c2ab18223714"
     },
     "docs/reference/adae.html": {
-      "checksum": "7d80341546eceb1bccb7d4017d96a59e"
+      "checksum": "07d98944a21636f8c191404981a17ef3"
     },
     "docs/reference/adlbc.html": {
-      "checksum": "be3ce0d8745209b26cbb9877fef9d8c4"
+      "checksum": "39b9c2989157682b1027de0fd05e8dd9"
     },
     "docs/reference/adsl.html": {
-      "checksum": "dcd572ec225aaad1bc39ccb4b7ae0b5f"
+      "checksum": "18eb64627156552168d51b1767fd9b66"
     },
     "docs/reference/advs.html": {
-      "checksum": "302479058a823f7aefe240462db31dd6"
+      "checksum": "c440242c3f492b008b003023f0857caf"
     },
     "docs/reference/boxPlot_srv.html": {
-      "checksum": "18be7d92925d7db80bcb570bcf048b0b"
+      "checksum": "5680a00ff0edcd533c63aa53022a6413"
     },
     "docs/reference/boxPlot_ui.html": {
-      "checksum": "ae61572b6095f2fdeff22345063b8002"
+      "checksum": "496fc30b642e9cab760c0323c380f12e"
     },
     "docs/reference/build_events.html": {
-      "checksum": "944d38a1e369edd21c7c63f137934146"
+      "checksum": "9dc6941a7076a5af91c9e67ceae321f0"
     },
     "docs/reference/CapStr.html": {
-      "checksum": "5564752b08ae7f3c65620b85bb5336fa"
+      "checksum": "4abb692116013e821c96e228676047f4"
     },
     "docs/reference/CDISC_anova.html": {
-      "checksum": "d8b1c9f9ea2fb900e0d20314d32bdcc0"
+      "checksum": "ba4b4b6140af813a9340e969d0597171"
     },
     "docs/reference/CDISC_boxplot.html": {
-      "checksum": "aed28b393810b6f172341a4e5a55169d"
+      "checksum": "77fd262677a1323171b2ffe4f22a632e"
     },
     "docs/reference/CDISC_chg.html": {
-      "checksum": "2449b20fb3689c6ebab4326c1e033532"
+      "checksum": "d9acf472a846b64e08625e6f0b789926"
     },
     "docs/reference/CDISC_freq.html": {
-      "checksum": "3f4394aef03daa070f0cc5022844e71c"
+      "checksum": "78f454f516f1685ee414a0cdc4c47ed6"
     },
     "docs/reference/CDISC_mean.ADSL.html": {
-      "checksum": "d7a06d84c56a8d80e8a65d1639171f6d"
+      "checksum": "3a73c70bf4a6d19323f4e048b1f1aba5"
     },
     "docs/reference/CDISC_mean.BDS.html": {
-      "checksum": "56a94f9e938477c14b7e8434df4ca545"
+      "checksum": "cedb4ccbb1361f6546ad0216659feab6"
     },
     "docs/reference/CDISC_mean.html": {
-      "checksum": "7b5e305a547e00f7243da0650b46bdba"
+      "checksum": "9e4110248dfdf77c7df7c0a94ae692db"
     },
     "docs/reference/CDISC_methods.html": {
-      "checksum": "ea67589943a4a2d9626cb4bcdfefab97"
+      "checksum": "23a5743274a01a9d14f60c53e9674378"
     },
     "docs/reference/CDISC_scatterplot.html": {
-      "checksum": "926693235cd85cd3440852118eb82b48"
+      "checksum": "e2fb396315b6618392e622a44927a858"
     },
     "docs/reference/CDISC_spaghettiplot.html": {
-      "checksum": "fa5cee8283043427476156ffdec1467b"
+      "checksum": "878114af0240fc4ff60b8089010e67cc"
     },
     "docs/reference/common_rownames.html": {
-      "checksum": "042beb019f6c4e4c763208acc32358e8"
+      "checksum": "63381577541541dd74d7eefb9fe411b6"
     },
     "docs/reference/convertTGOutput.html": {
-      "checksum": "b7161e3d19c496067518bbb268508f5e"
+      "checksum": "e6399d11fc5e2b7e0c57a23636ce1dec"
     },
     "docs/reference/custom_class.html": {
-      "checksum": "ef4d2a3ea8136a6b2e2f0746b7f24e08"
+      "checksum": "a22bef28ed4ac2e56726204ad9327c5e"
     },
     "docs/reference/dropArea.html": {
-      "checksum": "3c93f9203e111e70083a9e2b8ba33733"
+      "checksum": "03b8b8080a99f597cbc6108596d6437d"
     },
     "docs/reference/fnIndvExplVisits.html": {
-      "checksum": "5cdd114a8f6403fa5e6e63a4dd4ee680"
+      "checksum": "7d2a18c47f7291f728bac8bf0666f616"
     },
     "docs/reference/gather_reqs.html": {
-      "checksum": "7ee0a2c2c6a75bfc34e28f429da10076"
+      "checksum": "58ce4b63205531f1bc5e7e5da9a6ce4c"
     },
     "docs/reference/gather_rules.html": {
-      "checksum": "c01cbb7f292a1b4d2e3284f47ae69188"
+      "checksum": "7eeea6b6258f487f4fb5c6effb01958d"
     },
     "docs/reference/guide_ind_exp_events_adv.html": {
-      "checksum": "2959187e05075372c5e774ae0d4750e1"
+      "checksum": "b5a554de1ce500a0ee55bb830890462f"
     },
     "docs/reference/guide_ind_exp_events_blank.html": {
-      "checksum": "12b50b48d570d43ce4f60a78cc944743"
+      "checksum": "c2ff41f3db401e7bf4a3f88e92cd7df1"
     },
     "docs/reference/guide_ind_exp_events.html": {
-      "checksum": "85a26e3030ca8b489cda4e7df8a2c20c"
+      "checksum": "8b3bf4abecc9cf058180d511ba60d373"
     },
     "docs/reference/guide_ind_exp_sel_adv.html": {
-      "checksum": "f620e3475c7604065fbe6c5dffca660d"
+      "checksum": "d46a6ed62daa548bf7d4bd0c4be92981"
     },
     "docs/reference/guide_ind_exp_sel.html": {
-      "checksum": "cfdf60442e0a6e29334455ac7d18ff0c"
+      "checksum": "9927a7d11f09267525dda3839a83972b"
     },
     "docs/reference/guide_ind_exp_visits_adlb_olay.html": {
-      "checksum": "5decb4442c0d4181f1b78a293dff9b83"
+      "checksum": "f58b03f74721ef0b0a7f07b931b838ec"
     },
     "docs/reference/guide_ind_exp_visits_adlb.html": {
-      "checksum": "79cc7a5d499c4a3ae585aaacfbb5c56b"
+      "checksum": "7774076880fc6c1610547918c8212a4c"
     },
     "docs/reference/guide_ind_exp_visits_blank.html": {
-      "checksum": "d5704d4837f8a3d04f4f9a35b3f5da83"
+      "checksum": "3cb51ae32affb026ab671fcf205a0465"
     },
     "docs/reference/guide_ind_exp_visits.html": {
-      "checksum": "044637894655d8d3b775bd5c618df6df"
+      "checksum": "62e38f2943920ed2abec58a15a749249"
     },
     "docs/reference/guide_popex_sel_adv.html": {
-      "checksum": "a4f03546e32dba24c7a621792049d253"
+      "checksum": "410cede57f6d2cbf004d1fe0e3f007a4"
     },
     "docs/reference/guide_popex.html": {
-      "checksum": "77a0f5dc5a2b2bf7184274bd93034081"
+      "checksum": "062011f0b6aa70c34f7e16b155e65200"
     },
     "docs/reference/index.html": {
-      "checksum": "73075cbd5312ee24e1f25040a78db7f4"
+      "checksum": "031442acb8b78025ed18ea7b1c86a9dd"
     },
     "docs/reference/mean_summary.html": {
-      "checksum": "d54b7d09e36a92dfceea14ca1161644f"
+      "checksum": "c9f36b29037ae883acb82306a731693a"
     },
     "docs/reference/mod_dataComply_server.html": {
-      "checksum": "3f466451379488d8441a5f6407f95d1d"
+      "checksum": "4c62901b0789599103b96612ff86b877"
     },
     "docs/reference/mod_dataComply_ui.html": {
-      "checksum": "f292acb1e8801263706464852d2f52b9"
+      "checksum": "723e1c17771efc58377240b26c8e1c7a"
     },
     "docs/reference/mod_dataComplyRules_server.html": {
-      "checksum": "d18f97f39e81a6520913b842f8e9c956"
+      "checksum": "ad5974d4a45d98fdbcc3d7d9d2811a15"
     },
     "docs/reference/mod_dataComplyRules_ui.html": {
-      "checksum": "99838340637fa5d4ba8cb3fb5ed5ee96"
+      "checksum": "a049b8f9b4491310f160c733e5b45a87"
     },
     "docs/reference/mod_dataUpload_server.html": {
-      "checksum": "8d9e1b142f1cddb7a0392973609a4cca"
+      "checksum": "e0feba4bad52aea41e9eabb3998f6f6d"
     },
     "docs/reference/mod_dataUpload_ui.html": {
-      "checksum": "6d5d36e9b0e162aa04ff0390f221f2f7"
+      "checksum": "616c85be27fc2fa956b1be40f01335cb"
     },
     "docs/reference/mod_indvExp_server.html": {
-      "checksum": "a72fdfcb057126390648bc711e99ad77"
+      "checksum": "dac32130051bdd5922b786ee5bc1b678"
     },
     "docs/reference/mod_indvExp_ui.html": {
-      "checksum": "f3a7f006a4b30d0493f1aff308305e50"
+      "checksum": "debcb950dda0e2d9177f386b2b9a6616"
     },
     "docs/reference/mod_indvExpPat_server.html": {
-      "checksum": "c714c1feb8c6193af2cd7c9e09938598"
+      "checksum": "105f36619f6ae5ff395e4d5706b93059"
     },
     "docs/reference/mod_indvExpPatEvents_server.html": {
-      "checksum": "a86a42632cf69ee979852cbcf3511036"
+      "checksum": "ae3fcfa8a4909851b81c30732a5ab345"
     },
     "docs/reference/mod_indvExpPatVisits_server.html": {
-      "checksum": "4bf3ae41107ee9de29748d5065cf5bb3"
+      "checksum": "0dc92751883fe36a78bd57224d6876ea"
     },
     "docs/reference/mod_popExp_server.html": {
-      "checksum": "75664cb3a173e4ad6288e3916c948837"
+      "checksum": "961bbcc95bb1be64b56ec5fd8dec195f"
     },
     "docs/reference/mod_popExp_ui.html": {
-      "checksum": "f648e6e0a26a3ba0225b606ba5089fb1"
+      "checksum": "167ea1f1c9f3dda55d35320258c937ce"
     },
     "docs/reference/mod_tableGen_server.html": {
-      "checksum": "7b4f1dceab4abb2ab9f8c9bc838ae55f"
+      "checksum": "ba86dfdeeebf78b2d73e6e82a1b2be80"
     },
     "docs/reference/mod_tableGen_ui.html": {
-      "checksum": "6a35d35296370d2893b87b4a7d855f70"
+      "checksum": "eb8f337a5d15610d2931e11aa537395b"
     },
     "docs/reference/my_gg_color_hue.html": {
-      "checksum": "34d72ff6b1082ffcdd1f98689081d4ba"
+      "checksum": "5b7978f83e2de42ab15740bba6271c50"
     },
     "docs/reference/org_df_events.html": {
-      "checksum": "3d2bdebafe7041edb89a40b59cd33959"
+      "checksum": "aa4613f2caff095d305c24d8327a6872"
     },
     "docs/reference/pipe.html": {
-      "checksum": "ad32376cd5f0e7b7bd02ebe4bde8b95a"
+      "checksum": "dc0fee51dc254599d48c394f4f342f3f"
     },
     "docs/reference/recipe_column.html": {
-      "checksum": "939a9c8448189dce7b3a643d3d00ba6b"
+      "checksum": "207fe387d3dc0e3b29cb344b0e0dc306"
     },
     "docs/reference/recipe.html": {
-      "checksum": "7249769a91020c8dec833f09f2e4d29e"
+      "checksum": "6389fee2909bca08f41d8f5f30fce959"
     },
     "docs/reference/refact.html": {
-      "checksum": "881c42359ed7612c145780cef2f39154"
+      "checksum": "074e8b75d4f3e59f8626da60be8270cb"
     },
     "docs/reference/rowArea.html": {
-      "checksum": "5eb06cea71b644a1e52cda839b920691"
+      "checksum": "8236afd6873a84bab00f72acbfc10e03"
     },
     "docs/reference/rowBlock.html": {
-      "checksum": "6f2f5ad7bd5ba9d84d18e55ea351e239"
+      "checksum": "b4f7daef4c3237661ad194a554ad4945"
     },
     "docs/reference/rowPallete.html": {
-      "checksum": "6e999e882834ecda12c9f3939b4eae97"
+      "checksum": "bc67c56c8f19a01db12bd56c7048559e"
     },
     "docs/reference/run_app.html": {
-      "checksum": "192ba033eb66d0cd348bd405fb5136e6"
+      "checksum": "ba04b34baeef4f77b8c406ae25a5030a"
     },
     "docs/reference/scatterPlot_srv.html": {
-      "checksum": "8ba16e4073918b1bdb56a6c6cc5d58f0"
+      "checksum": "d3ac84465e72f1af7c56b0aa3c98b0f3"
     },
     "docs/reference/scatterPlot_ui.html": {
-      "checksum": "7780f83e7ebce40f093c5856d480cf74"
+      "checksum": "5c9d0ba07503c82d985732d80ecd9c38"
     },
     "docs/reference/spaghettiPlot_srv.html": {
-      "checksum": "0634e11f1a95be1743218e6744fc015e"
+      "checksum": "079d8028b7d07824d2eb32479fad4d73"
     },
     "docs/reference/spaghettiPlot_ui.html": {
-      "checksum": "d8907ab5fd31e0c55614b89dd80cfae8"
+      "checksum": "46212a3ade62df468d164586331a5cbc"
     },
     "docs/reference/tg_data.html": {
-      "checksum": "2e61cc9c0d6a33c42822cb8893d5b93f"
+      "checksum": "0f7f25b6413212bcc9912f7b44867aa3"
     },
     "docs/reference/tg_guide.html": {
-      "checksum": "7baac940d4dcdd07c87cebb209c58fd4"
+      "checksum": "3ab1e4da37c037f2016cceb81d0edee7"
     },
     "docs/reference/transpose_df.html": {
-      "checksum": "dfb9f7da6a4b886ebe81c1fc3d899347"
+      "checksum": "ad7c094a537b9a398b987bb8139962b4"
     },
     "inst/.DS_Store": {
       "checksum": "f6d85a260feb97fb50a101a00bb335f8"
@@ -4962,9 +4910,6 @@
     "packrat/desc/golem": {
       "checksum": "40a49f0f40a38f5c57e90a49b31c7a0c"
     },
-    "packrat/desc/gridExtra": {
-      "checksum": "90fa17df8c31703c95f80c4390d5ae8e"
-    },
     "packrat/desc/gt": {
       "checksum": "686a6d6a5283c746bf68235b7bfe2f76"
     },
@@ -5157,9 +5102,6 @@
     "packrat/desc/shinyjs": {
       "checksum": "e144b0af6097dc68287d8f38c85bd488"
     },
-    "packrat/desc/shinythemes": {
-      "checksum": "df132220b092e836eccf4d2dda23fd0d"
-    },
     "packrat/desc/shinyTime": {
       "checksum": "b422ece687156c51f79a7915b1bfe315"
     },
@@ -5242,7 +5184,7 @@
       "checksum": "a5c8026f8dbd6fdbfb913829911a4ed8"
     },
     "packrat/packrat.lock": {
-      "checksum": "e87c44331b426f5faaeb9f33606999cb"
+      "checksum": "282b63d066422b1f3032f3ff4e6b6598"
     },
     "R/app_config.R": {
       "checksum": "1af7bf1588402f142aa77915fceab210"
@@ -5386,7 +5328,7 @@
       "checksum": "3ae23ff1c90581c3e5651878b3705fff"
     },
     "README.md": {
-      "checksum": "4fd7a2d588dd8ef186573ea03f7ba8e0"
+      "checksum": "78fd55327dba8f1a1f629047c5a159b4"
     },
     "README.Rmd": {
       "checksum": "2eabda577a77a8065a19cbb7acf1145c"
