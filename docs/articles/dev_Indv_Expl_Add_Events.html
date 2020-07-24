@@ -60,13 +60,13 @@
       <a href="../articles/Create_TG_Table.html">Creating Tables</a>
     </li>
     <li>
+      <a href="../articles/User_Guide_Indv_Expl.html">Users Guide to the Individual Explorer Tab</a>
+    </li>
+    <li>
       <a href="../articles/dev_Indv_Expl_Add_Events.html">Integrate New Events in Individual Explorer</a>
     </li>
     <li>
       <a href="../articles/dev_popExp_add_graph.html">Add a Graph to the Population Explorer</a>
-    </li>
-    <li>
-      <a href="../articles/User_Guide_Indv_Expl.html">Users Guide to the Individual Explorer Tab</a>
     </li>
   </ul>
 </li>
@@ -91,7 +91,7 @@
 
       
 
-      </header><script src="dev_Indv_Expl_Add_Events_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Integrate New Events in Individual Explorer</h1>
@@ -147,7 +147,7 @@
     <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(<span class="no">USUBJID</span> <span class="kw">==</span> <span class="no">input</span>$<span class="no">selPatNo</span>) <span class="kw">%&gt;%</span>
     <span class="fu">distinct</span>(<span class="no">MHCAT</span>) <span class="kw">%&gt;%</span>
     <span class="fu">pull</span>()<span class="kw">%&gt;%</span>
-    <span class="kw pkg">stringr</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/stringr/man/case.html">str_to_title</a></span>()
+    <span class="kw pkg">stringr</span><span class="kw ns">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/case.html">str_to_title</a></span>()
   <span class="no">checked5</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">"MH_"</span>,<span class="fu"><a href="https://rdrr.io/r/base/lapply.html">sapply</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/strsplit.html">strsplit</a></span>(<span class="no">mh_names</span>, <span class="st">" "</span>), <span class="kw">function</span>(<span class="no">x</span>){
     <span class="fu"><a href="https://rdrr.io/r/base/chartr.html">toupper</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/substr.html">substring</a></span>(<span class="no">x</span>, <span class="fl">1</span>, <span class="fl">1</span>), <span class="kw">collapse</span> <span class="kw">=</span> <span class="st">""</span>))}))
 }
@@ -244,7 +244,7 @@
   )</pre></body></html></div>
 <p>What’s absolutely imperative when calling this function is that the <code>df_domain_abbr</code> matches the values for the named-list of choices passed to the <code>updateCheckGroupInput()</code> function used to update <code>input$checkGroup</code> and <code>input$overlay_events</code> discussed in <code>UI Considerations</code>.</p>
 <p>Running a publicly available ADAE data set (available through <a href="https://github.com/phuse-org/TestDataFactory/tree/master/Updated/TDF_ADaM">PHUSE’s gitHub</a>) through <code><a href="../reference/org_df_events.html">org_df_events()</a></code>, the output <code>ae_dat</code> might look something like the data frame below.</p>
-<p><img src="../../../../OneDrive%20-%20Biogen/Desktop/tidyCDISC/vignettes/figures/IndvExp/org_df_events_output.PNG" width="90%" height="90%"></p>
+<p><img src="figures/IndvExp/org_df_events_output.PNG" width="90%" height="90%"></p>
 <p>It will always contain these variables, but the amount of rows will certainly vary. In the example output below, we see that the column “EVENTTYP” was populated with the <code>df_desc</code> argument. Later, this will be the Event type label in the <code>timevis</code> object displayed on the <code>Events</code> tab.</p>
 <p>The next column is START which used the “ASTDT” column, which makes it evident that the ADAE data frame we provided in <code>mi_datafile</code> (the list of data frames uploaded by the user), didn’t have the preferred “AESTDT”, so the function selected the next best date choice: “ASTDT”. It’s important that no matter how many potential dates you provide in the <code>df_st_date_vars</code> vector, that at least one of them is a required field according to the current ADaMIG.</p>
 <p>Continuing on, the END variable exists only for date-oriented data sets that would benefit from seeing a visual start and end of an event. Typically, “events” happen in one day/ instant. However, an exception to this would be medical history data where events could include medical conditions that last several days, months, or years. As such, if you (the developer) wish to implement new event data that requires showing the start AND the end of an event, follow the precedent the Medical History code establishes in the next section called <code>Build Events</code>. At the end of the day, you just want to ensure the final output mimics the output above, for reasons that will also become obvious in the next section.</p>
