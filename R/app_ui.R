@@ -69,7 +69,6 @@ golem_add_external_resources <- function(){
     tags$script(HTML(htmljs)),
     tags$script(src = "https://code.jquery.com/ui/1.12.1/jquery-ui.js"),
     shinyjs::useShinyjs(),
-    waiter::use_waiter(),
     shinyjs::inlineCSS(css),
     shinyjs::extendShinyjs(text = jscode),
     cicerone::use_cicerone()
