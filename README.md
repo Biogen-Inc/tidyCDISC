@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# tidyCDISC
+# [tidyCDISC](https://mayagans.github.io/tidyCDISC/)
 
 The purpose of tidyCDISC is a shiny app to easily create custom tables
 and figures from ADaM datasets.
