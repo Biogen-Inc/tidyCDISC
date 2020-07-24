@@ -60,13 +60,13 @@
       <a href="../articles/Create_TG_Table.html">Creating Tables</a>
     </li>
     <li>
+      <a href="../articles/User_Guide_Indv_Expl.html">Users Guide to the Individual Explorer Tab</a>
+    </li>
+    <li>
       <a href="../articles/dev_Indv_Expl_Add_Events.html">Integrate New Events in Individual Explorer</a>
     </li>
     <li>
       <a href="../articles/dev_popExp_add_graph.html">Add a Graph to the Population Explorer</a>
-    </li>
-    <li>
-      <a href="../articles/User_Guide_Indv_Expl.html">Users Guide to the Individual Explorer Tab</a>
     </li>
   </ul>
 </li>
@@ -91,7 +91,7 @@
 
       
 
-      </header><script src="dev_popExp_add_graph_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Add a Graph to the Population Explorer</h1>
@@ -114,7 +114,7 @@
 </ul>
 <p>Each plot in the Population Explorer is a submodule <code>mod_popExp_&lt;newgraph&gt;.R</code> (where <newgraph> is the plot name to be added) that is conditionally called within <code>mod_popExp.R</code> and <code>mod_popExp_ui.R</code>. The plotting module is used for the reactivity logic of the plot; the widgets needed as well as how to render them. The plot function itself is found within <code>mod_popExp_fct_&lt;newgraph&gt;.R</code></newgraph></p>
 <p>This tutorial will walk you through adding a graph module and a graph function, then applying it to the Population Explorer module using <code>mod_popExp_boxplot.R</code> and <code>mod_popExp_fct_boxplot.R</code> as examples. This is what the population explorer looked like when it first launched. Note we are using a small (N=15) test ADSL dataset here:</p>
-<p><img src="../../../../OneDrive%20-%20Biogen/Desktop/tidyCDISC/vignettes/figures/popExp/Boxplot.png" width="90%" height="90%"></p>
+<p><img src="figures/popExp/Boxplot.png" width="90%" height="90%"></p>
 <div id="create-the-plotting-widgets-ui" class="section level2">
 <h2 class="hasAnchor">
 <a href="#create-the-plotting-widgets-ui" class="anchor"></a>Create the Plotting Widgets (“ui”)</h2>
@@ -171,7 +171,7 @@
     <span class="no">p</span> <span class="kw">&lt;-</span> <span class="no">d</span> <span class="kw">%&gt;%</span>
       <span class="kw pkg">ggplot2</span><span class="kw ns">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>() +
       <span class="kw pkg">ggplot2</span><span class="kw ns">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes_.html">aes_string</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">group</span>, <span class="kw">y</span> <span class="kw">=</span> <span class="no">value</span>) +
-      <span class="kw pkg">ggplot2</span><span class="kw ns">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ylab</a></span>(<span class="kw pkg">glue</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/glue/man/glue.html">glue</a></span>(<span class="st">"{var_label} ({attr(data[[value]], 'label')})"</span>))
+      <span class="kw pkg">ggplot2</span><span class="kw ns">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ylab</a></span>(<span class="kw pkg">glue</span><span class="kw ns">::</span><span class="fu"><a href="https://glue.tidyverse.org/reference/glue.html">glue</a></span>(<span class="st">"{var_label} ({attr(data[[value]], 'label')})"</span>))
   }
 
   <span class="no">p</span> <span class="kw">&lt;-</span> <span class="no">p</span> +
@@ -263,7 +263,7 @@
 <h2 class="hasAnchor">
 <a href="#example" class="anchor"></a>Example</h2>
 <p>Here is what the population explorer looks like after adding a Histogram to it. This is using the same small ADSL dataset as above.</p>
-<p><img src="../../../../OneDrive%20-%20Biogen/Desktop/tidyCDISC/vignettes/figures/popExp/Histogram.png" width="90%" height="90%"></p>
+<p><img src="figures/popExp/Histogram.png" width="90%" height="90%"></p>
 </div>
   </div>
 

@@ -60,13 +60,13 @@
       <a href="../articles/Create_TG_Table.html">Creating Tables</a>
     </li>
     <li>
+      <a href="../articles/User_Guide_Indv_Expl.html">Users Guide to the Individual Explorer Tab</a>
+    </li>
+    <li>
       <a href="../articles/dev_Indv_Expl_Add_Events.html">Integrate New Events in Individual Explorer</a>
     </li>
     <li>
       <a href="../articles/dev_popExp_add_graph.html">Add a Graph to the Population Explorer</a>
-    </li>
-    <li>
-      <a href="../articles/User_Guide_Indv_Expl.html">Users Guide to the Individual Explorer Tab</a>
     </li>
   </ul>
 </li>
@@ -91,7 +91,7 @@
 
       
 
-      </header><script src="Create_TG_Table_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Creating Tables</h1>
@@ -109,31 +109,31 @@
 <h1 class="hasAnchor">
 <a href="#import-data" class="anchor"></a>Import Data</h1>
 <p>We can import data by clicking the ‘Browse’ button and selecting the files to upload. Here we’ve included the <code>adsl.sas7bdat</code> and <code>advs.sas7bdat</code> from the CDISC Pilot</p>
-<p><img src="../../../../OneDrive%20-%20Biogen/Desktop/tidyCDISC/vignettes/figures/tableGen/01-dataupload.png" width="90%" height="90%"></p>
+<p><img src="figures/tableGen/01-dataupload.png" width="90%" height="90%"></p>
 </div>
 <div id="creating-tables" class="section level1">
 <h1 class="hasAnchor">
 <a href="#creating-tables" class="anchor"></a>Creating Tables</h1>
 <p>This tutorial will walk you through calculating simple statistics for an <code>ADSL</code> variable and a <code>PARAMCD</code> variable which must be calculated at a certain time point.</p>
 <p>Selecting the Table Generator tab results in the following screen which is divded in two: the area to create our tables using a drag and drop interface, and the table output. Because we uploaded two datasets we have to bins of blocks, an <code>ADSL</code> bin and <code>ADVS</code> bin. The <code>ADSL</code> bin includes all the column names of the variables inside <code>ADSL</code>, while the <code>ADVS</code> bin include the different PARAMCDs.</p>
-<p><img src="../../../../OneDrive%20-%20Biogen/Desktop/tidyCDISC/vignettes/figures/tableGen/02-TG.png" width="90%" height="90%"></p>
+<p><img src="figures/tableGen/02-TG.png" width="90%" height="90%"></p>
 <div id="age-summary-statistics" class="section level2">
 <h2 class="hasAnchor">
 <a href="#age-summary-statistics" class="anchor"></a>Age Summary Statistics</h2>
 <p>We can drag the <code>AGE</code> block from within <code>ADSL</code> and drag in the <code>MEAN</code> block from the statistical blocks to calculate summary statistics for <code>AGE</code> within the trial.</p>
-<p><img src="../../../../OneDrive%20-%20Biogen/Desktop/tidyCDISC/vignettes/figures/tableGen/03-age_mean.gif"><!-- --></p>
+<p><img src="figures/tableGen/03-age_mean.gif"><!-- --></p>
 </div>
 <div id="paramcd-summary-statistics" class="section level2">
 <h2 class="hasAnchor">
 <a href="#paramcd-summary-statistics" class="anchor"></a>PARAMCD Summary Statistics</h2>
 <p>Similarly, we can drag in <code>DIABP</code> from <code>ADVS</code> and use the <code>MEAN</code> block to calculate summary statistics. However, we also need to select the <code>AVISIT</code> from the week dropdown in order to calculate the summary statistics of <code>DIABP</code> at a certain week.</p>
-<p><img src="../../../../OneDrive%20-%20Biogen/Desktop/tidyCDISC/vignettes/figures/tableGen/04-diabp_mean.gif"><!-- --></p>
+<p><img src="figures/tableGen/04-diabp_mean.gif"><!-- --></p>
 </div>
 <div id="group-by-another-variable" class="section level2">
 <h2 class="hasAnchor">
 <a href="#group-by-another-variable" class="anchor"></a>Group by another Variable</h2>
 <p>Lastly, we can use the <code>Group By</code> dropdown to calculate our statistics across groups. When we select <code>ARM</code>, rather than have a single column in the output table we now see the <code>DIABP</code> summary statics for each treatment group.</p>
-<p><img src="../../../../OneDrive%20-%20Biogen/Desktop/tidyCDISC/vignettes/figures/tableGen/05-grouping.png" width="90%" height="90%"></p>
+<p><img src="figures/tableGen/05-grouping.png" width="90%" height="90%"></p>
 <p>And that’s it!</p>
 </div>
 </div>

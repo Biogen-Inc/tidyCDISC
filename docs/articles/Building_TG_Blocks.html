@@ -60,13 +60,13 @@
       <a href="../articles/Create_TG_Table.html">Creating Tables</a>
     </li>
     <li>
+      <a href="../articles/User_Guide_Indv_Expl.html">Users Guide to the Individual Explorer Tab</a>
+    </li>
+    <li>
       <a href="../articles/dev_Indv_Expl_Add_Events.html">Integrate New Events in Individual Explorer</a>
     </li>
     <li>
       <a href="../articles/dev_popExp_add_graph.html">Add a Graph to the Population Explorer</a>
-    </li>
-    <li>
-      <a href="../articles/User_Guide_Indv_Expl.html">Users Guide to the Individual Explorer Tab</a>
     </li>
   </ul>
 </li>
@@ -91,7 +91,7 @@
 
       
 
-      </header><script src="Building_TG_Blocks_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Create A Statistical Block</h1>
@@ -154,7 +154,7 @@
 
 
 <span class="no">CDISC_freq.default</span> <span class="kw">&lt;-</span> <span class="kw">function</span>(<span class="no">column</span>, <span class="no">week</span>, <span class="no">group</span>, <span class="no">data</span>) {
-  <span class="kw pkg">rlang</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/rlang/man/abort.html">abort</a></span>(<span class="kw pkg">glue</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/glue/man/glue.html">glue</a></span>(
+  <span class="kw pkg">rlang</span><span class="kw ns">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/abort.html">abort</a></span>(<span class="kw pkg">glue</span><span class="kw ns">::</span><span class="fu"><a href="https://glue.tidyverse.org/reference/glue.html">glue</a></span>(
     <span class="st">"Can't calculate mean because data is not classified as ADLB, BDS or OCCDS"</span>
   ))
 }</pre></body></html></div>
@@ -165,7 +165,7 @@
 <p>In the case of ADSL we need to calculate the frequency for the entire table, or if groups are selected and return a table of values to be used in gt.</p>
 <div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="no">CDISC_freq.ADSL</span> <span class="kw">&lt;-</span> <span class="kw">function</span>(<span class="no">column</span>, <span class="no">week</span>, <span class="no">group</span> <span class="kw">=</span> <span class="kw">NULL</span>, <span class="no">data</span>) {
 
-  <span class="no">column</span> <span class="kw">&lt;-</span> <span class="kw pkg">rlang</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/rlang/man/sym.html">sym</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/character.html">as.character</a></span>(<span class="no">column</span>))
+  <span class="no">column</span> <span class="kw">&lt;-</span> <span class="kw pkg">rlang</span><span class="kw ns">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/sym.html">sym</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/character.html">as.character</a></span>(<span class="no">column</span>))
 
   <span class="kw">if</span> (!<span class="fu"><a href="https://rdrr.io/r/base/character.html">is.character</a></span>(<span class="no">data</span><span class="kw">[[</span><span class="no">column</span>]])) {
     <span class="fu"><a href="https://rdrr.io/r/base/stop.html">stop</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span>(<span class="st">"Can't calculate frequency, "</span>, <span class="no">column</span>, <span class="st">" is not categorical"</span>))
@@ -184,15 +184,15 @@
   } <span class="kw">else</span> {
 
     <span class="kw">if</span> (<span class="no">group</span> <span class="kw">==</span> <span class="no">column</span>) {
-      <span class="fu"><a href="https://rdrr.io/r/base/stop.html">stop</a></span>(<span class="kw pkg">glue</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/glue/man/glue.html">glue</a></span>(<span class="st">"Cannot calculate frequency for {column} when also set as group."</span>))
+      <span class="fu"><a href="https://rdrr.io/r/base/stop.html">stop</a></span>(<span class="kw pkg">glue</span><span class="kw ns">::</span><span class="fu"><a href="https://glue.tidyverse.org/reference/glue.html">glue</a></span>(<span class="st">"Cannot calculate frequency for {column} when also set as group."</span>))
     }
 
-    <span class="no">group</span> <span class="kw">&lt;-</span> <span class="kw pkg">rlang</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/rlang/man/sym.html">sym</a></span>(<span class="no">group</span>)
+    <span class="no">group</span> <span class="kw">&lt;-</span> <span class="kw pkg">rlang</span><span class="kw ns">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/sym.html">sym</a></span>(<span class="no">group</span>)
     <span class="no">data</span> <span class="kw">%&gt;%</span>
       <span class="fu">distinct</span>(<span class="no">USUBJID</span>, !!<span class="no">column</span>, !!<span class="no">group</span>) <span class="kw">%&gt;%</span>
       <span class="fu">count</span>(!!<span class="no">column</span>, !!<span class="no">group</span>) <span class="kw">%&gt;%</span>
       <span class="fu">group_by</span>(!!<span class="no">group</span>) <span class="kw">%&gt;%</span>
-      <span class="fu">mutate</span>(<span class="kw">prop</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/proportions.html">prop.table</a></span>(<span class="no">n</span>)) <span class="kw">%&gt;%</span>
+      <span class="fu">mutate</span>(<span class="kw">prop</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/prop.table.html">prop.table</a></span>(<span class="no">n</span>)) <span class="kw">%&gt;%</span>
       <span class="fu">mutate</span>(<span class="kw">v1</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="no">n</span>, <span class="st">' ('</span>, <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span>(<span class="no">prop</span>*<span class="fl">100</span>, <span class="fl">2</span>), <span class="st">')'</span>)) <span class="kw">%&gt;%</span>
       <span class="fu">select</span>(-<span class="no">n</span>, -<span class="no">prop</span>) <span class="kw">%&gt;%</span>
       <span class="fu">spread</span>(!!<span class="no">group</span>, <span class="no">v1</span>)
@@ -204,7 +204,7 @@
 <a href="#create-a-method-for-bds" class="anchor"></a>Create a method for BDS</h3>
 <p>We don’t need a method for BDS because we currently only import PARAMCD blocks and since AVAL and CHG are numeric we can’t calculate frequency:</p>
 <div class="sourceCode" id="cb6"><html><body><pre class="r"><span class="no">CDISC_freq.BDS</span> <span class="kw">&lt;-</span> <span class="kw">function</span>(<span class="no">column</span>, <span class="no">week</span>, <span class="no">group</span> <span class="kw">=</span> <span class="kw">NULL</span>, <span class="no">data</span>) {
-  <span class="kw pkg">rlang</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/rlang/man/abort.html">abort</a></span>(<span class="kw pkg">glue</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/glue/man/glue.html">glue</a></span>(
+  <span class="kw pkg">rlang</span><span class="kw ns">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/abort.html">abort</a></span>(<span class="kw pkg">glue</span><span class="kw ns">::</span><span class="fu"><a href="https://glue.tidyverse.org/reference/glue.html">glue</a></span>(
     <span class="st">"Can't calculate frequency for BDS - {column} is numeric"</span>
   ))
 }</pre></body></html></div>
