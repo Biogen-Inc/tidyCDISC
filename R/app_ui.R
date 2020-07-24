@@ -72,7 +72,6 @@ golem_add_external_resources <- function(){
     shinyjs::inlineCSS(css),
     shinyjs::extendShinyjs(text = jscode),
     cicerone::use_cicerone()
-
   )
 
 }
