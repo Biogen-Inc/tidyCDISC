@@ -16,7 +16,7 @@ mod_dataUpload_ui <- function(id){
   tagList(
     h1("Data Upload/Preview", align = "center"),
     br(), br(), br(),
-    actionButton(ns("pilot"), "Use CDISC Pilot Data"),
+    
     fluidRow(
       style = "padding: 20px",
       column(3,
@@ -24,7 +24,6 @@ mod_dataUpload_ui <- function(id){
                div(style="display: inline-block; ",h3("Data upload")),
                div(style="display: inline-block; float:right;",mod_dataComplyRules_ui("dataComplyRules_ui_1")),
                HTML("<br>ADSL file is mandatory & BDS/ OCCDS files are optional"),
-               fileInput(ns("file"), "Upload sas7bdat files",accept = c(".sas7bdat"), multiple = TRUE),
                uiOutput(ns("radio_test"))
              )
       ),
@@ -81,7 +80,6 @@ mod_dataUpload_server <- function(input, output, session){
     
     # names
     names(data_list) <- toupper(stringr::str_remove(input$file$name, ".sas7bdat"))
-    
     
     
     # run that list of dfs through the data compliance module, replacing list with those that comply
@@ -159,19 +157,14 @@ mod_dataUpload_server <- function(input, output, session){
                   extensions = "Scroller", options = list(scrollY=400, scrollX=TRUE))
   })
   
-  observeEvent( input$pilot, {
-    
-    shinyjs::disable(id = "file")
-    
-    dd$data <- list(
-      ADSL = adsl,
-      ADVS = advs,
-      ADAE = adae,
-      ADLBC = adlbc
-    )
-    
-    shinyjs::hide(id = "pilot")
-  })
+  
+  dd$data <- list(
+    ADSL = adsl,
+    ADVS = advs,
+    ADAE = adae,
+    ADLBC = adlbc
+  )
+  
   
   
   ### return all data
