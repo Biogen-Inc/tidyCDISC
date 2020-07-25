@@ -13,3 +13,5 @@ $run_dev.*
 ^docs$
 ^pkgdown$
 ^manifest\.json$
+^docs$
+^inst/doc$
