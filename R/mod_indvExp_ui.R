@@ -42,7 +42,7 @@ mod_indvExp_ui <- function(id){
                               selectInput(ns("filter_df"),"Filter on Variable(s) in a loaded ADaM",
                                           multiple = TRUE, choices = NULL, selected = NULL)
                             ),
-                            conditionalPanel(condition = "!is.null(input.filter_df)", ns = ns,
+                            conditionalPanel(condition = "input.filter_df != null", ns = ns,
                                div(id = "indv_cic_data_filter",
                                   IDEAFilter::shiny_data_filter_ui(ns("data_filter"))
                                )
