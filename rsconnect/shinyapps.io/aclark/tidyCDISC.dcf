@@ -1,0 +1,13 @@
+name: tidyCDISC
+title: tidyCDISC
+username:
+account: aclark
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 2601420
+bundleId: 3442310
+url: https://aclark.shinyapps.io/tidyCDISC/
+when: 1595874114.55222
+lastSyncTime: 1595874114.55222
+asMultiple: FALSE
+asStatic: FALSE

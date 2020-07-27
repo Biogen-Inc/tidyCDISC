@@ -123,8 +123,8 @@ mod_indvExp_server <- function(input, output, session, datafile){
     updateSelectInput(
       session = session,
       inputId = "selPatNo",
-      choices = c(" ",subj),
-      selected = " "
+      choices = c("",subj),
+      selected = ""
     )
     shinyjs::show(id = "selPatNo") # show widget
     
