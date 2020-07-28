@@ -39,7 +39,7 @@ app_ui <- function(request) {
         }")),
     tags$script(
       HTML("var header = $('.navbar > .container-fluid');
-                              header.append('<div style=\"float:right; padding-top: 8px\"; onclick=\"openGithub()\"><img src=\"www/github.png\"></div>')")
+                              header.append('<div id=\"github\" style=\"float:right; padding-top: 8px\"; onclick=\"openGithub()\"><img src=\"www/github.png\"></div>')")
     )
   )
 }
