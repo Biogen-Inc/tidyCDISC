@@ -109,7 +109,7 @@ fnIndvExplVisits <- function(
     extra_aval_vars <- c("ATM","ATPT")
     if(most_avals_per_visit > 1 & any(extra_aval_vars %in% colnames(plot_dat))){
       # Grab first available variable that exists and could explain why their are extra avals
-      avals_by <- sym(extra_aval_vars[extra_aval_vars %in% colnames(plot_dat)][1])
+      avals_by <<- sym(extra_aval_vars[extra_aval_vars %in% colnames(plot_dat)][1])
       if(avals_by == "ATM") {
         plot_dat <- plot_dat %>% mutate(ATM = as.POSIXct(paste("1970-01-01",ATM)))
       }
@@ -149,6 +149,7 @@ fnIndvExplVisits <- function(
       }
       
     } else { # no color by variable in legend or hover text
+      avals_by <<- ""
       lb_plot <- lb_plot + 
         suppressWarnings(geom_point(na.rm = TRUE, 
           aes(text = paste0(AVISIT,
@@ -168,15 +169,19 @@ fnIndvExplVisits <- function(
       #   grid.text(x$lab,  rot=rot, gp=gpar(cex = cex, col="white",
       #                                      fontface = "bold", alpha = 0.5))
       # }
-      
+      proof_lab = "IDEA: PROOF ONLY"
       lb_plot <- lb_plot +
         # annotation_custom(xmin=-Inf, ymin=-Inf, xmax=Inf, ymax=Inf,
         #                   grob(lab="IDEA: PROOF ONLY", cl="watermark"))
         
         # Smaller watermark
-        annotate("text", x = Inf, y = -Inf, label = "IDEA: PROOF ONLY",
-                 hjust=1.1, vjust=-3.3, col="white", cex=20,
-                 fontface = "bold", alpha = 0.8)
+        annotate("text", x = Inf, y = -Inf, label = proof_lab,
+                 hjust=1.1, vjust=-3.3, col="white", fontface = "bold", alpha = 0.8,
+                 cex = ifelse(substr(proof_lab,1,4) == 'IDEA',
+                              ifelse(avals_by == "" | rlang::is_empty(avals_by),19,14),
+                              ifelse(avals_by == "" | rlang::is_empty(avals_by),16,12)
+                        )
+                 )
       
     }
     
