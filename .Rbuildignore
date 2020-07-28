@@ -12,3 +12,6 @@ $run_dev.*
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$
+^manifest\.json$
+^docs$
+^inst/doc$
