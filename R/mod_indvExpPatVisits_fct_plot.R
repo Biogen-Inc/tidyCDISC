@@ -177,7 +177,8 @@ fnIndvExplVisits <- function(
         # Smaller watermark
         annotate("text", x = Inf, y = -Inf, label = proof_lab,
                  hjust=1.1, vjust=-3.3, col="white", fontface = "bold", alpha = 0.8,
-                 cex = ifelse(substr(proof_lab,1,4) == 'IDEA',20,
+                 cex = ifelse(substr(proof_lab,1,4) == 'IDEA',
+                              ifelse(avals_by == "" | rlang::is_empty(avals_by),19,14),
                               ifelse(avals_by == "" | rlang::is_empty(avals_by),16,12)
                         )
                  )
