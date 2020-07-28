@@ -311,3 +311,7 @@ transform:rotate(180deg);
   body {
     zoom: 75%;
   */
+  
+#github {
+  cursor: pointer;
+}
