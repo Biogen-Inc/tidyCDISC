@@ -35,7 +35,7 @@ app_ui <- function(request) {
     ),
     tags$script(HTML("function openGithub() { 
             window.open( 
-              \"https://github.com/MayaGans/tidyCDISC\", \"_blank\"); 
+              \"https://github.com/\", \"_blank\"); 
         }")),
     tags$script(
       HTML("var header = $('.navbar > .container-fluid');
