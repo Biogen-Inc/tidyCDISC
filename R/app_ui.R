@@ -32,9 +32,17 @@ app_ui <- function(request) {
                  title = "Individual Explorer",
                  mod_indvExp_ui("indvExp_ui_1")
                )
-      )
+    ),
+    tags$script(HTML("function openGithub() { 
+            window.open( 
+              \"https://github.com/\", \"_blank\"); 
+        }")),
+    tags$script(
+      HTML("var header = $('.navbar > .container-fluid');
+                              header.append('<div id=\"github\" style=\"float:right; padding-top: 8px\"; onclick=\"openGithub()\"><img src=\"www/github.png\"></div>')")
     )
-  }
+  )
+}
 
 #' Add external Resources to the Application
 #' 
@@ -73,7 +81,7 @@ golem_add_external_resources <- function(){
     shinyjs::inlineCSS(css),
     shinyjs::extendShinyjs(text = jscode),
     cicerone::use_cicerone()
-
+    
   )
-
+  
 }
