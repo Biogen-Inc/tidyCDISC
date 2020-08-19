@@ -12,7 +12,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# tidyCDISC <img src="man/figures/hex-tidyCDISC.png" align="right" style="height:25%;width:25%;"/>
+# tidyCDISC <img src="man/figures/hex-tidyCDISC.png" align="right" style="height:10%;width:10%;"/>
 
 The purpose of tidyCDISC is a shiny app to easily create custom tables and figures from ADaM datasets.
 
