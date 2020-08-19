@@ -3,7 +3,7 @@
 
 # tidyCDISC 
 
-<img src="man/figures/hex-tidyCDISC.png" align="right" height="10%" width="10%"/>
+<img src="man/figures/hex-tidyCDISC.png" align="right" height="15%" width="15%"/>
 
 The purpose of tidyCDISC is a shiny app to easily create custom tables
 and figures from ADaM datasets.
