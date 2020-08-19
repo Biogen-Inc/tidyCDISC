@@ -8,15 +8,13 @@ output: github_document
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  fig.path = "man/figures/README-",
-  out.width = "100%"
+  out.width = "25%"
 )
 ```
 
-# tidyCDISC
+# tidyCDISC <img src="man/figures/hex-tidyCDISC.png" align="right" style="height:25%;width:25%;"/>
 
 The purpose of tidyCDISC is a shiny app to easily create custom tables and figures from ADaM datasets.
-
 
 # Installation
 
