@@ -100,9 +100,9 @@
         "GithubRef": "master",
         "GithubSHA1": "c81cc1f988bd74e3588f60946c2fcb39ba2f5d04",
         "NeedsCompilation": "no",
-        "Packaged": "2020-06-02 15:30:44 UTC; aclark5",
+        "Packaged": "2020-08-19 21:16:19 UTC; aclark5",
         "Author": "Maya Gans [aut, cre],\n  Aaron Clark [aut]",
-        "Built": "R 3.6.3; ; 2020-06-02 15:30:46 UTC; windows"
+        "Built": "R 3.6.3; ; 2020-08-19 21:16:20 UTC; windows"
       }
     },
     "MASS": {
@@ -939,27 +939,26 @@
         "Type": "Package",
         "Package": "dplyr",
         "Title": "A Grammar of Data Manipulation",
-        "Version": "0.8.5",
-        "Authors@R": "c(\n    person(\"Hadley\", \"Wickham\", , \"hadley@rstudio.com\", c(\"aut\", \"cre\"), comment = c(ORCID = \"0000-0003-4757-117X\")),\n    person(\"Romain\", \"Fran\\u00e7ois\", role = \"aut\", comment = c(ORCID = \"0000-0002-2444-4226\")),\n    person(\"Lionel\", \"Henry\", role = \"aut\"),\n    person(\"Kirill\", \"M\\u00fcller\", role = \"aut\", comment = c(ORCID = \"0000-0002-1416-3412\")),\n    person(\"RStudio\", role = c(\"cph\", \"fnd\"))\n    )",
-        "Description": "A fast, consistent tool for working with data frame like objects,\n    both in memory and out of memory.",
+        "Version": "1.0.1",
+        "Authors@R": "\n    c(person(given = \"Hadley\",\n             family = \"Wickham\",\n             role = c(\"aut\", \"cre\"),\n             email = \"hadley@rstudio.com\",\n             comment = c(ORCID = \"0000-0003-4757-117X\")),\n      person(given = \"Romain\",\n             family = \"François\",\n             role = \"aut\",\n             comment = c(ORCID = \"0000-0002-2444-4226\")),\n      person(given = \"Lionel\",\n             family = \"Henry\",\n             role = \"aut\"),\n      person(given = \"Kirill\",\n             family = \"Müller\",\n             role = \"aut\",\n             comment = c(ORCID = \"0000-0002-1416-3412\")),\n      person(given = \"RStudio\",\n             role = c(\"cph\", \"fnd\")))",
+        "Description": "A fast, consistent tool for working with data frame\n    like objects, both in memory and out of memory.",
         "License": "MIT + file LICENSE",
-        "URL": "http://dplyr.tidyverse.org, https://github.com/tidyverse/dplyr",
+        "URL": "https://dplyr.tidyverse.org, https://github.com/tidyverse/dplyr",
         "BugReports": "https://github.com/tidyverse/dplyr/issues",
         "Depends": "R (>= 3.2.0)",
-        "Imports": "ellipsis, assertthat (>= 0.2.0), glue (>= 1.3.0), magrittr (>=\n1.5), methods, pkgconfig, R6, Rcpp (>= 1.0.1), rlang (>=\n0.4.0), tibble (>= 2.0.0), tidyselect (>= 0.2.5), utils",
-        "Suggests": "bit64, callr, covr, crayon (>= 1.3.4), DBI, dbplyr, dtplyr,\nggplot2, hms, knitr, Lahman, lubridate, MASS, mgcv,\nmicrobenchmark, nycflights13, rmarkdown, RMySQL, RPostgreSQL,\nRSQLite, testthat, withr, broom, purrr, readr",
-        "LinkingTo": "BH, plogr (>= 0.2.0), Rcpp (>= 1.0.1)",
+        "Imports": "ellipsis, generics, glue (>= 1.3.2), lifecycle (>= 0.2.0),\nmagrittr (>= 1.5), methods, R6, rlang (>= 0.4.7), tibble (>=\n2.1.3), tidyselect (>= 1.1.0), utils, vctrs (>= 0.3.2)",
+        "Suggests": "bench, broom, callr, covr, DBI, dbplyr (>= 1.4.3), knitr,\nLahman, lobstr, microbenchmark, nycflights13, purrr, rmarkdown,\nRMySQL, RPostgreSQL, RSQLite, testthat (>= 2.1.0), withr",
         "VignetteBuilder": "knitr",
         "Encoding": "UTF-8",
         "LazyData": "yes",
-        "RoxygenNote": "6.1.1",
+        "RoxygenNote": "7.1.1",
         "NeedsCompilation": "yes",
-        "Packaged": "2020-03-05 18:24:36 UTC; lionel",
+        "Packaged": "2020-07-22 12:06:49 UTC; romainfrancois",
         "Author": "Hadley Wickham [aut, cre] (<https://orcid.org/0000-0003-4757-117X>),\n  Romain François [aut] (<https://orcid.org/0000-0002-2444-4226>),\n  Lionel Henry [aut],\n  Kirill Müller [aut] (<https://orcid.org/0000-0002-1416-3412>),\n  RStudio [cph, fnd]",
         "Maintainer": "Hadley Wickham <hadley@rstudio.com>",
         "Repository": "CRAN",
-        "Date/Publication": "2020-03-07 12:20:02 UTC",
-        "Built": "R 3.6.3; x86_64-w64-mingw32; 2020-03-24 10:32:48 UTC; windows"
+        "Date/Publication": "2020-07-31 07:00:05 UTC",
+        "Built": "R 3.6.3; x86_64-w64-mingw32; 2020-08-01 01:05:26 UTC; windows"
       }
     },
     "ellipsis": {
@@ -2495,36 +2494,6 @@
         "Built": "R 3.6.3; x86_64-w64-mingw32; 2020-06-16 13:31:55 UTC; windows"
       }
     },
-    "plogr": {
-      "Source": "CRAN",
-      "Repository": "https://cran.rstudio.com/",
-      "GithubRepo": null,
-      "GithubUsername": null,
-      "GithubRef": null,
-      "GithubSha1": null,
-      "description": {
-        "Package": "plogr",
-        "Title": "The 'plog' C++ Logging Library",
-        "Version": "0.2.0",
-        "Date": "2018-03-24",
-        "Authors@R": "c(\n  person(\"Kirill\", \"Müller\", role = c(\"aut\", \"cre\"), email = \"krlmlr+r@mailbox.org\"),\n  person(\"Sergey\", \"Podobry\", role = \"cph\", comment = \"Author of the bundled plog library\"))",
-        "Description": "\n  A simple header-only logging library for C++.\n  Add 'LinkingTo: plogr' to 'DESCRIPTION', and '#include <plogr.h>' in your C++ modules to use it.",
-        "Suggests": "Rcpp",
-        "License": "MIT + file LICENSE",
-        "Encoding": "UTF-8",
-        "LazyData": "true",
-        "URL": "https://github.com/krlmlr/plogr#readme",
-        "BugReports": "https://github.com/krlmlr/plogr/issues",
-        "RoxygenNote": "6.0.1.9000",
-        "NeedsCompilation": "no",
-        "Packaged": "2018-03-24 11:02:06 UTC; muelleki",
-        "Author": "Kirill Müller [aut, cre],\n  Sergey Podobry [cph] (Author of the bundled plog library)",
-        "Maintainer": "Kirill Müller <krlmlr+r@mailbox.org>",
-        "Repository": "CRAN",
-        "Date/Publication": "2018-03-25 15:25:27 UTC",
-        "Built": "R 3.6.2; ; 2020-01-31 21:55:49 UTC; windows"
-      }
-    },
     "plotly": {
       "Source": "CRAN",
       "Repository": "https://cran.rstudio.com/",
@@ -2905,7 +2874,7 @@
       "GithubSha1": null,
       "description": {
         "Package": "rlang",
-        "Version": "0.4.6",
+        "Version": "0.4.7",
         "Title": "Functions for Base Types and Core R and 'Tidyverse' Features",
         "Description": "A toolbox for working with base types, core R features\n  like the condition system, and core 'Tidyverse' features like tidy\n  evaluation.",
         "Authors@R": "c(\n    person(\"Lionel\", \"Henry\", ,\"lionel@rstudio.com\", c(\"aut\", \"cre\")),\n    person(\"Hadley\", \"Wickham\", ,\"hadley@rstudio.com\", \"aut\"),\n    person(\"RStudio\", role = \"cph\")\n    )",
@@ -2914,18 +2883,18 @@
         "ByteCompile": "true",
         "Biarch": "true",
         "Depends": "R (>= 3.2.0)",
-        "Suggests": "cli, covr, crayon, glue, magrittr, methods, pillar,\nrmarkdown, testthat (>= 2.3.0), vctrs (>= 0.2.3)",
+        "Suggests": "cli, covr, crayon, glue, magrittr, methods, pillar,\nrmarkdown, testthat (>= 2.3.0), vctrs (>= 0.2.3), withr",
         "Encoding": "UTF-8",
-        "RoxygenNote": "7.0.2",
+        "RoxygenNote": "7.1.1",
         "URL": "http://rlang.r-lib.org, https://github.com/r-lib/rlang",
         "BugReports": "https://github.com/r-lib/rlang/issues",
         "NeedsCompilation": "yes",
-        "Packaged": "2020-05-02 13:00:52 UTC; lionel",
+        "Packaged": "2020-07-09 12:06:27 UTC; lionel",
         "Author": "Lionel Henry [aut, cre],\n  Hadley Wickham [aut],\n  RStudio [cph]",
         "Maintainer": "Lionel Henry <lionel@rstudio.com>",
         "Repository": "CRAN",
-        "Date/Publication": "2020-05-02 16:20:02 UTC",
-        "Built": "R 3.6.3; x86_64-w64-mingw32; 2020-05-24 20:37:33 UTC; windows"
+        "Date/Publication": "2020-07-09 23:00:18 UTC",
+        "Built": "R 3.6.3; x86_64-w64-mingw32; 2020-08-01 04:16:07 UTC; windows"
       }
     },
     "rmarkdown": {
@@ -3033,7 +3002,7 @@
       "GithubRepo": "rsconnect",
       "GithubUsername": "rstudio",
       "GithubRef": "master",
-      "GithubSha1": "40c162bf3c4cd9b10deed82e1df9ec1b0c107c1f",
+      "GithubSha1": "6d3afdad7ccf07398102c3cec0eaecd76177211c",
       "description": {
         "Package": "rsconnect",
         "Type": "Package",
@@ -3055,14 +3024,14 @@
         "RemoteRepo": "rsconnect",
         "RemoteUsername": "rstudio",
         "RemoteRef": "master",
-        "RemoteSha": "40c162bf3c4cd9b10deed82e1df9ec1b0c107c1f",
+        "RemoteSha": "6d3afdad7ccf07398102c3cec0eaecd76177211c",
         "GithubRepo": "rsconnect",
         "GithubUsername": "rstudio",
         "GithubRef": "master",
-        "GithubSHA1": "40c162bf3c4cd9b10deed82e1df9ec1b0c107c1f",
+        "GithubSHA1": "6d3afdad7ccf07398102c3cec0eaecd76177211c",
         "NeedsCompilation": "no",
-        "Packaged": "2020-04-13 20:49:46 UTC; aclark5",
-        "Built": "R 3.6.2; ; 2020-04-13 20:49:49 UTC; windows"
+        "Packaged": "2020-07-24 17:11:24 UTC; aclark5",
+        "Built": "R 3.6.3; ; 2020-07-24 17:11:27 UTC; windows"
       }
     },
     "rstudioapi": {
@@ -3816,10 +3785,10 @@
         "GithubRef": "master",
         "GithubSHA1": "f9f5f60ec4c7b388140ce7a85e5f7fb187eae944",
         "NeedsCompilation": "no",
-        "Packaged": "2020-04-13 19:56:46 UTC; aclark5",
+        "Packaged": "2020-07-27 13:38:19 UTC; aclark5",
         "Author": "John Coene [aut, cre]",
         "Maintainer": "John Coene <jcoenep@gmail.com>",
-        "Built": "R 3.6.2; ; 2020-04-13 19:56:47 UTC; windows"
+        "Built": "R 3.6.3; ; 2020-07-27 13:38:20 UTC; windows"
       }
     },
     "usethis": {
@@ -3894,27 +3863,27 @@
       "description": {
         "Package": "vctrs",
         "Title": "Vector Helpers",
-        "Version": "0.2.4",
-        "Authors@R": "\n    c(person(given = \"Hadley\",\n             family = \"Wickham\",\n             role = c(\"aut\", \"cre\"),\n             email = \"hadley@rstudio.com\"),\n      person(given = \"Lionel\",\n             family = \"Henry\",\n             role = \"aut\",\n             email = \"lionel@rstudio.com\"),\n      person(given = \"Davis\",\n             family = \"Vaughan\",\n             role = \"aut\",\n             email = \"davis@rstudio.com\"),\n      person(given = \"RStudio\",\n             role = \"cph\"))",
+        "Version": "0.3.2",
+        "Authors@R": "\n    c(person(given = \"Hadley\",\n             family = \"Wickham\",\n             role = \"aut\",\n             email = \"hadley@rstudio.com\"),\n      person(given = \"Lionel\",\n             family = \"Henry\",\n             role = c(\"aut\", \"cre\"),\n             email = \"lionel@rstudio.com\"),\n      person(given = \"Davis\",\n             family = \"Vaughan\",\n             role = \"aut\",\n             email = \"davis@rstudio.com\"),\n      person(given = \"RStudio\",\n             role = \"cph\"))",
         "Description": "Defines new notions of prototype and size that are\n    used to provide tools for consistent and well-founded type-coercion\n    and size-recycling, and are in turn connected to ideas of type- and\n    size-stability useful for analysing function interfaces.",
         "License": "GPL-3",
-        "URL": "https://github.com/r-lib/vctrs",
+        "URL": "https://vctrs.r-lib.org/",
         "BugReports": "https://github.com/r-lib/vctrs/issues",
         "Depends": "R (>= 3.2)",
-        "Imports": "ellipsis (>= 0.2.0), digest, glue, rlang (>= 0.4.5)",
-        "Suggests": "bit64, covr, crayon, generics, knitr, pillar (>= 1.4.1),\npkgdown, rmarkdown, testthat (>= 2.3.0), tibble, xml2, zeallot",
+        "Imports": "ellipsis (>= 0.2.0), digest, glue, rlang (>= 0.4.7)",
+        "Suggests": "bit64, covr, crayon, dplyr (>= 0.8.5), generics, knitr,\npillar (>= 1.4.4), pkgdown, rmarkdown, testthat (>= 2.3.0),\ntibble, withr, xml2, zeallot",
         "VignetteBuilder": "knitr",
         "Encoding": "UTF-8",
         "Language": "en-GB",
         "LazyData": "true",
-        "RoxygenNote": "7.0.2",
+        "RoxygenNote": "7.1.1",
         "NeedsCompilation": "yes",
-        "Packaged": "2020-03-08 18:09:38 UTC; lionel",
-        "Author": "Hadley Wickham [aut, cre],\n  Lionel Henry [aut],\n  Davis Vaughan [aut],\n  RStudio [cph]",
-        "Maintainer": "Hadley Wickham <hadley@rstudio.com>",
+        "Packaged": "2020-07-15 10:57:45 UTC; lionel",
+        "Author": "Hadley Wickham [aut],\n  Lionel Henry [aut, cre],\n  Davis Vaughan [aut],\n  RStudio [cph]",
+        "Maintainer": "Lionel Henry <lionel@rstudio.com>",
         "Repository": "CRAN",
-        "Date/Publication": "2020-03-10 09:30:03 UTC",
-        "Built": "R 3.6.3; x86_64-w64-mingw32; 2020-03-24 07:29:47 UTC; windows"
+        "Date/Publication": "2020-07-15 11:30:02 UTC",
+        "Built": "R 3.6.3; x86_64-w64-mingw32; 2020-08-01 07:06:08 UTC; windows"
       }
     },
     "viridisLite": {
@@ -4175,7 +4144,7 @@
       "checksum": "b9e1042c52eb3b5a0abff2a1c61bb1ea"
     },
     "data-raw/adlbc.R": {
-      "checksum": "4969feab9cc06613e14f5c871a2b6977"
+      "checksum": "a4fe7ddc771cb8bf507f6feb4dac0443"
     },
     "data-raw/adlbc.xpt": {
       "checksum": "09150cf26d5709b5d673ce9be78a4b3d"
@@ -4196,7 +4165,7 @@
       "checksum": "95c154e10302b92e44a20dfe676d828c"
     },
     "data/adlbc.rda": {
-      "checksum": "3c9c49c0ba39af5ef4a7d2d4f8020949"
+      "checksum": "807c2754ddabe4035928165018027e6d"
     },
     "data/adsl.rda": {
       "checksum": "0cbdad4efc6f3fe1fbffe47248877937"
@@ -4205,7 +4174,7 @@
       "checksum": "61efa82920fa062e23d6215dfbdb74be"
     },
     "DESCRIPTION": {
-      "checksum": "179c29284f633effc3808ee6bb41559e"
+      "checksum": "15031a08cbc6d1541c6f6e833b675049"
     },
     "dev/01_start.R": {
       "checksum": "6992ea42b2ce8c44c53dd72e75724aac"
@@ -4226,10 +4195,10 @@
       "checksum": "58b61e085b194a44763eb8ad01b38020"
     },
     "inst/app/www/batchDownload_html.Rmd": {
-      "checksum": "a52729b9002ea019dfaf410d23b744a4"
+      "checksum": "86af84665272cc7b66468d7ed1f9f99d"
     },
     "inst/app/www/batchDownload_pdf.Rmd": {
-      "checksum": "26cfce1fb13ea7d5f04bae6acc31a682"
+      "checksum": "a8cd4fe04b8f5dac7873feff3ebc7614"
     },
     "inst/app/www/favicon.ico": {
       "checksum": "0356fd73062e635dd0b61db22ca21b45"
@@ -4244,7 +4213,7 @@
       "checksum": "deef254862ca7318d0738e95d6fac2b0"
     },
     "inst/app/www/recipe2.js": {
-      "checksum": "b293d8a542c8ffd5478b8d5559617e94"
+      "checksum": "9cc5a3213d6585aa2dfa2ad86abb01ae"
     },
     "inst/app/www/red_x.png": {
       "checksum": "71ee35ce4c01cb0435f41f91f646eac6"
@@ -4253,7 +4222,7 @@
       "checksum": "ecdc41fc2a93de86beb267d56d8d39bc"
     },
     "inst/app/www/styles.css": {
-      "checksum": "cce12a3023357ddcffbaae01e7d4d5c8"
+      "checksum": "e3ac419b28e21dfd0c7ce98c5ecd5fa6"
     },
     "inst/app/www/sync_divs.js": {
       "checksum": "23e76c85900525440527df79163e813b"
@@ -4352,7 +4321,7 @@
       "checksum": "a08efe2be94e43fe20593914cd2969fc"
     },
     "man/IDEA_boxplot.Rd": {
-      "checksum": "85d7fde9fcfb0eb466c4c58da8a8e9ef"
+      "checksum": "d4cba9546ceb53a8a55340075aced770"
     },
     "man/IDEA_chg.Rd": {
       "checksum": "92d328a52ad7b9be361fe7b3caf5fede"
@@ -4373,10 +4342,10 @@
       "checksum": "e3867a8f1bd1c9eac89d4d6dca3029cd"
     },
     "man/IDEA_scatterplot.Rd": {
-      "checksum": "14bc72893a23d97987e30cf004fbd4ee"
+      "checksum": "f21ef93bf7966fb9114b10c611dab59a"
     },
     "man/IDEA_spaghettiplot.Rd": {
-      "checksum": "b7b9102476a5955f9ee9a595de7625b0"
+      "checksum": "cb92ade4b4ebac22c0d53891283794e5"
     },
     "man/mean_summary.Rd": {
       "checksum": "a7891c15b753d65b3ad75f16e6e708b7"
@@ -4553,7 +4522,7 @@
       "checksum": "820273c2cdc58c3c8e187bfd8a0882a1"
     },
     "packrat/desc/dplyr": {
-      "checksum": "d16cf8fc0f20fcdd4d95ebd4b5728d3a"
+      "checksum": "4cbf36c25dbbf4f6827403b94ef73c03"
     },
     "packrat/desc/DT": {
       "checksum": "c9cc81819ad44e4d7a8190de4d20caa3"
@@ -4634,7 +4603,7 @@
       "checksum": "8e0960907e8a88469c4a2257706b919c"
     },
     "packrat/desc/IDEAFilter": {
-      "checksum": "89625d2c040c366631867d9fdb1dacc6"
+      "checksum": "431ec6723799c0f85cb338a20700fdac"
     },
     "packrat/desc/ini": {
       "checksum": "662618e7a75fe428b0c622e3205793c9"
@@ -4714,9 +4683,6 @@
     "packrat/desc/pkgload": {
       "checksum": "f1fdf13d8002f2b644b0fdf3e0715832"
     },
-    "packrat/desc/plogr": {
-      "checksum": "e34d9eebecd2d6f6b5a78d5dc0358848"
-    },
     "packrat/desc/plotly": {
       "checksum": "6bc0acdee7f37b75d3744b25af7de407"
     },
@@ -4763,7 +4729,7 @@
       "checksum": "559a78766d189ae86272eb293c05a344"
     },
     "packrat/desc/rlang": {
-      "checksum": "691cbbda530b9bfb862a357ce7a72a39"
+      "checksum": "6f7cca8d137b18322528df58054796e9"
     },
     "packrat/desc/rmarkdown": {
       "checksum": "1a232db8cb6bb0aa1bad3d2c2d630e3a"
@@ -4775,7 +4741,7 @@
       "checksum": "935c26a59eedf4c933af18fea4c3a6b2"
     },
     "packrat/desc/rsconnect": {
-      "checksum": "1a04beb54a62784d0ca7af93d5848f3e"
+      "checksum": "37987446772c492528352f674f5bbefc"
     },
     "packrat/desc/rstudioapi": {
       "checksum": "109679f641804b0addbb4be8420e7622"
@@ -4847,7 +4813,7 @@
       "checksum": "76e290f4bdeb4167430d69f32e2ea4f4"
     },
     "packrat/desc/tippy": {
-      "checksum": "b1ab904fa9edf726b91d4f6860cd3ca6"
+      "checksum": "7d6fc9ce42dc9a28cf5d74a244474a16"
     },
     "packrat/desc/usethis": {
       "checksum": "85b3a87290097c7b845f5b838f2d189b"
@@ -4856,7 +4822,7 @@
       "checksum": "5b189058bfd3009c520a6020f8600b2e"
     },
     "packrat/desc/vctrs": {
-      "checksum": "88591f2d403219600ae00ae2e0722314"
+      "checksum": "1b0a3e1cb47055de36840f7aa3859a95"
     },
     "packrat/desc/viridisLite": {
       "checksum": "f05821ee2ca7f50fd2b341641bc66dfd"
@@ -4883,7 +4849,7 @@
       "checksum": "1a902a5286236b90738a357b2537b341"
     },
     "packrat/packrat.lock": {
-      "checksum": "a2a7fc33af5cc35838908c7df6c1bd65"
+      "checksum": "c2b722f9d9f884e20cfc694f16b6e2b2"
     },
     "R/app_config.R": {
       "checksum": "97f9726e9dc06c780f75227609fee0bf"
@@ -4901,7 +4867,7 @@
       "checksum": "1629af3608d959eab0c488a890bcf34f"
     },
     "R/global.R": {
-      "checksum": "2d0388fbcc172194c9ecf41f8d139610"
+      "checksum": "7202613755855fb4273cfc5dcc285e58"
     },
     "R/golem_utils_server.R": {
       "checksum": "9e1b215ed4fbce8f5176b982dad17bc8"
@@ -4922,34 +4888,34 @@
       "checksum": "434e7e8f6474efba298c2d98495b8e53"
     },
     "R/mod_dataUpload.R": {
-      "checksum": "5faa47e8c72ea41b400d4a2d73411bf6"
+      "checksum": "76d31543a23c3c846b5c22209bdd251e"
     },
     "R/mod_indvExp_fct_buildEvents.R": {
-      "checksum": "66d6d526b3767fc5de25155e95fc45af"
+      "checksum": "d72762d8c453c77facb3b07ed76303cf"
     },
     "R/mod_indvExp_fct_organizeEvent.R": {
       "checksum": "6471271e6b1ece981cd4eb215d077138"
     },
     "R/mod_indvExp_srv.R": {
-      "checksum": "6a32ed953f5dfdcbf0397d77d003cfcd"
+      "checksum": "5e08473db2027a1c9d0f8bdc8d79cb3e"
     },
     "R/mod_indvExp_ui.R": {
-      "checksum": "f767b5eb240c3f8ebbac0458ee7764d8"
+      "checksum": "9b651e8b87ae3a122f450de1ffd11f41"
     },
     "R/mod_indvExp_utils_helpers.R": {
       "checksum": "7ed2e7f794c616894626f10ea3532fba"
     },
     "R/mod_indvExpPat.R": {
-      "checksum": "f5107f57f8242bc8bcd00a6da8decef9"
+      "checksum": "402410c8d770ee311d538d80f22ff67f"
     },
     "R/mod_indvExpPatEvents.R": {
       "checksum": "16da653aab13b455c8b9c634ebe17f4f"
     },
     "R/mod_indvExpPatVisits.R": {
-      "checksum": "f3ff0a1cb15b59ee926d6ca52ea6ad09"
+      "checksum": "3d9aa484eaf22d9f698a47c26172f181"
     },
     "R/mod_indvExpPatVisits_fct_plot.R": {
-      "checksum": "4a2ef27d498985fef1e2432e2e63c994"
+      "checksum": "acc77fdff82e38d63a93ee010aa41575"
     },
     "R/mod_popExp.R": {
       "checksum": "faf5e32f43079b375670f6657ff98bc9"
@@ -4958,7 +4924,16 @@
       "checksum": "fb91ac849067b34ddba1ecc454e1cfd2"
     },
     "R/mod_popExp_fct.R": {
-      "checksum": "82a0284b5d603c26fb9a5447128c1e0b"
+      "checksum": "6ba08133dcd37378498bb4321efd94b2"
+    },
+    "R/mod_popExp_fct_boxplot.R": {
+      "checksum": "f69884474dff4c1eea71c1b348345a3a"
+    },
+    "R/mod_popExp_fct_scatterplot.R": {
+      "checksum": "6e057a35ac630d3a88152f5a67931472"
+    },
+    "R/mod_popExp_fct_spaghettiplot.R": {
+      "checksum": "4b0447aea6a6af28b3ba6459ac45ffb3"
     },
     "R/mod_popExp_scatter.R": {
       "checksum": "daf1def06c35187428ebd321e0a9608f"
@@ -4976,7 +4951,7 @@
       "checksum": "5ff77fa3b4d84afeaeafa910bbea01e5"
     },
     "R/mod_tableGen.R": {
-      "checksum": "bd78781fb7b1221553038cecae4cd728"
+      "checksum": "7af24d3bd1ba779b00e3a2f5d2039cf4"
     },
     "R/mod_tableGen_fct_anova.R": {
       "checksum": "cbbc0c8ae13e7694608f1ef0f0567c4c"
@@ -5015,7 +4990,7 @@
       "checksum": "defd077e22f16800b23c7a2dea736716"
     },
     "R/utils_strObjs.R": {
-      "checksum": "18da0b87e8232b144e5a99f163b9a559"
+      "checksum": "f5eaae4506619743ce01cc43a30ccf7f"
     },
     "README.md": {
       "checksum": "f7117ced4ac4b89fa3451d42740bd85c"
@@ -5048,13 +5023,13 @@
       "checksum": "81bf2f250a1eac7f9a50f87374afa9e7"
     },
     "tests/testthat/test-popExp_fct_boxplot.R": {
-      "checksum": "5f6a61cda1e1ebe636ce14f51e777db9"
+      "checksum": "27b5f39f6374f19a3eeea4c92f9d22c4"
     },
     "tests/testthat/test-popExp_fct_scatterplot.R": {
-      "checksum": "427e625cc59a1e08b14090ac90432684"
+      "checksum": "dc9a95692dbc3b7f161971cbb79f2e75"
     },
     "tests/testthat/test-popExp_fct_spaghettiplot.R": {
-      "checksum": "9a24f01a4ffb790db9b0dfa026d66601"
+      "checksum": "d08953f4cba74481051973a3d301cc72"
     },
     "tests/testthat/test-tableGen_fct_blocks.R": {
       "checksum": "d4c511bfeff7886ee329008c22c2ea0d"
@@ -5081,7 +5056,7 @@
       "checksum": "098e15f79a2c8c253739d00f0c92ef04"
     },
     "vignettes/dev_popExp_add_graph.Rmd": {
-      "checksum": "40839c78c3d381446da0372702b6ff54"
+      "checksum": "738eeefa3bb9bf66e9fc0ac49ef94c45"
     },
     "vignettes/figures/IndvExp/01_dataUpload.PNG": {
       "checksum": "5503d8b1d7c7da5fc7900c6d2c613291"
@@ -5179,8 +5154,14 @@
     "vignettes/figures/IndvExp/Visits_Plot_Interactivity.gif": {
       "checksum": "65c4e21e04b5ecf4551b5329beb5eb03"
     },
+    "vignettes/figures/popExp/Boxplot.png": {
+      "checksum": "e27c8a011c613df3ad3e9c7e4b434eae"
+    },
     "vignettes/figures/popExp/create_plot.png": {
       "checksum": "df99dd15091d0e7a4044ec1e6d117aed"
+    },
+    "vignettes/figures/popExp/Histogram.png": {
+      "checksum": "e25f1ac453a9e82873e0918c11755124"
     },
     "vignettes/figures/tableGen/01-dataupload.png": {
       "checksum": "7804e9f2b04b8dc4f2acb9e83e43d31b"
