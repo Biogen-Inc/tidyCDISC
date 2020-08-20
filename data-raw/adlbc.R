@@ -22,6 +22,8 @@ move = min_lb - min_trt + (lb_dur - trt_dur)
 
 # Subtract the 'move' var's days, overwriting ADT
 adlbc <- adlbc %>%
-  mutate(ADT = ADT - move )
+  mutate(ADT = ADT - move ) %>%
+  dplyr::mutate(dplyr::across(.cols = where(is.character), 
+                              .fns = na_if, y = ""))
 
 usethis::use_data(adlbc, overwrite = TRUE)
