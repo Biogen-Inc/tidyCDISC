@@ -191,7 +191,7 @@ mod_popExp_server <- function(input, output, session, datafile) {
       
       d <- filtered_data() %>%
         semi_join(adsl_filt)
-
+      
       # If there are any datasets that were not filtered, then semi_join those
       if(!is.null(not_filtered())){
         d <- d %>%
@@ -200,6 +200,8 @@ mod_popExp_server <- function(input, output, session, datafile) {
               semi_join(adsl_filt)
           )
       }
+      d <- sjlabelled::copy_labels(d, feed_filter()) # add labels back in after filter
+      
     } else {
       d <- all_data()
     }
