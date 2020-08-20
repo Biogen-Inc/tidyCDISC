@@ -171,7 +171,7 @@ mod_popExp_server <- function(input, output, session, datafile) {
   
   # Update datset, depending on apply_filters or filtered_data() changing
   dataset <- eventReactive(list(input$apply_filters,filtered_data()), {
-    if (!is.null(filtered_data()) && input$apply_filters == TRUE ) {
+    if (!is.null(filtered_data()) & input$apply_filters == TRUE ) {
       
       req(input$filter_df) # needed 100% as this can be slow to update, causing an error
       
@@ -190,8 +190,8 @@ mod_popExp_server <- function(input, output, session, datafile) {
         purrr::reduce(inner_join)
       
       d <- filtered_data() %>%
-        semi_join(adsl_filt)
-
+        semi_join(adsl_filt) %>%
+      
       # If there are any datasets that were not filtered, then semi_join those
       if(!is.null(not_filtered())){
         d <- d %>%
@@ -200,6 +200,9 @@ mod_popExp_server <- function(input, output, session, datafile) {
               semi_join(adsl_filt)
           )
       }
+      
+      # d <- sjlabelled::copy_labels(d, feed_filter())
+      
     } else {
       d <- all_data()
     }
