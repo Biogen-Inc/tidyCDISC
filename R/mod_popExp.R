@@ -200,6 +200,7 @@ mod_popExp_server <- function(input, output, session, datafile) {
               semi_join(adsl_filt)
           )
       }
+      d <- sjlabelled::copy_labels(d, feed_filter())
     } else {
       d <- all_data()
     }
