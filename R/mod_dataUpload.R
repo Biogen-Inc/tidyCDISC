@@ -74,7 +74,7 @@ mod_dataUpload_server <- function(input, output, session){
     for (i in 1:nrow(input$file)){
       if(length(grep(".sas7bdat", input$file$name[i], ignore.case = TRUE)) > 0){
         data_list[[i]] <- haven::zap_formats(haven::read_sas(input$file$datapath[i])) %>%
-          dplyr::mutate(across(.cols = where(is.character),
+          dplyr::mutate(dplyr::across(.cols = where(is.character),
                                .fns = na_if, y = ""))
       }else{
         data_list[[i]] <- NULL
