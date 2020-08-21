@@ -35,7 +35,7 @@ app_ui <- function(request) {
       ),
   tags$script(
     HTML("var header = $('.navbar > .container-fluid');
-                              header.append('<a href=\"mailto:example@email.com\"><img src=\"www/email.svg\" style=\"width:2.5%;height:2.5%;float:right;padding-top:5px;\"></a>')")
+                              header.append('<a href=\"mailto:example@email.com?subject=IDEA App Request\"><img src=\"www/email.svg\" style=\"width:2.5%;height:2.5%;float:right;padding-top:5px;\"></a>')")
   ))
   }
 
