@@ -32,8 +32,11 @@ app_ui <- function(request) {
                  title = "Individual Explorer",
                  mod_indvExp_ui("indvExp_ui_1")
                )
-      )
-    )
+      ),
+  tags$script(
+    HTML("var header = $('.navbar > .container-fluid');
+                              header.append('<a href=\"mailto:adshelp@digicomm.jira.com?subject=IDEA App Request\"><img src=\"www/email.svg\" style=\"width:2.5%;height:2.5%;float:right;padding-top:5px;\"></a>')")
+  ))
   }
 
 #' Add external Resources to the Application
