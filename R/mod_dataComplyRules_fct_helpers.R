@@ -26,7 +26,7 @@ expl_rules <-
 # Rules for dfs that include certain variables
 df_incl_rules <- 
   list(
-    PARAMCD = list(error = c("AVISITN", "VISIT", "AVISIT", "PARAMCD", "PARAM", "AVAL", "CHG", "BASE"),
+    PARAMCD = list(error = c("AVISITN", "AVISIT", "PARAMCD", "PARAM", "AVAL", "CHG", "BASE"),
                    warn = c(""))
   )
 
