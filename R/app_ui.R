@@ -19,7 +19,7 @@ app_ui <- function(request) {
                  mod_dataUpload_ui("dataUpload_ui_1")
                ),
                tabPanel(
-                 title = "TableGenerator",
+                 title = "Table Generator",
                  div(mod_tableGen_ui("tableGen_ui_1"), id = "tableGen")
                ),
                tabPanel(
