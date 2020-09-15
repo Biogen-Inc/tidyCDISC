@@ -323,8 +323,12 @@ transform:rotate(180deg);
   color:white;
   size:12px;
   margin-bottom:10px !important;
-  font-size:2em;
+  font-size: 15px;
   text-align: center;
+}
+
+.filter-container {
+  font-size: 15px;
 }
 
 .checkbox label {
