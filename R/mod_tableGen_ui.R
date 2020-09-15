@@ -41,8 +41,8 @@ mod_tableGen_ui <- function(id){
                                  ),
                                  shinyUI(bootstrapPage(
                                    HTML('<button data-toggle="collapse" data-target="#demo" 
-                                        class="btn btn-input" id="filter-accordion"
-                                        style="width:100%;padding:3px;background-color:#008cba !important;color:white;size:12px;margin-bottom:10px;font-size:2em;">Filter Data</button>'),
+                                        class="btn btn-input filter-accordion" id="filter-accordion"
+                                        >Filter Data</button>'),
                                    tags$div(id = 'demo',  class="collapse",
                                             selectInput(ns("filter_df"),"Filter on Variable(s) in a loaded ADaM",
                                                         multiple = TRUE, choices = NULL, selected = NULL),
