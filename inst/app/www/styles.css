@@ -315,3 +315,29 @@ transform:rotate(180deg);
   body {
     zoom: 75%;
   */
+  
+  
+.filter-accordion {
+  width:100%;
+  background-color:#008cba !important;
+  color:white;
+  size:12px;
+  margin-bottom:10px !important;
+  font-size: 15px;
+  text-align: center;
+}
+
+.filter-container {
+  font-size: 15px;
+}
+
+.checkbox label {
+  width: 100%;
+  padding-right: 20px;
+  padding-top: 3px;
+}
+
+.form-group.shiny-input-container {
+    width: 100%;
+}
+
