@@ -333,3 +333,7 @@ transform:rotate(180deg);
   padding-top: 3px;
 }
 
+.form-group.shiny-input-container {
+    width: 100%;
+}
+
