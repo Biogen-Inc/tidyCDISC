@@ -315,3 +315,16 @@ transform:rotate(180deg);
   body {
     zoom: 75%;
   */
+  
+  
+.filter-accordion {
+  width:100%;
+  background-color:#008cba !important;
+  color:white;
+  size:12px;
+  margin-bottom:10px;
+  font-size:2em;
+  text-align: center;
+}
+
+
