@@ -102,7 +102,8 @@ mod_tableGen_ui <- function(id){
                                      column(6, offset = 0,
                                             radioButtons(ns("download_type"), "Download Type", 
                                                          choices = c("CSV" = ".csv",
-                                                                     "HTML" = ".html"),
+                                                                     "HTML" = ".html",
+                                                                     "CODE" = ".R"),
                                                          inline = TRUE))
                                      
                                    )

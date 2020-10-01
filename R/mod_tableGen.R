@@ -174,7 +174,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   
   
   # ----------------------------------------------------------------------
-  # Generate table given the droped blocks
+  # Generate table given the dropped blocks
   # ----------------------------------------------------------------------
   
   # convert the custom shiny input to a table output
@@ -217,7 +217,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
                                 data = all_data())) %>%
     map(setNames, common_rownames(all_data(), column())) %>%
     setNames(paste(blocks_and_functions()$gt_group)) %>%
-      bind_rows(.id = "ID") %>%
+    bind_rows(.id = "ID")  %>%
       mutate(
         ID = stringi::stri_replace_all_regex(
           ID, 
@@ -270,8 +270,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       )
   })
   
-  
-  output$all <- render_gt({ gt_table() })
+  output$all <- render_gt({  gt_table() })
   
   
   # ----------------------------------------------------------------------
@@ -336,9 +335,29 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       } else if(input$download_type == ".html") {
         exportHTML <- gt_table()
         gtsave(exportHTML, file)
+      } else {
+        writeLines(deparse(expressionOutput()), file)
       }
     }
   )  
+  
+  
+  expressionOutput <- reactive({ 
+    rlang::expr({
+      test <-  !!dput(blocks_and_functions()) 
+      test2 <- dput(all_data())
+      test3 <- pmap(list(test$agg, 
+                         test$S3, 
+                         test$dropdown), 
+                    function(x,y,z) 
+                      IDEA_methods(x,y,z, 
+                                   group = column(), 
+                                   data = test2)) %>%
+        map(setNames, common_rownames(test2, column())) %>%
+        setNames(paste(test$gt_group)) %>%
+        bind_rows(.id = "ID") 
+    })
+  })
   
   # return the block area to be created in app_ui
   p <- reactive({ rowArea(col = 12, block_data()) })
