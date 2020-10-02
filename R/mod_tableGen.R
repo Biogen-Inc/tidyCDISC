@@ -348,7 +348,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       
       # get input file paths from IDEA
       # use HAVEN to extract data, then merge
-      input_files <- all_files
+      input_files <- !!purrr::map_chr(datafile(), ~attributes(.x)$label)
       tg_data <- IDEA::combineData(input_files) %>% IDEA::mergeData()
       
       # get drop zone area from IDEA
