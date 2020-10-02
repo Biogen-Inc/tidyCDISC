@@ -342,18 +342,36 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   
   expressionOutput <- reactive({ 
     rlang::expr({
-      blockData <-  !!dput(blocks_and_functions()) 
-      tg_data <- !!input$sas$datapath
-      tg_table <- pmap(list(blockData$agg, 
+      library(purrr)
+      library(IDEA)
+      library(haven)
+      
+      # get input file paths from IDEA
+      # use HAVEN to extract data, then merge
+      input_files <- all_files
+      tg_data <- IDEA::combineData(input_files) %>% IDEA::mergeData()
+      
+      # get drop zone area from IDEA
+      # and create table using data
+      blockData <- !!dput(blocks_and_functions()) 
+        
+      tg_table <- purrr::pmap(list(blockData$agg, 
                          blockData$S3, 
                          blockData$dropdown), 
                     function(x,y,z) 
-                      IDEA_methods(x,y,z, 
+                      IDEA::IDEA_methods(x,y,z, 
                                    group = !!column(), 
                                    data = tg_data)) %>%
-        map(setNames, common_rownames(tg_data, !!column())) %>%
+        map(setNames, IDEA::common_rownames(tg_data, !!column())) %>%
         setNames(paste(blockData$gt_group)) %>%
         bind_rows(.id = "ID") 
+      
+      # read in SAS table and convert to DF
+      sas_data <- !!input$sas$datapath
+      sas_table <- haven::read_sas(sas_data)
+      
+      # Aaron's function to compare two tables
+      IDEA::compareTables(tg_table, sas_table)
     })
   })
   
@@ -369,6 +387,15 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   observeEvent(input$sas, {
      shinyjs::enable("code")
    })
+  
+  output$tblcode <- downloadHandler(
+    filename = function() {
+      paste0("TableGenerator.R")
+    },
+    content = function(file) {
+      writeLines(deparse(expressionOutput()), file)
+    }
+  ) 
   
   # return the block area to be created in app_ui
   p <- reactive({ rowArea(col = 12, block_data()) })
