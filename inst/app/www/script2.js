@@ -224,6 +224,6 @@ $("#popExp_ui_1-adv_filtering").parent().parent().parent().addClass('custom_shin
 
 /*Change file input css */
   $('#dataUpload_ui_1-pilot').on('click',  function () {
-    $(".btn-file").addClass('disable_button');
+    $("#dataUpload_ui_1-file").parent(".btn-file").addClass('disable_button');
   });
 });

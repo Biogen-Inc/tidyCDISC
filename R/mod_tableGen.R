@@ -26,7 +26,7 @@
 #' @family tableGen Functions
 
 
-mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL)) {
+mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL), filePaths = reactive(NULL)) {
   
   observeEvent( input$help, {
     tg_guide$init()$start()
@@ -335,29 +335,42 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       } else if(input$download_type == ".html") {
         exportHTML <- gt_table()
         gtsave(exportHTML, file)
-      } else {
-        writeLines(deparse(expressionOutput()), file)
       }
     }
-  )  
+  ) 
   
   
   expressionOutput <- reactive({ 
     rlang::expr({
-      test <-  !!dput(blocks_and_functions()) 
-      test2 <- dput(all_data())
-      test3 <- pmap(list(test$agg, 
-                         test$S3, 
-                         test$dropdown), 
+      blockData <-  !!dput(blocks_and_functions()) 
+      tg_data <- !!input$sas$datapath
+      tg_table <- pmap(list(blockData$agg, 
+                         blockData$S3, 
+                         blockData$dropdown), 
                     function(x,y,z) 
                       IDEA_methods(x,y,z, 
-                                   group = column(), 
-                                   data = test2)) %>%
-        map(setNames, common_rownames(test2, column())) %>%
-        setNames(paste(test$gt_group)) %>%
+                                   group = !!column(), 
+                                   data = tg_data)) %>%
+        map(setNames, common_rownames(tg_data, !!column())) %>%
+        setNames(paste(blockData$gt_group)) %>%
         bind_rows(.id = "ID") 
     })
   })
+  
+  output$code <- downloadHandler(
+      filename = function() {
+        paste0("TableGenerator.R")
+      },
+      content = function(file) {
+        writeLines(deparse(expressionOutput()), file)
+      }
+    ) 
+  
+  # observeEvent(input$sas, {
+  #   print(input$sas)
+  #   if (is.null(input$sas$name)) shinyjs::disable("tableGen_ui_1-code")
+  #   else shinyjs::enable("tableGen_ui_1-code")
+  # })
   
   # return the block area to be created in app_ui
   p <- reactive({ rowArea(col = 12, block_data()) })

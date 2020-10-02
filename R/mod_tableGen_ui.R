@@ -102,13 +102,20 @@ mod_tableGen_ui <- function(id){
                                      column(6, offset = 0,
                                             radioButtons(ns("download_type"), "Download Type", 
                                                          choices = c("CSV" = ".csv",
-                                                                     "HTML" = ".html",
-                                                                     "CODE" = ".R"),
+                                                                     "HTML" = ".html"),
                                                          inline = TRUE))
                                      
                                    )
                    )
-                   )))),
+                   )),
+                 
+                 wellPanel(
+                   fluidRow(
+                     shinyjs::useShinyjs(),
+                     column(6, shinyjs::disabled(downloadButton(ns("code"), "Compare To SAS"))),
+                     column(6, fileInput(ns("sas"), "SAS Table To Compare"))
+                   )
+                   ))),
         
         column(width = 6,
                wellPanel(
