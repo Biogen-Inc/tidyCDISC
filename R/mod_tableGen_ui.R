@@ -112,8 +112,10 @@ mod_tableGen_ui <- function(id){
                  wellPanel(
                    fluidRow(
                      shinyjs::useShinyjs(),
-                     column(6, shinyjs::disabled(downloadButton(ns("code"), "Compare To SAS"))),
-                     column(6, fileInput(ns("sas"), "SAS Table To Compare"))
+                     column(4, 
+                            tags$label(class="control-label", `for`="tableGen_ui_1-code", "Download Comparison Code"),
+                            shinyjs::disabled(downloadButton(ns("code"), "Compare To SAS"))),
+                     column(8, fileInput(ns("sas"), "SAS Table To Compare"))
                    )
                    ))),
         
