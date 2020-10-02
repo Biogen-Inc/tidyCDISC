@@ -366,11 +366,9 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       }
     ) 
   
-  # observeEvent(input$sas, {
-  #   print(input$sas)
-  #   if (is.null(input$sas$name)) shinyjs::disable("tableGen_ui_1-code")
-  #   else shinyjs::enable("tableGen_ui_1-code")
-  # })
+  observeEvent(input$sas, {
+     shinyjs::enable("code")
+   })
   
   # return the block area to be created in app_ui
   p <- reactive({ rowArea(col = 12, block_data()) })
