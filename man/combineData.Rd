@@ -2,13 +2,13 @@
 % Please edit documentation in R/utils_SAScompare.R
 \name{combineData}
 \alias{combineData}
-\title{Function to merge the list of user supplied data frames}
+\title{Function to bind data rows from the list of user supplied data frames}
 \usage{
-combineData(filepaths)
+combineData(datafile)
 }
 \arguments{
-\item{datalist}{list of CDISC dataframes}
+\item{datafile}{list of ADaM-ish dataframes}
 }
 \description{
-Function to merge the list of user supplied data frames
+Function to bind data rows from the list of user supplied data frames
 }
