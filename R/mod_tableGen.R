@@ -361,18 +361,19 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       # Could I just conditionally insert this code into the script instead?
       # If filter applied, then...
       if(any(regexpr("%>%", filter_code) > 0)){
-        # # Old way
-        # # re-create the subsetted data and apply those filters to the larger tg_data
+        # Old way
+        # re-create the subsetted data and apply those filters to the larger tg_data
         # tg_data <- tg_data %>% semi_join(
         #   datalist %>% IDEA::filterData(datalist, !!input$filter_df, filter_code)
         #   )
+        
         # # MG: is there any reason we can't just eval the filters on the larger df?
         # before, we wanted to use the output dataframe from IDEAFilter downstream
         # but didn't want to feed a mega data frame to IDEAFilter because it was really
         # bloated and slowed it way down. However, now, IDEAFilter is opertaing leanly
         # and we can't use the output df, so all we have is the code. I can't think of a
         # reason why we can't execute it on the entire df
-        tg_data <- eval(filter_code)
+        tg_data <- eval(parse(text = filter_code))
       }
       
       
