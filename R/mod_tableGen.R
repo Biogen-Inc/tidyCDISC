@@ -344,44 +344,53 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   expressionOutput <- reactive({ 
     
     # grab filter code (whether filter's used or not) # If filter applied, then add code
-    filter_code <- !!gsub("processed_data","tg_data",capture.output(attr(filtered_data(), "code")))
-    if(any(regexpr("%>%", filter_code) > 0)){
-      filter_expr <- rlang::expr({tg_data <- eval(parse(text = filter_code))})
-    } else {
-      filter_expr <- rlang::expr({})
-    }
+    # filter_code <- !!gsub("processed_data","tg_data",capture.output(attr(filtered_data(), "code")))
+    # if(any(regexpr("%>%", filter_code) > 0)){
+    #   filter_expr <- rlang::expr({tg_data <- eval(parse(text = filter_code))})
+    # } else {
+    #   filter_expr <- rlang::expr({})
+    # }
     
-    # if tblcode clicked, then we don't need the sas comparison code in the r script
-    if(input$tblcode){
-      compare_expr <- rlang::expr({})
-    } else {
-      compare_expr <- rlang::expr({
-        # read in SAS table and convert to DF
-        sas_data <- !!input$sas$datapath
-        sas_table <- haven::read_sas(sas_data)
-        
-        # Aaron's function to compare two tables
-        IDEA::compareTables(tg_table, sas_table)
-      })
-    }
+    # # if tblcode clicked, then we don't need the sas comparison code in the r script
+    # if(input$tblcode){
+    #   compare_expr <- rlang::expr({})
+    # } else {
+    #   compare_expr <- rlang::expr({
+    #     # read in SAS table and convert to DF
+    #     sas_data <- !!input$sas$datapath
+    #     sas_table <- haven::read_sas(sas_data)
+    # 
+    #     # Aaron's function to compare two tables
+    #     IDEA::compareTables(tg_table, sas_table)
+    #   })
+    # }
 
     # Create a list of expressions that will define our R script
-    explist <- rlang::exprs(
+    # explist <- 
+      # rlang::exprs(
+      rlang::expr(
       {
         library(purrr)
         library(IDEA)
         library(haven)
         library(dplyr)
         
-        # get input file paths from IDEA
+        # User must manually set file paths for study
+        setwd() # input filepath! # How do we get this comment to show up?
+        
         # use HAVEN to extract data, then merge
-        input_filepaths <- !!purrr::map_chr(datafile(), ~ attributes(.x)$label)
+        # input_filepaths <- !!purrr::map_chr(datafile(), ~ attributes(.x)$label)
+        filenames <- !!purrr::map_chr(datafile(), ~ paste0(.x, ".sas7bdat"))
         
         # create list of dataframes
-        tg_data <- IDEA::readData(input_filepaths) %>% IDEA::combineData()
-      },
-      filter_expr,
-      {
+        tg_data <- IDEA::readData(filenames) %>% IDEA::combineData()
+      # },
+      # { filter_expr },
+        filter_code <- !!gsub("processed_data","tg_data",capture.output(attr(filtered_data(), "code")))
+        if(any(regexpr("%>%", filter_code) > 0)){
+          tg_data <- eval(parse(text = filter_code))
+        }
+      # {
         # get drop zone area from IDEA
         # and create table using data
         blockData <- !!dput(blocks_and_functions()) 
@@ -396,12 +405,12 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
           map(setNames, IDEA::common_rownames(tg_data, !!column())) %>%
           setNames(paste(blockData$gt_group)) %>%
           bind_rows(.id = "ID") 
-      },
-      compare_expr
+      }#,
+      # compare_expr
     )
     
     # combine the list of expressions into one big expression
-    expr({!!!explist})
+    # expr({!!!explist})
   })
   
   output$code <- downloadHandler(
@@ -409,6 +418,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
         paste0("TableGenerator.R")
       },
       content = function(file) {
+        # writeLines("setwd() # input filepath!")
         writeLines(deparse(expressionOutput()), file)
       }
     ) 
