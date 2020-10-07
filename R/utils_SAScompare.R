@@ -1,10 +1,11 @@
+
 #' Function to read the SAS list of user supplied data frames
 #' 
 #' @param datalist list of CDISC dataframes 
 #' 
 #' @export
-readData <- function(filepaths) {
-  purrr::map(filepaths, ~haven::read_sas(.x))
+readData <- function(study_directory, file_names) {
+  purrr::map(file_names, ~haven::read_sas(file.path(study_directory,.x)))
 }
 
 

@@ -4,7 +4,7 @@
 \alias{readData}
 \title{Function to read the SAS list of user supplied data frames}
 \usage{
-readData(filepaths)
+readData(study_directory, file_names)
 }
 \arguments{
 \item{datalist}{list of CDISC dataframes}

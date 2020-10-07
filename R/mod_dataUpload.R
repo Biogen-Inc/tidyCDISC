@@ -97,7 +97,7 @@ mod_dataUpload_server <- function(input, output, session){
       
       print(length(input$file$datapath))
       for (i in 1:length(input$file$datapath)) {
-        attr(dd$data[[i]], "label") <- input$file$datapath[i]
+        attr(dd$data[[i]], "orig_filename") <- input$file$name[i]
       }
     }
     
