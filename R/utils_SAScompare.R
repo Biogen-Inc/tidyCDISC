@@ -39,45 +39,6 @@ combineData <- function(datafile) {
 }
 
 
-#' Function to filter rows from combined data
-#'
-#' @param datafile list of ADaM-ish dataframes
-#'
-#' @export
-#'
-filterData <- function(datafile, input_filter_df, filter_code) {
-  processed_data <-
-
-    select_dfs <- datafile[input_filter_df]
-
-    # Separate out non BDS and BDS data frames. Note: join may throw some
-    # warnings if labels are different between two datasets, which is fine!
-    # Ignore
-    non_bds <- select_dfs[sapply(select_dfs, function(x) !("PARAMCD" %in% colnames(x)) )]
-    bds <- select_dfs[sapply(select_dfs, function(x) "PARAMCD" %in% colnames(x) )]
-
-    # Make CHG var doesn't exist, create the column and populate with NA
-    PARAMCD_dat <- purrr::map(bds, ~ if(!"CHG" %in% names(.)) {purrr::update_list(., CHG = NA)} else {.})
-
-    # Combine selected data into a 1 usable data frame
-    if (!rlang::is_empty(PARAMCD_dat)) {
-      all_PARAMCD <- bind_rows(PARAMCD_dat, .id = "data_from") %>% distinct(.keep_all = T)
-
-      if (!rlang::is_empty(non_bds)){
-        processed_data <- inner_join(non_bds %>% purrr::reduce(inner_join), all_PARAMCD)
-      } else {
-        processed_data <-all_PARAMCD
-      }
-    } else {
-      processed_data <- non_bds %>% reduce(inner_join)
-    }
-
-    # evaluate the filtered code
-    filtered_data <- eval(filter_code)
-    return(filtered_data)
-}
-
-
 #' Function to compare the SAS table to the IDEA output table
 #' 
 #' @param sas_table SAS output 

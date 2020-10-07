@@ -340,65 +340,68 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   ) 
   
   
+  
   expressionOutput <- reactive({ 
-    rlang::expr({
-      library(purrr)
-      library(IDEA)
-      library(haven)
-      
-      # get input file paths from IDEA
-      # use HAVEN to extract data, then merge
-      input_filepaths <- !!purrr::map_chr(datafile(), ~ attributes(.x)$label)
-      
-      # create list of dataframes
-      datalist <- IDEA::readData(input_filepaths)
-      tg_data <- datalist %>% IDEA::combineData()
-      
-      # grab filter code (whether filter's used or not)
-      # filter_code <- !!capture.output(attr(filtered_data(), "code"))
-      filter_code <- !!gsub("processed_data","tg_data",capture.output(attr(filtered_data(), "code")))
-      
-      # Could I just conditionally insert this code into the script instead?
-      # If filter applied, then...
-      if(any(regexpr("%>%", filter_code) > 0)){
-        # Old way
-        # re-create the subsetted data and apply those filters to the larger tg_data
-        # tg_data <- tg_data %>% semi_join(
-        #   datalist %>% IDEA::filterData(datalist, !!input$filter_df, filter_code)
-        #   )
+    
+    # grab filter code (whether filter's used or not) # If filter applied, then add code
+    filter_code <- !!gsub("processed_data","tg_data",capture.output(attr(filtered_data(), "code")))
+    if(any(regexpr("%>%", filter_code) > 0)){
+      filter_expr <- rlang::expr({tg_data <- eval(parse(text = filter_code))})
+    } else {
+      filter_expr <- rlang::expr({})
+    }
+    
+    # if tblcode clicked, then we don't need the sas comparison code in the r script
+    if(input$tblcode){
+      compare_expr <- rlang::expr({})
+    } else {
+      compare_expr <- rlang::expr({
+        # read in SAS table and convert to DF
+        sas_data <- !!input$sas$datapath
+        sas_table <- haven::read_sas(sas_data)
         
-        # # MG: is there any reason we can't just eval the filters on the larger df?
-        # before, we wanted to use the output dataframe from IDEAFilter downstream
-        # but didn't want to feed a mega data frame to IDEAFilter because it was really
-        # bloated and slowed it way down. However, now, IDEAFilter is opertaing leanly
-        # and we can't use the output df, so all we have is the code. I can't think of a
-        # reason why we can't execute it on the entire df
-        tg_data <- eval(parse(text = filter_code))
-      }
-      
-      
-      # get drop zone area from IDEA
-      # and create table using data
-      blockData <- !!dput(blocks_and_functions()) 
+        # Aaron's function to compare two tables
+        IDEA::compareTables(tg_table, sas_table)
+      })
+    }
+
+    # Create a list of expressions that will define our R script
+    explist <- rlang::exprs(
+      {
+        library(purrr)
+        library(IDEA)
+        library(haven)
+        library(dplyr)
         
-      tg_table <- purrr::pmap(list(blockData$agg, 
-                         blockData$S3, 
-                         blockData$dropdown), 
-                    function(x,y,z) 
-                      IDEA::IDEA_methods(x,y,z, 
-                                   group = !!column(), 
-                                   data = tg_data)) %>%
-        map(setNames, IDEA::common_rownames(tg_data, !!column())) %>%
-        setNames(paste(blockData$gt_group)) %>%
-        bind_rows(.id = "ID") 
-      
-      # read in SAS table and convert to DF
-      sas_data <- !!input$sas$datapath
-      sas_table <- haven::read_sas(sas_data)
-      
-      # Aaron's function to compare two tables
-      IDEA::compareTables(tg_table, sas_table)
-    })
+        # get input file paths from IDEA
+        # use HAVEN to extract data, then merge
+        input_filepaths <- !!purrr::map_chr(datafile(), ~ attributes(.x)$label)
+        
+        # create list of dataframes
+        tg_data <- IDEA::readData(input_filepaths) %>% IDEA::combineData()
+      },
+      filter_expr,
+      {
+        # get drop zone area from IDEA
+        # and create table using data
+        blockData <- !!dput(blocks_and_functions()) 
+          
+        tg_table <- purrr::pmap(list(blockData$agg, 
+                           blockData$S3, 
+                           blockData$dropdown), 
+                      function(x,y,z) 
+                        IDEA::IDEA_methods(x,y,z, 
+                                     group = !!column(), 
+                                     data = tg_data)) %>%
+          map(setNames, IDEA::common_rownames(tg_data, !!column())) %>%
+          setNames(paste(blockData$gt_group)) %>%
+          bind_rows(.id = "ID") 
+      },
+      compare_expr
+    )
+    
+    # combine the list of expressions into one big expression
+    expr({!!!explist})
   })
   
   output$code <- downloadHandler(
