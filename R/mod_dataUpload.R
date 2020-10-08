@@ -94,6 +94,7 @@ mod_dataUpload_server <- function(input, output, session){
     if(length(names(dl_comply)) > 0){
       # append to existing reactiveValues list
       dd$data <-  c(dd$data, dl_comply) # dl_comply #
+      
     }
     
     # set dd$current to FALSE for previous & TRUE for current uploads
@@ -174,7 +175,6 @@ mod_dataUpload_server <- function(input, output, session){
     
     shinyjs::hide(id = "pilot")
   })
-  
   
   ### return all data
   return(reactive(dd$data))
