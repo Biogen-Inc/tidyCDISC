@@ -368,7 +368,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
         # "setwd() # this was added to writeLines below to include comment"
         
         # use HAVEN to extract data, then merge
-        filenames <- !!purrr::map_chr(datafile(), ~ attributes(.x)$orig_filename)
+        filenames <- !!tolower(paste0(names(datafile()), ".sas7bdat"))
 
         # create list of dataframes
         tg_data <- IDEA::readData(study_dir, filenames) %>% IDEA::combineData()

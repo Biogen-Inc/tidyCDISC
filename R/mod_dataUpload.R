@@ -95,10 +95,6 @@ mod_dataUpload_server <- function(input, output, session){
       # append to existing reactiveValues list
       dd$data <-  c(dd$data, dl_comply) # dl_comply #
       
-      print(length(input$file$datapath))
-      for (i in 1:length(input$file$datapath)) {
-        attr(dd$data[[i]], "orig_filename") <- input$file$name[i]
-      }
     }
     
     # set dd$current to FALSE for previous & TRUE for current uploads
