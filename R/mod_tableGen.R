@@ -21,6 +21,7 @@
 #' @importFrom stringi %s+%
 #' @importFrom glue glue
 #' @importFrom forcats fct_reorder
+#' @importFrom remotes install_github
 #' @import tidyr
 #'
 #' @family tableGen Functions
@@ -357,8 +358,9 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       {
         pkgs_req <- c("IDEA", "purrr", "haven", "dplyr")
         pkgs_needed <- pkgs_req[!(pkgs_req %in% installed.packages()[,"Package"])]
-        if(length(pkgs_needed)) install.packages(pkgs_needed)
-        
+        non_idea_needed <- pkgs_needed[pkgs_needed != "IDEA"]
+        if(length(non_idea_needed)) install.packages(non_idea_needed)
+        if("IDEA" %in% pkgs_needed) remotes::install_github("IDEA")
         library(purrr)
         library(IDEA)
         library(haven)
@@ -369,7 +371,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
         
         # use HAVEN to extract data, then merge
         filenames <- !!tolower(paste0(names(datafile()), ".sas7bdat"))
-
+        
         # create list of dataframes
         tg_data <- IDEA::readData(study_dir, filenames) %>% IDEA::combineData()
       },
@@ -431,7 +433,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
                    deparsed[!deparsed %in% c("{","}")]), file)
     }
   ) 
-  # # test it!
+  # # # test it!
   # test <- F
   # if(test){
   #   cond <- expr({
@@ -453,7 +455,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   #   !!cond,
   #   {
   #     paste("this is expr 4")
-  #     cray_crayron <- substr(special, 1, 2)
+  #     if(test) cray_crayron <- substr(special, 1, 2) else if(test == test) "carrot"
   #   }
   # )
   # one_expr<- rlang::expr({!!!expr_list})
