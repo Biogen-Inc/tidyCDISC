@@ -21,7 +21,6 @@
 #' @importFrom stringi %s+%
 #' @importFrom glue glue
 #' @importFrom forcats fct_reorder
-#' @importFrom remotes install_github
 #' @import tidyr
 #'
 #' @family tableGen Functions
