@@ -433,35 +433,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
                    deparsed[!deparsed %in% c("{","}")]), file)
     }
   ) 
-  # # # test it!
-  # test <- F
-  # if(test){
-  #   cond <- expr({
-  #     paste("My Conditional expr 2")
-  #     state <- "peanuts"
-  #     new <- substr(state, 1, 4)
-  #     paste("My Conditional expr 3")
-  #   })
-  # } else {
-  #   cond <- expr({})
-  # }
-  # 
-  # # cond <- enexpr(cond_sym)
-  # expr_list <- rlang::exprs(
-  #   {
-  #     paste("this is expr 0")
-  #     special <- "thing"
-  #   },
-  #   !!cond,
-  #   {
-  #     paste("this is expr 4")
-  #     if(test) cray_crayron <- substr(special, 1, 2) else if(test == test) "carrot"
-  #   }
-  # )
-  # one_expr<- rlang::expr({!!!expr_list})
-  # one_expr
-  # deparsed <- gsub("    ","",deparse(one_expr))
-  # deparsed[!deparsed %in% c("{","}")]
+
   
   # return the block area to be created in app_ui
   p <- reactive({ rowArea(col = 12, block_data()) })
