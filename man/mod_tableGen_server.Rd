@@ -4,7 +4,13 @@
 \alias{mod_tableGen_server}
 \title{tableGen Server Function}
 \usage{
-mod_tableGen_server(input, output, session, datafile = reactive(NULL))
+mod_tableGen_server(
+  input,
+  output,
+  session,
+  datafile = reactive(NULL),
+  filePaths = reactive(NULL)
+)
 }
 \arguments{
 \item{input, output, session}{Internal parameters for {shiny}}

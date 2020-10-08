@@ -26,7 +26,7 @@
 #' @family tableGen Functions
 
 
-mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL)) {
+mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL), filePaths = reactive(NULL)) {
   
   observeEvent( input$help, {
     tg_guide$init()$start()
@@ -174,7 +174,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   
   
   # ----------------------------------------------------------------------
-  # Generate table given the droped blocks
+  # Generate table given the dropped blocks
   # ----------------------------------------------------------------------
   
   # convert the custom shiny input to a table output
@@ -217,7 +217,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
                                 data = all_data())) %>%
     map(setNames, common_rownames(all_data(), column())) %>%
     setNames(paste(blocks_and_functions()$gt_group)) %>%
-      bind_rows(.id = "ID") %>%
+    bind_rows(.id = "ID")  %>%
       mutate(
         ID = stringi::stri_replace_all_regex(
           ID, 
@@ -270,8 +270,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       )
   })
   
-  
-  output$all <- render_gt({ gt_table() })
+  output$all <- render_gt({  gt_table() })
   
   
   # ----------------------------------------------------------------------
@@ -338,7 +337,102 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
         gtsave(exportHTML, file)
       }
     }
-  )  
+  ) 
+  
+  
+  
+  commonExprOutput <- reactive({ 
+    
+    # grab filter code (whether filter's used or not) # If filter applied, then add code
+    filter_code <- gsub("processed_data","tg_data",capture.output(attr(filtered_data(), "code")))
+    if(any(regexpr("%>%", filter_code) > 0)){
+      filter_expr <- rlang::expr({tg_data <- eval(parse(text = !!filter_code))})
+    } else {
+      filter_expr <- rlang::expr({})
+    }
+    
+    # Create a list of expressions that will define our R script
+    explist <-
+      rlang::exprs(
+      {
+        pkgs_req <- c("IDEA", "purrr", "haven", "dplyr")
+        pkgs_needed <- pkgs_req[!(pkgs_req %in% installed.packages()[,"Package"])]
+        non_idea_needed <- pkgs_needed[pkgs_needed != "IDEA"]
+        if(length(non_idea_needed)) install.packages(non_idea_needed)
+        if("IDEA" %in% pkgs_needed) remotes::install_github("IDEA")
+        library(purrr)
+        library(IDEA)
+        library(haven)
+        library(dplyr)
+        
+        # User must manually set file paths for study
+        # "setwd() # this was added to writeLines below to include comment"
+        
+        # use HAVEN to extract data, then merge
+        filenames <- !!tolower(paste0(names(datafile()), ".sas7bdat"))
+        
+        # create list of dataframes
+        tg_data <- IDEA::readData(study_dir, filenames) %>% IDEA::combineData()
+      },
+      !!filter_expr, # conditionally add filter code to R script
+      {
+        # get drop zone area from IDEA
+        # and create table using data
+        blockData <- !!dput(blocks_and_functions()) 
+          
+        tg_table <- purrr::pmap(list(blockData$agg, 
+                           blockData$S3, 
+                           blockData$dropdown), 
+                      function(x,y,z) 
+                        IDEA::IDEA_methods(x,y,z, 
+                                     group = !!column(), 
+                                     data = tg_data)) %>%
+          map(setNames, IDEA::common_rownames(tg_data, !!column())) %>%
+          setNames(paste(blockData$gt_group)) %>%
+          bind_rows(.id = "ID") 
+      }
+    )
+    # combine the list of expressions into one big expression
+    rlang::expr({!!!explist})
+  })
+  
+  output$code <- downloadHandler(
+      filename = function() {
+        paste0("Compare_IDEA_v_SASTables_Code.R")
+      },
+      content = function(file) {
+        deparsed <- gsub("    ","",deparse(commonExprOutput()))
+        compare_dp <- gsub("    ","",deparse(rlang::expr({
+          # read in SAS table and convert to DF
+          sas_data <- !!input$sas$datapath
+          sas_table <- haven::read_sas(sas_data)
+          # Aaron's function to compare two tables
+          IDEA::compareTables(tg_table, sas_table)
+        })))
+        writeLines(c('study_dir <- "path/to/study/directory/" # please input filepath to study directory', 
+                     "",
+                     deparsed[!deparsed %in% c("{","}")],
+                     compare_dp[!compare_dp %in% c("{","}")]
+                     ), file)
+      }
+    ) 
+  
+  observeEvent(input$sas, {
+     shinyjs::enable("code")
+   })
+  
+  output$tblcode <- downloadHandler(
+    filename = function() {
+      paste0("Reproduce_IDEA_Table.R")
+    },
+    content = function(file) {
+      deparsed <- gsub("    ","",deparse(commonExprOutput()))
+      writeLines(c('study_dir <- "path/to/study/directory/" # please input filepath to study directory', 
+                   "",
+                   deparsed[!deparsed %in% c("{","}")]), file)
+    }
+  ) 
+
   
   # return the block area to be created in app_ui
   p <- reactive({ rowArea(col = 12, block_data()) })
