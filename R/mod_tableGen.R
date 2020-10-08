@@ -21,6 +21,7 @@
 #' @importFrom stringi %s+%
 #' @importFrom glue glue
 #' @importFrom forcats fct_reorder
+#' @importFrom remotes install_github
 #' @import tidyr
 #'
 #' @family tableGen Functions
@@ -357,8 +358,9 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       {
         pkgs_req <- c("IDEA", "purrr", "haven", "dplyr")
         pkgs_needed <- pkgs_req[!(pkgs_req %in% installed.packages()[,"Package"])]
-        if(length(pkgs_needed)) install.packages(pkgs_needed)
-        
+        non_idea_needed <- pkgs_needed[pkgs_needed != "IDEA"]
+        if(length(non_idea_needed)) install.packages(non_idea_needed)
+        if("IDEA" %in% pkgs_needed) remotes::install_github("IDEA")
         library(purrr)
         library(IDEA)
         library(haven)
@@ -368,8 +370,8 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
         # "setwd() # this was added to writeLines below to include comment"
         
         # use HAVEN to extract data, then merge
-        filenames <- !!purrr::map_chr(datafile(), ~ attributes(.x)$orig_filename)
-
+        filenames <- !!tolower(paste0(names(datafile()), ".sas7bdat"))
+        
         # create list of dataframes
         tg_data <- IDEA::readData(study_dir, filenames) %>% IDEA::combineData()
       },
@@ -431,35 +433,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
                    deparsed[!deparsed %in% c("{","}")]), file)
     }
   ) 
-  # # test it!
-  # test <- F
-  # if(test){
-  #   cond <- expr({
-  #     paste("My Conditional expr 2")
-  #     state <- "peanuts"
-  #     new <- substr(state, 1, 4)
-  #     paste("My Conditional expr 3")
-  #   })
-  # } else {
-  #   cond <- expr({})
-  # }
-  # 
-  # # cond <- enexpr(cond_sym)
-  # expr_list <- rlang::exprs(
-  #   {
-  #     paste("this is expr 0")
-  #     special <- "thing"
-  #   },
-  #   !!cond,
-  #   {
-  #     paste("this is expr 4")
-  #     cray_crayron <- substr(special, 1, 2)
-  #   }
-  # )
-  # one_expr<- rlang::expr({!!!expr_list})
-  # one_expr
-  # deparsed <- gsub("    ","",deparse(one_expr))
-  # deparsed[!deparsed %in% c("{","}")]
+
   
   # return the block area to be created in app_ui
   p <- reactive({ rowArea(col = 12, block_data()) })
