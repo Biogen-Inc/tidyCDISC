@@ -443,18 +443,17 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
         paste0("Compare_IDEA_v_SASTables_Code.R")
       },
       content = function(file) {
-        deparsed <- gsub("    ","",deparse(commonExprOutput()))
-        compare_dp <- gsub("    ","",deparse(rlang::expr({
+        compare_dp <- deparse(rlang::expr({
           # read in SAS table and convert to DF
           sas_data <- !!input$sas$datapath
           sas_table <- haven::read_sas(sas_data)
           # Aaron's function to compare two tables
           IDEA::compareTables(tg_table, sas_table)
-        })))
+        }))
         writeLines(c('study_dir <- "path/to/study/directory/" # please input filepath to study directory', 
                      "",
-                     deparsed[!deparsed %in% c("{","}")],
-                     compare_dp[!compare_dp %in% c("{","}")]
+                     deparse(commonExprOutput()),
+                     compare_dp
                      ), file)
       }
     ) 
@@ -468,10 +467,9 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       paste0("Reproduce_IDEA_Table.R")
     },
     content = function(file) {
-      deparsed <- gsub("    ","",deparse(commonExprOutput()))
       writeLines(c('study_dir <- "path/to/study/directory/" # please input filepath to study directory', 
                    "",
-                   deparsed[!deparsed %in% c("{","}")]), file)
+                   deparse(commonExprOutput())), file)
     }
   ) 
 
