@@ -390,6 +390,48 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
           map(setNames, IDEA::common_rownames(tg_data, !!column())) %>%
           setNames(paste(blockData$gt_group)) %>%
           bind_rows(.id = "ID") 
+        
+        # return gt/html output
+        if (!!input$COLUMN == "NONE") {
+          total <- tg_data %>% 
+            distinct(USUBJID) %>% 
+            summarise(n = n()) %>%
+            pull(n)
+        } else {
+          total <- tg_data %>%
+            group_by(!!sym(input$COLUMN)) %>%
+            distinct(USUBJID) %>%
+            summarise(n = n()) %>%
+            pull(n)
+        }
+        
+        row_names_n <- names(tg_table)[-c(1:2)]
+        
+        col_for_list <- function(nm, x) {
+          if (is.numeric(tg_data[[!!input$COLUMN]])) {
+            stop("Need categorical column for grouping")
+          }
+          nm = md(glue::glue("**{row_names_n}** <br> N={total}"))
+        }
+        
+        tg_table %>%
+          gt(rowname_col = "Variable", groupname_col = "ID") %>%
+          tab_options(table.width = px(700)) %>%
+          cols_label(.list = imap(tg_table[-c(1:2)], ~ col_for_list(.y, .x))) %>%
+          tab_header(
+            title = md(!!input$table_title),
+            subtitle = md(!!subtitle())
+          ) %>%
+          tab_style(
+            style = cell_text(weight = "bold"),
+            locations = cells_row_groups()
+          ) %>%
+          tab_style(
+            style = list(
+              cell_text(align = "right")
+            ),
+            locations = cells_stub(rows = TRUE)
+          )
       }
     )
     # combine the list of expressions into one big expression
