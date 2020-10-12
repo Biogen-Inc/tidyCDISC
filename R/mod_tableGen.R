@@ -339,108 +339,134 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     }
   ) 
   
-  commonExprOutput <- reactive({ 
-    
-    # grab filter code (whether filter's used or not) # If filter applied, then add code
+  # ----------------------------------------------------------------------
+  # Download table code 
+  # Create code as string to be exported
+  # as primary or secondary table
+  # ----------------------------------------------------------------------
+  
+  # capture output of filtering expression
+  filter_expr <- reactive({
     filter_code <- gsub("processed_data","tg_data",capture.output(attr(filtered_data(), "code")))
     if(any(regexpr("%>%", filter_code) > 0)){
-      filter_expr <- rlang::expr({tg_data <- eval(parse(text = !!filter_code))})
+      glue::glue("tg_data <- eval(parse(text = {filter_code}))")
     } else {
-      filter_expr <- rlang::expr({})
+      ""
     }
-    
-    # Create a list of expressions that will define our R script
-    explist <-
-      rlang::exprs(
-      {
-        pkgs_req <- c("IDEA", "purrr", "haven", "dplyr")
-        pkgs_needed <- pkgs_req[!(pkgs_req %in% installed.packages()[,"Package"])]
-        non_idea_needed <- pkgs_needed[pkgs_needed != "IDEA"]
-        if(length(non_idea_needed)) install.packages(non_idea_needed)
-        if("IDEA" %in% pkgs_needed) remotes::install_github("IDEA")
-        library(purrr)
-        library(IDEA)
-        library(haven)
-        library(dplyr)
-        
-        # User must manually set file paths for study
-        # "setwd() # this was added to writeLines below to include comment"
-        
-        # use HAVEN to extract data, then merge
-        filenames <- !!tolower(paste0(names(datafile()), ".sas7bdat"))
-        
-        # create list of dataframes
-        tg_data <- IDEA::readData(study_dir, filenames) %>% IDEA::combineData()
-      },
-      !!filter_expr, # conditionally add filter code to R script
-      {
-        # get drop zone area from IDEA
-        # and create table using data
-        blockData <- !!dput(blocks_and_functions()) 
-          
-        tg_table <- purrr::pmap(list(blockData$agg, 
-                           blockData$S3, 
-                           blockData$dropdown), 
-                      function(x,y,z) 
-                        IDEA::IDEA_methods(x,y,z, 
-                                     group = !!column(), 
-                                     data = tg_data)) %>%
-          map(setNames, IDEA::common_rownames(tg_data, !!column())) %>%
-          setNames(paste(blockData$gt_group)) %>%
-          bind_rows(.id = "ID") 
-      }
-    )
-    # combine the list of expressions into one big expression
-    rlang::expr({!!!explist})
   })
   
-  generate_table_output <- reactive({
-    expr({
-    # create a total variable
-    if (!!input$COLUMN == "NONE") {
-      total <- tg_data %>% 
+  # get filepaths
+  filenames <- reactive({
+    options(useFancyQuotes = FALSE)
+    paste(tolower(sQuote(paste0(names(datafile()), '.sas7bdat'))), collapse = ",")
+  })
+  
+  # create code to generate table as dataframe object
+  text_code <- reactive({
+    glue::glue(
+    "
+    pkgs_req <- c('IDEA', 'purrr', 'haven', 'dplyr')
+    pkgs_needed <- pkgs_req[!(pkgs_req %in% installed.packages()[,'Package'])]
+    
+    non_idea_needed <- pkgs_needed[pkgs_needed != 'IDEA']
+    
+    if(length(non_idea_needed)) install.packages(non_idea_needed)
+    if('IDEA' %in% pkgs_needed) remotes::install_github('IDEA')
+    
+    library(purrr)
+    library(IDEA)
+    library(haven)
+    library(dplyr)
+        
+    # User must manually set file paths for study
+    study_dir <- 'path/to/study/directory/'
+        
+    # use HAVEN to extract data, then merge
+    filenames <- c({filenames()})
+        
+    # create list of dataframes
+    tg_data <- IDEA::readData(study_dir, filenames) %>% IDEA::combineData()
+        
+    # conditionally add filter code to R script
+    {filter_expr()}
+        
+    # get drop zone area from IDEA
+    # and create table using data
+    blockData <- {paste0(capture.output(dput(blocks_and_functions())), collapse = '\n')}
+      
+    tg_table <- purrr::pmap(list(blockData$agg, blockData$S3,blockData$dropdown), 
+                            function(x,y,z) IDEA::IDEA_methods(x,y,z, 
+                                                   group = {column() %||% 'NULL'}, 
+                                                   data = tg_data)) %>%
+    map(setNames, IDEA::common_rownames(tg_data, {column() %||% 'NULL'})) %>%
+    setNames(paste(blockData$gt_group)) %>%
+    bind_rows(.id = 'ID') 
+    "
+    )
+  })
+  
+  # create the total column names
+  total_for_code <- reactive({
+    if (!!input$COLUMN == 'NONE') {
+      "total <- tg_data %>% 
         distinct(USUBJID) %>% 
         summarise(n = n()) %>%
-        pull(n)
+        pull(n)"
     } else {
-      total <- tg_data %>%
+      "total <- tg_data %>%
         group_by(!!sym(input$COLUMN)) %>%
         distinct(USUBJID) %>%
         summarise(n = n()) %>%
-        pull(n)
+        pull(n)"
     }
+  })
+  
+  generate_table_output <- reactive({
+    glue::glue(
+      "
+      {text_code()}
+      
+      # create a total variable
+      {total_for_code()}
+      
+      # get the rownames for the rable
+      row_names_n <- names(tg_table)[-c(1:2)]
     
-    # get the rownames for the rable
-    row_names_n <- names(tg_table)[-c(1:2)]
-    
-    # get column names with N
-    col_for_list <- function(nm, x) {
-      if (is.numeric(tg_data[[!!input$COLUMN]])) {
-        stop("Need categorical column for grouping")
-      }
-      nm = md(glue::glue("**{row_names_n}** <br> N={total}"))
-    }
-    
-    # create the gt output
-    tg_table %>%
-      gt(rowname_col = "Variable", groupname_col = "ID") %>%
-      tab_options(table.width = px(700)) %>%
-      cols_label(.list = imap(tg_table[-c(1:2)], ~ col_for_list(.y, .x))) %>%
-      tab_header(
-        title = md(!!input$table_title),
-        subtitle = md(!!subtitle())
-      ) %>%
-      tab_style(
-        style = cell_text(weight = "bold"),
-        locations = cells_row_groups()
-      ) %>%
-      tab_style(
-        style = list(
-          cell_text(align = "right")
-        ),
-        locations = cells_stub(rows = TRUE)
-      )
-    })
+      # create the gt output
+      tg_table %>%
+          gt(rowname_col = 'Variable', groupname_col = 'ID') %>%
+          tab_options(table.width = px(700)) %>%
+          cols_label(.list = imap(tg_table[-c(1:2)], ~ IDEA::col_for_list_expr(.y, .x))) %>%
+          tab_header(
+            title = md('{input$table_title}'),
+            subtitle = md('{subtitle()}')
+          ) %>%
+          tab_style(
+          style = cell_text(weight = 'bold'),
+          locations = cells_row_groups()
+          ) %>%
+          tab_style(
+          style = list(
+          cell_text(align = 'right')
+          ),
+          locations = cells_stub(rows = TRUE)
+        )
+      "
+    )
+  })
+  
+  generate_comparison_output <- reactive({
+    glue::glue(
+      "
+      {text_code()}
+      
+      # read in SAS table and convert to DF
+      sas_data <- !!input$sas$datapath
+      sas_table <- haven::read_sas(sas_data)
+      # Aaron's function to compare two tables
+      IDEA::compareTables(tg_table, sas_table)
+      "
+    )
   })
   
   output$code <- downloadHandler(
@@ -448,18 +474,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
         paste0("Compare_IDEA_v_SASTables_Code.R")
       },
       content = function(file) {
-        compare_dp <- deparse(rlang::expr({
-          # read in SAS table and convert to DF
-          sas_data <- !!input$sas$datapath
-          sas_table <- haven::read_sas(sas_data)
-          # Aaron's function to compare two tables
-          IDEA::compareTables(tg_table, sas_table)
-        }))
-        writeLines(c('study_dir <- "path/to/study/directory/" # please input filepath to study directory', 
-                     "",
-                     deparse(commonExprOutput()),
-                     compare_dp
-                     ), file)
+        writeLines(generate_comparison_output(), file)
       }
     ) 
   
@@ -472,13 +487,10 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       paste0("Reproduce_IDEA_Table.R")
     },
     content = function(file) {
-      writeLines(c('study_dir <- "path/to/study/directory/" # please input filepath to study directory', 
-                   "",
-                   deparse(commonExprOutput()), deparse(generate_table_output())), file)
+      writeLines(generate_table_output(), file)
     }
   ) 
 
-  
   # return the block area to be created in app_ui
   p <- reactive({ rowArea(col = 12, block_data()) })
   
