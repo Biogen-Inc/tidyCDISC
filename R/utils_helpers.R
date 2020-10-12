@@ -1,3 +1,17 @@
+#' GT Column Names
+#' 
+#' @param dat data
+#' @param nm name
+#' @param x columns
+#' 
+#' create the labels for each column using the total function
+#' so the columns are now NAME N= X
+#' @export
+# get column names with N
+col_for_list_expr <- function(nm, x) {
+  nm = md(glue::glue("**{row_names_n}** <br> N={total}"))
+}
+
 
 #' My GG Color Hue
 #'
