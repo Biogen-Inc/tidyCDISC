@@ -396,6 +396,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   
   generate_table_output <- reactive({
     expr({
+    # create a total variable
     if (!!input$COLUMN == "NONE") {
       total <- tg_data %>% 
         distinct(USUBJID) %>% 
@@ -409,8 +410,10 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
         pull(n)
     }
     
+    # get the rownames for the rable
     row_names_n <- names(tg_table)[-c(1:2)]
     
+    # get column names with N
     col_for_list <- function(nm, x) {
       if (is.numeric(tg_data[[!!input$COLUMN]])) {
         stop("Need categorical column for grouping")
@@ -418,6 +421,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       nm = md(glue::glue("**{row_names_n}** <br> N={total}"))
     }
     
+    # create the gt output
     tg_table %>%
       gt(rowname_col = "Variable", groupname_col = "ID") %>%
       tab_options(table.width = px(700)) %>%
@@ -444,7 +448,6 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
         paste0("Compare_IDEA_v_SASTables_Code.R")
       },
       content = function(file) {
-        temp <- FALSE
         compare_dp <- deparse(rlang::expr({
           # read in SAS table and convert to DF
           sas_data <- !!input$sas$datapath
@@ -469,7 +472,6 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       paste0("Reproduce_IDEA_Table.R")
     },
     content = function(file) {
-      temp <- TRUE
       writeLines(c('study_dir <- "path/to/study/directory/" # please input filepath to study directory', 
                    "",
                    deparse(commonExprOutput()), deparse(generate_table_output())), file)
