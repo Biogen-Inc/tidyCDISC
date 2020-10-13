@@ -116,6 +116,24 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       combined_data <- non_bds %>% reduce(inner_join)
     }
     
+    # save the variable labels into savelbls vector
+    savelbls <- sjlabelled::get_label(combined_data)
+    
+    # identify all char - numeric variables pairs
+    cols <- colnames(combined_data)
+    non_num_cols <- c(subset_colclasses(combined_data, is.factor),
+                      subset_colclasses(combined_data, is.character))
+    varn <- paste0(non_num_cols,"N")[paste0(non_num_cols,"N") %in% cols]
+    varc <- substr(varn,1,nchar(varn) - 1)
+    print(paste("c:", varc))
+    print(paste("n:", varn))
+    
+    data.table::setDT(combined_data)
+    purrr::walk2(varc, varn, ~ refact(combined_data, .x, .y))
+    
+    # copy SAS labels back into data
+    combined_data <- sjlabelled::set_label(combined_data, label = savelbls)
+    
     return(combined_data)
   })
 
