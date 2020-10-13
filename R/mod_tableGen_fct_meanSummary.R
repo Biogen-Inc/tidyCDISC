@@ -14,7 +14,7 @@ mean_summary <- function(.data, to_count) {
   
   .data %>%
     summarise(
-      Missing = sum(is.na(!!to_count)),
+      n = n_distinct(USUBJID),
       `Mean (SD)` = paste0(round(mean(na.omit(!!to_count)), 2),
                           " (", round(sd(na.omit(!!to_count)), 2), ")"),
       Median = median(na.omit(!!to_count), type = 1),
