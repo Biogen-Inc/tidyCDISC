@@ -14,9 +14,9 @@ mean_summary <- function(.data, to_count) {
   
   .data %>%
     summarise(
-      Missing = sum(is.na(!!to_count)),
-      Mean = round(mean(na.omit(!!to_count)), 2),
-      SD = round(sd(na.omit(!!to_count)), 2),
+      n = n_distinct(USUBJID),
+      `Mean (SD)` = paste0(round(mean(na.omit(!!to_count)), 2),
+                          " (", round(sd(na.omit(!!to_count)), 2), ")"),
       Median = median(na.omit(!!to_count), type = 1),
       `Q1 | Q3` = paste(round(quantile(na.omit(!!to_count), 0.25, type = 1),2) , "|", 
                         (round(quantile(na.omit(!!to_count), 0.75, type = 1),2))),
