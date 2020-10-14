@@ -349,7 +349,11 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   filter_expr <- reactive({
     filter_code <- gsub("processed_data","tg_data",capture.output(attr(filtered_data(), "code")))
     if(any(regexpr("%>%", filter_code) > 0)){
-      glue::glue("tg_data <- eval(parse(text = {filter_code}))")
+      glue::glue("
+          # conditionally add filter code to R script
+          tg_data <- eval(parse(text = {filter_code}))
+          "
+                 )
     } else {
       ""
     }
@@ -387,7 +391,6 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     # create list of dataframes
     tg_data <- IDEA::readData(study_dir, filenames) %>% IDEA::combineData()
         
-    # conditionally add filter code to R script
     {filter_expr()}
         
     # get drop zone area from IDEA
@@ -396,9 +399,9 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       
     tg_table <- purrr::pmap(list(blockData$agg, blockData$S3,blockData$dropdown), 
                             function(x,y,z) IDEA::IDEA_methods(x,y,z, 
-                                                   group = {column() %||% 'NULL'}, 
+                                                   group = '{column() %||% 'NULL'}', 
                                                    data = tg_data)) %>%
-    map(setNames, IDEA::common_rownames(tg_data, {column() %||% 'NULL'})) %>%
+    map(setNames, IDEA::common_rownames(tg_data, '{column() %||% 'NULL'}')) %>%
     setNames(paste(blockData$gt_group)) %>%
     bind_rows(.id = 'ID') 
     "
@@ -461,7 +464,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       {text_code()}
       
       # read in SAS table and convert to DF
-      sas_data <- !!input$sas$datapath
+      sas_data <- 'path/to/sas/table/dataset/'
       sas_table <- haven::read_sas(sas_data)
       # Aaron's function to compare two tables
       IDEA::compareTables(tg_table, sas_table)
