@@ -350,7 +350,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     filter_code <- gsub("processed_data","tg_data",capture.output(attr(filtered_data(), "code")))
     if(any(regexpr("%>%", filter_code) > 0)){
       glue::glue("
-          # conditionally add filter code to R script
+          # add filter code to R script
           tg_data <- eval(parse(text = {filter_code}))
           "
                  )
