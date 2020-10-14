@@ -399,9 +399,9 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       
     tg_table <- purrr::pmap(list(blockData$agg, blockData$S3,blockData$dropdown), 
                             function(x,y,z) IDEA::IDEA_methods(x,y,z, 
-                                                   group = '{column() %||% 'NULL'}', 
+                                                   group = {column() %quote% 'NULL'}, 
                                                    data = tg_data)) %>%
-    map(setNames, IDEA::common_rownames(tg_data, '{column() %||% 'NULL'}')) %>%
+    map(setNames, IDEA::common_rownames(tg_data, {column() %quote% 'NULL'})) %>%
     setNames(paste(blockData$gt_group)) %>%
     bind_rows(.id = 'ID') 
     "
@@ -416,11 +416,13 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
         summarise(n = n()) %>%
         pull(n)"
     } else {
-      "total <- tg_data %>%
-        group_by(!!sym(input$COLUMN)) %>%
+      glue::glue(
+        "total <- tg_data %>%
+        group_by({input$COLUMN}) %>%
         distinct(USUBJID) %>%
         summarise(n = n()) %>%
         pull(n)"
+      )
     }
   })
   
