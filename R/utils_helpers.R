@@ -147,3 +147,18 @@ filters_in_english <- function(filtered_data, filter_header = "Filters Applied:"
 #' @noRd
 #' 
 getLevels <- function(x) {if(is.factor(x)) levels(x)else sort(unique(x)) } 
+
+
+
+#' %quote%
+#' @param x test if null
+#' @param y return if x is null
+#' @return either y or a string
+#'
+`%quote%` <- function(x,y) {
+  if (is.null(x)) {
+    y
+  } else {
+    sQuote(x)
+  }
+}
