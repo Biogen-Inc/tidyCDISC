@@ -413,14 +413,14 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     if (!!input$COLUMN == 'NONE') {
       "total <- tg_data %>% 
         distinct(USUBJID) %>% 
-        summarise(n = n()) %>%
+        summarise(n = n(), .groups='drop_last') %>%
         pull(n)"
     } else {
       glue::glue(
         "total <- tg_data %>%
         group_by({input$COLUMN}) %>%
         distinct(USUBJID) %>%
-        summarise(n = n()) %>%
+        summarise(n = n(), .groups='drop_last') %>%
         pull(n)"
       )
     }
