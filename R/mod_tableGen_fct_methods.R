@@ -15,7 +15,7 @@
 #' inside the table generator module.
 #' 
 #' @family tableGen Functions
-
+#' @export
 IDEA_methods <- function(agg, column, week, group, data) {
   if (agg == "MEAN") {
     IDEA_mean(column, week, group, data)
