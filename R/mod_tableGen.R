@@ -134,26 +134,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   
   all_data <- reactive({ 
     # apply filters from selected dfs to tg data to create all data
-    ad <- tg_data() %>% semi_join(filtered_data()) 
-    
-    # Now to refactor levels in VARN order, if they exist:
-    # save the variable labels into savelbls vector
-    savelbls <- sjlabelled::get_label(ad)
-    
-    # identify all char - numeric variables pairs that need factor re-ordering
-    cols <- colnames(ad)
-    non_num_cols <- c(subset_colclasses(ad, is.factor),
-                      subset_colclasses(ad, is.character))
-    varn <- paste0(non_num_cols,"N")[paste0(non_num_cols,"N") %in% cols]
-    varc <- substr(varn,1,nchar(varn) - 1)
-
-    data.table::setDT(ad)
-    purrr::walk2(varc, varn, ~ refact(ad, .x, .y))
-    
-    # copy SAS labels back into data
-    ad <- sjlabelled::set_label(ad, label = savelbls)
-
-    return(ad)
+      tg_data() %>% semi_join(filtered_data()) %>% varN_fctr_reorder()
     })
   
   # prepare the AVISIT dropdown of the statistics blocks
