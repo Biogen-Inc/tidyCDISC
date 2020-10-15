@@ -1,0 +1,13 @@
+name: idea_choose_files
+title: IDEA_choose_files
+username: aclark5
+account: aclark5
+server: awshpc22133.abc.amazon.biogen.com
+hostUrl: https://awshpc22133.abc.amazon.biogen.com/__api__
+appId: 166
+bundleId: 537
+url: https://awshpc22133.abc.amazon.biogen.com/content/166/
+when: 1602688617.29823
+lastSyncTime: 1602688617.29823
+asMultiple: FALSE
+asStatic: FALSE
