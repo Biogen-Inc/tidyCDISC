@@ -1,3 +1,17 @@
+#' GT Column Names
+#' 
+#' @param dat data
+#' @param nm name
+#' @param x columns
+#' 
+#' create the labels for each column using the total function
+#' so the columns are now NAME N= X
+#' @export
+# get column names with N
+col_for_list_expr <- function(nm, x) {
+  nm = md(glue::glue("**{row_names_n}** <br> N={total}"))
+}
+
 
 #' My GG Color Hue
 #'
@@ -137,3 +151,18 @@ filters_in_english <- function(filtered_data, filter_header = "Filters Applied:"
 #' @noRd
 #' 
 getLevels <- function(x) {if(is.factor(x)) levels(x)else sort(unique(x)) } 
+
+
+
+#' %quote%
+#' @param x test if null
+#' @param y return if x is null
+#' @return either y or a string
+#'
+`%quote%` <- function(x,y) {
+  if (is.null(x)) {
+    y
+  } else {
+    sQuote(x)
+  }
+}
