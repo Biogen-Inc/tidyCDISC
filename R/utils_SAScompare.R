@@ -39,25 +39,11 @@ combineData <- function(datafile) {
       mutate(data_from = "ADSL", PARAMCD = NA, AVAL = NA, CHG = NA)
   }
   
-  # Now to refactor levels in VARN order, if they exist:
-  # save the variable labels into savelbls vector
-  savelbls <- sjlabelled::get_label(combined_data)
-  
-  # identify all char - numeric variables pairs that need factor re-ordering
-  cols <- colnames(combined_data)
-  non_num_cols <- c(subset_colclasses(combined_data, is.factor),
-                    subset_colclasses(combined_data, is.character))
-  varn <- paste0(non_num_cols,"N")[paste0(non_num_cols,"N") %in% cols]
-  varc <- substr(varn,1,nchar(varn) - 1)
-  
-  data.table::setDT(combined_data)
-  purrr::walk2(varc, varn, ~ refact(combined_data, .x, .y))
-  
-  # copy SAS labels back into data
-  combined_data <- sjlabelled::set_label(combined_data, label = savelbls)
+  combined_data <- varN_fctr_reorder(combined_data)
   
   return(combined_data)
 }
+
 
 
 #' Function to compare the SAS table to the IDEA output table
