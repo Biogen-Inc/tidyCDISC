@@ -115,6 +115,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     } else {
       combined_data <- non_bds %>% reduce(inner_join)
     }
+    
     return(combined_data)
   })
 
@@ -133,10 +134,9 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   
   all_data <- reactive({ 
     # apply filters from selected dfs to tg data to create all data
-    ad <- tg_data() %>%
-      semi_join(filtered_data()) 
+    ad <- tg_data() %>% semi_join(filtered_data()) 
     
-    # Process to refactor levels in VARN order, if they exist:
+    # Now to refactor levels in VARN order, if they exist:
     # save the variable labels into savelbls vector
     savelbls <- sjlabelled::get_label(ad)
     
@@ -268,11 +268,6 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     } else {
       " "
     }
-  })
-  
-  output$display_df <- DT::renderDataTable({
-    req(nrow(for_gt() > 0))
-    DT::datatable(for_gt())
   })
   
   
