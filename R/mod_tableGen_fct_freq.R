@@ -39,7 +39,7 @@ IDEA_freq.ADSL <- function(column, week, group = NULL, data) {
   
   column <- rlang::sym(as.character(column))
   
-  if (!is.character(data[[column]])) {
+  if (is.numeric(data[[column]])) {
     stop(paste("Can't calculate frequency, ", column, " is not categorical"))
   }
   

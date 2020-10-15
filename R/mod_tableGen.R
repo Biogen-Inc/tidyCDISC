@@ -115,25 +115,6 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     } else {
       combined_data <- non_bds %>% reduce(inner_join)
     }
-    
-    # save the variable labels into savelbls vector
-    savelbls <- sjlabelled::get_label(combined_data)
-    
-    # identify all char - numeric variables pairs
-    cols <- colnames(combined_data)
-    non_num_cols <- c(subset_colclasses(combined_data, is.factor),
-                      subset_colclasses(combined_data, is.character))
-    varn <- paste0(non_num_cols,"N")[paste0(non_num_cols,"N") %in% cols]
-    varc <- substr(varn,1,nchar(varn) - 1)
-    print(paste("c:", varc))
-    print(paste("n:", varn))
-    
-    data.table::setDT(combined_data)
-    purrr::walk2(varc, varn, ~ refact(combined_data, .x, .y))
-    
-    # copy SAS labels back into data
-    combined_data <- sjlabelled::set_label(combined_data, label = savelbls)
-    
     return(combined_data)
   })
 
@@ -150,7 +131,30 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # use all_data() for any analyses
   filtered_data <- callModule(shiny_data_filter, "data_filter", data = processed_data, verbose = FALSE)
   
-  all_data <- reactive({ tg_data() %>% semi_join(filtered_data()) })
+  all_data <- reactive({ 
+    # apply filters from selected dfs to tg data to create all data
+    ad <- tg_data() %>%
+      semi_join(filtered_data()) 
+    
+    # Process to refactor levels in VARN order, if they exist:
+    # save the variable labels into savelbls vector
+    savelbls <- sjlabelled::get_label(ad)
+    
+    # identify all char - numeric variables pairs that need factor re-ordering
+    cols <- colnames(ad)
+    non_num_cols <- c(subset_colclasses(ad, is.factor),
+                      subset_colclasses(ad, is.character))
+    varn <- paste0(non_num_cols,"N")[paste0(non_num_cols,"N") %in% cols]
+    varc <- substr(varn,1,nchar(varn) - 1)
+
+    data.table::setDT(ad)
+    purrr::walk2(varc, varn, ~ refact(ad, .x, .y))
+    
+    # copy SAS labels back into data
+    ad <- sjlabelled::set_label(ad, label = savelbls)
+
+    return(ad)
+    })
   
   # prepare the AVISIT dropdown of the statistics blocks
   # by converting them to a factor in the order of AVISITN
@@ -265,6 +269,12 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       " "
     }
   })
+  
+  output$display_df <- DT::renderDataTable({
+    req(nrow(for_gt() > 0))
+    DT::datatable(for_gt())
+  })
+  
   
   # create gt table
   gt_table <- reactive({
