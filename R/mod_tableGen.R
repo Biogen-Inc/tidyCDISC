@@ -483,9 +483,19 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       }
     ) 
   
-  observeEvent(input$sas, {
-     shinyjs::enable("code")
+  sas_file_path <- eventReactive(input$upload_SAS, {
+    choose.files(default = "", caption = "Select sas7bdat file",
+                multi = F)
    })
+  
+  observe({
+    req(sas_file_path())
+    shinyjs::enable("code")
+   })
+  
+  output$sas_path <- renderPrint({
+    sas_file_path()
+  })
   
   output$tblcode <- downloadHandler(
     filename = function() {
