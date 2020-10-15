@@ -270,7 +270,6 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     }
   })
   
-  
   # create gt table
   gt_table <- reactive({
     for_gt() %>%
