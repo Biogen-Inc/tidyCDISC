@@ -125,9 +125,6 @@ mod_tableGen_ui <- function(id){
         column(width = 6,
                wellPanel(
                  fluidRow(gt_output(ns("all"))))
-               ,wellPanel(
-                 DT::dataTableOutput(ns("display_df"))
-               )
         )
       )
     )
