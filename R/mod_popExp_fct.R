@@ -15,9 +15,11 @@
 refact <- function(data, varc, varn) {
   datac <- deparse(substitute(data))
   if (varc %in% colnames(data) && varn %in% colnames(data)) {
-    message(paste("A factor was created for", varc, "based on", varn, "levels"))
+    # print(paste("A factor was created for", varc, "based on", varn, "levels"))
     if(!is.factor(data[,(varc)])) {data[, (varc) := as.factor(get(varc))]}
+    # print(paste("Prev:",levels(data[,(varc)]), collapse = ", "))
     data[, (varc) := forcats::fct_reorder(get(varc), get(varn))]
+    # print(paste("Now:",levels(data[,(varc)]), collapse = ", "))
   } 
 }
 
