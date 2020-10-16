@@ -132,7 +132,10 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # use all_data() for any analyses
   filtered_data <- callModule(shiny_data_filter, "data_filter", data = processed_data, verbose = FALSE)
   
-  all_data <- reactive({ tg_data() %>% semi_join(filtered_data()) })
+  all_data <- reactive({ 
+    # apply filters from selected dfs to tg data to create all data
+      tg_data() %>% semi_join(filtered_data()) %>% varN_fctr_reorder()
+    })
   
   # prepare the AVISIT dropdown of the statistics blocks
   # by converting them to a factor in the order of AVISITN

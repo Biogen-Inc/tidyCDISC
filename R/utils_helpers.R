@@ -60,7 +60,11 @@ common_rownames <- function(data, group) {
   if (is.null(group)) {
     vars <- c("Variable", "TOTAL")
   } else {
-    vars <- c("Variable", sort(unique(data[[group]])))
+    if(is.factor(data[[group]])){
+      vars <- c("Variable", levels(data[[group]]))
+    } else {
+      vars <- c("Variable", sort(unique(data[[group]])))
+    }
     vars[vars == ""] <- "Missing"
   }
   return(vars)
@@ -162,3 +166,38 @@ getLevels <- function(x) {if(is.factor(x)) levels(x)else sort(unique(x)) }
     sQuote(x)
   }
 }
+
+
+#' Re-order Factor Levels by VARN
+#' 
+#' Function to that looks for VARN counterparts to any character or factor VAR
+#' variables in any dataframe and re-orders there factor levels, taking the lead
+#' from VARN's numeric guide.
+#' 
+#' @param data a dataframe, including one enriched with SAS labels attributes
+#' 
+#' @importFrom sjlabelled get_label set_label
+#' @importFrom data.table setDT 
+#' @importFrom purrr walk2 
+#' 
+varN_fctr_reorder <- function(data) {
+  # Now to refactor levels in VARN order, if they exist:
+  # save the variable labels into savelbls vector
+  savelbls <- sjlabelled::get_label(data)
+  
+  # identify all char - numeric variables pairs that need factor re-ordering
+  cols <- colnames(data)
+  non_num_cols <- c(subset_colclasses(data, is.factor),
+                    subset_colclasses(data, is.character))
+  varn <- paste0(non_num_cols,"N")[paste0(non_num_cols,"N") %in% cols]
+  varc <- substr(varn,1,nchar(varn) - 1)
+  
+  data.table::setDT(data)
+  purrr::walk2(varc, varn, ~ refact(data, .x, .y))
+  
+  # copy SAS labels back into data
+  data <- sjlabelled::set_label(data, label = savelbls)
+  
+  return(data)
+}
+
