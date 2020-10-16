@@ -38,8 +38,12 @@ combineData <- function(datafile) {
     combined_data <- ADSL %>%
       mutate(data_from = "ADSL", PARAMCD = NA, AVAL = NA, CHG = NA)
   }
+  
+  combined_data <- varN_fctr_reorder(combined_data)
+  
   return(combined_data)
 }
+
 
 
 #' Function to compare the SAS table to the IDEA output table
