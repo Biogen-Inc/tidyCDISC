@@ -50,17 +50,21 @@ IDEA_mean.ADSL <- function(column, week, group = NULL, data) {
     stop(paste("Can't calculate mean, ", column, " is not numeric"))
   }
   
+  all <- data %>%
+    mean_summary(column) %>%
+    transpose_df(999)
+  
   if (!is.null(group)) {
     group <- sym(group)
-    data %>%
+    grouped <- data %>%
       group_by(!!group) %>% 
       mean_summary(column) %>%
       transpose_df(1)
     
+    cbind(grouped, all[2])
+    
   } else {
-    data %>%
-      mean_summary(column) %>%
-      transpose_df(999)
+    all
   }
   
 }
@@ -89,6 +93,11 @@ IDEA_mean.BDS <- function(column, week, group = NULL, data) {
     stop(paste("Can't calculate mean, ", column, " has no AVAL"))
   }
   
+  all <- data %>%
+    filter(AVISIT == week & PARAMCD == column) %>%
+    mean_summary("AVAL") %>%
+    transpose_df(999)
+  
   if (!is.null(group)) {
     
     if (week == "NONE") {
@@ -96,17 +105,16 @@ IDEA_mean.BDS <- function(column, week, group = NULL, data) {
     }
     
     group <- sym(group)
-    data %>%
+    grouped <- data %>%
       filter(AVISIT == week & PARAMCD == column) %>%
       group_by(!!group) %>%
       mean_summary("AVAL") %>%
       transpose_df(1)
     
+    cbind(grouped, all[2])
+    
   } else {
-    data %>%
-      filter(AVISIT == week & PARAMCD == column) %>%
-      mean_summary("AVAL") %>%
-      transpose_df(999)
+    all
   }
 }
 
