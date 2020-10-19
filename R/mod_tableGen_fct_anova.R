@@ -64,12 +64,10 @@ IDEA_anova.ADSL <- function(column, week, group = NULL, data) {
     anova_df[2, group_n] <- round(ttest$statistic[1], 2)
     anova_df[3, group_n] <- round(ttest$meansq[1], 2)
     anova_df[4, group_n] <- round(ttest$sumsq[1], 2)
-    print(anova_df)
     
     anova_df <- dplyr::mutate_all(anova_df, as.character) %>%
       dplyr::mutate_all(dplyr::coalesce, "")
-
-    print(anova_df)
+    
     anova_df
   }
   
