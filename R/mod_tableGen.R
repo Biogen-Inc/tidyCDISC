@@ -190,17 +190,22 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # calculate the totals to input after N= in the table headers
   # a single N if data is not grouped
   total <- reactive({
+    
+    all <- all_data() %>% 
+      distinct(USUBJID) %>% 
+      summarise(n = n()) %>%
+      pull(n)
+    
+    
     if (input$COLUMN == "NONE") {
-      all_data() %>% 
-        distinct(USUBJID) %>% 
-        summarise(n = n()) %>%
-        pull(n)
+      all
     } else {
-      all_data() %>%
+      groups <- all_data() %>%
         group_by(!!sym(input$COLUMN)) %>%
         distinct(USUBJID) %>%
         summarise(n = n()) %>%
         pull(n)
+      c(groups, all)
     }
   })
   
