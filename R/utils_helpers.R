@@ -67,7 +67,6 @@ common_rownames <- function(data, group) {
     }
     vars[vars == ""] <- "Missing"
   }
-  print(vars)
   return(vars)
 }
 
