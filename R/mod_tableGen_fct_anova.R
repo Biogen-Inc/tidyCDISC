@@ -52,9 +52,10 @@ IDEA_anova.ADSL <- function(column, week, group = NULL, data) {
     
     ttest <- broom::tidy(aov(all_dat[[paste(column)]] ~ all_dat[[paste(group)]], data=all_dat))
     
-    group_n <- length(unique(all_dat[[paste(group)]])) + 1
+    group_n <- length(unique(all_dat[[paste(group)]])) + 2
     
     anova_df <- data.frame(matrix(NA, ncol=group_n, nrow=4))
+    
     anova_df[1,1] <- "p-value"
     anova_df[2,1] <- "Test Statistic"
     anova_df[3,1] <- "Mean Sum of Squares"
@@ -66,7 +67,7 @@ IDEA_anova.ADSL <- function(column, week, group = NULL, data) {
     
     anova_df <- dplyr::mutate_all(anova_df, as.character) %>%
       dplyr::mutate_all(dplyr::coalesce, "")
-
+    
     anova_df
   }
   
@@ -108,7 +109,7 @@ IDEA_anova.BDS <- function(column, week, group = NULL, data) {
     
     ttest <- broom::tidy(aov(all_dat$AVAL ~ all_dat[[paste(group)]], data=all_dat))
     
-    group_n <- length(unique(all_dat[[paste(group)]])) + 1
+    group_n <- length(unique(all_dat[[paste(group)]])) + 2
     
     anova_df <- data.frame(matrix(NA, ncol=group_n, nrow=4))
     anova_df[1,1] <- "p-value"

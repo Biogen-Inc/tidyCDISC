@@ -55,15 +55,15 @@ transpose_df <- function(df, num) {
 #' from generics to the column name
 #' and the total N of each column
 #' @param data the data to create columns with
-#' @param group weather to group the data to calculate Ns
+#' @param group whether to group the data to calculate Ns
 common_rownames <- function(data, group) {
   if (is.null(group)) {
-    vars <- c("Variable", "TOTAL")
+    vars <- c("Variable", "Total")
   } else {
     if(is.factor(data[[group]])){
-      vars <- c("Variable", levels(data[[group]]))
+      vars <- c("Variable", levels(data[[group]]), "Total")
     } else {
-      vars <- c("Variable", sort(unique(data[[group]])))
+      vars <- c("Variable", sort(unique(data[[group]])), "Total")
     }
     vars[vars == ""] <- "Missing"
   }
