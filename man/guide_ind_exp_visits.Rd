@@ -5,7 +5,7 @@
 \alias{guide_ind_exp_visits}
 \title{Individual Explorer Cicerone Guide For Patient Visits tab when ADAM selected}
 \format{
-An object of class \code{Cicerone} (inherits from \code{R6}) of length 13.
+An object of class \code{Cicerone} (inherits from \code{R6}) of length 15.
 }
 \usage{
 guide_ind_exp_visits
