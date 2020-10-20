@@ -74,7 +74,8 @@ golem_add_external_resources <- function(){
     shinyjs::useShinyjs(),
     waiter::use_waiter(),
     shinyjs::inlineCSS(css),
-    shinyjs::extendShinyjs(text = jscode),
+    shinyjs::extendShinyjs(text = jscode,
+                           functions = c("disableTab","enableTab")),
     cicerone::use_cicerone()
 
   )
