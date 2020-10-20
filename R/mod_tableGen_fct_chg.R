@@ -58,6 +58,11 @@ IDEA_chg.BDS <- function(column, week, group = NULL, data) {
     stop(paste("Can't calculate change from baseline, ", column, " has no CHG values"))
   }
   
+  all <- data %>%
+    filter(AVISIT == week & PARAMCD == column) %>%
+    mean_summary("CHG") %>%
+    transpose_df(999)
+  
   if (!is.null(group)) {
     
     if (week == "NONE") {
@@ -65,16 +70,16 @@ IDEA_chg.BDS <- function(column, week, group = NULL, data) {
     }
     
     group <- rlang::sym(group)
-    data %>%
+    grouped <- data %>%
       filter(AVISIT == week & PARAMCD == column) %>%
       group_by(!!group) %>%
       mean_summary("CHG") %>%
       transpose_df(1)
+    
+    cbind(grouped, all[2])
+    
   } else {
-    data %>%
-      filter(AVISIT == week & PARAMCD == column) %>%
-      mean_summary("CHG") %>%
-      transpose_df(999)
+    all
   }
 }
 

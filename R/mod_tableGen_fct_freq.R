@@ -27,6 +27,7 @@ IDEA_freq.default <- function(column, week, group, data) {
 
 #' if ADSL supplied look for the column to take frequency of
 #' and look for a grouping variable to group_by
+#' if data is grouped add total column to the grouped data
 #' 
 #' @importFrom rlang sym !!
 #' @import dplyr
@@ -43,16 +44,19 @@ IDEA_freq.ADSL <- function(column, week, group = NULL, data) {
     stop(paste("Can't calculate frequency, ", column, " is not categorical"))
   }
   
-  if (is.null(group)) {
-    data %>%
-      distinct(USUBJID, !!column) %>%
-      count(!!column) %>%
-      group_by(!!column) %>%
-      summarise(n = sum(n)) %>%
-      ungroup() %>%
-      mutate(prop = n/sum(n)) %>%
-      mutate(x = paste0(n, " (", round(prop*100, 2), ")")) %>%
-      select(!!column, x)
+  total <- data %>%
+    distinct(USUBJID, !!column) %>%
+    count(!!column) %>%
+    group_by(!!column) %>%
+    summarise(n = sum(n)) %>%
+    ungroup() %>%
+    mutate(prop = n/sum(n)) %>%
+    mutate(x = paste0(n, " (", round(prop*100, 2), ")")) %>%
+    select(!!column, x)
+  
+  
+  if (is.null(group)) { 
+    total
   } else {
     
     if (group == column) {
@@ -60,7 +64,8 @@ IDEA_freq.ADSL <- function(column, week, group = NULL, data) {
     }
     
     group <- rlang::sym(group)
-    data %>%
+    
+    groups <- data %>%
       distinct(USUBJID, !!column, !!group) %>%
       count(!!column, !!group) %>%
       group_by(!!group) %>%
@@ -68,6 +73,8 @@ IDEA_freq.ADSL <- function(column, week, group = NULL, data) {
       mutate(v1 = paste0(n, ' (', round(prop*100, 2), ')')) %>%
       select(-n, -prop) %>% 
       spread(!!group, v1)
+    
+    cbind(groups, total$x)
   }
 }
 
