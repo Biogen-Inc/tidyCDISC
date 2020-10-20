@@ -416,8 +416,29 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     )
   })
   
+  total <- reactive({
+    
+    all <- all_data() %>% 
+      distinct(USUBJID) %>% 
+      summarise(n = n()) %>%
+      pull(n)
+    
+    
+    if (input$COLUMN == "NONE") {
+      all
+    } else {
+      groups <- all_data() %>%
+        group_by(!!sym(input$COLUMN)) %>%
+        distinct(USUBJID) %>%
+        summarise(n = n()) %>%
+        pull(n)
+      c(groups, all)
+    }
+  })
+  
   # create the total column names
   total_for_code <- reactive({
+    
     if (!!input$COLUMN == 'NONE') {
       "total <- tg_data %>% 
         distinct(USUBJID) %>% 
@@ -425,11 +446,20 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
         pull(n)"
     } else {
       glue::glue(
-        "total <- tg_data %>%
+        "
+        all <- tg_data %>% 
+        distinct(USUBJID) %>% 
+        summarise(n = n(), .groups='drop_last') %>%
+        pull(n)
+        
+        groups <- tg_data %>%
         group_by({input$COLUMN}) %>%
         distinct(USUBJID) %>%
         summarise(n = n(), .groups='drop_last') %>%
-        pull(n)"
+        pull(n)
+        
+        total <- c(groups, all)
+        "
       )
     }
   })
