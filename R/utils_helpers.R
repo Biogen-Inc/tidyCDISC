@@ -58,12 +58,12 @@ transpose_df <- function(df, num) {
 #' @param group whether to group the data to calculate Ns
 common_rownames <- function(data, group) {
   if (is.null(group)) {
-    vars <- c("Variable", "TOTAL")
+    vars <- c("Variable", "Total")
   } else {
     if(is.factor(data[[group]])){
-      vars <- c("Variable", levels(data[[group]]), "TOTAL")
+      vars <- c("Variable", levels(data[[group]]), "Total")
     } else {
-      vars <- c("Variable", sort(unique(data[[group]])), "TOTAL")
+      vars <- c("Variable", sort(unique(data[[group]])), "Total")
     }
     vars[vars == ""] <- "Missing"
   }
