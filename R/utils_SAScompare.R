@@ -252,11 +252,6 @@ prep_tg_table <- function(data, as_is = FALSE, num_dec = 1){
 
   return(if(as_is) tg else tg_comp_ready)
 }
-# data <- tg_table
-# as_is = FALSE
-# num_dec = 1
-
-
 
 
 
