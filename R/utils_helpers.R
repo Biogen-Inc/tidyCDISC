@@ -56,6 +56,7 @@ transpose_df <- function(df, num) {
 #' and the total N of each column
 #' @param data the data to create columns with
 #' @param group whether to group the data to calculate Ns
+#' @export
 common_rownames <- function(data, group) {
   if (is.null(group)) {
     vars <- c("Variable", "Total")
@@ -65,10 +66,21 @@ common_rownames <- function(data, group) {
     } else {
       vars <- c("Variable", sort(unique(data[[group]])), "Total")
     }
-    vars[vars == ""] <- "Missing"
+    # Add the 'Missing' group if there is actually data data attached to
+    # that "" chr / fctr level. For some reason, that fctr level exists
+    # with levels() above but not in the data, so this is just a dbl chk.
+    cnts <- forcats::fct_count(data[[group]])
+    if(any(cnts$f == "")){
+      if(pull(cnts[cnts$f == "","n"]) > 0){
+        vars[vars == ""] <- "Missing"
+      } else {
+        vars <- vars[vars != ""]
+      }
+    }
   }
   return(vars)
 }
+
 
 
 #' Convert actions performed on from an IDEAFilter output dataframe into text
