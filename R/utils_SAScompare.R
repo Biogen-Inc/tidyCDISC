@@ -87,7 +87,42 @@ delim_expand_rows <- function(data, sep){
   return(d)
 }
 
+#' Organize SAS or tg table into a machine readable format for comparing
+#'
+#' @param data a sas or tg table
+#'
+#' @import dplyr
+#' @importFrom stringr str_detect
+#'  
+machine_readable <- function(data){
+  data %>%
+    mutate(var_rn = 1) %>%
+    filter(across(-c(id_num:Variable), function(col) {
+      !stringr::str_detect(col, "\\(") & !stringr::str_detect(col, "\\,") & !stringr::str_detect(col, "\\|")}
+    )) %>%
+    mutate(across(-c(id_num:Variable), as.numeric)) %>% # convert fields to numeric
+    union(delim_expand_rows(data = data, sep = "\\|")) %>% # no | for sas table, but we'll do it anyway
+    union(delim_expand_rows(data = data, sep = "\\,")) %>%
+    union(
+      delim_expand_rows( sep = "\\(", data = 
+                           data %>% 
+                           filter(Variable != "Mean (SD)") %>%
+                           mutate(across(-starts_with("id_"), function(col) gsub(")", "", col)))
+      )
+    ) %>%
+    union(
+      delim_expand_rows( sep = "\\(", data = 
+                           data %>% 
+                           filter(Variable == "Mean (SD)") %>%
+                           mutate(across(-starts_with("id_"), function(col) gsub(")", "", col)))
+      )
+    ) %>%
+    arrange(id_num, id_rn, var_rn) %>%
+    select(-id_rn,-var_rn)
+}
 
+#'  
+#'  
 #' Organize SAS table into a format for comparing
 #'
 #' @param data the sas_table dataframe, output from IDEA
@@ -129,32 +164,7 @@ prep_sas_table <- function(data, as_is = FALSE){
   
   if(as_is == F){
     # separate out values that have more than 1 value embedded in cell
-    sas_comp_ready <-
-      sas_labelled %>%
-      mutate(var_rn = 1) %>%
-      filter(across(-c(id_num:Variable), function(col) {
-        !stringr::str_detect(col, "\\(") & !stringr::str_detect(col, "\\,") & !stringr::str_detect(col, "\\|")}
-      )) %>%
-      mutate(across(-c(id_num:Variable), as.numeric)) %>% # convert fields to numeric
-      union(delim_expand_rows(data = sas_labelled, sep = "\\|")) %>% # no | for sas table, but we'll do it anyway
-      union(delim_expand_rows(data = sas_labelled, sep = "\\,")) %>%
-      union(
-        delim_expand_rows( sep = "\\(", data = 
-                             sas_labelled %>% 
-                             filter(Variable != "Mean (SD)") %>%
-                             mutate(across(-starts_with("id_"), function(col) gsub(")", "", col)))
-        )
-      ) %>%
-      union(
-        delim_expand_rows( sep = "\\(", data = 
-                             sas_labelled %>% 
-                             filter(Variable == "Mean (SD)") %>%
-                             mutate(across(-starts_with("id_"), function(col) gsub(")", "", col)))
-        )
-      ) %>%
-      arrange(id_num, id_rn, var_rn) %>%
-      select(-id_rn,-var_rn)# %>% # don't need these for compare, correct?
-    # select(id_num, id_desc,  Variable,  everything())
+    sas_comp_ready <- machine_readable(sas_labelled)
   }
   
   return(if(as_is) sas_labelled else sas_comp_ready)
@@ -209,45 +219,11 @@ prep_tg_table <- function(data, as_is = FALSE, num_dec = 1){
     ungroup() %>%
     select(id_num, id_desc = ID, id_rn, everything())
   
-  # names(tg00)
   tg_renamed <- temp_col_rename(tg00)
   tg <- tg_renamed$dat
-  # names(tg)
   
   if(as_is == F){
-    tg_comp_ready0 <-
-      tg %>%
-      mutate(var_rn = 1) %>%
-      filter(across(-c(id_num:Variable), function(col) {
-        !stringr::str_detect(col, "\\(") & !stringr::str_detect(col, "\\,") & !stringr::str_detect(col, "\\|")}
-      )) %>%
-      mutate(across(-c(id_num:Variable), as.numeric)) %>% # convert fields to numeric
-      union(delim_expand_rows(data = tg, sep = "\\|")) %>%
-      union(delim_expand_rows(data = tg, sep = "\\,")) %>% # no commas in tg
-      union(
-        delim_expand_rows( sep = "\\(", 
-                           data = 
-                             tg %>% 
-                             filter(Variable != "Mean (SD)") %>%
-                             mutate(across(-starts_with("id_"), function(col) gsub(")", "", col)))
-        )
-      ) %>%
-      union(
-        delim_expand_rows( sep = "\\(", 
-                           data = 
-                             tg %>% 
-                             filter(Variable == "Mean (SD)") %>%
-                             mutate(across(-starts_with("id_"), function(col) gsub(")", "", col)))
-        )
-      ) %>%
-      mutate(across(-c(id_num:Variable), function(col) round(col, digits = num_dec))) %>%
-      arrange(id_num, id_rn, var_rn) %>%
-      select(-id_rn,-var_rn)
-    # select(id_num, id_desc, id_rn, Variable, var_rn, everything()) %>%
-    
-    # names(tg_comp_ready0)
-    tg_comp_ready <- revert_temp_colnames(tg_comp_ready0, tg_renamed$orig_names)
-    # names(tg_comp_ready)
+    tg_comp_ready0 <- machine_readable(tg) %>% revert_temp_colnames(tg_renamed$orig_names)
   }
 
   return(if(as_is) tg else tg_comp_ready)
