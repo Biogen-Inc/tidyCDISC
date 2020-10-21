@@ -51,11 +51,16 @@ transpose_df <- function(df, num) {
   return(t_df[-num,])
 }
 
-#' transform the gt rownames
-#' from generics to the column name
-#' and the total N of each column
+#' Identify Names of Columns
+#' 
+#' transform the gt rownames from generics to the column name and the total N of
+#' each column
+#'
 #' @param data the data to create columns with
 #' @param group whether to group the data to calculate Ns
+#' 
+#' @importFrom forcats fct_count
+#' 
 #' @export
 common_rownames <- function(data, group) {
   if (is.null(group)) {
