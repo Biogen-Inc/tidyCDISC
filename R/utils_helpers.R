@@ -67,25 +67,17 @@ common_rownames <- function(data, group) {
     vars <- c("Variable", "Total")
   } else {
     if(is.factor(data[[group]])){
-      vars <- c("Variable", levels(data[[group]]), "Total")
+      vars <- c("Variable", levels(droplevels(data[[group]])), "Total")
     } else {
       vars <- c("Variable", sort(unique(data[[group]])), "Total")
     }
-    # Add the 'Missing' group if there is actually data data attached to
-    # that "" chr / fctr level. For some reason, that fctr level exists
-    # with levels() above but not in the data, so this is just a dbl chk.
-    cnts <- forcats::fct_count(data[[group]])
-    if(any(cnts$f == "")){
-      if(pull(cnts[cnts$f == "","n"]) > 0){
-        vars[vars == ""] <- "Missing"
-      } else {
-        vars <- vars[vars != ""]
-      }
-    }
+    vars[vars == ""] <- "Missing"
   }
   return(vars)
 }
-
+# data <- tg_data
+# group <- "TRT01P"
+# class(data[[group]])
 
 
 #' Convert actions performed on from an IDEAFilter output dataframe into text

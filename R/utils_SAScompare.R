@@ -223,7 +223,7 @@ prep_tg_table <- function(data, as_is = FALSE, num_dec = 1){
   tg <- tg_renamed$dat
   
   if(as_is == F){
-    tg_comp_ready0 <- machine_readable(tg) %>% revert_temp_colnames(tg_renamed$orig_names)
+    tg_comp_ready <- machine_readable(tg) %>% revert_temp_colnames(tg_renamed$orig_names)
   }
 
   return(if(as_is) tg else tg_comp_ready)
