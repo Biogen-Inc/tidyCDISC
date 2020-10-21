@@ -2,9 +2,7 @@
 % Please edit documentation in R/utils_helpers.R
 \name{common_rownames}
 \alias{common_rownames}
-\title{transform the gt rownames
-from generics to the column name
-and the total N of each column}
+\title{Identify Names of Columns}
 \usage{
 common_rownames(data, group)
 }
@@ -14,7 +12,6 @@ common_rownames(data, group)
 \item{group}{whether to group the data to calculate Ns}
 }
 \description{
-transform the gt rownames
-from generics to the column name
-and the total N of each column
+transform the gt rownames from generics to the column name and the total N of
+each column
 }
