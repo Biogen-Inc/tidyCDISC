@@ -75,9 +75,6 @@ common_rownames <- function(data, group) {
   }
   return(vars)
 }
-# data <- tg_data
-# group <- "TRT01P"
-# class(data[[group]])
 
 
 #' Convert actions performed on from an IDEAFilter output dataframe into text
