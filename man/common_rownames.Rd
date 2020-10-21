@@ -11,7 +11,7 @@ common_rownames(data, group)
 \arguments{
 \item{data}{the data to create columns with}
 
-\item{group}{weather to group the data to calculate Ns}
+\item{group}{whether to group the data to calculate Ns}
 }
 \description{
 transform the gt rownames
