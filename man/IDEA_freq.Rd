@@ -44,6 +44,7 @@ using table generator blocks
 
 if ADSL supplied look for the column to take frequency of
 and look for a grouping variable to group_by
+if data is grouped add total column to the grouped data
 }
 \seealso{
 Other tableGen Functions: 
