@@ -506,6 +506,13 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       # read in SAS table and convert to DF
       sas_data <- 'path/to/sas/table/dataset/'
       sas_table <- haven::read_sas(sas_data)
+      
+      # prepare SAS table for comparison
+      sas_comp_ready <- IDEA::prep_sas_table(data = sas_table, as_is = F) # should I include num_dec here too?
+
+      # prepare TG Table for comparison
+      tg_comp_ready <- IDEA::prep_tg_table(data = tg_table, as_is = F, num_dec = 1)
+
       # Aaron's function to compare two tables
       IDEA::compareTables(tg_table, sas_table)
       "
