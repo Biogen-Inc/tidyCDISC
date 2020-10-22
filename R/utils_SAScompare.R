@@ -135,7 +135,9 @@ machine_readable <- function(data){
 #' 
 #' @export
 #'   
-prep_sas_table <- function(data, as_is = FALSE){
+prep_sas_table <- function(data,
+                           as_is = FALSE,
+                           rm_desc_col = TRUE){
   sas_prepped <-
     data %>%
     mutate(id_num = as.numeric(factor(cat)),
@@ -165,9 +167,14 @@ prep_sas_table <- function(data, as_is = FALSE){
   if(as_is == F){
     # separate out values that have more than 1 value embedded in cell
     sas_comp_ready <- machine_readable(sas_labelled)
+  } else {
+    sas_comp_ready <- sas_labelled
+  }
+  if(rm_desc_col){
+    sas_comp_ready$id_desc <- NULL
   }
   
-  return(if(as_is) sas_labelled else sas_comp_ready)
+  return(sas_comp_ready)
 }
 
 #' Create new Generic Names for Columns with numeric table data
@@ -209,7 +216,10 @@ revert_temp_colnames <- function(dat, orig_grp_names){
 #' 
 #' @export
 #'   
-prep_tg_table <- function(data, as_is = FALSE, num_dec = 1){
+prep_tg_table <- function(data,
+                          as_is = FALSE,
+                          generic_colnames = TRUE,
+                          rm_desc_col = TRUE){
   
   tg00 <- data %>%
     mutate(id_num = as.numeric(factor(ID, levels = unique(data$ID)))) %>%
@@ -223,10 +233,20 @@ prep_tg_table <- function(data, as_is = FALSE, num_dec = 1){
   tg <- tg_renamed$dat
   
   if(as_is == F){
-    tg_comp_ready <- machine_readable(tg) %>% revert_temp_colnames(tg_renamed$orig_names)
+    tg_comp_ready0 <- machine_readable(tg)
+  } else {
+    tg_comp_ready0 <- tg
+  }
+  if(generic_colnames){
+    tg_comp_ready <- tg_comp_ready0
+  } else {
+    tg_comp_ready <- revert_temp_colnames(tg_comp_ready0, tg_renamed$orig_names)
+  }
+  if(rm_desc_col){
+    tg_comp_ready$id_desc <- NULL
   }
 
-  return(if(as_is) tg else tg_comp_ready)
+  return(tg_comp_ready)
 }
 
 

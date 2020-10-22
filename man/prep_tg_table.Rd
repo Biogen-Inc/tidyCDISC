@@ -4,7 +4,7 @@
 \alias{prep_tg_table}
 \title{Organize Table Generator table into a format for comparing}
 \usage{
-prep_tg_table(data, as_is = FALSE, num_dec = 1)
+prep_tg_table(data, as_is = FALSE, generic_colnames = TRUE, rm_desc_col = TRUE)
 }
 \arguments{
 \item{data}{the tg_table dataframe, output from IDEA}

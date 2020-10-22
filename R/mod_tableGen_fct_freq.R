@@ -51,7 +51,7 @@ IDEA_freq.ADSL <- function(column, week, group = NULL, data) {
     summarise(n = sum(n)) %>%
     ungroup() %>%
     mutate(prop = n/sum(n)) %>%
-    mutate(x = paste0(n, " (", round(prop*100, 2), ")")) %>%
+    mutate(x = paste0(n, " (", sprintf("%.1f", round(prop*100, 1)), ")")) %>%
     select(!!column, x)
   
   
@@ -70,7 +70,7 @@ IDEA_freq.ADSL <- function(column, week, group = NULL, data) {
       count(!!column, !!group) %>%
       group_by(!!group) %>%
       mutate(prop = prop.table(n)) %>%
-      mutate(v1 = paste0(n, ' (', round(prop*100, 2), ')')) %>%
+      mutate(v1 = paste0(n, ' (', sprintf("%.1f", round(prop*100, 1)), ')')) %>%
       select(-n, -prop) %>% 
       spread(!!group, v1)
     
