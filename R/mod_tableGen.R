@@ -377,6 +377,8 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   text_code <- reactive({
     glue::glue(
     "
+    options(digits = 3)
+    
     pkgs_req <- c('IDEA', 'purrr', 'haven', 'dplyr')
     pkgs_needed <- pkgs_req[!(pkgs_req %in% installed.packages()[,'Package'])]
     

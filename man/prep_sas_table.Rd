@@ -4,7 +4,7 @@
 \alias{prep_sas_table}
 \title{Organize SAS table into a format for comparing}
 \usage{
-prep_sas_table(data, as_is = FALSE)
+prep_sas_table(data, as_is = FALSE, rm_desc_col = TRUE)
 }
 \arguments{
 \item{data}{the sas_table dataframe, output from IDEA}
