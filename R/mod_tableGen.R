@@ -406,14 +406,6 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     # get drop zone area from IDEA
     # and create table using data
     blockData <- {paste0(capture.output(dput(blocks_and_functions())), collapse = '\n')}
-      
-    tg_table <- purrr::pmap(list(blockData$agg, blockData$S3,blockData$dropdown), 
-                            function(x,y,z) IDEA::IDEA_methods(x,y,z, 
-                                                   group = {column() %quote% 'NULL'}, 
-                                                   data = tg_data)) %>%
-    map(setNames, IDEA::common_rownames(tg_data, {column() %quote% 'NULL'})) %>%
-    setNames(paste(blockData$gt_group)) %>%
-    bind_rows(.id = 'ID') 
     "
     )
   })
@@ -471,6 +463,14 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       "
       {text_code()}
       
+      tg_table <- purrr::pmap(list(blockData$agg, blockData$S3,blockData$dropdown), 
+                            function(x,y,z) IDEA::IDEA_methods(x,y,z, 
+                                                   group = {column() %quote% 'NULL'}, 
+                                                   data = tg_data)) %>%
+      map(setNames, IDEA::common_rownames(tg_data, {column() %quote% 'NULL'})) %>%
+      setNames(paste(blockData$gt_group)) %>%
+      bind_rows(.id = 'ID') 
+    
       # create a total variable
       {total_for_code()}
       
@@ -499,12 +499,43 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       "
     )
   })
+  # string <- "Hey Friend's"
+  # paste0('\\Q', string, '\\E')
+  # stringr::str_replace(string, '\'', '\'')
+  # gsub('\'',"\\'",string)
+  # gsub("([.|()\\^{}+$*?]|\\[|\\])", "\\\\\\1", string)
+  # 
+  # re.escape <- function(strings){
+  #   vals <- c("\\\\", "\\[", "\\]", "\\(", "\\)", 
+  #             "\\{", "\\}", "\\^", "\\$","\\*", 
+  #             "\\+", "\\?", "\\.", "\\|")
+  #   replace.vals <- paste0("\\\\", vals)
+  #   for(i in seq_along(vals)){
+  #     strings <- gsub(vals[i], replace.vals[i], strings)
+  #   }
+  #   strings
+  # }
+  # re.escape(string)
+  # sQuote(string)
+  # ?base::regex
   
   generate_comparison_output <- reactive({
     glue::glue(
       "
       {text_code()}
       
+      blockData$label <- 
+        purrr::map(blockData$block, function(x) attr(tg_data[[x]], 'label')) %>% 
+        unname() %>% str_trim()
+      
+      tg_table <- purrr::pmap(list(blockData$agg, blockData$S3,blockData$dropdown), 
+                              function(x,y,z) IDEA::IDEA_methods(x,y,z, 
+                                                     group = {column() %quote% 'NULL'}, 
+                                                     data = tg_data)) %>%
+      map(setNames, IDEA::common_rownames(tg_data, {column() %quote% 'NULL'})) %>%
+      setNames(paste(blockData$label)) %>%
+      bind_rows(.id = 'ID')
+    
       # read in SAS table and convert to DF
       sas_data_dir <- 'path/to/sas/table/dataset/'
       sas_filename <- '{input$sas$name}'
@@ -525,23 +556,36 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
                                            generic_colnames = TRUE
                                            )
       
-      # Compare the two tables
+      # Compare the two tables...
       library(diffdf)
-      my_diff <- diffdf(base = sas_comp_ready, 
+      
+      # ... by location in the tables
+      order_diff <- diffdf(base = sas_comp_ready, 
               compare = tg_comp_ready,
               keys = c('id_block', 'id_rn'),
               tolerance = 0.001,
               strict_numeric = TRUE, # Integer != Double
-              strict_factor = TRUE   # Factor != Character
-              # ,outfile = '{paste0(stringr::str_remove(input$sas$name, '.sas7bdat'), '_v_IDEA_diff_study_dir.log')}'
+              strict_factor = TRUE,  # Factor != Character
+              file = '{paste0(stringr::str_remove(input$sas$name, '.sas7bdat'), '_v_IDEA_order_diff_study_dir.log')}'
       )
-      my_diff # view output
+      order_diff # view output
       
-      diffdf_has_issues(my_diff) # any issues?
+      diffdf_has_issues(order_diff) # any issues?
       
       # which rows have an issue in each data frame
-      diffdf_issuerows(sas_comp_ready, my_diff)
-      diffdf_issuerows(tg_comp_ready, my_diff)
+      diffdf_issuerows(sas_comp_ready, order_diff)
+      diffdf_issuerows(tg_comp_ready, order_diff)
+      
+      
+      # # ... by variable labels and values. Note, must match!
+      # var_diff <- diffdf(base = sas_comp_ready, 
+      #         compare = tg_comp_ready,
+      #         keys = c('id_desc', 'Variable'),
+      #         tolerance = 0.001,
+      #         strict_numeric = TRUE, # Integer != Double
+      #         strict_factor = TRUE,  # Factor != Character
+      #         file = '{paste0(stringr::str_remove(input$sas$name, '.sas7bdat'), '_v_IDEA_var_diff_study_dir.log')}'
+      # )
       "
     )
   })
