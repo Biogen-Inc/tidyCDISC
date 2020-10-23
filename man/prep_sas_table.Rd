@@ -4,14 +4,26 @@
 \alias{prep_sas_table}
 \title{Organize SAS table into a format for comparing}
 \usage{
-prep_sas_table(data, as_is = FALSE, rm_desc_col = TRUE)
+prep_sas_table(
+  data,
+  machine_readable = TRUE,
+  keep_orig_ids = FALSE,
+  rm_desc_col = FALSE
+)
 }
 \arguments{
 \item{data}{the sas_table dataframe, output from IDEA}
 
-\item{as_is}{a logical which will determine if the table should be
-minimally prepared for comparison (leaving collapsed columns together) or
-prepared for optimal machine readability before comparison.}
+\item{machine_readable}{a logical; should the table be prepared for optimal
+machine readability; that is, should cells with multiple values be pivoted
+to new rows}
+
+\item{keep_orig_ids}{a logical; if machine_readability is desired, do you
+want to keep old id's that keep track of the values original position in
+the table}
+
+\item{rm_desc_col}{a logical; should the description column be removed from
+the table (since they never match between base and compare)}
 }
 \description{
 Organize SAS table into a format for comparing
