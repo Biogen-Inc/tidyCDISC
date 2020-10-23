@@ -379,7 +379,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     "
     options(digits = 3)
     
-    pkgs_req <- c('IDEA', 'purrr', 'haven', 'dplyr')
+    pkgs_req <- c('IDEA', 'purrr', 'haven', 'dplyr', 'diffdf')
     pkgs_needed <- pkgs_req[!(pkgs_req %in% installed.packages()[,'Package'])]
     
     non_idea_needed <- pkgs_needed[pkgs_needed != 'IDEA']
@@ -506,19 +506,48 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       {text_code()}
       
       # read in SAS table and convert to DF
-      sas_data <- 'path/to/sas/table/dataset/'
-      sas_table <- haven::read_sas(sas_data)
+      sas_data_dir <- 'path/to/sas/table/dataset/'
+      sas_filename <- '{input$sas$name}'
+      sas_table <- haven::read_sas(file.path(sas_data_dir, sas_filename))
       
       # prepare SAS table for comparison
-      sas_comp_ready <- IDEA::prep_sas_table(data = sas_table, as_is = F) # should I include num_dec here too?
+      sas_comp_ready <- IDEA::prep_sas_table(data = sas_table,
+                                             machine_readable = TRUE,
+                                             keep_orig_ids = FALSE,
+                                             rm_desc_col = FALSE
+                                             )
 
       # prepare TG Table for comparison
-      tg_comp_ready <- IDEA::prep_tg_table(data = tg_table, as_is = F, num_dec = 1)
-
-      # Aaron's function to compare two tables
-      IDEA::compareTables(tg_table, sas_table)
+      tg_comp_ready <- IDEA::prep_tg_table(data = tg_table,
+                                           machine_readable = TRUE,
+                                           keep_orig_ids = FALSE,
+                                           rm_desc_col = FALSE,
+                                           generic_colnames = TRUE
+                                           )
+      
+      # Compare the two tables
+      library(diffdf)
+      my_diff <- diffdf(base = sas_comp_ready, 
+              compare = tg_comp_ready,
+              keys = c('id_block', 'id_rn'),
+              tolerance = 0.001,
+              strict_numeric = TRUE, # Integer != Double
+              strict_factor = TRUE   # Factor != Character
+              # ,outfile = '{paste0(stringr::str_remove(input$sas$name, '.sas7bdat'), '_v_IDEA_diff_study_dir.log')}'
+      )
+      my_diff # view output
+      
+      diffdf_has_issues(my_diff) # any issues?
+      
+      # which rows have an issue in each data frame
+      diffdf_issuerows(sas_comp_ready, my_diff)
+      diffdf_issuerows(tg_comp_ready, my_diff)
       "
     )
+  })
+  
+  observeEvent(input$sas, {
+    shinyjs::enable("code")
   })
   
   output$code <- downloadHandler(
@@ -529,11 +558,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
         writeLines(generate_comparison_output(), file)
       }
     ) 
-  
-  observeEvent(input$sas, {
-     shinyjs::enable("code")
-   })
-  
+
   output$tblcode <- downloadHandler(
     filename = function() {
       paste0("Reproduce_IDEA_Table.R")

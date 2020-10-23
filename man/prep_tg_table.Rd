@@ -4,17 +4,31 @@
 \alias{prep_tg_table}
 \title{Organize Table Generator table into a format for comparing}
 \usage{
-prep_tg_table(data, as_is = FALSE, generic_colnames = TRUE, rm_desc_col = TRUE)
+prep_tg_table(
+  data,
+  machine_readable = TRUE,
+  keep_orig_ids = FALSE,
+  rm_desc_col = FALSE,
+  generic_colnames = TRUE
+)
 }
 \arguments{
 \item{data}{the tg_table dataframe, output from IDEA}
 
-\item{as_is}{a logical which will determine if the table should be minimally
-prepared for comparison (leaving collapsed columns together) or prepared
-for optimal machine readability before comparison.}
+\item{machine_readable}{a logical; should the table be prepared for optimal
+machine readability; that is, should cells with multiple values be pivoted
+to new rows}
 
-\item{num_dec}{the number of desired decimal places on all numeric columns;
-value will be passed to the 'digits' argument of the round() function}
+\item{keep_orig_ids}{a logical; if machine_readability is desired, do you
+want to keep old id's that keep track of the values original position in
+the table}
+
+\item{rm_desc_col}{a logical; should the description column be removed from
+the table (since they never match between base and compare)}
+
+\item{generic_colnames}{a logical; Should the column names of the table
+generator output be generalized to be col0 - colX col99, where x is the
+number of groups in the 'group by' variable and col99 is the total column}
 }
 \description{
 Organize Table Generator table into a format for comparing

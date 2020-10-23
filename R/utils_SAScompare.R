@@ -64,18 +64,18 @@ delim_expand_rows <- function(data, sep){
     d <- data %>%
       filter(across(
         #-starts_with("id_")
-        -c(id_num:Variable), function(col) stringr::str_detect(col, sep))) %>%
-      tidyr::separate_rows(-c(id_num:Variable), sep = sep, convert = T)# convert works for sas
+        -c(id_block:Variable), function(col) stringr::str_detect(col, sep))) %>%
+      tidyr::separate_rows(-c(id_block:Variable), sep = sep, convert = T)# convert works for sas
     
   } else {
     d <- data %>%
       filter(across(
         #-starts_with("id_")
-        -c(id_num:id_rn), function(col) stringr::str_detect(col, sep))) %>%
-      tidyr::separate_rows(-c(id_num:id_rn), sep = sep, convert = T) # convert works for sas
+        -c(id_block:id_rn), function(col) stringr::str_detect(col, sep))) %>%
+      tidyr::separate_rows(-c(id_block:id_rn), sep = sep, convert = T) # convert works for sas
   }
   d <- d %>%
-    group_by(id_num, id_rn) %>%
+    group_by(id_block, id_rn) %>%
     mutate(var_rn = row_number()) %>%
     ungroup() %>%
     mutate(Variable = trimws(Variable, which = "both"))
@@ -94,13 +94,13 @@ delim_expand_rows <- function(data, sep){
 #' @import dplyr
 #' @importFrom stringr str_detect
 #'  
-machine_readable <- function(data){
-  data %>%
+make_machine_readable <- function(data, keep_orig_ids = FALSE){
+  d <- data %>%
     mutate(var_rn = 1) %>%
-    filter(across(-c(id_num:Variable), function(col) {
+    filter(across(-c(id_block:Variable), function(col) {
       !stringr::str_detect(col, "\\(") & !stringr::str_detect(col, "\\,") & !stringr::str_detect(col, "\\|")}
     )) %>%
-    mutate(across(-c(id_num:Variable), as.numeric)) %>% # convert fields to numeric
+    mutate(across(-c(id_block:Variable), as.numeric)) %>% # convert fields to numeric
     union(delim_expand_rows(data = data, sep = "\\|")) %>% # no | for sas table, but we'll do it anyway
     union(delim_expand_rows(data = data, sep = "\\,")) %>%
     union(
@@ -117,30 +117,45 @@ machine_readable <- function(data){
                            mutate(across(-starts_with("id_"), function(col) gsub(")", "", col)))
       )
     ) %>%
-    arrange(id_num, id_rn, var_rn) %>%
-    select(-id_rn,-var_rn)
+    arrange(id_block, id_rn, var_rn) %>%
+    rename(orig_id_rn = id_rn, orig_var_rn = var_rn) %>%
+    group_by(id_block) %>%
+    mutate(id_rn = row_number()) %>% # id_rn = subcat) # has a strange numbering system
+    ungroup() %>%
+    select(id_block, id_desc, id_rn, orig_id_rn, orig_var_rn, Variable, everything())
+  
+  if(keep_orig_ids == FALSE){
+    d <- d %>% select(-orig_id_rn, -orig_var_rn)
+  }
+  return(d)
 }
 
-#'  
-#'  
+#'
+#'
 #' Organize SAS table into a format for comparing
 #'
 #' @param data the sas_table dataframe, output from IDEA
-#' @param as_is a logical which will determine if the table should be
-#'   minimally prepared for comparison (leaving collapsed columns together) or
-#'   prepared for optimal machine readability before comparison.
+#' @param machine_readable a logical; should the table be prepared for optimal
+#'   machine readability; that is, should cells with multiple values be pivoted
+#'   to new rows
+#' @param keep_orig_ids a logical; if machine_readability is desired, do you
+#'   want to keep old id's that keep track of the values original position in
+#'   the table
+#' @param rm_desc_col a logical; should the description column be removed from
+#'   the table (since they never match between base and compare)
 #'
 #' @import dplyr
 #' @importFrom stringr str_detect
-#' 
+#'
 #' @export
-#'   
+#' 
 prep_sas_table <- function(data,
-                           as_is = FALSE,
-                           rm_desc_col = TRUE){
+                           machine_readable = TRUE,
+                           keep_orig_ids = FALSE,
+                           rm_desc_col = FALSE){
   sas_prepped <-
     data %>%
-    mutate(id_num = as.numeric(factor(cat)),
+    mutate(id_block = as.numeric(factor(cat)),
            descr = trimws(descr, which = "both"))
   
   sas_labelled <-
@@ -149,24 +164,24 @@ prep_sas_table <- function(data,
     left_join(
       sas_prepped %>%
         filter(is.na(subcat) | subcat < 0) %>%
-        distinct(id_num, descr) %>%
-        group_by(id_num) %>%
+        distinct(id_block, descr) %>%
+        group_by(id_block) %>%
         top_n(1) %>% # if there happens to be more than 1 na or negative subcat
         ungroup() %>%
         rename(id_descr = descr)
     ) %>%
     mutate(id_desc = ifelse(is.na(id_descr), banner, id_descr)) %>%
     filter(subcat > 0) %>%
-    group_by(id_num) %>%
+    group_by(id_block) %>%
     mutate(id_rn = row_number()) %>% # id_rn = subcat) # has a strange numbering system
     ungroup() %>%
-    select(id_num, id_desc, id_rn, Variable = descr, everything()) %>%
+    select(id_block, id_desc, id_rn, Variable = descr, everything()) %>%
     select(-cat, -subcat, -region, -pg , -id_descr, -banner) %>%
-    mutate(across(-c(id_num:Variable), function(col) trimws(col, "both")))
+    mutate(across(-c(id_block:Variable), function(col) trimws(col, "both")))
   
-  if(as_is == F){
+  if(machine_readable){
     # separate out values that have more than 1 value embedded in cell
-    sas_comp_ready <- machine_readable(sas_labelled)
+    sas_comp_ready <- make_machine_readable(data = sas_labelled, keep_orig_ids = keep_orig_ids)
   } else {
     sas_comp_ready <- sas_labelled
   }
@@ -205,35 +220,43 @@ revert_temp_colnames <- function(dat, orig_grp_names){
 #' Organize Table Generator table into a format for comparing
 #'
 #' @param data the tg_table dataframe, output from IDEA
-#' @param as_is a logical which will determine if the table should be minimally
-#'   prepared for comparison (leaving collapsed columns together) or prepared
-#'   for optimal machine readability before comparison.
-#' @param num_dec the number of desired decimal places on all numeric columns;
-#'   value will be passed to the 'digits' argument of the round() function
+#' @param machine_readable a logical; should the table be prepared for optimal
+#'   machine readability; that is, should cells with multiple values be pivoted
+#'   to new rows
+#' @param keep_orig_ids a logical; if machine_readability is desired, do you
+#'   want to keep old id's that keep track of the values original position in
+#'   the table
+#' @param rm_desc_col a logical; should the description column be removed from
+#'   the table (since they never match between base and compare)
+#' @param generic_colnames a logical; Should the column names of the table
+#'   generator output be generalized to be col0 - colX col99, where x is the
+#'   number of groups in the 'group by' variable and col99 is the total column
 #'
 #' @import dplyr
 #' @importFrom stringr str_detect
-#' 
+#'
 #' @export
-#'   
+#' 
 prep_tg_table <- function(data,
-                          as_is = FALSE,
-                          generic_colnames = TRUE,
-                          rm_desc_col = TRUE){
+                          machine_readable = TRUE,
+                          keep_orig_ids = FALSE,
+                          rm_desc_col = FALSE,
+                          generic_colnames = TRUE
+                          ){
   
   tg00 <- data %>%
-    mutate(id_num = as.numeric(factor(ID, levels = unique(data$ID)))) %>%
+    mutate(id_block = as.numeric(factor(ID, levels = unique(data$ID)))) %>%
     filter(Variable != "Missing") %>%
-    group_by(id_num) %>%
+    group_by(id_block) %>%
     mutate(id_rn = row_number()) %>%
     ungroup() %>%
-    select(id_num, id_desc = ID, id_rn, everything())
+    select(id_block, id_desc = ID, id_rn, everything())
   
   tg_renamed <- temp_col_rename(tg00)
   tg <- tg_renamed$dat
   
-  if(as_is == F){
-    tg_comp_ready0 <- machine_readable(tg)
+  if(machine_readable){
+    tg_comp_ready0 <- make_machine_readable(tg, keep_orig_ids = keep_orig_ids)
   } else {
     tg_comp_ready0 <- tg
   }
