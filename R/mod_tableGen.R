@@ -484,7 +484,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
           cols_label(.list = imap(tg_table[-c(1:2)], ~ IDEA::col_for_list_expr(.y, .x))) %>%
           tab_header(
             title = md('{input$table_title}'),
-            subtitle = md('{subtitle()}')
+            subtitle = md(\"{subtitle()}\")
           ) %>%
           tab_style(
           style = cell_text(weight = 'bold'),
