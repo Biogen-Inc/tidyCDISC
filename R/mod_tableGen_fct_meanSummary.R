@@ -15,11 +15,11 @@ mean_summary <- function(.data, to_count) {
   .data %>%
     summarise(
       n = n_distinct(USUBJID),
-      `Mean (SD)` = paste0(round(mean(na.omit(!!to_count)), 2),
-                          " (", round(sd(na.omit(!!to_count)), 2), ")"),
-      Median = median(na.omit(!!to_count), type = 1),
-      `Q1 | Q3` = paste(round(quantile(na.omit(!!to_count), 0.25, type = 1),2) , "|", 
-                        (round(quantile(na.omit(!!to_count), 0.75, type = 1),2))),
+      `Mean (SD)` = paste0(sprintf("%.1f", round(mean(na.omit(!!to_count)), 1)),
+                          " (", sprintf("%.2f", round(sd(na.omit(!!to_count)), 2)), ")"),
+      Median = sprintf("%.1f", median(na.omit(!!to_count), type = 1)),
+      `Q1 | Q3` = paste(sprintf("%.1f", round(quantile(na.omit(!!to_count), 0.25, type = 1),2)) , "|", 
+                        (sprintf("%.1f", round(quantile(na.omit(!!to_count), 0.75, type = 1),2)))),
       `Min | Max` = paste0(round(min(na.omit(!!to_count)), 2), " | ", 
                            round(max(na.omit(!!to_count)), 2))
     )
