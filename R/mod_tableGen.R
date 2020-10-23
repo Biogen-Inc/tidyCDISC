@@ -499,25 +499,6 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       "
     )
   })
-  # string <- "Hey Friend's"
-  # paste0('\\Q', string, '\\E')
-  # stringr::str_replace(string, '\'', '\'')
-  # gsub('\'',"\\'",string)
-  # gsub("([.|()\\^{}+$*?]|\\[|\\])", "\\\\\\1", string)
-  # 
-  # re.escape <- function(strings){
-  #   vals <- c("\\\\", "\\[", "\\]", "\\(", "\\)", 
-  #             "\\{", "\\}", "\\^", "\\$","\\*", 
-  #             "\\+", "\\?", "\\.", "\\|")
-  #   replace.vals <- paste0("\\\\", vals)
-  #   for(i in seq_along(vals)){
-  #     strings <- gsub(vals[i], replace.vals[i], strings)
-  #   }
-  #   strings
-  # }
-  # re.escape(string)
-  # sQuote(string)
-  # ?base::regex
   
   generate_comparison_output <- reactive({
     glue::glue(
