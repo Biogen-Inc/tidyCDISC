@@ -236,7 +236,12 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   
   # remove the first two columns from the row names to use
   # since these are used for grouping in gt
-  row_names_n <- reactive({ names(for_gt())[-c(1:2)] })
+  row_names_n <- reactive({ 
+    test <- names(for_gt())[-c(1:2)] 
+    test[grepl("\\.\\.\\.", test)] <- "Missing"
+    test <- test[test != "Total"]
+    append(test, "Total")
+  })
   
   # create the labels for each column using the total function
   # so the columns are now NAME N= X
