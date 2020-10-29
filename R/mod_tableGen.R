@@ -40,7 +40,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     x <- input$recipe
     if (is.null(x) | length(x) == 0) { 
       recipe_column(session$ns("COLUMN"), ADSL(), "NONE") 
-    } else if (x == "DEMOGRAPHY") {
+    } else if (x == "Table 5: Demography") {
       recipe_column(session$ns("COLUMN"), ADSL(), "TRT01P") 
     } else {
       recipe_column(session$ns("COLUMN"), ADSL(), "NONE")

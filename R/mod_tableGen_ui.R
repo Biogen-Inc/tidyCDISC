@@ -51,7 +51,7 @@ mod_tableGen_ui <- function(id){
                  wellPanel(
                    fluidRow(
                      column(12, 
-                            "Commonly Used Tables", 
+                            "STAN Tables", 
                             recipe,
                             br(),
                             div(class = "col-sm-3", id="all-column-blocks", style = "height:300px;overflow-y:scroll;overflow-x:hidden;",

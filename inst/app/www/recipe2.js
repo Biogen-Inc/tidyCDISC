@@ -24,7 +24,7 @@ demography_agg = ["MEAN", "FREQ", "FREQ", "MEAN", "MEAN", "MEAN", "FREQ"]
 /* Create custom block recipes to automatically populate when selected */
   $("#RECIPE").bind("change", function(event, ui) {
     var publisher = $("#RECIPE").val();
-    if (publisher === "DEMOGRAPHY") {
+    if (publisher === "Table 5: Demography") {
       document.getElementById("droppable_agg").innerHTML = "";
       $("#droppable_agg").append($(combineRows(demography_agg)));
       document.getElementById("droppable_blocks").innerHTML = "";
