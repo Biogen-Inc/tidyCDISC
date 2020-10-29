@@ -18,8 +18,8 @@ function combineRows(arr) {
   return(t)
 }
 
-demography_rows = ["AGE", "SEX", "RACE", "HEIGHTBL", "WEIGHTBL", "BMIBL", "ETHNIC"]
-demography_agg = ["MEAN", "FREQ", "FREQ", "MEAN", "MEAN", "MEAN", "FREQ"]
+demography_rows = ["AGEGR1", "AGE",  "SEX",  "ETHNIC", "RACE", "HEIGHTBL", "WEIGHTBL"]
+demography_agg =  ["FREQ",   "MEAN", "FREQ", "FREQ",   "FREQ", "MEAN",     "MEAN"]
 
 /* Create custom block recipes to automatically populate when selected */
   $("#RECIPE").bind("change", function(event, ui) {
