@@ -1,0 +1,13 @@
+name: tidyCDISCdemo
+title: tidyCDISCdemo
+username:
+account: nate884
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 3065386
+bundleId: 3766642
+url: https://nate884.shinyapps.io/tidyCDISCdemo/
+when: 1603288089.78968
+lastSyncTime: 1603288089.7897
+asMultiple: FALSE
+asStatic: FALSE
