@@ -18,13 +18,13 @@ function combineRows(arr) {
   return(t)
 }
 
-demography_rows = ["AGE", "SEX", "RACE", "HEIGHTBL", "WEIGHTBL", "BMIBL", "ETHNIC"]
-demography_agg = ["MEAN", "FREQ", "FREQ", "MEAN", "MEAN", "MEAN", "FREQ"]
+demography_rows = ["AGEGR1", "AGE",  "SEX",  "ETHNIC", "RACE", "HEIGHTBL", "WEIGHTBL"]
+demography_agg =  ["FREQ",   "MEAN", "FREQ", "FREQ",   "FREQ", "MEAN",     "MEAN"]
 
 /* Create custom block recipes to automatically populate when selected */
   $("#RECIPE").bind("change", function(event, ui) {
     var publisher = $("#RECIPE").val();
-    if (publisher === "DEMOGRAPHY") {
+    if (publisher === "Table 5: Demography") {
       document.getElementById("droppable_agg").innerHTML = "";
       $("#droppable_agg").append($(combineRows(demography_agg)));
       document.getElementById("droppable_blocks").innerHTML = "";
