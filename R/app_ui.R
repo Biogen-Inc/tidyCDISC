@@ -69,7 +69,8 @@ golem_add_external_resources <- function(){
     tags$script(src = "https://code.jquery.com/ui/1.12.1/jquery-ui.js"),
     shinyjs::useShinyjs(),
     shinyjs::inlineCSS(css),
-    shinyjs::extendShinyjs(text = jscode),
+    shinyjs::extendShinyjs(text = jscode,
+                           functions = c("disableTab","enableTab")),
     cicerone::use_cicerone()
   )
 
