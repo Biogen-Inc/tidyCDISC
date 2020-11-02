@@ -35,7 +35,7 @@ app_ui <- function(request) {
     ),
     tags$script(HTML("function openGithub() { 
             window.open( 
-              \"https://github.com/\", \"_blank\"); 
+              \"https://github.com/biogen-inc/tidyCDISC\", \"_blank\"); 
         }")),
     tags$script(
       HTML("var header = $('.navbar > .container-fluid');
