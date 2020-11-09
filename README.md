@@ -1,7 +1,8 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0) 
+https://gist.github.com/lukas-h/2a5d00690736b4c3a7ba 
 
 # tidyCDISC 
 
