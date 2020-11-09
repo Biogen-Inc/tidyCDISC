@@ -3,6 +3,8 @@
 
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0) 
 
+<img src="inst/app/www/Biogen.png" align="right" height="15%" width="15%"/>
+
 # tidyCDISC 
 
 <img src="man/figures/hex-tidyCDISC.png" align="right" height="15%" width="15%"/>
