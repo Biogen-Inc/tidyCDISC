@@ -8,6 +8,8 @@
 The purpose of tidyCDISC is a shiny app to easily create custom tables
 and figures from ADaM datasets.
 
+[Read our help page here](https://tidycdisc.netlify.app/)
+
 # Installation
 
 ``` r
