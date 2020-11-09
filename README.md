@@ -15,7 +15,7 @@ and figures from ADaM datasets.
 # Installation
 
 ``` r
-remotes::install_github("tidyCDISC")
+remotes::install_github("Biogen-Inc/tidyCDISC")
 ```
 
 # Use Case
