@@ -1,6 +1,8 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+
 # tidyCDISC 
 
 <img src="man/figures/hex-tidyCDISC.png" align="right" height="15%" width="15%"/>
@@ -33,3 +35,4 @@ golem::document_and_reload()
 # Run the application 
 run_app()
 ```
+
