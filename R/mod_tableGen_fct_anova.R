@@ -137,6 +137,16 @@ IDEA_anova.OCCDS <- function(column, week = NULL, group = NULL, data) {
   ))
 }
 
+#' @return NULL
+#' @rdname IDEA_anova
+#' @family tableGen Functions
+IDEA_anova.ADAE <- function(column, week = NULL, group = NULL, data) {
+  rlang::abort(glue::glue(
+    "Currently no method to perform ANOVA on ADAE"
+  ))
+}
+
+
 
 #' @return NULL
 #' @rdname IDEA_anova

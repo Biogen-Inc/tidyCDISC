@@ -95,6 +95,18 @@ IDEA_chg.OCCDS <- function(column, week = NULL, group = NULL, data) {
   ))
 }
 
+#' Currently cannot calculate change from baseline from OCCDS data
+#' @return NULL
+#' 
+#' @rdname IDEA_chg
+#' 
+#' @family tableGen Functions
+IDEA_chg.ADAE <- function(column, week = NULL, group = NULL, data) {
+  rlang::abort(glue::glue(
+    "Can't calculate change from baseline of ADAE"
+  ))
+}
+
 #' Currently cannot calculate change from baseline for custom data
 #' @return NULL
 #' 
