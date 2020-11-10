@@ -119,6 +119,17 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       return(combined_data)
   })
 
+  processed_adae <- reactive({
+    datafile()$ADAE %>%
+      select(-DTHDT) %>% # REMOVE from ADAE, in favor of ADSL Col
+      # I don't think we can control for this in IDEA
+      # Filter on ADSL.SAFFL = Y
+      inner_join(
+        datafile()$ADSL %>% 
+          filter(SAFFL == 'Y') %>% 
+          distinct(USUBJID, TRT01P, TRT01PN, DTHDT)
+      )
+  })
   
   # get the list of PARAMCDs
   PARAMCD_names <- reactive({
@@ -209,13 +220,23 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     }
   })
   
+  
   # create a gt table output by mapping over each row in the block input
   # and performing the correct statistical method given the blocks S3 class
   for_gt <- reactive({
+    
     validate(
       need((nrow(blocks_and_functions()) > 0),'Add variable and statistics blocks to create table.')
     )
     
+    dat_types <- list()
+    for (i in 1:nrow(blocks_and_functions())) {
+      dat_types[i] <- class(blocks_and_functions()$S3[[i]])[2]
+    }
+    
+    check <- c("BDS", "ADAE")
+    validate(need(length(intersect(check, unlist(dat_types))) < 2, 'Cannot Create Table with both BDS and ADAE components'))
+
     pmap(list(blocks_and_functions()$agg, 
                       blocks_and_functions()$S3, 
                       blocks_and_functions()$dropdown), 
