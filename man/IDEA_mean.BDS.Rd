@@ -35,6 +35,7 @@ Other tableGen Functions:
 \code{\link{IDEA_mean.ADSL}()},
 \code{\link{IDEA_mean}()},
 \code{\link{IDEA_methods}()},
+\code{\link{IDEA_y}()},
 \code{\link{convertTGOutput}()},
 \code{\link{custom_class}()},
 \code{\link{dropArea}()},

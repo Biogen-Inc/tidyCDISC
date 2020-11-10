@@ -5,7 +5,7 @@
 \alias{tg_guide}
 \title{Table Generator Cicerone R6 Object}
 \format{
-An object of class \code{Cicerone} (inherits from \code{R6}) of length 15.
+An object of class \code{Cicerone} (inherits from \code{R6}) of length 13.
 }
 \usage{
 tg_guide
@@ -24,6 +24,7 @@ Other tableGen Functions:
 \code{\link{IDEA_mean.BDS}()},
 \code{\link{IDEA_mean}()},
 \code{\link{IDEA_methods}()},
+\code{\link{IDEA_y}()},
 \code{\link{convertTGOutput}()},
 \code{\link{custom_class}()},
 \code{\link{dropArea}()},

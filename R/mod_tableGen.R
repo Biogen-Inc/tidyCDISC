@@ -71,8 +71,9 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   
   ADSL <- reactive({ datafile()$ADSL })
   BDS <- reactive({ datafile()[sapply(datafile(), function(x) "PARAMCD" %in% colnames(x))] })
-  
-  tg_data <- reactive({ 
+  ADAE <- reactive({ datafile()$ADAE })
+ 
+   tg_data <- reactive({ 
     # Seperate ADSL and the PArAMCD dataframe
     PARAMCD <- map(BDS(), ~ if(!"CHG" %in% names(.)) {update_list(., CHG = NA)} else {.})
     
@@ -91,32 +92,31 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   })
   
   processed_data <- eventReactive(input$filter_df, {
-    
-    select_dfs <- datafile()[input$filter_df]
-    
-    # Separate out non BDS and BDS data frames. Note: join may throw some
-    # warnings if labels are different between two datasets, which is fine!
-    # Ignore
-    non_bds <- select_dfs[sapply(select_dfs, function(x) !("PARAMCD" %in% colnames(x)) )] 
-    bds <- select_dfs[sapply(select_dfs, function(x) "PARAMCD" %in% colnames(x) )]
-    
-    # Make CHG var doesn't exist, create the column and populate with NA
-    PARAMCD_dat <- purrr::map(bds, ~ if(!"CHG" %in% names(.)) {purrr::update_list(., CHG = NA)} else {.})
-    
-    # Combine selected data into a 1 usable data frame
-    if (!rlang::is_empty(PARAMCD_dat)) {
-      all_PARAMCD <- bind_rows(PARAMCD_dat, .id = "data_from") %>% distinct(.keep_all = T)
+      select_dfs <- datafile()[input$filter_df]
       
-      if (!rlang::is_empty(non_bds)){
-        combined_data <- inner_join(non_bds %>% purrr::reduce(inner_join), all_PARAMCD)
+      # Separate out non BDS and BDS data frames. Note: join may throw some
+      # warnings if labels are different between two datasets, which is fine!
+      # Ignore
+      non_bds <- select_dfs[sapply(select_dfs, function(x) !("PARAMCD" %in% colnames(x)) )] 
+      bds <- select_dfs[sapply(select_dfs, function(x) "PARAMCD" %in% colnames(x) )]
+      
+      # Make CHG var doesn't exist, create the column and populate with NA
+      PARAMCD_dat <- purrr::map(bds, ~ if(!"CHG" %in% names(.)) {purrr::update_list(., CHG = NA)} else {.})
+      
+      # Combine selected data into a 1 usable data frame
+      if (!rlang::is_empty(PARAMCD_dat)) {
+        all_PARAMCD <- bind_rows(PARAMCD_dat, .id = "data_from") %>% distinct(.keep_all = T)
+        
+        if (!rlang::is_empty(non_bds)){
+          combined_data <- inner_join(non_bds %>% purrr::reduce(inner_join), all_PARAMCD)
+        } else {
+          combined_data <-all_PARAMCD
+        }
       } else {
-        combined_data <-all_PARAMCD
+        combined_data <- non_bds %>% reduce(inner_join)
       }
-    } else {
-      combined_data <- non_bds %>% reduce(inner_join)
-    }
-    
-    return(combined_data)
+      
+      return(combined_data)
   })
 
   
@@ -298,18 +298,29 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # create dataframe of block names and their labels
   # for BDS use param cd as column names and params as their labels 
   block_data <- reactive({
-    metadata <- data.frame(col_names = colnames(ADSL()))
-    metadata$code <- NA
-    
-    for (i in 1:nrow(metadata)) {
-      metadata$code[i] <- attr(ADSL()[[colnames(ADSL())[i]]], "label")
-    }
-    
-    new_list <- lapply(BDS(), function(x) x %>% select(PARAMCD, PARAM) %>% distinct())
-    
-    new_list[[length(new_list) + 1 ]] <- metadata
-    names(new_list)[length(new_list)] <- "ADSL"
-    return(new_list)
+      metadata <- data.frame(col_names = colnames(ADSL()))
+      metadata$code <- NA
+      
+      for (i in 1:nrow(metadata)) {
+        metadata$code[i] <- attr(ADSL()[[colnames(ADSL())[i]]], "label")
+      }
+      
+      new_list <- lapply(BDS(), function(x) x %>% select(PARAMCD, PARAM) %>% distinct())
+      
+      new_list[[length(new_list) + 1 ]] <- metadata
+      names(new_list)[length(new_list)] <- "ADSL"
+      
+      if (!is.null(ADAE)) { 
+        ADAE_blocks <- data.frame(col_names = colnames(ADAE()))
+        
+        for (i in 1:nrow(ADAE_blocks)) {
+            ADAE_blocks$code[i] <- attr(ADAE()[[colnames(ADAE())[i]]], "label")
+        }
+        new_list[[length(new_list) + 1 ]] <- ADAE_blocks
+        names(new_list)[length(new_list)] <- "ADAE"
+      }
+        
+      return(new_list)
   })
   
   # create a lookup table for each stats block

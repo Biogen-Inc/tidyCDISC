@@ -5,7 +5,7 @@
 \alias{guide_popex_sel_adv}
 \title{Population Explorer Cicerone Guide with Advanced Filtering}
 \format{
-An object of class \code{Cicerone} (inherits from \code{R6}) of length 15.
+An object of class \code{Cicerone} (inherits from \code{R6}) of length 13.
 }
 \usage{
 guide_popex_sel_adv

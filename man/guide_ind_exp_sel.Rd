@@ -5,7 +5,7 @@
 \alias{guide_ind_exp_sel}
 \title{Individual Explorer Cicerone Guide For Selecting a Patient}
 \format{
-An object of class \code{Cicerone} (inherits from \code{R6}) of length 15.
+An object of class \code{Cicerone} (inherits from \code{R6}) of length 13.
 }
 \usage{
 guide_ind_exp_sel

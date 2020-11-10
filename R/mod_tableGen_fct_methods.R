@@ -17,12 +17,15 @@
 #' @family tableGen Functions
 #' @export
 IDEA_methods <- function(agg, column, week, group, data) {
+  print(agg)
   if (agg == "MEAN") {
     IDEA_mean(column, week, group, data)
   } else if (agg == "FREQ") {
     IDEA_freq(column, week, group, data)
   } else if (agg == "ANOVA") {
     IDEA_anova(column, week, group, data)
+  } else if (agg == "Y"){
+    IDEA_y(column, week, group, data)
   } else {
     IDEA_chg(column, week, group, data)
   }
@@ -43,7 +46,8 @@ custom_class <- function(x, df) {
   class(x) <- 
     case_when(
       df == "ADSL" ~ c(class(x), "ADSL"),
-      df == "ADAE" | df == "ADCM" | df == "ADMH" ~ c(class(x), "OCCDS"), # also admh, conmed
+      df == "ADAE" ~ c(class(x), "ADAE"),
+      df == "ADCM" | df == "ADMH" ~ c(class(x), "OCCDS"), # also admh, conmed
       TRUE ~ c(class(x), "BDS") # contains paramcd
     )
   return(x)
