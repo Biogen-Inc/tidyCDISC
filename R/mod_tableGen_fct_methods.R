@@ -17,7 +17,6 @@
 #' @family tableGen Functions
 #' @export
 IDEA_methods <- function(agg, column, week, group, data) {
-  print(agg)
   if (agg == "MEAN") {
     IDEA_mean(column, week, group, data)
   } else if (agg == "FREQ") {

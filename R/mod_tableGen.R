@@ -74,7 +74,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   ADAE <- reactive({ datafile()$ADAE })
  
    tg_data <- reactive({ 
-    # Seperate ADSL and the PArAMCD dataframe
+    # Seperate ADSL and the PARAMCD dataframe
     PARAMCD <- map(BDS(), ~ if(!"CHG" %in% names(.)) {update_list(., CHG = NA)} else {.})
     
     if (!is_empty(PARAMCD)) {
@@ -146,7 +146,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   all_data <- reactive({ 
     # apply filters from selected dfs to tg data to create all data
       tg_data() %>% semi_join(filtered_data()) %>% varN_fctr_reorder()
-    })
+  })
   
   # prepare the AVISIT dropdown of the statistics blocks
   # by converting them to a factor in the order of AVISITN
@@ -237,6 +237,12 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     check <- c("BDS", "ADAE")
     validate(need(length(intersect(check, unlist(dat_types))) < 2, 'Cannot Create Table with both BDS and ADAE components'))
 
+    gt_data <- if (intersect(check, unlist(dat_types)) == "ADAE") {
+      print("USE ADAE")
+    } else {
+      print("USE BDS")
+    }
+    
     pmap(list(blocks_and_functions()$agg, 
                       blocks_and_functions()$S3, 
                       blocks_and_functions()$dropdown), 
