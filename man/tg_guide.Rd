@@ -5,7 +5,7 @@
 \alias{tg_guide}
 \title{Table Generator Cicerone R6 Object}
 \format{
-An object of class \code{Cicerone} (inherits from \code{R6}) of length 13.
+An object of class \code{Cicerone} (inherits from \code{R6}) of length 15.
 }
 \usage{
 tg_guide
