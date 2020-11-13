@@ -6,6 +6,7 @@
 \alias{IDEA_chg.ADSL}
 \alias{IDEA_chg.BDS}
 \alias{IDEA_chg.OCCDS}
+\alias{IDEA_chg.ADAE}
 \alias{IDEA_chg.custom}
 \title{Generate change from baseline
 summary statistics using table generator blocks}
@@ -19,6 +20,8 @@ IDEA_chg(column, week, group, data)
 \method{IDEA_chg}{BDS}(column, week, group = NULL, data)
 
 \method{IDEA_chg}{OCCDS}(column, week = NULL, group = NULL, data)
+
+\method{IDEA_chg}{ADAE}(column, week = NULL, group = NULL, data)
 
 \method{IDEA_chg}{custom}(column, week = NULL, group = NULL, data)
 }
@@ -53,9 +56,32 @@ and report missing values from the mean if any
 
 Currently cannot calculate change from baseline from OCCDS data
 
+Currently cannot calculate change from baseline from OCCDS data
+
 Currently cannot calculate change from baseline for custom data
 }
 \seealso{
+Other tableGen Functions: 
+\code{\link{IDEA_anova}()},
+\code{\link{IDEA_freq}()},
+\code{\link{IDEA_mean.ADSL}()},
+\code{\link{IDEA_mean.BDS}()},
+\code{\link{IDEA_mean}()},
+\code{\link{IDEA_methods}()},
+\code{\link{IDEA_y}()},
+\code{\link{convertTGOutput}()},
+\code{\link{custom_class}()},
+\code{\link{dropArea}()},
+\code{\link{mean_summary}()},
+\code{\link{mod_tableGen_server}()},
+\code{\link{mod_tableGen_ui}()},
+\code{\link{recipe_column}()},
+\code{\link{recipe}},
+\code{\link{rowArea}()},
+\code{\link{rowBlock}()},
+\code{\link{rowPallete}()},
+\code{\link{tg_guide}}
+
 Other tableGen Functions: 
 \code{\link{IDEA_anova}()},
 \code{\link{IDEA_freq}()},

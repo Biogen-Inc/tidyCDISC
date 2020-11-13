@@ -71,7 +71,26 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   
   ADSL <- reactive({ datafile()$ADSL })
   BDS <- reactive({ datafile()[sapply(datafile(), function(x) "PARAMCD" %in% colnames(x))] })
-  ADAE <- reactive({ datafile()$ADAE })
+  ADAE <- reactive({
+    if("ADAE" %in% names(datafile())){
+      # find columns the ADAE & ADSL have in common (besides Usubjid), remove
+      # them from the ADAE, so that the ADSL cols are favored
+      adae_cols <- colnames(datafile()$ADAE)
+      common_cols <- dplyr::intersect(adae_cols, colnames(ADSL()))
+      com_cols_excp_u <- common_cols[common_cols != "USUBJID"]
+      adae_adsl <- datafile()$ADAE %>% 
+        select(-one_of(com_cols_excp_u)) %>%
+        full_join(ADSL(), by = "USUBJID")
+      preferred_col_order <- c(adae_cols, dplyr::setdiff(colnames(ADSL()), adae_cols))
+      if(sort(colnames(adae_adsl)) == sort(preferred_col_order)){
+        adae_adsl[,preferred_col_order]
+      } else {
+        adae_adsl
+      }
+    } else {
+      ADSL()
+    }
+  })
  
    tg_data <- reactive({ 
     # Seperate ADSL and the PARAMCD dataframe
@@ -118,35 +137,22 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       
       return(combined_data)
   })
-
-  processed_adae <- reactive({
-    datafile()$ADAE %>%
-      select(-DTHDT) %>% # REMOVE from ADAE, in favor of ADSL Col
-      # I don't think we can control for this in IDEA
-      # Filter on ADSL.SAFFL = Y
-      inner_join(
-        datafile()$ADSL %>% 
-          filter(SAFFL == 'Y') %>% 
-          distinct(USUBJID, TRT01P, TRT01PN, DTHDT)
-      )
-  })
   
   # get the list of PARAMCDs
   PARAMCD_names <- reactive({
-    all_data() %>% 
+    use_data() %>% 
       select(PARAMCD) %>% 
       distinct() %>%
       pull(PARAMCD)
   })
   
   # create a reactive for the data with filters applied
-  # use all_data() for any analyses
+  # use use_data() for any analyses
   filtered_data <- callModule(shiny_data_filter, "data_filter", data = processed_data, verbose = FALSE)
   
-  all_data <- reactive({ 
-    # apply filters from selected dfs to tg data to create all data
-      tg_data() %>% semi_join(filtered_data()) %>% varN_fctr_reorder()
-  })
+  # apply filters from selected dfs to tg data to create all data
+  all_data <- reactive({tg_data() %>% semi_join(filtered_data()) %>% varN_fctr_reorder()})
+  ae_data <- reactive({ADAE() %>% semi_join(filtered_data()) %>% varN_fctr_reorder()})
   
   # prepare the AVISIT dropdown of the statistics blocks
   # by converting them to a factor in the order of AVISITN
@@ -202,7 +208,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # a single N if data is not grouped
   total <- reactive({
     
-    all <- all_data() %>% 
+    all <- use_data() %>% 
       distinct(USUBJID) %>% 
       summarise(n = n()) %>%
       pull(n)
@@ -211,12 +217,31 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     if (input$COLUMN == "NONE") {
       all
     } else {
-      groups <- all_data() %>%
+      groups <- use_data %>%
         group_by(!!sym(input$COLUMN)) %>%
         distinct(USUBJID) %>%
         summarise(n = n()) %>%
         pull(n)
       c(groups, all)
+    }
+  })
+  
+  use_data <- reactive({
+    # Identify which class data set dragged variables are from
+    dat_types <- list()
+    for (i in 1:nrow(blocks_and_functions())) {
+      dat_types[i] <- class(blocks_and_functions()$S3[[i]])[2]
+    }
+    check <- c("BDS", "ADAE", "ADMH")
+
+    if(any(intersect(check, unlist(dat_types)) == "ADAE")) {
+      print("USE ADAE")
+      ae_data()
+    } else if(any(intersect(check, unlist(dat_types)) == "ADMH")) {
+      print("USE ADMH")
+    } else {
+      print("USE BDS")
+      all_data()
     }
   })
   
@@ -234,23 +259,17 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       dat_types[i] <- class(blocks_and_functions()$S3[[i]])[2]
     }
     
-    check <- c("BDS", "ADAE")
+    check <- c("BDS", "ADAE", "ADMH")
     validate(need(length(intersect(check, unlist(dat_types))) < 2, 'Cannot Create Table with both BDS and ADAE components'))
 
-    gt_data <- if (intersect(check, unlist(dat_types)) == "ADAE") {
-      print("USE ADAE")
-    } else {
-      print("USE BDS")
-    }
-    
     pmap(list(blocks_and_functions()$agg, 
                       blocks_and_functions()$S3, 
                       blocks_and_functions()$dropdown), 
                  function(x,y,z) 
                    IDEA_methods(x,y,z, 
                                 group = column(), 
-                                data = all_data())) %>%
-    map(setNames, common_rownames(all_data(), column())) %>%
+                                data = use_data())) %>%
+    map(setNames, common_rownames(use_data(), column())) %>%
     setNames(paste(blocks_and_functions()$gt_group)) %>%
     bind_rows(.id = "ID")  %>%
       mutate(
@@ -273,7 +292,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # create the labels for each column using the total function
   # so the columns are now NAME N= X
   col_for_list <- function(nm, x) {
-    if (is.numeric(all_data()[[input$COLUMN]])) {
+    if (is.numeric(use_data()[[input$COLUMN]])) {
       stop("Need categorical column for grouping")
     }
     nm = md(glue::glue("**{row_names_n()}** <br> N={total()}"))
@@ -455,7 +474,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   
   total <- reactive({
     
-    all <- all_data() %>% 
+    all <- use_data() %>% 
       distinct(USUBJID) %>% 
       summarise(n = n()) %>%
       pull(n)
@@ -464,7 +483,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     if (input$COLUMN == "NONE") {
       all
     } else {
-      groups <- all_data() %>%
+      groups <- use_data() %>%
         group_by(!!sym(input$COLUMN)) %>%
         distinct(USUBJID) %>%
         summarise(n = n()) %>%
