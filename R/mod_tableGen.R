@@ -39,11 +39,11 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   output$col_ADSL <- renderUI({
     x <- input$recipe
     if (is.null(x) | length(x) == 0) { 
-      recipe_column(session$ns("COLUMN"), ADSL(), "NONE") 
+      recipe_column(session$ns("COLUMN"), ADSL()[, sapply(ADSL(), class) %in% c('character', 'factor')], "NONE") 
     } else if (x == "Table 5: Demography") {
-      recipe_column(session$ns("COLUMN"), ADSL(), "TRT01P") 
+      recipe_column(session$ns("COLUMN"), ADSL()[, sapply(ADSL(), class) %in% c('character', 'factor')], "TRT01P") 
     } else {
-      recipe_column(session$ns("COLUMN"), ADSL(), "NONE")
+      recipe_column(session$ns("COLUMN"), ADSL()[, sapply(ADSL(), class) %in% c('character', 'factor')], "NONE")
     }
   })
   
@@ -140,7 +140,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   
   # get the list of PARAMCDs
   PARAMCD_names <- reactive({
-    use_data() %>% 
+    all_data() %>% 
       select(PARAMCD) %>% 
       distinct() %>%
       pull(PARAMCD)
@@ -226,6 +226,11 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     }
   })
   
+  data_to_use <- function(x) {
+    if (x == "ADAE") { ae_data() }
+    else all_data()
+  }
+  
   use_data <- reactive({
     # Identify which class data set dragged variables are from
     dat_types <- list()
@@ -233,7 +238,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       dat_types[i] <- class(blocks_and_functions()$S3[[i]])[2]
     }
     check <- c("BDS", "ADAE", "ADMH")
-
+    
     if(any(intersect(check, unlist(dat_types)) == "ADAE")) {
       print("USE ADAE")
       ae_data()
@@ -245,7 +250,6 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     }
   })
   
-  
   # create a gt table output by mapping over each row in the block input
   # and performing the correct statistical method given the blocks S3 class
   for_gt <- reactive({
@@ -253,23 +257,15 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     validate(
       need((nrow(blocks_and_functions()) > 0),'Add variable and statistics blocks to create table.')
     )
-    
-    dat_types <- list()
-    for (i in 1:nrow(blocks_and_functions())) {
-      dat_types[i] <- class(blocks_and_functions()$S3[[i]])[2]
-    }
-    
-    check <- c("BDS", "ADAE", "ADMH")
-    validate(need(length(intersect(check, unlist(dat_types))) < 2, 'Cannot Create Table with both BDS and ADAE components'))
-
+  
     pmap(list(blocks_and_functions()$agg, 
                       blocks_and_functions()$S3, 
                       blocks_and_functions()$dropdown), 
                  function(x,y,z) 
                    IDEA_methods(x,y,z, 
                                 group = column(), 
-                                data = use_data())) %>%
-    map(setNames, common_rownames(use_data(), column())) %>%
+                                data  = data_to_use(y))) %>%
+    map(setNames, common_rownames(blocks_and_functions()$S3[1], column())) %>%
     setNames(paste(blocks_and_functions()$gt_group)) %>%
     bind_rows(.id = "ID")  %>%
       mutate(
