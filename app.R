@@ -8,3 +8,4 @@ options( "golem.app.prod" = TRUE)
 options(shiny.sanitize.errors = FALSE)
 # rsconnect::writeManifest() # ac added
 IDEA::run_app() # add parameters here (if any)
+
