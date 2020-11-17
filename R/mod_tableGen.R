@@ -265,7 +265,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
                    IDEA_methods(x,y,z, 
                                 group = column(), 
                                 data  = data_to_use(y))) %>%
-    map(setNames, common_rownames(blocks_and_functions()$S3[1], column())) %>%
+    map(setNames, common_rownames(use_data(), column())) %>%
     setNames(paste(blocks_and_functions()$gt_group)) %>%
     bind_rows(.id = "ID")  %>%
       mutate(
