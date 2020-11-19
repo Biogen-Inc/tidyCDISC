@@ -4,7 +4,6 @@
 \alias{IDEA_mean}
 \alias{IDEA_mean.default}
 \alias{IDEA_mean.OCCDS}
-\alias{IDEA_mean.ADAE}
 \alias{IDEA_mean.custom}
 \title{Generate summary statistics 
 using table generator blocks}
@@ -14,8 +13,6 @@ IDEA_mean(column, week, group, data)
 \method{IDEA_mean}{default}(column, week, group, data)
 
 \method{IDEA_mean}{OCCDS}(column, week = NULL, group, data)
-
-\method{IDEA_mean}{ADAE}(column, week = NULL, group, data)
 
 \method{IDEA_mean}{custom}(column, week = NULL, group, data)
 }
@@ -42,7 +39,7 @@ Other tableGen Functions:
 \code{\link{IDEA_anova}()},
 \code{\link{IDEA_chg}()},
 \code{\link{IDEA_freq}()},
-\code{\link{IDEA_mean.ADSL}()},
+\code{\link{IDEA_mean.ADAE}()},
 \code{\link{IDEA_mean.BDS}()},
 \code{\link{IDEA_methods}()},
 \code{\link{IDEA_y}()},
@@ -62,7 +59,7 @@ Other tableGen Functions:
 \code{\link{IDEA_anova}()},
 \code{\link{IDEA_chg}()},
 \code{\link{IDEA_freq}()},
-\code{\link{IDEA_mean.ADSL}()},
+\code{\link{IDEA_mean.ADAE}()},
 \code{\link{IDEA_mean.BDS}()},
 \code{\link{IDEA_methods}()},
 \code{\link{IDEA_y}()},
@@ -82,7 +79,7 @@ Other tableGen Functions:
 \code{\link{IDEA_anova}()},
 \code{\link{IDEA_chg}()},
 \code{\link{IDEA_freq}()},
-\code{\link{IDEA_mean.ADSL}()},
+\code{\link{IDEA_mean.ADAE}()},
 \code{\link{IDEA_mean.BDS}()},
 \code{\link{IDEA_methods}()},
 \code{\link{IDEA_y}()},
@@ -102,27 +99,7 @@ Other tableGen Functions:
 \code{\link{IDEA_anova}()},
 \code{\link{IDEA_chg}()},
 \code{\link{IDEA_freq}()},
-\code{\link{IDEA_mean.ADSL}()},
-\code{\link{IDEA_mean.BDS}()},
-\code{\link{IDEA_methods}()},
-\code{\link{IDEA_y}()},
-\code{\link{convertTGOutput}()},
-\code{\link{custom_class}()},
-\code{\link{dropArea}()},
-\code{\link{mean_summary}()},
-\code{\link{mod_tableGen_server}()},
-\code{\link{mod_tableGen_ui}()},
-\code{\link{recipe}},
-\code{\link{rowArea}()},
-\code{\link{rowBlock}()},
-\code{\link{rowPallete}()},
-\code{\link{tg_guide}}
-
-Other tableGen Functions: 
-\code{\link{IDEA_anova}()},
-\code{\link{IDEA_chg}()},
-\code{\link{IDEA_freq}()},
-\code{\link{IDEA_mean.ADSL}()},
+\code{\link{IDEA_mean.ADAE}()},
 \code{\link{IDEA_mean.BDS}()},
 \code{\link{IDEA_methods}()},
 \code{\link{IDEA_y}()},

@@ -53,7 +53,7 @@ if data is grouped add total column to the grouped data
 Other tableGen Functions: 
 \code{\link{IDEA_anova}()},
 \code{\link{IDEA_chg}()},
-\code{\link{IDEA_mean.ADSL}()},
+\code{\link{IDEA_mean.ADAE}()},
 \code{\link{IDEA_mean.BDS}()},
 \code{\link{IDEA_mean}()},
 \code{\link{IDEA_methods}()},
@@ -73,7 +73,7 @@ Other tableGen Functions:
 Other tableGen Functions: 
 \code{\link{IDEA_anova}()},
 \code{\link{IDEA_chg}()},
-\code{\link{IDEA_mean.ADSL}()},
+\code{\link{IDEA_mean.ADAE}()},
 \code{\link{IDEA_mean.BDS}()},
 \code{\link{IDEA_mean}()},
 \code{\link{IDEA_methods}()},
@@ -93,7 +93,7 @@ Other tableGen Functions:
 Other tableGen Functions: 
 \code{\link{IDEA_anova}()},
 \code{\link{IDEA_chg}()},
-\code{\link{IDEA_mean.ADSL}()},
+\code{\link{IDEA_mean.ADAE}()},
 \code{\link{IDEA_mean.BDS}()},
 \code{\link{IDEA_mean}()},
 \code{\link{IDEA_methods}()},
@@ -113,7 +113,7 @@ Other tableGen Functions:
 Other tableGen Functions: 
 \code{\link{IDEA_anova}()},
 \code{\link{IDEA_chg}()},
-\code{\link{IDEA_mean.ADSL}()},
+\code{\link{IDEA_mean.ADAE}()},
 \code{\link{IDEA_mean.BDS}()},
 \code{\link{IDEA_mean}()},
 \code{\link{IDEA_methods}()},
@@ -133,7 +133,7 @@ Other tableGen Functions:
 Other tableGen Functions: 
 \code{\link{IDEA_anova}()},
 \code{\link{IDEA_chg}()},
-\code{\link{IDEA_mean.ADSL}()},
+\code{\link{IDEA_mean.ADAE}()},
 \code{\link{IDEA_mean.BDS}()},
 \code{\link{IDEA_mean}()},
 \code{\link{IDEA_methods}()},
@@ -153,7 +153,7 @@ Other tableGen Functions:
 Other tableGen Functions: 
 \code{\link{IDEA_anova}()},
 \code{\link{IDEA_chg}()},
-\code{\link{IDEA_mean.ADSL}()},
+\code{\link{IDEA_mean.ADAE}()},
 \code{\link{IDEA_mean.BDS}()},
 \code{\link{IDEA_mean}()},
 \code{\link{IDEA_methods}()},
@@ -173,7 +173,7 @@ Other tableGen Functions:
 Other tableGen Functions: 
 \code{\link{IDEA_anova}()},
 \code{\link{IDEA_chg}()},
-\code{\link{IDEA_mean.ADSL}()},
+\code{\link{IDEA_mean.ADAE}()},
 \code{\link{IDEA_mean.BDS}()},
 \code{\link{IDEA_mean}()},
 \code{\link{IDEA_methods}()},
