@@ -37,14 +37,18 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # ----------------------------------------------------------------------
   
   output$col_ADSL <- renderUI({
-    x <- input$recipe
-    if (is.null(x) | length(x) == 0) { 
-      recipe_column(session$ns("COLUMN"), ADSL()[, sapply(ADSL(), class) %in% c('character', 'factor')], "NONE") 
-    } else if (x == "Table 5: Demography") {
-      recipe_column(session$ns("COLUMN"), ADSL()[, sapply(ADSL(), class) %in% c('character', 'factor')], "TRT01P") 
-    } else {
-      recipe_column(session$ns("COLUMN"), ADSL()[, sapply(ADSL(), class) %in% c('character', 'factor')], "NONE")
-    }
+    sel_grp <- dplyr::case_when(
+      is.null(input$recipe) | length(input$recipe) == 0 ~ "NONE",
+      input$recipe == "Table 5: Demography" ~ "TRT01P",
+      TRUE ~ "NONE"
+    )
+    selectInput(session$ns("COLUMN"), "Group Data By:",
+                choices = c("NONE", unique(c(
+                  colnames(ADSL())[sapply(ADSL(), class) %in% c('character', 'factor')],
+                  colnames(ADAE())[sapply(ADAE(), class) %in% c('character', 'factor')]
+                ))),
+                selected = sel_grp
+    )
   })
   
   
@@ -211,6 +215,10 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     else all_data()
   }
   
+  is_grp_col_adae <- reactive({
+    column() %in% dplyr::setdiff(colnames(ae_data()), colnames(all_data()))
+  })
+  
   use_data <- reactive({
     # Identify which class data set dragged variables are from
     # dat_types <- list()
@@ -220,7 +228,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     # check <- c("BDS", "ADAE", "ADMH")
     # 
     # if(any(intersect(check, unlist(dat_types)) == "ADAE")) {
-    if(column() %in% dplyr::setdiff(colnames(ae_data()), colnames(all_data()))){
+    if(is_grp_col_adae()){
       ae_data()
     } else { # do the same for mh_data()
       all_data()
@@ -261,7 +269,13 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     validate(
       need((nrow(blocks_and_functions()) > 0),'Add variable and statistics blocks to create table.')
     )
-  
+    # if grouping by a column that only exists in the ADAE
+    if(is_grp_col_adae()){
+      validate(
+        need(all(blocks_and_functions()$dataset == "ADAE"), glue::glue("{column()} doesn't exist in all data files, please select new grouping variable or only drag variables to left-hand side from ADAE source"))
+      )
+    }
+    
     pmap(list(blocks_and_functions()$agg, 
                       blocks_and_functions()$S3, 
                       blocks_and_functions()$dropdown), 
@@ -357,7 +371,10 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       names(new_list)[length(new_list)] <- "ADSL"
       
       # only display ADAE column blocks if an ADAE is uploaded!
-      if (!is.null(ADAE) & "ADAE" %in% datafile()) { 
+      # print(!is.null(ADAE))
+      # print("ADAE" %in% names(datafile()))
+      # print(names(datafile()))
+      if (!is.null(ADAE) &  "ADAE" %in% names(datafile())) {  #
         ADAE_blocks <- data.frame(col_names = colnames(ADAE()))
         
         for (i in 1:nrow(ADAE_blocks)) {
