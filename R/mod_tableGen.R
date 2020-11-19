@@ -251,7 +251,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     if (input$COLUMN == "NONE") {
       all
     } else {
-      groups <- use_data %>%
+      groups <- use_data() %>%
         group_by(!!sym(input$COLUMN)) %>%
         distinct(USUBJID) %>%
         summarise(n = n()) %>%
@@ -270,11 +270,11 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       need((nrow(blocks_and_functions()) > 0),'Add variable and statistics blocks to create table.')
     )
     # if grouping by a column that only exists in the ADAE
-    if(is_grp_col_adae()){
-      validate(
-        need(all(blocks_and_functions()$dataset == "ADAE"), glue::glue("{column()} doesn't exist in all data files, please select new grouping variable or only drag variables to left-hand side from ADAE source"))
-      )
-    }
+    # if(is_grp_col_adae()){
+    #   validate(
+    #     need(all(blocks_and_functions()$dataset == "ADAE"), glue::glue("{column()} doesn't exist in all data files, please select new grouping variable or only drag variables to left-hand side from ADAE source"))
+    #   )
+    # }
     
     pmap(list(blocks_and_functions()$agg, 
                       blocks_and_functions()$S3, 
