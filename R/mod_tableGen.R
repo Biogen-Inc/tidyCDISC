@@ -278,11 +278,12 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     
     pmap(list(blocks_and_functions()$agg, 
                       blocks_and_functions()$S3, 
-                      blocks_and_functions()$dropdown), 
-                 function(x,y,z) 
+                      blocks_and_functions()$dropdown,
+                      blocks_and_functions()$dataset), 
+                 function(x,y,z,d) 
                    IDEA_methods(x,y,z, 
                                 group = column(), 
-                                data  = data_to_use(y))) %>%
+                                data  = data_to_use(d))) %>%
     map(setNames, common_rownames(use_data(), column())) %>%
     setNames(paste(blocks_and_functions()$gt_group)) %>%
     bind_rows(.id = "ID")  %>%
