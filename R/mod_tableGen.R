@@ -216,7 +216,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   }
   
   is_grp_col_adae <- reactive({
-    column() %in% dplyr::setdiff(colnames(ae_data()), colnames(all_data()))
+    input$COLUMN %in% dplyr::setdiff(colnames(ae_data()), colnames(all_data()))
   })
   
   use_data <- reactive({
@@ -270,11 +270,11 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       need((nrow(blocks_and_functions()) > 0),'Add variable and statistics blocks to create table.')
     )
     # if grouping by a column that only exists in the ADAE
-    # if(is_grp_col_adae()){
-    #   validate(
-    #     need(all(blocks_and_functions()$dataset == "ADAE"), glue::glue("{column()} doesn't exist in all data files, please select new grouping variable or only drag variables to left-hand side from ADAE source"))
-    #   )
-    # }
+    if(is_grp_col_adae()){
+      validate(
+        need(all(blocks_and_functions()$dataset == "ADAE"), glue::glue("{column()} doesn't exist in all data files, please select new grouping variable or only drag variables to left-hand side from ADAE source"))
+      )
+    }
     
     pmap(list(blocks_and_functions()$agg, 
                       blocks_and_functions()$S3, 
