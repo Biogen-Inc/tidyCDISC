@@ -74,7 +74,8 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   ADAE <- reactive({
     if("ADAE" %in% names(datafile())){
       # find columns the ADAE & ADSL have in common (besides Usubjid), remove
-      # them from the ADAE, so that the ADSL cols are favored
+      # them from the ADAE, so that the ADSL cols are used instead. Then join
+      # on usubjid and re-order the colnames to match the adae
       adae_cols <- colnames(datafile()$ADAE)
       common_cols <- dplyr::intersect(adae_cols, colnames(ADSL()))
       com_cols_excp_u <- common_cols[common_cols != "USUBJID"]
@@ -138,6 +139,15 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       return(combined_data)
   })
   
+  
+  
+  # create a reactive for the data with filters applied
+  filtered_data <- callModule(shiny_data_filter, "data_filter", data = processed_data, verbose = FALSE)
+  
+  # apply filters from selected dfs to tg data to create all data
+  all_data <- reactive({tg_data() %>% semi_join(filtered_data()) %>% varN_fctr_reorder()})
+  ae_data <- reactive({ADAE() %>% semi_join(filtered_data()) %>% varN_fctr_reorder()})
+  
   # get the list of PARAMCDs
   PARAMCD_names <- reactive({
     all_data() %>% 
@@ -145,14 +155,6 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       distinct() %>%
       pull(PARAMCD)
   })
-  
-  # create a reactive for the data with filters applied
-  # use use_data() for any analyses
-  filtered_data <- callModule(shiny_data_filter, "data_filter", data = processed_data, verbose = FALSE)
-  
-  # apply filters from selected dfs to tg data to create all data
-  all_data <- reactive({tg_data() %>% semi_join(filtered_data()) %>% varN_fctr_reorder()})
-  ae_data <- reactive({ADAE() %>% semi_join(filtered_data()) %>% varN_fctr_reorder()})
   
   # prepare the AVISIT dropdown of the statistics blocks
   # by converting them to a factor in the order of AVISITN
@@ -204,6 +206,30 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   
   column <- reactive( if (input$COLUMN == "NONE") NULL else input$COLUMN)
   
+  data_to_use <- function(x) {
+    if (x == "ADAE") { ae_data() }
+    else all_data()
+  }
+  
+  use_data <- reactive({
+    # Identify which class data set dragged variables are from
+    # dat_types <- list()
+    # for (i in 1:nrow(blocks_and_functions())) {
+    #   dat_types[i] <- class(blocks_and_functions()$S3[[i]])[2]
+    # }
+    # check <- c("BDS", "ADAE", "ADMH")
+    # 
+    # if(any(intersect(check, unlist(dat_types)) == "ADAE")) {
+    if(column() %in% dplyr::setdiff(colnames(ae_data()), colnames(all_data()))){
+      ae_data()
+    } else { # do the same for mh_data()
+      all_data()
+    }
+    # } else {
+    #   all_data()
+    # }
+  })
+  
   # calculate the totals to input after N= in the table headers
   # a single N if data is not grouped
   total <- reactive({
@@ -226,29 +252,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     }
   })
   
-  data_to_use <- function(x) {
-    if (x == "ADAE") { ae_data() }
-    else all_data()
-  }
   
-  use_data <- reactive({
-    # Identify which class data set dragged variables are from
-    dat_types <- list()
-    for (i in 1:nrow(blocks_and_functions())) {
-      dat_types[i] <- class(blocks_and_functions()$S3[[i]])[2]
-    }
-    check <- c("BDS", "ADAE", "ADMH")
-    
-    if(any(intersect(check, unlist(dat_types)) == "ADAE")) {
-      print("USE ADAE")
-      ae_data()
-    } else if(any(intersect(check, unlist(dat_types)) == "ADMH")) {
-      print("USE ADMH")
-    } else {
-      print("USE BDS")
-      all_data()
-    }
-  })
   
   # create a gt table output by mapping over each row in the block input
   # and performing the correct statistical method given the blocks S3 class
@@ -352,7 +356,8 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       new_list[[length(new_list) + 1 ]] <- metadata
       names(new_list)[length(new_list)] <- "ADSL"
       
-      if (!is.null(ADAE)) { 
+      # only display ADAE column blocks if an ADAE is uploaded!
+      if (!is.null(ADAE) & "ADAE" %in% datafile()) { 
         ADAE_blocks <- data.frame(col_names = colnames(ADAE()))
         
         for (i in 1:nrow(ADAE_blocks)) {
