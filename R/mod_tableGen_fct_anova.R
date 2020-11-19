@@ -32,7 +32,7 @@ IDEA_anova.default <- function(column, week, group, data) {
 #' @return an ANOVA table of grouped variables
 #' @rdname IDEA_anova
 #' @family tableGen Functions
-IDEA_anova.ADSL <- function(column, week, group = NULL, data) {
+IDEA_anova.ADAE <- IDEA_anova.ADSL <- function(column, week, group = NULL, data) {
   
   column <- as.character(column)
   
@@ -137,14 +137,7 @@ IDEA_anova.OCCDS <- function(column, week = NULL, group = NULL, data) {
   ))
 }
 
-#' @return NULL
-#' @rdname IDEA_anova
-#' @family tableGen Functions
-IDEA_anova.ADAE <- function(column, week = NULL, group = NULL, data) {
-  rlang::abort(glue::glue(
-    "Currently no method to perform ANOVA on ADAE"
-  ))
-}
+
 
 
 

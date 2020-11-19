@@ -36,7 +36,7 @@ IDEA_freq.default <- function(column, week, group, data) {
 #' @rdname IDEA_freq
 #' 
 #' @family tableGen Functions
-IDEA_freq.ADSL <- function(column, week, group = NULL, data) {
+IDEA_freq.ADAE <- IDEA_freq.ADSL <- function(column, week, group = NULL, data) {
   
   column <- rlang::sym(as.character(column))
   
@@ -78,51 +78,6 @@ IDEA_freq.ADSL <- function(column, week, group = NULL, data) {
   }
 }
 
-#' @return NULL
-#' @rdname IDEA_freq
-#' 
-#' @family tableGen Functions
-IDEA_freq.ADAE <- function(column, week = NULL, group, data) {
-  
-  column <- rlang::sym(as.character(column))
-  
-  if (is.numeric(data[[column]])) {
-    stop(paste("Can't calculate frequency, ", column, " is not categorical"))
-  }
-  
-  total <- data %>%
-    distinct(USUBJID, !!column) %>%
-    count(!!column) %>%
-    group_by(!!column) %>%
-    summarise(n = sum(n)) %>%
-    ungroup() %>%
-    mutate(prop = n/sum(n)) %>%
-    mutate(x = paste0(n, " (", sprintf("%.1f", round(prop*100, 1)), ")")) %>%
-    select(!!column, x)
-  
-  
-  if (is.null(group)) { 
-    total
-  } else {
-    
-    if (group == column) {
-      stop(glue::glue("Cannot calculate frequency for {column} when also set as group."))
-    }
-    
-    group <- rlang::sym(group)
-    
-    groups <- data %>%
-      distinct(USUBJID, !!column, !!group) %>%
-      count(!!column, !!group) %>%
-      group_by(!!group) %>%
-      mutate(prop = prop.table(n)) %>%
-      mutate(v1 = paste0(n, ' (', sprintf("%.1f", round(prop*100, 1)), ')')) %>%
-      select(-n, -prop) %>% 
-      spread(!!group, v1)
-    
-    cbind(groups, total$x)
-  }
-}
 
 #' @return NULL
 #' @rdname IDEA_freq
