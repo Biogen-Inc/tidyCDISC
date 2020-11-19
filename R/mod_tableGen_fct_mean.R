@@ -132,6 +132,16 @@ IDEA_mean.OCCDS <- function(column, week = NULL, group, data) {
 #' @rdname IDEA_mean
 #' 
 #' @family tableGen Functions
+IDEA_mean.ADAE <- function(column, week = NULL, group, data) {
+  rlang::abort(glue::glue(
+    "Currently no method to perform summary statistics on ADAE"
+  ))
+}
+
+#' @return NULL
+#' @rdname IDEA_mean
+#' 
+#' @family tableGen Functions
 IDEA_mean.custom <- function(column, week = NULL, group, data) {
   rlang::abort(glue::glue(
     "Can't calculate mean, data is not classified as ADLB, BDS or OCCDS"

@@ -39,11 +39,11 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   output$col_ADSL <- renderUI({
     x <- input$recipe
     if (is.null(x) | length(x) == 0) { 
-      recipe_column(session$ns("COLUMN"), ADSL(), "NONE") 
+      recipe_column(session$ns("COLUMN"), ADSL()[, sapply(ADSL(), class) %in% c('character', 'factor')], "NONE") 
     } else if (x == "Table 5: Demography") {
-      recipe_column(session$ns("COLUMN"), ADSL(), "TRT01P") 
+      recipe_column(session$ns("COLUMN"), ADSL()[, sapply(ADSL(), class) %in% c('character', 'factor')], "TRT01P") 
     } else {
-      recipe_column(session$ns("COLUMN"), ADSL(), "NONE")
+      recipe_column(session$ns("COLUMN"), ADSL()[, sapply(ADSL(), class) %in% c('character', 'factor')], "NONE")
     }
   })
   
@@ -71,9 +71,29 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   
   ADSL <- reactive({ datafile()$ADSL })
   BDS <- reactive({ datafile()[sapply(datafile(), function(x) "PARAMCD" %in% colnames(x))] })
-  
-  tg_data <- reactive({ 
-    # Seperate ADSL and the PArAMCD dataframe
+  ADAE <- reactive({
+    if("ADAE" %in% names(datafile())){
+      # find columns the ADAE & ADSL have in common (besides Usubjid), remove
+      # them from the ADAE, so that the ADSL cols are favored
+      adae_cols <- colnames(datafile()$ADAE)
+      common_cols <- dplyr::intersect(adae_cols, colnames(ADSL()))
+      com_cols_excp_u <- common_cols[common_cols != "USUBJID"]
+      adae_adsl <- datafile()$ADAE %>% 
+        select(-one_of(com_cols_excp_u)) %>%
+        full_join(ADSL(), by = "USUBJID")
+      preferred_col_order <- c(adae_cols, dplyr::setdiff(colnames(ADSL()), adae_cols))
+      if(sort(colnames(adae_adsl)) == sort(preferred_col_order)){
+        adae_adsl[,preferred_col_order]
+      } else {
+        adae_adsl
+      }
+    } else {
+      ADSL()
+    }
+  })
+ 
+   tg_data <- reactive({ 
+    # Seperate ADSL and the PARAMCD dataframe
     PARAMCD <- map(BDS(), ~ if(!"CHG" %in% names(.)) {update_list(., CHG = NA)} else {.})
     
     if (!is_empty(PARAMCD)) {
@@ -91,34 +111,32 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   })
   
   processed_data <- eventReactive(input$filter_df, {
-    
-    select_dfs <- datafile()[input$filter_df]
-    
-    # Separate out non BDS and BDS data frames. Note: join may throw some
-    # warnings if labels are different between two datasets, which is fine!
-    # Ignore
-    non_bds <- select_dfs[sapply(select_dfs, function(x) !("PARAMCD" %in% colnames(x)) )] 
-    bds <- select_dfs[sapply(select_dfs, function(x) "PARAMCD" %in% colnames(x) )]
-    
-    # Make CHG var doesn't exist, create the column and populate with NA
-    PARAMCD_dat <- purrr::map(bds, ~ if(!"CHG" %in% names(.)) {purrr::update_list(., CHG = NA)} else {.})
-    
-    # Combine selected data into a 1 usable data frame
-    if (!rlang::is_empty(PARAMCD_dat)) {
-      all_PARAMCD <- bind_rows(PARAMCD_dat, .id = "data_from") %>% distinct(.keep_all = T)
+      select_dfs <- datafile()[input$filter_df]
       
-      if (!rlang::is_empty(non_bds)){
-        combined_data <- inner_join(non_bds %>% purrr::reduce(inner_join), all_PARAMCD)
+      # Separate out non BDS and BDS data frames. Note: join may throw some
+      # warnings if labels are different between two datasets, which is fine!
+      # Ignore
+      non_bds <- select_dfs[sapply(select_dfs, function(x) !("PARAMCD" %in% colnames(x)) )] 
+      bds <- select_dfs[sapply(select_dfs, function(x) "PARAMCD" %in% colnames(x) )]
+      
+      # Make CHG var doesn't exist, create the column and populate with NA
+      PARAMCD_dat <- purrr::map(bds, ~ if(!"CHG" %in% names(.)) {purrr::update_list(., CHG = NA)} else {.})
+      
+      # Combine selected data into a 1 usable data frame
+      if (!rlang::is_empty(PARAMCD_dat)) {
+        all_PARAMCD <- bind_rows(PARAMCD_dat, .id = "data_from") %>% distinct(.keep_all = T)
+        
+        if (!rlang::is_empty(non_bds)){
+          combined_data <- inner_join(non_bds %>% purrr::reduce(inner_join), all_PARAMCD)
+        } else {
+          combined_data <-all_PARAMCD
+        }
       } else {
-        combined_data <-all_PARAMCD
+        combined_data <- non_bds %>% reduce(inner_join)
       }
-    } else {
-      combined_data <- non_bds %>% reduce(inner_join)
-    }
-    
-    return(combined_data)
+      
+      return(combined_data)
   })
-
   
   # get the list of PARAMCDs
   PARAMCD_names <- reactive({
@@ -129,13 +147,12 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   })
   
   # create a reactive for the data with filters applied
-  # use all_data() for any analyses
+  # use use_data() for any analyses
   filtered_data <- callModule(shiny_data_filter, "data_filter", data = processed_data, verbose = FALSE)
   
-  all_data <- reactive({ 
-    # apply filters from selected dfs to tg data to create all data
-      tg_data() %>% semi_join(filtered_data()) %>% varN_fctr_reorder()
-    })
+  # apply filters from selected dfs to tg data to create all data
+  all_data <- reactive({tg_data() %>% semi_join(filtered_data()) %>% varN_fctr_reorder()})
+  ae_data <- reactive({ADAE() %>% semi_join(filtered_data()) %>% varN_fctr_reorder()})
   
   # prepare the AVISIT dropdown of the statistics blocks
   # by converting them to a factor in the order of AVISITN
@@ -191,7 +208,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # a single N if data is not grouped
   total <- reactive({
     
-    all <- all_data() %>% 
+    all <- use_data() %>% 
       distinct(USUBJID) %>% 
       summarise(n = n()) %>%
       pull(n)
@@ -200,7 +217,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     if (input$COLUMN == "NONE") {
       all
     } else {
-      groups <- all_data() %>%
+      groups <- use_data %>%
         group_by(!!sym(input$COLUMN)) %>%
         distinct(USUBJID) %>%
         summarise(n = n()) %>%
@@ -209,21 +226,46 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     }
   })
   
+  data_to_use <- function(x) {
+    if (x == "ADAE") { ae_data() }
+    else all_data()
+  }
+  
+  use_data <- reactive({
+    # Identify which class data set dragged variables are from
+    dat_types <- list()
+    for (i in 1:nrow(blocks_and_functions())) {
+      dat_types[i] <- class(blocks_and_functions()$S3[[i]])[2]
+    }
+    check <- c("BDS", "ADAE", "ADMH")
+    
+    if(any(intersect(check, unlist(dat_types)) == "ADAE")) {
+      print("USE ADAE")
+      ae_data()
+    } else if(any(intersect(check, unlist(dat_types)) == "ADMH")) {
+      print("USE ADMH")
+    } else {
+      print("USE BDS")
+      all_data()
+    }
+  })
+  
   # create a gt table output by mapping over each row in the block input
   # and performing the correct statistical method given the blocks S3 class
   for_gt <- reactive({
+    
     validate(
       need((nrow(blocks_and_functions()) > 0),'Add variable and statistics blocks to create table.')
     )
-    
+  
     pmap(list(blocks_and_functions()$agg, 
                       blocks_and_functions()$S3, 
                       blocks_and_functions()$dropdown), 
                  function(x,y,z) 
                    IDEA_methods(x,y,z, 
                                 group = column(), 
-                                data = all_data())) %>%
-    map(setNames, common_rownames(all_data(), column())) %>%
+                                data  = data_to_use(y))) %>%
+    map(setNames, common_rownames(use_data(), column())) %>%
     setNames(paste(blocks_and_functions()$gt_group)) %>%
     bind_rows(.id = "ID")  %>%
       mutate(
@@ -246,7 +288,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # create the labels for each column using the total function
   # so the columns are now NAME N= X
   col_for_list <- function(nm, x) {
-    if (is.numeric(all_data()[[input$COLUMN]])) {
+    if (is.numeric(use_data()[[input$COLUMN]])) {
       stop("Need categorical column for grouping")
     }
     nm = md(glue::glue("**{row_names_n()}** <br> N={total()}"))
@@ -298,18 +340,29 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # create dataframe of block names and their labels
   # for BDS use param cd as column names and params as their labels 
   block_data <- reactive({
-    metadata <- data.frame(col_names = colnames(ADSL()))
-    metadata$code <- NA
-    
-    for (i in 1:nrow(metadata)) {
-      metadata$code[i] <- attr(ADSL()[[colnames(ADSL())[i]]], "label")
-    }
-    
-    new_list <- lapply(BDS(), function(x) x %>% select(PARAMCD, PARAM) %>% distinct())
-    
-    new_list[[length(new_list) + 1 ]] <- metadata
-    names(new_list)[length(new_list)] <- "ADSL"
-    return(new_list)
+      metadata <- data.frame(col_names = colnames(ADSL()))
+      metadata$code <- NA
+      
+      for (i in 1:nrow(metadata)) {
+        metadata$code[i] <- attr(ADSL()[[colnames(ADSL())[i]]], "label")
+      }
+      
+      new_list <- lapply(BDS(), function(x) x %>% select(PARAMCD, PARAM) %>% distinct())
+      
+      new_list[[length(new_list) + 1 ]] <- metadata
+      names(new_list)[length(new_list)] <- "ADSL"
+      
+      if (!is.null(ADAE)) { 
+        ADAE_blocks <- data.frame(col_names = colnames(ADAE()))
+        
+        for (i in 1:nrow(ADAE_blocks)) {
+            ADAE_blocks$code[i] <- attr(ADAE()[[colnames(ADAE())[i]]], "label")
+        }
+        new_list[[length(new_list) + 1 ]] <- ADAE_blocks
+        names(new_list)[length(new_list)] <- "ADAE"
+      }
+        
+      return(new_list)
   })
   
   # create a lookup table for each stats block
@@ -417,7 +470,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   
   total <- reactive({
     
-    all <- all_data() %>% 
+    all <- use_data() %>% 
       distinct(USUBJID) %>% 
       summarise(n = n()) %>%
       pull(n)
@@ -426,7 +479,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     if (input$COLUMN == "NONE") {
       all
     } else {
-      groups <- all_data() %>%
+      groups <- use_data() %>%
         group_by(!!sym(input$COLUMN)) %>%
         distinct(USUBJID) %>%
         summarise(n = n()) %>%
