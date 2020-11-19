@@ -33,7 +33,6 @@ Other tableGen Functions:
 \code{\link{dropArea}()},
 \code{\link{mean_summary}()},
 \code{\link{mod_tableGen_server}()},
-\code{\link{recipe_column}()},
 \code{\link{recipe}},
 \code{\link{rowArea}()},
 \code{\link{rowBlock}()},
