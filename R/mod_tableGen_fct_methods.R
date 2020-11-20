@@ -23,7 +23,7 @@ IDEA_methods <- function(agg, column, week, group, data) {
     IDEA_freq(column, week, group, data) # would like to remove week
   } else if (agg == "ANOVA") {
     IDEA_anova(column, week, group, data)
-  } else if (agg == "Y"){
+  } else if (agg == "Y_FREQ"){
     IDEA_y(column, group, data) # don't need week
   } else {
     IDEA_chg(column, week, group, data)
