@@ -20,6 +20,9 @@ function combineRows(arr) {
 
 demography_rows = ["AGEGR1", "AGE",  "SEX",  "ETHNIC", "RACE", "HEIGHTBL", "WEIGHTBL"]
 demography_agg =  ["FREQ",   "MEAN", "FREQ", "FREQ",   "FREQ", "MEAN",     "MEAN"]
+ae18_rows = ["AOCCFL"]
+ae18_agg =  ["Y%"]
+
 
 /* Create custom block recipes to automatically populate when selected */
   $("#RECIPE").bind("change", function(event, ui) {
@@ -29,6 +32,13 @@ demography_agg =  ["FREQ",   "MEAN", "FREQ", "FREQ",   "FREQ", "MEAN",     "MEAN
       $("#droppable_agg").append($(combineRows(demography_agg)));
       document.getElementById("droppable_blocks").innerHTML = "";
       $("#droppable_blocks").append($(combineRows(demography_rows)));
+      
+    } else if (publisher === "Table 18: Overall summary of adverse events") {
+      document.getElementById("droppable_agg").innerHTML = "";
+      $("#droppable_agg").append($(combineRows(ae18_agg)));
+      document.getElementById("droppable_blocks").innerHTML = "";
+      $("#droppable_blocks").append($(combineRows(ae18_rows)));
+      
     } else {
       document.getElementById("droppable_agg").innerHTML = "";
       document.getElementById("droppable_blocks").innerHTML = "";

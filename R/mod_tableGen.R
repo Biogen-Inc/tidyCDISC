@@ -39,6 +39,8 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   output$col_ADSL <- renderUI({
     sel_grp <- dplyr::case_when(
       is.null(input$recipe) | length(input$recipe) == 0 ~ "NONE",
+      input$recipe %in% c("Table 5: Demography",
+                          "Table 18: Overall summary of adverse events") ~ "TRT01P",
       input$recipe == "Table 5: Demography" ~ "TRT01P",
       TRUE ~ "NONE"
     )

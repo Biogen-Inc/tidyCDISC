@@ -4,14 +4,13 @@
 #' @param column the variable to perform frequency stats on,
 #' this also contains the class of the column
 #' based on the data file the column came from
-#' @param week filter the variable by certain week
 #' @param group the groups to compare for the ANOVA
 #' @param data the data to use 
 #'
 #' @return a frequency table of grouped variables
 #' 
 #' @family tableGen Functions
-IDEA_y <- function(column, week, group, data) {
+IDEA_y <- function(column, group, data) {
   UseMethod("IDEA_y", column)
 }
 
@@ -19,7 +18,7 @@ IDEA_y <- function(column, week, group, data) {
 #' @rdname IDEA_y
 #' 
 #' @family tableGen Functions
-IDEA_y.default <- function(column, week, group, data) {
+IDEA_y.default <- function(column, group, data) {
   rlang::abort(glue::glue(
     "Can't calculate mean because data is not classified as ADLB, BDS or OCCDS"
   ))
@@ -36,23 +35,24 @@ IDEA_y.default <- function(column, week, group, data) {
 #' @rdname IDEA_y
 #' 
 #' @family tableGen Functions
-IDEA_y.ADSL <- function(column, week, group = NULL, data) {
+IDEA_y.OCCDS <- IDEA_y.ADAE <- IDEA_y.ADSL <- function(column, group = NULL, data) {
   
+  # column is the variable selected on the left-hand side
   column <- rlang::sym(as.character(column))
   
   if (is.numeric(data[[column]])) {
     stop(paste("Can't calculate frequency, ", column, " is not categorical"))
   }
   
-  total <- data %>%
-    distinct(USUBJID, !!column) %>%
-    count(!!column) %>%
-    group_by(!!column) %>%
-    summarise(n = sum(n)) %>%
-    ungroup() %>%
-    mutate(prop = n/sum(n)) %>%
-    mutate(x = paste0(n, " (", sprintf("%.1f", round(prop*100, 1)), ")")) %>%
-    select(!!column, x)
+  total <- 
+    data %>%
+    distinct(USUBJID, !!sym(column)) %>%
+    count(!!sym(column)) %>%
+    mutate(prop = prop.table(n),
+           x = paste0(n, ' (', sprintf("%.1f", round(prop*100, 1)), ')')
+    ) %>%
+    filter(!!sym(column) == "Y") %>%
+    select(-n, -prop)
   
   
   if (is.null(group)) { 
@@ -66,13 +66,16 @@ IDEA_y.ADSL <- function(column, week, group = NULL, data) {
     group <- rlang::sym(group)
     
     groups <- data %>%
-      distinct(USUBJID, !!column, !!group) %>%
-      count(!!column, !!group) %>%
-      group_by(!!group) %>%
-      mutate(prop = prop.table(n)) %>%
-      mutate(v1 = paste0(n, ' (', sprintf("%.1f", round(prop*100, 1)), ')')) %>%
-      select(-n, -prop) %>% 
-      spread(!!group, v1)
+      distinct(USUBJID, !!sym(group), !!sym(column)) %>%
+      count(!!sym(column), !!sym(group)) %>%
+      group_by(!!sym(group)) %>%
+      mutate(prop = prop.table(n),
+             v = paste0(n, ' (', sprintf("%.1f", round(prop*100, 1)), ')')
+      )  %>%
+      filter(!!sym(column) == "Y") %>%
+      select(-n, -prop) %>%
+      spread(!!sym(column), v) %>%
+      transpose_df(num = 1)
     
     cbind(groups, total$x)
   }
@@ -82,9 +85,9 @@ IDEA_y.ADSL <- function(column, week, group = NULL, data) {
 #' @rdname IDEA_y
 #' 
 #' @family tableGen Functions
-IDEA_y.BDS <- function(column, week, group = NULL, data) {
+IDEA_y.BDS <- function(column, group = NULL, data) {
   rlang::abort(glue::glue(
-    "Can't calculate frequency for BDS - {column} is numeric"
+    "Can't calculate Y frequency for BDS - {column} is numeric"
   ))
 }
 
@@ -92,17 +95,7 @@ IDEA_y.BDS <- function(column, week, group = NULL, data) {
 #' @rdname IDEA_y
 #' 
 #' @family tableGen Functions
-IDEA_y.OCCDS <- function(column, week = NULL, group, data) {
-  rlang::abort(glue::glue(
-    "Currently no method to perform frequency statistics on OCCDS"
-  ))
-}
-
-#' @return NULL
-#' @rdname IDEA_y
-#' 
-#' @family tableGen Functions
-IDEA_y.custom <- function(column, week = NULL, group, data) {
+IDEA_y.custom <- function(column, group, data) {
   rlang::abort(glue::glue(
     "Can't calculate mean, data is not classified as ADLB, BDS or OCCDS"
   ))
