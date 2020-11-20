@@ -4,9 +4,9 @@ username:
 account: maya-gans
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
-appId: 2606468
-bundleId: 3433515
+appId: 3274305
+bundleId: 3885358
 url: https://maya-gans.shinyapps.io/tidyCDISC/
-when: 1595644161.63927
+when: 1605886823.20197
 asMultiple: FALSE
 asStatic: FALSE
