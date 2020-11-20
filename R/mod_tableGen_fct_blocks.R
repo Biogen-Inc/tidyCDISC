@@ -7,6 +7,7 @@ recipe <- HTML('
                <select id="RECIPE" class="selectize-input">
                <option  id="none">NONE</option>
                <option  id="demography">Table 5: Demography</option>
+               <option  id="demography">Table 18: Overall summary of adverse events</option>
                </select>')
 
 

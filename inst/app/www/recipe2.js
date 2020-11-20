@@ -21,7 +21,7 @@ function combineRows(arr) {
 demography_rows = ["AGEGR1", "AGE",  "SEX",  "ETHNIC", "RACE", "HEIGHTBL", "WEIGHTBL"]
 demography_agg =  ["FREQ",   "MEAN", "FREQ", "FREQ",   "FREQ", "MEAN",     "MEAN"]
 ae18_rows = ["AOCCFL"]
-ae18_agg =  ["Y%"]
+ae18_agg =  ["Y_FREQ"]
 
 
 /* Create custom block recipes to automatically populate when selected */
