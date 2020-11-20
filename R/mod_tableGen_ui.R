@@ -88,8 +88,8 @@ mod_tableGen_ui <- function(id){
                                          class = "agg"
                                        ),
                                        tags$li(
-                                         id = "y",
-                                         "Y%",
+                                         id = "y_freq",
+                                         "Y FREQ",
                                          class="agg"
                                        )
                                      ))
