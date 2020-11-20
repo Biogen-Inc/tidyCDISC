@@ -3,31 +3,26 @@
 \name{IDEA_y}
 \alias{IDEA_y}
 \alias{IDEA_y.default}
-\alias{IDEA_y.ADSL}
-\alias{IDEA_y.BDS}
 \alias{IDEA_y.OCCDS}
+\alias{IDEA_y.BDS}
 \alias{IDEA_y.custom}
 \title{Generate frequency of categorical variables
 using table generator blocks}
 \usage{
-IDEA_y(column, week, group, data)
+IDEA_y(column, group, data)
 
-\method{IDEA_y}{default}(column, week, group, data)
+\method{IDEA_y}{default}(column, group, data)
 
-\method{IDEA_y}{ADSL}(column, week, group = NULL, data)
+\method{IDEA_y}{OCCDS}(column, group = NULL, data)
 
-\method{IDEA_y}{BDS}(column, week, group = NULL, data)
+\method{IDEA_y}{BDS}(column, group = NULL, data)
 
-\method{IDEA_y}{OCCDS}(column, week = NULL, group, data)
-
-\method{IDEA_y}{custom}(column, week = NULL, group, data)
+\method{IDEA_y}{custom}(column, group, data)
 }
 \arguments{
 \item{column}{the variable to perform frequency stats on,
 this also contains the class of the column
 based on the data file the column came from}
-
-\item{week}{filter the variable by certain week}
 
 \item{group}{the groups to compare for the ANOVA}
 
@@ -47,26 +42,6 @@ and look for a grouping variable to group_by
 if data is grouped add total column to the grouped data
 }
 \seealso{
-Other tableGen Functions: 
-\code{\link{IDEA_anova}()},
-\code{\link{IDEA_chg}()},
-\code{\link{IDEA_freq}()},
-\code{\link{IDEA_mean.ADAE}()},
-\code{\link{IDEA_mean.BDS}()},
-\code{\link{IDEA_mean}()},
-\code{\link{IDEA_methods}()},
-\code{\link{convertTGOutput}()},
-\code{\link{custom_class}()},
-\code{\link{dropArea}()},
-\code{\link{mean_summary}()},
-\code{\link{mod_tableGen_server}()},
-\code{\link{mod_tableGen_ui}()},
-\code{\link{recipe}},
-\code{\link{rowArea}()},
-\code{\link{rowBlock}()},
-\code{\link{rowPallete}()},
-\code{\link{tg_guide}}
-
 Other tableGen Functions: 
 \code{\link{IDEA_anova}()},
 \code{\link{IDEA_chg}()},

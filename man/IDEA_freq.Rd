@@ -3,7 +3,6 @@
 \name{IDEA_freq}
 \alias{IDEA_freq}
 \alias{IDEA_freq.default}
-\alias{IDEA_freq.ADSL}
 \alias{IDEA_freq.ADAE}
 \alias{IDEA_freq.BDS}
 \alias{IDEA_freq.OCCDS}
@@ -15,9 +14,7 @@ IDEA_freq(column, week, group, data)
 
 \method{IDEA_freq}{default}(column, week, group, data)
 
-\method{IDEA_freq}{ADSL}(column, week, group = NULL, data)
-
-\method{IDEA_freq}{ADAE}(column, week = NULL, group, data)
+\method{IDEA_freq}{ADAE}(column, week, group = NULL, data)
 
 \method{IDEA_freq}{BDS}(column, week, group = NULL, data)
 
@@ -50,26 +47,6 @@ and look for a grouping variable to group_by
 if data is grouped add total column to the grouped data
 }
 \seealso{
-Other tableGen Functions: 
-\code{\link{IDEA_anova}()},
-\code{\link{IDEA_chg}()},
-\code{\link{IDEA_mean.ADAE}()},
-\code{\link{IDEA_mean.BDS}()},
-\code{\link{IDEA_mean}()},
-\code{\link{IDEA_methods}()},
-\code{\link{IDEA_y}()},
-\code{\link{convertTGOutput}()},
-\code{\link{custom_class}()},
-\code{\link{dropArea}()},
-\code{\link{mean_summary}()},
-\code{\link{mod_tableGen_server}()},
-\code{\link{mod_tableGen_ui}()},
-\code{\link{recipe}},
-\code{\link{rowArea}()},
-\code{\link{rowBlock}()},
-\code{\link{rowPallete}()},
-\code{\link{tg_guide}}
-
 Other tableGen Functions: 
 \code{\link{IDEA_anova}()},
 \code{\link{IDEA_chg}()},

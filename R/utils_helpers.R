@@ -67,6 +67,7 @@ common_rownames <- function(data, group) {
     vars <- c("Variable", "Total")
   } else {
     if(is.factor(data[[group]])){
+      # droplevels() get's rid of levels that no longer exist in the data post filtering
       vars <- c("Variable", levels(droplevels(data[[group]])), "Total")
     } else {
       vars <- c("Variable", sort(unique(data[[group]])), "Total")
