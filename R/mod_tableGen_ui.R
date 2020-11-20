@@ -52,7 +52,8 @@ mod_tableGen_ui <- function(id){
                    fluidRow(
                      column(12, 
                             "STAN Tables", 
-                            recipe,
+                            # recipe,
+                            uiOutput(ns("stan_recipe_ui")),
                             br(),
                             div(class = "col-sm-3", id="all-column-blocks", style = "height:300px;overflow-y:scroll;overflow-x:hidden;",
                                 uiOutput("all_rows") 
