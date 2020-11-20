@@ -32,6 +32,15 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     tg_guide$init()$start()
   })
   
+  output$stan_recipe_ui <- renderUI({
+      HTML(paste('
+           <select id="RECIPE" class="selectize-input">
+           <option  id="none">NONE</option>
+           <option  id="demography">Table 5: Demography</option>',
+           ifelse("ADAE" %in% names(datafile()),'<option  id="demography">Table 18: Overall summary of adverse events</option>','')
+           ,'</select>'))
+  })
+  
   # ----------------------------------------------------------------------
   # input prep for table manipulation
   # ----------------------------------------------------------------------

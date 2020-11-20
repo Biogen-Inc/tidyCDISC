@@ -31,7 +31,6 @@ Other tableGen Functions:
 \code{\link{mean_summary}()},
 \code{\link{mod_tableGen_server}()},
 \code{\link{mod_tableGen_ui}()},
-\code{\link{recipe}},
 \code{\link{rowArea}()},
 \code{\link{rowBlock}()},
 \code{\link{rowPallete}()}
