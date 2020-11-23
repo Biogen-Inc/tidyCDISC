@@ -10,24 +10,22 @@
 \title{Generate frequency of categorical variables
 using table generator blocks}
 \usage{
-IDEA_freq(column, week, group, data)
+IDEA_freq(column, group, data)
 
-\method{IDEA_freq}{default}(column, week, group, data)
+\method{IDEA_freq}{default}(column, group, data)
 
-\method{IDEA_freq}{ADAE}(column, week, group = NULL, data)
+\method{IDEA_freq}{ADAE}(column, group = NULL, data)
 
-\method{IDEA_freq}{BDS}(column, week, group = NULL, data)
+\method{IDEA_freq}{BDS}(column, group = NULL, data)
 
-\method{IDEA_freq}{OCCDS}(column, week = NULL, group, data)
+\method{IDEA_freq}{OCCDS}(column, group, data)
 
-\method{IDEA_freq}{custom}(column, week = NULL, group, data)
+\method{IDEA_freq}{custom}(column, group, data)
 }
 \arguments{
 \item{column}{the variable to perform frequency stats on,
 this also contains the class of the column
 based on the data file the column came from}
-
-\item{week}{filter the variable by certain week}
 
 \item{group}{the groups to compare for the ANOVA}
 
