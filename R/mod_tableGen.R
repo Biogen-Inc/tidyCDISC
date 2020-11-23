@@ -271,6 +271,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       c(groups, all)
     }
   })
+
   
   
   
@@ -446,6 +447,9 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # as primary or secondary table
   # ----------------------------------------------------------------------
   
+  
+  
+  ############### Question here: when ADAE is filtered, will it apply to bds? Me thinks not
   # capture output of filtering expression
   filter_bds_expr <- reactive({
     filter_code <- gsub("processed_data","bds_data",capture.output(attr(filtered_data(), "code")))
@@ -453,8 +457,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       glue::glue("
           # Filter BDS data
           bds_data <- eval(parse(text = '{filter_code}'))
-          "
-                 )
+          ")
     } else {""}
   })
   # capture output of filtering expression
@@ -464,8 +467,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       glue::glue("
           # Filter ADAE data
           ae_data <- eval(parse(text = '{filter_code}'))
-          "
-      )
+          ")
     } else {""}
   })
   
@@ -474,13 +476,11 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   adae_expr <- reactive({
     if("ADAE" %in% names(datafile())){
       glue::glue("
-          # add filter code to R script
+          # Create AE data set
           ae_data <- datalist %>% IDEA::cleanADAE()
           "
       )
-    } else {
-      ""
-    }
+    } else {""}
   })#
   
   
@@ -518,7 +518,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     # create list of dataframes
     datalist <- IDEA::readData(study_dir, filenames)
     bds_data <- datalist %>% IDEA::combineBDS()
-    
+    {adae_expr()}
         
     {filter_bds_expr()}
     {filter_ae_expr()}
@@ -530,43 +530,24 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     )
   })
   
-  total <- reactive({
-    
-    all <- use_data() %>% 
-      distinct(USUBJID) %>% 
-      summarise(n = n()) %>%
-      pull(n)
-    
-    
-    if (input$COLUMN == "NONE") {
-      all
-    } else {
-      groups <- use_data() %>%
-        group_by(!!sym(input$COLUMN)) %>%
-        distinct(USUBJID) %>%
-        summarise(n = n()) %>%
-        pull(n)
-      c(groups, all)
-    }
-  })
   
   # create the total column names
   total_for_code <- reactive({
-    
+    use_data <- ifelse(is_grp_col_adae(), "ae_data","bds_data")
     if (!!input$COLUMN == 'NONE') {
-      "total <- bds_data %>% 
+      glue::glue("total <- {use_data} %>% 
         distinct(USUBJID) %>% 
         summarise(n = n(), .groups='drop_last') %>%
-        pull(n)"
+        pull(n)")
     } else {
       glue::glue(
         "
-        all <- bds_data %>% 
+        all <- {use_data} %>% 
         distinct(USUBJID) %>% 
         summarise(n = n(), .groups='drop_last') %>%
         pull(n)
         
-        groups <- bds_data %>%
+        groups <- {use_data} %>%
         group_by({input$COLUMN}) %>%
         distinct(USUBJID) %>%
         summarise(n = n(), .groups='drop_last') %>%
@@ -579,15 +560,20 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   })
   
   generate_table_output <- reactive({
+    use_data <- ifelse(is_grp_col_adae(), "ae_data","bds_data")
+    
     glue::glue(
       "
       {text_code()}
       
-      tg_table <- purrr::pmap(list(blockData$agg, blockData$S3,blockData$dropdown), 
-                            function(x,y,z) IDEA::IDEA_methods(x,y,z, 
+      tg_table <- purrr::pmap(list(blockData$agg,
+                                    blockData$S3,
+                                    blockData$dropdown
+                                    blockData$dataset), 
+                            function(x,y,z) IDEA::IDEA_methods(x,y,z,d 
                                                    group = {column() %quote% 'NULL'}, 
-                                                   data = bds_data)) %>%
-      map(setNames, IDEA::common_rownames(bds_data, {column() %quote% 'NULL'})) %>%
+                                                   data = IDEA::data_to_use(d))) %>%
+      map(setNames, IDEA::common_rownames({use_data}, {column() %quote% 'NULL'})) %>%
       setNames(paste(blockData$gt_group)) %>%
       bind_rows(.id = 'ID') 
     
@@ -621,6 +607,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   })
   
   generate_comparison_output <- reactive({
+    use_data <- ifelse(is_grp_col_adae(), "ae_data","bds_data")
     glue::glue(
       "
       {text_code()}
@@ -629,11 +616,14 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
         purrr::map(blockData$block, function(x) attr(bds_data[[x]], 'label')) %>% 
         unname() %>% str_trim()
       
-      tg_table <- purrr::pmap(list(blockData$agg, blockData$S3,blockData$dropdown), 
+      tg_table <- purrr::pmap(list(blockData$agg,
+                                  blockData$S3,
+                                  blockData$dropdown
+                                  blockData$dataset), 
                               function(x,y,z) IDEA::IDEA_methods(x,y,z, 
                                                      group = {column() %quote% 'NULL'}, 
-                                                     data = bds_data)) %>%
-      map(setNames, IDEA::common_rownames(bds_data, {column() %quote% 'NULL'})) %>%
+                                                     data = IDEA::data_to_use(d))) %>%
+      map(setNames, IDEA::common_rownames({use_data}, {column() %quote% 'NULL'})) %>%
       setNames(paste(blockData$label)) %>%
       bind_rows(.id = 'ID')
     
@@ -677,16 +667,6 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       diffdf_issuerows(sas_comp_ready, order_diff)
       diffdf_issuerows(tg_comp_ready, order_diff)
       
-      
-      # # ... by variable labels and values. Note, must match!
-      # var_diff <- diffdf(base = sas_comp_ready, 
-      #         compare = tg_comp_ready,
-      #         keys = c('id_desc', 'Variable'),
-      #         tolerance = 0.001,
-      #         strict_numeric = TRUE, # Integer != Double
-      #         strict_factor = TRUE,  # Factor != Character
-      #         file = '{paste0(stringr::str_remove(input$sas$name, '.sas7bdat'), '_v_IDEA_var_diff_study_dir.log')}'
-      # )
       "
     )
   })
