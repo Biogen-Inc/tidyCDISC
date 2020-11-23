@@ -36,7 +36,7 @@ combineBDS <- function(datafile) {
       mutate(data_from = "ADSL", PARAMCD = NA, AVAL = NA, CHG = NA)
   }
   
-  combined_data <- varN_fctr_reorder(combined_data)
+  combined_data <- varN_fctr_reorder(combined_data) # add this after filter?
   
   return(combined_data)
 }

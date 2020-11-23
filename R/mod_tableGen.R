@@ -570,7 +570,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
                                     blockData$S3,
                                     blockData$dropdown,
                                     blockData$dataset), 
-                            function(x,y,z) IDEA::IDEA_methods(x,y,z,d,
+                            function(x,y,z,d) IDEA::IDEA_methods(x,y,z,
                                                    group = {column() %quote% 'NULL'}, 
                                                    data = IDEA::data_to_use(d))) %>%
       map(setNames, IDEA::common_rownames({use_data}, {column() %quote% 'NULL'})) %>%
@@ -584,6 +584,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       row_names_n <- names(tg_table)[-c(1:2)]
     
       # create the gt output
+      library(gt)
       tg_table %>%
           gt(rowname_col = 'Variable', groupname_col = 'ID') %>%
           tab_options(table.width = px(700)) %>%
@@ -620,7 +621,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
                                   blockData$S3,
                                   blockData$dropdown,
                                   blockData$dataset), 
-                              function(x,y,z) IDEA::IDEA_methods(x,y,z,d, 
+                              function(x,y,z,d) IDEA::IDEA_methods(x,y,z, 
                                                      group = {column() %quote% 'NULL'}, 
                                                      data = IDEA::data_to_use(d))) %>%
       map(setNames, IDEA::common_rownames({use_data}, {column() %quote% 'NULL'})) %>%
