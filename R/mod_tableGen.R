@@ -570,7 +570,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
                                     blockData$S3,
                                     blockData$dropdown,
                                     blockData$dataset), 
-                            function(x,y,z) IDEA::IDEA_methods(x,y,z,d 
+                            function(x,y,z) IDEA::IDEA_methods(x,y,z,d,
                                                    group = {column() %quote% 'NULL'}, 
                                                    data = IDEA::data_to_use(d))) %>%
       map(setNames, IDEA::common_rownames({use_data}, {column() %quote% 'NULL'})) %>%
@@ -620,7 +620,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
                                   blockData$S3,
                                   blockData$dropdown,
                                   blockData$dataset), 
-                              function(x,y,z) IDEA::IDEA_methods(x,y,z, 
+                              function(x,y,z) IDEA::IDEA_methods(x,y,z,d, 
                                                      group = {column() %quote% 'NULL'}, 
                                                      data = IDEA::data_to_use(d))) %>%
       map(setNames, IDEA::common_rownames({use_data}, {column() %quote% 'NULL'})) %>%
