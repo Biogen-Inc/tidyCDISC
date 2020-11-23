@@ -20,7 +20,7 @@ IDEA_y <- function(column, group, data) {
 #' @family tableGen Functions
 IDEA_y.default <- function(column, group, data) {
   rlang::abort(glue::glue(
-    "Default: Can't calculate mean because data is not classified as ADLB, BDS or OCCDS"
+    "Can't calculate mean because data is not classified as ADLB, BDS or OCCDS"
   ))
 }
 
@@ -114,6 +114,6 @@ IDEA_y.BDS <- function(column, group = NULL, data) {
 #' @family tableGen Functions
 IDEA_y.custom <- function(column, group, data) {
   rlang::abort(glue::glue(
-    "Custom Method: Can't calculate mean, data is not classified as ADLB, BDS or OCCDS"
+    "Can't calculate mean, data is not classified as ADLB, BDS or OCCDS"
   ))
 }
