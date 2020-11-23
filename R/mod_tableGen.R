@@ -86,28 +86,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   
   ADSL <- reactive({ datafile()$ADSL })
   BDS <- reactive({ datafile()[sapply(datafile(), function(x) "PARAMCD" %in% colnames(x))] })
-  ADAE <- reactive({
-    cleanADAE(datafile = datafile())
-    # if("ADAE" %in% names(datafile())){
-    #   # find columns the ADAE & ADSL have in common (besides Usubjid), remove
-    #   # them from the ADAE, so that the ADSL cols are used instead. Then join
-    #   # on usubjid and re-order the colnames to match the adae
-    #   adae_cols <- colnames(datafile()$ADAE)
-    #   common_cols <- dplyr::intersect(adae_cols, colnames(ADSL()))
-    #   com_cols_excp_u <- common_cols[common_cols != "USUBJID"]
-    #   adae_adsl <- datafile()$ADAE %>% 
-    #     select(-one_of(com_cols_excp_u)) %>%
-    #     full_join(ADSL(), by = "USUBJID")
-    #   preferred_col_order <- c(adae_cols, dplyr::setdiff(colnames(ADSL()), adae_cols))
-    #   if(sort(colnames(adae_adsl)) == sort(preferred_col_order)){
-    #     adae_adsl[,preferred_col_order]
-    #   } else {
-    #     adae_adsl
-    #   }
-    # } else {
-    #   ADSL()
-    # }
-  })
+  ADAE <- reactive({ cleanADAE(datafile = datafile()) })
  
    bds_data <- reactive({ 
     # Seperate ADSL and the PARAMCD dataframe
@@ -129,31 +108,6 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   
   processed_data <- eventReactive(input$filter_df, {
     data_to_filter(datafile(), input$filter_df)
-      # select_dfs <- datafile()[input$filter_df]
-      # 
-      # # Separate out non BDS and BDS data frames. Note: join may throw some
-      # # warnings if labels are different between two datasets, which is fine!
-      # # Ignore
-      # non_bds <- select_dfs[sapply(select_dfs, function(x) !("PARAMCD" %in% colnames(x)) )] 
-      # bds <- select_dfs[sapply(select_dfs, function(x) "PARAMCD" %in% colnames(x) )]
-      # 
-      # # Make CHG var doesn't exist, create the column and populate with NA
-      # PARAMCD_dat <- purrr::map(bds, ~ if(!"CHG" %in% names(.)) {purrr::update_list(., CHG = NA)} else {.})
-      # 
-      # # Combine selected data into a 1 usable data frame
-      # if (!rlang::is_empty(PARAMCD_dat)) {
-      #   all_PARAMCD <- bind_rows(PARAMCD_dat, .id = "data_from") %>% distinct(.keep_all = T)
-      #   
-      #   if (!rlang::is_empty(non_bds)){
-      #     combined_data <- inner_join(non_bds %>% purrr::reduce(inner_join), all_PARAMCD)
-      #   } else {
-      #     combined_data <-all_PARAMCD
-      #   }
-      # } else {
-      #   combined_data <- non_bds %>% reduce(inner_join)
-      # }
-      # 
-      # return(combined_data)
   })
   
   
@@ -233,22 +187,11 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   })
   
   use_data <- reactive({
-    # Identify which class data set dragged variables are from
-    # dat_types <- list()
-    # for (i in 1:nrow(blocks_and_functions())) {
-    #   dat_types[i] <- class(blocks_and_functions()$S3[[i]])[2]
-    # }
-    # check <- c("BDS", "ADAE", "ADMH")
-    # 
-    # if(any(intersect(check, unlist(dat_types)) == "ADAE")) {
     if(is_grp_col_adae()){
       ae_data()
     } else { # do the same for mh_data()
       all_data()
     }
-    # } else {
-    #   all_data()
-    # }
   })
   
   # calculate the totals to input after N= in the table headers
