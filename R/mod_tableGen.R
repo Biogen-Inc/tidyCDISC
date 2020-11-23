@@ -568,7 +568,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       
       tg_table <- purrr::pmap(list(blockData$agg,
                                     blockData$S3,
-                                    blockData$dropdown
+                                    blockData$dropdown,
                                     blockData$dataset), 
                             function(x,y,z) IDEA::IDEA_methods(x,y,z,d 
                                                    group = {column() %quote% 'NULL'}, 
@@ -618,7 +618,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       
       tg_table <- purrr::pmap(list(blockData$agg,
                                   blockData$S3,
-                                  blockData$dropdown
+                                  blockData$dropdown,
                                   blockData$dataset), 
                               function(x,y,z) IDEA::IDEA_methods(x,y,z, 
                                                      group = {column() %quote% 'NULL'}, 

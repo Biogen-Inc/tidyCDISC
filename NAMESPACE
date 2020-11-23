@@ -2,10 +2,12 @@
 
 export("%>%")
 export(IDEA_methods)
+export(cleanADAE)
 export(col_for_list_expr)
-export(combineData)
+export(combineBDS)
 export(common_rownames)
 export(compareTables)
+export(data_to_use)
 export(prep_sas_table)
 export(prep_tg_table)
 export(readData)
