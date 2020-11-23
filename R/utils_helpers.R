@@ -187,6 +187,8 @@ getLevels <- function(x) {if(is.factor(x)) levels(x)else sort(unique(x)) }
 #' @importFrom data.table setDT 
 #' @importFrom purrr walk2 
 #' 
+#' @export
+#' 
 varN_fctr_reorder <- function(data) {
   # Now to refactor levels in VARN order, if they exist:
   # save the variable labels into savelbls vector

@@ -128,31 +128,32 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   })
   
   processed_data <- eventReactive(input$filter_df, {
-      select_dfs <- datafile()[input$filter_df]
-      
-      # Separate out non BDS and BDS data frames. Note: join may throw some
-      # warnings if labels are different between two datasets, which is fine!
-      # Ignore
-      non_bds <- select_dfs[sapply(select_dfs, function(x) !("PARAMCD" %in% colnames(x)) )] 
-      bds <- select_dfs[sapply(select_dfs, function(x) "PARAMCD" %in% colnames(x) )]
-      
-      # Make CHG var doesn't exist, create the column and populate with NA
-      PARAMCD_dat <- purrr::map(bds, ~ if(!"CHG" %in% names(.)) {purrr::update_list(., CHG = NA)} else {.})
-      
-      # Combine selected data into a 1 usable data frame
-      if (!rlang::is_empty(PARAMCD_dat)) {
-        all_PARAMCD <- bind_rows(PARAMCD_dat, .id = "data_from") %>% distinct(.keep_all = T)
-        
-        if (!rlang::is_empty(non_bds)){
-          combined_data <- inner_join(non_bds %>% purrr::reduce(inner_join), all_PARAMCD)
-        } else {
-          combined_data <-all_PARAMCD
-        }
-      } else {
-        combined_data <- non_bds %>% reduce(inner_join)
-      }
-      
-      return(combined_data)
+    data_to_filter(datafile(), input$filter_df)
+      # select_dfs <- datafile()[input$filter_df]
+      # 
+      # # Separate out non BDS and BDS data frames. Note: join may throw some
+      # # warnings if labels are different between two datasets, which is fine!
+      # # Ignore
+      # non_bds <- select_dfs[sapply(select_dfs, function(x) !("PARAMCD" %in% colnames(x)) )] 
+      # bds <- select_dfs[sapply(select_dfs, function(x) "PARAMCD" %in% colnames(x) )]
+      # 
+      # # Make CHG var doesn't exist, create the column and populate with NA
+      # PARAMCD_dat <- purrr::map(bds, ~ if(!"CHG" %in% names(.)) {purrr::update_list(., CHG = NA)} else {.})
+      # 
+      # # Combine selected data into a 1 usable data frame
+      # if (!rlang::is_empty(PARAMCD_dat)) {
+      #   all_PARAMCD <- bind_rows(PARAMCD_dat, .id = "data_from") %>% distinct(.keep_all = T)
+      #   
+      #   if (!rlang::is_empty(non_bds)){
+      #     combined_data <- inner_join(non_bds %>% purrr::reduce(inner_join), all_PARAMCD)
+      #   } else {
+      #     combined_data <-all_PARAMCD
+      #   }
+      # } else {
+      #   combined_data <- non_bds %>% reduce(inner_join)
+      # }
+      # 
+      # return(combined_data)
   })
   
   
@@ -449,14 +450,23 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   
   
   
-  ############### Question here: when ADAE is filtered, will it apply to bds? Me thinks not
   # capture output of filtering expression
+  data_to_filter_expr <- reactive({
+    filter_code <- gsub("processed_data","dat_to_filt",capture.output(attr(filtered_data(), "code")))
+    if(any(regexpr("%>%", filter_code) > 0)){
+      glue::glue("
+          # Create small filtered data set
+          dat_to_filt <- IDEA::data_to_filter(datalist, {input$filter_df})
+          filtered_data <- eval(parse(text = '{filter_code}')) %>% varN_fctr_reorder()
+          ")
+    } else {""}
+  })
   filter_bds_expr <- reactive({
     filter_code <- gsub("processed_data","bds_data",capture.output(attr(filtered_data(), "code")))
     if(any(regexpr("%>%", filter_code) > 0)){
       glue::glue("
-          # Filter BDS data
-          bds_data <- eval(parse(text = '{filter_code}'))
+          # Apply small filtered data set to BDS data
+          bds_data <- bds_data %>% semi_join(filtered_data) 
           ")
     } else {""}
   })
@@ -465,8 +475,8 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     filter_code <- gsub("processed_data","ae_data",capture.output(attr(filtered_data(), "code")))
     if(any(regexpr("%>%", filter_code) > 0)){
       glue::glue("
-          # Filter ADAE data
-          ae_data <- eval(parse(text = '{filter_code}'))
+          # Apply small filtered data set to ADAE data
+          ae_data <- ae_data %>% semi_join(filtered_data) 
           ")
     } else {""}
   })
@@ -520,6 +530,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     bds_data <- datalist %>% IDEA::combineBDS()
     {adae_expr()}
         
+    {data_to_filter_expr()}
     {filter_bds_expr()}
     {filter_ae_expr()}
         
