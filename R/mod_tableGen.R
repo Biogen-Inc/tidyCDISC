@@ -457,8 +457,9 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     print(input$filter_df)
     filter_code <- gsub("processed_data","dat_to_filt",capture.output(attr(filtered_data(), "code")))
     if(any(regexpr("%>%", filter_code) > 0)){
-      options(useFancyQuotes = FALSE)
+      # options(useFancyQuotes = FALSE)
       filter_dfs <- paste(sQuote(input$filter_df), collapse = ",")
+      # options(useFancyQuotes = TRUE)
       glue::glue("
           # Create small filtered data set
           dat_to_filt <- IDEA::data_to_filter(datalist, c({filter_dfs}))
