@@ -108,7 +108,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     }
   })
  
-   tg_data <- reactive({ 
+   bds_data <- reactive({ 
     # Seperate ADSL and the PARAMCD dataframe
     PARAMCD <- map(BDS(), ~ if(!"CHG" %in% names(.)) {update_list(., CHG = NA)} else {.})
     
@@ -160,7 +160,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   filtered_data <- callModule(shiny_data_filter, "data_filter", data = processed_data, verbose = FALSE)
   
   # apply filters from selected dfs to tg data to create all data
-  all_data <- reactive({tg_data() %>% semi_join(filtered_data()) %>% varN_fctr_reorder()})
+  all_data <- reactive({bds_data() %>% semi_join(filtered_data()) %>% varN_fctr_reorder()})
   ae_data <- reactive({ADAE() %>% semi_join(filtered_data()) %>% varN_fctr_reorder()})
   
   # get the list of PARAMCDs
@@ -447,17 +447,31 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   
   # capture output of filtering expression
   filter_expr <- reactive({
-    filter_code <- gsub("processed_data","tg_data",capture.output(attr(filtered_data(), "code")))
+    filter_code <- gsub("processed_data","bds_data",capture.output(attr(filtered_data(), "code")))
     if(any(regexpr("%>%", filter_code) > 0)){
       glue::glue("
           # add filter code to R script
-          tg_data <- eval(parse(text = '{filter_code}'))
+          bds_data <- eval(parse(text = '{filter_code}'))
           "
                  )
     } else {
       ""
     }
   })
+  # If ADAE exists, then prep that data too
+  adae_expr <- reactive({
+    filter_code <- gsub("processed_data","bds_data",capture.output(attr(filtered_data(), "code")))
+    if(any(regexpr("%>%", filter_code) > 0)){
+      glue::glue("
+          # add filter code to R script
+          bds_data <- eval(parse(text = '{filter_code}'))
+          "
+      )
+    } else {
+      ""
+    }
+  })#"ADAE" %in% names(datafile())
+  
   
   # get filepaths
   filenames <- reactive({
@@ -491,7 +505,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     filenames <- c({filenames()})
         
     # create list of dataframes
-    tg_data <- IDEA::readData(study_dir, filenames) %>% IDEA::combineData()
+    bds_data <- IDEA::readData(study_dir, filenames) %>% IDEA::combineData()
         
     {filter_expr()}
         
@@ -526,19 +540,19 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   total_for_code <- reactive({
     
     if (!!input$COLUMN == 'NONE') {
-      "total <- tg_data %>% 
+      "total <- bds_data %>% 
         distinct(USUBJID) %>% 
         summarise(n = n(), .groups='drop_last') %>%
         pull(n)"
     } else {
       glue::glue(
         "
-        all <- tg_data %>% 
+        all <- bds_data %>% 
         distinct(USUBJID) %>% 
         summarise(n = n(), .groups='drop_last') %>%
         pull(n)
         
-        groups <- tg_data %>%
+        groups <- bds_data %>%
         group_by({input$COLUMN}) %>%
         distinct(USUBJID) %>%
         summarise(n = n(), .groups='drop_last') %>%
@@ -558,8 +572,8 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       tg_table <- purrr::pmap(list(blockData$agg, blockData$S3,blockData$dropdown), 
                             function(x,y,z) IDEA::IDEA_methods(x,y,z, 
                                                    group = {column() %quote% 'NULL'}, 
-                                                   data = tg_data)) %>%
-      map(setNames, IDEA::common_rownames(tg_data, {column() %quote% 'NULL'})) %>%
+                                                   data = bds_data)) %>%
+      map(setNames, IDEA::common_rownames(bds_data, {column() %quote% 'NULL'})) %>%
       setNames(paste(blockData$gt_group)) %>%
       bind_rows(.id = 'ID') 
     
@@ -598,14 +612,14 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       {text_code()}
       
       blockData$label <- 
-        purrr::map(blockData$block, function(x) attr(tg_data[[x]], 'label')) %>% 
+        purrr::map(blockData$block, function(x) attr(bds_data[[x]], 'label')) %>% 
         unname() %>% str_trim()
       
       tg_table <- purrr::pmap(list(blockData$agg, blockData$S3,blockData$dropdown), 
                               function(x,y,z) IDEA::IDEA_methods(x,y,z, 
                                                      group = {column() %quote% 'NULL'}, 
-                                                     data = tg_data)) %>%
-      map(setNames, IDEA::common_rownames(tg_data, {column() %quote% 'NULL'})) %>%
+                                                     data = bds_data)) %>%
+      map(setNames, IDEA::common_rownames(bds_data, {column() %quote% 'NULL'})) %>%
       setNames(paste(blockData$label)) %>%
       bind_rows(.id = 'ID')
     
