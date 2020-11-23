@@ -117,24 +117,6 @@ Other tableGen Functions:
 \code{\link{rowBlock}()},
 \code{\link{rowPallete}()},
 \code{\link{tg_guide}}
-
-Other tableGen Functions: 
-\code{\link{IDEA_anova}()},
-\code{\link{IDEA_chg}()},
-\code{\link{IDEA_freq}()},
-\code{\link{IDEA_mean.ADAE}()},
-\code{\link{IDEA_mean.BDS}()},
-\code{\link{IDEA_mean}()},
-\code{\link{IDEA_methods}()},
-\code{\link{convertTGOutput}()},
-\code{\link{custom_class}()},
-\code{\link{dropArea}()},
-\code{\link{mean_summary}()},
-\code{\link{mod_tableGen_server}()},
-\code{\link{mod_tableGen_ui}()},
-\code{\link{rowArea}()},
-\code{\link{rowBlock}()},
-\code{\link{rowPallete}()},
-\code{\link{tg_guide}}
 }
 \concept{tableGen Functions}
+\concept{tableGen Functionss}

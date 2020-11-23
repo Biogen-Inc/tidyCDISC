@@ -20,7 +20,7 @@ IDEA_y <- function(column, group, data) {
 #' @family tableGen Functions
 IDEA_y.default <- function(column, group, data) {
   rlang::abort(glue::glue(
-    "Can't calculate mean because data is not classified as ADLB, BDS or OCCDS"
+    "Default: Can't calculate mean because data is not classified as ADLB, BDS or OCCDS"
   ))
 }
 
@@ -34,8 +34,13 @@ IDEA_y.default <- function(column, group, data) {
 #' @return frequency table of ADSL column
 #' @rdname IDEA_y
 #' 
-#' @family tableGen Functions
+#' @family tableGen Functionss
 IDEA_y.OCCDS <- IDEA_y.ADAE <- IDEA_y.ADSL <- function(column, group = NULL, data) {
+  # ########## ######### ######## #########
+  # column <- blockData$S3
+  # group = "TRT01P"
+  # data = ae_data %>% filter(SAFFL == 'Y')
+  # ########## ######### ######## #########
   
   # column is the variable selected on the left-hand side
   column <- rlang::sym(as.character(column))
@@ -46,16 +51,18 @@ IDEA_y.OCCDS <- IDEA_y.ADAE <- IDEA_y.ADSL <- function(column, group = NULL, dat
   if (substr(column, nchar(column) - 1, nchar(column)) != "FL") {
     stop(paste("Can't calculate Y frequency on non-flag, ", column, " does not end with 'FL'"))
   }
-  
+
   total <- 
     data %>%
     distinct(USUBJID, !!sym(column)) %>%
-    count(!!sym(column)) %>%
-    mutate(prop = prop.table(n),
-           x = paste0(n, ' (', sprintf("%.1f", round(prop*100, 1)), ')')
-    ) %>%
     filter(!!sym(column) == "Y") %>%
-    select(-n, -prop)
+    # count(!!sym(column)) %>%
+    summarize(n = n_distinct(USUBJID)) %>%
+    mutate(n_tot = data %>% distinct(USUBJID) %>% nrow(),
+           prop = n / n_tot,
+           x = paste0(n, ' (', sprintf("%.1f", round(prop*100, 1)), ')')
+    )  %>%
+    select(-n, -prop, -n_tot)
   
   
   if (is.null(group)) { 
@@ -68,21 +75,28 @@ IDEA_y.OCCDS <- IDEA_y.ADAE <- IDEA_y.ADSL <- function(column, group = NULL, dat
     
     group <- rlang::sym(group)
     
-    groups <- data %>%
-      distinct(USUBJID, !!sym(group), !!sym(column)) %>%
-      count(!!sym(column), !!sym(group)) %>%
+    grp_tot <- data %>%
       group_by(!!sym(group)) %>%
-      mutate(prop = prop.table(n),
+      summarize(n_tot = n_distinct(USUBJID))
+      
+    groups <- data %>%
+      # distinct(USUBJID, !!sym(group), !!sym(column)) %>%
+      group_by(!!sym(group), !!sym(column)) %>%
+      summarize(n = n_distinct(USUBJID)) %>%
+      left_join(grp_tot) %>%
+      mutate(prop = n / n_tot,
              v = paste0(n, ' (', sprintf("%.1f", round(prop*100, 1)), ')')
-      )  %>%
+      ) %>%
       filter(!!sym(column) == "Y") %>%
-      select(-n, -prop) %>%
+      select(-n, -prop, -n_tot) %>%
       spread(!!sym(column), v) %>%
       transpose_df(num = 1)
     
     cbind(groups, total$x)
   }
 }
+
+
 
 #' @return NULL
 #' @rdname IDEA_y
@@ -100,6 +114,6 @@ IDEA_y.BDS <- function(column, group = NULL, data) {
 #' @family tableGen Functions
 IDEA_y.custom <- function(column, group, data) {
   rlang::abort(glue::glue(
-    "Can't calculate mean, data is not classified as ADLB, BDS or OCCDS"
+    "Custom Method: Can't calculate mean, data is not classified as ADLB, BDS or OCCDS"
   ))
 }
