@@ -454,10 +454,11 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # input_filter_df <- c("one","mild","Moderate")
   # paste('"',dput(input_filter_df),'"')
   data_to_filter_expr <- reactive({
-    print(input$filter_df)
-    filter_code <- gsub("processed_data","dat_to_filt",capture.output(attr(filtered_data(), "code")))
+    
+    filter_code <- gsub("processed_data","dat_to_filt",gsub("    ","",paste(capture.output(attr(filtered_data(), "code")), collapse = "")))
+    print(paste(filter_code, collapse = ""))
     if(any(regexpr("%>%", filter_code) > 0)){
-      # options(useFancyQuotes = FALSE)
+      options(useFancyQuotes = FALSE)
       filter_dfs <- paste(sQuote(input$filter_df), collapse = ",")
       # options(useFancyQuotes = TRUE)
       glue::glue("
