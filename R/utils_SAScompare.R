@@ -17,7 +17,7 @@ readData <- function(study_directory, file_names) {
 #' 
 #' @export
 #' 
-combineData <- function(datafile) {
+combineBDS <- function(datafile) {
   
   ADSL <- datafile$ADSL
   BDS <- datafile[sapply(datafile, function(x) "PARAMCD" %in% colnames(x))]
@@ -41,6 +41,33 @@ combineData <- function(datafile) {
   return(combined_data)
 }
 
+#' Function to clean and combine ADAE dataset with ADSL
+#' 
+#' @param datafile list of ADaM-ish dataframes 
+#' 
+#' @export
+#' 
+cleanADAE <- function(datafile) {
+  if("ADAE" %in% names(datafile)){
+    # find columns the ADAE & ADSL have in common (besides Usubjid), remove
+    # them from the ADAE, so that the ADSL cols are used instead. Then join
+    # on usubjid and re-order the colnames to match the adae
+    adae_cols <- colnames(datafile$ADAE)
+    common_cols <- dplyr::intersect(adae_cols, colnames(datafile$ADSL))
+    com_cols_excp_u <- common_cols[common_cols != "USUBJID"]
+    adae_adsl <- datafile$ADAE %>% 
+      select(-one_of(com_cols_excp_u)) %>%
+      full_join(datafile$ADSL, by = "USUBJID")
+    preferred_col_order <- c(adae_cols, dplyr::setdiff(colnames(datafile$ADSL), adae_cols))
+    if(sort(colnames(adae_adsl)) == sort(preferred_col_order)){
+      adae_adsl[,preferred_col_order]
+    } else {
+      adae_adsl
+    }
+  } else {
+    datafile$ADSL
+  }
+}
 
 
 

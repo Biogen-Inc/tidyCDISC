@@ -87,25 +87,26 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   ADSL <- reactive({ datafile()$ADSL })
   BDS <- reactive({ datafile()[sapply(datafile(), function(x) "PARAMCD" %in% colnames(x))] })
   ADAE <- reactive({
-    if("ADAE" %in% names(datafile())){
-      # find columns the ADAE & ADSL have in common (besides Usubjid), remove
-      # them from the ADAE, so that the ADSL cols are used instead. Then join
-      # on usubjid and re-order the colnames to match the adae
-      adae_cols <- colnames(datafile()$ADAE)
-      common_cols <- dplyr::intersect(adae_cols, colnames(ADSL()))
-      com_cols_excp_u <- common_cols[common_cols != "USUBJID"]
-      adae_adsl <- datafile()$ADAE %>% 
-        select(-one_of(com_cols_excp_u)) %>%
-        full_join(ADSL(), by = "USUBJID")
-      preferred_col_order <- c(adae_cols, dplyr::setdiff(colnames(ADSL()), adae_cols))
-      if(sort(colnames(adae_adsl)) == sort(preferred_col_order)){
-        adae_adsl[,preferred_col_order]
-      } else {
-        adae_adsl
-      }
-    } else {
-      ADSL()
-    }
+    cleanADAE(datafile = datafile())
+    # if("ADAE" %in% names(datafile())){
+    #   # find columns the ADAE & ADSL have in common (besides Usubjid), remove
+    #   # them from the ADAE, so that the ADSL cols are used instead. Then join
+    #   # on usubjid and re-order the colnames to match the adae
+    #   adae_cols <- colnames(datafile()$ADAE)
+    #   common_cols <- dplyr::intersect(adae_cols, colnames(ADSL()))
+    #   com_cols_excp_u <- common_cols[common_cols != "USUBJID"]
+    #   adae_adsl <- datafile()$ADAE %>% 
+    #     select(-one_of(com_cols_excp_u)) %>%
+    #     full_join(ADSL(), by = "USUBJID")
+    #   preferred_col_order <- c(adae_cols, dplyr::setdiff(colnames(ADSL()), adae_cols))
+    #   if(sort(colnames(adae_adsl)) == sort(preferred_col_order)){
+    #     adae_adsl[,preferred_col_order]
+    #   } else {
+    #     adae_adsl
+    #   }
+    # } else {
+    #   ADSL()
+    # }
   })
  
    bds_data <- reactive({ 
@@ -446,31 +447,41 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # ----------------------------------------------------------------------
   
   # capture output of filtering expression
-  filter_expr <- reactive({
+  filter_bds_expr <- reactive({
     filter_code <- gsub("processed_data","bds_data",capture.output(attr(filtered_data(), "code")))
     if(any(regexpr("%>%", filter_code) > 0)){
       glue::glue("
-          # add filter code to R script
+          # Filter BDS data
           bds_data <- eval(parse(text = '{filter_code}'))
           "
                  )
-    } else {
-      ""
-    }
+    } else {""}
   })
-  # If ADAE exists, then prep that data too
-  adae_expr <- reactive({
-    filter_code <- gsub("processed_data","bds_data",capture.output(attr(filtered_data(), "code")))
+  # capture output of filtering expression
+  filter_ae_expr <- reactive({
+    filter_code <- gsub("processed_data","ae_data",capture.output(attr(filtered_data(), "code")))
     if(any(regexpr("%>%", filter_code) > 0)){
       glue::glue("
+          # Filter ADAE data
+          ae_data <- eval(parse(text = '{filter_code}'))
+          "
+      )
+    } else {""}
+  })
+  
+  
+  # If ADAE exists, then prep that data too
+  adae_expr <- reactive({
+    if("ADAE" %in% names(datafile())){
+      glue::glue("
           # add filter code to R script
-          bds_data <- eval(parse(text = '{filter_code}'))
+          ae_data <- datalist %>% IDEA::cleanADAE()
           "
       )
     } else {
       ""
     }
-  })#"ADAE" %in% names(datafile())
+  })#
   
   
   # get filepaths
@@ -505,9 +516,12 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     filenames <- c({filenames()})
         
     # create list of dataframes
-    bds_data <- IDEA::readData(study_dir, filenames) %>% IDEA::combineData()
+    datalist <- IDEA::readData(study_dir, filenames)
+    bds_data <- datalist %>% IDEA::combineBDS()
+    
         
-    {filter_expr()}
+    {filter_bds_expr()}
+    {filter_ae_expr()}
         
     # get drop zone area from IDEA
     # and create table using data
