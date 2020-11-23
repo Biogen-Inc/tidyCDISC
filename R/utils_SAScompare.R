@@ -69,7 +69,16 @@ cleanADAE <- function(datafile) {
   }
 }
 
-
+#' Function to clean and combine ADAE dataset with ADSL
+#' 
+#' @param datafile list of ADaM-ish dataframes 
+#' 
+#' @export
+#' 
+data_to_use <- function(x) {
+  if (x == "ADAE") { ae_data }
+  else bds_data
+}
 
 
 #' Expands a collapsed column into multiple rows
