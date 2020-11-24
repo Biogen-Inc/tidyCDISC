@@ -10,7 +10,7 @@ using table generator blocks}
 \usage{
 IDEA_y(column, group, data)
 
-\method{IDEA_y}{default}(column, group, data)
+\method{IDEA_y}{default}(column, group = NULL, data)
 
 \method{IDEA_y}{BDS}(column, group = NULL, data)
 
