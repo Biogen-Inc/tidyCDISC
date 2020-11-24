@@ -63,7 +63,7 @@ transpose_df <- function(df, num) {
 #' 
 #' @export
 common_rownames <- function(data, group) {
-  if (is.null(group) | group == "NONE") {
+  if (is.null(group) ) { #| group == "NONE"
     vars <- c("Variable", "Total")
   } else {
     if(is.factor(data[[group]])){
