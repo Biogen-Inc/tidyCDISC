@@ -1,4 +1,5 @@
 $( document ).ready(function() {
+  // setup sortable and draggable functionality
   $(function() {
     $("#sortable_agg").sortable();
     $("#sortable_agg").disableSelection();
