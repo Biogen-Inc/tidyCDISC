@@ -26,7 +26,7 @@ IDEA_y <- function(column, group, data) {
 #' @rdname IDEA_y
 #' 
 #' @family tableGen Functionss
-IDEA_y.default <- IDEA_y.OCCDS <- IDEA_y.ADAE <- IDEA_y.ADSL <- function(column, group, data) {
+IDEA_y.default <- IDEA_y.OCCDS <- IDEA_y.ADAE <- IDEA_y.ADSL <- function(column, group = NULL, data) {
   # ########## ######### ######## #########
   # column <- blockData$S3
   # group = "TRT01P"
