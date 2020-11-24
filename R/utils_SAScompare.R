@@ -17,7 +17,7 @@ readData <- function(study_directory, file_names) {
 #' 
 #' @export
 #' 
-combineData <- function(datafile) {
+combineBDS <- function(datafile) {
   
   ADSL <- datafile$ADSL
   BDS <- datafile[sapply(datafile, function(x) "PARAMCD" %in% colnames(x))]
@@ -36,13 +36,85 @@ combineData <- function(datafile) {
       mutate(data_from = "ADSL", PARAMCD = NA, AVAL = NA, CHG = NA)
   }
   
-  combined_data <- varN_fctr_reorder(combined_data)
+  combined_data <- varN_fctr_reorder(combined_data) # add this after filter?
+  
+  return(combined_data)
+}
+
+#' Function to clean and combine ADAE dataset with ADSL
+#' 
+#' @param datafile list of ADaM-ish dataframes 
+#' 
+#' @export
+#' 
+cleanADAE <- function(datafile) {
+  if("ADAE" %in% names(datafile)){
+    # find columns the ADAE & ADSL have in common (besides Usubjid), remove
+    # them from the ADAE, so that the ADSL cols are used instead. Then join
+    # on usubjid and re-order the colnames to match the adae
+    adae_cols <- colnames(datafile$ADAE)
+    common_cols <- dplyr::intersect(adae_cols, colnames(datafile$ADSL))
+    com_cols_excp_u <- common_cols[common_cols != "USUBJID"]
+    adae_adsl <- datafile$ADAE %>% 
+      select(-one_of(com_cols_excp_u)) %>%
+      full_join(datafile$ADSL, by = "USUBJID")
+    preferred_col_order <- c(adae_cols, dplyr::setdiff(colnames(datafile$ADSL), adae_cols))
+    if(sort(colnames(adae_adsl)) == sort(preferred_col_order)){
+      varN_fctr_reorder(adae_adsl[,preferred_col_order]) # add this after filter?
+    } else {
+      varN_fctr_reorder(adae_adsl)
+    }
+  } else {
+    varN_fctr_reorder(datafile$ADSL)
+  }
+}
+
+#' The smallest possible data set we could filter to semi-join later
+#' 
+#' @param datafile list of ADaM-ish dataframes 
+#' @param datafile list of ADaM-ish dataframes 
+#' 
+#' @export
+#' 
+data_to_filter <- function(datafile, input_filter_df) {
+  select_dfs <- datafile[input_filter_df]
+  
+  # Separate out non-BDS and BDS data frames. Note: join may throw some warnings
+  # if labels are different between two datasets, which is fine! Just Ignore
+  non_bds <- select_dfs[sapply(select_dfs, function(x) !("PARAMCD" %in% colnames(x)) )] 
+  bds <- select_dfs[sapply(select_dfs, function(x) "PARAMCD" %in% colnames(x) )]
+  
+  # Make CHG var doesn't exist, create the column and populate with NA
+  PARAMCD_dat <- purrr::map(bds, ~ if(!"CHG" %in% names(.)) {purrr::update_list(., CHG = NA)} else {.})
+  
+  # Combine selected data into a 1 usable data frame
+  if (!rlang::is_empty(PARAMCD_dat)) {
+    all_PARAMCD <- bind_rows(PARAMCD_dat, .id = "data_from") %>% distinct(.keep_all = T)
+    
+    if (!rlang::is_empty(non_bds)){
+      combined_data <- inner_join(non_bds %>% purrr::reduce(inner_join), all_PARAMCD)
+    } else {
+      combined_data <-all_PARAMCD
+    }
+  } else {
+    combined_data <- non_bds %>% reduce(inner_join)
+  }
   
   return(combined_data)
 }
 
 
 
+#' Function to clean and combine ADAE dataset with ADSL
+#' 
+#' @param datafile list of ADaM-ish dataframes 
+#' 
+#' @export
+#' 
+data_to_use_str <- function(x) {
+  if (x == "ADAE") { ae_data }
+  else bds_data
+}
 
 
 #' Expands a collapsed column into multiple rows

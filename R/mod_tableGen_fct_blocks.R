@@ -1,14 +1,3 @@
-#' An HTML dropdown for the commonly used tables
-#' Add more tables here!
-#' @importFrom shiny HTML
-#' 
-#' @family tableGen Functions
-recipe <- HTML('
-               <select id="RECIPE" class="selectize-input">
-               <option  id="none">NONE</option>
-               <option  id="demography">Table 5: Demography</option>
-               </select>')
-
 
 #' Create a single draggable block for each column
 #' @param name the column name

@@ -21,7 +21,7 @@ Other tableGen Functions:
 \code{\link{IDEA_anova}()},
 \code{\link{IDEA_chg}()},
 \code{\link{IDEA_freq}()},
-\code{\link{IDEA_mean.ADSL}()},
+\code{\link{IDEA_mean.ADAE}()},
 \code{\link{IDEA_mean.BDS}()},
 \code{\link{IDEA_mean}()},
 \code{\link{IDEA_methods}()},
@@ -32,8 +32,6 @@ Other tableGen Functions:
 \code{\link{mean_summary}()},
 \code{\link{mod_tableGen_server}()},
 \code{\link{mod_tableGen_ui}()},
-\code{\link{recipe_column}()},
-\code{\link{recipe}},
 \code{\link{rowBlock}()},
 \code{\link{rowPallete}()},
 \code{\link{tg_guide}}

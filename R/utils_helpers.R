@@ -63,14 +63,16 @@ transpose_df <- function(df, num) {
 #' 
 #' @export
 common_rownames <- function(data, group) {
-  if (is.null(group)) {
+  if (is.null(group) ) { #| group == "NONE"
     vars <- c("Variable", "Total")
   } else {
     if(is.factor(data[[group]])){
-      vars <- c("Variable", levels(droplevels(data[[group]])), "Total")
+      # droplevels() get's rid of levels that no longer exist in the data post filtering
+      lvls <- levels(droplevels(data[[group]]))
     } else {
-      vars <- c("Variable", sort(unique(data[[group]])), "Total")
+      lvls <- sort(unique(data[[group]]))
     }
+    vars <- c("Variable", lvls, "Total")
     vars[vars == ""] <- "Missing"
   }
   return(vars)
@@ -185,6 +187,8 @@ getLevels <- function(x) {if(is.factor(x)) levels(x)else sort(unique(x)) }
 #' @importFrom sjlabelled get_label set_label
 #' @importFrom data.table setDT 
 #' @importFrom purrr walk2 
+#' 
+#' @export
 #' 
 varN_fctr_reorder <- function(data) {
   # Now to refactor levels in VARN order, if they exist:

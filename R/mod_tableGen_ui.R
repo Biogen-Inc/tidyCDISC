@@ -37,7 +37,7 @@ mod_tableGen_ui <- function(id){
                  fluidRow(column(width = 12,
                                  div(
                                    id = "COLUMN-wrapper",
-                                   uiOutput(ns("col_ADSL"))
+                                   uiOutput(ns("grp_col_ui"))
                                  ),
                                  shinyUI(bootstrapPage(
                                    HTML('<button data-toggle="collapse" data-target="#demo" 
@@ -52,7 +52,8 @@ mod_tableGen_ui <- function(id){
                    fluidRow(
                      column(12, 
                             "STAN Tables", 
-                            recipe,
+                            # recipe,
+                            uiOutput(ns("stan_recipe_ui")),
                             br(),
                             div(class = "col-sm-3", id="all-column-blocks", style = "height:300px;overflow-y:scroll;overflow-x:hidden;",
                                 uiOutput("all_rows") 
@@ -88,8 +89,8 @@ mod_tableGen_ui <- function(id){
                                          class = "agg"
                                        ),
                                        tags$li(
-                                         id = "y",
-                                         "Y%",
+                                         id = "y_freq",
+                                         div(tippy(div("Y FREQ"), "For flag vars: Subj Cnt for those with 'Y' values Only")),
                                          class="agg"
                                        )
                                      ))
