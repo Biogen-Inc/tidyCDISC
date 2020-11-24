@@ -14,15 +14,6 @@ IDEA_y <- function(column, group, data) {
   UseMethod("IDEA_y", column)
 }
 
-#' @return NULL
-#' @rdname IDEA_y
-#' 
-#' @family tableGen Functions
-IDEA_y.default <- function(column, group, data) {
-  rlang::abort(glue::glue(
-    "Can't calculate mean because data is not classified as ADLB, BDS or OCCDS"
-  ))
-}
 
 #' if ADSL supplied look for the column to take frequency of
 #' and look for a grouping variable to group_by
@@ -35,10 +26,11 @@ IDEA_y.default <- function(column, group, data) {
 #' @rdname IDEA_y
 #' 
 #' @family tableGen Functionss
-IDEA_y.OCCDS <- IDEA_y.ADAE <- IDEA_y.ADSL <- function(column, group = NULL, data) {
+IDEA_y.default <- IDEA_y.OCCDS <- IDEA_y.ADAE <- IDEA_y.ADSL <- function(column, group, data) {
   # ########## ######### ######## #########
   # column <- blockData$S3
   # group = "TRT01P"
+  # # group <- "NONE"
   # data = ae_data %>% filter(SAFFL == 'Y')
   # ########## ######### ######## #########
   
@@ -56,7 +48,7 @@ IDEA_y.OCCDS <- IDEA_y.ADAE <- IDEA_y.ADSL <- function(column, group = NULL, dat
     data %>%
     distinct(USUBJID, !!sym(column)) %>%
     filter(!!sym(column) == "Y") %>%
-    # count(!!sym(column)) %>%
+    group_by(!!sym(column)) %>%
     summarize(n = n_distinct(USUBJID)) %>%
     mutate(n_tot = data %>% distinct(USUBJID) %>% nrow(),
            prop = n / n_tot,
@@ -65,7 +57,7 @@ IDEA_y.OCCDS <- IDEA_y.ADAE <- IDEA_y.ADSL <- function(column, group = NULL, dat
     select(-n, -prop, -n_tot)
   
   
-  if (is.null(group)) { 
+  if (is.null(group) | group == "NONE") { 
     total
   } else {
     
@@ -77,8 +69,11 @@ IDEA_y.OCCDS <- IDEA_y.ADAE <- IDEA_y.ADSL <- function(column, group = NULL, dat
     
     grp_tot <- data %>%
       group_by(!!sym(group)) %>%
-      summarize(n_tot = n_distinct(USUBJID))
-      
+      summarize(n_tot = n_distinct(USUBJID)) %>%
+      ungroup() %>%
+      mutate(temp_col = "Y") %>% # add in case some grp by level doesn't have 'Y'
+      rename_with(~paste(column), "temp_col")
+    
     groups <- grp_tot %>%
         left_join(
           data %>%
@@ -86,10 +81,10 @@ IDEA_y.OCCDS <- IDEA_y.ADAE <- IDEA_y.ADSL <- function(column, group = NULL, dat
           summarize(n = n_distinct(USUBJID)) %>%
           ungroup()
       ) %>%
-      mutate(prop = n / n_tot,
+      mutate(n = tidyr::replace_na(n, 0),
+             prop = n / n_tot,
              v = paste0(n, ' (', sprintf("%.1f", round(prop*100, 1)), ')')
       ) %>%
-      filter(!!sym(column) == "Y") %>%
       select(-n, -prop, -n_tot) %>%
       spread(!!sym(column), v) %>%
       transpose_df(num = 1)
