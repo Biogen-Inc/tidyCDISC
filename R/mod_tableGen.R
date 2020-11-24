@@ -177,7 +177,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   
   column <- reactive( if (input$COLUMN == "NONE") NULL else input$COLUMN)
   
-  data_to_use <- function(x) {
+  data_to_use_str <- function(x) {
     if (x == "ADAE") { ae_data() }
     else all_data()
   }
@@ -186,7 +186,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     input$COLUMN %in% dplyr::setdiff(colnames(ae_data()), colnames(all_data()))
   })
   
-  use_data <- reactive({
+  use_data_reactive <- reactive({
     if(is_grp_col_adae()){
       ae_data()
     } else { # do the same for mh_data()
@@ -198,7 +198,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # a single N if data is not grouped
   total <- reactive({
     
-    all <- use_data() %>% 
+    all <- use_data_reactive() %>% 
       distinct(USUBJID) %>% 
       summarise(n = n()) %>%
       pull(n)
@@ -207,7 +207,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     if (input$COLUMN == "NONE") {
       all
     } else {
-      groups <- use_data() %>%
+      groups <- use_data_reactive() %>%
         group_by(!!sym(input$COLUMN)) %>%
         distinct(USUBJID) %>%
         summarise(n = n()) %>%
@@ -240,8 +240,8 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
                  function(x,y,z,d) 
                    IDEA_methods(x,y,z, 
                                 group = column(), 
-                                data  = data_to_use(d))) %>%
-    map(setNames, common_rownames(use_data(), column())) %>%
+                                data  = data_to_use_str(d))) %>%
+    map(setNames, common_rownames(use_data_reactive(), column())) %>%
     setNames(paste(blocks_and_functions()$gt_group)) %>%
     bind_rows(.id = "ID")  %>%
       mutate(
@@ -264,7 +264,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # create the labels for each column using the total function
   # so the columns are now NAME N= X
   col_for_list <- function(nm, x) {
-    if (is.numeric(use_data()[[input$COLUMN]])) {
+    if (is.numeric(use_data_reactive()[[input$COLUMN]])) {
       stop("Need categorical column for grouping")
     }
     nm = md(glue::glue("**{row_names_n()}** <br> N={total()}"))
@@ -535,7 +535,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
                                     blockData$dataset), 
                             function(x,y,z,d) IDEA::IDEA_methods(x,y,z,
                                                    group = {column() %quote% 'NULL'}, 
-                                                   data = IDEA::data_to_use(d))) %>%
+                                                   data = IDEA::data_to_use_str(d))) %>%
       map(setNames, IDEA::common_rownames({use_data}, {column() %quote% 'NULL'})) %>%
       setNames(paste(blockData$gt_group)) %>%
       bind_rows(.id = 'ID') 
@@ -586,7 +586,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
                                   blockData$dataset), 
                               function(x,y,z,d) IDEA::IDEA_methods(x,y,z, 
                                                      group = {column() %quote% 'NULL'}, 
-                                                     data = IDEA::data_to_use(d))) %>%
+                                                     data = IDEA::data_to_use_str(d))) %>%
       map(setNames, IDEA::common_rownames({use_data}, {column() %quote% 'NULL'})) %>%
       setNames(paste(blockData$label)) %>%
       bind_rows(.id = 'ID')
