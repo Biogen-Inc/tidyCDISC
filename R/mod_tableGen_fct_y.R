@@ -79,11 +79,13 @@ IDEA_y.OCCDS <- IDEA_y.ADAE <- IDEA_y.ADSL <- function(column, group = NULL, dat
       group_by(!!sym(group)) %>%
       summarize(n_tot = n_distinct(USUBJID))
       
-    groups <- data %>%
-      # distinct(USUBJID, !!sym(group), !!sym(column)) %>%
-      group_by(!!sym(group), !!sym(column)) %>%
-      summarize(n = n_distinct(USUBJID)) %>%
-      left_join(grp_tot) %>%
+    groups <- grp_tot %>%
+        left_join(
+          data %>%
+          group_by(!!sym(group), !!sym(column)) %>%
+          summarize(n = n_distinct(USUBJID)) %>%
+          ungroup()
+      ) %>%
       mutate(prop = n / n_tot,
              v = paste0(n, ' (', sprintf("%.1f", round(prop*100, 1)), ')')
       ) %>%
