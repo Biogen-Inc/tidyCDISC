@@ -10,17 +10,17 @@
 #' @return a frequency table of grouped variables
 #' 
 #' @family tableGen Functions
-IDEA_y <- function(column, group, data) {
-  UseMethod("IDEA_y", column)
+IDEA_non_empty <- function(column, group, data) {
+  UseMethod("IDEA_non_empty", column)
 }
 
 #' @return NULL
-#' @rdname IDEA_y
+#' @rdname IDEA_non_empty
 #' 
 #' @family tableGen Functions
-IDEA_y.default <- function(column, group, data) {
+IDEA_non_empty.default <- function(column, group, data) {
   rlang::abort(glue::glue(
-    "Can't calculate mean because data is not classified as ADLB, BDS or OCCDS"
+    "Default method not yet configured to handle this unknown class"
   ))
 }
 
@@ -32,10 +32,10 @@ IDEA_y.default <- function(column, group, data) {
 #' @import dplyr
 #' 
 #' @return frequency table of ADSL column
-#' @rdname IDEA_y
+#' @rdname IDEA_non_empty
 #' 
 #' @family tableGen Functionss
-IDEA_y.OCCDS <- IDEA_y.ADAE <- IDEA_y.ADSL <- function(column, group = NULL, data) {
+IDEA_non_empty.OCCDS <- IDEA_non_empty.ADAE <- IDEA_non_empty.ADSL <- function(column, group = NULL, data) {
   # ########## ######### ######## #########
   # column <- blockData$S3
   # group = "TRT01P"
@@ -99,20 +99,20 @@ IDEA_y.OCCDS <- IDEA_y.ADAE <- IDEA_y.ADSL <- function(column, group = NULL, dat
 
 
 #' @return NULL
-#' @rdname IDEA_y
+#' @rdname IDEA_non_empty
 #' 
 #' @family tableGen Functions
-IDEA_y.BDS <- function(column, group = NULL, data) {
+IDEA_non_empty.BDS <- function(column, group = NULL, data) {
   rlang::abort(glue::glue(
     "Can't calculate Y frequency for BDS - {column} is numeric"
   ))
 }
 
 #' @return NULL
-#' @rdname IDEA_y
+#' @rdname IDEA_non_empty
 #' 
 #' @family tableGen Functions
-IDEA_y.custom <- function(column, group, data) {
+IDEA_non_empty.custom <- function(column, group, data) {
   rlang::abort(glue::glue(
     "Can't calculate mean, data is not classified as ADLB, BDS or OCCDS"
   ))
