@@ -26,7 +26,7 @@ IDEA_methods <- function(agg, column, week, group, data) {
   } else if (agg == "Y_FREQ"){
     IDEA_y(column, group, data)
   } else if (agg == "NON_EMPTY"){
-    IDEA_non_empty(column, week, group, data)
+    IDEA_non_empty(column, group, data)
   } else {
     IDEA_chg(column, week, group, data)
   }
