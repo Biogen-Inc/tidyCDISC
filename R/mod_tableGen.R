@@ -331,9 +331,6 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       names(new_list)[length(new_list)] <- "ADSL"
       
       # only display ADAE column blocks if an ADAE is uploaded!
-      # print(!is.null(ADAE))
-      # print("ADAE" %in% names(datafile()))
-      # print(names(datafile()))
       if (!is.null(ADAE) &  "ADAE" %in% names(datafile())) {  #
         ADAE_blocks <- data.frame(col_names = colnames(ADAE()))
         
