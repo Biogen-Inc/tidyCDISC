@@ -90,7 +90,7 @@ mod_tableGen_ui <- function(id){
                                        ),
                                        tags$li(
                                          id = "y_freq",
-                                         div(tippy(div("Y FREQ"), "For flag vars: frequency of 'Y' values Only")),
+                                         div(tippy(div("Y FREQ"), "For flag vars: Subj Cnt for those with 'Y' values Only")),
                                          class="agg"
                                        )
                                      ))
