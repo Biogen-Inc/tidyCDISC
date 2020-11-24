@@ -63,15 +63,16 @@ transpose_df <- function(df, num) {
 #' 
 #' @export
 common_rownames <- function(data, group) {
-  if (is.null(group)) {
+  if (is.null(group) ) { #| group == "NONE"
     vars <- c("Variable", "Total")
   } else {
     if(is.factor(data[[group]])){
       # droplevels() get's rid of levels that no longer exist in the data post filtering
-      vars <- c("Variable", levels(droplevels(data[[group]])), "Total")
+      lvls <- levels(droplevels(data[[group]]))
     } else {
-      vars <- c("Variable", sort(unique(data[[group]])), "Total")
+      lvls <- sort(unique(data[[group]]))
     }
+    vars <- c("Variable", lvls, "Total")
     vars[vars == ""] <- "Missing"
   }
   return(vars)

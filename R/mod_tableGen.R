@@ -45,7 +45,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # input prep for table manipulation
   # ----------------------------------------------------------------------
   
-  output$col_ADSL <- renderUI({
+  output$grp_col_ui <- renderUI({
     sel_grp <- dplyr::case_when(
       is.null(input$recipe) | length(input$recipe) == 0 ~ "NONE",
       input$recipe %in% c("Table 5: Demography",
@@ -177,7 +177,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   
   column <- reactive( if (input$COLUMN == "NONE") NULL else input$COLUMN)
   
-  data_to_use <- function(x) {
+  data_to_use_str <- function(x) {
     if (x == "ADAE") { ae_data() }
     else all_data()
   }
@@ -186,7 +186,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     input$COLUMN %in% dplyr::setdiff(colnames(ae_data()), colnames(all_data()))
   })
   
-  use_data <- reactive({
+  use_data_reactive <- reactive({
     if(is_grp_col_adae()){
       ae_data()
     } else { # do the same for mh_data()
@@ -198,7 +198,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # a single N if data is not grouped
   total <- reactive({
     
-    all <- use_data() %>% 
+    all <- use_data_reactive() %>% 
       distinct(USUBJID) %>% 
       summarise(n = n()) %>%
       pull(n)
@@ -207,7 +207,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     if (input$COLUMN == "NONE") {
       all
     } else {
-      groups <- use_data() %>%
+      groups <- use_data_reactive() %>%
         group_by(!!sym(input$COLUMN)) %>%
         distinct(USUBJID) %>%
         summarise(n = n()) %>%
@@ -240,8 +240,8 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
                  function(x,y,z,d) 
                    IDEA_methods(x,y,z, 
                                 group = column(), 
-                                data  = data_to_use(d))) %>%
-    map(setNames, common_rownames(use_data(), column())) %>%
+                                data  = data_to_use_str(d))) %>%
+    map(setNames, common_rownames(use_data_reactive(), column())) %>%
     setNames(paste(blocks_and_functions()$gt_group)) %>%
     bind_rows(.id = "ID")  %>%
       mutate(
@@ -264,7 +264,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # create the labels for each column using the total function
   # so the columns are now NAME N= X
   col_for_list <- function(nm, x) {
-    if (is.numeric(use_data()[[input$COLUMN]])) {
+    if (is.numeric(use_data_reactive()[[input$COLUMN]])) {
       stop("Need categorical column for grouping")
     }
     nm = md(glue::glue("**{row_names_n()}** <br> N={total()}"))
@@ -320,7 +320,9 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       metadata$code <- NA
       
       for (i in 1:nrow(metadata)) {
-        metadata$code[i] <- attr(ADSL()[[colnames(ADSL())[i]]], "label")
+        if("label" %in% names(attributes(ADSL()[[colnames(ADSL())[i]]]))){
+          metadata$code[i] <- attr(ADSL()[[colnames(ADSL())[i]]], "label")
+        }
       }
       
       new_list <- lapply(BDS(), function(x) x %>% select(PARAMCD, PARAM) %>% distinct())
@@ -329,14 +331,13 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       names(new_list)[length(new_list)] <- "ADSL"
       
       # only display ADAE column blocks if an ADAE is uploaded!
-      # print(!is.null(ADAE))
-      # print("ADAE" %in% names(datafile()))
-      # print(names(datafile()))
       if (!is.null(ADAE) &  "ADAE" %in% names(datafile())) {  #
         ADAE_blocks <- data.frame(col_names = colnames(ADAE()))
         
         for (i in 1:nrow(ADAE_blocks)) {
+          if("label" %in% names(attributes(ADAE()[[colnames(ADAE())[i]]]))){
             ADAE_blocks$code[i] <- attr(ADAE()[[colnames(ADAE())[i]]], "label")
+          }
         }
         new_list[[length(new_list) + 1 ]] <- ADAE_blocks
         names(new_list)[length(new_list)] <- "ADAE"
@@ -535,7 +536,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
                                     blockData$dataset), 
                             function(x,y,z,d) IDEA::IDEA_methods(x,y,z,
                                                    group = {column() %quote% 'NULL'}, 
-                                                   data = IDEA::data_to_use(d))) %>%
+                                                   data = IDEA::data_to_use_str(d))) %>%
       map(setNames, IDEA::common_rownames({use_data}, {column() %quote% 'NULL'})) %>%
       setNames(paste(blockData$gt_group)) %>%
       bind_rows(.id = 'ID') 
@@ -586,7 +587,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
                                   blockData$dataset), 
                               function(x,y,z,d) IDEA::IDEA_methods(x,y,z, 
                                                      group = {column() %quote% 'NULL'}, 
-                                                     data = IDEA::data_to_use(d))) %>%
+                                                     data = IDEA::data_to_use_str(d))) %>%
       map(setNames, IDEA::common_rownames({use_data}, {column() %quote% 'NULL'})) %>%
       setNames(paste(blockData$label)) %>%
       bind_rows(.id = 'ID')
