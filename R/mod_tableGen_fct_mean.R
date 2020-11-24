@@ -42,7 +42,7 @@ IDEA_mean.default <- function(column, week, group, data) {
 #' @param data the data to use 
 #' 
 #' @family tableGen Functions
-IDEA_mean.ADSL <- function(column, week, group = NULL, data) {
+IDEA_mean.ADAE <- IDEA_mean.ADSL <- function(column, week, group = NULL, data) {
   
   column <- as.character(column)
   
@@ -128,15 +128,6 @@ IDEA_mean.OCCDS <- function(column, week = NULL, group, data) {
   ))
 }
 
-#' @return NULL
-#' @rdname IDEA_mean
-#' 
-#' @family tableGen Functions
-IDEA_mean.ADAE <- function(column, week = NULL, group, data) {
-  rlang::abort(glue::glue(
-    "Currently no method to perform summary statistics on ADAE"
-  ))
-}
 
 #' @return NULL
 #' @rdname IDEA_mean

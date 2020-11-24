@@ -20,11 +20,11 @@ IDEA_methods <- function(agg, column, week, group, data) {
   if (agg == "MEAN") {
     IDEA_mean(column, week, group, data)
   } else if (agg == "FREQ") {
-    IDEA_freq(column, week, group, data)
+    IDEA_freq(column, group, data)
   } else if (agg == "ANOVA") {
     IDEA_anova(column, week, group, data)
-  } else if (agg == "Y"){
-    IDEA_y(column, week, group, data)
+  } else if (agg == "Y_FREQ"){
+    IDEA_y(column, group, data)
   } else {
     IDEA_chg(column, week, group, data)
   }
@@ -98,7 +98,10 @@ convertTGOutput <- function(agg, blocks) {
           dropdown == "NONE" ~ glue("{agg} of {block}"),
           is.na(dropdown) ~ glue("{agg} of {block}"),
           TRUE ~ glue("{agg} of {block} at {dropdown}")
-        )
+        )#, # will need to feed these datasets through to this function? Or create a new funct?
+            # that get's called "blocks_and_functions" that adds the labels?
+      # label = purrr::map(blockData$block, function(x) attr(data_to_use(dataset)[[x]], 'label')) %>% 
+      #   unname() %>% str_trim()
     )
     
   }
