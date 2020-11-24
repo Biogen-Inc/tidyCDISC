@@ -57,7 +57,7 @@ IDEA_y.default <- IDEA_y.OCCDS <- IDEA_y.ADAE <- IDEA_y.ADSL <- function(column,
     select(-n, -prop, -n_tot)
   
   
-  if (is.null(group) | group == "NONE") { 
+  if (is.null(group) ) { # | group == "NONE"
     total
   } else {
     
