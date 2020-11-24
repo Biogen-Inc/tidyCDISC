@@ -111,7 +111,7 @@ data_to_filter <- function(datafile, input_filter_df) {
 #' 
 #' @export
 #' 
-data_to_use <- function(x) {
+data_to_use_str <- function(x) {
   if (x == "ADAE") { ae_data }
   else bds_data
 }
