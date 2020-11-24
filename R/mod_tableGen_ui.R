@@ -92,6 +92,11 @@ mod_tableGen_ui <- function(id){
                                          id = "y_freq",
                                          div(tippy(div("Y FREQ"), "For flag vars: Subj Cnt for those with 'Y' values Only")),
                                          class="agg"
+                                       ),
+                                       tags$li(
+                                         id = "non_miss",
+                                         div(tippy(div("Y FREQ"), "Subj Cnt for those with non-missing values Only")),
+                                         class="agg"
                                        )
                                      ))
                             )
