@@ -90,12 +90,12 @@ mod_tableGen_ui <- function(id){
                                        ),
                                        tags$li(
                                          id = "y_freq",
-                                         div(tippy(div("Y FREQ"), "For flag vars: Subj Cnt for those with 'Y' values Only")),
+                                         div(tippy(div("Y FREQ"), "For flag vars: Subject Count for those with 'Y' values Only")),
                                          class="agg"
                                        ),
                                        tags$li(
-                                         id = "non_miss",
-                                         div(tippy(div("Y FREQ"), "Subj Cnt for those with non-missing values Only")),
+                                         id = "non_empty",
+                                         div(tippy(div("Non Empty"), "Subject Count for those with non-missing values Only")),
                                          class="agg"
                                        )
                                      ))
@@ -123,13 +123,14 @@ mod_tableGen_ui <- function(id){
                  wellPanel(
                    fluidRow(
                      shinyjs::useShinyjs(),
-                     column(2, 
-                            tags$label(class="control-label", `for`="tableGen_ui_1-tblcode", "Table Code"),
+                     div(style = 'padding-left:15px', h5("Download R Script(s)")),
+                     column(3, 
+                            tags$label(class="control-label", `for`="tableGen_ui_1-tblcode", "Reproduce Table"),
                             downloadButton(ns("tblcode"), "Code")),
-                     column(4, 
-                            tags$label(class="control-label", `for`="tableGen_ui_1-code", "Download Comparison Code"),
-                            shinyjs::disabled(downloadButton(ns("code"), "Compare To SAS"))),
-                     column(6, fileInput(ns("sas"), "SAS Table To Compare", accept = c(".sas7bdat")))
+                     column(3, 
+                            tags$label(class="control-label", `for`="tableGen_ui_1-code", "Compare Outputs"),
+                            shinyjs::disabled(downloadButton(ns("code"), "IDEA vs SAS"))),
+                     column(6, fileInput(ns("sas"), "Upload SAS Table To Compare", accept = c(".sas7bdat")))
                    )
                    ))),
         
