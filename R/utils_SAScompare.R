@@ -48,7 +48,6 @@ combineBDS <- function(datafile) {
 #' @export
 #' 
 cleanADAE <- function(datafile) {
-  datafile <- datalist
   if("ADAE" %in% names(datafile)){
     # find columns the ADAE & ADSL have in common (besides Usubjid), remove
     # them from the ADAE, so that the ADSL cols are used instead. Then join
