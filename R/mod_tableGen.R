@@ -355,12 +355,12 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   block_lookup <- reactive({
     
     pretty_blocks <- tibble(
-      Pattern = c("MEAN", "FREQ", "CHG", "Y_FREQ", "NON_EMPTY"),
+      Pattern = c("MEAN", "FREQ", "CHG", "Y_FREQ", "NON_MISSING"),
       Replacement = c("Descriptive Statistics", 
                       "Summary Counts", 
                       "Descriptive Statistics of Change from Baseline",
                       "Subject Count on those with 'Y' values",
-                      "Subject Count on those with Non-empty values")
+                      "Subject Count on those with Non Missing values")
     )
     
     test <- block_data() %>%
