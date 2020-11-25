@@ -56,7 +56,7 @@ IDEA_non_missing.default <- IDEA_non_missing.OCCDS <- IDEA_non_missing.ADAE <- I
   } else {
     
     if (group == column) {
-      stop(glue::glue("Cannot calculate non empty subject counts for {column} when also set as grouping variable."))
+      stop(glue::glue("Cannot calculate non missing subject counts for {column} when also set as grouping variable."))
     }
     
     group <- rlang::sym(group)
