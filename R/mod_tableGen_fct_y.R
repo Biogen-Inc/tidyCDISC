@@ -47,9 +47,9 @@ IDEA_y.default <- IDEA_y.OCCDS <- IDEA_y.ADAE <- IDEA_y.ADSL <- function(column,
   # Calculate Total Y count
   total <- 
     data %>%
-    distinct(USUBJID, !!sym(column)) %>%
-    filter(!!sym(column) == "Y") %>%
-    group_by(!!sym(column)) %>% # keep variable visible in final table
+    distinct(USUBJID, !!column) %>%
+    filter(!!column == "Y") %>%
+    group_by(!!column) %>% # keep variable visible in final table
     summarize(n = n_distinct(USUBJID)) %>%
     mutate(n_tot = data %>% distinct(USUBJID) %>% nrow(),
            prop = n / n_tot,
@@ -72,7 +72,7 @@ IDEA_y.default <- IDEA_y.OCCDS <- IDEA_y.ADAE <- IDEA_y.ADSL <- function(column,
     # grouping var may cease to exist, so precautions were taken below
     # to retain it's value and give it a 0 (0.0)
     grp_tot <- data %>%
-      group_by(!!sym(group)) %>%
+      group_by(!!group) %>%
       summarize(n_tot = n_distinct(USUBJID)) %>%
       ungroup() %>%
       mutate(temp_col = "Y") %>% # add in case some grp by level doesn't have 'Y'
@@ -82,7 +82,7 @@ IDEA_y.default <- IDEA_y.OCCDS <- IDEA_y.ADAE <- IDEA_y.ADSL <- function(column,
     groups <- grp_tot %>%
         left_join(
           data %>%
-          group_by(!!sym(group), !!sym(column)) %>%
+          group_by(!!group, !!column) %>%
           summarize(n = n_distinct(USUBJID)) %>%
           ungroup()
       ) %>%
@@ -91,7 +91,7 @@ IDEA_y.default <- IDEA_y.OCCDS <- IDEA_y.ADAE <- IDEA_y.ADSL <- function(column,
              v = paste0(n, ' (', sprintf("%.1f", round(prop*100, 1)), ')')
       ) %>%
       select(-n, -prop, -n_tot) %>%
-      spread(!!sym(column), v) %>%
+      spread(!!column, v) %>%
       transpose_df(num = 1)
     
     cbind(groups, total$x) # combine w/ Total
