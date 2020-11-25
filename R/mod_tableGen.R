@@ -41,8 +41,8 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
            ,'</select>'))
   })
   
-  # observeEvent(input$RECIPE, {
-  #   val <- ifelse(input$RECIPE == "NONE", "Table Title", input$RECIPE)
+  # observeEvent(input$recipe, {
+  #   val <- ifelse(input$recipe == "NONE", "Table Title", input$recipe)
   #   updateTextInput(session, "table_title", label = "Table Title",
   #                   value = val, width = '100%')
   # })
@@ -57,7 +57,6 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       is.null(input$recipe) | length(input$recipe) == 0 ~ "NONE",
       input$recipe %in% c("Table 5: Demography",
                           "Table 18: Overall summary of adverse events") ~ "TRT01P",
-      input$recipe == "Table 5: Demography" ~ "TRT01P",
       TRUE ~ "NONE"
     )
     selectInput(session$ns("COLUMN"), "Group Data By:",
