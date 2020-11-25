@@ -42,8 +42,8 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   })
   
   # observeEvent(input$recipe, {
-  #   val <- ifelse(input$recipe == "NONE", "Table Title", input$recipe)
-  #   updateTextInput(session, "table_title", label = "Table Title",
+  #   val <- ifelse(input$recipe == "none", "Table Title", input$recipe)
+  #   updateTextInput(session, session$ns("table_title"), label = "Table Title",
   #                   value = val, width = '100%')
   # })
   
