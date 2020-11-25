@@ -14,15 +14,6 @@ IDEA_non_missing <- function(column, group, data) {
   UseMethod("IDEA_non_missing", column)
 }
 
-#' @return NULL
-#' @rdname IDEA_non_missing
-#' 
-#' @family tableGen Functions
-IDEA_non_missing.default <- function(column, group, data) {
-  rlang::abort(glue::glue(
-    "Default method not yet configured to handle this unknown class"
-  ))
-}
 
 #' if ADSL supplied look for the column to take frequency of
 #' and look for a grouping variable to group_by
@@ -35,7 +26,8 @@ IDEA_non_missing.default <- function(column, group, data) {
 #' @rdname IDEA_non_missing
 #' 
 #' @family tableGen Functionss
-IDEA_non_missing.OCCDS <- IDEA_non_missing.ADAE <- IDEA_non_missing.ADSL <- function(column, group = NULL, data) {
+IDEA_non_missing.default <- IDEA_non_missing.OCCDS <- IDEA_non_missing.ADAE <- IDEA_non_missing.ADSL <- 
+  function(column, group = NULL, data) {
   # # ########## ######### ######## #########
   # column <- blockData$S3
   # group = "TRT01P"

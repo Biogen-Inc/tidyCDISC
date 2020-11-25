@@ -47,7 +47,7 @@ Other tableGen Functions:
 \code{\link{IDEA_mean.BDS}()},
 \code{\link{IDEA_mean}()},
 \code{\link{IDEA_methods}()},
-\code{\link{IDEA_non_empty}()},
+\code{\link{IDEA_non_missing}()},
 \code{\link{convertTGOutput}()},
 \code{\link{custom_class}()},
 \code{\link{dropArea}()},
@@ -60,7 +60,7 @@ Other tableGen Functions:
 \code{\link{tg_guide}}
 
 Other tableGen Functionss: 
-\code{\link{IDEA_non_empty}()}
+\code{\link{IDEA_non_missing}()}
 
 Other tableGen Functions: 
 \code{\link{IDEA_anova}()},
@@ -70,7 +70,7 @@ Other tableGen Functions:
 \code{\link{IDEA_mean.BDS}()},
 \code{\link{IDEA_mean}()},
 \code{\link{IDEA_methods}()},
-\code{\link{IDEA_non_empty}()},
+\code{\link{IDEA_non_missing}()},
 \code{\link{convertTGOutput}()},
 \code{\link{custom_class}()},
 \code{\link{dropArea}()},
@@ -90,7 +90,7 @@ Other tableGen Functions:
 \code{\link{IDEA_mean.BDS}()},
 \code{\link{IDEA_mean}()},
 \code{\link{IDEA_methods}()},
-\code{\link{IDEA_non_empty}()},
+\code{\link{IDEA_non_missing}()},
 \code{\link{convertTGOutput}()},
 \code{\link{custom_class}()},
 \code{\link{dropArea}()},
