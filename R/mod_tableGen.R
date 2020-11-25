@@ -37,9 +37,16 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
            <select id="RECIPE" class="selectize-input">
            <option  id="none">NONE</option>
            <option  id="demography">Table 5: Demography</option>',
-           ifelse("ADAE" %in% names(datafile()),'<option  id="demography">Table 18: Overall summary of adverse events</option>','')
+           ifelse("ADAE" %in% names(datafile()),'<option  id="tbl18">Table 18: Overall summary of adverse events</option>','')
            ,'</select>'))
   })
+  
+  # observeEvent(input$RECIPE, {
+  #   val <- ifelse(input$RECIPE == "NONE", "Table Title", input$RECIPE)
+  #   updateTextInput(session, "table_title", label = "Table Title",
+  #                   value = val, width = '100%')
+  # })
+  
   
   # ----------------------------------------------------------------------
   # input prep for table manipulation
