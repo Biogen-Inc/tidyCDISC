@@ -44,9 +44,11 @@ IDEA_non_missing.default <- IDEA_non_missing.OCCDS <- IDEA_non_missing.ADAE <- I
     summarize(n = n_distinct(USUBJID)) %>%
     mutate(n_tot = data %>% distinct(USUBJID) %>% nrow(),
            prop = n / n_tot,
-           x = paste0(n, ' (', sprintf("%.1f", round(prop*100, 1)), ')')
+           x = paste0(n, ' (', sprintf("%.1f", round(prop*100, 1)), ')'),
+           temp_col = "Non Missing"
     )  %>%
-    select(-n, -prop, -n_tot)
+    rename_with(~paste(column), "temp_col") %>%
+    select(!!column, x) 
   
   
   if (is.null(group)) { 
@@ -61,7 +63,8 @@ IDEA_non_missing.default <- IDEA_non_missing.OCCDS <- IDEA_non_missing.ADAE <- I
     
     grp_tot <- data %>%
       group_by(!!group) %>%
-      summarize(n_tot = n_distinct(USUBJID))
+      summarize(n_tot = n_distinct(USUBJID)) %>%
+      ungroup()
       
     groups <- grp_tot %>%
       left_join(
@@ -71,9 +74,10 @@ IDEA_non_missing.default <- IDEA_non_missing.OCCDS <- IDEA_non_missing.ADAE <- I
         summarize(n = n_distinct(USUBJID)) %>%
         ungroup()
       ) %>%
-      mutate(prop = n / n_tot,
+      mutate(n = tidyr::replace_na(n, 0),
+             prop = n / n_tot,
              v = paste0(n, ' (', sprintf("%.1f", round(prop*100, 1)), ')'),
-             temp_col = "Non-Empty"
+             temp_col = "Non Missing"
       ) %>%
       rename_with(~as.character(column), "temp_col") %>%
       select(-n, -prop, -n_tot) %>%
@@ -92,7 +96,7 @@ IDEA_non_missing.default <- IDEA_non_missing.OCCDS <- IDEA_non_missing.ADAE <- I
 #' @family tableGen Functions
 IDEA_non_missing.BDS <- function(column, group = NULL, data) {
   rlang::abort(glue::glue(
-    "Can't calculate Non-Empty for BDS yet"
+    "Can't calculate Non Missings for BDS yet"
   ))
 }
 
