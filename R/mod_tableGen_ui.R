@@ -95,7 +95,7 @@ mod_tableGen_ui <- function(id){
                                        ),
                                        tags$li(
                                          id = "non_empty",
-                                         div(tippy(div("Non Empty"), "Subject Count for those with non-missing values Only")),
+                                         div(tippy(div("Non Missing"), "Subject Count for those with non-missing values Only")),
                                          class="agg"
                                        )
                                      ))
