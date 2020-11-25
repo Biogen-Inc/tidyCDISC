@@ -36,7 +36,7 @@ IDEA_non_missing.default <- IDEA_non_missing.OCCDS <- IDEA_non_missing.ADAE <- I
   
   # column is the variable selected on the left-hand side
   column <- rlang::sym(as.character(column))
-
+  
   total <- 
     data %>%
     distinct(USUBJID, !!column) %>%
