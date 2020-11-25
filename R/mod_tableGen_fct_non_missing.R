@@ -40,7 +40,7 @@ IDEA_non_missing.default <- IDEA_non_missing.OCCDS <- IDEA_non_missing.ADAE <- I
   total <- 
     data %>%
     distinct(USUBJID, !!column) %>%
-    filter(!is.na(!!column) & !!column != "") %>%
+    filter(!is.na(!!column)) %>%
     summarize(n = n_distinct(USUBJID)) %>%
     mutate(n_tot = data %>% distinct(USUBJID) %>% nrow(),
            prop = n / n_tot,
@@ -69,7 +69,7 @@ IDEA_non_missing.default <- IDEA_non_missing.OCCDS <- IDEA_non_missing.ADAE <- I
     groups <- grp_tot %>%
       left_join(
         data %>%
-        filter(!is.na(!!column) & !!column != "") %>%
+        filter(!is.na(!!column)) %>%
         group_by(!!group) %>%
         summarize(n = n_distinct(USUBJID)) %>%
         ungroup()
