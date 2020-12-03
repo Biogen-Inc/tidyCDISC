@@ -1,11 +1,11 @@
 context("table generator freq block")
 
 test_that("freq block ADSL", {
-  IDEA_freq.ADSL("SEX", NULL, NULL, tg_data)
+  IDEA_freq.ADSL("SEX", NULL, tg_data)
 })
 
 test_that("freq block ADSL group", {
-  IDEA_freq.ADSL("SEX", NULL, "COUNTRY", tg_data)
+  IDEA_freq.ADSL("SEX", "COUNTRY", tg_data)
 })
 
 # -------------------------------------------
@@ -13,7 +13,7 @@ test_that("freq block ADSL group", {
 # -------------------------------------------
 
 test_that("freq block numeric fails", {
-  expect_error(IDEA_freq.ADSL("AGE", NULL, NULL, tg_data))
+  expect_error(IDEA_freq.ADSL("AGE", NULL, tg_data))
 })
 
 test_that("freq block BDS exits", {

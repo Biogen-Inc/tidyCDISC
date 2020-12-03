@@ -65,15 +65,16 @@ test_that("gather_reqs Return Classes", {
   )
   
   # df output is class data frame
+  gr_df_clss <- class(
+    gather_reqs(
+      disp_type = "error",
+      datalist = reactive(list("mtcars" = mtcars)),
+      all_df_rules = all_df_rules,
+      expl_rules = expl_rules,
+      df_incl_rules = df_incl_rules)$df
+  )
   expect_equal(
-    class(
-      gather_reqs(
-        disp_type = "error",
-        datalist = reactive(list("mtcars" = mtcars)),
-        all_df_rules = all_df_rules,
-        expl_rules = expl_rules,
-        df_incl_rules = df_incl_rules)$df
-    ),
+    gr_df_clss[gr_df_clss == "data.frame"],
     class(mtcars)
   )
   
