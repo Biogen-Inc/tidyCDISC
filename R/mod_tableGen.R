@@ -348,7 +348,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
             ADAE_blocks$code[i] <- attr(ADAE()[[ADAE_blocks$col_names[i]]], "label") 
           }
         }
-        cat(ADAE_blocks)
+        print(ADAE_blocks)
         new_list[[length(new_list) + 1 ]] <- ADAE_blocks
         names(new_list)[length(new_list)] <- "ADAE"
       }
