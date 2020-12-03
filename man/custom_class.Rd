@@ -26,6 +26,7 @@ Other tableGen Functions:
 \code{\link{IDEA_mean.BDS}()},
 \code{\link{IDEA_mean}()},
 \code{\link{IDEA_methods}()},
+\code{\link{IDEA_non_missing}()},
 \code{\link{IDEA_y}()},
 \code{\link{convertTGOutput}()},
 \code{\link{dropArea}()},
