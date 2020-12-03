@@ -326,8 +326,8 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       metadata$code <- NA
       
       for (i in 1:nrow(metadata)) {
-        if("label" %in% names(attributes(ADSL()[[colnames(ADSL())[i]]]))){
-          metadata$code[i] <- attr(ADSL()[[colnames(ADSL())[i]]], "label")
+        if("label" %in% names(attributes(ADSL()[[metadata$col_names[i]]]))){
+          metadata$code[i] <- attr(ADSL()[[metadata$col_names[i]]], "label")
         }
       }
       
@@ -344,8 +344,8 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
         )
         
         for (i in 1:nrow(ADAE_blocks)) {
-          if("label" %in% names(attributes(ADAE()[[colnames(ADAE())[i]]]))){
-            ADAE_blocks$code[i] <- attr(ADAE()[[colnames(ADAE())[i]]], "label")
+          if("label" %in% names(attributes(ADAE()[[ADAE_blocks$col_names[i]]]))){
+            ADAE_blocks$code[i] <- attr(ADAE()[[ADAE_blocks$col_names[i]]], "label")
           }
         }
         new_list[[length(new_list) + 1 ]] <- ADAE_blocks
