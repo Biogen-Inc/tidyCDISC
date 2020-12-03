@@ -59,7 +59,7 @@ cleanADAE <- function(datafile) {
       select(-one_of(com_cols_excp_u)) %>%
       full_join(datafile$ADSL, by = "USUBJID")
     preferred_col_order <- c(adae_cols, dplyr::setdiff(colnames(datafile$ADSL), adae_cols))
-    if(sort(colnames(adae_adsl)) == sort(preferred_col_order)){
+    if(all(sort(colnames(adae_adsl)) == sort(preferred_col_order))){
       varN_fctr_reorder(adae_adsl[,preferred_col_order]) # add this after filter?
     } else {
       varN_fctr_reorder(adae_adsl)

@@ -17,6 +17,10 @@
 #' @family tableGen Functions
 #' @export
 IDEA_methods <- function(agg, column, week, group, data) {
+  # informative error in case the selected variable doesn't exist in data
+  if (!(paste(column) %in% colnames(data))){
+    stop(glue::glue("{column} variable doesn't exist in data, please remove or replace that variable from drop zone."))
+  }
   if (agg == "MEAN") {
     IDEA_mean(column, week, group, data)
   } else if (agg == "FREQ") {
@@ -25,6 +29,8 @@ IDEA_methods <- function(agg, column, week, group, data) {
     IDEA_anova(column, week, group, data)
   } else if (agg == "Y_FREQ"){
     IDEA_y(column, group, data)
+  } else if (agg == "NON_MISSING"){
+    IDEA_non_missing(column, group, data)
   } else {
     IDEA_chg(column, week, group, data)
   }

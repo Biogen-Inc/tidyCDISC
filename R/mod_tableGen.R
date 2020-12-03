@@ -37,9 +37,16 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
            <select id="RECIPE" class="selectize-input">
            <option  id="none">NONE</option>
            <option  id="demography">Table 5: Demography</option>',
-           ifelse("ADAE" %in% names(datafile()),'<option  id="demography">Table 18: Overall summary of adverse events</option>','')
+           ifelse("ADAE" %in% names(datafile()),'<option  id="tbl18">Table 18: Overall summary of adverse events</option>','')
            ,'</select>'))
   })
+  
+  # observeEvent(input$recipe, {
+  #   val <- ifelse(input$recipe == "none", "Table Title", input$recipe)
+  #   updateTextInput(session, session$ns("table_title"), label = "Table Title",
+  #                   value = val, width = '100%')
+  # })
+  
   
   # ----------------------------------------------------------------------
   # input prep for table manipulation
@@ -50,7 +57,6 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       is.null(input$recipe) | length(input$recipe) == 0 ~ "NONE",
       input$recipe %in% c("Table 5: Demography",
                           "Table 18: Overall summary of adverse events") ~ "TRT01P",
-      input$recipe == "Table 5: Demography" ~ "TRT01P",
       TRUE ~ "NONE"
     )
     selectInput(session$ns("COLUMN"), "Group Data By:",
@@ -233,7 +239,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       )
     }
     
-    pmap(list(blocks_and_functions()$agg, 
+    purrr::pmap(list(blocks_and_functions()$agg, 
                       blocks_and_functions()$S3, 
                       blocks_and_functions()$dropdown,
                       blocks_and_functions()$dataset), 
@@ -241,14 +247,14 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
                    IDEA_methods(x,y,z, 
                                 group = column(), 
                                 data  = data_to_use_str(d))) %>%
-    map(setNames, common_rownames(use_data_reactive(), column())) %>%
+    purrr::map(setNames, common_rownames(use_data_reactive(), column())) %>%
     setNames(paste(blocks_and_functions()$gt_group)) %>%
     bind_rows(.id = "ID")  %>%
       mutate(
         ID = stringi::stri_replace_all_regex(
           ID, 
-          pattern = "\\b"%s+%block_lookup()$Pattern%s+%"\\b",
-          replacement = block_lookup()$Replacement,
+          pattern = '\\b'%s+%pretty_blocks$Pattern%s+%'\\b',
+          replacement = pretty_blocks$Replacement,
           vectorize_all = FALSE))
   })
   
@@ -320,8 +326,8 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       metadata$code <- NA
       
       for (i in 1:nrow(metadata)) {
-        if("label" %in% names(attributes(ADSL()[[colnames(ADSL())[i]]]))){
-          metadata$code[i] <- attr(ADSL()[[colnames(ADSL())[i]]], "label")
+        if("label" %in% names(attributes(ADSL()[[metadata$col_names[i]]]))){
+          metadata$code[i] <- attr(ADSL()[[metadata$col_names[i]]], "label")
         }
       }
       
@@ -331,14 +337,19 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       names(new_list)[length(new_list)] <- "ADSL"
       
       # only display ADAE column blocks if an ADAE is uploaded!
-      if (!is.null(ADAE) &  "ADAE" %in% names(datafile())) {  #
-        ADAE_blocks <- data.frame(col_names = colnames(ADAE()))
+      if (!is.null(ADAE) &  "ADAE" %in% names(datafile())) {
+        # Display variable blocks that are only unique to ADAE
+        ADAE_blocks <- data.frame(
+          col_names = dplyr::setdiff(colnames(ADAE()), metadata$col_names)
+        )
+        ADAE_blocks$code <- NA
         
         for (i in 1:nrow(ADAE_blocks)) {
-          if("label" %in% names(attributes(ADAE()[[colnames(ADAE())[i]]]))){
-            ADAE_blocks$code[i] <- attr(ADAE()[[colnames(ADAE())[i]]], "label")
+          if("label" %in% names(attributes(ADAE()[[ADAE_blocks$col_names[i]]]))){ 
+            ADAE_blocks$code[i] <- attr(ADAE()[[ADAE_blocks$col_names[i]]], "label") 
           }
         }
+        # print(ADAE_blocks)
         new_list[[length(new_list) + 1 ]] <- ADAE_blocks
         names(new_list)[length(new_list)] <- "ADAE"
       }
@@ -346,28 +357,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       return(new_list)
   })
   
-  # create a lookup table for each stats block
-  # and what to print in the tab headers instead 
-  # of the name of the block:
-  # rather than print STATSBLOCKNAME of COLUMN
-  # replace all STATSBLOCKNAME with a more table friendly label
-  # MEAN becomes Descriptive Statistics etc.
-  block_lookup <- reactive({
-    
-    pretty_blocks <- tibble(
-      Pattern = c("MEAN", "FREQ", "CHG", "Y_FREQ"),
-      Replacement = c("Descriptive Statistics", 
-                      "Summary Counts", 
-                      "Descriptive Statistics of Change from Baseline",
-                      "Subject Count on those with 'Y' values")
-    )
-    
-    test <- block_data() %>%
-      map(rlang::set_names, c("Pattern", "Replacement")) %>%
-      bind_rows() %>%
-      rbind(pretty_blocks)
-  })
-  
+
   # ----------------------------------------------------------------------
   # Download table
   # Currently CSV and HTML but easy to add more!
@@ -489,6 +479,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     # get drop zone area from IDEA
     # and create table using data
     blockData <- {paste0(capture.output(dput(blocks_and_functions())), collapse = '\n')}
+    pretty_blocks <- {paste0(capture.output(dput(pretty_blocks)), collapse = '\n')}
     "
     )
   })
@@ -538,7 +529,13 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
                                                    data = IDEA::data_to_use_str(d))) %>%
       map(setNames, IDEA::common_rownames({use_data}, {column() %quote% 'NULL'})) %>%
       setNames(paste(blockData$gt_group)) %>%
-      bind_rows(.id = 'ID') 
+      bind_rows(.id = 'ID') %>%
+      mutate(
+        ID = stringi::stri_replace_all_regex(
+          ID, 
+          pattern = pretty_blocks$Pattern,
+          replacement = pretty_blocks$Replacement,
+          vectorize_all = FALSE))
     
       # create a total variable
       {total_for_code()}
@@ -589,7 +586,13 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
                                                      data = IDEA::data_to_use_str(d))) %>%
       map(setNames, IDEA::common_rownames({use_data}, {column() %quote% 'NULL'})) %>%
       setNames(paste(blockData$label)) %>%
-      bind_rows(.id = 'ID')
+      bind_rows(.id = 'ID') %>%
+      mutate(
+        ID = stringi::stri_replace_all_regex(
+          ID, 
+          pattern = pretty_blocks$Pattern,
+          replacement = pretty_blocks$Replacement,
+          vectorize_all = FALSE))
     
       # read in SAS table and convert to DF
       sas_data_dir <- 'path/to/sas/table/dataset/'
