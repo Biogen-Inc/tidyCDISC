@@ -36,6 +36,7 @@ CapStr <- function(y) {
         sep="", collapse=" ")
 }
 
+
 #' transpose dataframes so they can all 
 #' be used with rbind to generate
 #' the gt tables
