@@ -239,7 +239,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       )
     }
     
-    pmap(list(blocks_and_functions()$agg, 
+    purrr::pmap(list(blocks_and_functions()$agg, 
                       blocks_and_functions()$S3, 
                       blocks_and_functions()$dropdown,
                       blocks_and_functions()$dataset), 
@@ -247,14 +247,14 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
                    IDEA_methods(x,y,z, 
                                 group = column(), 
                                 data  = data_to_use_str(d))) %>%
-    map(setNames, common_rownames(use_data_reactive(), column())) %>%
+    purrr::map(setNames, common_rownames(use_data_reactive(), column())) %>%
     setNames(paste(blocks_and_functions()$gt_group)) %>%
     bind_rows(.id = "ID")  %>%
       mutate(
         ID = stringi::stri_replace_all_regex(
           ID, 
-          pattern = "\\b"%s+%block_lookup()$Pattern%s+%"\\b",
-          replacement = block_lookup()$Replacement,
+          pattern = '\\b'%s+%pretty_blocks$Pattern%s+%'\\b',
+          replacement = pretty_blocks$Replacement,
           vectorize_all = FALSE))
   })
   
@@ -357,29 +357,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       return(new_list)
   })
   
-  # create a lookup table for each stats block
-  # and what to print in the tab headers instead 
-  # of the name of the block:
-  # rather than print STATSBLOCKNAME of COLUMN
-  # replace all STATSBLOCKNAME with a more table friendly label
-  # MEAN becomes Descriptive Statistics etc.
-  block_lookup <- reactive({
-    
-    pretty_blocks <- tibble(
-      Pattern = c("MEAN", "FREQ", "CHG", "Y_FREQ", "NON_MISSING"),
-      Replacement = c("Descriptive Statistics", 
-                      "Summary Counts", 
-                      "Descriptive Statistics of Change from Baseline",
-                      "Subject Count on those with 'Y' values",
-                      "Subject Count on those with Non Missing values")
-    )
-    
-    test <- block_data() %>%
-      map(rlang::set_names, c("Pattern", "Replacement")) %>%
-      bind_rows() %>%
-      rbind(pretty_blocks)
-  })
-  
+
   # ----------------------------------------------------------------------
   # Download table
   # Currently CSV and HTML but easy to add more!
@@ -501,6 +479,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     # get drop zone area from IDEA
     # and create table using data
     blockData <- {paste0(capture.output(dput(blocks_and_functions())), collapse = '\n')}
+    pretty_blocks <- {paste0(capture.output(dput(pretty_blocks)), collapse = '\n')}
     "
     )
   })
@@ -550,7 +529,13 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
                                                    data = IDEA::data_to_use_str(d))) %>%
       map(setNames, IDEA::common_rownames({use_data}, {column() %quote% 'NULL'})) %>%
       setNames(paste(blockData$gt_group)) %>%
-      bind_rows(.id = 'ID') 
+      bind_rows(.id = 'ID') %>%
+      mutate(
+        ID = stringi::stri_replace_all_regex(
+          ID, 
+          pattern = pretty_blocks$Pattern,
+          replacement = pretty_blocks$Replacement,
+          vectorize_all = FALSE))
     
       # create a total variable
       {total_for_code()}
@@ -601,7 +586,13 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
                                                      data = IDEA::data_to_use_str(d))) %>%
       map(setNames, IDEA::common_rownames({use_data}, {column() %quote% 'NULL'})) %>%
       setNames(paste(blockData$label)) %>%
-      bind_rows(.id = 'ID')
+      bind_rows(.id = 'ID') %>%
+      mutate(
+        ID = stringi::stri_replace_all_regex(
+          ID, 
+          pattern = pretty_blocks$Pattern,
+          replacement = pretty_blocks$Replacement,
+          vectorize_all = FALSE))
     
       # read in SAS table and convert to DF
       sas_data_dir <- 'path/to/sas/table/dataset/'

@@ -1,4 +1,18 @@
-
+#' Table Generator Pretty Block lookup table
+#' 
+#' This object is used within the table generator module
+#' to add pretty names for each stat block when displayed in the table
+#' 
+#' @importFrom tibble tibble
+#' 
+pretty_blocks <- tibble::tibble(
+  Pattern = c("MEAN", "FREQ", "CHG", "Y_FREQ", "NON_MISSING"),
+  Replacement = c("Descriptive Statistics", 
+                  "Summary Counts", 
+                  "Descriptive Statistics of Change from Baseline",
+                  "Subject Count for those with 'Y' values",
+                  "Subject Count for those with Non Missing values")
+)
 
 #' Table Generator Cicerone R6 Object 
 #' 
