@@ -64,7 +64,7 @@ test_that("build_events fun", {
                , my_datafile = datafile
                , my_filtered_dat = datafile$ADSL)
   ),
-  c("EVENTTYP", "START", "END", "tab_st", "tab_en", "DECODE", "DOMAIN")
+  c( "START", "DECODE", "EVENTTYP", "DOMAIN", "END", "tab_st", "tab_en")
   )
 })
 
