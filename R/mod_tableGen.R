@@ -337,8 +337,11 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       names(new_list)[length(new_list)] <- "ADSL"
       
       # only display ADAE column blocks if an ADAE is uploaded!
-      if (!is.null(ADAE) &  "ADAE" %in% names(datafile())) {  #
-        ADAE_blocks <- data.frame(col_names = colnames(ADAE()))
+      if (!is.null(ADAE) &  "ADAE" %in% names(datafile())) {
+        # Display variable blocks that are only unique to ADAE
+        ADAE_blocks <- data.frame(
+          col_names = dplyr::setdiff(colnames(ADAE()), metadata$col_names)
+        )
         
         for (i in 1:nrow(ADAE_blocks)) {
           if("label" %in% names(attributes(ADAE()[[colnames(ADAE())[i]]]))){
