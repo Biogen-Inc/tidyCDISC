@@ -342,6 +342,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
         ADAE_blocks <- data.frame(
           col_names = dplyr::setdiff(colnames(ADAE()), metadata$col_names)
         )
+        ADAE_blocks$code <- NA
         
         for (i in 1:nrow(ADAE_blocks)) {
           if("label" %in% names(attributes(ADAE()[[ADAE_blocks$col_names[i]]]))){ 
