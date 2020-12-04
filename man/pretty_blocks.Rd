@@ -5,7 +5,7 @@
 \alias{pretty_blocks}
 \title{Table Generator Pretty Block lookup table}
 \format{
-An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 5 rows and 2 columns.
+An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 6 rows and 2 columns.
 }
 \usage{
 pretty_blocks

@@ -15,5 +15,22 @@ tg_data <- tidyr::tibble(
   CHG  =  c(20,30,40,30,40,60,20,30,50,40),
   ITTFL = c('Y','Y',rep(NA_character_,8)),
   SAFFL = c('Y','Y','N',rep(NA_character_,7)),
-  DTHDT = c(as.Date("2020-01-01"),rep(NA,9))
+  DTHDT = c(as.Date("2020-01-01"),rep(NA,9)),
+  AVISIT1 = factor(c(rep(c("Week 1", "Week 2"), 5)),c("Week 1","Week 2")),
+  AVISIT2 = factor(c(rep(c("Week 1", "Week 2"), 5)),c("Week 2","Week 1"))
 )
+# char
+tg_data %>%
+  group_by(SEX) %>%
+  slice_max(AVISIT) %>%
+  distinct(SEX, AVISIT)
+# week 1 first
+tg_data %>%
+  group_by(SEX) %>%
+  slice_max(AVISIT1) %>%
+  distinct(SEX, AVISIT1)
+# week 2 first
+tg_data %>%
+  group_by(SEX) %>%
+  slice_max(AVISIT2) %>%
+  distinct(SEX, AVISIT2)
