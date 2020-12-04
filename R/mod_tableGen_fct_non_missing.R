@@ -26,7 +26,7 @@ IDEA_non_missing <- function(column, group, data) {
 #' @rdname IDEA_non_missing
 #' 
 #' @family tableGen Functionss
-IDEA_non_missing.default <- IDEA_non_missing.OCCDS <- IDEA_non_missing.ADAE <- IDEA_non_missing.ADSL <- 
+IDEA_non_missing.default <- IDEA_non_missing.BDS <- IDEA_non_missing.OCCDS <- IDEA_non_missing.ADAE <- IDEA_non_missing.ADSL <- 
   function(column, group = NULL, data) {
   # # ########## ######### ######## #########
   # column <- blockData$S3

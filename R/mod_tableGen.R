@@ -533,7 +533,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       mutate(
         ID = stringi::stri_replace_all_regex(
           ID, 
-          pattern = pretty_blocks$Pattern,
+          pattern = '\\\\b'%s+%pretty_blocks$Pattern%s+%'\\\\b',
           replacement = pretty_blocks$Replacement,
           vectorize_all = FALSE))
     
@@ -590,7 +590,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       mutate(
         ID = stringi::stri_replace_all_regex(
           ID, 
-          pattern = pretty_blocks$Pattern,
+          pattern = '\\\\b'%s+%pretty_blocks$Pattern%s+%'\\\\b',
           replacement = pretty_blocks$Replacement,
           vectorize_all = FALSE))
     

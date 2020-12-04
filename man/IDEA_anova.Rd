@@ -53,6 +53,7 @@ and report missing values from the mean if any
 Other tableGen Functions: 
 \code{\link{IDEA_chg}()},
 \code{\link{IDEA_freq}()},
+\code{\link{IDEA_max_freq}()},
 \code{\link{IDEA_mean.ADAE}()},
 \code{\link{IDEA_mean.BDS}()},
 \code{\link{IDEA_mean}()},
@@ -73,6 +74,7 @@ Other tableGen Functions:
 Other tableGen Functions: 
 \code{\link{IDEA_chg}()},
 \code{\link{IDEA_freq}()},
+\code{\link{IDEA_max_freq}()},
 \code{\link{IDEA_mean.ADAE}()},
 \code{\link{IDEA_mean.BDS}()},
 \code{\link{IDEA_mean}()},
@@ -93,6 +95,7 @@ Other tableGen Functions:
 Other tableGen Functions: 
 \code{\link{IDEA_chg}()},
 \code{\link{IDEA_freq}()},
+\code{\link{IDEA_max_freq}()},
 \code{\link{IDEA_mean.ADAE}()},
 \code{\link{IDEA_mean.BDS}()},
 \code{\link{IDEA_mean}()},
@@ -113,6 +116,7 @@ Other tableGen Functions:
 Other tableGen Functions: 
 \code{\link{IDEA_chg}()},
 \code{\link{IDEA_freq}()},
+\code{\link{IDEA_max_freq}()},
 \code{\link{IDEA_mean.ADAE}()},
 \code{\link{IDEA_mean.BDS}()},
 \code{\link{IDEA_mean}()},
@@ -133,6 +137,7 @@ Other tableGen Functions:
 Other tableGen Functions: 
 \code{\link{IDEA_chg}()},
 \code{\link{IDEA_freq}()},
+\code{\link{IDEA_max_freq}()},
 \code{\link{IDEA_mean.ADAE}()},
 \code{\link{IDEA_mean.BDS}()},
 \code{\link{IDEA_mean}()},
@@ -153,6 +158,7 @@ Other tableGen Functions:
 Other tableGen Functions: 
 \code{\link{IDEA_chg}()},
 \code{\link{IDEA_freq}()},
+\code{\link{IDEA_max_freq}()},
 \code{\link{IDEA_mean.ADAE}()},
 \code{\link{IDEA_mean.BDS}()},
 \code{\link{IDEA_mean}()},
