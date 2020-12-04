@@ -10,7 +10,7 @@
 #' @return a frequency table of grouped variables
 #' 
 #' @family tableGen Functions
-IDEA_non_missing <- function(column, group, data) {
+IDEA_max_freq <- function(column, group, data) {
   UseMethod("IDEA_non_missing", column)
 }
 
@@ -26,7 +26,7 @@ IDEA_non_missing <- function(column, group, data) {
 #' @rdname IDEA_non_missing
 #' 
 #' @family tableGen Functionss
-IDEA_non_missing.default <- IDEA_non_missing.BDS <- IDEA_non_missing.OCCDS <- IDEA_non_missing.ADAE <- IDEA_non_missing.ADSL <- 
+IDEA_max_freq.default <- IDEA_max_freq.OCCDS <- IDEA_max_freq.ADAE <- IDEA_max_freq.ADSL <- 
   function(column, group = NULL, data) {
   # # ########## ######### ######## #########
   # column <- blockData$S3
