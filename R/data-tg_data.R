@@ -16,8 +16,9 @@ tg_data <- tidyr::tibble(
   ITTFL = c('Y','Y',rep(NA_character_,8)),
   SAFFL = c('Y','Y','N',rep(NA_character_,7)),
   DTHDT = c(as.Date("2020-01-01"),rep(NA,9)),
-  AVISIT1 = factor(c(rep(c("Week 1", "Week 2"), 5)),c("Week 1","Week 2")),
-  AVISIT2 = factor(c(rep(c("Week 1", "Week 2"), 5)),c("Week 2","Week 1"))
+  AVISITf1 = factor(c(rep(c("Week 1", "Week 2"), 5)),c("Week 1","Week 2")),
+  AVISITf2 = factor(c(rep(c("Week 1", "Week 2"), 5)),c("Week 2","Week 1")),
+  AVISITf2N = AVISITN
 )
 # char
 tg_data %>%
