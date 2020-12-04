@@ -20,18 +20,3 @@ tg_data <- tidyr::tibble(
   AVISITf2 = factor(c(rep(c("Week 1", "Week 2"), 5)),c("Week 2","Week 1")),
   AVISITf2N = AVISITN
 )
-# char
-tg_data %>%
-  group_by(SEX) %>%
-  slice_max(AVISIT) %>%
-  distinct(SEX, AVISIT)
-# week 1 first
-tg_data %>%
-  group_by(SEX) %>%
-  slice_max(AVISIT1) %>%
-  distinct(SEX, AVISIT1)
-# week 2 first
-tg_data %>%
-  group_by(SEX) %>%
-  slice_max(AVISIT2) %>%
-  distinct(SEX, AVISIT2)
