@@ -11,7 +11,7 @@ pretty_blocks <- tibble::tibble(
                   "Summary Counts", 
                   "Descriptive Statistics of Change from Baseline",
                   "Subject Count for those with 'Y' values",
-                  "Subject Count for those at maximum value",
+                  "Subject Count for maximum",
                   "Subject Count for those with Non Missing values")
 )
 
