@@ -78,24 +78,18 @@ mod_tableGen_ui <- function(id){
                                          class = "ui-state-default agg", id = "chg",
                                          div(tippy(div("CHG"), "Change from Baseline"))
                                        ),
-                                       tags$li(
-                                         id = "mean",
-                                         "MEAN",
-                                         class = "agg"
-                                       ),
-                                       tags$li(
-                                         id = "freq",
-                                         "FREQ",
-                                         class = "agg"
-                                       ),
-                                       tags$li(
-                                         id = "y_freq",
+                                       tags$li(id = "mean","MEAN",class = "agg"),
+                                       tags$li(id = "freq","FREQ",class = "agg"),
+                                       tags$li(id = "y_freq",
                                          div(tippy(div("Y FREQ"), "For flag vars: Subject Count for those with 'Y' values Only")),
                                          class="agg"
                                        ),
-                                       tags$li(
-                                         id = "non_missing",
-                                         div(tippy(div("Non Missing"), "Subject Count for those with non-missing values Only")),
+                                       tags$li(id = "max_freq",
+                                         div(tippy(div("MAX FREQ"), "Each subject counted once at Max 'VARN' value. May be paired with 'VAR' or 'VARN'. However, 'VAR' must have a 'VARN' counterpart.")),
+                                         class="agg"
+                                       ),
+                                       tags$li(id = "non_missing",
+                                         div(tippy(div("NON MISSING"), "Subject Count for those with non-missing values Only")),
                                          class="agg"
                                        )
                                      ))

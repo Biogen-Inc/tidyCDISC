@@ -29,6 +29,8 @@ IDEA_methods <- function(agg, column, week, group, data) {
     IDEA_anova(column, week, group, data)
   } else if (agg == "Y_FREQ"){
     IDEA_y(column, group, data)
+  } else if (agg == "MAX_FREQ"){
+    IDEA_max_freq(column, group, data)
   } else if (agg == "NON_MISSING"){
     IDEA_non_missing(column, group, data)
   } else {
