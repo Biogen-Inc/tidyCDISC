@@ -28,12 +28,12 @@ IDEA_max_freq <- function(column, group, data) {
 IDEA_max_freq.default <- IDEA_max_freq.OCCDS <- IDEA_max_freq.ADAE <- IDEA_max_freq.ADSL <- 
   function(column, group = NULL, data) {
   # # ########## ######### ######## #########
-  # column <- blockData$S3
+  # column <- "AESEV"
   # group = "TRT01P"
-  # data = ae_data %>% filter(SAFFL == 'Y') %>% filter(TRTEMFL == 'Y')
+  # data = ae_data #%>% filter(SAFFL == 'Y') %>% filter(TRTEMFL == 'Y')
   # # ########## ######### ######## #########
   
-    # column is the variable selected on the left-hand side
+  # column is the variable selected on the left-hand side
   column <- rlang::sym(as.character(column))
   
   VARN <- paste0(column,"N")
@@ -78,11 +78,16 @@ IDEA_max_freq.default <- IDEA_max_freq.OCCDS <- IDEA_max_freq.ADAE <- IDEA_max_f
     group <- rlang::sym(group)
     
     grp_tot <- data %>%
-      filter(!is.na(!!column)) %>% # how to incorporate filter on AOCCIFL?
+      # filter(!is.na(!!column)) %>% # don't filter here.
       group_by(!!group) %>%
       summarize(n_tot = n_distinct(USUBJID)) %>%
-      ungroup()
-      
+      ungroup() %>%
+      tidyr::crossing(
+        data %>%
+        filter(!is.na(!!column)) %>% # how to incorporate filter on AOCCIFL?
+          distinct(!!column)
+      )
+    
     groups <- grp_tot %>%
       left_join(
         data %>%
