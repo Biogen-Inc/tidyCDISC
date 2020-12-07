@@ -38,6 +38,7 @@ using table generator blocks
 Other tableGen Functions: 
 \code{\link{IDEA_anova}()},
 \code{\link{IDEA_chg}()},
+\code{\link{IDEA_distinct_freq}()},
 \code{\link{IDEA_freq}()},
 \code{\link{IDEA_max_freq}()},
 \code{\link{IDEA_mean.ADAE}()},
@@ -59,6 +60,7 @@ Other tableGen Functions:
 Other tableGen Functions: 
 \code{\link{IDEA_anova}()},
 \code{\link{IDEA_chg}()},
+\code{\link{IDEA_distinct_freq}()},
 \code{\link{IDEA_freq}()},
 \code{\link{IDEA_max_freq}()},
 \code{\link{IDEA_mean.ADAE}()},
@@ -80,6 +82,7 @@ Other tableGen Functions:
 Other tableGen Functions: 
 \code{\link{IDEA_anova}()},
 \code{\link{IDEA_chg}()},
+\code{\link{IDEA_distinct_freq}()},
 \code{\link{IDEA_freq}()},
 \code{\link{IDEA_max_freq}()},
 \code{\link{IDEA_mean.ADAE}()},
@@ -101,6 +104,7 @@ Other tableGen Functions:
 Other tableGen Functions: 
 \code{\link{IDEA_anova}()},
 \code{\link{IDEA_chg}()},
+\code{\link{IDEA_distinct_freq}()},
 \code{\link{IDEA_freq}()},
 \code{\link{IDEA_max_freq}()},
 \code{\link{IDEA_mean.ADAE}()},

@@ -6,10 +6,11 @@
 #' @importFrom tibble tibble
 #' 
 pretty_blocks <- tibble::tibble(
-  Pattern = c("MEAN", "FREQ", "CHG", "Y_FREQ", "MAX_FREQ", "NON_MISSING"),
+  Pattern = c("MEAN", "FREQ", "CHG", "DISTINCT_FREQ", "Y_FREQ", "MAX_FREQ", "NON_MISSING"),
   Replacement = c("Descriptive Statistics", 
                   "Summary Counts", 
                   "Descriptive Statistics of Change from Baseline",
+                  "Subject Count at each variable level, if applicable",
                   "Subject Count for those with 'Y' values",
                   "Subject Count for maximum",
                   "Subject Count for those with Non Missing values")
