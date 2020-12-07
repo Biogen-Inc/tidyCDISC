@@ -32,12 +32,16 @@ IDEA_distinct_freq.default <- IDEA_distinct_freq.OCCDS <- IDEA_distinct_freq.ADA
   # group = "TRT01P"
   column_var_sort = "desc_tot"
   # data = ae_data #%>% filter(SAFFL == 'Y') %>% filter(TRTEMFL == 'Y')
+  # test <- data %>% filter(is.na(AEBODSYS))
   # # ########## ######### ######## #########
   
   # column is the variable selected on the left-hand side
   column <- rlang::sym(as.character(column))
   
   # First, get the desired order our by_var
+  x <- data[[column]]
+  if(is.factor(x)) levels(x)else sort(unique(x), na.last = T)
+  any(is.na(getLevels()))
   column_lvls <- getLevels(data[[column]])
   abc <- data.frame(column_lvls) %>%
     rename_with(~paste(column), column_lvls)
@@ -116,10 +120,12 @@ IDEA_distinct_freq.default <- IDEA_distinct_freq.OCCDS <- IDEA_distinct_freq.ADA
       select(-n, -prop, -n_tot) %>%
       spread(!!column, v) %>%
       transpose_df(num = 1) %>%
+      mutate(rowname = case_when(rowname == "V1" ~ "",
+                                 rowname == "<NA>" ~ NA_character_,
+                                 TRUE ~ rowname)) %>%
       left_join(sort_cnts, by = c("rowname" = paste(column))) %>%
       arrange(desc(sort_n)) %>%
-      select(-sort_n) %>%
-      mutate(rowname = ifelse(rowname == "V1","",rowname))
+      select(-sort_n) 
     
     cbind(groups, total$x)
   }

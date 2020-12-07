@@ -258,6 +258,8 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
           vectorize_all = FALSE))
   })
   
+  output$for_gt_table <- renderTable({ for_gt() })
+  
   # remove the first two columns from the row names to use
   # since these are used for grouping in gt
   row_names_n <- reactive({ 
