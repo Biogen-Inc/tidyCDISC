@@ -97,7 +97,7 @@ IDEA_distinct_freq.default <- IDEA_distinct_freq.OCCDS <- IDEA_distinct_freq.ADA
       ungroup() %>%
       tidyr::crossing(
         data %>%
-        filter(!is.na(!!column)) %>% # how to incorporate filter on AOCCIFL?
+        # filter(!is.na(!!column)) %>% # how to incorporate filter on AOCCIFL?
           distinct(!!column)
       )
     
