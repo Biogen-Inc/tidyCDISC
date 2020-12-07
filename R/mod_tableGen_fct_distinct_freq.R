@@ -39,9 +39,6 @@ IDEA_distinct_freq.default <- IDEA_distinct_freq.OCCDS <- IDEA_distinct_freq.ADA
   column <- rlang::sym(as.character(column))
   
   # First, get the desired order our by_var
-  x <- data[[column]]
-  if(is.factor(x)) levels(x)else sort(unique(x), na.last = T)
-  any(is.na(getLevels()))
   column_lvls <- getLevels(data[[column]])
   abc <- data.frame(column_lvls) %>%
     rename_with(~paste(column), column_lvls)
