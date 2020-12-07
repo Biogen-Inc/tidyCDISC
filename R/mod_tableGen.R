@@ -239,6 +239,13 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       )
     }
     
+    # print(IDEA_distinct_freq.ADAE(column = "AEBODSYS",
+    #                               group = NULL,
+    #                               data = ae_data()))
+    # print(paste("ae_data():", "" %in% getLevels(ae_data()$AEBODSYS)))
+    # print(paste("ADAE():", "" %in% getLevels(ADAE()$AEBODSYS)))
+    # print(paste("datafile$ADAE:", "" %in% getLevels(datafile()$ADAE$AEBODSYS)))
+    
     purrr::pmap(list(blocks_and_functions()$agg, 
                       blocks_and_functions()$S3, 
                       blocks_and_functions()$dropdown,
