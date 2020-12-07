@@ -19,7 +19,7 @@ test_that("Y freq block numeric fails", {
   expect_error(IDEA_y.ADSL("AGE", NULL, tg_data))
 })
 
-test_that("Y freq must be applied to flag variable", {
-  expect_error(IDEA_y.ADSL("SEX", data = tg_data))
-})
+# test_that("Y freq must be applied to flag variable", {
+#   expect_error(IDEA_y.ADSL("SEX", data = tg_data))
+# })
 

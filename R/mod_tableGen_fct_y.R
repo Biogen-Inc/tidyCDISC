@@ -40,9 +40,9 @@ IDEA_y.default <- IDEA_y.OCCDS <- IDEA_y.ADAE <- IDEA_y.ADSL <- function(column,
   if (is.numeric(data[[column]])) {
     stop(paste("Can't calculate Y frequency, ", column, " is not categorical"))
   }
-  if (substr(column, nchar(column) - 1, nchar(column)) != "FL") {
-    stop(paste("Can't calculate Y frequency on non-flag, ", column, " does not end with 'FL'"))
-  }
+  # if (substr(column, nchar(column) - 1, nchar(column)) != "FL") {
+  #   stop(paste("Can't calculate Y frequency on non-flag, ", column, " does not end with 'FL'"))
+  # }
 
   # Calculate Total Y count
   total <- 
