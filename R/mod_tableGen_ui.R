@@ -80,10 +80,6 @@ mod_tableGen_ui <- function(id){
                                        ),
                                        tags$li(id = "mean","MEAN",class = "agg"),
                                        tags$li(id = "freq","FREQ",class = "agg"),
-                                       tags$li(id = "distinct_freq",
-                                         div(tippy(div("DISTINCT FREQ"), "Subject Count at each variable level, if applicable")),
-                                         class="agg"
-                                       ),
                                        tags$li(id = "y_freq",
                                          div(tippy(div("Y FREQ"), "For flag vars: Subject Count for those with 'Y' values Only")),
                                          class="agg"
@@ -95,6 +91,10 @@ mod_tableGen_ui <- function(id){
                                        tags$li(id = "non_missing",
                                          div(tippy(div("NON MISSING"), "Subject Count for those with non-missing values Only")),
                                          class="agg"
+                                       ),
+                                       tags$li(id = "nested_freq",
+                                               div(tippy(div("NESTED FREQ"), "Subject Count at each variable level nested inside another variable's levels")),
+                                               class="agg"
                                        )
                                      ))
                             )

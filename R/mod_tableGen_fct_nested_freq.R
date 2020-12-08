@@ -3,14 +3,15 @@
 #'
 #' @param column the variable to perform  stats on, this also contains
 #'   the class of the column based on the data file the column came from
+#' @param nested_var select variable to produce frequencies nested inside column
 #' @param group the groups to compare for the ANOVA
 #' @param data the data to use
 #'
 #' @return a frequency table of grouped variables
 #'
 #' @family tableGen Functions
-IDEA_distinct_freq <- function(column, group, data) {
-  UseMethod("IDEA_distinct_freq", column)
+IDEA_nested_freq <- function(column, nested_var, group, data) {
+  UseMethod("IDEA_nested_freq", column)
 }
 
 
@@ -22,21 +23,26 @@ IDEA_distinct_freq <- function(column, group, data) {
 #' @import dplyr
 #' 
 #' @return frequency table of ADSL column
-#' @rdname IDEA_distinct_freq
+#' @rdname IDEA_nested_freq
 #' 
 #' @family tableGen Functionss
-IDEA_distinct_freq.default <- IDEA_distinct_freq.OCCDS <- IDEA_distinct_freq.ADAE <- IDEA_distinct_freq.ADSL <- 
-  function(column, group = NULL, data) {
+IDEA_nested_freq.default <- IDEA_nested_freq.OCCDS <- IDEA_nested_freq.ADAE <- IDEA_nested_freq.ADSL <- 
+  function(column, nested_var, group = NULL, data) {
+    
   # # ########## ######### ######## #########
   # column <- "AEBODSYS"
+  # nested_var <- "AEDECOD"
   # group = "TRT01P"
   column_var_sort = "desc_tot"
   # data = ae_data #%>% filter(SAFFL == 'Y') %>% filter(TRTEMFL == 'Y')
-  # test <- data %>% filter(is.na(AEBODSYS))
   # # ########## ######### ######## #########
   
   # column is the variable selected on the left-hand side
   column <- rlang::sym(as.character(column))
+  
+  if (is.numeric(data[[column]])) {
+    stop(paste("Can't calculate frequency, ", column, " is not categorical"))
+  }
   
   # First, get the desired order our by_var
   column_lvls <- getLevels(data[[column]])
@@ -71,13 +77,53 @@ IDEA_distinct_freq.default <- IDEA_distinct_freq.OCCDS <- IDEA_distinct_freq.ADA
   }
   
   
-  total <- 
+  total0 <- 
     sort_cnts %>%
     mutate(n_tot = data %>% distinct(USUBJID) %>% nrow(),
            prop = sort_n / n_tot,
            x = paste0(sort_n, ' (', sprintf("%.1f", round(prop*100, 1)), ')')
     )  %>%
-    select(!!column, x) 
+    select(!!column, x, sort_n) 
+  
+  if(nested_var == "NONE"){
+    total <- total0 %>%
+      select(-sort_n)
+    
+  } else {
+    nst_var <- rlang::sym(as.character(nested_var))
+    
+    total <- 
+      total0 %>%
+      mutate(pt = 'Overall', sort = 0) %>%
+      rename_with(~nested_var, pt) %>%
+      bind_rows(
+        total0 %>% 
+        select(-x) %>%
+        left_join(
+          data %>%
+            # filter(!is.na(!!column)) %>% # how to incorporate filter on AOCCIFL?
+            distinct(USUBJID, !!column, !!nst_var) %>%
+            group_by(!!column, !!nst_var) %>%
+            summarize(n = n_distinct(USUBJID)) %>%
+            ungroup() %>%
+            mutate(n_tot = data %>% distinct(USUBJID) %>% nrow(), # do we want to keep zeros?
+                   prop = n / n_tot,
+                   x = paste0(n, ' (', sprintf("%.1f", round(prop*100, 1)), ')')
+            ) %>%
+            mutate(sort = 1) %>%
+            arrange(desc(n))
+        )
+      ) %>%
+      arrange(desc(sort_n), !!column, sort, desc(n)) %>%
+      select(-sort_n,-n, -prop, -n_tot, -sort) %>%
+      select(!!column, !!nst_var, x) %>%
+      mutate(var = case_when(
+        !!nst_var == "Overall" ~ !!column,
+        !!nst_var == NA_character_ ~ NA_character_,
+        TRUE ~ paste0("    ", !!nst_var)
+      )) %>%
+      select(var, x)
+  }
   
   
   if (is.null(group)) { 
@@ -131,20 +177,20 @@ IDEA_distinct_freq.default <- IDEA_distinct_freq.OCCDS <- IDEA_distinct_freq.ADA
 
 
 #' @return NULL
-#' @rdname IDEA_distinct_freq
+#' @rdname IDEA_nested_freq
 #' 
 #' @family tableGen Functions
-IDEA_distinct_freq.BDS <- function(column, group = NULL, data) {
+IDEA_nested_freq.BDS <- function(column, nested_var, group = NULL, data) {
   rlang::abort(glue::glue(
     "Can't calculate Distinct Frequency for for BDS variables"
   ))
 }
 
 #' @return NULL
-#' @rdname IDEA_distinct_freq
+#' @rdname IDEA_nested_freq
 #' 
 #' @family tableGen Functions
-IDEA_distinct_freq.custom <- function(column, group, data) {
+IDEA_nested_freq.custom <- function(column, nested_var, group, data) {
   rlang::abort(glue::glue(
     "Can't calculate Distinct Frequency for custom class data set."
   ))

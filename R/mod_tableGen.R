@@ -171,6 +171,15 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     session$sendCustomMessage("my_data", AVISIT())
   })
   
+  observe({
+    req(ADSL(), ADAE())
+    all_cols <- unique(c(
+      colnames(ADSL())[sapply(ADSL(), class) %in% c('character', 'factor')],
+      colnames(ADAE())[sapply(ADAE(), class) %in% c('character', 'factor')]
+    ))
+    session$sendCustomMessage("all_cols", all_cols)
+  })
+  
   
   # ----------------------------------------------------------------------
   # Generate table given the dropped blocks
