@@ -23,11 +23,11 @@ $( document ).ready(function() {
   
   /* Functions needed to render ShinyInput from the drop zones */
     
-    /**
-    * Rerender the contents of the shinyInput
-  * @param {id} the id of the dropped zone containing dropped blocks
-  * @param {outputID} the name of the input we'll use in Shiny as in input$outputID
-  */
+/**
+  * Rerender the contents of the shinyInput
+* @param {id} the id of the dropped zone containing dropped blocks
+* @param {outputID} the name of the input we'll use in Shiny as in input$outputID
+*/
   function setUpShiny(id, outputID, obj) {
   var obj = { numbers: [] }
   var str = "";
@@ -151,6 +151,33 @@ Shiny.addCustomMessageHandler('my_data', function(df) {
 });
 
 /**
+  * Create dropdown menu from the array of all_cols values
+* @param {all_cols} the text and value of the option
+*/
+Shiny.addCustomMessageHandler('all_cols', function(df) {
+  // the dataframe column is imported as an array
+  my_array = Object.values(df)
+  select = `${my_array.map(createOption).join("")}`
+  
+  $(function() {
+    $(".draggable_agg").draggable();
+    $("#droppable_agg").droppable({
+      accept: ".agg",
+      drop: function(event, ui) {
+        var draggableId = ui.draggable.attr("id");
+        var newid = getNewId(draggableId);
+        if (draggableId.includes("nested_freq")) {
+          $(this).append(selectWeekBlock(newid, "NESTED_FREQ", select));
+        } else {
+          $(this).append(simpleBlock(newid, "df"));
+        }
+      }
+    }).sortable({
+      revert: false
+    })
+  });
+});
+/**
   * Create a block with a dropdown menu of weeks
 * @param {newid} the new, unique id of the dropped block
 * @param {label} the name of the new block
@@ -207,10 +234,14 @@ $(function() {
       var newid = getNewId(draggableId);
       if (draggableId.includes("ttest")) {
         $(this).append(selectWeekBlock(newid, "T-TEST"));
+      } else if (draggableId.includes("anova")) {
+        $(this).append(selectWeekBlock(newid, "ANOVA"));
       } else if (draggableId.includes("chg")) {
         $(this).append(selectWeekBlock(newid, "CHG"));
       } else if (draggableId.includes("mean")) {
         $(this).append(selectWeekBlock(newid, "MEAN"));
+      } else if (draggableId.includes("nested_freq")) {
+        $(this).append(selectWeekBlock(newid, "NESTED_FREQ"));
       } else {
         $(this).append(simpleBlock(newid));
       }

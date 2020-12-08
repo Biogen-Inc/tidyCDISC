@@ -27,8 +27,8 @@ IDEA_methods <- function(agg, column, week, group, data) {
     IDEA_freq(column, group, data)
   } else if (agg == "ANOVA") {
     IDEA_anova(column, week, group, data)
-  } else if (agg == "DISTINCT_FREQ"){
-    IDEA_distinct_freq(column, group, data)
+  } else if (agg == "NESTED_FREQ"){
+    IDEA_nested_freq(column, week, group, data) # should chg arg nm to "drop_data" or "sel"
   } else if (agg == "Y_FREQ"){
     IDEA_y(column, group, data)
   } else if (agg == "MAX_FREQ"){

@@ -52,13 +52,13 @@ and report missing values from the mean if any
 \seealso{
 Other tableGen Functions: 
 \code{\link{IDEA_chg}()},
-\code{\link{IDEA_distinct_freq}()},
 \code{\link{IDEA_freq}()},
 \code{\link{IDEA_max_freq}()},
 \code{\link{IDEA_mean.ADAE}()},
 \code{\link{IDEA_mean.BDS}()},
 \code{\link{IDEA_mean}()},
 \code{\link{IDEA_methods}()},
+\code{\link{IDEA_nested_freq}()},
 \code{\link{IDEA_non_missing}()},
 \code{\link{IDEA_y}()},
 \code{\link{convertTGOutput}()},
@@ -74,13 +74,13 @@ Other tableGen Functions:
 
 Other tableGen Functions: 
 \code{\link{IDEA_chg}()},
-\code{\link{IDEA_distinct_freq}()},
 \code{\link{IDEA_freq}()},
 \code{\link{IDEA_max_freq}()},
 \code{\link{IDEA_mean.ADAE}()},
 \code{\link{IDEA_mean.BDS}()},
 \code{\link{IDEA_mean}()},
 \code{\link{IDEA_methods}()},
+\code{\link{IDEA_nested_freq}()},
 \code{\link{IDEA_non_missing}()},
 \code{\link{IDEA_y}()},
 \code{\link{convertTGOutput}()},
@@ -96,13 +96,13 @@ Other tableGen Functions:
 
 Other tableGen Functions: 
 \code{\link{IDEA_chg}()},
-\code{\link{IDEA_distinct_freq}()},
 \code{\link{IDEA_freq}()},
 \code{\link{IDEA_max_freq}()},
 \code{\link{IDEA_mean.ADAE}()},
 \code{\link{IDEA_mean.BDS}()},
 \code{\link{IDEA_mean}()},
 \code{\link{IDEA_methods}()},
+\code{\link{IDEA_nested_freq}()},
 \code{\link{IDEA_non_missing}()},
 \code{\link{IDEA_y}()},
 \code{\link{convertTGOutput}()},
@@ -118,13 +118,13 @@ Other tableGen Functions:
 
 Other tableGen Functions: 
 \code{\link{IDEA_chg}()},
-\code{\link{IDEA_distinct_freq}()},
 \code{\link{IDEA_freq}()},
 \code{\link{IDEA_max_freq}()},
 \code{\link{IDEA_mean.ADAE}()},
 \code{\link{IDEA_mean.BDS}()},
 \code{\link{IDEA_mean}()},
 \code{\link{IDEA_methods}()},
+\code{\link{IDEA_nested_freq}()},
 \code{\link{IDEA_non_missing}()},
 \code{\link{IDEA_y}()},
 \code{\link{convertTGOutput}()},
@@ -140,13 +140,13 @@ Other tableGen Functions:
 
 Other tableGen Functions: 
 \code{\link{IDEA_chg}()},
-\code{\link{IDEA_distinct_freq}()},
 \code{\link{IDEA_freq}()},
 \code{\link{IDEA_max_freq}()},
 \code{\link{IDEA_mean.ADAE}()},
 \code{\link{IDEA_mean.BDS}()},
 \code{\link{IDEA_mean}()},
 \code{\link{IDEA_methods}()},
+\code{\link{IDEA_nested_freq}()},
 \code{\link{IDEA_non_missing}()},
 \code{\link{IDEA_y}()},
 \code{\link{convertTGOutput}()},
@@ -162,13 +162,13 @@ Other tableGen Functions:
 
 Other tableGen Functions: 
 \code{\link{IDEA_chg}()},
-\code{\link{IDEA_distinct_freq}()},
 \code{\link{IDEA_freq}()},
 \code{\link{IDEA_max_freq}()},
 \code{\link{IDEA_mean.ADAE}()},
 \code{\link{IDEA_mean.BDS}()},
 \code{\link{IDEA_mean}()},
 \code{\link{IDEA_methods}()},
+\code{\link{IDEA_nested_freq}()},
 \code{\link{IDEA_non_missing}()},
 \code{\link{IDEA_y}()},
 \code{\link{convertTGOutput}()},
