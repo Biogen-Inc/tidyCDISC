@@ -324,7 +324,8 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
           cell_text(align = "right")
         ),
         locations = cells_stub(rows = TRUE)
-      )
+      )%>%
+      cols_label(Variable = "")
   })
   
   output$all <- render_gt({  gt_table() })
@@ -579,12 +580,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
           style = cell_text(weight = 'bold'),
           locations = cells_row_groups()
           ) %>%
-          tab_style(
-          style = list(
-          cell_text(align = 'right')
-          ),
-          locations = cells_stub(rows = TRUE)
-        )
+          cols_label(Variable = "")
       "
     )
   })
