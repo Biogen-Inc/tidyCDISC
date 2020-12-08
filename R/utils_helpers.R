@@ -63,7 +63,7 @@ transpose_df <- function(df, num) {
 #' @importFrom forcats fct_count
 #' 
 #' @export
-common_rownames <- function(data, group) {
+common_rownames <- function(data, group) { 
   if (is.null(group) ) { #| group == "NONE"
     vars <- c("Variable", "Total")
   } else {

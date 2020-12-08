@@ -118,9 +118,9 @@ IDEA_nested_freq.default <- IDEA_nested_freq.OCCDS <- IDEA_nested_freq.ADAE <- I
       select(-sort_n,-n, -prop, -n_tot, -sort) %>%
       select(!!column, !!nst_var, x) %>%
       mutate(var = case_when(
-        !!nst_var == "Overall" ~ !!column,
+        !!nst_var == "Overall" ~ paste0("<b>",!!column,"</b>"),
         !!nst_var == NA_character_ ~ NA_character_,
-        TRUE ~ paste0("    ", !!nst_var)
+        TRUE ~ paste0("&nbsp;&nbsp;&nbsp;&nbsp;", !!nst_var)
       )) %>%
       select(var, x)
   }

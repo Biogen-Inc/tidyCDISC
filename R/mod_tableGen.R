@@ -306,7 +306,9 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # create gt table
   gt_table <- reactive({
     for_gt() %>%
-      gt(rowname_col = "Variable", groupname_col = "ID") %>%
+      # gt(rowname_col = "Variable", groupname_col = "ID") %>%
+      gt(groupname_col = "ID") %>%
+      fmt_markdown(columns = vars(Variable)) %>%
       tab_options(table.width = px(700)) %>%
       cols_label(.list = imap(for_gt()[-c(1:2)], ~col_for_list(.y, .x))) %>%
       tab_header(
@@ -564,7 +566,9 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       # create the gt output
       library(gt)
       tg_table %>%
-          gt(rowname_col = 'Variable', groupname_col = 'ID') %>%
+          # gt(rowname_col = 'Variable', groupname_col = 'ID') %>%
+          gt(groupname_col = 'ID') %>%
+          fmt_markdown(columns = vars(Variable)) %>%
           tab_options(table.width = px(700)) %>%
           cols_label(.list = imap(tg_table[-c(1:2)], ~ IDEA::col_for_list_expr(.y, .x))) %>%
           tab_header(
@@ -610,7 +614,10 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
           ID, 
           pattern = '\\\\b'%s+%pretty_blocks$Pattern%s+%'\\\\b',
           replacement = pretty_blocks$Replacement,
-          vectorize_all = FALSE))
+          vectorize_all = FALSE),
+        # remove html
+        Variable = gsub('<b>','', gsub('</b>','', gsub('&nbsp;',' ', Variable)))
+  )
     
       # read in SAS table and convert to DF
       sas_data_dir <- 'path/to/sas/table/dataset/'
