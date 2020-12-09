@@ -567,7 +567,6 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       # create the gt output
       library(gt)
       tg_table %>%
-          # gt(rowname_col = 'Variable', groupname_col = 'ID') %>%
           gt(groupname_col = 'ID') %>%
           fmt_markdown(columns = vars(Variable)) %>%
           tab_options(table.width = px(700)) %>%
