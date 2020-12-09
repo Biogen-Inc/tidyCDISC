@@ -31,7 +31,7 @@ IDEA_nested_freq.default <- IDEA_nested_freq.OCCDS <- IDEA_nested_freq.ADAE <- I
     
   # # ########## ######### ######## #########
   # column <- "SEX"
-  # nested_var <- "RACE"
+  # nested_var <- "NONE"
   # group = "TRT01P"
   column_var_sort = "desc_tot"
   # data = ae_data #%>% filter(SAFFL == 'Y') %>% filter(TRTEMFL == 'Y')
@@ -141,18 +141,16 @@ IDEA_nested_freq.default <- IDEA_nested_freq.OCCDS <- IDEA_nested_freq.ADAE <- I
     
     group <- rlang::sym(group)
     
-    grp_tot <- data %>%
+    col_grp_tot <- data %>%
       # filter(!is.na(!!column)) %>% # don't filter here.
       group_by(!!group) %>%
       summarize(n_tot = n_distinct(USUBJID)) %>%
       ungroup() %>%
       tidyr::crossing(
-        inner_lvls %>%
-          select(!!column, !!nst_var)
+        data %>% distinct(!!column)
       )
     
-    col_grp <- grp_tot %>% 
-      distinct(!!group, !!column, n_tot) %>%
+    col_grp <- col_grp_tot %>%
       left_join(
         data %>%
         # filter(!is.na(!!column)) %>% # don't filter here.
@@ -165,46 +163,64 @@ IDEA_nested_freq.default <- IDEA_nested_freq.OCCDS <- IDEA_nested_freq.ADAE <- I
              prop = n / n_tot,
              v = paste0(n, ' (', sprintf("%.1f", round(prop*100, 1)), ')')
       ) %>%
-      select(-n, -prop, -n_tot) %>%
-      spread(!!group, v) #%>%
-      # transpose_df(num = 1)
+      select(-n, -prop, -n_tot) 
     
-    groups <- 
-      total_by %>%
-      left_join(
-        col_grp %>%
-        mutate(pt = 'Overall') %>%
-        rename_with(~nested_var, pt) %>%
-        bind_rows(
-          grp_tot %>% 
-          left_join(
-            data %>%
-              # filter(!is.na(!!column)) %>% # how to incorporate filter on AOCCIFL?
-              distinct(USUBJID, !!column, !!nst_var, !!group) %>%
-              group_by(!!column, !!nst_var, !!group) %>%
-              summarize(n = n_distinct(USUBJID)) %>%
-              ungroup()
-            ) %>%
-            mutate(n = tidyr::replace_na(n, 0),
-                   prop = n / n_tot,
-                   v = paste0(n, ' (', sprintf("%.1f", round(prop*100, 1)), ')')
-            ) %>%
-            select(-n, -prop, -n_tot) %>%
-            spread(!!group, v)
+    
+    
+    if(nested_var == "NONE"){
+      groups0 <- col_grp %>%
+        spread(!!column, v) %>%
+        transpose_df(num = 1)
+      groups <- cbind(groups0, total$x)
+    } else {
+      grp_tot <- data %>%
+        # filter(!is.na(!!column)) %>% # don't filter here.
+        group_by(!!group) %>%
+        summarize(n_tot = n_distinct(USUBJID)) %>%
+        ungroup() %>%
+        tidyr::crossing(
+          data %>%
+            distinct(!!column, !!nst_var)
         )
-      )%>%
-      select(-x, x) %>%
-      mutate(var = case_when(
-        !!nst_var == "Overall" ~ paste0("<b>",!!column,"</b>"),
-        !!nst_var == NA_character_ ~ NA_character_,
-        TRUE ~ paste0("&nbsp;&nbsp;&nbsp;&nbsp;", !!nst_var)
-      )) %>%
-      select(var, everything(), x, -!!column, -!!nst_var)
+      
+      groups <- 
+        total_by %>%
+        left_join(
+          col_grp %>%
+            spread(!!group, v)%>%
+            mutate(pt = 'Overall') %>%
+            rename_with(~nested_var, pt) %>%
+            bind_rows(
+              grp_tot %>% 
+                left_join(
+                  data %>%
+                    # filter(!is.na(!!column)) %>% # how to incorporate filter on AOCCIFL?
+                    distinct(USUBJID, !!column, !!nst_var, !!group) %>%
+                    group_by(!!column, !!nst_var, !!group) %>%
+                    summarize(n = n_distinct(USUBJID)) %>%
+                    ungroup()
+                ) %>%
+                mutate(n = tidyr::replace_na(n, 0),
+                       prop = n / n_tot,
+                       v = paste0(n, ' (', sprintf("%.1f", round(prop*100, 1)), ')')
+                ) %>%
+                select(-n, -prop, -n_tot) %>%
+                spread(!!group, v)
+            )
+        )%>%
+        select(-x, x) %>%
+        mutate(var = case_when(
+          !!nst_var == "Overall" ~ paste0("<b>",!!column,"</b>"),
+          !!nst_var == NA_character_ ~ NA_character_,
+          TRUE ~ paste0("&nbsp;&nbsp;&nbsp;&nbsp;", !!nst_var)
+        )) %>%
+        select(var, everything(), x, -!!column, -!!nst_var)
+      
+      # wasn't able to use transpose_df, so we need to make column names generic here
+      # colnames(groups) <- c("rowname", paste(1:(ncol(groups)-1)))
+    }
     
-    # wasn't able to use transpose_df, so we need to make column names generic here
-    colnames(groups) <- c("rowname", paste(1:(ncol(groups)-1)))
     groups
-
 
   }
 }
