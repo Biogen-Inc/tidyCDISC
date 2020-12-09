@@ -18,9 +18,8 @@
 #' @export
 IDEA_methods <- function(agg, column, week, group, data) {
   # informative error in case the selected variable doesn't exist in data
-  print(colnames(data))
   if (!(paste(column) %in% colnames(data)) &
-      !(paste(column) %in% data$PARAMCD)
+      !(paste(column) %in% unique(data$PARAMCD))
       ){
     stop(glue::glue("{column} variable doesn't exist in data, please remove or replace that variable from drop zone."))
   }
