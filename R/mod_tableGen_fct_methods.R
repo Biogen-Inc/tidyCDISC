@@ -107,7 +107,8 @@ convertTGOutput <- function(agg, blocks) {
         case_when(
           dropdown == "NONE" ~ glue("{agg} of {block}"),
           is.na(dropdown) ~ glue("{agg} of {block}"),
-          TRUE ~ glue("{agg} of {block} at {dropdown}")
+          tolower(substr(dropdown, 1, 4)) %in% c("week","base","scree","end ") ~ glue("{agg} of {block} at {dropdown}"),
+          TRUE ~ glue("{agg} of {block} and {dropdown}") # "and" instead of "at"
         )#, # will need to feed these datasets through to this function? Or create a new funct?
             # that get's called "blocks_and_functions" that adds the labels?
       # label = purrr::map(blockData$block, function(x) attr(data_to_use(dataset)[[x]], 'label')) %>% 
