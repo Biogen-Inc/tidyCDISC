@@ -222,7 +222,7 @@ $(function() {
   })
 })
 
-
+/*
 // for agg blocks, 
 // create dropdowns specific to each block
 $(function() {
@@ -250,6 +250,7 @@ $(function() {
     revert: false
   })
 });
+*/
 
 $("#popExp_ui_1-adv_filtering").parent().parent().addClass('custom_checkbox');
 $("#popExp_ui_1-adv_filtering").parent().parent().parent().addClass('custom_shiny_width');
