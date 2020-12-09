@@ -580,7 +580,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
           style = cell_text(weight = 'bold'),
           locations = cells_row_groups()
           ) %>%
-          cols_label(Variable = "")
+          cols_label(Variable = '')
       "
     )
   })
