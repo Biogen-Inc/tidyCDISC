@@ -25,9 +25,12 @@ function combineRows(arr, strg) {
 // These are called arrays
 demography_rows = ["AGEGR1", "AGE",  "SEX",  "ETHNIC", "RACE", "HEIGHTBL", "WEIGHTBL"]
 demography_agg =  ["FREQ",   "MEAN", "FREQ", "FREQ",   "FREQ", "MEAN",     "MEAN"]
+
 ae18_rows = ["AOCCFL", "AESEV", "AESER","DTHDT"]
 ae18_agg =  ["Y_FREQ", "MAX_FREQ", "Y_FREQ", "NON_MISSING"]
 
+ae18_rows = ["AEBODSYS"]
+ae18_agg =  ["NESTED_FREQ"]
 
 /* Create custom block recipes to automatically populate when selected */
   $("#RECIPE").bind("change", function(event, ui) {
@@ -43,6 +46,12 @@ ae18_agg =  ["Y_FREQ", "MAX_FREQ", "Y_FREQ", "NON_MISSING"]
       $("#droppable_agg").append($(combineRows(ae18_agg, "ADAE")));
       document.getElementById("droppable_blocks").innerHTML = "";
       $("#droppable_blocks").append($(combineRows(ae18_rows, "ADAE")));
+      
+    } else if (publisher === "Table 19: Adverse events by system organ class and preferred term") {
+      document.getElementById("droppable_agg").innerHTML = "";
+      $("#droppable_agg").append($(combineRows(ae19_agg, "ADAE")));
+      document.getElementById("droppable_blocks").innerHTML = "";
+      $("#droppable_blocks").append($(combineRows(ae19_rows, "ADAE")));
       
     } else {
       document.getElementById("droppable_agg").innerHTML = "";

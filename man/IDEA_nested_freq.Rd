@@ -8,13 +8,13 @@
 \title{Generate frequency where each subject is only counted once for the maximum
 VAR}
 \usage{
-IDEA_nested_freq(column, nested_var, group, data)
+IDEA_nested_freq(column, nested_var = "NONE", group, data)
 
-\method{IDEA_nested_freq}{default}(column, nested_var, group = NULL, data)
+\method{IDEA_nested_freq}{default}(column, nested_var = "NONE", group = NULL, data)
 
-\method{IDEA_nested_freq}{BDS}(column, nested_var, group = NULL, data)
+\method{IDEA_nested_freq}{BDS}(column, nested_var = "NONE", group = NULL, data)
 
-\method{IDEA_nested_freq}{custom}(column, nested_var, group, data)
+\method{IDEA_nested_freq}{custom}(column, nested_var = "NONE", group, data)
 }
 \arguments{
 \item{column}{the variable to perform  stats on, this also contains

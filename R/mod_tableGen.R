@@ -37,8 +37,9 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
            <select id="RECIPE" class="selectize-input">
            <option  id="none">NONE</option>
            <option  id="demography">Table 5: Demography</option>',
-           ifelse("ADAE" %in% names(datafile()),'<option  id="tbl18">Table 18: Overall summary of adverse events</option>','')
-           ,'</select>'))
+           ifelse("ADAE" %in% names(datafile()),'<option  id="tbl18">Table 18: Overall summary of adverse events</option>',''),
+           ifelse("ADAE" %in% names(datafile()),'<option  id="tbl19">Table 19: Adverse events by system organ class and preferred term</option>',''),
+           '</select>'))
   })
   
   # observeEvent(input$recipe, {
@@ -56,7 +57,8 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     sel_grp <- dplyr::case_when(
       is.null(input$recipe) | length(input$recipe) == 0 ~ "NONE",
       input$recipe %in% c("Table 5: Demography",
-                          "Table 18: Overall summary of adverse events") ~ "TRT01P",
+                          "Table 18: Overall summary of adverse events",
+                          "Table 19: Adverse events by system organ class and preferred term") ~ "TRT01P",
       TRUE ~ "NONE"
     )
     selectInput(session$ns("COLUMN"), "Group Data By:",
