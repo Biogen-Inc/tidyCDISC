@@ -10,7 +10,7 @@
 #' @return a frequency table of grouped variables
 #'
 #' @family tableGen Functions
-IDEA_nested_freq <- function(column, nested_var, group, data) {
+IDEA_nested_freq <- function(column, nested_var = "NONE", group, data) {
   UseMethod("IDEA_nested_freq", column)
 }
 
@@ -27,7 +27,7 @@ IDEA_nested_freq <- function(column, nested_var, group, data) {
 #' 
 #' @family tableGen Functionss
 IDEA_nested_freq.default <- IDEA_nested_freq.OCCDS <- IDEA_nested_freq.ADAE <- IDEA_nested_freq.ADSL <- 
-  function(column, nested_var, group = NULL, data) {
+  function(column, nested_var = "NONE", group = NULL, data) {
     
   # # ########## ######### ######## #########
   # column <- "SEX"
@@ -231,7 +231,7 @@ IDEA_nested_freq.default <- IDEA_nested_freq.OCCDS <- IDEA_nested_freq.ADAE <- I
 #' @rdname IDEA_nested_freq
 #' 
 #' @family tableGen Functions
-IDEA_nested_freq.BDS <- function(column, nested_var, group = NULL, data) {
+IDEA_nested_freq.BDS <- function(column, nested_var = "NONE", group = NULL, data) {
   rlang::abort(glue::glue(
     "Can't calculate Distinct Frequency for for BDS variables"
   ))
@@ -241,7 +241,7 @@ IDEA_nested_freq.BDS <- function(column, nested_var, group = NULL, data) {
 #' @rdname IDEA_nested_freq
 #' 
 #' @family tableGen Functions
-IDEA_nested_freq.custom <- function(column, nested_var, group, data) {
+IDEA_nested_freq.custom <- function(column, nested_var = "NONE", group, data) {
   rlang::abort(glue::glue(
     "Can't calculate Distinct Frequency for custom class data set."
   ))
