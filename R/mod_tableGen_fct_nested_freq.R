@@ -110,25 +110,28 @@ IDEA_nested_freq.default <- IDEA_nested_freq.OCCDS <- IDEA_nested_freq.ADAE <- I
           arrange(desc(n))
       )
     
-    total <- 
+    total_by <- 
       total0 %>%
       mutate(pt = 'Overall', sort = 0) %>%
       rename_with(~nested_var, pt) %>%
       bind_rows(inner_lvls) %>%
       arrange(desc(sort_n), !!column, sort, desc(n)) %>%
       select(-sort_n,-n, -prop, -n_tot, -sort) %>%
-      select(!!column, !!nst_var, x) 
-  }
-  
-  
-  if (is.null(group)) { 
-    total %>%
+      select(!!column, !!nst_var, x)
+    
+    total <-  
+      total_by %>%
       mutate(var = case_when(
         !!nst_var == "Overall" ~ paste0("<b>",!!column,"</b>"),
         !!nst_var == NA_character_ ~ NA_character_,
         TRUE ~ paste0("&nbsp;&nbsp;&nbsp;&nbsp;", !!nst_var)
       )) %>%
       select(var, x)
+  }
+  
+  
+  if (is.null(group)) { 
+    total
     
   } else { # group specified!!!
     
@@ -167,7 +170,7 @@ IDEA_nested_freq.default <- IDEA_nested_freq.OCCDS <- IDEA_nested_freq.ADAE <- I
       # transpose_df(num = 1)
     
     groups <- 
-      total %>%
+      total_by %>%
       left_join(
         col_grp %>%
         mutate(pt = 'Overall') %>%
