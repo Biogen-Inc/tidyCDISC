@@ -29,8 +29,8 @@ demography_agg =  ["FREQ",   "MEAN", "FREQ", "FREQ",   "FREQ", "MEAN",     "MEAN
 ae18_rows = ["AOCCFL", "AESEV", "AESER","DTHDT"]
 ae18_agg =  ["Y_FREQ", "MAX_FREQ", "Y_FREQ", "NON_MISSING"]
 
-ae18_rows = ["AEBODSYS"]
-ae18_agg =  ["NESTED_FREQ"]
+ae19_rows = ["AEBODSYS"]
+ae19_agg =  ["NESTED_FREQ"]
 
 /* Create custom block recipes to automatically populate when selected */
   $("#RECIPE").bind("change", function(event, ui) {
