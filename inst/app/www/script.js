@@ -101,7 +101,7 @@ selectChange("droppable_blocks", 'droppable_blocks label', 'tableGen_ui_1-block_
   
   
   /**
-  * Create a simple block with a name and delete button
+  * Create a simple block just contains a label and X button
 * @param {newid} the new, unique id of the dropped block
 */
   function simpleBlock(newid, df) {
@@ -122,67 +122,54 @@ selectChange("droppable_blocks", 'droppable_blocks label', 'tableGen_ui_1-block_
     return `<option value="${opt}">${opt}</option>`
   }
 
-Shiny.addCustomMessageHandler('my_data', function(df) {
+/**
+  * Function that brings in vectors from shiny and uses 
+  * them to create the appropriate style block for the agg chosen
+*/
+Shiny.addCustomMessageHandler('my_weeks', function(df) {
   // the dataframe column is imported as an array
-  my_array = Object.values(df)
-  select = `${my_array.map(createOption).join("")}`
+  weeks_array = Object.values(df)
+  week_opts = `${weeks_array.map(createOption).join("")}`
+
+  // bring in another array from shiny that contains column names
+  Shiny.addCustomMessageHandler('all_cols', function(df) {
+  // the dataframe column is imported as an array
+  col_array = Object.values(df)
+  col_opts = `${col_array.map(createOption).join("")}`
   
-  $(function() {
-    $(".draggable_agg").draggable();
-    $("#droppable_agg").droppable({
-      accept: ".agg",
-      drop: function(event, ui) {
-        var draggableId = ui.draggable.attr("id");
-        var newid = getNewId(draggableId);
-        if (draggableId.includes("anova")) {
-          $(this).append(selectWeekBlock(newid, "ANOVA", select));
-        } else if (draggableId.includes("chg")) {
-          $(this).append(selectWeekBlock(newid, "CHG", select));
-        } else if (draggableId.includes("mean")) {
-          $(this).append(selectWeekBlock(newid, "MEAN", select));
-        } else {
-          $(this).append(simpleBlock(newid, "df"));
+    $(function() {
+      $(".draggable_agg").draggable();
+      $("#droppable_agg").droppable({
+        accept: ".agg",
+        drop: function(event, ui) {
+          var draggableId = ui.draggable.attr("id");
+          var newid = getNewId(draggableId);
+          if (draggableId.includes("anova")) {
+            $(this).append(selectBlock(newid, "ANOVA", week_opts));
+          } else if (draggableId.includes("chg")) {
+            $(this).append(selectBlock(newid, "CHG", week_opts));
+          } else if (draggableId.includes("mean")) {
+            $(this).append(selectBlock(newid, "MEAN", week_opts));
+          } else if (draggableId.includes("nested_freq")) {
+            $(this).append(selectBlock(newid, "NESTED_FREQ", col_opts));
+          } else {
+            $(this).append(simpleBlock(newid, "df"));
+          }
         }
-      }
-    }).sortable({
-      revert: false
-    })
+      }).sortable({
+        revert: false
+      })
+    });
   });
 });
 
-/**
-  * Create dropdown menu from the array of all_cols values
-* @param {all_cols} the text and value of the option
-*/
-Shiny.addCustomMessageHandler('all_cols', function(df) {
-  // the dataframe column is imported as an array
-  my_array = Object.values(df)
-  select = `${my_array.map(createOption).join("")}`
-  
-  $(function() {
-    $(".draggable_agg").draggable();
-    $("#droppable_agg").droppable({
-      accept: ".agg",
-      drop: function(event, ui) {
-        var draggableId = ui.draggable.attr("id");
-        var newid = getNewId(draggableId);
-        if (draggableId.includes("nested_freq")) {
-          $(this).append(selectWeekBlock(newid, "NESTED_FREQ", select));
-        } else {
-          $(this).append(simpleBlock(newid, "df"));
-        }
-      }
-    }).sortable({
-      revert: false
-    })
-  });
-});
+
 /**
   * Create a block with a dropdown menu of weeks
 * @param {newid} the new, unique id of the dropped block
 * @param {label} the name of the new block
 */
-  function selectWeekBlock(newid, label, values) { 
+  function selectBlock(newid, label, values) { 
     return `<div class="form-group drop_area">
       <label class="control-label" for="${newid}">${label}</label>
         <select id="${newid}" class="dropdown">
@@ -195,7 +182,8 @@ Shiny.addCustomMessageHandler('all_cols', function(df) {
 
 
 /**
-  * Create newIDs for all blocks dragged into drop zone containing a select box
+  * Create newIDs for all blocks dragged into drop zone containing
+  * a select box
 * @param {type} the draggable element to get a new ID for
 */
   function getNewId(type) {
@@ -222,7 +210,10 @@ $(function() {
   })
 })
 
-/*
+/**
+ * Not sure if this does anything, so we commented it out a while ago 
+ * and it doesn't appear to have impacted anything
+
 // for agg blocks, 
 // create dropdowns specific to each block
 $(function() {
@@ -233,15 +224,15 @@ $(function() {
       var draggableId = ui.draggable.attr("id");
       var newid = getNewId(draggableId);
       if (draggableId.includes("ttest")) {
-        $(this).append(selectWeekBlock(newid, "T-TEST"));
+        $(this).append(selectBlock(newid, "T-TEST"));
       } else if (draggableId.includes("anova")) {
-        $(this).append(selectWeekBlock(newid, "ANOVA"));
+        $(this).append(selectBlock(newid, "ANOVA"));
       } else if (draggableId.includes("chg")) {
-        $(this).append(selectWeekBlock(newid, "CHG"));
+        $(this).append(selectBlock(newid, "CHG"));
       } else if (draggableId.includes("mean")) {
-        $(this).append(selectWeekBlock(newid, "MEAN"));
+        $(this).append(selectBlock(newid, "MEAN"));
       } else if (draggableId.includes("nested_freq")) {
-        $(this).append(selectWeekBlock(newid, "NESTED_FREQ"));
+        $(this).append(selectBlock(newid, "NESTED_FREQ"));
       } else {
         $(this).append(simpleBlock(newid));
       }
