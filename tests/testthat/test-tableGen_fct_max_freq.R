@@ -1,14 +1,9 @@
 context("table generator max FREQ stat block")
 
 test_that("max FREQ block on ADSL", {
-  IDEA_max_freq.ADSL("AVISIT", NULL, tg_data)
-  IDEA_max_freq.ADSL("AVISIT1", NULL, tg_data)
-  IDEA_max_freq.ADSL("AVISIT2", NULL, tg_data)
+  IDEA_max_freq.ADSL("AVISITf2", NULL, tg_data)
 })
 
-test_that("max FREQ block ADSL group", {
-  IDEA_max_freq.ADSL("ITTFL", "COUNTRY", tg_data)
-})
 
 # -------------------------------------------
 # Expected Test Failures

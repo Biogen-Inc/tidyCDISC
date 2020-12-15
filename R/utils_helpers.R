@@ -63,7 +63,7 @@ transpose_df <- function(df, num) {
 #' @importFrom forcats fct_count
 #' 
 #' @export
-common_rownames <- function(data, group) {
+common_rownames <- function(data, group) { 
   if (is.null(group) ) { #| group == "NONE"
     vars <- c("Variable", "Total")
   } else {
@@ -159,7 +159,7 @@ filters_in_english <- function(filtered_data, filter_header = "Filters Applied:"
 #' 
 #' @noRd
 #' 
-getLevels <- function(x) {if(is.factor(x)) levels(x)else sort(unique(x)) } 
+getLevels <- function(x) {if(is.factor(x)) levels(x) else sort(unique(x), na.last = T) } 
 
 
 
