@@ -6,13 +6,14 @@
 #' @importFrom tibble tibble
 #' 
 pretty_blocks <- tibble::tibble(
-  Pattern = c("MEAN", "FREQ", "CHG", "Y_FREQ", "MAX_FREQ", "NON_MISSING"),
+  Pattern = c("MEAN", "FREQ", "CHG", "Y_FREQ", "MAX_FREQ", "NON_MISSING", "NESTED_FREQ"),
   Replacement = c("Descriptive Statistics", 
                   "Summary Counts", 
                   "Descriptive Statistics of Change from Baseline",
                   "Subject Count for those with 'Y' values",
                   "Subject Count for maximum",
-                  "Subject Count for those with Non Missing values")
+                  "Subject Count for those with Non Missing values",
+                  "Subject Count at each variable level")
 )
 
 #' Table Generator Cicerone R6 Object 

@@ -91,6 +91,10 @@ mod_tableGen_ui <- function(id){
                                        tags$li(id = "non_missing",
                                          div(tippy(div("NON MISSING"), "Subject Count for those with non-missing values Only")),
                                          class="agg"
+                                       ),
+                                       tags$li(id = "nested_freq",
+                                               div(tippy(div("NESTED FREQ"), "Subject Count at each variable level nested inside another variable's levels")),
+                                               class="agg"
                                        )
                                      ))
                             )
@@ -131,6 +135,7 @@ mod_tableGen_ui <- function(id){
         column(width = 6,
                wellPanel(
                  fluidRow(gt_output(ns("all"))))
+               # ,fluidRow(tableOutput(ns("for_gt_table")))
         )
       )
     )

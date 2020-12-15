@@ -37,8 +37,9 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
            <select id="RECIPE" class="selectize-input">
            <option  id="none">NONE</option>
            <option  id="demography">Table 5: Demography</option>',
-           ifelse("ADAE" %in% names(datafile()),'<option  id="tbl18">Table 18: Overall summary of adverse events</option>','')
-           ,'</select>'))
+           ifelse("ADAE" %in% names(datafile()),'<option  id="tbl18">Table 18: Overall summary of adverse events</option>',''),
+           ifelse("ADAE" %in% names(datafile()),'<option  id="tbl19">Table 19: Adverse events by system organ class and preferred term</option>',''),
+           '</select>'))
   })
   
   # observeEvent(input$recipe, {
@@ -56,7 +57,8 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     sel_grp <- dplyr::case_when(
       is.null(input$recipe) | length(input$recipe) == 0 ~ "NONE",
       input$recipe %in% c("Table 5: Demography",
-                          "Table 18: Overall summary of adverse events") ~ "TRT01P",
+                          "Table 18: Overall summary of adverse events",
+                          "Table 19: Adverse events by system organ class and preferred term") ~ "TRT01P",
       TRUE ~ "NONE"
     )
     selectInput(session$ns("COLUMN"), "Group Data By:",
@@ -168,7 +170,16 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   
   observe({
     req(AVISIT())
-    session$sendCustomMessage("my_data", AVISIT())
+    session$sendCustomMessage("my_weeks", AVISIT())
+  })
+  
+  observe({
+    req(ADSL(), ADAE())
+    all_cols <- unique(c(
+      colnames(ADSL())[sapply(ADSL(), class) %in% c('character', 'factor')],
+      colnames(ADAE())[sapply(ADAE(), class) %in% c('character', 'factor')]
+    ))
+    session$sendCustomMessage("all_cols", all_cols)
   })
   
   
@@ -239,6 +250,13 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       )
     }
     
+    # print(IDEA_distinct_freq.ADAE(column = "AEBODSYS",
+    #                               group = NULL,
+    #                               data = ae_data()))
+    # print(paste("ae_data():", "" %in% getLevels(ae_data()$AEBODSYS)))
+    # print(paste("ADAE():", "" %in% getLevels(ADAE()$AEBODSYS)))
+    # print(paste("datafile$ADAE:", "" %in% getLevels(datafile()$ADAE$AEBODSYS)))
+    
     purrr::pmap(list(blocks_and_functions()$agg, 
                       blocks_and_functions()$S3, 
                       blocks_and_functions()$dropdown,
@@ -257,6 +275,8 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
           replacement = pretty_blocks$Replacement,
           vectorize_all = FALSE))
   })
+  
+  # output$for_gt_table <- renderTable({ for_gt() })
   
   # remove the first two columns from the row names to use
   # since these are used for grouping in gt
@@ -288,7 +308,12 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # create gt table
   gt_table <- reactive({
     for_gt() %>%
-      gt(rowname_col = "Variable", groupname_col = "ID") %>%
+      # gt(rowname_col = "Variable", groupname_col = "ID") %>%
+      gt(groupname_col = "ID") %>%
+      fmt_markdown(columns = vars(Variable),
+                   rows = stringr::str_detect(Variable,'&nbsp;') |
+                     stringr::str_detect(Variable,'<b>') |
+                     stringr::str_detect(Variable,'</b>')) %>%
       tab_options(table.width = px(700)) %>%
       cols_label(.list = imap(for_gt()[-c(1:2)], ~col_for_list(.y, .x))) %>%
       tab_header(
@@ -304,7 +329,8 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
           cell_text(align = "right")
         ),
         locations = cells_stub(rows = TRUE)
-      )
+      )%>%
+      cols_label(Variable = "")
   })
   
   output$all <- render_gt({  gt_table() })
@@ -546,7 +572,11 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       # create the gt output
       library(gt)
       tg_table %>%
-          gt(rowname_col = 'Variable', groupname_col = 'ID') %>%
+          gt(groupname_col = 'ID') %>%
+          fmt_markdown(columns = vars(Variable),
+                 rows = stringr::str_detect(Variable,'&nbsp;') |
+                   stringr::str_detect(Variable,'<b>') |
+                   stringr::str_detect(Variable,'</b>')) %>%
           tab_options(table.width = px(700)) %>%
           cols_label(.list = imap(tg_table[-c(1:2)], ~ IDEA::col_for_list_expr(.y, .x))) %>%
           tab_header(
@@ -557,12 +587,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
           style = cell_text(weight = 'bold'),
           locations = cells_row_groups()
           ) %>%
-          tab_style(
-          style = list(
-          cell_text(align = 'right')
-          ),
-          locations = cells_stub(rows = TRUE)
-        )
+          cols_label(Variable = '')
       "
     )
   })
@@ -592,7 +617,10 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
           ID, 
           pattern = '\\\\b'%s+%pretty_blocks$Pattern%s+%'\\\\b',
           replacement = pretty_blocks$Replacement,
-          vectorize_all = FALSE))
+          vectorize_all = FALSE),
+        # remove html
+        Variable = gsub('<b>','', gsub('</b>','', gsub('&nbsp;',' ', Variable)))
+  )
     
       # read in SAS table and convert to DF
       sas_data_dir <- 'path/to/sas/table/dataset/'

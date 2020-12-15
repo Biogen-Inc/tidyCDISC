@@ -48,6 +48,7 @@ Other tableGen Functions:
 \code{\link{IDEA_mean.BDS}()},
 \code{\link{IDEA_mean}()},
 \code{\link{IDEA_methods}()},
+\code{\link{IDEA_nested_freq}()},
 \code{\link{IDEA_non_missing}()},
 \code{\link{convertTGOutput}()},
 \code{\link{custom_class}()},
@@ -62,6 +63,7 @@ Other tableGen Functions:
 
 Other tableGen Functionss: 
 \code{\link{IDEA_max_freq}()},
+\code{\link{IDEA_nested_freq}()},
 \code{\link{IDEA_non_missing}()}
 
 Other tableGen Functions: 
@@ -73,6 +75,7 @@ Other tableGen Functions:
 \code{\link{IDEA_mean.BDS}()},
 \code{\link{IDEA_mean}()},
 \code{\link{IDEA_methods}()},
+\code{\link{IDEA_nested_freq}()},
 \code{\link{IDEA_non_missing}()},
 \code{\link{convertTGOutput}()},
 \code{\link{custom_class}()},
@@ -94,6 +97,7 @@ Other tableGen Functions:
 \code{\link{IDEA_mean.BDS}()},
 \code{\link{IDEA_mean}()},
 \code{\link{IDEA_methods}()},
+\code{\link{IDEA_nested_freq}()},
 \code{\link{IDEA_non_missing}()},
 \code{\link{convertTGOutput}()},
 \code{\link{custom_class}()},
