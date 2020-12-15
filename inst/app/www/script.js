@@ -126,7 +126,7 @@ selectChange("droppable_blocks", 'droppable_blocks label', 'tableGen_ui_1-block_
   * Function that brings in vectors from shiny and uses 
   * them to create the appropriate style block for the agg chosen
 */
-Shiny.addCustomMessageHandler('my_data', function(df) {
+Shiny.addCustomMessageHandler('my_weeks', function(df) {
   // the dataframe column is imported as an array
   weeks_array = Object.values(df)
   week_opts = `${weeks_array.map(createOption).join("")}`
