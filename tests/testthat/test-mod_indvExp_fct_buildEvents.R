@@ -11,6 +11,7 @@ named_list <- setNames(filenames, toupper(filenames))
 datafile <- purrr::map(.x = named_list, function(x) eval(as.name(tolower(x))) )
 
 
+
 test_that("build_events fun", {
   # nrow should never change
   expect_equal(nrow(

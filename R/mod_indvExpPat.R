@@ -106,22 +106,41 @@ mod_indvExpPat_server <- function(input, output, session, datafile, loaded_adams
 
     # check for "adsl" (required), "adae", "adcm", and "adlb"
     if ("ADSL" %in% loaded_adams()) { checked1 <- "DS" }
-    if ("ADAE" %in% loaded_adams()) { checked2 <- "AE" }
-    if ("ADCM" %in% loaded_adams()) { checked3 <- "CM" }
-    if ("ADLB" %in% loaded_adams()) { checked4 <- "LB" }
+    if ("ADAE" %in% loaded_adams()) {
+      # if the chose patient has any adverse events, then include that AE checkbox
+      if(datafile()[["ADAE"]] %>% filter(USUBJID == input$selPatNo) %>% nrow()) {
+        checked2 <- "AE"
+      }
+    }
+    if ("ADCM" %in% loaded_adams()) { 
+      if(datafile()[["ADCM"]] %>% filter(USUBJID == input$selPatNo) %>% nrow()) {
+        checked3 <- "CM"
+      }
+    }
+    if ("ADLB" %in% loaded_adams()) { 
+      if(datafile()[["ADLB"]] %>% filter(USUBJID == input$selPatNo) %>% nrow()) {
+        checked4 <- "LB" 
+      }
+    }
     if ("ADMH" %in% loaded_adams()) {
       # For ADMH, we want to create separate checkboxes for each type of 
       # Medical History Category that exist in the ADMH for the selected patient.
-      mh_names <-
-        datafile()[["ADMH"]] %>%
-        filter(USUBJID == input$selPatNo) %>%
-        distinct(MHCAT) %>%
-        pull()%>%
-        stringr::str_to_title()
-      checked5 <- paste0("MH_",sapply(strsplit(mh_names, " "), function(x){
-        toupper(paste(substring(x, 1, 1), collapse = ""))}))
+      if(datafile()[["ADMH"]] %>% filter(USUBJID == input$selPatNo) %>% nrow()) {
+        mh_names <-
+          datafile()[["ADMH"]] %>%
+          filter(USUBJID == input$selPatNo) %>%
+          distinct(MHCAT) %>%
+          pull()%>%
+          stringr::str_to_title()
+        checked5 <- paste0("MH_",sapply(strsplit(mh_names, " "), function(x){
+          toupper(paste(substring(x, 1, 1), collapse = ""))}))
+      }
     }
-    if ("ADLBC" %in% loaded_adams()) { checked6 <- "LC" }
+    if ("ADLBC" %in% loaded_adams()) {
+      if(datafile()[["ADLBC"]] %>% filter(USUBJID == input$selPatNo) %>% nrow()) {
+        checked6 <- "LC" 
+      }
+    }
     
     # Combine all into a list
     choices <- as.list(unlist(c(list(checked1,checked2,checked3,checked4,as.list(checked5),checked6))))

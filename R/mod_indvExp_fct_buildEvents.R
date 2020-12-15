@@ -39,7 +39,7 @@ build_events <- function(
   # then convert the adae data frame to a standard format.
   ae_rec <- org_df_events(
     df_name = "ADAE", df_domain_abbr = "AE", df_desc = "Adverse Events"
-    , df_st_date_vars = c("AESTDT","ASTDT")
+    , df_st_date_vars = c("AESTDT","ASTDT") # from left to right, use first var that exists
     , event_desc_vars = c("AEDECOD","AESEV","AESER")
     , event_desc = 'paste0(AEDECOD, ", AESEV: ", AESEV, ", AESER: ", AESER)'
     , mi_input_checkbox = input_checkbox
@@ -103,7 +103,7 @@ build_events <- function(
   # then convert the adae data frame to a standard format.
   cm_rec <- org_df_events(
     df_name = "ADCM", df_domain_abbr = "CM", df_desc = "Concomitant Meds"
-    , df_st_date_vars = c("CMSTDT")
+    , df_st_date_vars = c("CMSTDT", "CMSTDTC", "ASTDT")# from left to right, use first var that exists
     , event_desc_vars = "CMDECOD"
     , event_desc = 'CMDECOD'
     , mi_input_checkbox = input_checkbox
@@ -118,7 +118,7 @@ build_events <- function(
   # then convert the adae data frame to a standard format.
   lb_rec <- org_df_events(
     df_name = "ADLB", df_domain_abbr = "LB", df_desc = "Lab Results"
-    , df_st_date_vars = c("LBDT") # from left to right
+    , df_st_date_vars = c("LBDT") # from left to right, use first var that exists
     , event_desc_vars = ""
     , event_desc = "'Labs Drawn'"
     , mi_input_checkbox = input_checkbox
@@ -133,7 +133,7 @@ build_events <- function(
   # then convert the adae data frame to a standard format.
   lc_rec <- org_df_events(
     df_name = "ADLBC", df_domain_abbr = "LC", df_desc = "Chem Lab Results"
-    , df_st_date_vars = c("ADT") # from left to right
+    , df_st_date_vars = c("ADT") # from left to right, use first var that exists
     , event_desc_vars = ""
     , event_desc = "'Chem Labs Drawn'"
     , mi_input_checkbox = input_checkbox
