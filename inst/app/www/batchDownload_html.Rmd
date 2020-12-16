@@ -15,6 +15,7 @@ params:
 ---
 
 ```{r setup, include=FALSE} 
+options(bitmapType='cairo')
 # always_allow_html: true killed my table of contents, maybe it was in the wrong spot.
 # should try - 
 # title: "Batch Download"
