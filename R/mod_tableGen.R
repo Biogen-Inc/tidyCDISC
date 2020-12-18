@@ -192,15 +192,15 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   })
   
   filter_msgs <- reactive({
-    msg <- paste(pre_ADSL$message, pre_ADAE$message, collapse = "\n")
+    msg <- paste(pre_ADSL()$message, pre_ADAE()$message, collapse = "\n")
     print(msg)
     return(msg)
   })
   
   # Create cleaned up versions of raw data
-  ADSL <- pre_ADSL()$data
+  ADSL <- reactive({pre_ADSL()$data})
   BDS <- reactive({ datafile()[sapply(datafile(), function(x) "PARAMCD" %in% colnames(x))] })
-  ADAE <- pre_ADAE()$data
+  ADAE <- reactive({pre_ADAE()$data})
  
   # combine BDS data into one large data set
   bds_data <- reactive({ 
