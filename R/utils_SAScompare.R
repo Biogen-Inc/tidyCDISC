@@ -29,7 +29,7 @@ combineBDS <- function(datafile, ADSL) {
       arrange(USUBJID, AVISITN, PARAMCD) %>% 
       select(USUBJID, AVISITN, AVISIT, PARAMCD, AVAL, CHG, data_from)
     # Join ADSL and all_PARAMCD
-    combined_data <- full_join(ADSL, all_PARAMCD, by = "USUBJID")
+    combined_data <- inner_join(ADSL, all_PARAMCD, by = "USUBJID")
   } else {
     combined_data <- ADSL %>%
       mutate(data_from = "ADSL", PARAMCD = NA, AVAL = NA, CHG = NA)
@@ -56,7 +56,7 @@ cleanADAE <- function(datafile, ADSL) {
     com_cols_excp_u <- common_cols[common_cols != "USUBJID"]
     adae_adsl <- datafile$ADAE %>% 
       select(-one_of(com_cols_excp_u)) %>%
-      full_join(ADSL, by = "USUBJID")
+      inner_join(ADSL, by = "USUBJID")
     preferred_col_order <- c(adae_cols, dplyr::setdiff(colnames(ADSL), adae_cols))
     if(all(sort(colnames(adae_adsl)) == sort(preferred_col_order))){
       varN_fctr_reorder(adae_adsl[,preferred_col_order]) # add this after filter?
