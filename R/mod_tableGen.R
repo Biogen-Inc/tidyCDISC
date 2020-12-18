@@ -119,88 +119,91 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     return(list(data = dat, message = msg))
   })
   
-  pre_ADAE <- reactive({
-    dat <- cleanADAE(datafile = datafile(), adsl = pre_ADSL()$data)
-    msg <- ""
-    if(stan_table_num() %in% c(25, 26)){
-      if("AESEV" %in% colnames(dat)){
-        dat <- dat %>% filter(AESEV == 'SEVERE')
-        msg <- "AESEV = 'SEVERE'"
-      }else {
-        msg <- "Variable 'AESEV' doesn't exist in ADAE. Filter not applied!"
-      }
-    } else if(stan_table_num() == 29){
-      if("AEREL" %in% colnames(dat)){
-        dat <- dat %>% filter(AEREL == 'RELATED')
-        msg <- "AEREL = 'RELATED'"
-      } else{
-        msg <- "Variable 'AEREL' doesn't exist in ADAE. Filter not applied!"
-      }
-    } else if(stan_table_num() %in% c(30, 31)){
-      if("AESER" %in% colnames(dat)){
-        dat <- dat %>% filter(AESER == 'Y')
-        msg <- "AESER = 'Y'"
-      }else {
-        msg <- "Variable 'AESER' doesn't exist in ADAE. Filter not applied!"
-      }
-    } else if(stan_table_num() == 33){
-      if("AEREL" %in% colnames(dat) & "AESER" %in% colnames(dat)){
-        dat <- dat %>% filter(AEREL == 'RELATED' & AESER == 'Y')
-        msg <- "AEREL = 'RELATED'\nAESER = 'Y'"
-      } else if("AEREL" %in% colnames(dat) & !("AESER" %in% colnames(dat))){
-        dat <- dat %>% filter(AEREL == 'RELATED')
-        msg <- "AEREL = 'RELATED'\nVariable 'AESER' doesn't exist in ADAE. Filter not applied!"
-      } else if(!("AEREL" %in% colnames(dat)) & "AESER" %in% colnames(dat)){
-        dat <- dat %>% filter(AESER == 'Y')
-        msg <- "Variable 'AEREL' doesn't exist in ADAE. Filter not applied!\nAESER = 'Y'"
-      } else{
-        msg <- "Variables 'AEREL' & 'AESER' doesn't exist in ADAE. Filters not applied!"
-      }
-    } else if(stan_table_num() == 34){
-      if("AEACN" %in% colnames(dat)){
-        dat <- dat %>% filter(AEACN == 'DRUG WITHDRAWN')
-        msg <- "AEACN = 'DRUG WITHDRAWN'"
-      } else{
-        msg <- "Variable 'AEACN' doesn't exist in ADAE. Filter not applied!"
-      }
-    } else if(stan_table_num() == 36){ #AEACNOTH contains 'Withdrawl" and "Study"
-      if("AEACNOTH" %in% colnames(dat)){
-        dat <- dat %>% 
-          filter(stringr::str_detect(tolower(AEACNOTH),"withdrawl") &
-                   stringr::str_detect(tolower(AEACNOTH),"study"))
-        msg <- "AEACNOTH Contains 'withdrawl' and 'study'"
-      } else{
-        msg <- "Variable 'AEACNOTH' doesn't exist in ADAE. Filter not applied!"
-      }
-    } else if(stan_table_num() == 38){
-      if("AEACN" %in% colnames(dat)){
-        dat <- dat %>% filter(AEACN %in% c('DRUG INTERRUPTED', 'DRUG REDUCED', 'DRUG INCREASED'))
-        msg <- "AEACN IN ('DRUG INTERRUPTED', 'DRUG REDUCED', 'DRUG INCREASED')"
-      } else{
-        msg <- "Variable 'AEACN' doesn't exist in ADAE. Filter not applied!"
-      }
-    } else if(stan_table_num() == 39){
-      if("TRTEMFL" %in% colnames(dat)){
-        dat <- dat %>% filter(TRTEMFL == 'Y')
-        msg <- "TRTEMFL = 'Y'"
-      }else {
-        msg <- "Variable 'TRTEMFL' doesn't exist in ADAE. Filter not applied!"
-      }
-    }
-    
-    return(list(data = dat, message = msg))
-  })
+  # pre_ADAE <- reactive({
+  #   dat <- cleanADAE(datafile = datafile(), adsl = pre_ADSL()$data)
+  #   msg <- ""
+  #   if(stan_table_num() %in% c(25, 26)){
+  #     if("AESEV" %in% colnames(dat)){
+  #       dat <- dat %>% filter(AESEV == 'SEVERE')
+  #       msg <- "AESEV = 'SEVERE'"
+  #     }else {
+  #       msg <- "Variable 'AESEV' doesn't exist in ADAE. Filter not applied!"
+  #     }
+  #   } else if(stan_table_num() == 29){
+  #     if("AEREL" %in% colnames(dat)){
+  #       dat <- dat %>% filter(AEREL == 'RELATED')
+  #       msg <- "AEREL = 'RELATED'"
+  #     } else{
+  #       msg <- "Variable 'AEREL' doesn't exist in ADAE. Filter not applied!"
+  #     }
+  #   } else if(stan_table_num() %in% c(30, 31)){
+  #     if("AESER" %in% colnames(dat)){
+  #       dat <- dat %>% filter(AESER == 'Y')
+  #       msg <- "AESER = 'Y'"
+  #     }else {
+  #       msg <- "Variable 'AESER' doesn't exist in ADAE. Filter not applied!"
+  #     }
+  #   } else if(stan_table_num() == 33){
+  #     if("AEREL" %in% colnames(dat) & "AESER" %in% colnames(dat)){
+  #       dat <- dat %>% filter(AEREL == 'RELATED' & AESER == 'Y')
+  #       msg <- "AEREL = 'RELATED'\nAESER = 'Y'"
+  #     } else if("AEREL" %in% colnames(dat) & !("AESER" %in% colnames(dat))){
+  #       dat <- dat %>% filter(AEREL == 'RELATED')
+  #       msg <- "AEREL = 'RELATED'\nVariable 'AESER' doesn't exist in ADAE. Filter not applied!"
+  #     } else if(!("AEREL" %in% colnames(dat)) & "AESER" %in% colnames(dat)){
+  #       dat <- dat %>% filter(AESER == 'Y')
+  #       msg <- "Variable 'AEREL' doesn't exist in ADAE. Filter not applied!\nAESER = 'Y'"
+  #     } else{
+  #       msg <- "Variables 'AEREL' & 'AESER' doesn't exist in ADAE. Filters not applied!"
+  #     }
+  #   } else if(stan_table_num() == 34){
+  #     if("AEACN" %in% colnames(dat)){
+  #       dat <- dat %>% filter(AEACN == 'DRUG WITHDRAWN')
+  #       msg <- "AEACN = 'DRUG WITHDRAWN'"
+  #     } else{
+  #       msg <- "Variable 'AEACN' doesn't exist in ADAE. Filter not applied!"
+  #     }
+  #   } else if(stan_table_num() == 36){ #AEACNOTH contains 'Withdrawl" and "Study"
+  #     if("AEACNOTH" %in% colnames(dat)){
+  #       dat <- dat %>% 
+  #         filter(stringr::str_detect(tolower(AEACNOTH),"withdrawl") &
+  #                  stringr::str_detect(tolower(AEACNOTH),"study"))
+  #       msg <- "AEACNOTH Contains 'withdrawl' and 'study'"
+  #     } else{
+  #       msg <- "Variable 'AEACNOTH' doesn't exist in ADAE. Filter not applied!"
+  #     }
+  #   } else if(stan_table_num() == 38){
+  #     if("AEACN" %in% colnames(dat)){
+  #       dat <- dat %>% filter(AEACN %in% c('DRUG INTERRUPTED', 'DRUG REDUCED', 'DRUG INCREASED'))
+  #       msg <- "AEACN IN ('DRUG INTERRUPTED', 'DRUG REDUCED', 'DRUG INCREASED')"
+  #     } else{
+  #       msg <- "Variable 'AEACN' doesn't exist in ADAE. Filter not applied!"
+  #     }
+  #   } else if(stan_table_num() == 39){
+  #     if("TRTEMFL" %in% colnames(dat)){
+  #       dat <- dat %>% filter(TRTEMFL == 'Y')
+  #       msg <- "TRTEMFL = 'Y'"
+  #     }else {
+  #       msg <- "Variable 'TRTEMFL' doesn't exist in ADAE. Filter not applied!"
+  #     }
+  #   }
+  #   
+  #   return(list(data = dat, message = msg))
+  # })
   
-  filter_msgs <- reactive({
-    msg <- paste(pre_ADSL()$message, pre_ADAE()$message, collapse = "\n")
-    print(msg)
-    return(msg)
-  })
+  # filter_msgs <- reactive({
+  #   msg <- paste(pre_ADSL()$message, pre_ADAE()$message, collapse = "\n")
+  #   print(msg)
+  #   return(msg)
+  # })
   
   # Create cleaned up versions of raw data
   ADSL <- reactive({pre_ADSL()$data})
   BDS <- reactive({ datafile()[sapply(datafile(), function(x) "PARAMCD" %in% colnames(x))] })
-  ADAE <- reactive({pre_ADAE()$data})
+  ADAE <- reactive({
+    cleanADAE(datafile = datafile(), ADSL = ADSL())
+    #pre_ADAE()$data
+    })
  
   # combine BDS data into one large data set
   bds_data <- reactive({ 
