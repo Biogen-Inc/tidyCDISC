@@ -4,7 +4,7 @@
 \alias{cleanADAE}
 \title{Function to clean and combine ADAE dataset with ADSL}
 \usage{
-cleanADAE(datafile)
+cleanADAE(datafile, ADSL)
 }
 \arguments{
 \item{datafile}{list of ADaM-ish dataframes}

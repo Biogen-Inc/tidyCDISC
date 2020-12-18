@@ -4,7 +4,7 @@
 \alias{combineBDS}
 \title{Function to bind data rows from the list of user supplied data frames}
 \usage{
-combineBDS(datafile)
+combineBDS(datafile, ADSL)
 }
 \arguments{
 \item{datafile}{list of ADaM-ish dataframes}
