@@ -61,7 +61,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     )
     selectInput(session$ns("COLUMN"), "Group Data By:",
                 choices = c("NONE", unique(c(
-                  colnames(ADSL())[sapply(ADSL(), class) %in% c('character', 'factor')],
+                  colnames(ADSL)[sapply(ADSL, class) %in% c('character', 'factor')],
                   colnames(ADAE())[sapply(ADAE(), class) %in% c('character', 'factor')]
                 ))),
                 selected = sel_grp
@@ -96,7 +96,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
            as.numeric(gsub(" ","",gsub(":","",stringr::word(start = 2, substr(input$recipe, 1, 9)))))
     )
   })
-  observe({ print(stan_table_num()) })
+  
   
   # perform any pre-filters on the data, when a STAN table is selected
   pre_ADSL <- reactive({
@@ -196,22 +196,21 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     return(list(data = dat, message = msg))
   })
   
-  # filter_msgs <- reactive({
-  #   msg <- paste(pre_ADSL()$message, pre_ADAE()$message, collapse = "\n")
-  #   print(msg)
-  #   return(msg)
-  # })
+  pre_filter_msgs <- reactive({
+    req(!is.null(input$recipe))
+    paste0(pre_ADSL()$message, pre_ADAE()$message, collapse = "\n")
+  })
+  
+  observe({ 
+    print(stan_table_num())
+    # print(paste0(pre_ADSL()$message, pre_ADAE()$message, collapse = "\n"))
+    print(pre_filter_msgs())
+  })
   
   # Create cleaned up versions of raw data
-  ADSL <- reactive({
-    # datafile()$ADSL
-    pre_ADSL()$data
-    })
-  BDS <- reactive({ datafile()[sapply(datafile(), function(x) "PARAMCD" %in% colnames(x))] })
-  ADAE <- reactive({
-    # cleanADAE(datafile = datafile(), ADSL = ADSL())
-    pre_ADAE()$data
-    })
+  ADSL <- reactive({ pre_ADSL()$data })
+  BDS <- reactive({  datafile()[sapply(datafile(), function(x) "PARAMCD" %in% colnames(x))] })
+  ADAE <- reactive({ pre_ADAE()$data })
  
   # combine BDS data into one large data set
   bds_data <- reactive({ 
@@ -225,7 +224,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
         select(USUBJID, AVISITN, AVISIT, PARAMCD, AVAL, CHG, data_from)
       
       # Join ADSL and all_PARAMCD
-      combined_data <- full_join(ADSL(), all_PARAMCD, by = "USUBJID")
+      combined_data <- inner_join(ADSL(), all_PARAMCD, by = "USUBJID")
     } else {
       combined_data <- ADSL() %>%
         mutate(data_from = "ADSL", PARAMCD = NA, AVAL = NA, CHG = NA)
@@ -295,10 +294,11 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   })
   
   observe({
-    req(ADSL(), ADAE())
+    req(datafile()) # this also doesn't need to depend on pre-filters, so grabbing root df cols
+    
     all_cols <- unique(c(
-      colnames(ADSL())[sapply(ADSL(), class) %in% c('character', 'factor')],
-      colnames(ADAE())[sapply(ADAE(), class) %in% c('character', 'factor')]
+      colnames(datafile()$ADSL)[sapply(datafile()$ADSL, class) %in% c('character', 'factor')],
+      colnames(datafile()$ADAE)[sapply(datafile()$ADAE, class) %in% c('character', 'factor')]
     ))
     session$sendCustomMessage("all_cols", all_cols)
   })
@@ -420,7 +420,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # Create the tables subtitle if the table has been filtered
   subtitle <- reactive({
     if (any(regexpr("%>%", capture.output(attr(filtered_data(), "code"))) > 0)) {
-      filters_in_english(filtered_data()) 
+      filters_in_english(filtered_data()) # filter_header = "",
     } else {
       " "
     }
@@ -469,12 +469,15 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # create dataframe of block names and their labels
   # for BDS use param cd as column names and params as their labels 
   block_data <- reactive({
-      metadata <- data.frame(col_names = colnames(ADSL()))
+      # We don't want the column names to update based on prefilters by recipe
+      # so we are going to use the original column names here
+      ADSL <- datafile()$ADSL
+      metadata <- data.frame(col_names = colnames(ADSL))
       metadata$code <- NA
       
       for (i in 1:nrow(metadata)) {
-        if("label" %in% names(attributes(ADSL()[[metadata$col_names[i]]]))){
-          metadata$code[i] <- attr(ADSL()[[metadata$col_names[i]]], "label")
+        if("label" %in% names(attributes(ADSL[[metadata$col_names[i]]]))){
+          metadata$code[i] <- attr(ADSL[[metadata$col_names[i]]], "label")
         }
       }
       
@@ -484,16 +487,18 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       names(new_list)[length(new_list)] <- "ADSL"
       
       # only display ADAE column blocks if an ADAE is uploaded!
-      if (!is.null(ADAE) &  "ADAE" %in% names(datafile())) {
+      if ("ADAE" %in% names(datafile())) {
+        # this also doesn't need to depend on pre-filters
+        ADAE <- datafile()$ADAE
         # Display variable blocks that are only unique to ADAE
         ADAE_blocks <- data.frame(
-          col_names = dplyr::setdiff(colnames(ADAE()), metadata$col_names)
+          col_names = dplyr::setdiff(colnames(ADAE), metadata$col_names)
         )
         ADAE_blocks$code <- NA
         
         for (i in 1:nrow(ADAE_blocks)) {
-          if("label" %in% names(attributes(ADAE()[[ADAE_blocks$col_names[i]]]))){ 
-            ADAE_blocks$code[i] <- attr(ADAE()[[ADAE_blocks$col_names[i]]], "label") 
+          if("label" %in% names(attributes(ADAE[[ADAE_blocks$col_names[i]]]))){ 
+            ADAE_blocks$code[i] <- attr(ADAE[[ADAE_blocks$col_names[i]]], "label") 
           }
         }
         # print(ADAE_blocks)
