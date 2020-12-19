@@ -39,6 +39,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
            <option  id="demography">Table 5: Demography</option>',
            ifelse("ADAE" %in% names(datafile()),'<option  id="tbl18">Table 18: Overall summary of adverse events</option>',''),
            ifelse("ADAE" %in% names(datafile()),'<option  id="tbl19">Table 19: Adverse events by system organ class and preferred term</option>',''),
+           ifelse("ADAE" %in% names(datafile()),'<option  id="tbl25">Table 25: Severe adverse events by system organ class and preferred term</option>',''),
            '</select>'))
   })
   
@@ -408,7 +409,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   
   pre_filter_msgs <- reactive({
     req(!is.null(input$recipe))
-    paste0(pre_ADSL()$message, pre_ADAE()$message, collapse = "<br/>")
+    paste0(pre_ADSL()$message, "<br/>", pre_ADAE()$message, collapse = "<br/>")
   })
   
   observe({ 
