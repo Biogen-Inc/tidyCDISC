@@ -55,7 +55,8 @@ ae18_rows = ["AOCCFL", "AESEV", "AESER","DTHDT"]
       $("#droppable_blocks").append($(combineRows(ae18_rows, "ADAE")));
       
     } else if (["Table 19: Adverse events by system organ class and preferred term",
-                "Table 25: Severe adverse events by system organ class and preferred term"].includes(publisher)) {
+                "Table 25: Severe adverse events by system organ class and preferred term",
+                "Table 29: Related adverse events by system organ class and preferred term"].includes(publisher)) {
       document.getElementById("droppable_agg").innerHTML = "";
       $("#droppable_agg").append($(selectRecipeBlock("NESTED_FREQ", "ADAE", "AEDECOD")));
       document.getElementById("droppable_blocks").innerHTML = "";
