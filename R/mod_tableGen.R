@@ -151,13 +151,13 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       } else if(stan_table_num() == 33){
         if("AEREL" %in% colnames(dat) & "AESER" %in% colnames(dat)){
           dat <- dat %>% filter(AEREL == 'RELATED' & AESER == 'Y')
-          msg <- "AEREL = 'RELATED'\nAESER = 'Y'"
+          msg <- "AEREL = 'RELATED'<br/>AESER = 'Y'"
         } else if("AEREL" %in% colnames(dat) & !("AESER" %in% colnames(dat))){
           dat <- dat %>% filter(AEREL == 'RELATED')
-          msg <- "AEREL = 'RELATED'\nVariable 'AESER' doesn't exist in ADAE. Filter not applied!"
+          msg <- "AEREL = 'RELATED'<br/>Variable 'AESER' doesn't exist in ADAE. Filter not applied!"
         } else if(!("AEREL" %in% colnames(dat)) & "AESER" %in% colnames(dat)){
           dat <- dat %>% filter(AESER == 'Y')
-          msg <- "Variable 'AEREL' doesn't exist in ADAE. Filter not applied!\nAESER = 'Y'"
+          msg <- "Variable 'AEREL' doesn't exist in ADAE. Filter not applied!<br/>AESER = 'Y'"
         } else{
           msg <- "Variables 'AEREL' & 'AESER' doesn't exist in ADAE. Filters not applied!"
         }
@@ -194,17 +194,6 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       }
     }
     return(list(data = dat, message = msg))
-  })
-  
-  pre_filter_msgs <- reactive({
-    req(!is.null(input$recipe))
-    paste0(pre_ADSL()$message, pre_ADAE()$message, collapse = "\n")
-  })
-  
-  observe({ 
-    print(stan_table_num())
-    # print(paste0(pre_ADSL()$message, pre_ADAE()$message, collapse = "\n"))
-    print(pre_filter_msgs())
   })
   
   # Create cleaned up versions of raw data
@@ -417,10 +406,29 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     nm = md(glue::glue("**{row_names_n()}** <br> N={total()}"))
   }
   
+  pre_filter_msgs <- reactive({
+    req(!is.null(input$recipe))
+    paste0(pre_ADSL()$message, pre_ADAE()$message, collapse = "<br/>")
+  })
+  
+  observe({ 
+    print(stan_table_num())
+    print(pre_filter_msgs())
+  })
+  
   # Create the tables subtitle if the table has been filtered
   subtitle <- reactive({
-    if (any(regexpr("%>%", capture.output(attr(filtered_data(), "code"))) > 0)) {
-      filters_in_english(filtered_data()) # filter_header = "",
+    # recipe selected AND IDEAFilter applied
+    if (input$recipe != "NONE" & any(regexpr("%>%", capture.output(attr(filtered_data(), "code"))) > 0) ) {
+      paste0("<b>Filters Applied:</b><br/>",pre_filter_msgs(), 
+              filters_in_english(filter_header = "", filtered_data()),
+             collapse = "<br/>")
+    # recipe selected, no IDEAFilter
+    } else if(input$recipe != "NONE" & !(any(regexpr("%>%", capture.output(attr(filtered_data(), "code"))) > 0))){
+      paste0("<b>Filters Applied:</b><br/>",pre_filter_msgs(), collapse = "<br/>")
+    # no recipe selected, but IDEAFilter
+    } else if(input$recipe == "NONE" & any(regexpr("%>%", capture.output(attr(filtered_data(), "code"))) > 0)){
+      filters_in_english(filtered_data())
     } else {
       " "
     }
