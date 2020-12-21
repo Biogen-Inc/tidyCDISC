@@ -44,8 +44,11 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
            '</select>'))
   })
   
-  # observeEvent(input$recipe, {
-  #   val <- ifelse(input$recipe == "none", "Table Title", input$recipe)
+  RECIPE <- reactive( if(rlang::is_empty(input$recipe)) "NONE" else input$recipe)
+
+  # observeEvent(RECIPE(), {
+  #   req(input$table_title)
+  #   val <- ifelse(RECIPE() == "NONE", "Table Title", RECIPE())
   #   updateTextInput(session, session$ns("table_title"), label = "Table Title",
   #                   value = val, width = '100%')
   # })
@@ -57,8 +60,8 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   
   output$grp_col_ui <- renderUI({
     sel_grp <- dplyr::case_when(
-      is.null(input$recipe) | length(input$recipe) == 0 ~ "NONE",
-      !is.null(input$recipe) & input$recipe != "NONE" ~ "TRT01P",
+      is.null(RECIPE()) | length(RECIPE()) == 0 ~ "NONE",
+      !is.null(RECIPE()) & RECIPE() != "NONE" ~ "TRT01P",
       TRUE ~ "NONE"
     )
     selectInput(session$ns("COLUMN"), "Group Data By:",
@@ -91,17 +94,25 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     updateSelectInput("filter_df", session = session, choices = as.list(my_loaded_adams()), selected = "ADSL")
   })
   
-  stan_table_num <- reactive({
-    req(!is.null(input$recipe)) # if recipe hasn't initialize yet...)
-    numeric_stan_table(input$recipe)
-  })
+  # stan_table_num <- reactive({
+  #   req(RECIPE()) # if recipe hasn't initialize yet...)
+  #   numeric_stan_table(RECIPE())
+  # })
+  
+  # observe({
+  #   print(input$recipe)
+  #   print(RECIPE())
+  #   print(stan_table_num())
+  #   
+  # })
   
   
   # perform any pre-filters on the data, when a STAN table is selected
   pre_ADSL <- reactive({
+    req(RECIPE())
     prep_adsl(ADSL = datafile()$ADSL,
-              input_recipe = input$recipe,
-              stan_table_num = stan_table_num()
+              input_recipe = RECIPE()
+              # ,stan_table_num = stan_table_num()
               )
   })
   
@@ -109,10 +120,12 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # use potentially pre-filtered ADSL when building/ joining w/ ADAE
   # Then filter ADAE based on STAN table selected.
   pre_ADAE <- reactive({
+    req(RECIPE())
     prep_adae(datafile = datafile(),
               ADSL = pre_ADSL()$data,
-              input_recipe = input$recipe,
-              stan_table_num = stan_table_num())
+              input_recipe = RECIPE()
+              # ,stan_table_num = stan_table_num()
+              )
   })
   
   # Create cleaned up versions of raw data
@@ -326,22 +339,22 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   }
   
   pre_filter_msgs <- reactive({
-    req(!is.null(input$recipe))
+    req(RECIPE())
     paste0(pre_ADSL()$message, "<br/>", pre_ADAE()$message, collapse = "<br/>")
   })
   
   # Create the tables subtitle if the table has been filtered
   subtitle <- reactive({
     # recipe selected AND IDEAFilter applied
-    if (input$recipe != "NONE" & any(regexpr("%>%", capture.output(attr(filtered_data(), "code"))) > 0) ) {
+    if (RECIPE() != "NONE" & any(regexpr("%>%", capture.output(attr(filtered_data(), "code"))) > 0) ) {
       paste0("<b>Filters Applied:</b><br/>",pre_filter_msgs(), 
               filters_in_english(filter_header = "", filtered_data()),
              collapse = "<br/>")
     # recipe selected, no IDEAFilter
-    } else if(input$recipe != "NONE" & !(any(regexpr("%>%", capture.output(attr(filtered_data(), "code"))) > 0))){
+    } else if(RECIPE() != "NONE" & !(any(regexpr("%>%", capture.output(attr(filtered_data(), "code"))) > 0))){
       paste0("<b>Filters Applied:</b><br/>",pre_filter_msgs(), collapse = "<br/>")
     # no recipe selected, but IDEAFilter
-    } else if(input$recipe == "NONE" & any(regexpr("%>%", capture.output(attr(filtered_data(), "code"))) > 0)){
+    } else if(RECIPE() == "NONE" & any(regexpr("%>%", capture.output(attr(filtered_data(), "code"))) > 0)){
       filters_in_english(filtered_data())
     } else {
       " "
@@ -464,7 +477,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       glue::glue("
         # Create AE data set
         pre_adae <- datalist %>%
-          IDEA::prep_adae(adsl$data, '{input$recipe}', {stan_table_num()})
+          IDEA::prep_adae(adsl$data, '{RECIPE()}')
         ae_data <- pre_adae$data
         "
       )
@@ -545,9 +558,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
         
     # create list of dataframes
     datalist <- IDEA::readData(study_dir, filenames)
-    adsl <- IDEA::prep_adsl(datalist$ADSL,
-                            input_recipe = '{input$recipe}',
-                            stan_table_num = {stan_table_num()})
+    adsl <- IDEA::prep_adsl(datalist$ADSL, input_recipe = '{RECIPE()}')
     bds_data <- datalist %>% IDEA::combineBDS(ADSL = adsl$data)
     {adae_expr()}
         

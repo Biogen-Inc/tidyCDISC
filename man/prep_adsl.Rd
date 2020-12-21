@@ -4,7 +4,7 @@
 \alias{prep_adsl}
 \title{Function to pre-filter the ADSL depending on the stan table selected}
 \usage{
-prep_adsl(ADSL, input_recipe, stan_table_num)
+prep_adsl(ADSL, input_recipe)
 }
 \arguments{
 \item{input_recipe}{The shiny input that keeps track of the recipe selected}

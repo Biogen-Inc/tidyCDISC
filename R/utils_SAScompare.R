@@ -87,8 +87,8 @@ numeric_stan_table <- function(input_recipe){
 #' 
 #' @export
 #' 
-prep_adsl <- function(ADSL, input_recipe, stan_table_num) {
-  # stan_table_num <- numeric_stan_table(input_recipe)
+prep_adsl <- function(ADSL, input_recipe) { #, stan_table_num
+  stan_table_num <- numeric_stan_table(input_recipe)
   dat <- ADSL
   msg <- ""
   if(!is.null(input_recipe)){ # if recipe has initialized...
@@ -119,8 +119,8 @@ prep_adsl <- function(ADSL, input_recipe, stan_table_num) {
 #' 
 #' @export
 #' 
-prep_adae <- function(datafile, ADSL, input_recipe, stan_table_num) {
-  # stan_table_num <- numeric_stan_table(input_recipe)
+prep_adae <- function(datafile, ADSL, input_recipe) { #, stan_table_num
+  stan_table_num <- numeric_stan_table(input_recipe)
   dat <- cleanADAE(datafile = datafile, ADSL = ADSL)
   msg <- ""
   if(!is.null(input_recipe)){ # if recipe has initialized...

@@ -4,7 +4,7 @@
 \alias{prep_adae}
 \title{Function to pre-filter the ADAE depending on the stan table selected}
 \usage{
-prep_adae(datafile, ADSL, input_recipe, stan_table_num)
+prep_adae(datafile, ADSL, input_recipe)
 }
 \arguments{
 \item{datafile}{list of ADaM-ish dataframes}
