@@ -7,8 +7,11 @@ adae <- haven::read_xpt("data-raw/adae.xpt") %>%
                                    AESEV == "SEVERE" ~ 3,
                                    TRUE ~ NA_real_),
                 AREL = if_else(AEREL %in% c('NOT RELATED', 'UNLIKELY RELATED', 'NONE', 'REMOTE'),
-                          'NOT RELATED', 'RELATED')
+                          'NOT RELATED', 'RELATED'),
+                ARELN = if_else(AREL == 'NOT RELATED', 0, 1)
   )
 attr(adae$AESEVN, "label") <- "Severity/Intensity (N)"
+attr(adae$AREL, "label") <- "Analysis Causality"
+attr(adae$ARELN, "label") <- "Analysis Causality (N)"
 usethis::use_data(adae, overwrite = TRUE)
 
