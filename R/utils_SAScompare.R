@@ -132,11 +132,11 @@ prep_adae <- function(datafile, ADSL, input_recipe) { #, stan_table_num
         msg <- "Variable 'AESEV' doesn't exist in ADAE. Filter not applied!"
       }
     } else if(stan_table_num == 29){
-      if("AEREL" %in% colnames(dat)){
-        dat <- dat %>% filter(AEREL == 'RELATED')
-        msg <- "AEREL = 'RELATED'"
+      if("AREL" %in% colnames(dat)){
+        dat <- dat %>% filter(AREL == 'RELATED')
+        msg <- "AREL = 'RELATED'"
       } else{
-        msg <- "Variable 'AEREL' doesn't exist in ADAE. Filter not applied!"
+        msg <- "Variable 'AREL' doesn't exist in ADAE. Filter not applied!"
       }
     } else if(stan_table_num %in% c(30, 31)){
       if("AESER" %in% colnames(dat)){
@@ -146,17 +146,17 @@ prep_adae <- function(datafile, ADSL, input_recipe) { #, stan_table_num
         msg <- "Variable 'AESER' doesn't exist in ADAE. Filter not applied!"
       }
     } else if(stan_table_num == 33){
-      if("AEREL" %in% colnames(dat) & "AESER" %in% colnames(dat)){
-        dat <- dat %>% filter(AEREL == 'RELATED' & AESER == 'Y')
-        msg <- "AEREL = 'RELATED'<br/>AESER = 'Y'"
-      } else if("AEREL" %in% colnames(dat) & !("AESER" %in% colnames(dat))){
-        dat <- dat %>% filter(AEREL == 'RELATED')
-        msg <- "AEREL = 'RELATED'<br/>Variable 'AESER' doesn't exist in ADAE. Filter not applied!"
-      } else if(!("AEREL" %in% colnames(dat)) & "AESER" %in% colnames(dat)){
+      if("AREL" %in% colnames(dat) & "AESER" %in% colnames(dat)){
+        dat <- dat %>% filter(AREL == 'RELATED' & AESER == 'Y')
+        msg <- "AREL = 'RELATED'<br/>AESER = 'Y'"
+      } else if("AREL" %in% colnames(dat) & !("AESER" %in% colnames(dat))){
+        dat <- dat %>% filter(AREL == 'RELATED')
+        msg <- "AREL = 'RELATED'<br/>Variable 'AESER' doesn't exist in ADAE. Filter not applied!"
+      } else if(!("AREL" %in% colnames(dat)) & "AESER" %in% colnames(dat)){
         dat <- dat %>% filter(AESER == 'Y')
-        msg <- "Variable 'AEREL' doesn't exist in ADAE. Filter not applied!<br/>AESER = 'Y'"
+        msg <- "Variable 'AREL' doesn't exist in ADAE. Filter not applied!<br/>AESER = 'Y'"
       } else{
-        msg <- "Variables 'AEREL' & 'AESER' doesn't exist in ADAE. Filters not applied!"
+        msg <- "Variables 'AREL' & 'AESER' doesn't exist in ADAE. Filters not applied!"
       }
     } else if(stan_table_num == 34){
       if("AEACN" %in% colnames(dat)){
