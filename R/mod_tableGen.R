@@ -258,10 +258,20 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     if (input$COLUMN == "NONE") {
       all
     } else {
-      groups <- use_data_reactive() %>%
-        group_by(!!sym(input$COLUMN)) %>%
-        distinct(USUBJID) %>%
-        summarise(n = n()) %>%
+      # retain all levels of grouping variable (COLUMN)
+      grp_lvls <- getLevels(use_data_reactive()[[input$COLUMN]])  # PUT ADAE() somehow?
+      xyz <- data.frame(grp_lvls) %>%
+        rename_with(~paste(input$COLUMN), grp_lvls)
+      
+      groups <- 
+        xyz %>%
+        left_join(
+          use_data_reactive() %>%
+          group_by(!!sym(input$COLUMN)) %>%
+          distinct(USUBJID) %>%
+          summarise(n = n())
+        )%>%
+        mutate(n = tidyr::replace_na(n, 0)) %>%
         pull(n)
       c(groups, all)
     }
@@ -284,12 +294,13 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       )
     }
     
-    # print(IDEA_distinct_freq.ADAE(column = "AEBODSYS",
-    #                               group = NULL,
-    #                               data = ae_data()))
-    # print(paste("ae_data():", "" %in% getLevels(ae_data()$AEBODSYS)))
-    # print(paste("ADAE():", "" %in% getLevels(ADAE()$AEBODSYS)))
-    # print(paste("datafile$ADAE:", "" %in% getLevels(datafile()$ADAE$AEBODSYS)))
+
+    print("start")
+    print(paste("1:",paste(levels(datafile()$ADSL[[column()]]), collapse = ", ")))
+    print(paste("2:",paste(levels(ADAE()[[column()]]), collapse = ", ")))
+    print(paste("3:",paste(levels(ae_data()[[column()]]), collapse = ", ")))
+    print(paste("4:",paste(common_rownames(use_data_reactive(), column()), collapse = ", ")))
+    print("end")
     
     purrr::pmap(list(blocks_and_functions()$agg, 
                       blocks_and_functions()$S3, 
@@ -310,7 +321,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
           vectorize_all = FALSE))
   })
   
-  # output$for_gt_table <- renderTable({ for_gt() })
+  output$for_gt_table <- renderTable({ for_gt() })
   
   # remove the first two columns from the row names to use
   # since these are used for grouping in gt
@@ -598,11 +609,20 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
         summarise(n = n(), .groups='drop_last') %>%
         pull(n)
         
-        groups <- {use_data} %>%
-        group_by({input$COLUMN}) %>%
-        distinct(USUBJID) %>%
-        summarise(n = n(), .groups='drop_last') %>%
-        pull(n)
+        grp_lvls <- getLevels({use_data}[['{input$COLUMN}']])
+        xyz <- data.frame(grp_lvls) %>%
+            rename_with(~paste('{input$COLUMN}'), grp_lvls)
+
+        groups <- 
+          xyz %>%
+          left_join(
+            {use_data} %>%
+            group_by({input$COLUMN}) %>%
+            distinct(USUBJID) %>%
+            summarise(n = n(), .groups='drop_last')
+          ) %>%
+          mutate(n = tidyr::replace_na(n, 0)) %>%
+          pull(n)
         
         total <- c(groups, all)
         "

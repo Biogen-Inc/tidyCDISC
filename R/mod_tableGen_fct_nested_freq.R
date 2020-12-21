@@ -141,11 +141,21 @@ IDEA_nested_freq.default <- IDEA_nested_freq.OCCDS <- IDEA_nested_freq.ADAE <- I
     
     group <- rlang::sym(group)
     
-    col_grp_tot <- data %>%
-      # filter(!is.na(!!column)) %>% # don't filter here.
-      group_by(!!group) %>%
-      summarize(n_tot = n_distinct(USUBJID)) %>%
-      ungroup() %>%
+    # Need this in case dataset rows get filtered to a really small set, and
+    # "lose" some levels
+    grp_lvls <- getLevels(data[[group]])
+    xyz <- data.frame(grp_lvls) %>%
+      rename_with(~paste(group), grp_lvls)
+    
+    col_grp_tot <- xyz %>%
+      left_join(
+        data %>%
+        # filter(!is.na(!!column)) %>% # don't filter here.
+        group_by(!!group) %>%
+        summarize(n_tot = n_distinct(USUBJID)) %>%
+        ungroup() 
+      )%>%
+      mutate(n_tot = tidyr::replace_na(n_tot, 0)) %>%
       tidyr::crossing(
         data %>% distinct(!!column)
       )
@@ -160,7 +170,7 @@ IDEA_nested_freq.default <- IDEA_nested_freq.OCCDS <- IDEA_nested_freq.ADAE <- I
         ungroup()
       ) %>%
       mutate(n = tidyr::replace_na(n, 0),
-             prop = n / n_tot,
+             prop = ifelse(n_tot == 0, 0, n / n_tot),
              v = paste0(n, ' (', sprintf("%.1f", round(prop*100, 1)), ')')
       ) %>%
       select(-n, -prop, -n_tot) 
@@ -173,11 +183,16 @@ IDEA_nested_freq.default <- IDEA_nested_freq.OCCDS <- IDEA_nested_freq.ADAE <- I
         transpose_df(num = 1)
       groups <- cbind(groups0, total$x)
     } else {
-      grp_tot <- data %>%
-        # filter(!is.na(!!column)) %>% # don't filter here.
-        group_by(!!group) %>%
-        summarize(n_tot = n_distinct(USUBJID)) %>%
-        ungroup() %>%
+      
+      grp_tot <- xyz %>%
+        left_join(
+          data %>%
+          # filter(!is.na(!!column)) %>% # don't filter here.
+          group_by(!!group) %>%
+          summarize(n_tot = n_distinct(USUBJID)) %>%
+          ungroup()
+        ) %>%
+        mutate(n_tot = tidyr::replace_na(n_tot, 0)) %>%
         tidyr::crossing(
           data %>%
             distinct(!!column, !!nst_var)
@@ -201,7 +216,7 @@ IDEA_nested_freq.default <- IDEA_nested_freq.OCCDS <- IDEA_nested_freq.ADAE <- I
                     ungroup()
                 ) %>%
                 mutate(n = tidyr::replace_na(n, 0),
-                       prop = n / n_tot,
+                       prop = ifelse(n_tot == 0, 0, n / n_tot),
                        v = paste0(n, ' (', sprintf("%.1f", round(prop*100, 1)), ')')
                 ) %>%
                 select(-n, -prop, -n_tot) %>%
