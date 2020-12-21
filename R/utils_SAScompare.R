@@ -73,7 +73,6 @@ cleanADAE <- function(datafile, ADSL) {
 #' @param input_recipe The shiny input that keeps track of the recipe selected
 #' 
 numeric_stan_table <- function(input_recipe){
-  req(!is.null(input_recipe)) # if recipe hasn't initialize yet...)
   ifelse(is.null(input_recipe) | input_recipe == "NONE", 
          0,
          as.numeric(gsub(" ","",gsub(":","",stringr::word(start = 2, substr(input_recipe, 1, 9)))))
@@ -88,8 +87,8 @@ numeric_stan_table <- function(input_recipe){
 #' 
 #' @export
 #' 
-prep_adsl <- function(ADSL, input_recipe) {
-  stan_table_num <- numeric_stan_table(input_recipe)
+prep_adsl <- function(ADSL, input_recipe, stan_table_num) {
+  # stan_table_num <- numeric_stan_table(input_recipe)
   dat <- ADSL
   msg <- ""
   if(!is.null(input_recipe)){ # if recipe has initialized...
@@ -120,8 +119,8 @@ prep_adsl <- function(ADSL, input_recipe) {
 #' 
 #' @export
 #' 
-prep_adae <- function(datafile, ADSL, input_recipe) {
-  stan_table_num <- numeric_stan_table(input_recipe)
+prep_adae <- function(datafile, ADSL, input_recipe, stan_table_num) {
+  # stan_table_num <- numeric_stan_table(input_recipe)
   dat <- cleanADAE(datafile = datafile, ADSL = ADSL)
   msg <- ""
   if(!is.null(input_recipe)){ # if recipe has initialized...

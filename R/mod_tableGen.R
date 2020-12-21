@@ -91,18 +91,18 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     updateSelectInput("filter_df", session = session, choices = as.list(my_loaded_adams()), selected = "ADSL")
   })
   
-  # stan_table_num <- reactive({
-  #   req(!is.null(input$recipe)) # if recipe hasn't initialize yet...)
-  #   ifelse(is.null(input$recipe) | input$recipe == "NONE", 
-  #          0,
-  #          as.numeric(gsub(" ","",gsub(":","",stringr::word(start = 2, substr(input$recipe, 1, 9)))))
-  #   )
-  # })
+  stan_table_num <- reactive({
+    req(!is.null(input$recipe)) # if recipe hasn't initialize yet...)
+    numeric_stan_table(input$recipe)
+  })
   
   
   # perform any pre-filters on the data, when a STAN table is selected
   pre_ADSL <- reactive({
-    prep_adsl(ADSL = datafile()$ADSL, input_recipe = input$recipe)
+    prep_adsl(ADSL = datafile()$ADSL,
+              input_recipe = input$recipe,
+              stan_table_num = stan_table_num()
+              )
   })
   
   # cleanADAE() now happens inside this reactive!
@@ -111,7 +111,8 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   pre_ADAE <- reactive({
     prep_adae(datafile = datafile(),
               ADSL = pre_ADSL()$data,
-              input_recipe = input$recipe)
+              input_recipe = input$recipe,
+              stan_table_num = stan_table_num())
   })
   
   # Create cleaned up versions of raw data
@@ -457,7 +458,18 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # ----------------------------------------------------------------------
   
   
-  
+  # If ADAE exists, then prep that data too
+  adae_expr <- reactive({
+    if("ADAE" %in% names(datafile())){
+      glue::glue("
+        # Create AE data set
+        pre_adae <- datalist %>%
+          IDEA::prep_adae(adsl$data, '{input$recipe}', {stan_table_num()})
+        ae_data <- pre_adae$data
+        "
+      )
+    } else {""}
+  })
   # capture output of filtering expression
   # input_filter_df <- c("one","mild","Moderate")
   # paste('"',dput(input_filter_df),'"')
@@ -497,16 +509,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   })
   
   
-  # If ADAE exists, then prep that data too
-  adae_expr <- reactive({
-    if("ADAE" %in% names(datafile())){
-      glue::glue("
-          # Create AE data set
-          ae_data <- datalist %>% IDEA::cleanADAE()
-          "
-      )
-    } else {""}
-  })#
+  
   
   
   # get filepaths
@@ -542,7 +545,10 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
         
     # create list of dataframes
     datalist <- IDEA::readData(study_dir, filenames)
-    bds_data <- datalist %>% IDEA::combineBDS()
+    adsl <- IDEA::prep_adsl(datalist$ADSL,
+                            input_recipe = '{input$recipe}',
+                            stan_table_num = {stan_table_num()})
+    bds_data <- datalist %>% IDEA::combineBDS(ADSL = adsl$data)
     {adae_expr()}
         
     {data_to_filter_expr()}
