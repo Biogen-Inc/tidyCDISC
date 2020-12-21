@@ -230,13 +230,15 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     if (x == "ADAE") { ae_data() }
     else all_data()
   }
-  
+
+  # check if the grouping column only exists in the ADAE
   is_grp_col_adae <- reactive({
     input$COLUMN %in% dplyr::setdiff(colnames(ae_data()), colnames(all_data()))
   })
   
+  # Decide which reactive data frame to use below
   use_data_reactive <- reactive({
-    if(is_grp_col_adae()){
+    if(is_grp_col_adae() | numeric_stan_table(RECIPE()) %in% c(18:39)){
       ae_data()
     } else { # do the same for mh_data()
       all_data()
@@ -581,7 +583,8 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   
   # create the total column names
   total_for_code <- reactive({
-    use_data <- ifelse(is_grp_col_adae(), "ae_data","bds_data")
+    use_data <- ifelse(is_grp_col_adae() | 
+       numeric_stan_table(RECIPE()) %in% c(18:39), "ae_data","bds_data")
     if (!!input$COLUMN == 'NONE') {
       glue::glue("total <- {use_data} %>% 
         distinct(USUBJID) %>% 
@@ -608,7 +611,8 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   })
   
   generate_table_output <- reactive({
-    use_data <- ifelse(is_grp_col_adae(), "ae_data","bds_data")
+    use_data <- ifelse(is_grp_col_adae() |
+        numeric_stan_table(RECIPE()) %in% c(18:39), "ae_data","bds_data")
     
     glue::glue(
       "
@@ -661,7 +665,8 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   })
   
   generate_comparison_output <- reactive({
-    use_data <- ifelse(is_grp_col_adae(), "ae_data","bds_data")
+    use_data <- ifelse(is_grp_col_adae() |
+        numeric_stan_table(RECIPE()) %in% c(18:39), "ae_data","bds_data")
     glue::glue(
       "
       {text_code()}

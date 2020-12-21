@@ -31,10 +31,10 @@ IDEA_nested_freq.default <- IDEA_nested_freq.OCCDS <- IDEA_nested_freq.ADAE <- I
     
   # # ########## ######### ######## #########
   # column <- "SEX"
-  # nested_var <- "NONE"
+  # nested_var <- "RACE"
   # group = "TRT01P"
+  # data = ae_data
   column_var_sort = "desc_tot"
-  # data = ae_data #%>% filter(SAFFL == 'Y') %>% filter(TRTEMFL == 'Y')
   # # ########## ######### ######## #########
   
   # column is the variable selected on the left-hand side
