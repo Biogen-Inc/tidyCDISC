@@ -68,9 +68,138 @@ cleanADAE <- function(datafile, ADSL) {
   }
 }
 
-#' The smallest possible data set we could filter to semi-join later
+#' Function to clean and combine ADAE dataset with ADSL
+#' 
+#' @param input_recipe The shiny input that keeps track of the recipe selected
+#' 
+numeric_stan_table <- function(input_recipe){
+  req(!is.null(input_recipe)) # if recipe hasn't initialize yet...)
+  ifelse(is.null(input_recipe) | input_recipe == "NONE", 
+         0,
+         as.numeric(gsub(" ","",gsub(":","",stringr::word(start = 2, substr(input_recipe, 1, 9)))))
+  )
+}
+
+
+#' Function to pre-filter the ADSL depending on the stan table selected
+#' 
+#' @param data an ADSL
+#' @param input_recipe The shiny input that keeps track of the recipe selected
+#' 
+#' @export
+#' 
+prep_adsl <- function(ADSL, input_recipe) {
+  stan_table_num <- numeric_stan_table(input_recipe)
+  dat <- ADSL
+  msg <- ""
+  if(!is.null(input_recipe)){ # if recipe has initialized...
+    if(stan_table_num == 5){
+      if("ITTFL" %in% colnames(dat)){
+        dat <- dat %>% filter(ITTFL == 'Y')
+        msg <- "ITTFL = 'Y'"
+      }else {
+        msg <- "Variable 'ITTFL' doesn't exist in ADSL. Filter not applied!"
+      }
+    } else if(stan_table_num %in% c(18:39)){
+      if("SAFFL" %in% colnames(dat)){
+        dat <- dat %>% filter(SAFFL == 'Y')
+        msg <- "SAFFL = 'Y'"
+      } else{
+        msg <- "Variable 'SAFFL' doesn't exist in ADSL. Filter not applied!"
+      }
+    }
+  }
+  return(list(data = dat, message = msg))
+}
+
+#' Function to pre-filter the ADAE depending on the stan table selected
 #' 
 #' @param datafile list of ADaM-ish dataframes 
+#' @param data an ADSL
+#' @param input_recipe The shiny input that keeps track of the recipe selected
+#' 
+#' @export
+#' 
+prep_adae <- function(datafile, ADSL, input_recipe) {
+  stan_table_num <- numeric_stan_table(input_recipe)
+  dat <- cleanADAE(datafile = datafile, ADSL = ADSL)
+  msg <- ""
+  if(!is.null(input_recipe)){ # if recipe has initialized...
+    if(stan_table_num %in% c(25, 26)){
+      if("AESEV" %in% colnames(dat)){
+        dat <- dat %>% filter(AESEV == 'SEVERE')
+        msg <- "AESEV = 'SEVERE'"
+      }else {
+        msg <- "Variable 'AESEV' doesn't exist in ADAE. Filter not applied!"
+      }
+    } else if(stan_table_num == 29){
+      if("AEREL" %in% colnames(dat)){
+        dat <- dat %>% filter(AEREL == 'RELATED')
+        msg <- "AEREL = 'RELATED'"
+      } else{
+        msg <- "Variable 'AEREL' doesn't exist in ADAE. Filter not applied!"
+      }
+    } else if(stan_table_num %in% c(30, 31)){
+      if("AESER" %in% colnames(dat)){
+        dat <- dat %>% filter(AESER == 'Y')
+        msg <- "AESER = 'Y'"
+      }else {
+        msg <- "Variable 'AESER' doesn't exist in ADAE. Filter not applied!"
+      }
+    } else if(stan_table_num == 33){
+      if("AEREL" %in% colnames(dat) & "AESER" %in% colnames(dat)){
+        dat <- dat %>% filter(AEREL == 'RELATED' & AESER == 'Y')
+        msg <- "AEREL = 'RELATED'<br/>AESER = 'Y'"
+      } else if("AEREL" %in% colnames(dat) & !("AESER" %in% colnames(dat))){
+        dat <- dat %>% filter(AEREL == 'RELATED')
+        msg <- "AEREL = 'RELATED'<br/>Variable 'AESER' doesn't exist in ADAE. Filter not applied!"
+      } else if(!("AEREL" %in% colnames(dat)) & "AESER" %in% colnames(dat)){
+        dat <- dat %>% filter(AESER == 'Y')
+        msg <- "Variable 'AEREL' doesn't exist in ADAE. Filter not applied!<br/>AESER = 'Y'"
+      } else{
+        msg <- "Variables 'AEREL' & 'AESER' doesn't exist in ADAE. Filters not applied!"
+      }
+    } else if(stan_table_num == 34){
+      if("AEACN" %in% colnames(dat)){
+        dat <- dat %>% filter(AEACN == 'DRUG WITHDRAWN')
+        msg <- "AEACN = 'DRUG WITHDRAWN'"
+      } else{
+        msg <- "Variable 'AEACN' doesn't exist in ADAE. Filter not applied!"
+      }
+    } else if(stan_table_num == 36){ #AEACNOTH contains 'Withdrawl" and "Study"
+      if("AEACNOTH" %in% colnames(dat)){
+        dat <- dat %>%
+          filter(stringr::str_detect(tolower(AEACNOTH),"withdrawl") &
+                   stringr::str_detect(tolower(AEACNOTH),"study"))
+        msg <- "AEACNOTH Contains 'withdrawl' and 'study'"
+      } else{
+        msg <- "Variable 'AEACNOTH' doesn't exist in ADAE. Filter not applied!"
+      }
+    } else if(stan_table_num == 38){
+      if("AEACN" %in% colnames(dat)){
+        dat <- dat %>% filter(AEACN %in% c('DRUG INTERRUPTED', 'DRUG REDUCED', 'DRUG INCREASED'))
+        msg <- "AEACN IN ('DRUG INTERRUPTED', 'DRUG REDUCED', 'DRUG INCREASED')"
+      } else{
+        msg <- "Variable 'AEACN' doesn't exist in ADAE. Filter not applied!"
+      }
+    } else if(stan_table_num == 39){
+      if("TRTEMFL" %in% colnames(dat)){
+        dat <- dat %>% filter(TRTEMFL == 'Y')
+        msg <- "TRTEMFL = 'Y'"
+      }else {
+        msg <- "Variable 'TRTEMFL' doesn't exist in ADAE. Filter not applied!"
+      }
+    }
+  }
+  return(list(data = dat, message = msg))
+}
+
+
+
+
+
+#' The smallest possible data set we could filter to semi-join later
+#' 
 #' @param datafile list of ADaM-ish dataframes 
 #' 
 #' @export
