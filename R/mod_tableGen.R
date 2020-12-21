@@ -94,10 +94,6 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     updateSelectInput("filter_df", session = session, choices = as.list(my_loaded_adams()), selected = "ADSL")
   })
   
-  # stan_table_num <- reactive({
-  #   req(RECIPE()) # if recipe hasn't initialize yet...)
-  #   numeric_stan_table(RECIPE())
-  # })
   
   # observe({
   #   print(input$recipe)
@@ -110,10 +106,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # perform any pre-filters on the data, when a STAN table is selected
   pre_ADSL <- reactive({
     req(RECIPE())
-    prep_adsl(ADSL = datafile()$ADSL,
-              input_recipe = RECIPE()
-              # ,stan_table_num = stan_table_num()
-              )
+    prep_adsl(ADSL = datafile()$ADSL,input_recipe = RECIPE())
   })
   
   # cleanADAE() now happens inside this reactive!
@@ -121,11 +114,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # Then filter ADAE based on STAN table selected.
   pre_ADAE <- reactive({
     req(RECIPE())
-    prep_adae(datafile = datafile(),
-              ADSL = pre_ADSL()$data,
-              input_recipe = RECIPE()
-              # ,stan_table_num = stan_table_num()
-              )
+    prep_adae(datafile = datafile(),ADSL = pre_ADSL()$data,input_recipe = RECIPE())
   })
   
   # Create cleaned up versions of raw data
@@ -476,9 +465,9 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     if("ADAE" %in% names(datafile())){
       glue::glue("
         # Create AE data set
-        pre_adae <- datalist %>%
-          IDEA::prep_adae(adsl$data, '{RECIPE()}')
-        ae_data <- pre_adae$data
+            pre_adae <- datalist %>%
+                IDEA::prep_adae(pre_adsl$data, '{RECIPE()}')
+            ae_data <- pre_adae$data
         "
       )
     } else {""}
@@ -496,8 +485,8 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       # options(useFancyQuotes = TRUE)
       glue::glue("
           # Create small filtered data set
-          dat_to_filt <- IDEA::data_to_filter(datalist, c({filter_dfs}))
-          filtered_data <- eval(parse(text = '{filter_code}')) %>% varN_fctr_reorder()
+              dat_to_filt <- IDEA::data_to_filter(datalist, c({filter_dfs}))
+              filtered_data <- eval(parse(text = '{filter_code}')) %>% varN_fctr_reorder()
           ")
     } else {""}
   })
@@ -506,7 +495,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     if(any(regexpr("%>%", filter_code) > 0)){
       glue::glue("
           # Apply small filtered data set to BDS data
-          bds_data <- bds_data %>% semi_join(filtered_data) 
+              bds_data <- bds_data %>% semi_join(filtered_data) 
           ")
     } else {""}
   })
@@ -516,7 +505,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     if(any(regexpr("%>%", filter_code) > 0)){
       glue::glue("
           # Apply small filtered data set to ADAE data
-          ae_data <- ae_data %>% semi_join(filtered_data) 
+              ae_data <- ae_data %>% semi_join(filtered_data) 
           ")
     } else {""}
   })
@@ -558,8 +547,8 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
         
     # create list of dataframes
     datalist <- IDEA::readData(study_dir, filenames)
-    adsl <- IDEA::prep_adsl(datalist$ADSL, input_recipe = '{RECIPE()}')
-    bds_data <- datalist %>% IDEA::combineBDS(ADSL = adsl$data)
+    pre_adsl <- IDEA::prep_adsl(datalist$ADSL, input_recipe = '{RECIPE()}')
+    bds_data <- datalist %>% IDEA::combineBDS(ADSL = pre_adsl$data)
     {adae_expr()}
         
     {data_to_filter_expr()}
