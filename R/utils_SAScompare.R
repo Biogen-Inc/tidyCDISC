@@ -108,6 +108,7 @@ prep_adsl <- function(ADSL, input_recipe) { #, stan_table_num
       }
     }
   }
+  
   return(list(data = dat, message = msg))
 }
 
@@ -190,6 +191,7 @@ prep_adae <- function(datafile, ADSL, input_recipe) { #, stan_table_num
       }
     }
   }
+  
   return(list(data = dat, message = msg))
 }
 

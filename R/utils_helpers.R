@@ -69,7 +69,7 @@ common_rownames <- function(data, group) {
   } else {
     if(is.factor(data[[group]])){
       # droplevels() get's rid of levels that no longer exist in the data post filtering
-      lvls <- levels(droplevels(data[[group]]))
+      lvls <- levels(data[[group]]) # removed droplevels() to retain all trt grps
     } else {
       lvls <- sort(unique(data[[group]]))
     }
