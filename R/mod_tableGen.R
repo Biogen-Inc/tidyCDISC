@@ -460,6 +460,27 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # ----------------------------------------------------------------------
   
   
+  
+  # Depending on data source used in the app, create data for R script
+  create_script_data <- reactive({
+    if(any("CDISCPILOT01" %in% ADSL()$STUDYID)){
+      glue::glue("
+        # create list of dataframes from CDISC pilot study
+            datalist <- list(ADSL = adsl, ADAE = adae, ADVS = advs, ADLBC = adlbc)
+        "
+      )
+    } else {glue::glue("
+      # User must manually set file paths for study
+          study_dir <- 'path/to/study/directory/'
+          
+          # use HAVEN to extract data, then merge
+          filenames <- c({filenames()})
+          
+          # create list of dataframes
+          datalist <- IDEA::readData(study_dir, filenames)
+      ")}
+  })
+  
   # If ADAE exists, then prep that data too
   adae_expr <- reactive({
     if("ADAE" %in% names(datafile())){
@@ -539,14 +560,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     library(haven)
     library(dplyr)
         
-    # User must manually set file paths for study
-    study_dir <- 'path/to/study/directory/'
-        
-    # use HAVEN to extract data, then merge
-    filenames <- c({filenames()})
-        
-    # create list of dataframes
-    datalist <- IDEA::readData(study_dir, filenames)
+    {create_script_data()}
     pre_adsl <- IDEA::prep_adsl(datalist$ADSL, input_recipe = '{RECIPE()}')
     bds_data <- datalist %>% IDEA::combineBDS(ADSL = pre_adsl$data)
     {adae_expr()}

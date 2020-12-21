@@ -2,6 +2,10 @@
 
 export("%>%")
 export(IDEA_methods)
+export(adae)
+export(adlbc)
+export(adsl)
+export(advs)
 export(cleanADAE)
 export(col_for_list_expr)
 export(combineBDS)
