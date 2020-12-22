@@ -59,7 +59,8 @@ ae18_rows = ["AOCCFL", "AESEV", "AESER","DTHDT"]
                 "Table 29: Related adverse events by system organ class and preferred term",
                 "Table 30: Serious adverse events by system organ class and preferred term",
                 "Table 33: Related serious adverse events by system organ class and preferred term",
-                "Table 34: Adverse events that led to discontinuation of study treatment by system organ class and preferred term"].includes(publisher)) {
+                "Table 34: Adverse events that led to discontinuation of study treatment by system organ class and preferred term",
+                "Table 38: Adverse events that led to drug interrupted, dose reduced, or dose increased by system organ class and preferred term"].includes(publisher)) {
       document.getElementById("droppable_agg").innerHTML = "";
       $("#droppable_agg").append($(selectRecipeBlock("NESTED_FREQ", "ADAE", "AEDECOD")));
       document.getElementById("droppable_blocks").innerHTML = "";
