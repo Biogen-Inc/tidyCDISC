@@ -74,7 +74,8 @@ ae18_rows = ["AOCCFL", "AESEV", "AESER","DTHDT"]
       $("#droppable_blocks").append($(simpleRecipeRowBlock("AEBODSYS", "ADAE")));
       
     } else if (["Table 23: Adverse events by preferred term",
-                "Table 26: Severe adverse events by preferred term"].includes(publisher)) {
+                "Table 26: Severe adverse events by preferred term",
+                "Table 31: Serious adverse events by preferred term"].includes(publisher)) {
       document.getElementById("droppable_agg").innerHTML = "";
       $("#droppable_agg").append($(selectRecipeBlock("NESTED_FREQ", "ADAE", "NONE")));
       document.getElementById("droppable_blocks").innerHTML = "";
