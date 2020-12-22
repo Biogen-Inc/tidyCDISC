@@ -42,6 +42,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
            ifelse("ADAE" %in% names(datafile()),'<option  id="tbl25">Table 25: Severe adverse events by system organ class and preferred term</option>',''),
            ifelse("ADAE" %in% names(datafile()),'<option  id="tbl29">Table 29: Related adverse events by system organ class and preferred term</option>',''),
            ifelse("ADAE" %in% names(datafile()),'<option  id="tbl30">Table 30: Serious adverse events by system organ class and preferred term</option>',''),
+           ifelse("ADAE" %in% names(datafile()),'<option  id="tbl33">Table 33: Related serious adverse events by system organ class and preferred term</option>',''),
            '</select>'))
   })
   
@@ -324,8 +325,8 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   
   output$for_gt_table <- renderTable({ for_gt() })
   
-  # remove the first two columns from the row names to use
-  # since these are used for grouping in gt
+  # remove the first two columns from the row names to use since 
+  # these are used for grouping in gt. Make sure Total is at the end
   row_names_n <- reactive({ 
     test <- names(for_gt())[-c(1:2)] 
     test[grepl("\\.\\.\\.", test)] <- "Missing"
