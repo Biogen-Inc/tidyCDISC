@@ -226,6 +226,8 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   
   column <- reactive( if (input$COLUMN == "NONE") NULL else input$COLUMN)
   
+  # tell Shiny which dataframe to use when mapping through list of tables
+  # to render
   data_to_use_str <- function(x) {
     if (x == "ADAE") { ae_data() }
     else all_data()
@@ -244,6 +246,14 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       all_data()
     }
   })
+  # Only needed for app, not for R script
+  use_data_reactive_pre_filter <- reactive({
+    if(is_grp_col_adae() | numeric_stan_table(RECIPE()) %in% c(18:39)){
+      ADAE()
+    } else { # do the same for mh_data()
+      bds_data()
+    }
+  })
   
   # calculate the totals to input after N= in the table headers
   # a single N if data is not grouped
@@ -258,7 +268,6 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     if (input$COLUMN == "NONE") {
       all
     } else {
-      # retain all levels of grouping variable (COLUMN)
       grp_lvls <- getLevels(use_data_reactive()[[input$COLUMN]])  # PUT ADAE() somehow?
       xyz <- data.frame(grp_lvls) %>%
         rename_with(~paste(input$COLUMN), grp_lvls)
@@ -293,15 +302,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
         need(all(blocks_and_functions()$dataset == "ADAE"), glue::glue("{column()} doesn't exist in all data files, please select new grouping variable or only drag variables to left-hand side from ADAE source"))
       )
     }
-    
 
-    print("start")
-    print(paste("1:",paste(levels(datafile()$ADSL[[column()]]), collapse = ", ")))
-    print(paste("2:",paste(levels(ADAE()[[column()]]), collapse = ", ")))
-    print(paste("3:",paste(levels(ae_data()[[column()]]), collapse = ", ")))
-    print(paste("4:",paste(common_rownames(use_data_reactive(), column()), collapse = ", ")))
-    print("end")
-    
     purrr::pmap(list(blocks_and_functions()$agg, 
                       blocks_and_functions()$S3, 
                       blocks_and_functions()$dropdown,
