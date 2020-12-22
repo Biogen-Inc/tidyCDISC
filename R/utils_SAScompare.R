@@ -125,27 +125,25 @@ prep_adae <- function(datafile, ADSL, input_recipe) { #, stan_table_num
   dat <- cleanADAE(datafile = datafile, ADSL = ADSL)
   msg <- ""
   if(!is.null(input_recipe)){ # if recipe has initialized...
+    
     if(stan_table_num %in% c(25, 26)){
-      if("AESEV" %in% colnames(dat)){
-        dat <- dat %>% filter(AESEV == 'SEVERE')
-        msg <- "AESEV = 'SEVERE'"
-      }else {
-        msg <- "Variable 'AESEV' doesn't exist in ADAE. Filter AESEV = 'SEVERE' not applied!"
-      }
+        if("AESEV" %in% colnames(dat)){
+          dat <- dat %>% filter(AESEV == 'SEVERE')
+          msg <- "AESEV = 'SEVERE'"
+        } else {msg <- "Variable 'AESEV' doesn't exist in ADAE. Filter AESEV = 'SEVERE' not applied!"}
+    
     } else if(stan_table_num == 29){
-      if("AREL" %in% colnames(dat)){
-        dat <- dat %>% filter(AREL == 'RELATED')
-        msg <- "AREL = 'RELATED'"
-      } else{
-        msg <- "Variable 'AREL' doesn't exist in ADAE. Filter AREL = 'RELATED' not applied!"
-      }
+        if("AREL" %in% colnames(dat)){
+          dat <- dat %>% filter(AREL == 'RELATED')
+          msg <- "AREL = 'RELATED'"
+        } else {msg <- "Variable 'AREL' doesn't exist in ADAE. Filter AREL = 'RELATED' not applied!"}
+        
     } else if(stan_table_num %in% c(30, 31)){
-      if("AESER" %in% colnames(dat)){
-        dat <- dat %>% filter(AESER == 'Y')
-        msg <- "AESER = 'Y'"
-      }else {
-        msg <- "Variable 'AESER' doesn't exist in ADAE. Filter AESER = 'Y' not applied!"
-      }
+        if("AESER" %in% colnames(dat)){
+          dat <- dat %>% filter(AESER == 'Y')
+          msg <- "AESER = 'Y'"
+        } else {msg <- "Variable 'AESER' doesn't exist in ADAE. Filter AESER = 'Y' not applied!"}
+        
     } else if(stan_table_num == 33){
       if("AREL" %in% colnames(dat) & "AESER" %in% colnames(dat)){
         dat <- dat %>% filter(AREL == 'RELATED' & AESER == 'Y')
@@ -189,6 +187,12 @@ prep_adae <- function(datafile, ADSL, input_recipe) { #, stan_table_num
       }else {
         msg <- "Variable 'TRTEMFL' doesn't exist in ADAE. Filter TRTEMFL = 'Y' not applied!"
       }
+    }
+    if(stan_table_num %in% c(25:26, 29:33)){
+      if("TRTEMFL" %in% colnames(dat)){
+        dat <- dat %>% filter(TRTEMFL == 'Y')
+        msg <- paste0(msg, "<br/>TRTEMFL = 'Y'")
+      } else {msg <- paste0(msg, "<br/>Variable 'TRTEMFL' doesn't exist in ADAE. Filter TRTEMFL = 'Y' not applied!")}
     }
   }
   
