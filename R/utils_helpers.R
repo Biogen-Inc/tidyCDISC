@@ -192,6 +192,7 @@ getLevels <- function(x) {if(is.factor(x)) levels(x) else sort(unique(x), na.las
 #' @export
 #' 
 varN_fctr_reorder <- function(data) {
+  
   # Now to refactor levels in VARN order, if they exist:
   # save the variable labels into savelbls vector
   savelbls <- sjlabelled::get_label(data)
@@ -205,10 +206,8 @@ varN_fctr_reorder <- function(data) {
   
   data.table::setDT(data)
   purrr::walk2(varc, varn, ~ refact(data, .x, .y))
-  
   # copy SAS labels back into data
   data <- sjlabelled::set_label(data, label = savelbls)
-  
   return(data)
 }
 

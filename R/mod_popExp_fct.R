@@ -13,12 +13,16 @@
 #' @family popExp Functions
 #' 
 refact <- function(data, varc, varn) {
+  
   datac <- deparse(substitute(data))
   if (varc %in% colnames(data) && varn %in% colnames(data)) {
     #message(paste("A factor was created for", varc, "based on", varn, "levels"))
     # if not a factor yet, make it a factor, then re-order
     if(!is.factor(data[,(varc)])) {data[, (varc) := as.factor(get(varc))]}
-    data[, (varc) := forcats::fct_reorder(get(varc), get(varn))] 
+    # If a level was dropped, then don't reorder the factor
+     if(length(levels(data[[varc]])) == length(unique(data[[varc]]))){
+       data[, (varc) := forcats::fct_reorder(get(varc), get(varn))] 
+     }
   } 
 }
 
