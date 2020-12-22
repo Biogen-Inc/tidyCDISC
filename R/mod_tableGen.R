@@ -328,7 +328,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     }
     # if no data in the source, do not run the pmap, just show this msg:
     if(nrow(use_data_reactive()) == 0){
-      stop(paste0("No subjects remain when the following filters are applied. Please\n        "
+      stop(paste0("No subjects remain when the following filters are applied.\n        "
                       ,gsub("<br/>", "\n        ", pre_filter_msgs())))
     }
 
@@ -565,7 +565,10 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     options(useFancyQuotes = FALSE)
     paste(tolower(sQuote(paste0(names(datafile()), '.sas7bdat'))), collapse = ",")
   })
-  
+  Rscript_use_data <- reactive({
+    ifelse(is_grp_col_adae() | 
+           numeric_stan_table(RECIPE()) %in% c(18:39), "ae_data","bds_data")
+  })
   # create code to generate table as dataframe object
   text_code <- reactive({
     glue::glue(
@@ -598,36 +601,35 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     # and create table using data
     blockData <- {paste0(capture.output(dput(blocks_and_functions())), collapse = '\n')}
     pretty_blocks <- {paste0(capture.output(dput(pretty_blocks)), collapse = '\n')}
+    
+    if(nrow({Rscript_use_data()}) == 0) stop(\"{paste0('No subjects remain when the following filters are applied. \n        ',gsub('<br/>', '\n        ', pre_filter_msgs()))}\")
     "
     )
   })
   
-  
   # create the total column names
   total_for_code <- reactive({
-    use_data <- ifelse(is_grp_col_adae() | 
-       numeric_stan_table(RECIPE()) %in% c(18:39), "ae_data","bds_data")
     if (!!input$COLUMN == 'NONE') {
-      glue::glue("total <- {use_data} %>% 
+      glue::glue("total <- {Rscript_use_data()} %>% 
         distinct(USUBJID) %>% 
         summarise(n = n(), .groups='drop_last') %>%
         pull(n)")
     } else {
       glue::glue(
         "
-        all <- {use_data} %>% 
+        all <- {Rscript_use_data()} %>% 
         distinct(USUBJID) %>% 
         summarise(n = n(), .groups='drop_last') %>%
         pull(n)
         
-        grp_lvls <- getLevels({use_data}[['{input$COLUMN}']])
+        grp_lvls <- getLevels({Rscript_use_data()}[['{input$COLUMN}']])
         xyz <- data.frame(grp_lvls) %>%
             rename_with(~paste('{input$COLUMN}'), grp_lvls)
 
         groups <- 
           xyz %>%
           left_join(
-            {use_data} %>%
+            {Rscript_use_data()} %>%
             group_by({input$COLUMN}) %>%
             distinct(USUBJID) %>%
             summarise(n = n(), .groups='drop_last')
@@ -642,8 +644,6 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   })
   
   generate_table_output <- reactive({
-    use_data <- ifelse(is_grp_col_adae() |
-        numeric_stan_table(RECIPE()) %in% c(18:39), "ae_data","bds_data")
     
     glue::glue(
       "
@@ -656,7 +656,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
                             function(x,y,z,d) IDEA::IDEA_methods(x,y,z,
                                                    group = {column() %quote% 'NULL'}, 
                                                    data = IDEA::data_to_use_str(d))) %>%
-      map(setNames, IDEA::common_rownames({use_data}, {column() %quote% 'NULL'})) %>%
+      map(setNames, IDEA::common_rownames({Rscript_use_data()}, {column() %quote% 'NULL'})) %>%
       setNames(paste(blockData$gt_group)) %>%
       bind_rows(.id = 'ID') %>%
       mutate(
@@ -696,8 +696,6 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   })
   
   generate_comparison_output <- reactive({
-    use_data <- ifelse(is_grp_col_adae() |
-        numeric_stan_table(RECIPE()) %in% c(18:39), "ae_data","bds_data")
     glue::glue(
       "
       {text_code()}
@@ -713,7 +711,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
                               function(x,y,z,d) IDEA::IDEA_methods(x,y,z, 
                                                      group = {column() %quote% 'NULL'}, 
                                                      data = IDEA::data_to_use_str(d))) %>%
-      map(setNames, IDEA::common_rownames({use_data}, {column() %quote% 'NULL'})) %>%
+      map(setNames, IDEA::common_rownames({Rscript_use_data()}, {column() %quote% 'NULL'})) %>%
       setNames(paste(blockData$label)) %>%
       bind_rows(.id = 'ID') %>%
       mutate(

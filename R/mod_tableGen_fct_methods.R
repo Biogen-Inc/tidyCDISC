@@ -18,6 +18,10 @@
 #' @export
 IDEA_methods <- function(agg, column, week, group, data) {
   # informative error in case the selected variable doesn't exist in data
+  # if no data in the source, do not run the pmap, just show this msg:
+  if(nrow(data) == 0){
+    stop("No subjects remain in data source.")
+  }
   if (!(paste(column) %in% colnames(data)) &
       !(paste(column) %in% unique(data$PARAMCD))
       ){
