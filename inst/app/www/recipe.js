@@ -73,7 +73,8 @@ ae18_rows = ["AOCCFL", "AESEV", "AESER","DTHDT"]
       document.getElementById("droppable_blocks").innerHTML = "";
       $("#droppable_blocks").append($(simpleRecipeRowBlock("AEBODSYS", "ADAE")));
       
-    } else if (publisher === "Table 23: Adverse events by preferred term") {
+    } else if (["Table 23: Adverse events by preferred term",
+                "Table 26: Severe adverse events by preferred term"].includes(publisher)) {
       document.getElementById("droppable_agg").innerHTML = "";
       $("#droppable_agg").append($(selectRecipeBlock("NESTED_FREQ", "ADAE", "NONE")));
       document.getElementById("droppable_blocks").innerHTML = "";
