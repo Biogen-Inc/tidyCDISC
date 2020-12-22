@@ -177,8 +177,8 @@ prep_adae <- function(datafile, ADSL, input_recipe) { #, stan_table_num
       }
     } else if(stan_table_num == 38){
       if("AEACN" %in% colnames(dat)){
-        dat <- dat %>% filter(AEACN %in% c('DRUG INTERRUPTED', 'DRUG REDUCED', 'DRUG INCREASED'))
-        msg <- "AEACN IN ('DRUG INTERRUPTED', 'DRUG REDUCED', 'DRUG INCREASED')"
+        dat <- dat %>% filter(AEACN %in% c('DRUG INTERRUPTED', 'DRUG REDUCED', 'DOSE REDUCED', 'DRUG INCREASED', 'DOSE INCREASED'))
+        msg <- "AEACN IN ('DRUG INTERRUPTED', 'DOSE REDUCED', 'DOSE INCREASED')"
       } else{
         msg <- "Variable 'AEACN' doesn't exist in ADAE. Filter not applied!"
       }
