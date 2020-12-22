@@ -43,6 +43,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
            ifelse("ADAE" %in% names(datafile()),'<option  id="tbl29">Table 29: Related adverse events by system organ class and preferred term</option>',''),
            ifelse("ADAE" %in% names(datafile()),'<option  id="tbl30">Table 30: Serious adverse events by system organ class and preferred term</option>',''),
            ifelse("ADAE" %in% names(datafile()),'<option  id="tbl33">Table 33: Related serious adverse events by system organ class and preferred term</option>',''),
+           ifelse("ADAE" %in% names(datafile()),'<option  id="tbl34">Table 34: Adverse events that led to discontinuation of study treatment by system organ class and preferred term</option>',''),
            '</select>'))
   })
   
@@ -287,7 +288,28 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     }
   })
 
+  pre_filter_msgs <- reactive({
+    req(RECIPE())
+    paste0(pre_ADSL()$message, "<br/>", pre_ADAE()$message, collapse = "<br/>")
+  })
   
+  # Create the tables subtitle if the table has been filtered
+  subtitle_html <- reactive({
+    # recipe selected AND IDEAFilter applied
+    if (RECIPE() != "NONE" & any(regexpr("%>%", capture.output(attr(filtered_data(), "code"))) > 0) ) {
+      paste0("<b>Filters Applied:</b><br/>",pre_filter_msgs(), 
+             filters_in_english(filter_header = "", filtered_data()),
+             collapse = "<br/>")
+      # recipe selected, no IDEAFilter
+    } else if(RECIPE() != "NONE" & !(any(regexpr("%>%", capture.output(attr(filtered_data(), "code"))) > 0))){
+      paste0("<b>Filters Applied:</b><br/>",pre_filter_msgs(), collapse = "<br/>")
+      # no recipe selected, but IDEAFilter
+    } else if(RECIPE() == "NONE" & any(regexpr("%>%", capture.output(attr(filtered_data(), "code"))) > 0)){
+      filters_in_english(filtered_data())
+    } else {
+      " "
+    }
+  })
   
   
   # create a gt table output by mapping over each row in the block input
@@ -302,6 +324,11 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       validate(
         need(all(blocks_and_functions()$dataset == "ADAE"), glue::glue("{column()} doesn't exist in all data files, please select new grouping variable or only drag variables to left-hand side from ADAE source"))
       )
+    }
+    # if no data in the source, do not run the pmap, just show this msg:
+    if(nrow(use_data_reactive()) == 0){
+      stop(paste0("No subjects remain when the following filters are applied. Please\n        "
+                      ,gsub("<br/>", "\n        ", pre_filter_msgs())))
     }
 
     purrr::pmap(list(blocks_and_functions()$agg, 
@@ -343,28 +370,9 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     nm = md(glue::glue("**{row_names_n()}** <br> N={total()}"))
   }
   
-  pre_filter_msgs <- reactive({
-    req(RECIPE())
-    paste0(pre_ADSL()$message, "<br/>", pre_ADAE()$message, collapse = "<br/>")
-  })
   
-  # Create the tables subtitle if the table has been filtered
-  subtitle <- reactive({
-    # recipe selected AND IDEAFilter applied
-    if (RECIPE() != "NONE" & any(regexpr("%>%", capture.output(attr(filtered_data(), "code"))) > 0) ) {
-      paste0("<b>Filters Applied:</b><br/>",pre_filter_msgs(), 
-              filters_in_english(filter_header = "", filtered_data()),
-             collapse = "<br/>")
-    # recipe selected, no IDEAFilter
-    } else if(RECIPE() != "NONE" & !(any(regexpr("%>%", capture.output(attr(filtered_data(), "code"))) > 0))){
-      paste0("<b>Filters Applied:</b><br/>",pre_filter_msgs(), collapse = "<br/>")
-    # no recipe selected, but IDEAFilter
-    } else if(RECIPE() == "NONE" & any(regexpr("%>%", capture.output(attr(filtered_data(), "code"))) > 0)){
-      filters_in_english(filtered_data())
-    } else {
-      " "
-    }
-  })
+  
+  
   
   # create gt table
   gt_table <- reactive({
@@ -379,7 +387,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       cols_label(.list = imap(for_gt()[-c(1:2)], ~col_for_list(.y, .x))) %>%
       tab_header(
         title = md(input$table_title),
-        subtitle = md(subtitle())
+        subtitle = md(subtitle_html())
       ) %>%
       tab_style(
         style = cell_text(weight = "bold"),
@@ -675,7 +683,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
           cols_label(.list = imap(tg_table[-c(1:2)], ~ IDEA::col_for_list_expr(.y, .x))) %>%
           tab_header(
             title = md('{input$table_title}'),
-            subtitle = md(\"{subtitle()}\")
+            subtitle = md(\"{subtitle_html()}\")
           ) %>%
           tab_style(
           style = cell_text(weight = 'bold'),
