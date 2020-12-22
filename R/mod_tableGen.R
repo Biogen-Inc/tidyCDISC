@@ -667,9 +667,9 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
                                     blockData$dropdown,
                                     blockData$dataset), 
                             function(x,y,z,d) IDEA::IDEA_methods(x,y,z,
-                                                   group = '{column() %||% 'NULL'}', 
+                                                   group = {column() %quote% 'NULL'}, 
                                                    data = IDEA::data_to_use_str(d))) %>%
-      map(setNames, IDEA::common_rownames({Rscript_use_data()}, '{column() %||% 'NULL'}')) %>%
+      map(setNames, IDEA::common_rownames({Rscript_use_data()}, {column() %quote% 'NULL'})) %>%
       setNames(paste(blockData$gt_group)) %>%
       bind_rows(.id = 'ID') %>%
       mutate(
@@ -722,9 +722,9 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
                                   blockData$dropdown,
                                   blockData$dataset), 
                               function(x,y,z,d) IDEA::IDEA_methods(x,y,z, 
-                                                     group = '{column() %||% 'NULL'}', 
+                                                     group = {column() %quote% 'NULL'}, 
                                                      data = IDEA::data_to_use_str(d))) %>%
-      map(setNames, IDEA::common_rownames({Rscript_use_data()}, '{column() %||% 'NULL'}')) %>%
+      map(setNames, IDEA::common_rownames({Rscript_use_data()}, {column() %quote% 'NULL'})) %>%
       setNames(paste(blockData$label)) %>%
       bind_rows(.id = 'ID') %>%
       mutate(

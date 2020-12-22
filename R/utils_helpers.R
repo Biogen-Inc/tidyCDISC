@@ -172,7 +172,7 @@ getLevels <- function(x) {if(is.factor(x)) levels(x) else sort(unique(x), na.las
   if (is.null(x)) {
     y
   } else {
-    sQuote(x)
+    paste0("\'",x,"\'") #sQuote(x) # old
   }
 }
 
