@@ -560,7 +560,15 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
           ")
     } else {""}
   })
-  
+  # capture output for empty df warning
+  df_empty_expr <- reactive({
+    if(nrow(use_data_reactive()) == 0) {
+      glue::glue("
+          # Check if No subject's remain
+              if(nrow({Rscript_use_data()}) == 0) stop(\"{paste0('No subjects remain when the following filters are applied. \n        ',gsub('<br/>', '\n        ', pre_filter_msgs()))}\")
+          ")
+    } else {""}
+  })
   
   
   
@@ -607,7 +615,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     blockData <- {paste0(capture.output(dput(blocks_and_functions())), collapse = '\n')}
     pretty_blocks <- {paste0(capture.output(dput(pretty_blocks)), collapse = '\n')}
     
-    if(nrow({Rscript_use_data()}) == 0) stop(\"{paste0('No subjects remain when the following filters are applied. \n        ',gsub('<br/>', '\n        ', pre_filter_msgs()))}\")
+    {df_empty_expr()}
     "
     )
   })
@@ -659,9 +667,9 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
                                     blockData$dropdown,
                                     blockData$dataset), 
                             function(x,y,z,d) IDEA::IDEA_methods(x,y,z,
-                                                   group = {column() %quote% 'NULL'}, 
+                                                   group = '{column() %||% 'NULL'}', 
                                                    data = IDEA::data_to_use_str(d))) %>%
-      map(setNames, IDEA::common_rownames({Rscript_use_data()}, {column() %quote% 'NULL'})) %>%
+      map(setNames, IDEA::common_rownames({Rscript_use_data()}, '{column() %||% 'NULL'}')) %>%
       setNames(paste(blockData$gt_group)) %>%
       bind_rows(.id = 'ID') %>%
       mutate(
@@ -714,9 +722,9 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
                                   blockData$dropdown,
                                   blockData$dataset), 
                               function(x,y,z,d) IDEA::IDEA_methods(x,y,z, 
-                                                     group = {column() %quote% 'NULL'}, 
+                                                     group = '{column() %||% 'NULL'}', 
                                                      data = IDEA::data_to_use_str(d))) %>%
-      map(setNames, IDEA::common_rownames({Rscript_use_data()}, {column() %quote% 'NULL'})) %>%
+      map(setNames, IDEA::common_rownames({Rscript_use_data()}, '{column() %||% 'NULL'}')) %>%
       setNames(paste(blockData$label)) %>%
       bind_rows(.id = 'ID') %>%
       mutate(
