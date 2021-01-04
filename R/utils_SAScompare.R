@@ -179,14 +179,14 @@ prep_adae <- function(datafile, ADSL, input_recipe) { #, stan_table_num
         msg <- "Variable 'AEACN' doesn't exist in ADAE. STAN table not displayed because filter \"AEACN = 'DRUG WITHDRAWN'\" cannot be applied!"
         stop(msg)
       }
-    } else if(stan_table_num == 36){ #AEACNOTH contains 'Withdrawl" and "Study"
+    } else if(stan_table_num == 36){ #AEACNOTH contains 'Withdrawal" and "Study"
       if("AEACNOTH" %in% colnames(dat)){
         dat <- dat %>%
-          filter(stringr::str_detect(tolower(AEACNOTH),"withdrawl") &
+          filter(stringr::str_detect(tolower(AEACNOTH),"withdrawal") &
                    stringr::str_detect(tolower(AEACNOTH),"study"))
-        msg <- "AEACNOTH Contains 'withdrawl' and 'study'"
+        msg <- "AEACNOTH Contains 'withdrawal' and 'study'"
       } else{
-        msg <- "Variable 'AEACNOTH' doesn't exist in ADAE. STAN table not displayed because filter \"AEACNOTH Contains 'withdrawl' and 'study'\" cannot be applied!"
+        msg <- "Variable 'AEACNOTH' doesn't exist in ADAE. STAN table not displayed because filter \"AEACNOTH Contains 'withdrawal' and 'study'\" cannot be applied!"
         stop(msg)
       }
     } else if(stan_table_num == 38){
