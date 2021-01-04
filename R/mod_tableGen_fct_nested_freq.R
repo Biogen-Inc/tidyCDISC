@@ -30,10 +30,10 @@ IDEA_nested_freq.default <- IDEA_nested_freq.OCCDS <- IDEA_nested_freq.ADAE <- I
   function(column, nested_var = "NONE", group = NULL, data) {
     
   # # ########## ######### ######## #########
-  # column <- "SEX"
-  # nested_var <- "RACE"
-  # group = "TRT01P"
-  # data = ae_data
+  # column <- "AEBODSYS"
+  # nested_var <- "AEDECOD"
+  # group <- "TRT01P"
+  # data <- ae_data
   column_var_sort = "desc_tot"
   # # ########## ######### ######## #########
   
@@ -148,16 +148,19 @@ IDEA_nested_freq.default <- IDEA_nested_freq.OCCDS <- IDEA_nested_freq.ADAE <- I
       rename_with(~paste(group), grp_lvls)
     
     col_grp_tot <- xyz %>%
-      left_join(
-        data %>%
-        # filter(!is.na(!!column)) %>% # don't filter here.
-        group_by(!!group) %>%
-        summarize(n_tot = n_distinct(USUBJID)) %>%
-        ungroup() 
-      )%>%
-      mutate(n_tot = tidyr::replace_na(n_tot, 0)) %>%
-      tidyr::crossing(
-        data %>% distinct(!!column)
+      left_join( # have to do this twice because 'crossing()' messes with order
+        xyz %>%
+        left_join(
+          data %>%
+          # filter(!is.na(!!column)) %>% # don't filter here.
+          group_by(!!group) %>%
+          summarize(n_tot = n_distinct(USUBJID)) %>%
+          ungroup() 
+        )%>%
+        mutate(n_tot = tidyr::replace_na(n_tot, 0)) %>%
+        tidyr::crossing(
+          data %>% distinct(!!column)
+        )
       )
     
     col_grp <- col_grp_tot %>%
@@ -184,25 +187,29 @@ IDEA_nested_freq.default <- IDEA_nested_freq.OCCDS <- IDEA_nested_freq.ADAE <- I
       groups <- cbind(groups0, total$x)
     } else {
       
-      grp_tot <- xyz %>%
+      grp_tot <- xyz %>% # have to do this twice because 'crossing()' messes with order
         left_join(
-          data %>%
-          # filter(!is.na(!!column)) %>% # don't filter here.
-          group_by(!!group) %>%
-          summarize(n_tot = n_distinct(USUBJID)) %>%
-          ungroup()
-        ) %>%
-        mutate(n_tot = tidyr::replace_na(n_tot, 0)) %>%
-        tidyr::crossing(
-          data %>%
-            distinct(!!column, !!nst_var)
+          xyz %>%
+          left_join(
+            data %>%
+            # filter(!is.na(!!column)) %>% # don't filter here.
+            group_by(!!group) %>%
+            summarize(n_tot = n_distinct(USUBJID)) %>%
+            ungroup()
+          ) %>%
+          mutate(n_tot = tidyr::replace_na(n_tot, 0)) %>%
+          tidyr::crossing(
+            data %>%
+              distinct(!!column, !!nst_var)
+          )
         )
       
       groups <- 
         total_by %>%
         left_join(
           col_grp %>%
-            spread(!!group, v)%>%
+            pivot_wider(!!column, names_from = !!group, values_from = v) %>%
+            # spread(!!group, v)%>% # swapped for pivot_wider because spread doesn't retain order when zero vals exist for lvl
             mutate(pt = 'Overall') %>%
             rename_with(~nested_var, pt) %>%
             bind_rows(
