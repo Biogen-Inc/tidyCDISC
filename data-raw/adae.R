@@ -13,7 +13,11 @@ adae <- haven::read_xpt("data-raw/adae.xpt") %>%
                 AREL = if_else(AEREL %in% c('NOT RELATED', 'UNLIKELY RELATED', 'NONE', 'REMOTE'),
                           'NOT RELATED', 'RELATED'),
                 ARELN = if_else(AREL == 'NOT RELATED', 0, 1),
-                AEACN = if_else(AREL == 'RELATED' & AESER == 'Y' & TRT01P == "Xanomeline High Dose", "DRUG WITHDRAWN", ""),
+                AEACN = case_when(
+                  AREL == 'RELATED' & AESER == 'Y' & TRT01P == "Xanomeline High Dose" ~ "DOSE REDUCED",
+                  AREL == 'RELATED' & AESER == 'Y' & TRT01P == "Xanomeline Low Dose" ~ "DRUG WITHDRAWN",
+                  TRUE ~ "",
+                ),
                 AEACNOTH = if_else(AEACN == 'DRUG WITHDRAWN', "RESULTED IN WITHDRAWAL FROM STUDY","")
   ) %>%
   select(-TRT01P, -TRT01PN)
