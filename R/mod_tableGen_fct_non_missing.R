@@ -29,9 +29,9 @@ IDEA_non_missing <- function(column, group, data) {
 IDEA_non_missing.default <- IDEA_non_missing.BDS <- IDEA_non_missing.OCCDS <- IDEA_non_missing.ADAE <- IDEA_non_missing.ADSL <- 
   function(column, group = NULL, data) {
   # # ########## ######### ######## #########
-  # column <- blockData$S3
+  # column <- "USUBJID"
   # group = "TRT01P"
-  # data = ae_data %>% filter(SAFFL == 'Y')
+  # data = ae_data #%>% filter(SAFFL == 'Y')
   # # ########## ######### ######## #########
   
   # column is the variable selected on the left-hand side
@@ -61,10 +61,18 @@ IDEA_non_missing.default <- IDEA_non_missing.BDS <- IDEA_non_missing.OCCDS <- ID
     
     group <- rlang::sym(group)
     
-    grp_tot <- data %>%
-      group_by(!!group) %>%
-      summarize(n_tot = n_distinct(USUBJID)) %>%
-      ungroup()
+    grp_lvls <- getLevels(data[[group]])
+    xyz <- data.frame(grp_lvls) %>%
+      rename_with(~paste(group), grp_lvls)
+    
+    grp_tot <- xyz %>%
+      left_join(
+        data %>%
+        group_by(!!group) %>%
+        summarize(n_tot = n_distinct(USUBJID)) %>%
+        ungroup()
+      )%>%
+      mutate(n_tot = tidyr::replace_na(n_tot, 0))
       
     groups <- grp_tot %>%
       left_join(
@@ -75,14 +83,15 @@ IDEA_non_missing.default <- IDEA_non_missing.BDS <- IDEA_non_missing.OCCDS <- ID
         ungroup()
       ) %>%
       mutate(n = tidyr::replace_na(n, 0),
-             prop = n / n_tot,
+             prop = ifelse(n_tot == 0, 0, n / n_tot),
              v = paste0(n, ' (', sprintf("%.1f", round(prop*100, 1)), ')'),
              temp_col = "Non Missing"
       ) %>%
       rename_with(~as.character(column), "temp_col") %>%
       select(-n, -prop, -n_tot) %>%
-      spread(!!column, v) %>%
-      transpose_df(num = 1)
+      pivot_wider(!!column, names_from = !!group, values_from = v) #%>%
+    # spread(!!column, v) %>% # swapped for pivot_wider because spread doesn't retain order when zero vals exist for lvl
+    # transpose_df(num = 1)
     
     cbind(groups, total$x)
   }

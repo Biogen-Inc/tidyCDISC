@@ -127,7 +127,13 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   })
   
   # Create cleaned up versions of raw data
-  ADSL <- reactive({ pre_ADSL()$data })
+  ADSL <- reactive({ 
+    pre_ADSL()$data %>%
+      inner_join(
+        pre_ADAE()$data %>%
+          distinct(USUBJID)
+        )
+  })
   BDS <- reactive({  datafile()[sapply(datafile(), function(x) "PARAMCD" %in% colnames(x))] })
   ADAE <- reactive({ pre_ADAE()$data })
  
@@ -154,7 +160,9 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
    
    
    
-   
+  # Allow users to filter on any combination of data, even values are outside of table
+  # prefilters. If you only want users to apply filters ontop of existing filters,
+  # then you need to have the filters applied to ADSL(), ADAE(), and BDS_DATA()
   processed_data <- eventReactive(input$filter_df, {
     data_to_filter(datafile(), input$filter_df)
   })
@@ -519,9 +527,13 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
             pre_adae <- datalist %>%
                 IDEA::prep_adae(pre_adsl$data, '{RECIPE()}')
             ae_data <- pre_adae$data
+            adsl_data <- pre_adsl$data %>% inner_join(ae_data %>% distinct(USUBJID))
+            bds_data <- datalist %>% IDEA::combineBDS(ADSL = adsl_data)
         "
       )
-    } else {""}
+    } else {"
+      bds_data <- datalist %>% IDEA::combineBDS(ADSL = pre_adsl$data)
+      "}
   })
   # capture output of filtering expression
   # input_filter_df <- c("one","mild","Moderate")
@@ -603,7 +615,6 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
         
     {create_script_data()}
     pre_adsl <- IDEA::prep_adsl(datalist$ADSL, input_recipe = '{RECIPE()}')
-    bds_data <- datalist %>% IDEA::combineBDS(ADSL = pre_adsl$data)
     {adae_expr()}
         
     {data_to_filter_expr()}
