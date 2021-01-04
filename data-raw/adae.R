@@ -21,6 +21,7 @@ adae <- haven::read_xpt("data-raw/adae.xpt") %>%
 attr(adae$AESEVN, "label") <- "Severity/Intensity (N)"
 attr(adae$AREL, "label") <- "Analysis Causality"
 attr(adae$ARELN, "label") <- "Analysis Causality (N)"
+attr(adae$AEACN, "label") <- "Action Taken with Study Treatment"
 attr(adae$AEACNOTH, "label") <- "Other Action Taken"
 usethis::use_data(adae, overwrite = TRUE)
 
