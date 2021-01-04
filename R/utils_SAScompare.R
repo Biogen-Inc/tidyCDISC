@@ -97,14 +97,16 @@ prep_adsl <- function(ADSL, input_recipe) { #, stan_table_num
         dat <- dat %>% filter(ITTFL == 'Y')
         msg <- "ITTFL = 'Y'"
       }else {
-        msg <- "Variable 'ITTFL' doesn't exist in ADSL. Filter not applied!"
+        msg <- "Variable 'ITTFL' doesn't exist in ADSL. STAN table not displayed because filter \"ITTFL == 'Y'\" cannot be applied!"
+        stop(msg)
       }
     } else if(stan_table_num %in% c(18:39)){
       if("SAFFL" %in% colnames(dat)){
         dat <- dat %>% filter(SAFFL == 'Y')
         msg <- "SAFFL = 'Y'"
       } else{
-        msg <- "Variable 'SAFFL' doesn't exist in ADSL. Filter not applied!"
+        msg <- "Variable 'SAFFL' doesn't exist in ADSL. STAN table not displayed because filter \"SAFFL == 'Y'\" cannot be applied!"
+        stop(msg)
       }
     }
   }
@@ -130,19 +132,28 @@ prep_adae <- function(datafile, ADSL, input_recipe) { #, stan_table_num
         if("AESEV" %in% colnames(dat)){
           dat <- dat %>% filter(AESEV == 'SEVERE')
           msg <- "AESEV = 'SEVERE'"
-        } else {msg <- "Variable 'AESEV' doesn't exist in ADAE. Filter AESEV = 'SEVERE' not applied!"}
+        } else {
+          msg <- "Variable 'AESEV' doesn't exist in ADAE. STAN table not displayed because filter \"AESEV = 'SEVERE'\" cannot be applied!"
+          stop(msg)
+        }
     
     } else if(stan_table_num == 29){
         if("AREL" %in% colnames(dat)){
           dat <- dat %>% filter(AREL == 'RELATED')
           msg <- "AREL = 'RELATED'"
-        } else {msg <- "Variable 'AREL' doesn't exist in ADAE. Filter AREL = 'RELATED' not applied!"}
+        } else {
+          msg <- "Variable 'AREL' doesn't exist in ADAE. STAN table not displayed because filter \"AREL = 'RELATED'\" cannot be applied!"
+          stop(msg)
+        }
         
     } else if(stan_table_num %in% c(30, 31)){
         if("AESER" %in% colnames(dat)){
           dat <- dat %>% filter(AESER == 'Y')
           msg <- "AESER = 'Y'"
-        } else {msg <- "Variable 'AESER' doesn't exist in ADAE. Filter AESER = 'Y' not applied!"}
+        } else {
+          msg <- "Variable 'AESER' doesn't exist in ADAE. STAN table not displayed because filter \"AESER = 'Y'\" cannot be applied!"
+          stop(msg)
+        }
         
     } else if(stan_table_num == 33){
       if("AREL" %in% colnames(dat) & "AESER" %in% colnames(dat)){
@@ -150,19 +161,23 @@ prep_adae <- function(datafile, ADSL, input_recipe) { #, stan_table_num
         msg <- "AREL = 'RELATED'<br/>AESER = 'Y'"
       } else if("AREL" %in% colnames(dat) & !("AESER" %in% colnames(dat))){
         dat <- dat %>% filter(AREL == 'RELATED')
-        msg <- "AREL = 'RELATED'<br/>Variable 'AESER' doesn't exist in ADAE. Filter AESER = 'Y' not applied!"
+        msg <- "AREL = 'RELATED'<br/>Variable 'AESER' doesn't exist in ADAE. STAN table not displayed because filter \"AESER = 'Y'\" cannot be applied!"
+        stop("Variable 'AESER' doesn't exist in ADAE. STAN table not displayed because filter \"AESER = 'Y'\" cannot be applied!")
       } else if(!("AREL" %in% colnames(dat)) & "AESER" %in% colnames(dat)){
         dat <- dat %>% filter(AESER == 'Y')
-        msg <- "Variable 'AREL' doesn't exist in ADAE. Filter AREL = 'RELATED' not applied!<br/>AESER = 'Y'"
+        msg <- "Variable 'AREL' doesn't exist in ADAE. STAN table not displayed because filter \"AREL = 'RELATED'\" cannot be applied!<br/>AESER = 'Y'"
+        stop("Variable 'AREL' doesn't exist in ADAE. STAN table not displayed because filter \"AREL = 'RELATED'\" cannot be applied!")
       } else{
-        msg <- "Variables 'AREL' & 'AESER' do not exist in ADAE. Filters AREL = 'RELATED' and AESER = 'Y' not applied!"
+        msg <- "Variables 'AREL' & 'AESER' do not exist in ADAE. STAN table not displayed because filters \"AREL = 'RELATED'\" and \"AESER = 'Y'\" cannot be applied!"
+        stop(msg)
       }
     } else if(stan_table_num == 34){
       if("AEACN" %in% colnames(dat)){
         dat <- dat %>% filter(AEACN == 'DRUG WITHDRAWN')
         msg <- "AEACN = 'DRUG WITHDRAWN'"
       } else{
-        msg <- "Variable 'AEACN' doesn't exist in ADAE. Filter AEACN = 'DRUG WITHDRAWN' not applied!"
+        msg <- "Variable 'AEACN' doesn't exist in ADAE. STAN table not displayed because filter \"AEACN = 'DRUG WITHDRAWN'\" cannot be applied!"
+        stop(msg)
       }
     } else if(stan_table_num == 36){ #AEACNOTH contains 'Withdrawl" and "Study"
       if("AEACNOTH" %in% colnames(dat)){
@@ -171,28 +186,34 @@ prep_adae <- function(datafile, ADSL, input_recipe) { #, stan_table_num
                    stringr::str_detect(tolower(AEACNOTH),"study"))
         msg <- "AEACNOTH Contains 'withdrawl' and 'study'"
       } else{
-        msg <- "Variable 'AEACNOTH' doesn't exist in ADAE. Filter AEACNOTH Contains 'withdrawl' and 'study' not applied!"
+        msg <- "Variable 'AEACNOTH' doesn't exist in ADAE. STAN table not displayed because filter \"AEACNOTH Contains 'withdrawl' and 'study'\" cannot be applied!"
+        stop(msg)
       }
     } else if(stan_table_num == 38){
       if("AEACN" %in% colnames(dat)){
         dat <- dat %>% filter(AEACN %in% c('DRUG INTERRUPTED', 'DRUG REDUCED', 'DOSE REDUCED', 'DRUG INCREASED', 'DOSE INCREASED'))
         msg <- "AEACN IN ('DRUG INTERRUPTED', 'DOSE REDUCED', 'DOSE INCREASED')"
       } else{
-        msg <- "Variable 'AEACN' doesn't exist in ADAE. Filter AEACN IN ('DRUG INTERRUPTED', 'DOSE REDUCED', 'DOSE INCREASED') not applied!"
+        msg <- "Variable 'AEACN' doesn't exist in ADAE. STAN table not displayed because filter \"AEACN IN ('DRUG INTERRUPTED', 'DOSE REDUCED', 'DOSE INCREASED')\" cannot be applied!"
+        stop(msg)
       }
     } else if(stan_table_num == 39){
       if("TRTEMFL" %in% colnames(dat)){
         dat <- dat %>% filter(TRTEMFL == 'Y')
         msg <- "TRTEMFL = 'Y'"
       }else {
-        msg <- "Variable 'TRTEMFL' doesn't exist in ADAE. Filter TRTEMFL = 'Y' not applied!"
+        msg <- "Variable 'TRTEMFL' doesn't exist in ADAE. STAN table not displayed because filter \"TRTEMFL = 'Y'\" cannot be applied!"
+        stop(msg)
       }
     }
     if(stan_table_num %in% c(25:26, 29:33)){
       if("TRTEMFL" %in% colnames(dat)){
         dat <- dat %>% filter(TRTEMFL == 'Y')
         msg <- paste0(msg, "<br/>TRTEMFL = 'Y'")
-      } else {msg <- paste0(msg, "<br/>Variable 'TRTEMFL' doesn't exist in ADAE. Filter TRTEMFL = 'Y' not applied!")}
+      } else {
+        msg <- paste0(msg, "<br/>Variable 'TRTEMFL' doesn't exist in ADAE. STAN table not displayed because filter \"TRTEMFL = 'Y'\" cannot be applied!")
+        stop(msg)
+      }
     }
   }
   
