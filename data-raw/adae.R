@@ -13,13 +13,14 @@ adae <- haven::read_xpt("data-raw/adae.xpt") %>%
                 AREL = if_else(AEREL %in% c('NOT RELATED', 'UNLIKELY RELATED', 'NONE', 'REMOTE'),
                           'NOT RELATED', 'RELATED'),
                 ARELN = if_else(AREL == 'NOT RELATED', 0, 1),
-                AEACN = if_else(AREL == 'RELATED' & AESER == 'Y' & TRT01P == "Xanomeline High Dose", "DRUG WITHDRAWN", AEACN)
+                AEACN = if_else(AREL == 'RELATED' & AESER == 'Y' & TRT01P == "Xanomeline High Dose", "DRUG WITHDRAWN", ""),
+                AEACNOTH = if_else(AEACN == 'DRUG WITHDRAWN', "RESULTED IN WITHDRAWAL FROM STUDY","")
   ) %>%
   select(-TRT01P, -TRT01PN)
 
-# unique(adae[,c("AEACN")])
 attr(adae$AESEVN, "label") <- "Severity/Intensity (N)"
 attr(adae$AREL, "label") <- "Analysis Causality"
 attr(adae$ARELN, "label") <- "Analysis Causality (N)"
+attr(adae$AEACNOTH, "label") <- "Other Action Taken"
 usethis::use_data(adae, overwrite = TRUE)
 
