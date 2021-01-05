@@ -128,11 +128,19 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   
   # Create cleaned up versions of raw data
   ADSL <- reactive({ 
-    pre_ADSL()$data %>%
-      inner_join(
-        pre_ADAE()$data %>%
-          distinct(USUBJID)
-        )
+    pre_ADSL()$data 
+    # CANNOT inner_join on the ADAE subjects that were filtered because some
+    # subjects had no adverse events so you'd make a mistake by excluding them.
+    # Really, we'd have to identify the subjects in pre_ADSL$data and not in the
+    # datalist$ADAE Then keep those, plus subjects that exist in the inner_join
+    # of pre_ADSL$data & pre_ADAE()$data. Have to take this out of R script
+    # still too ############################################################
+    
+      #%>% 
+      # inner_join(
+      #   pre_ADAE()$data %>%
+      #     distinct(USUBJID)
+      #   )
   })
   BDS <- reactive({  datafile()[sapply(datafile(), function(x) "PARAMCD" %in% colnames(x))] })
   ADAE <- reactive({ pre_ADAE()$data })
@@ -173,6 +181,11 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # apply filters from selected dfs to tg data to create all data
   all_data <- reactive({bds_data() %>% semi_join(filtered_data()) %>% varN_fctr_reorder()})
   ae_data <- reactive({ADAE() %>% semi_join(filtered_data()) %>% varN_fctr_reorder()})
+  pop_data <- reactive({
+    pre_ADSL()$data %>% # Cannot be ADSL() because that has potentially been filtered to ADAE subj's
+      semi_join(filtered_data()) %>%
+      varN_fctr_reorder()
+  })
   
   # get the list of PARAMCDs
   PARAMCD_names <- reactive({
@@ -263,11 +276,11 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     }
   })
   # Only needed for app, not for R script
-  use_data_reactive_pre_filter <- reactive({
-    if(is_grp_col_adae() | numeric_stan_table(RECIPE()) %in% c(18:39)){
-      ADAE()
+  use_preferred_pop_data <- reactive({
+    if(is_grp_col_adae()){
+      ae_data()
     } else { # do the same for mh_data()
-      bds_data()
+      pop_data()
     }
   })
   
@@ -275,7 +288,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # a single N if data is not grouped
   total <- reactive({
     
-    all <- use_data_reactive() %>% 
+    all <- use_preferred_pop_data() %>% 
       distinct(USUBJID) %>% 
       summarise(n = n()) %>%
       pull(n)
@@ -284,14 +297,14 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     if (input$COLUMN == "NONE") {
       all
     } else {
-      grp_lvls <- getLevels(use_data_reactive()[[input$COLUMN]])  # PUT ADAE() somehow?
+      grp_lvls <- getLevels(use_preferred_pop_data()[[input$COLUMN]])  # PUT ADAE() somehow?
       xyz <- data.frame(grp_lvls) %>%
         rename_with(~paste(input$COLUMN), grp_lvls)
       
       groups <- 
         xyz %>%
         left_join(
-          use_data_reactive() %>%
+          use_preferred_pop_data() %>%
           group_by(!!sym(input$COLUMN)) %>%
           distinct(USUBJID) %>%
           summarise(n = n())
@@ -353,7 +366,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
                    IDEA_methods(x,y,z, 
                                 group = column(), 
                                 data  = data_to_use_str(d))) %>%
-    purrr::map(setNames, common_rownames(use_data_reactive(), column())) %>%
+    purrr::map(setNames, common_rownames(use_preferred_pop_data(), column())) %>%
     setNames(paste(blocks_and_functions()$gt_group)) %>%
     bind_rows(.id = "ID")  %>%
       mutate(
