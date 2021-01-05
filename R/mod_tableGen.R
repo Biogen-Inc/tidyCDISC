@@ -540,12 +540,9 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
             pre_adae <- datalist %>%
                 IDEA::prep_adae(pre_adsl$data, '{RECIPE()}')
             ae_data <- pre_adae$data
-            adsl_data <- pre_adsl$data %>% inner_join(ae_data %>% distinct(USUBJID))
-            bds_data <- datalist %>% IDEA::combineBDS(ADSL = adsl_data)
         "
       )
     } else {"
-      bds_data <- datalist %>% IDEA::combineBDS(ADSL = pre_adsl$data)
       "}
   })
   # capture output of filtering expression
@@ -629,6 +626,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     {create_script_data()}
     pre_adsl <- IDEA::prep_adsl(datalist$ADSL, input_recipe = '{RECIPE()}')
     {adae_expr()}
+    bds_data <- datalist %>% IDEA::combineBDS(ADSL = pre_adsl$data)
         
     {data_to_filter_expr()}
     {filter_bds_expr()}
