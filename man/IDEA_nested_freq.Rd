@@ -8,17 +8,17 @@
 \title{Generate frequency where each subject is only counted once for the maximum
 VAR}
 \usage{
-IDEA_nested_freq(column, nested_var = "NONE", group, data, totals)
+IDEA_nested_freq(column, nested_var = "NONE", group, data, totals, sort)
 
-\method{IDEA_nested_freq}{default}(column, nested_var = "NONE", group = NULL, data, totals)
+\method{IDEA_nested_freq}{default}(column, nested_var = "NONE", group = NULL, data, totals, sort)
 
-\method{IDEA_nested_freq}{BDS}(column, nested_var = "NONE", group = NULL, data, totals)
+\method{IDEA_nested_freq}{BDS}(column, nested_var = "NONE", group = NULL, data, totals, sort)
 
-\method{IDEA_nested_freq}{custom}(column, nested_var = "NONE", group, data, totals)
+\method{IDEA_nested_freq}{custom}(column, nested_var = "NONE", group, data, totals, sort)
 }
 \arguments{
-\item{column}{the variable to perform  stats on, this also contains
-the class of the column based on the data file the column came from}
+\item{column}{the variable to perform  stats on, this also contains the class
+of the column based on the data file the column came from}
 
 \item{nested_var}{select variable to produce frequencies nested inside column}
 
@@ -28,6 +28,9 @@ the class of the column based on the data file the column came from}
 
 \item{totals}{the totals data frame that contains denominator N's use when
 calculating column percentages}
+
+\item{sort}{text string specifying if table should be sorted by descending
+counts using keyword "desc_cnt" or alphabetically}
 }
 \value{
 a frequency table of grouped variables

@@ -39,7 +39,7 @@ ae18_rows = ["AOCCFL", "AESEV", "AESER","DTHDT"]
 ae18_agg =  ["Y_FREQ", "MAX_FREQ", "Y_FREQ", "NON_MISSING"]
 
 soc_pt_rows = ["AOCCFL", "AEBODSYS"]
-soc_pt_agg =  ["Y_FREQ", "NESTED_FREQ"]
+soc_pt_agg =  ["Y_FREQ", "NESTED_FREQ_BY_DESC_CNT"]
 soc_pt_sel = ["NONE", "AEDECOD"]
 
 /* Create custom block recipes to automatically populate when selected */
@@ -71,7 +71,7 @@ soc_pt_sel = ["NONE", "AEDECOD"]
                   
       document.getElementById("droppable_agg").innerHTML = "";
       $("#droppable_agg").append($(simpleRecipeRowBlock("NON_MISSING", "ADAE")));
-      $("#droppable_agg").append($(selectRecipeBlock("NESTED_FREQ", "ADAE", "AEDECOD")));
+      $("#droppable_agg").append($(selectRecipeBlock("NESTED_FREQ_BY_DESC_CNT", "ADAE", "AEDECOD")));
       document.getElementById("droppable_blocks").innerHTML = "";
       $("#droppable_blocks").append($(simpleRecipeRowBlock("USUBJID", "ADAE")));
       $("#droppable_blocks").append($(simpleRecipeRowBlock("AEBODSYS", "ADAE")));
@@ -81,7 +81,7 @@ soc_pt_sel = ["NONE", "AEDECOD"]
     } else if (publisher === "Table 21: Adverse events by system organ class") {
       document.getElementById("droppable_agg").innerHTML = "";
       $("#droppable_agg").append($(simpleRecipeRowBlock("NON_MISSING", "ADAE")));
-      $("#droppable_agg").append($(selectRecipeBlock("NESTED_FREQ", "ADAE", "NONE")));
+      $("#droppable_agg").append($(selectRecipeBlock("NESTED_FREQ_BY_DESC_CNT", "ADAE", "NONE")));
       document.getElementById("droppable_blocks").innerHTML = "";
       $("#droppable_blocks").append($(simpleRecipeRowBlock("USUBJID", "ADAE")));
       $("#droppable_blocks").append($(simpleRecipeRowBlock("AEBODSYS", "ADAE")));
@@ -94,7 +94,7 @@ soc_pt_sel = ["NONE", "AEDECOD"]
                 "Table 31: Serious adverse events by preferred term"].includes(publisher)) {
       document.getElementById("droppable_agg").innerHTML = "";
       $("#droppable_agg").append($(simpleRecipeRowBlock("NON_MISSING", "ADAE")));
-      $("#droppable_agg").append($(selectRecipeBlock("NESTED_FREQ", "ADAE", "NONE")));
+      $("#droppable_agg").append($(selectRecipeBlock("NESTED_FREQ_BY_DESC_CNT", "ADAE", "NONE")));
       document.getElementById("droppable_blocks").innerHTML = "";
       $("#droppable_blocks").append($(simpleRecipeRowBlock("USUBJID", "ADAE")));
       $("#droppable_blocks").append($(simpleRecipeRowBlock("AEDECOD", "ADAE")));
