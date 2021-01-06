@@ -1,16 +1,16 @@
-#' Generate frequency of categorical variables
-#' using table generator blocks
+#' Generate frequency of categorical variables using table generator blocks
 #'
-#' @param column the variable to perform frequency stats on,
-#' this also contains the class of the column
-#' based on the data file the column came from
+#' @param column the variable to perform frequency stats on, this also contains
+#'   the class of the column based on the data file the column came from
 #' @param group the groups to compare for the ANOVA
-#' @param data the data to use 
+#' @param data the data to use
+#' @param totals the totals data frame that contains denominator N's use when
+#'   calculating column percentages
 #'
 #' @return a frequency table of grouped variables
-#' 
+#'
 #' @family tableGen Functions
-IDEA_non_missing <- function(column, group, data) {
+IDEA_non_missing <- function(column, group, data, totals) {
   UseMethod("IDEA_non_missing", column)
 }
 
@@ -27,11 +27,12 @@ IDEA_non_missing <- function(column, group, data) {
 #' 
 #' @family tableGen Functionss
 IDEA_non_missing.default <- IDEA_non_missing.BDS <- IDEA_non_missing.OCCDS <- IDEA_non_missing.ADAE <- IDEA_non_missing.ADSL <- 
-  function(column, group = NULL, data) {
+  function(column, group = NULL, data, totals) {
   # # ########## ######### ######## #########
-  # column <- blockData$S3
+  # column <- "USUBJID"
   # group = "TRT01P"
-  # data = ae_data %>% filter(SAFFL == 'Y')
+  # data = ae_data #%>% filter(SAFFL == 'Y')
+  # totals <- total_df
   # # ########## ######### ######## #########
   
   # column is the variable selected on the left-hand side
@@ -42,7 +43,7 @@ IDEA_non_missing.default <- IDEA_non_missing.BDS <- IDEA_non_missing.OCCDS <- ID
     distinct(USUBJID, !!column) %>%
     filter(!is.na(!!column)) %>%
     summarize(n = n_distinct(USUBJID)) %>%
-    mutate(n_tot = data %>% distinct(USUBJID) %>% nrow(),
+    mutate(n_tot = totals[nrow(totals),"n_tot"],
            prop = n / n_tot,
            x = paste0(n, ' (', sprintf("%.1f", round(prop*100, 1)), ')'),
            temp_col = "Non Missing"
@@ -61,10 +62,19 @@ IDEA_non_missing.default <- IDEA_non_missing.BDS <- IDEA_non_missing.OCCDS <- ID
     
     group <- rlang::sym(group)
     
-    grp_tot <- data %>%
-      group_by(!!group) %>%
-      summarize(n_tot = n_distinct(USUBJID)) %>%
-      ungroup()
+    grp_lvls <- getLevels(data[[group]])
+    xyz <- data.frame(grp_lvls) %>%
+      rename_with(~paste(group), grp_lvls)
+    
+    grp_tot <- xyz %>%
+      left_join(
+        totals %>% filter(!!group != "Total")
+        # data %>%
+        # group_by(!!group) %>%
+        # summarize(n_tot = n_distinct(USUBJID)) %>%
+        # ungroup()
+      )#%>%
+      # mutate(n_tot = tidyr::replace_na(n_tot, 0))
       
     groups <- grp_tot %>%
       left_join(
@@ -75,14 +85,15 @@ IDEA_non_missing.default <- IDEA_non_missing.BDS <- IDEA_non_missing.OCCDS <- ID
         ungroup()
       ) %>%
       mutate(n = tidyr::replace_na(n, 0),
-             prop = n / n_tot,
+             prop = ifelse(n_tot == 0, 0, n / n_tot),
              v = paste0(n, ' (', sprintf("%.1f", round(prop*100, 1)), ')'),
              temp_col = "Non Missing"
       ) %>%
       rename_with(~as.character(column), "temp_col") %>%
       select(-n, -prop, -n_tot) %>%
-      spread(!!column, v) %>%
-      transpose_df(num = 1)
+      pivot_wider(!!column, names_from = !!group, values_from = v) #%>%
+    # spread(!!column, v) %>% # swapped for pivot_wider because spread doesn't retain order when zero vals exist for lvl
+    # transpose_df(num = 1)
     
     cbind(groups, total$x)
   }
@@ -94,7 +105,7 @@ IDEA_non_missing.default <- IDEA_non_missing.BDS <- IDEA_non_missing.OCCDS <- ID
 #' @rdname IDEA_non_missing
 #' 
 #' @family tableGen Functions
-IDEA_non_missing.BDS <- function(column, group = NULL, data) {
+IDEA_non_missing.BDS <- function(column, group = NULL, data, totals) {
   rlang::abort(glue::glue(
     "Can't calculate Non Missings for BDS yet"
   ))
@@ -104,7 +115,7 @@ IDEA_non_missing.BDS <- function(column, group = NULL, data) {
 #' @rdname IDEA_non_missing
 #' 
 #' @family tableGen Functions
-IDEA_non_missing.custom <- function(column, group, data) {
+IDEA_non_missing.custom <- function(column, group, data, totals) {
   rlang::abort(glue::glue(
     "Can't calculate mean, data is not classified as ADLB, BDS or OCCDS"
   ))
