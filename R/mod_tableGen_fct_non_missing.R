@@ -1,14 +1,14 @@
-#' Generate frequency of categorical variables
-#' using table generator blocks
+#' Generate frequency of categorical variables using table generator blocks
 #'
-#' @param column the variable to perform frequency stats on,
-#' this also contains the class of the column
-#' based on the data file the column came from
+#' @param column the variable to perform frequency stats on, this also contains
+#'   the class of the column based on the data file the column came from
 #' @param group the groups to compare for the ANOVA
-#' @param data the data to use 
+#' @param data the data to use
+#' @param totals the totals data frame that contains denominator N's use when
+#'   calculating column percentages
 #'
 #' @return a frequency table of grouped variables
-#' 
+#'
 #' @family tableGen Functions
 IDEA_non_missing <- function(column, group, data, totals) {
   UseMethod("IDEA_non_missing", column)

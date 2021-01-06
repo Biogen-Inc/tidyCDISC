@@ -8,6 +8,8 @@
 #' @param week the week if needed for calculation
 #' @param group whether to perform a group_by and if so by which column
 #' @param data the dataset to perform all functions on
+#' @param totals the totals data frame that contains denominator N's use when
+#'   calculating column percentages
 #' 
 #' @return the table corresponding to the proper function
 #' to perform given the supplied column.

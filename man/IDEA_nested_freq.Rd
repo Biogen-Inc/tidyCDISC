@@ -25,6 +25,9 @@ the class of the column based on the data file the column came from}
 \item{group}{the groups to compare for the ANOVA}
 
 \item{data}{the data to use}
+
+\item{totals}{the totals data frame that contains denominator N's use when
+calculating column percentages}
 }
 \value{
 a frequency table of grouped variables

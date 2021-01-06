@@ -20,6 +20,9 @@ and class of the column dictated by the data frame it came from}
 \item{group}{whether to perform a group_by and if so by which column}
 
 \item{data}{the dataset to perform all functions on}
+
+\item{totals}{the totals data frame that contains denominator N's use when
+calculating column percentages}
 }
 \value{
 the table corresponding to the proper function
