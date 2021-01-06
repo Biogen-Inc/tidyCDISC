@@ -1,18 +1,20 @@
 #' Generate frequency where each subject is only counted once for the maximum
 #' VAR
 #'
-#' @param column the variable to perform  stats on, this also contains
-#'   the class of the column based on the data file the column came from
+#' @param column the variable to perform  stats on, this also contains the class
+#'   of the column based on the data file the column came from
 #' @param nested_var select variable to produce frequencies nested inside column
 #' @param group the groups to compare for the ANOVA
 #' @param data the data to use
 #' @param totals the totals data frame that contains denominator N's use when
 #'   calculating column percentages
+#' @param sort text string specifying if table should be sorted by descending
+#'   counts using keyword "desc_cnt" or alphabetically
 #'
 #' @return a frequency table of grouped variables
 #'
 #' @family tableGen Functions
-IDEA_nested_freq <- function(column, nested_var = "NONE", group, data, totals) {
+IDEA_nested_freq <- function(column, nested_var = "NONE", group, data, totals, sort) {
   UseMethod("IDEA_nested_freq", column)
 }
 
@@ -29,7 +31,7 @@ IDEA_nested_freq <- function(column, nested_var = "NONE", group, data, totals) {
 #' 
 #' @family tableGen Functionss
 IDEA_nested_freq.default <- IDEA_nested_freq.OCCDS <- IDEA_nested_freq.ADAE <- IDEA_nested_freq.ADSL <- 
-  function(column, nested_var = "NONE", group = NULL, data, totals) {
+  function(column, nested_var = "NONE", group = NULL, data, totals, sort) {
     
   # # ########## ######### ######## #########
   # column <- "AEBODSYS"
@@ -37,7 +39,8 @@ IDEA_nested_freq.default <- IDEA_nested_freq.OCCDS <- IDEA_nested_freq.ADAE <- I
   # group <- "TRT01P"
   # data <- ae_data
   # totals <- total_df
-  column_var_sort = "desc_tot"
+  # column_var_sort = "desc_tot"
+  # sort = "desc_tot"
   # # ########## ######### ######## #########
   
   # column is the variable selected on the left-hand side
@@ -52,10 +55,10 @@ IDEA_nested_freq.default <- IDEA_nested_freq.OCCDS <- IDEA_nested_freq.ADAE <- I
   abc <- data.frame(column_lvls) %>%
     rename_with(~paste(column), column_lvls)
   
-  if(column_var_sort %in% c("desc_tot", "desc_right")){
-    if(column_var_sort == "desc_tot"){
+  if(sort %in% c("desc_tot", "desc_right")){
+    if(sort == "desc_tot"){
       init_dat <- data # do nothing
-    } else { # column_var_sort == "desc_right"
+    } else { # sort == "desc_right"
       grp_lvls <- getLevels(data[[grp]])
       rightmost <- grp_lvls[length(grp_lvls)]
       init_dat <- data %>%
@@ -258,7 +261,7 @@ IDEA_nested_freq.default <- IDEA_nested_freq.OCCDS <- IDEA_nested_freq.ADAE <- I
 #' @rdname IDEA_nested_freq
 #' 
 #' @family tableGen Functions
-IDEA_nested_freq.BDS <- function(column, nested_var = "NONE", group = NULL, data, totals) {
+IDEA_nested_freq.BDS <- function(column, nested_var = "NONE", group = NULL, data, totals, sort) {
   rlang::abort(glue::glue(
     "Can't calculate Distinct Frequency for for BDS variables"
   ))
@@ -268,7 +271,7 @@ IDEA_nested_freq.BDS <- function(column, nested_var = "NONE", group = NULL, data
 #' @rdname IDEA_nested_freq
 #' 
 #' @family tableGen Functions
-IDEA_nested_freq.custom <- function(column, nested_var = "NONE", group, data, totals) {
+IDEA_nested_freq.custom <- function(column, nested_var = "NONE", group, data, totals, sort) {
   rlang::abort(glue::glue(
     "Can't calculate Distinct Frequency for custom class data set."
   ))

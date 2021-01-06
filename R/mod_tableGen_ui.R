@@ -92,8 +92,12 @@ mod_tableGen_ui <- function(id){
                                          div(tippy(div("NON MISSING"), "Subject Count for those with non-missing values Only")),
                                          class="agg"
                                        ),
-                                       tags$li(id = "nested_freq",
-                                               div(tippy(div("NESTED FREQ"), "Subject Count at each variable level nested inside another variable's levels")),
+                                       tags$li(id = "nested_freq_by_desc_cnt",
+                                               div(tippy(div("NESTED FREQ BY DESC CNT"), "Subject Count at each variable level nested inside another variable's levels, sorted descending by total counts")),
+                                               class="agg"
+                                       ),
+                                       tags$li(id = "nested_freq_by_name",
+                                               div(tippy(div("NESTED FREQ BY NAME"), "Subject Count at each variable level nested inside another variable's levels, sorted alphabetically by name")),
                                                class="agg"
                                        )
                                      ))

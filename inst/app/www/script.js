@@ -150,8 +150,10 @@ Shiny.addCustomMessageHandler('my_weeks', function(df) {
             $(this).append(selectBlock(newid, "CHG", week_opts));
           } else if (draggableId.includes("mean")) {
             $(this).append(selectBlock(newid, "MEAN", week_opts));
-          } else if (draggableId.includes("nested_freq")) {
-            $(this).append(selectBlock(newid, "NESTED_FREQ", col_opts));
+          } else if (draggableId.includes("nested_freq_by_desc_cnt")) {
+            $(this).append(selectBlock(newid, "NESTED_FREQ_BY_DESC_CNT", col_opts));
+          } else if (draggableId.includes("nested_freq_by_name")) {
+            $(this).append(selectBlock(newid, "NESTED_FREQ_BY_NAME", col_opts));
           } else {
             $(this).append(simpleBlock(newid, "df"));
           }
@@ -210,38 +212,6 @@ $(function() {
   })
 })
 
-/**
- * Not sure if this does anything, so we commented it out a while ago 
- * and it doesn't appear to have impacted anything
-
-// for agg blocks, 
-// create dropdowns specific to each block
-$(function() {
-  $(".draggable_agg").draggable();
-  $("#droppable_agg").droppable({
-    accept: ".agg",
-    drop: function(event, ui) {
-      var draggableId = ui.draggable.attr("id");
-      var newid = getNewId(draggableId);
-      if (draggableId.includes("ttest")) {
-        $(this).append(selectBlock(newid, "T-TEST"));
-      } else if (draggableId.includes("anova")) {
-        $(this).append(selectBlock(newid, "ANOVA"));
-      } else if (draggableId.includes("chg")) {
-        $(this).append(selectBlock(newid, "CHG"));
-      } else if (draggableId.includes("mean")) {
-        $(this).append(selectBlock(newid, "MEAN"));
-      } else if (draggableId.includes("nested_freq")) {
-        $(this).append(selectBlock(newid, "NESTED_FREQ"));
-      } else {
-        $(this).append(simpleBlock(newid));
-      }
-    }
-  }).sortable({
-    revert: false
-  })
-});
-*/
 
 $("#popExp_ui_1-adv_filtering").parent().parent().addClass('custom_checkbox');
 $("#popExp_ui_1-adv_filtering").parent().parent().parent().addClass('custom_shiny_width');
