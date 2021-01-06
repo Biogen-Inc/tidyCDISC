@@ -95,7 +95,7 @@ prep_adsl <- function(ADSL, input_recipe) { #, stan_table_num
     if(stan_table_num == 5){
       if("ITTFL" %in% colnames(dat)){
         dat <- dat %>% filter(ITTFL == 'Y')
-        msg <- "ITTFL = 'Y'"
+        msg <- "Population Set: ITTFL = 'Y'"
       }else {
         msg <- "Variable 'ITTFL' doesn't exist in ADSL. STAN table not displayed because filter \"ITTFL == 'Y'\" cannot be applied!"
         stop(msg)
@@ -103,7 +103,7 @@ prep_adsl <- function(ADSL, input_recipe) { #, stan_table_num
     } else if(stan_table_num %in% c(18:39)){
       if("SAFFL" %in% colnames(dat)){
         dat <- dat %>% filter(SAFFL == 'Y')
-        msg <- "SAFFL = 'Y'"
+        msg <- "Population Set: SAFFL = 'Y'"
       } else{
         msg <- "Variable 'SAFFL' doesn't exist in ADSL. STAN table not displayed because filter \"SAFFL == 'Y'\" cannot be applied!"
         stop(msg)

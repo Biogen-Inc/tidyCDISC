@@ -7,7 +7,7 @@ each statistical and column block pairing
 and use the metadata associated with 
 each column block for the function's arguments}
 \usage{
-IDEA_methods(agg, column, week, group, data)
+IDEA_methods(agg, column, week, group, data, totals)
 }
 \arguments{
 \item{agg}{the statistic to apply given the block name}
