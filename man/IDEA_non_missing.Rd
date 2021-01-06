@@ -8,13 +8,13 @@
 \title{Generate frequency of categorical variables
 using table generator blocks}
 \usage{
-IDEA_non_missing(column, group, data)
+IDEA_non_missing(column, group, data, totals)
 
-\method{IDEA_non_missing}{default}(column, group = NULL, data)
+\method{IDEA_non_missing}{default}(column, group = NULL, data, totals)
 
-\method{IDEA_non_missing}{BDS}(column, group = NULL, data)
+\method{IDEA_non_missing}{BDS}(column, group = NULL, data, totals)
 
-\method{IDEA_non_missing}{custom}(column, group, data)
+\method{IDEA_non_missing}{custom}(column, group, data, totals)
 }
 \arguments{
 \item{column}{the variable to perform frequency stats on,

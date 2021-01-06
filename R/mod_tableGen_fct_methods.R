@@ -16,7 +16,7 @@
 #' 
 #' @family tableGen Functions
 #' @export
-IDEA_methods <- function(agg, column, week, group, data) {
+IDEA_methods <- function(agg, column, week, group, data, totals) {
   # informative error in case the selected variable doesn't exist in data
   # if no data in the source, do not run the pmap, just show this msg:
   if(nrow(data) == 0){
@@ -34,13 +34,13 @@ IDEA_methods <- function(agg, column, week, group, data) {
   } else if (agg == "ANOVA") {
     IDEA_anova(column, week, group, data)
   } else if (agg == "NESTED_FREQ"){
-    IDEA_nested_freq(column, week, group, data) # should chg arg nm to "drop_data" or "sel"
+    IDEA_nested_freq(column, week, group, data, totals) # should chg arg nm to "drop_data" or "sel"
   } else if (agg == "Y_FREQ"){
     IDEA_y(column, group, data)
   } else if (agg == "MAX_FREQ"){
     IDEA_max_freq(column, group, data)
   } else if (agg == "NON_MISSING"){
-    IDEA_non_missing(column, group, data)
+    IDEA_non_missing(column, group, data, totals)
   } else {
     IDEA_chg(column, week, group, data)
   }
