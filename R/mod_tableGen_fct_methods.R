@@ -8,6 +8,8 @@
 #' @param week the week if needed for calculation
 #' @param group whether to perform a group_by and if so by which column
 #' @param data the dataset to perform all functions on
+#' @param totals the totals data frame that contains denominator N's use when
+#'   calculating column percentages
 #' 
 #' @return the table corresponding to the proper function
 #' to perform given the supplied column.
@@ -16,7 +18,7 @@
 #' 
 #' @family tableGen Functions
 #' @export
-IDEA_methods <- function(agg, column, week, group, data) {
+IDEA_methods <- function(agg, column, week, group, data, totals) {
   # informative error in case the selected variable doesn't exist in data
   # if no data in the source, do not run the pmap, just show this msg:
   if(nrow(data) == 0){
@@ -30,17 +32,17 @@ IDEA_methods <- function(agg, column, week, group, data) {
   if (agg == "MEAN") {
     IDEA_mean(column, week, group, data)
   } else if (agg == "FREQ") {
-    IDEA_freq(column, group, data)
+    IDEA_freq(column, group, data, totals)
   } else if (agg == "ANOVA") {
     IDEA_anova(column, week, group, data)
   } else if (agg == "NESTED_FREQ"){
-    IDEA_nested_freq(column, week, group, data) # should chg arg nm to "drop_data" or "sel"
+    IDEA_nested_freq(column, week, group, data, totals) # should chg arg nm to "drop_data" or "sel"
   } else if (agg == "Y_FREQ"){
-    IDEA_y(column, group, data)
+    IDEA_y(column, group, data, totals)
   } else if (agg == "MAX_FREQ"){
-    IDEA_max_freq(column, group, data)
+    IDEA_max_freq(column, group, data, totals)
   } else if (agg == "NON_MISSING"){
-    IDEA_non_missing(column, group, data)
+    IDEA_non_missing(column, group, data, totals)
   } else {
     IDEA_chg(column, week, group, data)
   }
