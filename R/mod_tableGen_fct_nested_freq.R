@@ -6,6 +6,8 @@
 #' @param nested_var select variable to produce frequencies nested inside column
 #' @param group the groups to compare for the ANOVA
 #' @param data the data to use
+#' @param totals the totals data frame that contains denominator N's use when
+#'   calculating column percentages
 #'
 #' @return a frequency table of grouped variables
 #'

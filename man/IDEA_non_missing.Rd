@@ -5,8 +5,7 @@
 \alias{IDEA_non_missing.default}
 \alias{IDEA_non_missing.BDS}
 \alias{IDEA_non_missing.custom}
-\title{Generate frequency of categorical variables
-using table generator blocks}
+\title{Generate frequency of categorical variables using table generator blocks}
 \usage{
 IDEA_non_missing(column, group, data, totals)
 
@@ -17,13 +16,15 @@ IDEA_non_missing(column, group, data, totals)
 \method{IDEA_non_missing}{custom}(column, group, data, totals)
 }
 \arguments{
-\item{column}{the variable to perform frequency stats on,
-this also contains the class of the column
-based on the data file the column came from}
+\item{column}{the variable to perform frequency stats on, this also contains
+the class of the column based on the data file the column came from}
 
 \item{group}{the groups to compare for the ANOVA}
 
 \item{data}{the data to use}
+
+\item{totals}{the totals data frame that contains denominator N's use when
+calculating column percentages}
 }
 \value{
 a frequency table of grouped variables
@@ -31,8 +32,7 @@ a frequency table of grouped variables
 frequency table of ADSL column
 }
 \description{
-Generate frequency of categorical variables
-using table generator blocks
+Generate frequency of categorical variables using table generator blocks
 
 if ADSL supplied look for the column to take frequency of
 and look for a grouping variable to group_by
