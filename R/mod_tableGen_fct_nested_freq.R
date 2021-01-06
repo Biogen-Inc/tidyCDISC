@@ -6,11 +6,13 @@
 #' @param nested_var select variable to produce frequencies nested inside column
 #' @param group the groups to compare for the ANOVA
 #' @param data the data to use
+#' @param totals the totals data frame that contains denominator N's use when
+#'   calculating column percentages
 #'
 #' @return a frequency table of grouped variables
 #'
 #' @family tableGen Functions
-IDEA_nested_freq <- function(column, nested_var = "NONE", group, data) {
+IDEA_nested_freq <- function(column, nested_var = "NONE", group, data, totals) {
   UseMethod("IDEA_nested_freq", column)
 }
 
@@ -27,14 +29,15 @@ IDEA_nested_freq <- function(column, nested_var = "NONE", group, data) {
 #' 
 #' @family tableGen Functionss
 IDEA_nested_freq.default <- IDEA_nested_freq.OCCDS <- IDEA_nested_freq.ADAE <- IDEA_nested_freq.ADSL <- 
-  function(column, nested_var = "NONE", group = NULL, data) {
+  function(column, nested_var = "NONE", group = NULL, data, totals) {
     
   # # ########## ######### ######## #########
-  # column <- "SEX"
-  # nested_var <- "NONE"
-  # group = "TRT01P"
+  # column <- "AEBODSYS"
+  # nested_var <- "AEDECOD"
+  # group <- "TRT01P"
+  # data <- ae_data
+  # totals <- total_df
   column_var_sort = "desc_tot"
-  # data = ae_data #%>% filter(SAFFL == 'Y') %>% filter(TRTEMFL == 'Y')
   # # ########## ######### ######## #########
   
   # column is the variable selected on the left-hand side
@@ -79,7 +82,7 @@ IDEA_nested_freq.default <- IDEA_nested_freq.OCCDS <- IDEA_nested_freq.ADAE <- I
   
   total0 <- 
     sort_cnts %>%
-    mutate(n_tot = data %>% distinct(USUBJID) %>% nrow(),
+    mutate(n_tot = totals[nrow(totals),"n_tot"],
            prop = sort_n / n_tot,
            x = paste0(sort_n, ' (', sprintf("%.1f", round(prop*100, 1)), ')')
     )  %>%
@@ -102,7 +105,7 @@ IDEA_nested_freq.default <- IDEA_nested_freq.OCCDS <- IDEA_nested_freq.ADAE <- I
           group_by(!!column, !!nst_var) %>%
           summarize(n = n_distinct(USUBJID)) %>%
           ungroup() %>%
-          mutate(n_tot = data %>% distinct(USUBJID) %>% nrow(), # do we want to keep zeros?
+          mutate(n_tot = totals[nrow(totals),"n_tot"], # do we want to keep zeros?
                  prop = n / n_tot,
                  x = paste0(n, ' (', sprintf("%.1f", round(prop*100, 1)), ')')
           ) %>%
@@ -141,13 +144,27 @@ IDEA_nested_freq.default <- IDEA_nested_freq.OCCDS <- IDEA_nested_freq.ADAE <- I
     
     group <- rlang::sym(group)
     
-    col_grp_tot <- data %>%
-      # filter(!is.na(!!column)) %>% # don't filter here.
-      group_by(!!group) %>%
-      summarize(n_tot = n_distinct(USUBJID)) %>%
-      ungroup() %>%
-      tidyr::crossing(
-        data %>% distinct(!!column)
+    # Need this in case dataset rows get filtered to a really small set, and
+    # "lose" some levels
+    grp_lvls <- getLevels(data[[group]])
+    xyz <- data.frame(grp_lvls) %>%
+      rename_with(~paste(group), grp_lvls)
+    
+    col_grp_tot <- xyz %>%
+      left_join( # have to do this twice because 'crossing()' messes with order
+        totals %>% filter(!!group != "Total") %>%
+        # xyz %>%
+        # left_join(
+          # data %>%
+          # # filter(!is.na(!!column)) %>% # don't filter here.
+          # group_by(!!group) %>%
+          # summarize(n_tot = n_distinct(USUBJID)) %>%
+          # ungroup() 
+        # )%>%
+        # mutate(n_tot = tidyr::replace_na(n_tot, 0)) %>%
+        tidyr::crossing(
+          data %>% distinct(!!column)
+        )
       )
     
     col_grp <- col_grp_tot %>%
@@ -160,7 +177,7 @@ IDEA_nested_freq.default <- IDEA_nested_freq.OCCDS <- IDEA_nested_freq.ADAE <- I
         ungroup()
       ) %>%
       mutate(n = tidyr::replace_na(n, 0),
-             prop = n / n_tot,
+             prop = ifelse(n_tot == 0, 0, n / n_tot),
              v = paste0(n, ' (', sprintf("%.1f", round(prop*100, 1)), ')')
       ) %>%
       select(-n, -prop, -n_tot) 
@@ -173,21 +190,31 @@ IDEA_nested_freq.default <- IDEA_nested_freq.OCCDS <- IDEA_nested_freq.ADAE <- I
         transpose_df(num = 1)
       groups <- cbind(groups0, total$x)
     } else {
-      grp_tot <- data %>%
-        # filter(!is.na(!!column)) %>% # don't filter here.
-        group_by(!!group) %>%
-        summarize(n_tot = n_distinct(USUBJID)) %>%
-        ungroup() %>%
-        tidyr::crossing(
-          data %>%
-            distinct(!!column, !!nst_var)
+      
+      grp_tot <- xyz %>% # have to do this twice because 'crossing()' messes with order
+        left_join(
+          totals %>% filter(!!group != "Total") %>%
+          # xyz %>%
+          # left_join(
+          #   data %>%
+          #   # filter(!is.na(!!column)) %>% # don't filter here.
+          #   group_by(!!group) %>%
+          #   summarize(n_tot = n_distinct(USUBJID)) %>%
+          #   ungroup()
+          # ) %>%
+          # mutate(n_tot = tidyr::replace_na(n_tot, 0)) %>%
+          tidyr::crossing(
+            data %>%
+              distinct(!!column, !!nst_var)
+          )
         )
       
       groups <- 
         total_by %>%
         left_join(
           col_grp %>%
-            spread(!!group, v)%>%
+            pivot_wider(!!column, names_from = !!group, values_from = v) %>%
+            # spread(!!group, v)%>% # swapped for pivot_wider because spread doesn't retain order when zero vals exist for lvl
             mutate(pt = 'Overall') %>%
             rename_with(~nested_var, pt) %>%
             bind_rows(
@@ -201,7 +228,7 @@ IDEA_nested_freq.default <- IDEA_nested_freq.OCCDS <- IDEA_nested_freq.ADAE <- I
                     ungroup()
                 ) %>%
                 mutate(n = tidyr::replace_na(n, 0),
-                       prop = n / n_tot,
+                       prop = ifelse(n_tot == 0, 0, n / n_tot),
                        v = paste0(n, ' (', sprintf("%.1f", round(prop*100, 1)), ')')
                 ) %>%
                 select(-n, -prop, -n_tot) %>%
@@ -231,7 +258,7 @@ IDEA_nested_freq.default <- IDEA_nested_freq.OCCDS <- IDEA_nested_freq.ADAE <- I
 #' @rdname IDEA_nested_freq
 #' 
 #' @family tableGen Functions
-IDEA_nested_freq.BDS <- function(column, nested_var = "NONE", group = NULL, data) {
+IDEA_nested_freq.BDS <- function(column, nested_var = "NONE", group = NULL, data, totals) {
   rlang::abort(glue::glue(
     "Can't calculate Distinct Frequency for for BDS variables"
   ))
@@ -241,7 +268,7 @@ IDEA_nested_freq.BDS <- function(column, nested_var = "NONE", group = NULL, data
 #' @rdname IDEA_nested_freq
 #' 
 #' @family tableGen Functions
-IDEA_nested_freq.custom <- function(column, nested_var = "NONE", group, data) {
+IDEA_nested_freq.custom <- function(column, nested_var = "NONE", group, data, totals) {
   rlang::abort(glue::glue(
     "Can't calculate Distinct Frequency for custom class data set."
   ))

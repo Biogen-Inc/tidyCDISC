@@ -69,7 +69,7 @@ common_rownames <- function(data, group) {
   } else {
     if(is.factor(data[[group]])){
       # droplevels() get's rid of levels that no longer exist in the data post filtering
-      lvls <- levels(droplevels(data[[group]]))
+      lvls <- levels(data[[group]]) # removed droplevels() to retain all trt grps
     } else {
       lvls <- sort(unique(data[[group]]))
     }
@@ -172,7 +172,7 @@ getLevels <- function(x) {if(is.factor(x)) levels(x) else sort(unique(x), na.las
   if (is.null(x)) {
     y
   } else {
-    sQuote(x)
+    paste0("\'",x,"\'") #sQuote(x) # old
   }
 }
 
@@ -192,6 +192,7 @@ getLevels <- function(x) {if(is.factor(x)) levels(x) else sort(unique(x), na.las
 #' @export
 #' 
 varN_fctr_reorder <- function(data) {
+  
   # Now to refactor levels in VARN order, if they exist:
   # save the variable labels into savelbls vector
   savelbls <- sjlabelled::get_label(data)
@@ -205,10 +206,8 @@ varN_fctr_reorder <- function(data) {
   
   data.table::setDT(data)
   purrr::walk2(varc, varn, ~ refact(data, .x, .y))
-  
   # copy SAS labels back into data
   data <- sjlabelled::set_label(data, label = savelbls)
-  
   return(data)
 }
 

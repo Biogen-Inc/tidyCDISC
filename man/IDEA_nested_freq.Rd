@@ -8,13 +8,13 @@
 \title{Generate frequency where each subject is only counted once for the maximum
 VAR}
 \usage{
-IDEA_nested_freq(column, nested_var = "NONE", group, data)
+IDEA_nested_freq(column, nested_var = "NONE", group, data, totals)
 
-\method{IDEA_nested_freq}{default}(column, nested_var = "NONE", group = NULL, data)
+\method{IDEA_nested_freq}{default}(column, nested_var = "NONE", group = NULL, data, totals)
 
-\method{IDEA_nested_freq}{BDS}(column, nested_var = "NONE", group = NULL, data)
+\method{IDEA_nested_freq}{BDS}(column, nested_var = "NONE", group = NULL, data, totals)
 
-\method{IDEA_nested_freq}{custom}(column, nested_var = "NONE", group, data)
+\method{IDEA_nested_freq}{custom}(column, nested_var = "NONE", group, data, totals)
 }
 \arguments{
 \item{column}{the variable to perform  stats on, this also contains
@@ -25,6 +25,9 @@ the class of the column based on the data file the column came from}
 \item{group}{the groups to compare for the ANOVA}
 
 \item{data}{the data to use}
+
+\item{totals}{the totals data frame that contains denominator N's use when
+calculating column percentages}
 }
 \value{
 a frequency table of grouped variables
