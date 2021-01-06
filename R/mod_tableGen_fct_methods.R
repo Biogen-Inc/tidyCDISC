@@ -38,7 +38,7 @@ IDEA_methods <- function(agg, column, week, group, data, totals) {
   } else if (agg == "Y_FREQ"){
     IDEA_y(column, group, data, totals)
   } else if (agg == "MAX_FREQ"){
-    IDEA_max_freq(column, group, data)
+    IDEA_max_freq(column, group, data, totals)
   } else if (agg == "NON_MISSING"){
     IDEA_non_missing(column, group, data, totals)
   } else {

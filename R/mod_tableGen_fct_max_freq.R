@@ -9,7 +9,7 @@
 #' @return a frequency table of grouped variables
 #'
 #' @family tableGen Functions
-IDEA_max_freq <- function(column, group, data) {
+IDEA_max_freq <- function(column, group, data, totals) {
   UseMethod("IDEA_max_freq", column)
 }
 
@@ -26,11 +26,12 @@ IDEA_max_freq <- function(column, group, data) {
 #' 
 #' @family tableGen Functionss
 IDEA_max_freq.default <- IDEA_max_freq.OCCDS <- IDEA_max_freq.ADAE <- IDEA_max_freq.ADSL <- 
-  function(column, group = NULL, data) {
+  function(column, group = NULL, data, totals) {
   # # ########## ######### ######## #########
   # column <- "AESEV"
   # group = "TRT01P"
-  # data = ae_data #%>% filter(SAFFL == 'Y') %>% filter(TRTEMFL == 'Y')
+  # data = ae_data #%>% filter(SAFFL == 'Y')
+  # totals <- total_df
   # # ########## ######### ######## #########
   
   # column is the variable selected on the left-hand side
@@ -60,7 +61,7 @@ IDEA_max_freq.default <- IDEA_max_freq.OCCDS <- IDEA_max_freq.ADAE <- IDEA_max_f
     group_by(!!column) %>%
     summarize(n = n_distinct(USUBJID)) %>%
     ungroup() %>%
-    mutate(n_tot = data %>% distinct(USUBJID) %>% nrow(),
+    mutate(n_tot = totals[nrow(totals),"n_tot"],
            prop = n / n_tot,
            x = paste0(n, ' (', sprintf("%.1f", round(prop*100, 1)), ')')
     )  %>%
@@ -77,16 +78,24 @@ IDEA_max_freq.default <- IDEA_max_freq.OCCDS <- IDEA_max_freq.ADAE <- IDEA_max_f
     
     group <- rlang::sym(group)
     
-    grp_tot <- data %>%
-      # filter(!is.na(!!column)) %>% # don't filter here.
-      group_by(!!group) %>%
-      summarize(n_tot = n_distinct(USUBJID)) %>%
-      ungroup() %>%
+    grp_lvls <- getLevels(data[[group]])
+    xyz <- data.frame(grp_lvls) %>%
+      rename_with(~paste(group), grp_lvls)
+    
+    grp_tot <- xyz %>%
+      left_join(
+        totals %>% filter(!!group != "Total") %>%
+      # data %>%
+      # # filter(!is.na(!!column)) %>% # don't filter here.
+      # group_by(!!group) %>%
+      # summarize(n_tot = n_distinct(USUBJID)) %>%
+      # ungroup() %>%
       tidyr::crossing(
         data %>%
         filter(!is.na(!!column)) %>% # how to incorporate filter on AOCCIFL?
           distinct(!!column)
       )
+    )
     
     groups <- grp_tot %>%
       left_join(
@@ -105,8 +114,9 @@ IDEA_max_freq.default <- IDEA_max_freq.OCCDS <- IDEA_max_freq.ADAE <- IDEA_max_f
              v = paste0(n, ' (', sprintf("%.1f", round(prop*100, 1)), ')')
       ) %>%
       select(-n, -prop, -n_tot) %>%
-      spread(!!column, v) %>%
-      transpose_df(num = 1)
+      pivot_wider(!!column, names_from = !!group, values_from = v)
+      # spread(!!column, v) %>%
+      # transpose_df(num = 1)
     
     cbind(groups, total$x)
   }
@@ -118,7 +128,7 @@ IDEA_max_freq.default <- IDEA_max_freq.OCCDS <- IDEA_max_freq.ADAE <- IDEA_max_f
 #' @rdname IDEA_max_freq
 #' 
 #' @family tableGen Functions
-IDEA_max_freq.BDS <- function(column, group = NULL, data) {
+IDEA_max_freq.BDS <- function(column, group = NULL, data, totals) {
   rlang::abort(glue::glue(
     "Can't calculate Max Frequency for for BDS variables"
   ))
@@ -128,7 +138,7 @@ IDEA_max_freq.BDS <- function(column, group = NULL, data) {
 #' @rdname IDEA_max_freq
 #' 
 #' @family tableGen Functions
-IDEA_max_freq.custom <- function(column, group, data) {
+IDEA_max_freq.custom <- function(column, group, data, totals) {
   rlang::abort(glue::glue(
     "Can't calculate Max Frequency for custom class data set."
   ))

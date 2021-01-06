@@ -8,13 +8,13 @@
 \title{Generate frequency where each subject is only counted once for the maximum
 VAR}
 \usage{
-IDEA_max_freq(column, group, data)
+IDEA_max_freq(column, group, data, totals)
 
-\method{IDEA_max_freq}{default}(column, group = NULL, data)
+\method{IDEA_max_freq}{default}(column, group = NULL, data, totals)
 
-\method{IDEA_max_freq}{BDS}(column, group = NULL, data)
+\method{IDEA_max_freq}{BDS}(column, group = NULL, data, totals)
 
-\method{IDEA_max_freq}{custom}(column, group, data)
+\method{IDEA_max_freq}{custom}(column, group, data, totals)
 }
 \arguments{
 \item{column}{the variable to perform  stats on, this also contains
