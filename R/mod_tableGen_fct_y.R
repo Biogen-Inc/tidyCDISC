@@ -10,7 +10,7 @@
 #' @return a frequency table of grouped variables
 #' 
 #' @family tableGen Functions
-IDEA_y <- function(column, group, data) {
+IDEA_y <- function(column, group, data, totals) {
   UseMethod("IDEA_y", column)
 }
 
@@ -26,12 +26,13 @@ IDEA_y <- function(column, group, data) {
 #' @rdname IDEA_y
 #' 
 #' @family tableGen Functionss
-IDEA_y.default <- IDEA_y.OCCDS <- IDEA_y.ADAE <- IDEA_y.ADSL <- function(column, group = NULL, data) {
+IDEA_y.default <- IDEA_y.OCCDS <- IDEA_y.ADAE <- IDEA_y.ADSL <- function(column, group = NULL, data, totals) {
   # ########## ######### ######## #########
   # column <- "AOCCFL"
   # group = "TRT01P"
   # # # group <- "NONE"
   # data = ae_data #%>% filter(SAFFL == 'Y')
+  # totals <- total_df
   # ########## ######### ######## #########
   
   # column is the variable selected on the left-hand side
@@ -56,7 +57,7 @@ IDEA_y.default <- IDEA_y.OCCDS <- IDEA_y.ADAE <- IDEA_y.ADSL <- function(column,
       summarize(n = n_distinct(USUBJID)) 
     ) %>%
     mutate(n = tidyr::replace_na(n, 0),
-           n_tot = data %>% distinct(USUBJID) %>% nrow(),
+           n_tot = totals[nrow(totals),"n_tot"],
            prop = n / n_tot,
            x = paste0(n, ' (', sprintf("%.1f", round(prop*100, 1)), ')')
     )  %>%
@@ -82,12 +83,13 @@ IDEA_y.default <- IDEA_y.OCCDS <- IDEA_y.ADAE <- IDEA_y.ADSL <- function(column,
     
     grp_tot <- xyz %>%
       left_join(
-        data %>%
-        group_by(!!group) %>%
-        summarize(n_tot = n_distinct(USUBJID)) %>%
-        ungroup() 
+        totals %>% filter(!!group != "Total")
+        # data %>%
+        # group_by(!!group) %>%
+        # summarize(n_tot = n_distinct(USUBJID)) %>%
+        # ungroup() 
       ) %>%
-      mutate(n_tot = tidyr::replace_na(n_tot, 0),
+      mutate(#n_tot = tidyr::replace_na(n_tot, 0),
              temp_col = "Y") %>% # add in case some grp by level doesn't have 'Y'
       rename_with(~paste(column), "temp_col")
     
@@ -119,7 +121,7 @@ IDEA_y.default <- IDEA_y.OCCDS <- IDEA_y.ADAE <- IDEA_y.ADSL <- function(column,
 #' @rdname IDEA_y
 #' 
 #' @family tableGen Functions
-IDEA_y.BDS <- function(column, group = NULL, data) {
+IDEA_y.BDS <- function(column, group = NULL, data, totals) {
   rlang::abort(glue::glue(
     "Can't calculate Y frequency for BDS - {column} is numeric"
   ))
@@ -129,7 +131,7 @@ IDEA_y.BDS <- function(column, group = NULL, data) {
 #' @rdname IDEA_y
 #' 
 #' @family tableGen Functions
-IDEA_y.custom <- function(column, group, data) {
+IDEA_y.custom <- function(column, group, data, totals) {
   rlang::abort(glue::glue(
     "Can't calculate mean, data is not classified as ADLB, BDS or OCCDS"
   ))
