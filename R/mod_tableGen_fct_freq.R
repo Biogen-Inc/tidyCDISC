@@ -100,7 +100,6 @@ IDEA_freq.ADAE <- IDEA_freq.ADSL <- function(column, group = NULL, data, totals)
              v = paste0(n, ' (', sprintf("%.1f", round(prop*100, 1)), ')')) %>%
       select(-n, -prop) %>%
       pivot_wider(!!column, names_from = !!group, values_from = v)
-      # spread(!!group, v1)
     
     cbind(groups, total$x)
   }
