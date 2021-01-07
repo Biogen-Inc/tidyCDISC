@@ -109,9 +109,7 @@ IDEA_y.default <- IDEA_y.OCCDS <- IDEA_y.ADAE <- IDEA_y.ADSL <- function(column,
              v = paste0(n, ' (', sprintf("%.1f", round(prop*100, 1)), ')')
       ) %>%
       select(-n, -prop, -n_tot) %>%
-      pivot_wider(!!column, names_from = !!group, values_from = v) #%>%
-      # spread(!!column, v) %>% # swapped for pivot_wider because spread doesn't retain order when zero vals exist for lvl
-      # transpose_df(num = 1)
+      pivot_wider(!!column, names_from = !!group, values_from = v)
     
     cbind(groups, total$x) # combine w/ Total
   }

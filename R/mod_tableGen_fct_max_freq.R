@@ -117,8 +117,6 @@ IDEA_max_freq.default <- IDEA_max_freq.OCCDS <- IDEA_max_freq.ADAE <- IDEA_max_f
       ) %>%
       select(-n, -prop, -n_tot) %>%
       pivot_wider(!!column, names_from = !!group, values_from = v)
-      # spread(!!column, v) %>%
-      # transpose_df(num = 1)
     
     cbind(groups, total$x)
   }
