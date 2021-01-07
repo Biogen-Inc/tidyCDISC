@@ -35,7 +35,7 @@ IDEA_nested_freq.default <- IDEA_nested_freq.OCCDS <- IDEA_nested_freq.ADAE <- I
     
   # # ########## ######### ######## #########
   # column <- "ETHNIC"
-  # nested_var <- "NONE"
+  # nested_var <- "RACE"
   # group <- "TRT01P"
   # data <- bds_data
   # totals <- total_df
@@ -67,7 +67,6 @@ IDEA_nested_freq.default <- IDEA_nested_freq.OCCDS <- IDEA_nested_freq.ADAE <- I
     sort_cnts <- abc %>%
       left_join(
         init_dat %>%
-          # filter(!!sym(filt_var) == filt_lvl) %>%
           group_by(!!column) %>%
           summarize(n = n_distinct(USUBJID)) %>%
           ungroup()
@@ -77,10 +76,7 @@ IDEA_nested_freq.default <- IDEA_nested_freq.OCCDS <- IDEA_nested_freq.ADAE <- I
       arrange(desc(sort_n)) %>%
       select(sort_n, everything())
   } else { # alpha
-    # sort_cnts <- abc %>%
-    #   mutate(sort_n = rev(1:length(column_lvls)))
-    # # have to reverse because we use desc() later
-    
+
     sort_cnts <- abc %>%
       left_join(
         data %>%
@@ -116,7 +112,6 @@ IDEA_nested_freq.default <- IDEA_nested_freq.OCCDS <- IDEA_nested_freq.ADAE <- I
       select(-x) %>%
       left_join(
         data %>%
-          # filter(!is.na(!!column)) %>% # how to incorporate filter on AOCCIFL?
           distinct(USUBJID, !!column, !!nst_var) %>%
           group_by(!!column, !!nst_var) %>%
           summarize(n = n_distinct(USUBJID)) %>%
@@ -185,15 +180,6 @@ IDEA_nested_freq.default <- IDEA_nested_freq.OCCDS <- IDEA_nested_freq.ADAE <- I
     col_grp_tot <- xyz %>%
       left_join( # have to do this twice because 'crossing()' messes with order
         totals %>% filter(!!group != "Total") %>%
-        # xyz %>%
-        # left_join(
-          # data %>%
-          # # filter(!is.na(!!column)) %>% # don't filter here.
-          # group_by(!!group) %>%
-          # summarize(n_tot = n_distinct(USUBJID)) %>%
-          # ungroup() 
-        # )%>%
-        # mutate(n_tot = tidyr::replace_na(n_tot, 0)) %>%
         tidyr::crossing(
           data %>% distinct(!!column)
         )
@@ -218,33 +204,16 @@ IDEA_nested_freq.default <- IDEA_nested_freq.OCCDS <- IDEA_nested_freq.ADAE <- I
     
     if(nested_var == "NONE"){
       groups <- 
-        # total0 %>% distinct(!!column) %>% left_join(
         col_grp  %>% 
         pivot_wider(!!column, names_from = !!group, values_from = v) %>%
-        # spread(!!column, v) %>%
-        # transpose_df(num = 1)
         left_join(total0) %>%
         arrange(desc(sort_n)) %>%
         select(-sort_n)
-        
-      # groups <- groups0 %>%
-      #   left_join(
-      #     total %>% rename_with(~"rowname", paste(column))
-      # )
     } else {
       
       grp_tot <- xyz %>% # have to do this twice because 'crossing()' messes with order
         left_join(
           totals %>% filter(!!group != "Total") %>%
-          # xyz %>%
-          # left_join(
-          #   data %>%
-          #   # filter(!is.na(!!column)) %>% # don't filter here.
-          #   group_by(!!group) %>%
-          #   summarize(n_tot = n_distinct(USUBJID)) %>%
-          #   ungroup()
-          # ) %>%
-          # mutate(n_tot = tidyr::replace_na(n_tot, 0)) %>%
           tidyr::crossing(
             data %>%
               distinct(!!column, !!nst_var)
@@ -256,14 +225,12 @@ IDEA_nested_freq.default <- IDEA_nested_freq.OCCDS <- IDEA_nested_freq.ADAE <- I
         left_join(
           col_grp %>%
             pivot_wider(!!column, names_from = !!group, values_from = v) %>%
-            # spread(!!group, v)%>% # swapped for pivot_wider because spread doesn't retain order when zero vals exist for lvl
             mutate(pt = 'Overall') %>%
             rename_with(~nested_var, pt) %>%
             bind_rows(
               grp_tot %>% 
                 left_join(
                   data %>%
-                    # filter(!is.na(!!column)) %>% # how to incorporate filter on AOCCIFL?
                     distinct(USUBJID, !!column, !!nst_var, !!group) %>%
                     group_by(!!column, !!nst_var, !!group) %>%
                     summarize(n = n_distinct(USUBJID)) %>%
@@ -274,7 +241,7 @@ IDEA_nested_freq.default <- IDEA_nested_freq.OCCDS <- IDEA_nested_freq.ADAE <- I
                        v = paste0(n, ' (', sprintf("%.1f", round(prop*100, 1)), ')')
                 ) %>%
                 select(-n, -prop, -n_tot) %>%
-                spread(!!group, v)
+                spread(!!group, v) # can use spread since we are using bind rows and the prev df is in order
             )
         )%>%
         select(-x, x) %>%
@@ -285,8 +252,6 @@ IDEA_nested_freq.default <- IDEA_nested_freq.OCCDS <- IDEA_nested_freq.ADAE <- I
         )) %>%
         select(var, everything(), x, -!!column, -!!nst_var)
       
-      # wasn't able to use transpose_df, so we need to make column names generic here
-      # colnames(groups) <- c("rowname", paste(1:(ncol(groups)-1)))
     }
     
     groups
