@@ -668,7 +668,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       glue::glue("
         total_df <- {Rscript_use_preferred_pop_data()} %>% 
         distinct(USUBJID) %>% 
-        summarise(n_tot = n(), .groups='drop_last') %>%
+        summarise(n_tot = n(), .groups='drop_last')
         
         total <- total_df$n_tot
         ")
@@ -695,7 +695,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
           mutate(n_tot = tidyr::replace_na(n_tot, 0)) 
         
         total_df <- bind_rows(groups, all)
-        total <- total_df$n_tot # new
+        total <- total_df$n_tot
         "
       )
     }

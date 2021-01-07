@@ -7,7 +7,7 @@
 #' 
 pretty_blocks <- tibble::tibble(
   Pattern = c("MEAN", "FREQ", "CHG", "Y_FREQ", "MAX_FREQ", "NON_MISSING",
-              "NESTED_FREQ_BY_DESC_CNT", "NESTED_FREQ_BY_NAME"),
+              "NESTED_FREQ_DESC", "NESTED_FREQ_ALPHA"),
   Replacement = c("Descriptive Statistics", 
                   "Summary Counts", 
                   "Descriptive Statistics of Change from Baseline",
