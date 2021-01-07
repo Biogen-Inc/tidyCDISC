@@ -34,12 +34,12 @@ IDEA_nested_freq.default <- IDEA_nested_freq.OCCDS <- IDEA_nested_freq.ADAE <- I
   function(column, nested_var = "NONE", group = NULL, data, totals, sort) {
     
   # # ########## ######### ######## #########
-  # column <- "AEBODSYS"
-  # nested_var <- "AEDECOD"
+  # column <- "ETHNIC"
+  # nested_var <- "NONE"
   # group <- "TRT01P"
-  # data <- ae_data
+  # data <- bds_data
   # totals <- total_df
-  # column_var_sort = "desc_tot"
+  # sort = "alpha"
   # sort = "desc_tot"
   # # ########## ######### ######## #########
   
@@ -69,27 +69,40 @@ IDEA_nested_freq.default <- IDEA_nested_freq.OCCDS <- IDEA_nested_freq.ADAE <- I
         init_dat %>%
           # filter(!!sym(filt_var) == filt_lvl) %>%
           group_by(!!column) %>%
-          summarize(sort_n = n_distinct(USUBJID)) %>%
-          arrange(desc(sort_n)) %>%
-          select(sort_n, everything())
+          summarize(n = n_distinct(USUBJID)) %>%
+          ungroup()
       ) %>%
-      mutate(sort_n = replace_na(sort_n, 0)) %>%
-      arrange(desc(sort_n))
-  }
-  else { # alpha
+      mutate(n = replace_na(n, 0),
+             sort_n = n) %>%
+      arrange(desc(sort_n)) %>%
+      select(sort_n, everything())
+  } else { # alpha
+    # sort_cnts <- abc %>%
+    #   mutate(sort_n = rev(1:length(column_lvls)))
+    # # have to reverse because we use desc() later
+    
     sort_cnts <- abc %>%
-      mutate(sort_n = rev(1:length(column_lvls)))
-    # have to reverse because we use desc() later
+      left_join(
+        data %>%
+          group_by(!!column) %>%
+          summarize(n = n_distinct(USUBJID)) %>%
+          ungroup() 
+      ) %>%
+      arrange(desc(as.character(!!column))) %>% # have to reverse because we use desc() later
+      mutate(n = replace_na(n, 0),
+             sort_n = 1:length(column_lvls)) %>%
+      select(sort_n, everything())
   }
   
   
   total0 <- 
     sort_cnts %>%
     mutate(n_tot = totals[nrow(totals),"n_tot"],
-           prop = sort_n / n_tot,
-           x = paste0(sort_n, ' (', sprintf("%.1f", round(prop*100, 1)), ')')
+           prop = n / n_tot,
+           x = paste0(n, ' (', sprintf("%.1f", round(prop*100, 1)), ')')
     )  %>%
-    select(!!column, x, sort_n) 
+    select(!!column, x, sort_n)  %>%
+    arrange(desc(sort_n))
   
   if(nested_var == "NONE"){
     total <- total0 %>%
@@ -98,7 +111,7 @@ IDEA_nested_freq.default <- IDEA_nested_freq.OCCDS <- IDEA_nested_freq.ADAE <- I
   } else {
     nst_var <- rlang::sym(as.character(nested_var))
     
-    inner_lvls <- 
+    inner_lvls0 <- 
       total0 %>% 
       select(-x) %>%
       left_join(
@@ -112,17 +125,33 @@ IDEA_nested_freq.default <- IDEA_nested_freq.OCCDS <- IDEA_nested_freq.ADAE <- I
                  prop = n / n_tot,
                  x = paste0(n, ' (', sprintf("%.1f", round(prop*100, 1)), ')')
           ) %>%
-          mutate(sort = 1) %>%
-          arrange(desc(n))
+          mutate(sort = 1) 
       )
+    if(sort == "desc_tot") {
+      inner_lvls <- inner_lvls0 %>%
+        mutate(inner_sort = n) %>%
+        arrange(desc(inner_sort))
+      
+    } else { # alpha
+      
+      inner_column_lvls <- rev(sort(as.character(getLevels(data[[nst_var]]))))
+      inner_abc <- data.frame(inner_column_lvls) %>%
+        rename_with(~paste(nst_var), inner_column_lvls) %>%
+        mutate(inner_sort = 1:length(inner_column_lvls))
+      
+      inner_lvls <- inner_lvls0 %>%
+        left_join(inner_abc) %>%
+        arrange(desc(inner_sort))
+    }
+    
     
     total_by <- 
       total0 %>%
       mutate(pt = 'Overall', sort = 0) %>%
       rename_with(~nested_var, pt) %>%
       bind_rows(inner_lvls) %>%
-      arrange(desc(sort_n), !!column, sort, desc(n)) %>%
-      select(-sort_n,-n, -prop, -n_tot, -sort) %>%
+      arrange(desc(sort_n), !!column, sort, desc(inner_sort)) %>%
+      select(-sort_n,-n, -prop, -n_tot, -sort, -inner_sort) %>%
       select(!!column, !!nst_var, x)
     
     total <-  
@@ -188,10 +217,20 @@ IDEA_nested_freq.default <- IDEA_nested_freq.OCCDS <- IDEA_nested_freq.ADAE <- I
     
     
     if(nested_var == "NONE"){
-      groups0 <- col_grp %>%
-        spread(!!column, v) %>%
-        transpose_df(num = 1)
-      groups <- cbind(groups0, total$x)
+      groups <- 
+        # total0 %>% distinct(!!column) %>% left_join(
+        col_grp  %>% 
+        pivot_wider(!!column, names_from = !!group, values_from = v) %>%
+        # spread(!!column, v) %>%
+        # transpose_df(num = 1)
+        left_join(total0) %>%
+        arrange(desc(sort_n)) %>%
+        select(-sort_n)
+        
+      # groups <- groups0 %>%
+      #   left_join(
+      #     total %>% rename_with(~"rowname", paste(column))
+      # )
     } else {
       
       grp_tot <- xyz %>% # have to do this twice because 'crossing()' messes with order
