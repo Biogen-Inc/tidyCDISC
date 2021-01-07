@@ -60,7 +60,17 @@ soc_pt_sel = ["NONE", "AEDECOD"]
       $("#droppable_blocks").append($(combineRows(ae18_rows, "ADAE")));
       
       
-    } else if (["Table 19: Adverse events by system organ class and preferred term",
+    }  else if (publisher === "Table 20: Adverse events by system organ class and preferred term sorted by alphabetical order") {
+      document.getElementById("droppable_agg").innerHTML = "";
+      $("#droppable_agg").append($(simpleRecipeRowBlock("NON_MISSING", "ADAE")));
+      $("#droppable_agg").append($(selectRecipeBlock("NESTED_FREQ_ABC", "ADAE", "AEDECOD")));
+      document.getElementById("droppable_blocks").innerHTML = "";
+      $("#droppable_blocks").append($(simpleRecipeRowBlock("USUBJID", "ADAE")));
+      $("#droppable_blocks").append($(simpleRecipeRowBlock("AEBODSYS", "ADAE")));
+      
+      
+    }
+    else if (["Table 19: Adverse events by system organ class and preferred term sorted by decreasing frequency",
                 "Table 25: Severe adverse events by system organ class and preferred term",
                 "Table 29: Related adverse events by system organ class and preferred term",
                 "Table 30: Serious adverse events by system organ class and preferred term",
