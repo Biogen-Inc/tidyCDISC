@@ -35,9 +35,9 @@ IDEA_methods <- function(agg, column, week, group, data, totals) {
     IDEA_freq(column, group, data, totals)
   } else if (agg == "ANOVA") {
     IDEA_anova(column, week, group, data)
-  } else if (agg == "NESTED_FREQ_BY_DESC_CNT"){
+  } else if (agg == "NESTED_FREQ_DESC"){
     IDEA_nested_freq(column, week, group, data, totals, sort = "desc_tot")
-  } else if (agg == "NESTED_FREQ_BY_NAME"){
+  } else if (agg == "NESTED_FREQ_ALPHA"){
     IDEA_nested_freq(column, week, group, data, totals, "alpha")
   } else if (agg == "Y_FREQ"){
     IDEA_y(column, group, data, totals)

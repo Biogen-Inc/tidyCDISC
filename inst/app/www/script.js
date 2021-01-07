@@ -150,10 +150,10 @@ Shiny.addCustomMessageHandler('my_weeks', function(df) {
             $(this).append(selectBlock(newid, "CHG", week_opts));
           } else if (draggableId.includes("mean")) {
             $(this).append(selectBlock(newid, "MEAN", week_opts));
-          } else if (draggableId.includes("nested_freq_by_desc_cnt")) {
-            $(this).append(selectBlock(newid, "NESTED_FREQ_BY_DESC_CNT", col_opts));
-          } else if (draggableId.includes("nested_freq_by_name")) {
-            $(this).append(selectBlock(newid, "NESTED_FREQ_BY_NAME", col_opts));
+          } else if (draggableId.includes("nested_freq_desc")) {
+            $(this).append(selectBlock(newid, "NESTED_FREQ_DESC", col_opts));
+          } else if (draggableId.includes("nested_freq_alpha")) {
+            $(this).append(selectBlock(newid, "NESTED_FREQ_ALPHA", col_opts));
           } else {
             $(this).append(simpleBlock(newid, "df"));
           }
