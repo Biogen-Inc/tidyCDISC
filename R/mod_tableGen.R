@@ -38,7 +38,8 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
            <option  id="none">NONE</option>
            <option  id="demography">Table 5: Demography</option>',
            ifelse("ADAE" %in% names(datafile()),'<option  id="tbl18">Table 18: Overall summary of adverse events</option>',''),
-           ifelse("ADAE" %in% names(datafile()),'<option  id="tbl19">Table 19: Adverse events by system organ class and preferred term</option>',''),
+           ifelse("ADAE" %in% names(datafile()),'<option  id="tbl19">Table 19: Adverse events by system organ class and preferred term sorted by decreasing frequency</option>',''),
+           ifelse("ADAE" %in% names(datafile()),'<option  id="tbl20">Table 20: Adverse events by system organ class and preferred term sorted by alphabetical order</option>',''),
            ifelse("ADAE" %in% names(datafile()),'<option  id="tbl21">Table 21: Adverse events by system organ class</option>',''),
            ifelse("ADAE" %in% names(datafile()),'<option  id="tbl23">Table 23: Adverse events by preferred term</option>',''),
            ifelse("ADAE" %in% names(datafile()),'<option  id="tbl25">Table 25: Severe adverse events by system organ class and preferred term</option>',''),
@@ -668,7 +669,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       glue::glue("
         total_df <- {Rscript_use_preferred_pop_data()} %>% 
         distinct(USUBJID) %>% 
-        summarise(n_tot = n(), .groups='drop_last') %>%
+        summarise(n_tot = n(), .groups='drop_last')
         
         total <- total_df$n_tot
         ")
@@ -695,7 +696,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
           mutate(n_tot = tidyr::replace_na(n_tot, 0)) 
         
         total_df <- bind_rows(groups, all)
-        total <- total_df$n_tot # new
+        total <- total_df$n_tot
         "
       )
     }

@@ -39,7 +39,7 @@ ae18_rows = ["AOCCFL", "AESEV", "AESER","DTHDT"]
 ae18_agg =  ["Y_FREQ", "MAX_FREQ", "Y_FREQ", "NON_MISSING"]
 
 soc_pt_rows = ["AOCCFL", "AEBODSYS"]
-soc_pt_agg =  ["Y_FREQ", "NESTED_FREQ"]
+soc_pt_agg =  ["Y_FREQ", "NESTED_FREQ_DSC"]
 soc_pt_sel = ["NONE", "AEDECOD"]
 
 /* Create custom block recipes to automatically populate when selected */
@@ -60,7 +60,17 @@ soc_pt_sel = ["NONE", "AEDECOD"]
       $("#droppable_blocks").append($(combineRows(ae18_rows, "ADAE")));
       
       
-    } else if (["Table 19: Adverse events by system organ class and preferred term",
+    }  else if (publisher === "Table 20: Adverse events by system organ class and preferred term sorted by alphabetical order") {
+      document.getElementById("droppable_agg").innerHTML = "";
+      $("#droppable_agg").append($(simpleRecipeRowBlock("NON_MISSING", "ADAE")));
+      $("#droppable_agg").append($(selectRecipeBlock("NESTED_FREQ_ABC", "ADAE", "AEDECOD")));
+      document.getElementById("droppable_blocks").innerHTML = "";
+      $("#droppable_blocks").append($(simpleRecipeRowBlock("USUBJID", "ADAE")));
+      $("#droppable_blocks").append($(simpleRecipeRowBlock("AEBODSYS", "ADAE")));
+      
+      
+    }
+    else if (["Table 19: Adverse events by system organ class and preferred term sorted by decreasing frequency",
                 "Table 25: Severe adverse events by system organ class and preferred term",
                 "Table 29: Related adverse events by system organ class and preferred term",
                 "Table 30: Serious adverse events by system organ class and preferred term",
@@ -71,7 +81,7 @@ soc_pt_sel = ["NONE", "AEDECOD"]
                   
       document.getElementById("droppable_agg").innerHTML = "";
       $("#droppable_agg").append($(simpleRecipeRowBlock("NON_MISSING", "ADAE")));
-      $("#droppable_agg").append($(selectRecipeBlock("NESTED_FREQ", "ADAE", "AEDECOD")));
+      $("#droppable_agg").append($(selectRecipeBlock("NESTED_FREQ_DSC", "ADAE", "AEDECOD")));
       document.getElementById("droppable_blocks").innerHTML = "";
       $("#droppable_blocks").append($(simpleRecipeRowBlock("USUBJID", "ADAE")));
       $("#droppable_blocks").append($(simpleRecipeRowBlock("AEBODSYS", "ADAE")));
@@ -81,7 +91,7 @@ soc_pt_sel = ["NONE", "AEDECOD"]
     } else if (publisher === "Table 21: Adverse events by system organ class") {
       document.getElementById("droppable_agg").innerHTML = "";
       $("#droppable_agg").append($(simpleRecipeRowBlock("NON_MISSING", "ADAE")));
-      $("#droppable_agg").append($(selectRecipeBlock("NESTED_FREQ", "ADAE", "NONE")));
+      $("#droppable_agg").append($(selectRecipeBlock("NESTED_FREQ_DSC", "ADAE", "NONE")));
       document.getElementById("droppable_blocks").innerHTML = "";
       $("#droppable_blocks").append($(simpleRecipeRowBlock("USUBJID", "ADAE")));
       $("#droppable_blocks").append($(simpleRecipeRowBlock("AEBODSYS", "ADAE")));
@@ -94,7 +104,7 @@ soc_pt_sel = ["NONE", "AEDECOD"]
                 "Table 31: Serious adverse events by preferred term"].includes(publisher)) {
       document.getElementById("droppable_agg").innerHTML = "";
       $("#droppable_agg").append($(simpleRecipeRowBlock("NON_MISSING", "ADAE")));
-      $("#droppable_agg").append($(selectRecipeBlock("NESTED_FREQ", "ADAE", "NONE")));
+      $("#droppable_agg").append($(selectRecipeBlock("NESTED_FREQ_DSC", "ADAE", "NONE")));
       document.getElementById("droppable_blocks").innerHTML = "";
       $("#droppable_blocks").append($(simpleRecipeRowBlock("USUBJID", "ADAE")));
       $("#droppable_blocks").append($(simpleRecipeRowBlock("AEDECOD", "ADAE")));
