@@ -70,7 +70,7 @@ make_machine_readable <- function(data, keep_orig_ids = FALSE){
                            mutate(across(-starts_with("id_"), function(col) gsub(")", "", col)))
       )
     ) %>%
-    bind_rows(
+    union(
       delim_expand_rows( sep = "\\(", data = 
                            data %>% 
                            filter(Variable == "Mean (SD)") %>%
