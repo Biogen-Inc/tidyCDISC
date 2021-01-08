@@ -800,14 +800,14 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       sas_comp_ready <- IDEA::prep_sas_table(data = sas_table,
                                              machine_readable = TRUE,
                                              keep_orig_ids = FALSE,
-                                             rm_desc_col = FALSE
+                                             rm_desc_col = TRUE
                                              )
 
       # prepare TG Table for comparison
       tg_comp_ready <- IDEA::prep_tg_table(data = tg_table,
                                            machine_readable = TRUE,
                                            keep_orig_ids = FALSE,
-                                           rm_desc_col = FALSE,
+                                           rm_desc_col = TRUE,
                                            generic_colnames = TRUE
                                            )
       
