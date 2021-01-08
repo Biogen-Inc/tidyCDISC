@@ -35,8 +35,10 @@ IDEA_methods <- function(agg, column, week, group, data, totals) {
     IDEA_freq(column, group, data, totals)
   } else if (agg == "ANOVA") {
     IDEA_anova(column, week, group, data)
-  } else if (agg == "NESTED_FREQ"){
-    IDEA_nested_freq(column, week, group, data, totals) # should chg arg nm to "drop_data" or "sel"
+  } else if (agg == "NESTED_FREQ_DSC"){
+    IDEA_nested_freq(column, week, group, data, totals, sort = "desc_tot")
+  } else if (agg == "NESTED_FREQ_ABC"){
+    IDEA_nested_freq(column, week, group, data, totals, sort = "alpha")
   } else if (agg == "Y_FREQ"){
     IDEA_y(column, group, data, totals)
   } else if (agg == "MAX_FREQ"){

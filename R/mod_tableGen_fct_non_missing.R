@@ -91,9 +91,8 @@ IDEA_non_missing.default <- IDEA_non_missing.BDS <- IDEA_non_missing.OCCDS <- ID
       ) %>%
       rename_with(~as.character(column), "temp_col") %>%
       select(-n, -prop, -n_tot) %>%
-      pivot_wider(!!column, names_from = !!group, values_from = v) #%>%
-    # spread(!!column, v) %>% # swapped for pivot_wider because spread doesn't retain order when zero vals exist for lvl
-    # transpose_df(num = 1)
+      pivot_wider(!!column, names_from = !!group, values_from = v)
+
     
     cbind(groups, total$x)
   }
