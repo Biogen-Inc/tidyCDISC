@@ -63,7 +63,6 @@ make_machine_readable <- function(data, keep_orig_ids = FALSE){
     union(delim_expand_rows(data = data, sep = "\\|")) %>% # no | for sas table, but we'll do it anyway
     union(delim_expand_rows(data = data, sep = "\\,")) %>%
     union(
-      # a<-
       delim_expand_rows( sep = "\\(", data = 
                            data %>% 
                            filter(Variable != "Mean (SD)") %>%
