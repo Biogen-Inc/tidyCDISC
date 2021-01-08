@@ -74,8 +74,7 @@ make_machine_readable <- function(data, keep_orig_ids = FALSE){
       delim_expand_rows( sep = "\\(", data = 
                            data %>% 
                            filter(Variable == "Mean (SD)") %>%
-                           mutate(across(-starts_with("id_"), function(col) gsub(")", "", col))) %>%
-                           mutate(Variable = as.character(Variable))
+                           mutate(across(-starts_with("id_"), function(col) gsub(")", "", col)))
       )
     ) %>%
     arrange(id_block, id_rn, var_rn) %>%
