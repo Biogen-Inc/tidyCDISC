@@ -14,8 +14,9 @@ params:
   html_filters: NA
 ---
 
-```{r setup, include=FALSE} 
-options(bitmapType='cairo')
+```{r setup, include=FALSE, dev="CairoPNG"} 
+knitr::opts_chunk$set(dev="CairoPNG")
+
 # always_allow_html: true killed my table of contents, maybe it was in the wrong spot.
 # should try - 
 # title: "Batch Download"
