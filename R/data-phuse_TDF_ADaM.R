@@ -4,7 +4,6 @@
 #' Subject Level Analysis Dataset from Phuse Test Data Fractory Project's github.
 #'
 #' @source <https://github.com/phuse-org/TestDataFactory/blob/master/Updated/TDF_ADaM/adsl.xpt>, downloaded 2020-06-17
-#'
 #' @format Data frame with 254 features and 51 fields
 #' 
 "adsl"

@@ -38,12 +38,27 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
            <option  id="none">NONE</option>
            <option  id="demography">Table 5: Demography</option>',
            ifelse("ADAE" %in% names(datafile()),'<option  id="tbl18">Table 18: Overall summary of adverse events</option>',''),
-           ifelse("ADAE" %in% names(datafile()),'<option  id="tbl19">Table 19: Adverse events by system organ class and preferred term</option>',''),
+           ifelse("ADAE" %in% names(datafile()),'<option  id="tbl19">Table 19: Adverse events by system organ class and preferred term sorted by decreasing frequency</option>',''),
+           ifelse("ADAE" %in% names(datafile()),'<option  id="tbl20">Table 20: Adverse events by system organ class and preferred term sorted by alphabetical order</option>',''),
+           ifelse("ADAE" %in% names(datafile()),'<option  id="tbl21">Table 21: Adverse events by system organ class</option>',''),
+           ifelse("ADAE" %in% names(datafile()),'<option  id="tbl23">Table 23: Adverse events by preferred term</option>',''),
+           ifelse("ADAE" %in% names(datafile()),'<option  id="tbl25">Table 25: Severe adverse events by system organ class and preferred term</option>',''),
+           ifelse("ADAE" %in% names(datafile()),'<option  id="tbl26">Table 26: Severe adverse events by preferred term</option>',''),
+           ifelse("ADAE" %in% names(datafile()),'<option  id="tbl29">Table 29: Related adverse events by system organ class and preferred term</option>',''),
+           ifelse("ADAE" %in% names(datafile()),'<option  id="tbl30">Table 30: Serious adverse events by system organ class and preferred term</option>',''),
+           ifelse("ADAE" %in% names(datafile()),'<option  id="tbl31">Table 31: Serious adverse events by preferred term</option>',''),
+           ifelse("ADAE" %in% names(datafile()),'<option  id="tbl33">Table 33: Related serious adverse events by system organ class and preferred term</option>',''),
+           ifelse("ADAE" %in% names(datafile()),'<option  id="tbl34">Table 34: Adverse events that led to discontinuation of study treatment by system organ class and preferred term</option>',''),
+           ifelse("ADAE" %in% names(datafile()),'<option  id="tbl36">Table 36: Adverse events that led to withdrawl from study by system organ class and preferred term</option>',''),
+           ifelse("ADAE" %in% names(datafile()),'<option  id="tbl38">Table 38: Adverse events that led to drug interrupted, dose reduced, or dose increased by system organ class and preferred term</option>',''),
            '</select>'))
   })
   
-  # observeEvent(input$recipe, {
-  #   val <- ifelse(input$recipe == "none", "Table Title", input$recipe)
+  RECIPE <- reactive( if(rlang::is_empty(input$recipe)) "NONE" else input$recipe)
+
+  # observeEvent(RECIPE(), {
+  #   req(input$table_title)
+  #   val <- ifelse(RECIPE() == "NONE", "Table Title", RECIPE())
   #   updateTextInput(session, session$ns("table_title"), label = "Table Title",
   #                   value = val, width = '100%')
   # })
@@ -55,15 +70,13 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   
   output$grp_col_ui <- renderUI({
     sel_grp <- dplyr::case_when(
-      is.null(input$recipe) | length(input$recipe) == 0 ~ "NONE",
-      input$recipe %in% c("Table 5: Demography",
-                          "Table 18: Overall summary of adverse events",
-                          "Table 19: Adverse events by system organ class and preferred term") ~ "TRT01P",
+      is.null(RECIPE()) | length(RECIPE()) == 0 ~ "NONE",
+      !is.null(RECIPE()) & RECIPE() != "NONE" ~ "TRT01P",
       TRUE ~ "NONE"
     )
     selectInput(session$ns("COLUMN"), "Group Data By:",
                 choices = c("NONE", unique(c(
-                  colnames(ADSL())[sapply(ADSL(), class) %in% c('character', 'factor')],
+                  colnames(ADSL)[sapply(ADSL, class) %in% c('character', 'factor')],
                   colnames(ADAE())[sapply(ADAE(), class) %in% c('character', 'factor')]
                 ))),
                 selected = sel_grp
@@ -77,7 +90,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # this code will need to be changed if you want to add in OCCDS 
   # ----------------------------------------------------------------------
   
-  
+  # Create vector of loaded adams that could be filtered on
   my_loaded_adams <- reactive({
     req(!is.null(datafile()))
     sasdata0 <- toupper(names(datafile()))
@@ -85,18 +98,56 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     return(sasdata)
   })
   
-  
   # If User wants to perform advance filtering, update drop down of data frames they can filter on
   observe({
     req(my_loaded_adams())
     updateSelectInput("filter_df", session = session, choices = as.list(my_loaded_adams()), selected = "ADSL")
   })
   
-  ADSL <- reactive({ datafile()$ADSL })
-  BDS <- reactive({ datafile()[sapply(datafile(), function(x) "PARAMCD" %in% colnames(x))] })
-  ADAE <- reactive({ cleanADAE(datafile = datafile()) })
+  
+  # observe({
+  #   print(input$recipe)
+  #   print(RECIPE())
+  #   print(stan_table_num())
+  #   
+  # })
+  
+  
+  # perform any pre-filters on the data, when a STAN table is selected
+  pre_ADSL <- reactive({
+    req(RECIPE())
+    prep_adsl(ADSL = datafile()$ADSL,input_recipe = RECIPE())
+  })
+  
+  # cleanADAE() now happens inside this reactive!
+  # use potentially pre-filtered ADSL when building/ joining w/ ADAE
+  # Then filter ADAE based on STAN table selected.
+  pre_ADAE <- reactive({
+    req(RECIPE())
+    prep_adae(datafile = datafile(),ADSL = pre_ADSL()$data,input_recipe = RECIPE())
+  })
+  
+  # Create cleaned up versions of raw data
+  ADSL <- reactive({ 
+    pre_ADSL()$data 
+    # CANNOT inner_join on the ADAE subjects that were filtered because some
+    # subjects had no adverse events so you'd make a mistake by excluding them.
+    # Really, we'd have to identify the subjects in pre_ADSL$data and not in the
+    # datalist$ADAE Then keep those, plus subjects that exist in the inner_join
+    # of pre_ADSL$data & pre_ADAE()$data. Have to take this out of R script
+    # still too ############################################################
+    
+      #%>% 
+      # inner_join(
+      #   pre_ADAE()$data %>%
+      #     distinct(USUBJID)
+      #   )
+  })
+  BDS <- reactive({  datafile()[sapply(datafile(), function(x) "PARAMCD" %in% colnames(x))] })
+  ADAE <- reactive({ pre_ADAE()$data })
  
-   bds_data <- reactive({ 
+  # combine BDS data into one large data set
+  bds_data <- reactive({ 
     # Seperate ADSL and the PARAMCD dataframe
     PARAMCD <- map(BDS(), ~ if(!"CHG" %in% names(.)) {update_list(., CHG = NA)} else {.})
     
@@ -107,18 +158,23 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
         select(USUBJID, AVISITN, AVISIT, PARAMCD, AVAL, CHG, data_from)
       
       # Join ADSL and all_PARAMCD
-      combined_data <- full_join(ADSL(), all_PARAMCD, by = "USUBJID")
+      combined_data <- inner_join(ADSL(), all_PARAMCD, by = "USUBJID")
     } else {
       combined_data <- ADSL() %>%
         mutate(data_from = "ADSL", PARAMCD = NA, AVAL = NA, CHG = NA)
     }
   })
   
+   
+   
+   
+   
+  # Allow users to filter on any combination of data, even values are outside of table
+  # prefilters. If you only want users to apply filters ontop of existing filters,
+  # then you need to have the filters applied to ADSL(), ADAE(), and BDS_DATA()
   processed_data <- eventReactive(input$filter_df, {
     data_to_filter(datafile(), input$filter_df)
   })
-  
-  
   
   # create a reactive for the data with filters applied
   filtered_data <- callModule(shiny_data_filter, "data_filter", data = processed_data, verbose = FALSE)
@@ -126,6 +182,11 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # apply filters from selected dfs to tg data to create all data
   all_data <- reactive({bds_data() %>% semi_join(filtered_data()) %>% varN_fctr_reorder()})
   ae_data <- reactive({ADAE() %>% semi_join(filtered_data()) %>% varN_fctr_reorder()})
+  pop_data <- reactive({
+    pre_ADSL()$data %>% # Cannot be ADSL() because that has potentially been filtered to ADAE subj's
+      semi_join(filtered_data()) %>%
+      varN_fctr_reorder()
+  })
   
   # get the list of PARAMCDs
   PARAMCD_names <- reactive({
@@ -174,10 +235,11 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   })
   
   observe({
-    req(ADSL(), ADAE())
+    req(datafile()) # this also doesn't need to depend on pre-filters, so grabbing root df cols
+    
     all_cols <- unique(c(
-      colnames(ADSL())[sapply(ADSL(), class) %in% c('character', 'factor')],
-      colnames(ADAE())[sapply(ADAE(), class) %in% c('character', 'factor')]
+      colnames(datafile()$ADSL)[sapply(datafile()$ADSL, class) %in% c('character', 'factor')],
+      colnames(datafile()$ADAE)[sapply(datafile()$ADAE, class) %in% c('character', 'factor')]
     ))
     session$sendCustomMessage("all_cols", all_cols)
   })
@@ -194,46 +256,94 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   
   column <- reactive( if (input$COLUMN == "NONE") NULL else input$COLUMN)
   
+  # tell Shiny which dataframe to use when mapping through list of tables
+  # to render
   data_to_use_str <- function(x) {
     if (x == "ADAE") { ae_data() }
     else all_data()
   }
-  
+
+  # check if the grouping column only exists in the ADAE
   is_grp_col_adae <- reactive({
     input$COLUMN %in% dplyr::setdiff(colnames(ae_data()), colnames(all_data()))
   })
   
+  # Decide which reactive data frame to use below
   use_data_reactive <- reactive({
-    if(is_grp_col_adae()){
+    if(is_grp_col_adae() | numeric_stan_table(RECIPE()) %in% c(18:39)){
       ae_data()
     } else { # do the same for mh_data()
       all_data()
     }
   })
+  # Only needed for app, not for R script
+  use_preferred_pop_data <- reactive({
+    if(is_grp_col_adae()){
+      ae_data()
+    } else { # do the same for mh_data()
+      pop_data()
+    }
+  })
   
   # calculate the totals to input after N= in the table headers
   # a single N if data is not grouped
-  total <- reactive({
-    
-    all <- use_data_reactive() %>% 
+  total_df <- reactive({
+    df <- use_preferred_pop_data() %>% 
       distinct(USUBJID) %>% 
-      summarise(n = n()) %>%
-      pull(n)
-    
+      summarise(n_tot = n())
     
     if (input$COLUMN == "NONE") {
-      all
+      df
+      
     } else {
-      groups <- use_data_reactive() %>%
-        group_by(!!sym(input$COLUMN)) %>%
-        distinct(USUBJID) %>%
-        summarise(n = n()) %>%
-        pull(n)
-      c(groups, all)
+      df <- df %>%
+        mutate(temp = 'Total') %>%
+        rename_with(~paste(input$COLUMN), "temp")
+      
+      grp_lvls <- getLevels(use_preferred_pop_data()[[input$COLUMN]])  # PUT ADAE() somehow?
+      xyz <- data.frame(grp_lvls) %>%
+        rename_with(~paste(input$COLUMN), grp_lvls)
+      
+      groups <- 
+        xyz %>%
+        left_join(
+          use_preferred_pop_data() %>%
+          group_by(!!sym(input$COLUMN)) %>%
+          distinct(USUBJID) %>%
+          summarise(n_tot = n())
+        )%>%
+        mutate(n_tot = tidyr::replace_na(n_tot, 0)) 
+      
+      bind_rows(groups, df)
     }
   })
-
   
+  total <- reactive({
+    total_df()$n_tot
+  })
+
+  pre_filter_msgs <- reactive({
+    req(RECIPE())
+    paste0(pre_ADSL()$message, "<br/>", pre_ADAE()$message, collapse = "<br/>")
+  })
+  
+  # Create the tables subtitle if the table has been filtered
+  subtitle_html <- reactive({
+    # recipe selected AND IDEAFilter applied
+    if (RECIPE() != "NONE" & any(regexpr("%>%", capture.output(attr(filtered_data(), "code"))) > 0) ) {
+      paste0("<b>Filters Applied:</b><br/>",pre_filter_msgs(), 
+             filters_in_english(filter_header = "", filtered_data()),
+             collapse = "<br/>")
+      # recipe selected, no IDEAFilter
+    } else if(RECIPE() != "NONE" & !(any(regexpr("%>%", capture.output(attr(filtered_data(), "code"))) > 0))){
+      paste0("<b>Filters Applied:</b><br/>",pre_filter_msgs(), collapse = "<br/>")
+      # no recipe selected, but IDEAFilter
+    } else if(RECIPE() == "NONE" & any(regexpr("%>%", capture.output(attr(filtered_data(), "code"))) > 0)){
+      filters_in_english(filtered_data())
+    } else {
+      " "
+    }
+  })
   
   
   # create a gt table output by mapping over each row in the block input
@@ -249,14 +359,12 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
         need(all(blocks_and_functions()$dataset == "ADAE"), glue::glue("{column()} doesn't exist in all data files, please select new grouping variable or only drag variables to left-hand side from ADAE source"))
       )
     }
-    
-    # print(IDEA_distinct_freq.ADAE(column = "AEBODSYS",
-    #                               group = NULL,
-    #                               data = ae_data()))
-    # print(paste("ae_data():", "" %in% getLevels(ae_data()$AEBODSYS)))
-    # print(paste("ADAE():", "" %in% getLevels(ADAE()$AEBODSYS)))
-    # print(paste("datafile$ADAE:", "" %in% getLevels(datafile()$ADAE$AEBODSYS)))
-    
+    # if no data in the source, do not run the pmap, just show this msg:
+    if(nrow(use_data_reactive()) == 0){
+      stop(paste0("No subjects remain when the following filters are applied.\n        "
+                      ,gsub("<br/>", "\n        ", pre_filter_msgs())))
+    }
+
     purrr::pmap(list(blocks_and_functions()$agg, 
                       blocks_and_functions()$S3, 
                       blocks_and_functions()$dropdown,
@@ -264,8 +372,9 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
                  function(x,y,z,d) 
                    IDEA_methods(x,y,z, 
                                 group = column(), 
-                                data  = data_to_use_str(d))) %>%
-    purrr::map(setNames, common_rownames(use_data_reactive(), column())) %>%
+                                data  = data_to_use_str(d),
+                                totals = total_df())) %>%
+    purrr::map(setNames, common_rownames(use_preferred_pop_data(), column())) %>%
     setNames(paste(blocks_and_functions()$gt_group)) %>%
     bind_rows(.id = "ID")  %>%
       mutate(
@@ -276,10 +385,10 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
           vectorize_all = FALSE))
   })
   
-  # output$for_gt_table <- renderTable({ for_gt() })
+  output$for_gt_table <- renderTable({ for_gt() })
   
-  # remove the first two columns from the row names to use
-  # since these are used for grouping in gt
+  # remove the first two columns from the row names to use since 
+  # these are used for grouping in gt. Make sure Total is at the end
   row_names_n <- reactive({ 
     test <- names(for_gt())[-c(1:2)] 
     test[grepl("\\.\\.\\.", test)] <- "Missing"
@@ -296,14 +405,9 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     nm = md(glue::glue("**{row_names_n()}** <br> N={total()}"))
   }
   
-  # Create the tables subtitle if the table has been filtered
-  subtitle <- reactive({
-    if (any(regexpr("%>%", capture.output(attr(filtered_data(), "code"))) > 0)) {
-      filters_in_english(filtered_data()) 
-    } else {
-      " "
-    }
-  })
+  
+  
+  
   
   # create gt table
   gt_table <- reactive({
@@ -318,7 +422,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       cols_label(.list = imap(for_gt()[-c(1:2)], ~col_for_list(.y, .x))) %>%
       tab_header(
         title = md(input$table_title),
-        subtitle = md(subtitle())
+        subtitle = md(subtitle_html())
       ) %>%
       tab_style(
         style = cell_text(weight = "bold"),
@@ -348,12 +452,15 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # create dataframe of block names and their labels
   # for BDS use param cd as column names and params as their labels 
   block_data <- reactive({
-      metadata <- data.frame(col_names = colnames(ADSL()))
+      # We don't want the column names to update based on prefilters by recipe
+      # so we are going to use the original column names here
+      ADSL <- datafile()$ADSL
+      metadata <- data.frame(col_names = colnames(ADSL))
       metadata$code <- NA
       
       for (i in 1:nrow(metadata)) {
-        if("label" %in% names(attributes(ADSL()[[metadata$col_names[i]]]))){
-          metadata$code[i] <- attr(ADSL()[[metadata$col_names[i]]], "label")
+        if("label" %in% names(attributes(ADSL[[metadata$col_names[i]]]))){
+          metadata$code[i] <- attr(ADSL[[metadata$col_names[i]]], "label")
         }
       }
       
@@ -363,16 +470,18 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       names(new_list)[length(new_list)] <- "ADSL"
       
       # only display ADAE column blocks if an ADAE is uploaded!
-      if (!is.null(ADAE) &  "ADAE" %in% names(datafile())) {
+      if ("ADAE" %in% names(datafile())) {
+        # this also doesn't need to depend on pre-filters
+        ADAE <- datafile()$ADAE
         # Display variable blocks that are only unique to ADAE
         ADAE_blocks <- data.frame(
-          col_names = dplyr::setdiff(colnames(ADAE()), metadata$col_names)
+          col_names = dplyr::setdiff(colnames(ADAE), metadata$col_names)
         )
         ADAE_blocks$code <- NA
         
         for (i in 1:nrow(ADAE_blocks)) {
-          if("label" %in% names(attributes(ADAE()[[ADAE_blocks$col_names[i]]]))){ 
-            ADAE_blocks$code[i] <- attr(ADAE()[[ADAE_blocks$col_names[i]]], "label") 
+          if("label" %in% names(attributes(ADAE[[ADAE_blocks$col_names[i]]]))){ 
+            ADAE_blocks$code[i] <- attr(ADAE[[ADAE_blocks$col_names[i]]], "label") 
           }
         }
         # print(ADAE_blocks)
@@ -411,6 +520,39 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   
   
   
+  # Depending on data source used in the app, create data for R script
+  create_script_data <- reactive({
+    if(any("CDISCPILOT01" %in% ADSL()$STUDYID)){
+      glue::glue("
+        # create list of dataframes from CDISC pilot study
+            datalist <- list(ADSL = adsl, ADAE = adae, ADVS = advs, ADLBC = adlbc)
+        "
+      )
+    } else {glue::glue("
+      # User must manually set file paths for study
+          study_dir <- 'path/to/study/directory/'
+          
+          # use HAVEN to extract data, then merge
+          filenames <- c({filenames()})
+          
+          # create list of dataframes
+          datalist <- IDEA::readData(study_dir, filenames)
+      ")}
+  })
+  
+  # If ADAE exists, then prep that data too
+  adae_expr <- reactive({
+    if("ADAE" %in% names(datafile())){
+      glue::glue("
+        # Create AE data set
+            pre_adae <- datalist %>%
+                IDEA::prep_adae(pre_adsl$data, '{RECIPE()}')
+            ae_data <- pre_adae$data
+        "
+      )
+    } else {"
+      "}
+  })
   # capture output of filtering expression
   # input_filter_df <- c("one","mild","Moderate")
   # paste('"',dput(input_filter_df),'"')
@@ -424,8 +566,8 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       # options(useFancyQuotes = TRUE)
       glue::glue("
           # Create small filtered data set
-          dat_to_filt <- IDEA::data_to_filter(datalist, c({filter_dfs}))
-          filtered_data <- eval(parse(text = '{filter_code}')) %>% varN_fctr_reorder()
+              dat_to_filt <- IDEA::data_to_filter(datalist, c({filter_dfs}))
+              filtered_data <- eval(parse(text = '{filter_code}')) %>% varN_fctr_reorder()
           ")
     } else {""}
   })
@@ -434,7 +576,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     if(any(regexpr("%>%", filter_code) > 0)){
       glue::glue("
           # Apply small filtered data set to BDS data
-          bds_data <- bds_data %>% semi_join(filtered_data) 
+              bds_data <- bds_data %>% semi_join(filtered_data) 
           ")
     } else {""}
   })
@@ -444,22 +586,30 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     if(any(regexpr("%>%", filter_code) > 0)){
       glue::glue("
           # Apply small filtered data set to ADAE data
-          ae_data <- ae_data %>% semi_join(filtered_data) 
+              ae_data <- ae_data %>% semi_join(filtered_data) 
+          ")
+    } else {""}
+  })
+  filter_pop_expr <- reactive({
+    filter_code <- gsub("processed_data","bds_data",capture.output(attr(filtered_data(), "code")))
+    if(any(regexpr("%>%", filter_code) > 0)){
+      glue::glue("
+          # Apply small filtered data set to population dataset
+              pop_data <- pre_adsl$data %>% semi_join(filtered_data) %>% IDEA::varN_fctr_reorder()
+          ")
+    } else {"pop_data <- pre_adsl$data %>% IDEA::varN_fctr_reorder()"}
+  })
+  # capture output for empty df warning
+  df_empty_expr <- reactive({
+    if(nrow(use_data_reactive()) == 0) {
+      glue::glue("
+          # Check if No subject's remain
+              if(nrow({Rscript_use_data()}) == 0) stop(\"{paste0('No subjects remain when the following filters are applied. \n        ',gsub('<br/>', '\n        ', pre_filter_msgs()))}\")
           ")
     } else {""}
   })
   
   
-  # If ADAE exists, then prep that data too
-  adae_expr <- reactive({
-    if("ADAE" %in% names(datafile())){
-      glue::glue("
-          # Create AE data set
-          ae_data <- datalist %>% IDEA::cleanADAE()
-          "
-      )
-    } else {""}
-  })#
   
   
   # get filepaths
@@ -467,7 +617,13 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     options(useFancyQuotes = FALSE)
     paste(tolower(sQuote(paste0(names(datafile()), '.sas7bdat'))), collapse = ",")
   })
-  
+  Rscript_use_data <- reactive({
+    ifelse(is_grp_col_adae() | 
+           numeric_stan_table(RECIPE()) %in% c(18:39), "ae_data","bds_data")
+  })
+  Rscript_use_preferred_pop_data <- reactive({
+    ifelse(is_grp_col_adae() , "ae_data","pop_data")
+  })
   # create code to generate table as dataframe object
   text_code <- reactive({
     glue::glue(
@@ -487,18 +643,13 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     library(haven)
     library(dplyr)
         
-    # User must manually set file paths for study
-    study_dir <- 'path/to/study/directory/'
-        
-    # use HAVEN to extract data, then merge
-    filenames <- c({filenames()})
-        
-    # create list of dataframes
-    datalist <- IDEA::readData(study_dir, filenames)
-    bds_data <- datalist %>% IDEA::combineBDS()
+    {create_script_data()}
+    pre_adsl <- IDEA::prep_adsl(datalist$ADSL, input_recipe = '{RECIPE()}')
     {adae_expr()}
+    bds_data <- datalist %>% IDEA::combineBDS(ADSL = pre_adsl$data)
         
     {data_to_filter_expr()}
+    {filter_pop_expr()}
     {filter_bds_expr()}
     {filter_ae_expr()}
         
@@ -506,54 +657,71 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     # and create table using data
     blockData <- {paste0(capture.output(dput(blocks_and_functions())), collapse = '\n')}
     pretty_blocks <- {paste0(capture.output(dput(pretty_blocks)), collapse = '\n')}
+    
+    {df_empty_expr()}
     "
     )
   })
   
-  
   # create the total column names
   total_for_code <- reactive({
-    use_data <- ifelse(is_grp_col_adae(), "ae_data","bds_data")
     if (!!input$COLUMN == 'NONE') {
-      glue::glue("total <- {use_data} %>% 
+      glue::glue("
+        total_df <- {Rscript_use_preferred_pop_data()} %>% 
         distinct(USUBJID) %>% 
-        summarise(n = n(), .groups='drop_last') %>%
-        pull(n)")
+        summarise(n_tot = n(), .groups='drop_last')
+        
+        total <- total_df$n_tot
+        ")
     } else {
       glue::glue(
         "
-        all <- {use_data} %>% 
+        all <- {Rscript_use_preferred_pop_data()} %>% 
         distinct(USUBJID) %>% 
-        summarise(n = n(), .groups='drop_last') %>%
-        pull(n)
+        summarise(n_tot = n(), .groups='drop_last') %>%
+        mutate({input$COLUMN} = 'Total') 
         
-        groups <- {use_data} %>%
-        group_by({input$COLUMN}) %>%
-        distinct(USUBJID) %>%
-        summarise(n = n(), .groups='drop_last') %>%
-        pull(n)
+        grp_lvls <- getLevels({Rscript_use_preferred_pop_data()}[['{input$COLUMN}']])
+        xyz <- data.frame(grp_lvls) %>%
+            rename_with(~paste('{input$COLUMN}'), grp_lvls)
+
+        groups <- 
+          xyz %>%
+          left_join(
+            {Rscript_use_preferred_pop_data()} %>%
+            group_by({input$COLUMN}) %>%
+            distinct(USUBJID) %>%
+            summarise(n_tot = n(), .groups='drop_last')
+          ) %>%
+          mutate(n_tot = tidyr::replace_na(n_tot, 0)) 
         
-        total <- c(groups, all)
+        total_df <- bind_rows(groups, all)
+        total <- total_df$n_tot
         "
       )
     }
   })
   
   generate_table_output <- reactive({
-    use_data <- ifelse(is_grp_col_adae(), "ae_data","bds_data")
     
     glue::glue(
       "
       {text_code()}
       
-      tg_table <- purrr::pmap(list(blockData$agg,
-                                    blockData$S3,
-                                    blockData$dropdown,
-                                    blockData$dataset), 
-                            function(x,y,z,d) IDEA::IDEA_methods(x,y,z,
-                                                   group = {column() %quote% 'NULL'}, 
-                                                   data = IDEA::data_to_use_str(d))) %>%
-      map(setNames, IDEA::common_rownames({use_data}, {column() %quote% 'NULL'})) %>%
+      # Calculate totals for population set
+      {total_for_code()}
+      
+      
+      tg_table <- purrr::pmap(list(
+                  blockData$agg,
+                  blockData$S3,
+                  blockData$dropdown,
+                  blockData$dataset), 
+          function(x,y,z,d) IDEA::IDEA_methods(x,y,z,
+                       group = {column() %quote% 'NULL'}, 
+                       data = IDEA::data_to_use_str(d),
+                       totals = total_df)) %>%
+      map(setNames, IDEA::common_rownames({Rscript_use_preferred_pop_data()}, {column() %quote% 'NULL'})) %>%
       setNames(paste(blockData$gt_group)) %>%
       bind_rows(.id = 'ID') %>%
       mutate(
@@ -562,11 +730,8 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
           pattern = '\\\\b'%s+%pretty_blocks$Pattern%s+%'\\\\b',
           replacement = pretty_blocks$Replacement,
           vectorize_all = FALSE))
-    
-      # create a total variable
-      {total_for_code()}
       
-      # get the rownames for the rable
+      # get the rownames for the table
       row_names_n <- names(tg_table)[-c(1:2)]
     
       # create the gt output
@@ -581,7 +746,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
           cols_label(.list = imap(tg_table[-c(1:2)], ~ IDEA::col_for_list_expr(.y, .x))) %>%
           tab_header(
             title = md('{input$table_title}'),
-            subtitle = md(\"{subtitle()}\")
+            subtitle = md(\"{subtitle_html()}\")
           ) %>%
           tab_style(
           style = cell_text(weight = 'bold'),
@@ -593,7 +758,6 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   })
   
   generate_comparison_output <- reactive({
-    use_data <- ifelse(is_grp_col_adae(), "ae_data","bds_data")
     glue::glue(
       "
       {text_code()}
@@ -602,14 +766,19 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
         purrr::map(blockData$block, function(x) attr(bds_data[[x]], 'label')) %>% 
         unname() %>% str_trim()
       
-      tg_table <- purrr::pmap(list(blockData$agg,
-                                  blockData$S3,
-                                  blockData$dropdown,
-                                  blockData$dataset), 
-                              function(x,y,z,d) IDEA::IDEA_methods(x,y,z, 
-                                                     group = {column() %quote% 'NULL'}, 
-                                                     data = IDEA::data_to_use_str(d))) %>%
-      map(setNames, IDEA::common_rownames({use_data}, {column() %quote% 'NULL'})) %>%
+      # Calculate totals for population set
+      {total_for_code()}
+      
+      tg_table <- purrr::pmap(list(
+              blockData$agg,
+              blockData$S3,
+              blockData$dropdown,
+              blockData$dataset), 
+          function(x,y,z,d) IDEA::IDEA_methods(x,y,z, 
+                       group = {column() %quote% 'NULL'}, 
+                       data = IDEA::data_to_use_str(d),
+                       totals = total_df)) %>%
+      map(setNames, IDEA::common_rownames({Rscript_use_preferred_pop_data()}, {column() %quote% 'NULL'})) %>%
       setNames(paste(blockData$label)) %>%
       bind_rows(.id = 'ID') %>%
       mutate(
@@ -631,14 +800,14 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       sas_comp_ready <- IDEA::prep_sas_table(data = sas_table,
                                              machine_readable = TRUE,
                                              keep_orig_ids = FALSE,
-                                             rm_desc_col = FALSE
+                                             rm_desc_col = TRUE
                                              )
 
       # prepare TG Table for comparison
       tg_comp_ready <- IDEA::prep_tg_table(data = tg_table,
                                            machine_readable = TRUE,
                                            keep_orig_ids = FALSE,
-                                           rm_desc_col = FALSE,
+                                           rm_desc_col = TRUE,
                                            generic_colnames = TRUE
                                            )
       
