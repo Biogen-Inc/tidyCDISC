@@ -1,3 +1,274 @@
+#' Function to read the SAS list of user supplied data frames
+#' 
+#' @param datalist list of CDISC dataframes 
+#' 
+#' @export
+readData <- function(study_directory, file_names) {
+  purrr::map(file_names, ~haven::read_sas(file.path(study_directory,.x))) %>%
+    setNames(toupper(stringr::str_remove(file_names, ".sas7bdat")))
+}
+
+
+#' Function to bind data rows from the list of user supplied data frames
+#' 
+#' @param datafile list of ADaM-ish dataframes 
+#' 
+#' @export
+#' 
+combineBDS <- function(datafile, ADSL) {
+  
+  BDS <- datafile[sapply(datafile, function(x) "PARAMCD" %in% colnames(x))]
+  
+  PARAMCD <- map(BDS, ~ if(!"CHG" %in% names(.)) {update_list(., CHG = NA)} else {.})
+  
+  if (!is_empty(PARAMCD)) {
+    # Bind all the PARAMCD files 
+    all_PARAMCD <- bind_rows(PARAMCD, .id = "data_from")  %>% 
+      arrange(USUBJID, AVISITN, PARAMCD) %>% 
+      select(USUBJID, AVISITN, AVISIT, PARAMCD, AVAL, CHG, data_from)
+    # Join ADSL and all_PARAMCD
+    combined_data <- inner_join(ADSL, all_PARAMCD, by = "USUBJID")
+  } else {
+    combined_data <- ADSL %>%
+      mutate(data_from = "ADSL", PARAMCD = NA, AVAL = NA, CHG = NA)
+  }
+  
+  combined_data <- varN_fctr_reorder(combined_data) # add this after filter?
+  
+  return(combined_data)
+}
+
+#' Function to clean and combine ADAE dataset with ADSL
+#' 
+#' @param datafile list of ADaM-ish dataframes 
+#' 
+#' @export
+#' 
+cleanADAE <- function(datafile, ADSL) {
+  if("ADAE" %in% names(datafile)){
+    # find columns the ADAE & ADSL have in common (besides Usubjid), remove
+    # them from the ADAE, so that the ADSL cols are used instead. Then join
+    # on usubjid and re-order the colnames to match the adae
+    adae_cols <- colnames(datafile$ADAE)
+    common_cols <- dplyr::intersect(adae_cols, colnames(ADSL))
+    com_cols_excp_u <- common_cols[common_cols != "USUBJID"]
+    adae_adsl <- datafile$ADAE %>% 
+      select(-one_of(com_cols_excp_u)) %>%
+      inner_join(ADSL, by = "USUBJID")
+    preferred_col_order <- c(adae_cols, dplyr::setdiff(colnames(ADSL), adae_cols))
+    if(all(sort(colnames(adae_adsl)) == sort(preferred_col_order))){
+      varN_fctr_reorder(adae_adsl[,preferred_col_order]) # add this after filter?
+    } else {
+      varN_fctr_reorder(adae_adsl)
+    }
+  } else {
+    varN_fctr_reorder(ADSL)
+  }
+}
+
+#' Function to clean and combine ADAE dataset with ADSL
+#' 
+#' @param input_recipe The shiny input that keeps track of the recipe selected
+#' 
+numeric_stan_table <- function(input_recipe){
+  ifelse(is.null(input_recipe) | input_recipe == "NONE", 
+         0,
+         as.numeric(gsub(" ","",gsub(":","",stringr::word(start = 2, substr(input_recipe, 1, 9)))))
+  )
+}
+
+
+#' Function to pre-filter the ADSL depending on the stan table selected
+#' 
+#' @param data an ADSL
+#' @param input_recipe The shiny input that keeps track of the recipe selected
+#' 
+#' @export
+#' 
+prep_adsl <- function(ADSL, input_recipe) { #, stan_table_num
+  stan_table_num <- numeric_stan_table(input_recipe)
+  dat <- ADSL
+  msg <- ""
+  if(!is.null(input_recipe)){ # if recipe has initialized...
+    if(stan_table_num == 5){
+      if("ITTFL" %in% colnames(dat)){
+        dat <- dat %>% filter(ITTFL == 'Y')
+        msg <- "Population Set: ITTFL = 'Y'"
+      }else {
+        msg <- "Variable 'ITTFL' doesn't exist in ADSL. STAN table not displayed because filter \"ITTFL == 'Y'\" cannot be applied!"
+        stop(msg)
+      }
+    } else if(stan_table_num %in% c(18:39)){
+      if("SAFFL" %in% colnames(dat)){
+        dat <- dat %>% filter(SAFFL == 'Y')
+        msg <- "Population Set: SAFFL = 'Y'"
+      } else{
+        msg <- "Variable 'SAFFL' doesn't exist in ADSL. STAN table not displayed because filter \"SAFFL == 'Y'\" cannot be applied!"
+        stop(msg)
+      }
+    }
+  }
+  
+  return(list(data = dat, message = msg))
+}
+
+#' Function to pre-filter the ADAE depending on the stan table selected
+#' 
+#' @param datafile list of ADaM-ish dataframes 
+#' @param data an ADSL
+#' @param input_recipe The shiny input that keeps track of the recipe selected
+#' 
+#' @export
+#' 
+prep_adae <- function(datafile, ADSL, input_recipe) { #, stan_table_num
+  stan_table_num <- numeric_stan_table(input_recipe)
+  dat <- cleanADAE(datafile = datafile, ADSL = ADSL)
+  msg <- ""
+  if(!is.null(input_recipe)){ # if recipe has initialized...
+    
+    if(stan_table_num %in% c(25, 26)){
+      if("AESEV" %in% colnames(dat)){
+        dat <- dat %>% filter(AESEV == 'SEVERE')
+        msg <- "AESEV = 'SEVERE'"
+      } else {
+        msg <- "Variable 'AESEV' doesn't exist in ADAE. STAN table not displayed because filter \"AESEV = 'SEVERE'\" cannot be applied!"
+        stop(msg)
+      }
+      
+    } else if(stan_table_num == 29){
+      if("AREL" %in% colnames(dat)){
+        dat <- dat %>% filter(AREL == 'RELATED')
+        msg <- "AREL = 'RELATED'"
+      } else {
+        msg <- "Variable 'AREL' doesn't exist in ADAE. STAN table not displayed because filter \"AREL = 'RELATED'\" cannot be applied!"
+        stop(msg)
+      }
+      
+    } else if(stan_table_num %in% c(30, 31)){
+      if("AESER" %in% colnames(dat)){
+        dat <- dat %>% filter(AESER == 'Y')
+        msg <- "AESER = 'Y'"
+      } else {
+        msg <- "Variable 'AESER' doesn't exist in ADAE. STAN table not displayed because filter \"AESER = 'Y'\" cannot be applied!"
+        stop(msg)
+      }
+      
+    } else if(stan_table_num == 33){
+      if("AREL" %in% colnames(dat) & "AESER" %in% colnames(dat)){
+        dat <- dat %>% filter(AREL == 'RELATED' & AESER == 'Y')
+        msg <- "AREL = 'RELATED'<br/>AESER = 'Y'"
+      } else if("AREL" %in% colnames(dat) & !("AESER" %in% colnames(dat))){
+        dat <- dat %>% filter(AREL == 'RELATED')
+        msg <- "AREL = 'RELATED'<br/>Variable 'AESER' doesn't exist in ADAE. STAN table not displayed because filter \"AESER = 'Y'\" cannot be applied!"
+        stop("Variable 'AESER' doesn't exist in ADAE. STAN table not displayed because filter \"AESER = 'Y'\" cannot be applied!")
+      } else if(!("AREL" %in% colnames(dat)) & "AESER" %in% colnames(dat)){
+        dat <- dat %>% filter(AESER == 'Y')
+        msg <- "Variable 'AREL' doesn't exist in ADAE. STAN table not displayed because filter \"AREL = 'RELATED'\" cannot be applied!<br/>AESER = 'Y'"
+        stop("Variable 'AREL' doesn't exist in ADAE. STAN table not displayed because filter \"AREL = 'RELATED'\" cannot be applied!")
+      } else{
+        msg <- "Variables 'AREL' & 'AESER' do not exist in ADAE. STAN table not displayed because filters \"AREL = 'RELATED'\" and \"AESER = 'Y'\" cannot be applied!"
+        stop(msg)
+      }
+    } else if(stan_table_num == 34){
+      if("AEACN" %in% colnames(dat)){
+        dat <- dat %>% filter(AEACN == 'DRUG WITHDRAWN')
+        msg <- "AEACN = 'DRUG WITHDRAWN'"
+      } else{
+        msg <- "Variable 'AEACN' doesn't exist in ADAE. STAN table not displayed because filter \"AEACN = 'DRUG WITHDRAWN'\" cannot be applied!"
+        stop(msg)
+      }
+    } else if(stan_table_num == 36){ #AEACNOTH contains 'Withdrawal" and "Study"
+      if("AEACNOTH" %in% colnames(dat)){
+        dat <- dat %>%
+          filter(stringr::str_detect(tolower(AEACNOTH),"withdrawal") &
+                   stringr::str_detect(tolower(AEACNOTH),"study"))
+        msg <- "AEACNOTH Contains 'withdrawal' and 'study'"
+      } else{
+        msg <- "Variable 'AEACNOTH' doesn't exist in ADAE. STAN table not displayed because filter \"AEACNOTH Contains 'withdrawal' and 'study'\" cannot be applied!"
+        stop(msg)
+      }
+    } else if(stan_table_num == 38){
+      if("AEACN" %in% colnames(dat)){
+        dat <- dat %>% filter(AEACN %in% c('DRUG INTERRUPTED', 'DRUG REDUCED', 'DOSE REDUCED', 'DRUG INCREASED', 'DOSE INCREASED'))
+        msg <- "AEACN IN ('DRUG INTERRUPTED', 'DOSE REDUCED', 'DOSE INCREASED')"
+      } else{
+        msg <- "Variable 'AEACN' doesn't exist in ADAE. STAN table not displayed because filter \"AEACN IN ('DRUG INTERRUPTED', 'DOSE REDUCED', 'DOSE INCREASED')\" cannot be applied!"
+        stop(msg)
+      }
+    } else if(stan_table_num == 39){
+      if("TRTEMFL" %in% colnames(dat)){
+        dat <- dat %>% filter(TRTEMFL == 'Y')
+        msg <- "TRTEMFL = 'Y'"
+      }else {
+        msg <- "Variable 'TRTEMFL' doesn't exist in ADAE. STAN table not displayed because filter \"TRTEMFL = 'Y'\" cannot be applied!"
+        stop(msg)
+      }
+    }
+    if(stan_table_num %in% c(25:26, 29:33)){
+      if("TRTEMFL" %in% colnames(dat)){
+        dat <- dat %>% filter(TRTEMFL == 'Y')
+        msg <- paste0(msg, "<br/>TRTEMFL = 'Y'")
+      } else {
+        msg <- paste0(msg, "<br/>Variable 'TRTEMFL' doesn't exist in ADAE. STAN table not displayed because filter \"TRTEMFL = 'Y'\" cannot be applied!")
+        stop(msg)
+      }
+    }
+  }
+  
+  return(list(data = dat, message = msg))
+}
+
+
+
+
+
+#' The smallest possible data set we could filter to semi-join later
+#' 
+#' @param datafile list of ADaM-ish dataframes 
+#' 
+#' @export
+#' 
+data_to_filter <- function(datafile, input_filter_df) {
+  select_dfs <- datafile[input_filter_df]
+  
+  # Separate out non-BDS and BDS data frames. Note: join may throw some warnings
+  # if labels are different between two datasets, which is fine! Just Ignore
+  non_bds <- select_dfs[sapply(select_dfs, function(x) !("PARAMCD" %in% colnames(x)) )] 
+  bds <- select_dfs[sapply(select_dfs, function(x) "PARAMCD" %in% colnames(x) )]
+  
+  # Make CHG var doesn't exist, create the column and populate with NA
+  PARAMCD_dat <- purrr::map(bds, ~ if(!"CHG" %in% names(.)) {purrr::update_list(., CHG = NA)} else {.})
+  
+  # Combine selected data into a 1 usable data frame
+  if (!rlang::is_empty(PARAMCD_dat)) {
+    all_PARAMCD <- bind_rows(PARAMCD_dat, .id = "data_from") %>% distinct(.keep_all = T)
+    
+    if (!rlang::is_empty(non_bds)){
+      combined_data <- inner_join(non_bds %>% purrr::reduce(inner_join), all_PARAMCD)
+    } else {
+      combined_data <-all_PARAMCD
+    }
+  } else {
+    combined_data <- non_bds %>% reduce(inner_join)
+  }
+  
+  return(combined_data)
+}
+
+
+
+#' Function to clean and combine ADAE dataset with ADSL
+#' 
+#' @param datafile list of ADaM-ish dataframes 
+#' 
+#' @export
+#' 
+data_to_use_str <- function(x) {
+  if (x == "ADAE") { ae_data }
+  else bds_data
+}
+
+
 #' Table Generator Pretty Block lookup table
 #' 
 #' This object is used within the table generator module
@@ -6,14 +277,16 @@
 #' @importFrom tibble tibble
 #' 
 pretty_blocks <- tibble::tibble(
-  Pattern = c("MEAN", "FREQ", "CHG", "Y_FREQ", "MAX_FREQ", "NON_MISSING", "NESTED_FREQ"),
+  Pattern = c("MEAN", "FREQ", "CHG", "Y_FREQ", "MAX_FREQ", "NON_MISSING",
+              "NESTED_FREQ_DSC", "NESTED_FREQ_ABC"),
   Replacement = c("Descriptive Statistics", 
                   "Summary Counts", 
                   "Descriptive Statistics of Change from Baseline",
                   "Subject Count for those with 'Y' values",
                   "Subject Count for maximum",
                   "Subject Count for those with Non Missing values",
-                  "Subject Count at each variable level")
+                  "Subject Count at each variable level, sorted descending by total counts",
+                  "Subject Count at each variable level, sorted alphabetically by name")
 )
 
 #' Table Generator Cicerone R6 Object 

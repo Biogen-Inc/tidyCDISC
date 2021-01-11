@@ -10,17 +10,17 @@
 \title{Generate frequency of categorical variables
 using table generator blocks}
 \usage{
-IDEA_freq(column, group, data)
+IDEA_freq(column, group, data, totals)
 
-\method{IDEA_freq}{default}(column, group, data)
+\method{IDEA_freq}{default}(column, group, data, totals)
 
-\method{IDEA_freq}{ADAE}(column, group = NULL, data)
+\method{IDEA_freq}{ADAE}(column, group = NULL, data, totals)
 
-\method{IDEA_freq}{BDS}(column, group = NULL, data)
+\method{IDEA_freq}{BDS}(column, group = NULL, data, totals)
 
-\method{IDEA_freq}{OCCDS}(column, group, data)
+\method{IDEA_freq}{OCCDS}(column, group, data, totals)
 
-\method{IDEA_freq}{custom}(column, group, data)
+\method{IDEA_freq}{custom}(column, group, data, totals)
 }
 \arguments{
 \item{column}{the variable to perform frequency stats on,
@@ -30,6 +30,9 @@ based on the data file the column came from}
 \item{group}{the groups to compare for the ANOVA}
 
 \item{data}{the data to use}
+
+\item{totals}{the totals data frame that contains denominator N's use when
+calculating column percentages}
 }
 \value{
 a frequency table of grouped variables
