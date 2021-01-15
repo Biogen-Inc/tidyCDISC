@@ -40,14 +40,14 @@ Imports:
     forcats,
     tidyr,
     tibble,
-    IDEAFilter (>= 0.0.2),
     magrittr,
     cicerone,
     tidyselect,
     broom,
     pkgload,
     rsconnect (>= 0.8.16.9001),
-    V8
+    V8,
+    IDEAFilter (>= 0.0.2)
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1
@@ -57,10 +57,10 @@ Suggests:
     testthat,
     lazyeval,
     scales
-Remotes: 
+Remotes:  
     JohnCoene/tippy,
-    MayaGans/IDEAFilter,
-    rstudio/rsconnect
+    rstudio/rsconnect,
+    Biogen-Inc/IDEAFilter
 Depends: 
     R (>= 2.10)
 VignetteBuilder: knitr
