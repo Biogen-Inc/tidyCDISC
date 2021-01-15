@@ -6,7 +6,7 @@
 \title{Individual Explorer Cicerone Guide For Patient Visits tab when ADLB loaded &
 'dy' visit var selected, plus overlain events selected}
 \format{
-An object of class \code{Cicerone} (inherits from \code{R6}) of length 13.
+An object of class \code{Cicerone} (inherits from \code{R6}) of length 15.
 }
 \usage{
 guide_ind_exp_visits_adlb_olay
