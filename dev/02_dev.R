@@ -141,6 +141,7 @@ usethis::use_data_raw( name = "adsl", open = FALSE ) # ran
 usethis::use_data_raw( name = "adlbc", open = FALSE ) # ran
 usethis::use_data_raw( name = "advs", open = FALSE ) # ran
 usethis::use_data_raw( name = "adae", open = FALSE ) # ran
+usethis::use_data_raw( name = "adtte", open = T ) # ran
 
 ## Tests ---- not run
 ## Add one line by test you want to create
