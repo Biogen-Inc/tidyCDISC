@@ -143,7 +143,11 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       #     distinct(USUBJID)
       #   )
   })
-  BDS <- reactive({  datafile()[sapply(datafile(), function(x) "PARAMCD" %in% colnames(x))] })
+  BDS <- reactive({ 
+    init <- sapply(datafile(), function(x) "PARAMCD" %in% colnames(x))
+    datafile()[init[substr(names(init),1,4) != "ADTT"]] # remove TTE class df's because `AVISIT` col doesn't exist in that class of df
+    # datafile()[sapply(datafile(), function(x) "PARAMCD" %in% colnames(x))]
+  })
   ADAE <- reactive({ pre_ADAE()$data })
  
   # combine BDS data into one large data set
@@ -525,7 +529,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     if(any("CDISCPILOT01" %in% ADSL()$STUDYID)){
       glue::glue("
         # create list of dataframes from CDISC pilot study
-            datalist <- list(ADSL = adsl, ADAE = adae, ADVS = advs, ADLBC = adlbc)
+            datalist <- list(ADSL = adsl, ADAE = adae, ADVS = advs, ADLBC = adlbc, ADTTE = adtte)
         "
       )
     } else {glue::glue("

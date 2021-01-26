@@ -170,7 +170,8 @@ mod_dataUpload_server <- function(input, output, session){
       ADSL = adsl,
       ADVS = advs,
       ADAE = adae,
-      ADLBC = adlbc
+      ADLBC = adlbc,
+      ADTTE = adtte
     )
     
     shinyjs::hide(id = "pilot")

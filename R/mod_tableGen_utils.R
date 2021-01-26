@@ -16,8 +16,8 @@ readData <- function(study_directory, file_names) {
 #' @export
 #' 
 combineBDS <- function(datafile, ADSL) {
-  
-  BDS <- datafile[sapply(datafile, function(x) "PARAMCD" %in% colnames(x))]
+  init <- sapply(datafile, function(x) "PARAMCD" %in% colnames(x))
+  BDS <- datafile[init[substr(names(init),1,4) != "ADTT"]]
   
   PARAMCD <- map(BDS, ~ if(!"CHG" %in% names(.)) {update_list(., CHG = NA)} else {.})
   
