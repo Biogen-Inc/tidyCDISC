@@ -144,7 +144,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       #   )
   })
   BDS <- reactive({ 
-    init <- sapply(datafile(), function(x) "PARAMCD" %in% colnames(x))
+    init <- sapply(datafile(), function(x) "PARAMCD" %in% colnames(x) & !("CNSR" %in% colnames(x)))
     datafile()[init[substr(names(init),1,4) != "ADTT"]] # remove TTE class df's because `AVISIT` col doesn't exist in that class of df
     # datafile()[sapply(datafile(), function(x) "PARAMCD" %in% colnames(x))]
   })
