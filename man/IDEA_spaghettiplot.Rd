@@ -27,6 +27,8 @@ Other popExp Functions:
 \code{\link{IDEA_boxplot}()},
 \code{\link{boxPlot_srv}()},
 \code{\link{boxPlot_ui}()},
+\code{\link{km_srv}()},
+\code{\link{km_ui}()},
 \code{\link{mod_popExp_server}()},
 \code{\link{mod_popExp_ui}()},
 \code{\link{refact}()},

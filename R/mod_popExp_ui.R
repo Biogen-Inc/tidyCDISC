@@ -62,7 +62,8 @@ mod_popExp_ui <- function(id, label = "Population Explorer"){
              div(id = "pop_cic_chart_inputs", 
                conditionalPanel("input.plot_type === 'Box Plot'", ns = ns, boxPlot_ui(ns("boxPlot"))),
                conditionalPanel("input.plot_type === 'Spaghetti Plot'", ns = ns, spaghettiPlot_ui(ns("spaghettiPlot"))),
-               conditionalPanel("input.plot_type === 'Scatter Plot'", ns = ns, scatterPlot_ui(ns("scatterPlot")))
+               conditionalPanel("input.plot_type === 'Scatter Plot'", ns = ns, scatterPlot_ui(ns("scatterPlot"))),
+               conditionalPanel("input.plot_type === 'Kaplan-Meier Curve'", ns = ns, km_ui(ns("km")))
              )
            ),
            column(width = 9,

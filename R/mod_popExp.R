@@ -138,6 +138,17 @@ mod_popExp_server <- function(input, output, session, datafile) {
     updateSelectInput("filter_df", session = session, choices = as.list(my_loaded_adams()))
   })
   
+  # if ADTT* exists in data, add KM curve as radioButton choice
+  observeEvent(my_loaded_adams(), {
+    req(any(substr(my_loaded_adams(), 1, 4) == "ADTT"))
+    updateRadioButtons(session, "plot_type",
+                       choices = c("Scatter Plot", 
+                                   "Spaghetti Plot", 
+                                   "Box Plot",
+                                   "Kaplan-Meier Curve") # new ... added KM
+    )
+  })
+  
   # must make reactive
   all_data <- reactive({ process()$all_data })
   adsl_cols <- reactive({ process()$adsl_cols })
@@ -208,9 +219,15 @@ mod_popExp_server <- function(input, output, session, datafile) {
     return(d)
   })
 
+  km_data <- reactive({
+    dataset() %>% 
+      filter(substr(data_from, 1, 4) == "ADTT")
+  })
+  
   p_scatter <- callModule(scatterPlot_srv, "scatterPlot", data = dataset)
   p_spaghetti <- callModule(spaghettiPlot_srv, "spaghettiPlot", data = dataset)
   p_box <- callModule(boxPlot_srv, "boxPlot", data = dataset)
+  p_km <- callModule(km_srv, "km", data = km_data)
   
 
   # use plot output of the module to create the plot 
@@ -220,6 +237,7 @@ mod_popExp_server <- function(input, output, session, datafile) {
                `Scatter Plot` = p_scatter(),
                `Box Plot` = p_box(),
                `Spaghetti Plot` = p_spaghetti()
+               , `Kaplan-Meier Curve` = p_km()
         )%>% 
         plotly::ggplotly() %>%
           config(displaylogo = FALSE, 
