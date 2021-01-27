@@ -1,0 +1,62 @@
+#' IDEA Kaplan-Meier Curve
+#' 
+#' Create scatter plot where if the variables are numeric then they
+#' are plotted, and if they are PARAMCD's then a week and value 
+#' must be selected for plotting.
+#' 
+#' @param data Merged data to be used in plot
+#' @param yvar Selected xy-axis 
+#' @param group namne of grouping variable (categorical or factor)
+#' @param points logical, whether to plot + symbols when patients censored
+#' @param ci logical, whether the curve(s) should be accompanied with a 95% CI
+#' 
+#' @importFrom stats as.formula
+#' @importFrom GGally ggsurv
+#' @importFrom survival survfit Surv
+#' 
+#' @family popExp functions
+#' 
+IDEA_km_curve <- function(data, yvar, group = "NONE", points = TRUE, ci = FALSE) {
+    
+  # Filter data by param selected
+  suppressWarnings(
+    d <- data %>% 
+      dplyr::filter(PARAMCD == yvar) %>%
+      dplyr::select(USUBJID, PARAM, PARAMCD, AVAL, CNSR, one_of(group)) %>%
+      dplyr::distinct()
+  )
+  
+  fit <- survival::survfit(
+    as.formula(paste("survival::Surv(AVAL, CNSR) ~ ", 
+       if(group != "NONE" & !rlang::is_empty(group)) group else 1)),
+    data = d)
+  
+  # Initialize title of variables plotted
+  # if group used, include those "by" variables in title
+  by_title <- case_when(
+    group != "NONE" ~ paste("\nby", attr(data[[group]], "label")), 
+    TRUE ~ ""
+  )
+  
+  # generate plot
+  p <- 
+    GGally::ggsurv(fit,
+                    order.legend = FALSE, # use data order, not survival order
+                    CI = ci, 
+                    plot.cens = points) +
+    ggplot2::xlab(glue::glue("{unique(d$PARAM)}")) +
+    ggplot2::theme_bw() +
+    theme(
+      text = element_text(size = 12),
+      axis.text = element_text(size = 12),
+      plot.title = element_text(size = 16)
+    ) +
+    ggplot2::ggtitle(paste(unique(d$PARAM), by_title)
+                     # ,subtitle = paste(by_title) # plotly won't automatically accept this
+    )
+  
+  # Add in plot layers conditional upon user selection
+  if (by_title != "") {p <- p + theme(plot.margin = margin(t = 1.2, unit = "cm"))}
+  
+  return(p)
+}
