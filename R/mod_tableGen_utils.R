@@ -16,8 +16,8 @@ readData <- function(study_directory, file_names) {
 #' @export
 #' 
 combineBDS <- function(datafile, ADSL) {
-  init <- sapply(datafile, function(x) "PARAMCD" %in% colnames(x))
-  BDS <- datafile[init[substr(names(init),1,4) != "ADTT"]]
+  init <- sapply(datafile, function(x) "PARAMCD" %in% colnames(x) & !("CNSR" %in% colnames(x)))
+  BDS <- datafile[init[substr(names(init),1,4) != "ADTT"]] # remove TTE class df's because `AVISIT` col doesn't exist in that class of df
   
   PARAMCD <- map(BDS, ~ if(!"CHG" %in% names(.)) {update_list(., CHG = NA)} else {.})
   
