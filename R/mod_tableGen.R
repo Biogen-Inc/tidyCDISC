@@ -629,19 +629,21 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     glue::glue(
     "
     options(digits = 3)
-    
-    pkgs_req <- c('IDEA', 'purrr', 'haven', 'dplyr', 'diffdf')
+    # For HPC users, add RSPM's GHE repo:
+    options(repos = c(
+      CRAN = 'https://cran.rstudio.com/',
+      ghe = 'google.com/latest')
+    )
+
+    pkgs_req <- c('IDEA', 'purrr', 'haven', 'dplyr', 'stringi', 'stringr', 'tidyr', 'gt', 'diffdf')
     pkgs_needed <- pkgs_req[!(pkgs_req %in% installed.packages()[,'Package'])]
+    if(length(pkgs_needed)) install.packages(pkgs_needed)
     
-    non_idea_needed <- pkgs_needed[pkgs_needed != 'IDEA']
-    
-    if(length(non_idea_needed)) install.packages(non_idea_needed)
-    if('IDEA' %in% pkgs_needed) remotes::install_github('IDEA')
-    
-    library(purrr)
     library(IDEA)
+    library(purrr)
     library(haven)
     library(dplyr)
+    library(stringi)
         
     {create_script_data()}
     pre_adsl <- IDEA::prep_adsl(datalist$ADSL, input_recipe = '{RECIPE()}')
@@ -681,7 +683,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
         summarise(n_tot = n(), .groups='drop_last') %>%
         mutate({input$COLUMN} = 'Total') 
         
-        grp_lvls <- getLevels({Rscript_use_preferred_pop_data()}[['{input$COLUMN}']])
+        grp_lvls <- IDEA::getLevels({Rscript_use_preferred_pop_data()}[['{input$COLUMN}']])
         xyz <- data.frame(grp_lvls) %>%
             rename_with(~paste('{input$COLUMN}'), grp_lvls)
 
