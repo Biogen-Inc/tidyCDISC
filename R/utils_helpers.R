@@ -152,8 +152,6 @@ filters_in_english <- function(filtered_data, filter_header = "Filters Applied:"
 #' Return levels of a factor/vector
 #'
 #' @param x a vector
-#' 
-#'   DO NOT REMOVE.
 #'   
 #' @return x vector 
 #' 

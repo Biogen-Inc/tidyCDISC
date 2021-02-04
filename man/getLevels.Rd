@@ -7,9 +7,7 @@
 getLevels(x)
 }
 \arguments{
-\item{x}{a vector
-
-  DO NOT REMOVE.}
+\item{x}{a vector}
 }
 \value{
 x vector
