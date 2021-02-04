@@ -152,12 +152,10 @@ filters_in_english <- function(filtered_data, filter_header = "Filters Applied:"
 #' Return levels of a factor/vector
 #'
 #' @param x a vector
-#' 
-#'   DO NOT REMOVE.
 #'   
 #' @return x vector 
 #' 
-#' @noRd
+#' @export
 #' 
 getLevels <- function(x) {if(is.factor(x)) levels(x) else sort(unique(x), na.last = T) } 
 
