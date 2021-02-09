@@ -31,6 +31,17 @@ function combineRows(arr, strg) {
   return(t)
 }
 
+// this is scanning through the
+function oneAgg_AllOptions(agg_stat, df, select_input) {
+  let t = []
+  select_input.forEach(function (sel_input) {
+    t.push(selectRecipeBlock(agg_stat, df, sel_input))
+  });
+  t= t.join("")
+  return(t)
+}
+
+
 // These are called arrays
 demography_rows = ["AGEGR1", "AGE",  "SEX",  "ETHNIC", "RACE", "HEIGHTBL", "WEIGHTBL"]
 demography_agg =  ["FREQ",   "MEAN", "FREQ", "FREQ",   "FREQ", "MEAN",     "MEAN"]
@@ -41,6 +52,13 @@ ae18_agg =  ["Y_FREQ", "MAX_FREQ", "Y_FREQ", "NON_MISSING"]
 soc_pt_rows = ["AOCCFL", "AEBODSYS"]
 soc_pt_agg =  ["Y_FREQ", "NESTED_FREQ_DSC"]
 soc_pt_sel = ["NONE", "AEDECOD"]
+
+weeks = Shiny.addCustomMessageHandler('my_weeks', function(x) {
+  Object.values(x) // the dataframe column is imported as an array
+}
+adlbc_params = Shiny.addCustomMessageHandler('adlbc_params', function(x) {
+  Object.values(x) // the dataframe column is imported as an array
+}
 
 /* Create custom block recipes to automatically populate when selected */
   $("#RECIPE").bind("change", function(event, ui) {
@@ -109,7 +127,11 @@ soc_pt_sel = ["NONE", "AEDECOD"]
       $("#droppable_blocks").append($(simpleRecipeRowBlock("USUBJID", "ADAE")));
       $("#droppable_blocks").append($(simpleRecipeRowBlock("AEDECOD", "ADAE")));
       
-      
+     } else if (["Table 41: Blood Chemistry actual values by visit"].includes(publisher)) {
+      document.getElementById("droppable_agg").innerHTML = "";
+      $("#droppable_agg").append($(combineRows(demography_agg, "ADSL")));
+      document.getElementById("droppable_blocks").innerHTML = "";
+      $("#droppable_blocks").append($(combineRows(demography_rows, "ADSL")));
       
     } else {
       document.getElementById("droppable_agg").innerHTML = "";

@@ -51,6 +51,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
            ifelse("ADAE" %in% names(datafile()),'<option  id="tbl34">Table 34: Adverse events that led to discontinuation of study treatment by system organ class and preferred term</option>',''),
            ifelse("ADAE" %in% names(datafile()),'<option  id="tbl36">Table 36: Adverse events that led to withdrawl from study by system organ class and preferred term</option>',''),
            ifelse("ADAE" %in% names(datafile()),'<option  id="tbl38">Table 38: Adverse events that led to drug interrupted, dose reduced, or dose increased by system organ class and preferred term</option>',''),
+           ifelse("ADLBC" %in% loaded_labs(),'<option  id="tbl41_bc">Table 41: Blood Chemistry actual values by visit</option>',''),
            '</select>'))
   })
   
@@ -96,6 +97,11 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     sasdata0 <- toupper(names(datafile()))
     sasdata <- names(which(sapply(sasdata0,function(df) { return(stringr::str_detect(toupper(df),"^AD[A-Z0-9\\_]+")) })))
     return(sasdata)
+  })
+  
+  # grabs "normal" labs + blood chem labs... need something special for hematology?
+  loaded_labs <- reactive({
+    my_loaded_adams()[substr(my_loaded_adams(),1,4) == "ADLB"] 
   })
   
   # If User wants to perform advance filtering, update drop down of data frames they can filter on
@@ -256,11 +262,23 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   
   # Sending df(?) that consists for specific params (if they exist) and
   # all AVISITS
-  # observe({
-  #   req(datafile()) 
-  #   
-  #   session$sendCustomMessage("all_cols", all_cols)
-  # })
+  observe({
+    req(!rlang::is_empty(loaded_labs()))
+    
+    # missing some
+    bc <- 
+      adlbc %>%
+      dplyr::filter(PARAMCD %in% c(
+        "ALT", "AST", "ALP", "BILI", "GGT", # Liver #
+        "BUN", "CREAT", # Renal # 
+        "SODIUM", "K", "CL",  # Electrolytes # "BICARBONATE",
+        "GLUC", "CA", "PHOS", "ALB", "CHOL" # Other # "MAGNESIUM", ""TRIGLYCERIDES, "URIC ACID"
+      )) %>%
+      dplyr::distinct(PARAMCD) %>%
+      dplyr::pull()
+    
+    session$sendCustomMessage("adlbc_params", bc)
+  })
   
   # ----------------------------------------------------------------------
   # Generate table given the dropped blocks
