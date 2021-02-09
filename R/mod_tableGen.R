@@ -229,13 +229,18 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     avisit_words
   })
   
+  
+  # Send any and all AVISITs that exist to javascript side
   observe({
     req(AVISIT())
     session$sendCustomMessage("my_weeks", AVISIT())
   })
   
+  
+  # Sending columns names that could be selected for nested freq stat block
+  # just character of factor vars from the ADSL or ADAE
   observe({
-    req(datafile()) # this also doesn't need to depend on pre-filters, so grabbing root df cols
+    req(datafile()) 
     
     all_cols <- unique(c(
       colnames(datafile()$ADSL)[sapply(datafile()$ADSL, class) %in% c('character', 'factor')],
@@ -244,6 +249,18 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     session$sendCustomMessage("all_cols", all_cols)
   })
   
+  # check if LB exists? Specifically
+  # Hematology
+  # Blood Chemistry
+  # Urinalysis
+  
+  # Sending df(?) that consists for specific params (if they exist) and
+  # all AVISITS
+  # observe({
+  #   req(datafile()) 
+  #   
+  #   session$sendCustomMessage("all_cols", all_cols)
+  # })
   
   # ----------------------------------------------------------------------
   # Generate table given the dropped blocks
