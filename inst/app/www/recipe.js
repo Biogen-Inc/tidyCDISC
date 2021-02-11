@@ -82,7 +82,7 @@ soc_pt_sel = ["NONE", "AEDECOD"]
 
 
       
-//console.log("initial bc:", wks);
+console.log("initial bc:", bc);
 //bc_params = ["SODIUM","SODIUM","SODIUM"]
 bc_params = Object.values(bc);
 weeks = Object.values(wks);

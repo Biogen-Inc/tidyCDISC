@@ -264,21 +264,23 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   
   # Sending vector of specific blood chem params(if they exist) and
   observe({
-    req("ADLBC" %in% loaded_labs())
+    req(datafile()) # don't req("ADLBC") because then the custom message will never get sent, and hang up the UI
     
-    # missing some
-    bc <- 
-      adlbc %>%
-      dplyr::filter(PARAMCD %in% c(
-        "ALT", "AST", "ALP", "BILI", "GGT", # Liver #
-        "BUN", "CREAT", # Renal # 
-        "SODIUM", "K", "CL",  # Electrolytes # "BICARBONATE",
-        "GLUC", "CA", "PHOS", "ALB", "CHOL" # Other # "MAGNESIUM", ""TRIGLYCERIDES, "URIC ACID"
-      )) %>%
-      dplyr::distinct(PARAMCD) %>%
-      dplyr::pull()
+    if("ADLBC" %in% loaded_labs()){
+      bc <- adlbc %>%
+        dplyr::filter(PARAMCD %in% c(
+          "ALT", "AST", "ALP", "BILI", "GGT", # Liver
+          "BUN", "CREAT", # Renal 
+          "SODIUM", "K", "CL", "BICARB", # Electrolytes
+          "GLUC", "CA", "PHOS", "ALB", "CHOL", "MG", "TRIG", "URATE" # Other 
+        )) %>%
+        dplyr::distinct(PARAMCD) %>%
+        dplyr::pull()
+    } else {
+      bc <- c("non_used","fake","vector","to","convert","to","js","array")
+    }
     
-    # print(as.vector(bc))
+    print(as.vector(bc))
     session$sendCustomMessage("adlbc_params", as.vector(bc))
   })
   
