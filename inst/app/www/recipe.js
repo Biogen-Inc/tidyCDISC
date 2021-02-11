@@ -1,7 +1,11 @@
-Shiny.addCustomMessageHandler('adlbc_params', function(bc) {
-  Shiny.addCustomMessageHandler('my_weeks', function(wks) {
-  $(document).ready(function(){
-  $(document).on('click', '#RECIPE', function(){
+
+
+Shiny.addCustomMessageHandler('my_weeks2', function(wks) {
+  Shiny.addCustomMessageHandler('adlbc_params', function(bc) {
+      $(document).ready(function(){
+        $(document).on('click', '#RECIPE', function(){
+
+    
 /* Function to create list of row blocks. If we need a block with a text String
 or a dropdown, make a new function here */
 function simpleRecipeRowBlock(newid, df) {
@@ -76,6 +80,8 @@ soc_pt_rows = ["AOCCFL", "AEBODSYS"]
 soc_pt_agg =  ["Y_FREQ", "NESTED_FREQ_DSC"]
 soc_pt_sel = ["NONE", "AEDECOD"]
 
+
+      
 //console.log("initial bc:", wks);
 //bc_params = ["SODIUM","SODIUM","SODIUM"]
 bc_params = Object.values(bc);
@@ -165,13 +171,16 @@ weeks = Object.values(wks);
     }
   });
 
-  
+
+
 $('select#RECIPE').change(function() {
   var selectedDropdown = $(this).children('option:selected').val()
   Shiny.setInputValue('tableGen_ui_1-recipe', selectedDropdown)
 })
 
-});
-});
-}); // end of my_weeks
+}); // $(document).on('click', '#RECIPE'
+}); // $document.ready()
+
 }); // end of adlbc_params
+}); // end of my_weeks
+
