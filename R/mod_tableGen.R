@@ -169,6 +169,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   
   observe({
     req(AVISIT())
+    session$sendCustomMessage("weeks", AVISIT())
     session$sendCustomMessage("my_data", AVISIT())
   })
   

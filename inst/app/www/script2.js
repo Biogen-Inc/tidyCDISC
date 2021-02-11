@@ -121,18 +121,25 @@ selectChange("droppable_blocks", 'droppable_blocks label', 'tableGen_ui_1-block_
     return `<option value="${opt}">${opt}</option>`
   }
 
-weeks = Shiny.addCustomMessageHandler('my_data', function(df) {
+let weeks = [];
+Shiny.addCustomMessageHandler('my_data', function(df) {
   console.log("inside f1()- df:", df);
-  my_array = Object.values(df);
+  weeks = Object.values(df);
   return my_array;
 });
-console.log("outside f1()- weeks:", weeks);
+
+console.log("what is weeks when we load the app:", weeks);
+setTimeout(function(){ 
+  console.log("what about after 3 seconds?:", weeks);
+}, 3000);
 
 
 Shiny.addCustomMessageHandler('my_data', function(df) {
   // the dataframe column is imported as an array
   console.log("inside f2()- df:", df)
   my_array = Object.values(df)
+  weeks = Object.values(df)
+  console.log("now whats weeks", eeks)
   select = `${my_array.map(createOption).join("")}`
   
   $(function() {
