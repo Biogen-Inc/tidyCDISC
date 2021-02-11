@@ -232,6 +232,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
         pull(AVISIT) %>%
         unique()
     }
+    # print(avisit_words[avisit_words != ""])
     avisit_words[avisit_words != ""]
   })
   
@@ -276,7 +277,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       dplyr::distinct(PARAMCD) %>%
       dplyr::pull()
     
-    print(as.vector(bc))
+    # print(as.vector(bc))
     session$sendCustomMessage("adlbc_params", as.vector(bc))
   })
   
