@@ -232,7 +232,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
         pull(AVISIT) %>%
         unique()
     }
-    avisit_words
+    avisit_words[avisit_words != ""]
   })
   
   
@@ -260,10 +260,9 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # Blood Chemistry
   # Urinalysis
   
-  # Sending df(?) that consists for specific params (if they exist) and
-  # all AVISITS
+  # Sending vector of specific blood chem params(if they exist) and
   observe({
-    req(!rlang::is_empty(loaded_labs()))
+    req("ADLBC" %in% loaded_labs())
     
     # missing some
     bc <- 
@@ -277,7 +276,8 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       dplyr::distinct(PARAMCD) %>%
       dplyr::pull()
     
-    session$sendCustomMessage("adlbc_params", bc)
+    print(as.vector(bc))
+    session$sendCustomMessage("adlbc_params", as.vector(bc))
   })
   
   # ----------------------------------------------------------------------
