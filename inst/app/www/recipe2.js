@@ -1,4 +1,6 @@
-$(document).ready(function(){
+
+Shiny.addCustomMessageHandler('dem_agg', function(x) {  
+  $(document).ready(function(){
   $(document).on('click', '#RECIPE', function(){
 /* Function to create list of row blocks */
 function recipeRowBlock(newid) {
@@ -19,7 +21,13 @@ function combineRows(arr) {
 }
 
 demography_rows = ["AGE", "SEX", "RACE", "HEIGHTBL", "WEIGHTBL", "BMIBL", "ETHNIC"]
-demography_agg = ["MEAN", "FREQ", "FREQ", "MEAN", "MEAN", "MEAN", "FREQ"]
+// Get this array from R vector via custom message instead
+//demography_agg = ["MEAN", "FREQ", "FREQ", "MEAN", "MEAN", "MEAN", "FREQ"]
+
+
+  // the dataframe column is imported as an array
+  demography_agg = Object.values(x)
+  console.log("now whats dem_agg?", demography_agg)
 
 /* Create custom block recipes to automatically populate when selected */
   $("#RECIPE").bind("change", function(event, ui) {
@@ -27,6 +35,7 @@ demography_agg = ["MEAN", "FREQ", "FREQ", "MEAN", "MEAN", "MEAN", "FREQ"]
     if (publisher === "DEMOGRAPHY") {
       document.getElementById("droppable_agg").innerHTML = "";
       $("#droppable_agg").append($(combineRows(demography_agg)));
+      
       document.getElementById("droppable_blocks").innerHTML = "";
       $("#droppable_blocks").append($(combineRows(demography_rows)));
     } else {
@@ -34,6 +43,7 @@ demography_agg = ["MEAN", "FREQ", "FREQ", "MEAN", "MEAN", "MEAN", "FREQ"]
       document.getElementById("droppable_blocks").innerHTML = "";
     }
   });
+})
   
 $('select#RECIPE').change(function() {
   var selectedDropdown = $(this).children('option:selected').val()

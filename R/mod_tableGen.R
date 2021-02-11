@@ -169,7 +169,8 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   
   observe({
     req(AVISIT())
-    session$sendCustomMessage("weeks", AVISIT())
+    stat_blocks <- c("MEAN", "FREQ", "FREQ", "MEAN", "MEAN", "MEAN", "FREQ")
+    session$sendCustomMessage("dem_agg", stat_blocks)
     session$sendCustomMessage("my_data", AVISIT())
   })
   
