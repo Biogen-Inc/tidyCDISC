@@ -266,7 +266,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   observe({
     req(datafile()) # don't req("ADLBC") because then the custom message will never get sent, and hang up the UI
     
-    if("ADLBC" %in% loaded_labs()){
+    if("ADLBC" %in% loaded_labs()){ # add recipe() = 'tab 41'?
       bc <- adlbc %>%
         dplyr::filter(PARAMCD %in% c(
           "ALT", "AST", "ALP", "BILI", "GGT", # Liver
@@ -277,7 +277,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
         dplyr::distinct(PARAMCD) %>%
         dplyr::pull()
     } else {
-      bc <- c("non_used","fake","vector","to","convert","to","js","array")
+      bc <- c("not","used","fake","vector","to","convert","to","js","array")
     }
     
     print(as.vector(bc))
