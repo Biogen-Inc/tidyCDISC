@@ -160,30 +160,35 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
  
   # combine BDS data into one large data set
   bds_data <- reactive({ 
-    # Seperate ADSL and the PARAMCD dataframe
-    PARAMCD <- map(BDS(), ~ if(!"CHG" %in% names(.)) {update_list(., CHG = NA)} else {.})
     
-    if (!is_empty(PARAMCD)) {
-      # Bind all the PARAMCD files 
-      all_PARAMCD <- bind_rows(PARAMCD, .id = "data_from")  %>% 
-        arrange(USUBJID, AVISITN, PARAMCD) %>% 
-        select(USUBJID, AVISITN, AVISIT, PARAMCD, AVAL, CHG, data_from)
-      
-      # Join ADSL and all_PARAMCD
-      combined_data <- inner_join(ADSL(), all_PARAMCD, by = "USUBJID")
-    } else {
-      combined_data <- ADSL() %>%
-        mutate(data_from = "ADSL", PARAMCD = NA, AVAL = NA, CHG = NA)
-    }
+    combineBDS(datafile = datafile(), ADSL = ADSL())
+    
+    # OLD
+    # # Seperate ADSL and the PARAMCD dataframe
+    # PARAMCD <- map(BDS(), ~ if(!"CHG" %in% names(.)) {update_list(., CHG = NA)} else {.})
+    # 
+    # if (!is_empty(PARAMCD)) {
+    #   # Bind all the PARAMCD files 
+    #   all_PARAMCD <- bind_rows(PARAMCD, .id = "data_from")  %>% 
+    #     arrange(USUBJID, AVISITN, PARAMCD) %>% 
+    #     select(USUBJID, AVISITN, AVISIT, PARAMCD, AVAL, CHG, data_from)
+    #   
+    #   # Join ADSL and all_PARAMCD
+    #   combined_data <- inner_join(ADSL(), all_PARAMCD, by = "USUBJID")
+    # } else {
+    #   combined_data <- ADSL() %>%
+    #     mutate(data_from = "ADSL", PARAMCD = NA, AVAL = NA, CHG = NA)
+    # }
   })
   
    
    
    
    
-  # Allow users to filter on any combination of data, even values are outside of table
-  # prefilters. If you only want users to apply filters ontop of existing filters,
-  # then you need to have the filters applied to ADSL(), ADAE(), and BDS_DATA()
+  # Allow users to filter on any combination of data, even values that are
+  # outside of table prefilters. If you only want users to apply filters ontop
+  # of existing (pre) filters (from stan tables), then you need to have the
+  # filters applied to ADSL(), ADAE(), and BDS_DATA()
   processed_data <- eventReactive(input$filter_df, {
     data_to_filter(datafile(), input$filter_df)
   })

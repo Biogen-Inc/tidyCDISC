@@ -12,6 +12,7 @@ readData <- function(study_directory, file_names) {
 #' Function to bind data rows from the list of user supplied data frames
 #' 
 #' @param datafile list of ADaM-ish dataframes 
+#' @param ADSL A dataframe which contains the ADSL data
 #' 
 #' @export
 #' 
@@ -41,6 +42,7 @@ combineBDS <- function(datafile, ADSL) {
 #' Function to clean and combine ADAE dataset with ADSL
 #' 
 #' @param datafile list of ADaM-ish dataframes 
+#' @param ADSL A dataframe which contains the ADSL data
 #' 
 #' @export
 #' 
