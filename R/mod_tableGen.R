@@ -116,6 +116,11 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     updateSelectInput("filter_df", session = session, choices = as.list(my_loaded_adams()), selected = "ADSL")
   })
   
+  # observe({
+  #   # req(!rlang::is_empty(input$all_rows))
+  #   req(!rlang::is_null(input$all_rows))
+  #   print("input$all_rows is not null")
+  # })
   
   # observe({
   #   print(input$recipe)
@@ -197,12 +202,14 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   filtered_data <- callModule(shiny_data_filter, "data_filter", data = processed_data, verbose = FALSE)
   
   # apply filters from selected dfs to tg data to create all data
-  all_data <- reactive({bds_data() %>% semi_join(filtered_data()) %>% varN_fctr_reorder()})
-  ae_data <- reactive({ADAE() %>% semi_join(filtered_data()) %>% varN_fctr_reorder()})
+  all_data <- reactive({suppressMessages(bds_data() %>% semi_join(filtered_data()) %>% varN_fctr_reorder())})
+  ae_data <- reactive({suppressMessages(ADAE() %>% semi_join(filtered_data()) %>% varN_fctr_reorder())})
   pop_data <- reactive({
-    pre_ADSL()$data %>% # Cannot be ADSL() because that has potentially been filtered to ADAE subj's
+    suppressMessages(
+      pre_ADSL()$data %>% # Cannot be ADSL() because that has potentially been filtered to ADAE subj's
       semi_join(filtered_data()) %>%
       varN_fctr_reorder()
+    )
   })
   
   # get the list of PARAMCDs
@@ -256,6 +263,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     # print(categ_vars())
     all_cols <- categ_vars()
     session$sendCustomMessage("all_cols", all_cols)
+    # session$sendCustomMessage("all_cols2", all_cols) # test
   })
   
   
@@ -573,7 +581,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   data_to_filter_expr <- reactive({
     
     filter_code <- gsub("processed_data","dat_to_filt",gsub("    ","",paste(capture.output(attr(filtered_data(), "code")), collapse = "")))
-    print(paste(filter_code, collapse = ""))
+    # print(paste(filter_code, collapse = ""))
     if(any(regexpr("%>%", filter_code) > 0)){
       options(useFancyQuotes = FALSE)
       filter_dfs <- paste(sQuote(input$filter_df), collapse = ",")
