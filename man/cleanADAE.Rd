@@ -8,6 +8,8 @@ cleanADAE(datafile, ADSL)
 }
 \arguments{
 \item{datafile}{list of ADaM-ish dataframes}
+
+\item{ADSL}{A dataframe which contains the ADSL data}
 }
 \description{
 Function to clean and combine ADAE dataset with ADSL

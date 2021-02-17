@@ -8,6 +8,8 @@ combineBDS(datafile, ADSL)
 }
 \arguments{
 \item{datafile}{list of ADaM-ish dataframes}
+
+\item{ADSL}{A dataframe which contains the ADSL data}
 }
 \description{
 Function to bind data rows from the list of user supplied data frames
