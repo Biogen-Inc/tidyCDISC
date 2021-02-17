@@ -133,8 +133,8 @@ Shiny.addCustomMessageHandler('my_weeks', function(df) {
     // the dataframe column is imported as an array
     weeks_array = Object.values(df)
     week_opts = `${weeks_array.map(createOption).join("")}`
-    console.log("weeks_array[0]:", weeks_array[0])
-    console.log("df[0]:", df[0])
+    //console.log("weeks_array[0]:", weeks_array[0])
+    
 
     Shiny.addCustomMessageHandler('all_cols', function(cols) {
       
