@@ -124,103 +124,10 @@ selectChange("droppable_blocks", 'droppable_blocks label', 'tableGen_ui_1-block_
 
 
 
-
 /**
   * Function that brings in vectors from shiny and uses 
   * them to create the appropriate style block for the agg chosen
-  * A function to run if BDS dataframes are loaded and a
-  * week option needs to be created for some agg blocks
 */
-/*
-// bring in another array from shiny that contains column names
-Shiny.addCustomMessageHandler('all_cols', function(df) {
-  
-  // the dataframe column is imported as an array
-  col_array = Object.values(df)
-  col_opts = `${col_array.map(createOption).join("")}`
-  
-  // Now if there is any bds datasets also loaded, run this function
-  Shiny.addCustomMessageHandler('my_weeks', function(df) {
-    // the dataframe column is imported as an array
-    weeks_array = Object.values(df)
-    week_opts = `${weeks_array.map(createOption).join("")}`
-  
-    $(function() {
-      $(".draggable_agg").draggable();
-      $("#droppable_agg").droppable({
-        accept: ".agg",
-        drop: function(event, ui) {
-          var draggableId = ui.draggable.attr("id");
-          var newid = getNewId(draggableId);
-          if (draggableId.includes("anova")) {
-            $(this).append(selectBlock(newid, "ANOVA", week_opts));
-          } else if (draggableId.includes("chg")) {
-            $(this).append(selectBlock(newid, "CHG", week_opts));
-          } else if (draggableId.includes("mean")) {
-            $(this).append(selectBlock(newid, "MEAN", week_opts));
-          } else if (draggableId.includes("nested_freq_dsc")) {
-            $(this).append(selectBlock(newid, "NESTED_FREQ_DSC", col_opts));
-          } else if (draggableId.includes("nested_freq_abc")) {
-            $(this).append(selectBlock(newid, "NESTED_FREQ_ABC", col_opts));
-          } else {
-            $(this).append(simpleBlock(newid, "df"));
-          }
-        }
-      }).sortable({
-        revert: false
-      })
-    }); // end function()
-  }); // end "my_weeks"  handler
-}); // end "all_cols" handler
-*/
-
-
-
-/**
- * when I put this first, it didn't work
- * 
-  * Function that brings in vectors from shiny and uses 
-  * them to create the appropriate style block for the agg chosen
-  * A function to run if no BDS dataframes are loaded leave
-  * week options blank since they default to null and remove the
-  * rows for the mean block since we don't need a dropdown for week
-*/
-/*
-Shiny.addCustomMessageHandler('all_cols', function(df) {
-  
-  // the dataframe column is imported as an array
-  col_array = Object.values(df)
-  col_opts = `${col_array.map(createOption).join("")}`
-  
-  $(function() {
-    $(".draggable_agg").draggable();
-    $("#droppable_agg").droppable({
-      accept: ".agg",
-      drop: function(event, ui) {
-        var draggableId = ui.draggable.attr("id");
-        var newid = getNewId(draggableId);
-        if (draggableId.includes("anova")) {
-          $(this).append(selectBlock(newid, "ANOVA"));
-        } else if (draggableId.includes("chg")) {
-          $(this).append(selectBlock(newid, "CHG"));
-        } else if (draggableId.includes("mean")) {
-          $(this).append(selectBlock(newid, "MEAN"));
-        } else if (draggableId.includes("nested_freq_dsc")) {
-          $(this).append(selectBlock(newid, "NESTED_FREQ_DSC", col_opts));
-        } else if (draggableId.includes("nested_freq_abc")) {
-          $(this).append(selectBlock(newid, "NESTED_FREQ_ABC", col_opts));
-        } else {
-          $(this).append(simpleBlock(newid, "df"));
-        }
-      }
-    }).sortable({
-      revert: false
-    })
-  }); // end function()
-}); // end "all_cols" handler
-*/
-
-
 // Now if there is any bds datasets also loaded, run this function
 Shiny.addCustomMessageHandler('my_weeks', function(df) {
     // the dataframe column is imported as an array
@@ -236,7 +143,11 @@ Shiny.addCustomMessageHandler('my_weeks', function(df) {
       col_opts = `${col_array.map(createOption).join("")}`
   
   
-    
+/**
+  * A function to run if no BDS dataframes are loaded: leave
+  * week options blank since their default method is null and remove the
+  * rows for the mean block since we don't need a dropdown for week
+*/
     // if weeks array is undefined, then do all cols version, else all cols and weeks_array
     if (weeks_array[0] === "fake_weeky") {
       // no weeks, just col dropdowns
@@ -264,13 +175,15 @@ Shiny.addCustomMessageHandler('my_weeks', function(df) {
       }).sortable({
         revert: false
       })
-    }); // end all_cols only function()
+    }); // end all_cols only function(), ie, no weeks!
     
       
-    } else {
+    } else { // Weeks exist in the function below
     
-    
-  
+/**
+  * A function to run if BDS dataframes are loaded and a
+  * week option needs to be created for some agg blocks
+*/
     $(function() {
       $(".draggable_agg").draggable();
       $("#droppable_agg").droppable({
@@ -298,8 +211,8 @@ Shiny.addCustomMessageHandler('my_weeks', function(df) {
     }); // end all_cols and weeks function()
     
     } // end of if-then-else
-  }); // end "my_weeks"  handler
-}); // end "all_cols" handler
+  }); // end "all_cols"  handler
+}); // end "my_weeks" handler
 
 
 /**
