@@ -116,19 +116,6 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     updateSelectInput("filter_df", session = session, choices = as.list(my_loaded_adams()), selected = "ADSL")
   })
   
-  # observe({
-  #   # req(!rlang::is_empty(input$all_rows))
-  #   req(!rlang::is_null(input$all_rows))
-  #   print("input$all_rows is not null")
-  # })
-  
-  # observe({
-  #   print(input$recipe)
-  #   print(RECIPE())
-  #   print(stan_table_num())
-  #   
-  # })
-  
   
   # perform any pre-filters on the data, when a STAN table is selected
   pre_ADSL <- reactive({
@@ -163,27 +150,10 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   BDS <- reactive({  datafile()[sapply(datafile(), function(x) "PARAMCD" %in% colnames(x))] })
   ADAE <- reactive({ pre_ADAE()$data })
  
-  # combine BDS data into one large data set
+  # combine all BDS data files into one large data set
   bds_data <- reactive({ 
-    
     combineBDS(datafile = datafile(), ADSL = ADSL())
-    
-    # OLD
-    # # Seperate ADSL and the PARAMCD dataframe
-    # PARAMCD <- map(BDS(), ~ if(!"CHG" %in% names(.)) {update_list(., CHG = NA)} else {.})
-    # 
-    # if (!is_empty(PARAMCD)) {
-    #   # Bind all the PARAMCD files 
-    #   all_PARAMCD <- bind_rows(PARAMCD, .id = "data_from")  %>% 
-    #     arrange(USUBJID, AVISITN, PARAMCD) %>% 
-    #     select(USUBJID, AVISITN, AVISIT, PARAMCD, AVAL, CHG, data_from)
-    #   
-    #   # Join ADSL and all_PARAMCD
-    #   combined_data <- inner_join(ADSL(), all_PARAMCD, by = "USUBJID")
-    # } else {
-    #   combined_data <- ADSL() %>%
-    #     mutate(data_from = "ADSL", PARAMCD = NA, AVAL = NA, CHG = NA)
-    # }
+    # OLD code removed 2/17/2021
   })
   
    
@@ -270,22 +240,13 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   observe({
     req(AVISIT())
     
-    # if(!is.null(AVISIT())){
-    #   send_weeks <- 
-    # } else {
-    #   send_weeks <- "fake_weeky"
-    # }
-    
-    print(paste("AVISIT():", paste(AVISIT(), collapse = ", ")))
     session$sendCustomMessage("my_weeks", AVISIT())
   })
   
   observe({
     req(categ_vars())
-    # print(categ_vars())
     all_cols <- categ_vars()
     session$sendCustomMessage("all_cols", all_cols)
-    # session$sendCustomMessage("all_cols2", all_cols) # test
   })
   
   
@@ -528,7 +489,6 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
             ADAE_blocks$code[i] <- attr(ADAE[[ADAE_blocks$col_names[i]]], "label") 
           }
         }
-        # print(ADAE_blocks)
         new_list[[length(new_list) + 1 ]] <- ADAE_blocks
         names(new_list)[length(new_list)] <- "ADAE"
       }
@@ -603,7 +563,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   data_to_filter_expr <- reactive({
     
     filter_code <- gsub("processed_data","dat_to_filt",gsub("    ","",paste(capture.output(attr(filtered_data(), "code")), collapse = "")))
-    # print(paste(filter_code, collapse = ""))
+
     if(any(regexpr("%>%", filter_code) > 0)){
       options(useFancyQuotes = FALSE)
       filter_dfs <- paste(sQuote(input$filter_df), collapse = ",")
