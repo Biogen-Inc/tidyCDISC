@@ -131,6 +131,7 @@ selectChange("droppable_blocks", 'droppable_blocks label', 'tableGen_ui_1-block_
   * A function to run if BDS dataframes are loaded and a
   * week option needs to be created for some agg blocks
 */
+/*
 // bring in another array from shiny that contains column names
 Shiny.addCustomMessageHandler('all_cols', function(df) {
   
@@ -171,15 +172,20 @@ Shiny.addCustomMessageHandler('all_cols', function(df) {
     }); // end function()
   }); // end "my_weeks"  handler
 }); // end "all_cols" handler
+*/
+
 
 
 /**
+ * when I put this first, it didn't work
+ * 
   * Function that brings in vectors from shiny and uses 
   * them to create the appropriate style block for the agg chosen
   * A function to run if no BDS dataframes are loaded leave
   * week options blank since they default to null and remove the
   * rows for the mean block since we don't need a dropdown for week
 */
+/*
 Shiny.addCustomMessageHandler('all_cols', function(df) {
   
   // the dataframe column is imported as an array
@@ -197,8 +203,8 @@ Shiny.addCustomMessageHandler('all_cols', function(df) {
           $(this).append(selectBlock(newid, "ANOVA"));
         } else if (draggableId.includes("chg")) {
           $(this).append(selectBlock(newid, "CHG"));
-        //} else if (draggableId.includes("mean")) {
-        //  $(this).append(selectBlock(newid, "MEAN"));
+        } else if (draggableId.includes("mean")) {
+          $(this).append(selectBlock(newid, "MEAN"));
         } else if (draggableId.includes("nested_freq_dsc")) {
           $(this).append(selectBlock(newid, "NESTED_FREQ_DSC", col_opts));
         } else if (draggableId.includes("nested_freq_abc")) {
@@ -212,25 +218,27 @@ Shiny.addCustomMessageHandler('all_cols', function(df) {
     })
   }); // end function()
 }); // end "all_cols" handler
+*/
 
 
-
-
-/*
-Shiny.addCustomMessageHandler('all_cols', function(cols) {
-  
-  // the dataframe column is imported as an array
-  col_array = Object.values(cols)
-  col_opts = `${col_array.map(createOption).join("")}`
-  
-  // Now if there is any bds datasets also loaded, run this function
-  Shiny.addCustomMessageHandler('my_weeks', function(df) {
+// Now if there is any bds datasets also loaded, run this function
+Shiny.addCustomMessageHandler('my_weeks', function(df) {
     // the dataframe column is imported as an array
-    console.log("my df:", df)
     weeks_array = Object.values(df)
+    week_opts = `${weeks_array.map(createOption).join("")}`
+    console.log("weeks_array[0]:", weeks_array[0])
+    console.log("df[0]:", df[0])
+
+    Shiny.addCustomMessageHandler('all_cols', function(cols) {
+      
+      // the dataframe column is imported as an array
+      col_array = Object.values(cols)
+      col_opts = `${col_array.map(createOption).join("")}`
+  
+  
     
     // if weeks array is undefined, then do all cols version, else all cols and weeks_array
-    if (typeof df == "undefined") {
+    if (weeks_array[0] === "fake_weeky") {
       // no weeks, just col dropdowns
     $(function() {
       $(".draggable_agg").draggable();
@@ -257,10 +265,11 @@ Shiny.addCustomMessageHandler('all_cols', function(cols) {
         revert: false
       })
     }); // end all_cols only function()
+    
+      
     } else {
     
     
-    week_opts = `${weeks_array.map(createOption).join("")}`
   
     $(function() {
       $(".draggable_agg").draggable();
@@ -291,7 +300,7 @@ Shiny.addCustomMessageHandler('all_cols', function(cols) {
     } // end of if-then-else
   }); // end "my_weeks"  handler
 }); // end "all_cols" handler
-*/
+
 
 /**
   * Create a block with a dropdown menu of weeks
