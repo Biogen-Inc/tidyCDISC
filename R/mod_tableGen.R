@@ -224,24 +224,38 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # by converting them to a factor in the order of AVISITN
   # this allows our dropdown to be in chronological order
   avisit_words <- reactive({ 
-    req(any(purrr::map_lgl(datafile(), ~"AVISIT" %in% colnames(.x))))
+    req(datafile())
+    # req(any(purrr::map_lgl(datafile(), ~"AVISIT" %in% colnames(.x))))
     
-    purrr::map(BDS(), function(x) x %>% dplyr::select(AVISIT)) %>%
-      dplyr::bind_rows() %>%
-      dplyr::pull(AVISIT)
+    if(any(purrr::map_lgl(datafile(), ~"AVISIT" %in% colnames(.x)))){
+      purrr::map(BDS(), function(x) x %>% dplyr::select(AVISIT)) %>%
+        dplyr::bind_rows() %>%
+        dplyr::pull(AVISIT)
+    } else {
+      c("fake_weeky","dummy_weeky")
+    }
+    
   })
   
-  avisit_fctr  <- reactive({ 
-    req(any(purrr::map_lgl(datafile(), ~"AVISIT" %in% colnames(.x))))
-    purrr::map(BDS(), function(x) x %>% dplyr::select(AVISITN)) %>%
-      dplyr::bind_rows() %>%
-      dplyr::pull(AVISITN)
+  avisit_fctr  <- reactive({
+    req(datafile())
+    # req(any(purrr::map_lgl(datafile(), ~"AVISIT" %in% colnames(.x))))
+    
+    if(any(purrr::map_lgl(datafile(), ~"AVISIT" %in% colnames(.x)))){
+      purrr::map(BDS(), function(x) x %>% dplyr::select(AVISITN)) %>%
+        dplyr::bind_rows() %>%
+        dplyr::pull(AVISITN)
+    } else {
+      1:2
+    }
+    
   })
   
   AVISIT <- reactive({
-    req(BDS())
+    req(datafile())
+    # req(BDS())
     if (is.null(avisit_words())) {
-      avisit_words <- " "
+      avisit_words <- c("fake_weeky","dummy_weeky")
     } else {
       avisit_words <-
         tibble(AVISIT = avisit_words(), AVISITN = avisit_fctr()) %>%
@@ -255,6 +269,14 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   
   observe({
     req(AVISIT())
+    
+    # if(!is.null(AVISIT())){
+    #   send_weeks <- 
+    # } else {
+    #   send_weeks <- "fake_weeky"
+    # }
+    
+    print(paste("AVISIT():", paste(AVISIT(), collapse = ", ")))
     session$sendCustomMessage("my_weeks", AVISIT())
   })
   
