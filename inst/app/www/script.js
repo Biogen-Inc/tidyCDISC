@@ -133,6 +133,7 @@ Shiny.addCustomMessageHandler('my_weeks', function(df) {
 
   // bring in another array from shiny that contains column names
   Shiny.addCustomMessageHandler('all_cols', function(df) {
+  
   // the dataframe column is imported as an array
   col_array = Object.values(df)
   col_opts = `${col_array.map(createOption).join("")}`
@@ -161,9 +162,9 @@ Shiny.addCustomMessageHandler('my_weeks', function(df) {
       }).sortable({
         revert: false
       })
-    });
-  });
-});
+    }); // end function()
+  }); // end "all_cols" handler
+}); // end "my_weeks" handler
 
 
 /**
