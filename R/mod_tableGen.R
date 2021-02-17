@@ -67,7 +67,22 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # ----------------------------------------------------------------------
   # input prep for table manipulation
   # ----------------------------------------------------------------------
-  
+  categ_vars <- reactive({
+    req(datafile()) # this also doesn't need to depend on pre-filters, so grabbing root df cols
+    
+    if("ADAE" %in% names(datafile())){
+      all_cols <- unique(c(
+        colnames(datafile()$ADSL)[sapply(datafile()$ADSL, class) %in% c('character', 'factor')],
+        colnames(datafile()$ADAE)[sapply(datafile()$ADAE, class) %in% c('character', 'factor')]
+      ))
+    } else { # just adsl cols
+      all_cols <- unique(c(
+        colnames(datafile()$ADSL)[sapply(datafile()$ADSL, class) %in% c('character', 'factor')]
+      ))
+    }
+    return( all_cols )
+  })
+    
   output$grp_col_ui <- renderUI({
     sel_grp <- dplyr::case_when(
       is.null(RECIPE()) | length(RECIPE()) == 0 ~ "NONE",
@@ -75,10 +90,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       TRUE ~ "NONE"
     )
     selectInput(session$ns("COLUMN"), "Group Data By:",
-                choices = c("NONE", unique(c(
-                  colnames(ADSL)[sapply(ADSL, class) %in% c('character', 'factor')],
-                  colnames(ADAE())[sapply(ADAE(), class) %in% c('character', 'factor')]
-                ))),
+                choices = c("NONE", categ_vars()),
                 selected = sel_grp
     )
   })
@@ -235,12 +247,9 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   })
   
   observe({
-    req(datafile()) # this also doesn't need to depend on pre-filters, so grabbing root df cols
-    
-    all_cols <- unique(c(
-      colnames(datafile()$ADSL)[sapply(datafile()$ADSL, class) %in% c('character', 'factor')],
-      colnames(datafile()$ADAE)[sapply(datafile()$ADAE, class) %in% c('character', 'factor')]
-    ))
+    req(categ_vars())
+    print(categ_vars())
+    all_cols <- categ_vars()
     session$sendCustomMessage("all_cols", all_cols)
   })
   
