@@ -124,7 +124,7 @@ prep_adae <- function(datafile, ADSL, input_recipe) { #, stan_table_num
   stan_table_num <- numeric_stan_table(input_recipe)
   dat <- cleanADAE(datafile = datafile, ADSL = ADSL)
   msg <- ""
-  if(!is.null(input_recipe)){ # if recipe has initialized...
+  if(!is.null(input_recipe) & "ADAE" %in% names(datafile)){ # if recipe has initialized...
     
     if(stan_table_num %in% c(25, 26)){
       if("AESEV" %in% colnames(dat)){

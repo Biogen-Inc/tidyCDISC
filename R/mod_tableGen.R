@@ -248,7 +248,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   
   observe({
     req(categ_vars())
-    print(categ_vars())
+    # print(categ_vars())
     all_cols <- categ_vars()
     session$sendCustomMessage("all_cols", all_cols)
   })
