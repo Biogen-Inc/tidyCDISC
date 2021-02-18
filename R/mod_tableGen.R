@@ -68,7 +68,22 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # ----------------------------------------------------------------------
   # input prep for table manipulation
   # ----------------------------------------------------------------------
-  
+  categ_vars <- reactive({
+    req(datafile()) # this also doesn't need to depend on pre-filters, so grabbing root df cols
+    
+    if("ADAE" %in% names(datafile())){
+      all_cols <- unique(c(
+        colnames(datafile()$ADSL)[sapply(datafile()$ADSL, class) %in% c('character', 'factor')],
+        colnames(datafile()$ADAE)[sapply(datafile()$ADAE, class) %in% c('character', 'factor')]
+      ))
+    } else { # just adsl cols
+      all_cols <- unique(c(
+        colnames(datafile()$ADSL)[sapply(datafile()$ADSL, class) %in% c('character', 'factor')]
+      ))
+    }
+    return( all_cols )
+  })
+    
   output$grp_col_ui <- renderUI({
     sel_grp <- dplyr::case_when(
       is.null(RECIPE()) | length(RECIPE()) == 0 ~ "NONE",
@@ -76,10 +91,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       TRUE ~ "NONE"
     )
     selectInput(session$ns("COLUMN"), "Group Data By:",
-                choices = c("NONE", unique(c(
-                  colnames(ADSL)[sapply(ADSL, class) %in% c('character', 'factor')],
-                  colnames(ADAE())[sapply(ADAE(), class) %in% c('character', 'factor')]
-                ))),
+                choices = c("NONE", categ_vars()),
                 selected = sel_grp
     )
   })
@@ -109,14 +121,6 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     req(my_loaded_adams())
     updateSelectInput("filter_df", session = session, choices = as.list(my_loaded_adams()), selected = "ADSL")
   })
-  
-  
-  # observe({
-  #   print(input$recipe)
-  #   print(RECIPE())
-  #   print(stan_table_num())
-  #   
-  # })
   
   
   # perform any pre-filters on the data, when a STAN table is selected
@@ -152,32 +156,20 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   BDS <- reactive({  datafile()[sapply(datafile(), function(x) "PARAMCD" %in% colnames(x))] })
   ADAE <- reactive({ pre_ADAE()$data })
  
-  # combine BDS data into one large data set
+  # combine all BDS data files into one large data set
   bds_data <- reactive({ 
-    # Seperate ADSL and the PARAMCD dataframe
-    PARAMCD <- map(BDS(), ~ if(!"CHG" %in% names(.)) {update_list(., CHG = NA)} else {.})
-    
-    if (!is_empty(PARAMCD)) {
-      # Bind all the PARAMCD files 
-      all_PARAMCD <- bind_rows(PARAMCD, .id = "data_from")  %>% 
-        arrange(USUBJID, AVISITN, PARAMCD) %>% 
-        select(USUBJID, AVISITN, AVISIT, PARAMCD, AVAL, CHG, data_from)
-      
-      # Join ADSL and all_PARAMCD
-      combined_data <- inner_join(ADSL(), all_PARAMCD, by = "USUBJID")
-    } else {
-      combined_data <- ADSL() %>%
-        mutate(data_from = "ADSL", PARAMCD = NA, AVAL = NA, CHG = NA)
-    }
+    combineBDS(datafile = datafile(), ADSL = ADSL())
+    # OLD code removed 2/17/2021
   })
   
    
    
    
    
-  # Allow users to filter on any combination of data, even values are outside of table
-  # prefilters. If you only want users to apply filters ontop of existing filters,
-  # then you need to have the filters applied to ADSL(), ADAE(), and BDS_DATA()
+  # Allow users to filter on any combination of data, even values that are
+  # outside of table prefilters. If you only want users to apply filters ontop
+  # of existing (pre) filters (from stan tables), then you need to have the
+  # filters applied to ADSL(), ADAE(), and BDS_DATA()
   processed_data <- eventReactive(input$filter_df, {
     data_to_filter(datafile(), input$filter_df)
   })
@@ -186,12 +178,14 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   filtered_data <- callModule(shiny_data_filter, "data_filter", data = processed_data, verbose = FALSE)
   
   # apply filters from selected dfs to tg data to create all data
-  all_data <- reactive({bds_data() %>% semi_join(filtered_data()) %>% varN_fctr_reorder()})
-  ae_data <- reactive({ADAE() %>% semi_join(filtered_data()) %>% varN_fctr_reorder()})
+  all_data <- reactive({suppressMessages(bds_data() %>% semi_join(filtered_data()) %>% varN_fctr_reorder())})
+  ae_data <- reactive({suppressMessages(ADAE() %>% semi_join(filtered_data()) %>% varN_fctr_reorder())})
   pop_data <- reactive({
-    pre_ADSL()$data %>% # Cannot be ADSL() because that has potentially been filtered to ADAE subj's
+    suppressMessages(
+      pre_ADSL()$data %>% # Cannot be ADSL() because that has potentially been filtered to ADAE subj's
       semi_join(filtered_data()) %>%
       varN_fctr_reorder()
+    )
   })
   
   # get the list of PARAMCDs
@@ -206,24 +200,38 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # by converting them to a factor in the order of AVISITN
   # this allows our dropdown to be in chronological order
   avisit_words <- reactive({ 
-    req(any(purrr::map_lgl(datafile(), ~"AVISIT" %in% colnames(.x))))
+    req(datafile())
+    # req(any(purrr::map_lgl(datafile(), ~"AVISIT" %in% colnames(.x))))
     
-    purrr::map(BDS(), function(x) x %>% dplyr::select(AVISIT)) %>%
-      dplyr::bind_rows() %>%
-      dplyr::pull(AVISIT)
+    if(any(purrr::map_lgl(datafile(), ~"AVISIT" %in% colnames(.x)))){
+      purrr::map(BDS(), function(x) x %>% dplyr::select(AVISIT)) %>%
+        dplyr::bind_rows() %>%
+        dplyr::pull(AVISIT)
+    } else {
+      c("fake_weeky","dummy_weeky")
+    }
+    
   })
   
-  avisit_fctr  <- reactive({ 
-    req(any(purrr::map_lgl(datafile(), ~"AVISIT" %in% colnames(.x))))
-    purrr::map(BDS(), function(x) x %>% dplyr::select(AVISITN)) %>%
-      dplyr::bind_rows() %>%
-      dplyr::pull(AVISITN)
+  avisit_fctr  <- reactive({
+    req(datafile())
+    # req(any(purrr::map_lgl(datafile(), ~"AVISIT" %in% colnames(.x))))
+    
+    if(any(purrr::map_lgl(datafile(), ~"AVISIT" %in% colnames(.x)))){
+      purrr::map(BDS(), function(x) x %>% dplyr::select(AVISITN)) %>%
+        dplyr::bind_rows() %>%
+        dplyr::pull(AVISITN)
+    } else {
+      1:2
+    }
+    
   })
   
   AVISIT <- reactive({
-    req(BDS())
+    req(datafile())
+    # req(BDS())
     if (is.null(avisit_words())) {
-      avisit_words <- " "
+      avisit_words <- c("fake_weeky","dummy_weeky")
     } else {
       avisit_words <-
         tibble(AVISIT = avisit_words(), AVISITN = avisit_fctr()) %>%
@@ -240,6 +248,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # Send any and all AVISITs that exist to javascript side
   observe({
     req(AVISIT())
+    
     session$sendCustomMessage("my_weeks", AVISIT())
     session$sendCustomMessage("my_weeks2", AVISIT())
   })
@@ -248,12 +257,17 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # Sending columns names that could be selected for nested freq stat block
   # just character of factor vars from the ADSL or ADAE
   observe({
+<<<<<<< HEAD
     req(datafile()) 
     
     all_cols <- unique(c(
       colnames(datafile()$ADSL)[sapply(datafile()$ADSL, class) %in% c('character', 'factor')],
       colnames(datafile()$ADAE)[sapply(datafile()$ADAE, class) %in% c('character', 'factor')]
     ))
+=======
+    req(categ_vars())
+    all_cols <- categ_vars()
+>>>>>>> master
     session$sendCustomMessage("all_cols", all_cols)
   })
   
@@ -523,7 +537,6 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
             ADAE_blocks$code[i] <- attr(ADAE[[ADAE_blocks$col_names[i]]], "label") 
           }
         }
-        # print(ADAE_blocks)
         new_list[[length(new_list) + 1 ]] <- ADAE_blocks
         names(new_list)[length(new_list)] <- "ADAE"
       }
@@ -598,7 +611,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   data_to_filter_expr <- reactive({
     
     filter_code <- gsub("processed_data","dat_to_filt",gsub("    ","",paste(capture.output(attr(filtered_data(), "code")), collapse = "")))
-    print(paste(filter_code, collapse = ""))
+
     if(any(regexpr("%>%", filter_code) > 0)){
       options(useFancyQuotes = FALSE)
       filter_dfs <- paste(sQuote(input$filter_df), collapse = ",")

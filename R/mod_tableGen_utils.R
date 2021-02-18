@@ -12,6 +12,7 @@ readData <- function(study_directory, file_names) {
 #' Function to bind data rows from the list of user supplied data frames
 #' 
 #' @param datafile list of ADaM-ish dataframes 
+#' @param ADSL A dataframe which contains the ADSL data
 #' 
 #' @export
 #' 
@@ -38,33 +39,7 @@ combineBDS <- function(datafile, ADSL) {
   return(combined_data)
 }
 
-#' Function to clean and combine ADAE dataset with ADSL
-#' 
-#' @param datafile list of ADaM-ish dataframes 
-#' 
-#' @export
-#' 
-cleanADAE <- function(datafile, ADSL) {
-  if("ADAE" %in% names(datafile)){
-    # find columns the ADAE & ADSL have in common (besides Usubjid), remove
-    # them from the ADAE, so that the ADSL cols are used instead. Then join
-    # on usubjid and re-order the colnames to match the adae
-    adae_cols <- colnames(datafile$ADAE)
-    common_cols <- dplyr::intersect(adae_cols, colnames(ADSL))
-    com_cols_excp_u <- common_cols[common_cols != "USUBJID"]
-    adae_adsl <- datafile$ADAE %>% 
-      select(-one_of(com_cols_excp_u)) %>%
-      inner_join(ADSL, by = "USUBJID")
-    preferred_col_order <- c(adae_cols, dplyr::setdiff(colnames(ADSL), adae_cols))
-    if(all(sort(colnames(adae_adsl)) == sort(preferred_col_order))){
-      varN_fctr_reorder(adae_adsl[,preferred_col_order]) # add this after filter?
-    } else {
-      varN_fctr_reorder(adae_adsl)
-    }
-  } else {
-    varN_fctr_reorder(ADSL)
-  }
-}
+
 
 #' Function to clean and combine ADAE dataset with ADSL
 #' 
@@ -112,6 +87,35 @@ prep_adsl <- function(ADSL, input_recipe) { #, stan_table_num
   return(list(data = dat, message = msg))
 }
 
+#' Function to clean and combine ADAE dataset with ADSL
+#' 
+#' @param datafile list of ADaM-ish dataframes 
+#' @param ADSL A dataframe which contains the ADSL data
+#' 
+#' @export
+#' 
+cleanADAE <- function(datafile, ADSL) {
+  if("ADAE" %in% names(datafile)){
+    # find columns the ADAE & ADSL have in common (besides Usubjid), remove
+    # them from the ADAE, so that the ADSL cols are used instead. Then join
+    # on usubjid and re-order the colnames to match the adae
+    adae_cols <- colnames(datafile$ADAE)
+    common_cols <- dplyr::intersect(adae_cols, colnames(ADSL))
+    com_cols_excp_u <- common_cols[common_cols != "USUBJID"]
+    adae_adsl <- datafile$ADAE %>% 
+      select(-one_of(com_cols_excp_u)) %>%
+      inner_join(ADSL, by = "USUBJID")
+    preferred_col_order <- c(adae_cols, dplyr::setdiff(colnames(ADSL), adae_cols))
+    if(all(sort(colnames(adae_adsl)) == sort(preferred_col_order))){
+      varN_fctr_reorder(adae_adsl[,preferred_col_order]) # add this after filter?
+    } else {
+      varN_fctr_reorder(adae_adsl)
+    }
+  } else {
+    varN_fctr_reorder(ADSL)
+  }
+}
+
 #' Function to pre-filter the ADAE depending on the stan table selected
 #' 
 #' @param datafile list of ADaM-ish dataframes 
@@ -124,7 +128,7 @@ prep_adae <- function(datafile, ADSL, input_recipe) { #, stan_table_num
   stan_table_num <- numeric_stan_table(input_recipe)
   dat <- cleanADAE(datafile = datafile, ADSL = ADSL)
   msg <- ""
-  if(!is.null(input_recipe)){ # if recipe has initialized...
+  if(!is.null(input_recipe) & "ADAE" %in% names(datafile)){ # if recipe has initialized...
     
     if(stan_table_num %in% c(25, 26)){
       if("AESEV" %in% colnames(dat)){
