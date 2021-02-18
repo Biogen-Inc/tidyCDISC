@@ -257,17 +257,8 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # Sending columns names that could be selected for nested freq stat block
   # just character of factor vars from the ADSL or ADAE
   observe({
-<<<<<<< HEAD
-    req(datafile()) 
-    
-    all_cols <- unique(c(
-      colnames(datafile()$ADSL)[sapply(datafile()$ADSL, class) %in% c('character', 'factor')],
-      colnames(datafile()$ADAE)[sapply(datafile()$ADAE, class) %in% c('character', 'factor')]
-    ))
-=======
     req(categ_vars())
     all_cols <- categ_vars()
->>>>>>> master
     session$sendCustomMessage("all_cols", all_cols)
   })
   
