@@ -222,9 +222,73 @@ prep_adae <- function(datafile, ADSL, input_recipe) { #, stan_table_num
   return(list(data = dat, message = msg))
 }
 
+#' Blood Chemistry PARAMCDs used to build STAN Table 41
+chem <- c(
+  "ALT", "AST", "ALP", "BILI", "GGT", # Liver
+  "BUN", "CREAT", # Renal
+  "SODIUM", "K", "CL", "BICARB", # Electrolytes
+  "GLUC", "CA", "PHOS", "ALB", "CHOL", "MG", "TRIG", "URATE" # Other
+)
 
+#' Hematology PARAMCDs used to build STAN Table 41
+# param_vector <-
+hema <- c(
+  "LYM", "LYMLE", "NEUT", "NEUTLE", "MONO", "MONOLE", "EOS", "EOSLE",
+  "BASO", "BASOLE", # white blood cells
+  "RBC", "HGB", "HCT", "PLAT"
+)
 
+#' Urinalysis PARAMCDs used to build STAN Table 41
+# param_vector <- 
+urin <- c(
+  "PH", "COLOR", "OCCBLD", "GLUCQU", "GLUCU", "KETONESQ", "KETONES",
+  "PROTU", "MWBCQU", "MWBCU", "MRBCQU", "MRBCU"
+)
 
+#' A function that checks if certain parameters exist in any dataframe within a list of dataframes
+#' 
+#' @param datafile list of ADaM-ish dataframes 
+#' @param param_vector character vector of params to search the list of dataframes for
+#' 
+check_params <- function(datafile, param_vector) {
+  param_dat <- datafile[sapply(datafile, function(x) "PARAMCD" %in% colnames(x)) & substr(names(datafile), 1, 4) == "ADLB"]
+  
+  if(!rlang::is_empty(param_dat)){
+    # purrr::map_lgl(names(param_dat), ~ 
+    #                  param_dat[[.x]] %>%
+    #                  filter(PARAMCD %in% param_vector) %>%
+    #                  distinct(PARAMCD) %>%
+    #                  pull() %>% length() > 0
+    # ) %>% any()
+    param_lst <- purrr::map(names(param_dat), ~ 
+                             param_dat[[.x]] %>%
+                             filter(PARAMCD %in% param_vector) %>%
+                             distinct(PARAMCD) %>%
+                             pull() %>% as.vector()
+    )
+    param_vctr <- unlist(param_lst)
+    if(!rlang::is_empty(param_vctr)){
+      dat_lgls <- purrr::map_lgl(param_lst, ~length(.x) > 0)
+      param_lgl <- any(dat_lgls)
+      dat_names <- purrr::map_chr(dat_lgls, ~names(param_dat[.x]))
+    } else {
+      param_lgl <- FALSE
+      dat_names <- NA_character_
+      param_vctr <- NA_character_
+    }
+  } else {
+    param_lgl <- FALSE
+    dat_names <- NA_character_
+    param_vctr <- NA_character_
+  }
+  return(
+    list(
+      exist = param_lgl,
+      dat_name = dat_names,
+      vctr = param_vctr
+    )
+  )
+}
 
 #' The smallest possible data set we could filter to semi-join later
 #' 
