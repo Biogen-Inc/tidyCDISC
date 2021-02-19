@@ -51,7 +51,9 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
            ifelse("ADAE" %in% names(datafile()),'<option  id="tbl34">Table 34: Adverse events that led to discontinuation of study treatment by system organ class and preferred term</option>',''),
            ifelse("ADAE" %in% names(datafile()),'<option  id="tbl36">Table 36: Adverse events that led to withdrawl from study by system organ class and preferred term</option>',''),
            ifelse("ADAE" %in% names(datafile()),'<option  id="tbl38">Table 38: Adverse events that led to drug interrupted, dose reduced, or dose increased by system organ class and preferred term</option>',''),
-           ifelse("ADLBC" %in% loaded_labs(),'<option  id="tbl41_bc">Table 41: Blood Chemistry actual values by visit</option>',''),
+           ifelse(!rlang::is_empty(loaded_labs()) & chem_params()$exist,'<option  id="tbl41_b">Table 41: Blood Chemistry actual values by visit</option>',''),
+           ifelse(!rlang::is_empty(loaded_labs()) & hema_params()$exist,'<option  id="tbl41_h">Table 41: Hematology actual values by visit</option>',''),
+           ifelse(!rlang::is_empty(loaded_labs()) & urin_params()$exist,'<option  id="tbl41_u">Table 41: Urinalysis actual values by visit</option>',''),
            '</select>'))
   })
   
@@ -111,10 +113,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     return(sasdata)
   })
   
-  # grabs "normal" labs + blood chem labs... need something special for hematology?
-  loaded_labs <- reactive({
-    my_loaded_adams()[substr(my_loaded_adams(),1,4) == "ADLB"] 
-  })
+  
   
   # If User wants to perform advance filtering, update drop down of data frames they can filter on
   observe({
@@ -262,31 +261,78 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     session$sendCustomMessage("all_cols", all_cols)
   })
   
+  
+  # Verify if certain lab params exist, and if so, which dataset they live in
+  # in case there are multiple ADLBs- to use later to send data to js side
+  chem_params <- reactive({
+    req(datafile())
+    # chem_params <-
+    check_params(datafile(), chem)
+  })
+  hema_params <- reactive({
+    req(datafile())
+    # hema_params <-
+    check_params(datafile(), hema)
+  }) 
+  urin_params <- reactive({
+    req(datafile())
+    # urin_params <-
+    check_params(datafile(), urin)
+  }) 
+  loaded_labs <- reactive({
+    my_loaded_adams()[substr(my_loaded_adams(),1,4) == "ADLB"] 
+  })
+  
   # check if LB exists? Specifically
   # Hematology
   # Blood Chemistry
   # Urinalysis
   
-  # Sending vector of specific blood chem params(if they exist) and
+  # Sending vector of specific params (if they exist) for certain labs (if they exist)
   observe({
-    req(datafile()) # don't req("ADLBC") because then the custom message will never get sent, and hang up the UI
+    req(datafile(), chem_params(), hema_params(), urin_params()) # don't req("ADLBC") because then the custom message will never get sent, and hang up the UI
+
+    send_chem <- send_urin <- send_hema <- c("not","used","fake","vector","to","convert","to","js","array")
     
-    if("ADLBC" %in% loaded_labs()){ # add recipe() = 'tab 41'?
-      bc <- adlbc %>%
-        dplyr::filter(PARAMCD %in% c(
-          "ALT", "AST", "ALP", "BILI", "GGT", # Liver
-          "BUN", "CREAT", # Renal 
-          "SODIUM", "K", "CL", "BICARB", # Electrolytes
-          "GLUC", "CA", "PHOS", "ALB", "CHOL", "MG", "TRIG", "URATE" # Other 
-        )) %>%
-        dplyr::distinct(PARAMCD) %>%
-        dplyr::pull()
-    } else {
-      bc <- c("not","used","fake","vector","to","convert","to","js","array")
-    }
+    if(!(rlang::is_empty(loaded_labs())) &
+        (chem_params()$exist | hema_params()$exist| urin_params()$exist)
+       ){
+      
+      # Blood Chem
+      
+      if(chem_params()$exist){ # add recipe() = 'tab 41'?
+        send_chem <- chem_params()$vctr
+        # send_chem <-
+          # datafile()[[chem_params()$dat_name]] %>%
+          # dplyr::filter(PARAMCD %in% c(
+          #   "ALT", "AST", "ALP", "BILI", "GGT", # Liver
+          #   "BUN", "CREAT", # Renal 
+          #   "SODIUM", "K", "CL", "BICARB", # Electrolytes
+          #   "GLUC", "CA", "PHOS", "ALB", "CHOL", "MG", "TRIG", "URATE" # Other 
+          # )) %>%
+          # dplyr::distinct(PARAMCD) %>%
+          # dplyr::pull()
+      } 
+      
+      # Hematology
+      if(hema_params()$exist){ # add specific recipe() = 'tab 41'?
+        send_hema <- hema_params()$vctr
+      } 
+
+      # Urinalysis
+      if(urin_params()$exist){ # add specific recipe() = 'tab 41'?
+        send_urin <- urin_params()$vctr
+      } 
+      
+    } # end of "if labs exist"
     
-    print(as.vector(bc))
-    session$sendCustomMessage("adlbc_params", as.vector(bc))
+    print(paste("chem:", as.vector(send_chem)))
+    print(paste("hema:", as.vector(send_hema)))
+    print(paste("urin:", as.vector(send_urin)))
+    session$sendCustomMessage("adlbc_params", as.vector(send_chem))
+    session$sendCustomMessage("adlbh_params", as.vector(send_hema))
+    session$sendCustomMessage("adlbu_params", as.vector(send_urin))
+    
   })
   
   # ----------------------------------------------------------------------
