@@ -2,6 +2,8 @@
 
 Shiny.addCustomMessageHandler('my_weeks2', function(wks) {
   Shiny.addCustomMessageHandler('adlbc_params', function(bc) {
+  Shiny.addCustomMessageHandler('adlbh_params', function(he) {
+  Shiny.addCustomMessageHandler('adlbu_params', function(ur) {
       $(document).ready(function(){
         $(document).on('click', '#RECIPE', function(){
 
@@ -83,8 +85,7 @@ soc_pt_sel = ["NONE", "AEDECOD"]
 
       
 //console.log("initial bc:", wks);
-//bc_params = ["SODIUM","SODIUM","SODIUM"]
-bc_params = Object.values(bc);
+//c_params = ["SODIUM","SODIUM","SODIUM"]
 weeks = Object.values(wks);
 
 
@@ -153,17 +154,33 @@ weeks = Object.values(wks);
       $("#droppable_blocks").append($(simpleRecipeRowBlock("USUBJID", "ADAE")));
       $("#droppable_blocks").append($(simpleRecipeRowBlock("AEDECOD", "ADAE")));
       
-     } else if (["Table 41: Blood Chemistry actual values by visit"].includes(publisher)) {
-      //document.getElementById("droppable_agg").innerHTML = "";
-      //$("#droppable_agg").append($(combineRows(demography_agg, "ADSL")));
-      //document.getElementById("droppable_blocks").innerHTML = "";
-      //$("#droppable_blocks").append($(combineRows(demography_rows, "ADSL")));
-      
-      document.getElementById("droppable_agg").innerHTML = "";
-      $("#droppable_agg").append($(oneAgg_eachOption(bc_params,"MEAN","ADLBC",weeks)));
-      document.getElementById("droppable_blocks").innerHTML = "";
-      $("#droppable_blocks").append($(multiplyCombineRows(bc_params, "ADLBC", weeks)));
+     } else if (publisher === "Table 41: Blood Chemistry actual values by visit"){
+       
+       c_params = Object.values(bc);
+       document.getElementById("droppable_agg").innerHTML = "";
+       $("#droppable_agg").append($(oneAgg_eachOption(c_params,"MEAN","ADLBC",weeks)));
+       document.getElementById("droppable_blocks").innerHTML = "";
+       $("#droppable_blocks").append($(multiplyCombineRows(c_params, "ADLBC", weeks)));
 
+     } else if (publisher === "Table 41: Hematology actual values by visit"){
+       
+       h_params = Object.values(he);
+       document.getElementById("droppable_agg").innerHTML = "";
+       $("#droppable_agg").append($(oneAgg_eachOption(h_params,"MEAN","ADLBC",weeks)));
+       document.getElementById("droppable_blocks").innerHTML = "";
+       $("#droppable_blocks").append($(multiplyCombineRows(h_params, "ADLBC", weeks)));
+       
+     } else if (publisher === "Table 41: Urinalysis actual values by visit"){
+
+        //document.getElementById("droppable_agg").innerHTML = "";
+        //$("#droppable_agg").append($(combineRows(demography_agg, "ADSL")));
+        //document.getElementById("droppable_blocks").innerHTML = "";
+        //$("#droppable_blocks").append($(combineRows(demography_rows, "ADSL")));
+       u_params = Object.values(ur);
+       document.getElementById("droppable_agg").innerHTML = "";
+       $("#droppable_agg").append($(oneAgg_eachOption(u_params,"MEAN","ADLBC",weeks)));
+       document.getElementById("droppable_blocks").innerHTML = "";
+       $("#droppable_blocks").append($(multiplyCombineRows(u_params, "ADLBC", weeks)));
       
     } else {
       document.getElementById("droppable_agg").innerHTML = "";
@@ -181,6 +198,8 @@ $('select#RECIPE').change(function() {
 }); // $(document).on('click', '#RECIPE'
 }); // $document.ready()
 
+}); // end of adlbu_params
+}); // end of adlbh_params
 }); // end of adlbc_params
 }); // end of my_weeks
 
