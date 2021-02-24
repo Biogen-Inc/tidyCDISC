@@ -87,6 +87,13 @@ IDEA_mean.ADAE <- IDEA_mean.ADSL <- function(column, week, group = NULL, data) {
 #' @family tableGen Functions
 IDEA_mean.BDS <- function(column, week, group = NULL, data) {
   
+  ################################
+  # column <- "K"
+  # week <- "DAY -1"
+  # group <- 'TRT01P'
+  # data <- bds_data
+  ################################
+  
   column <- as.character(column)
   
   if (!column %in% data[["PARAMCD"]]) {
@@ -105,10 +112,19 @@ IDEA_mean.BDS <- function(column, week, group = NULL, data) {
     }
     
     group <- sym(group)
-    grouped <- data %>%
-      filter(AVISIT == week & PARAMCD == column) %>%
-      group_by(!!group) %>%
-      mean_summary("AVAL") %>%
+    grp_lvls <- getLevels(data[[group]])
+    xyz <- data.frame(grp_lvls) %>%
+      rename_with(~paste(group), grp_lvls)
+    
+    grouped <- 
+      xyz %>%
+      left_join(
+        data %>%
+        filter(AVISIT == week & PARAMCD == column) %>%
+        group_by(!!group) %>%
+        mean_summary("AVAL")
+      )%>%
+      mutate(n = tidyr::replace_na(n, 0))%>%
       transpose_df(1)
     
     cbind(grouped, all[2])
