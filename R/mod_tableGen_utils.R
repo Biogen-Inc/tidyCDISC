@@ -233,8 +233,8 @@ chem <- c(
 #' Hematology PARAMCDs used to build STAN Table 41
 # param_vector <-
 hema <- c(
-  "LYM", "LYMLE", "NEUT", "NEUTLE", "MONO", "MONOLE", "EOS", "EOSLE",
-  "BASO", "BASOLE", # white blood cells
+  # white blood cells 
+  "LYM", "NEUT", "MONO", "EOS", "BASO", #"LYMLE", "NEUTLE", "MONOLE", "EOSLE", "BASOLE",
   "RBC", "HGB", "HCT", "PLAT"
 )
 
@@ -254,20 +254,27 @@ check_params <- function(datafile, param_vector) {
   param_dat <- datafile[sapply(datafile, function(x) "PARAMCD" %in% colnames(x)) & substr(names(datafile), 1, 4) == "ADLB"]
   
   if(!rlang::is_empty(param_dat)){
-    # purrr::map_lgl(names(param_dat), ~ 
-    #                  param_dat[[.x]] %>%
-    #                  filter(PARAMCD %in% param_vector) %>%
-    #                  distinct(PARAMCD) %>%
-    #                  pull() %>% length() > 0
-    # ) %>% any()
+    # param_lst <- purrr::map(names(param_dat), ~ 
+    #                          param_dat[[.x]] %>%
+    #                          filter(PARAMCD %in% param_vector) %>%
+    #                          distinct(PARAMCD) %>%
+    #                          pull() %>% as.vector()
+    # )
+    # param_vctr <- unlist(param_lst)
     param_lst <- purrr::map(names(param_dat), ~ 
-                             param_dat[[.x]] %>%
-                             filter(PARAMCD %in% param_vector) %>%
-                             distinct(PARAMCD) %>%
-                             pull() %>% as.vector()
+                              param_dat[[.x]] %>%
+                              filter(PARAMCD %in% param_vector) %>%
+                              filter(!(AVISIT %in% c("UNSCHEDULED", "EARLY TERMINATION"))) %>%
+                              distinct(PARAMCD, AVISIT, AVISITN) %>%
+                              varN_fctr_reorder() %>%
+                              arrange(PARAMCD, AVISIT)
+                            # pull() %>% as.vector()
     )
-    param_vctr <- unlist(param_lst)
+    param_vctr <- param_lst[[1]]$PARAMCD # Will this work if two ADLB's are uploaded?
+     
+    
     if(!rlang::is_empty(param_vctr)){
+      visit_vctr <- param_lst[[1]]$AVISIT
       dat_lgls <- purrr::map_lgl(param_lst, ~length(.x) > 0)
       param_lgl <- any(dat_lgls)
       dat_names <- purrr::map_chr(dat_lgls, ~names(param_dat[.x]))
@@ -275,17 +282,20 @@ check_params <- function(datafile, param_vector) {
       param_lgl <- FALSE
       dat_names <- NA_character_
       param_vctr <- NA_character_
+      visit_vctr <- c("fake_weeky","fake_weeky2")
     }
   } else {
     param_lgl <- FALSE
     dat_names <- NA_character_
     param_vctr <- NA_character_
+    visit_vctr <- c("fake_weeky","fake_weeky2")
   }
   return(
     list(
       exist = param_lgl,
       dat_name = dat_names,
-      vctr = param_vctr
+      vctr = param_vctr,
+      tp = visit_vctr
     )
   )
 }
