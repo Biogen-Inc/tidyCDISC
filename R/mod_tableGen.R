@@ -282,9 +282,6 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   })
   
   
-  !(rlang::is_empty(loaded_labs())) &
-    (chem_params()$exist | hema_params()$exist| urin_params()$exist)
-  
   # Send to Client (JS) side:
   # Hematology
   # Blood Chemistry
@@ -322,14 +319,14 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       
     } # end of "if labs exist"
     
-    print(paste("chem_wks:", as.vector(send_weeks)))
-    print(paste("chem:", as.vector(send_chem_wks)))
-    
-    print(paste("hema:", as.vector(send_hema)))
-    print(paste("hema_wks:", as.vector(send_hema_wks)))
-    
-    print(paste("urin:", as.vector(send_urin)))
-    print(paste("urin_wks:", as.vector(send_urin_wks)))
+    # print(paste("chem:", as.vector(send_chem)))
+    # print(paste("chem_wks:", as.vector(send_chem_wks)))
+    # 
+    # print(paste("hema:", as.vector(send_hema)))
+    # print(paste("hema_wks:", as.vector(send_hema_wks)))
+    # 
+    # print(paste("urin:", as.vector(send_urin)))
+    # print(paste("urin_wks:", as.vector(send_urin_wks)))
     
     session$sendCustomMessage("chem_weeks", as.vector(send_chem_wks))
     session$sendCustomMessage("hema_weeks", as.vector(send_hema_wks))
