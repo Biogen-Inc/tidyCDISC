@@ -5,7 +5,7 @@
 \alias{hema}
 \title{Hematology PARAMCDs used to build STAN Table 41}
 \format{
-An object of class \code{character} of length 14.
+An object of class \code{character} of length 9.
 }
 \usage{
 hema

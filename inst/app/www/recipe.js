@@ -1,6 +1,8 @@
 
 
-Shiny.addCustomMessageHandler('my_weeks2', function(wks) {
+Shiny.addCustomMessageHandler('chem_weeks', function(bc_wks) {
+Shiny.addCustomMessageHandler('hema_weeks', function(he_wks) {
+Shiny.addCustomMessageHandler('urin_weeks', function(ur_wks) {
   Shiny.addCustomMessageHandler('adlbc_params', function(bc) {
   Shiny.addCustomMessageHandler('adlbh_params', function(he) {
   Shiny.addCustomMessageHandler('adlbu_params', function(ur) {
@@ -27,7 +29,8 @@ function selectRecipeBlock(newid, df, values) {
               </div>`
   }
 
-// this is scanning through the array, and appends to the html above 
+// this is used for combining block rows (on either the Var or STAT agg 
+// side) scanning through the array, and appends to the html above 
 // and join() concatenates it all together, joining on nothing ("")
 // the df (df name as a string) remains constant
 function combineRows(block_array, df) {
@@ -39,6 +42,11 @@ function combineRows(block_array, df) {
   return(t)
 }
 
+
+
+
+
+/*
 // this similar to combineRows above, but will add additional array into
 // the mix and loops through that too, creating a var block for every combo
 function multiplyCombineRows(var_block, df, select_input) {
@@ -51,7 +59,10 @@ function multiplyCombineRows(var_block, df, select_input) {
   t= t.join("")
   return(t)
 }
+*/
 
+
+/*
 // this is selecting one stat block (that contains a selectInput) 
 // and then scans sets the selection options/choices to only have one
 // value - one stat block per option choices. For example, it can Create
@@ -67,6 +78,19 @@ function oneAgg_eachOption(var_block, agg_stat, df,  select_input) {
   t= t.join("");
   return(t);
 }
+*/
+
+
+//
+function oneAgg_combineSelects(var_block, agg_stat, df, select_input) {
+  let t = Array(var_block.length)
+  for(var i = 0; i < var_block.length; ++1){
+    t.push(selectRecipeBlock(agg_stat, df, select_input[i]))
+  });
+  t= t.join("")
+  return(t)
+}
+
 
 
 // These are called arrays
@@ -84,9 +108,8 @@ soc_pt_sel = ["NONE", "AEDECOD"]
 
 
       
-//console.log("initial bc:", wks);
-//c_params = ["SODIUM","SODIUM","SODIUM"]
-weeks = Object.values(wks);
+
+//weeks = Object.values(wks);
 
 
 /* Create custom block recipes to automatically populate when selected */
@@ -157,18 +180,24 @@ weeks = Object.values(wks);
      } else if (publisher === "Table 41: Blood Chemistry actual values by visit"){
        
        c_params = Object.values(bc);
+       c_weeks = Object.values(bc_wks);
        document.getElementById("droppable_agg").innerHTML = "";
-       $("#droppable_agg").append($(oneAgg_eachOption(c_params,"MEAN","ADLBC",weeks)));
+       //$("#droppable_agg").append($(oneAgg_eachOption(c_params,"MEAN","ADLBC",weeks)));
+       $("#droppable_agg").append($(oneAgg_combineSelects(c_params,"MEAN","ADLBC",c_weeks)));
        document.getElementById("droppable_blocks").innerHTML = "";
-       $("#droppable_blocks").append($(multiplyCombineRows(c_params, "ADLBC", weeks)));
+       //$("#droppable_blocks").append($(multiplyCombineRows(c_params, "ADLBC", weeks)));
+       $("#droppable_blocks").append($(combineRows(c_params, "ADLBC")));
 
      } else if (publisher === "Table 41: Hematology actual values by visit"){
        
        h_params = Object.values(he);
+       h_weeks = Object.values(he_wks);
        document.getElementById("droppable_agg").innerHTML = "";
-       $("#droppable_agg").append($(oneAgg_eachOption(h_params,"MEAN","ADLBC",weeks)));
+       //$("#droppable_agg").append($(oneAgg_eachOption(h_params,"MEAN","ADLBC",weeks)));
+       $("#droppable_agg").append($(oneAgg_combineSelects(h_params,"MEAN","ADLBC",h_weeks)));
        document.getElementById("droppable_blocks").innerHTML = "";
-       $("#droppable_blocks").append($(multiplyCombineRows(h_params, "ADLBC", weeks)));
+       //$("#droppable_blocks").append($(multiplyCombineRows(h_params, "ADLBC", weeks)));
+       $("#droppable_blocks").append($(combineRows(h_params, "ADLBC")));
        
      } else if (publisher === "Table 41: Urinalysis actual values by visit"){
 
@@ -177,10 +206,13 @@ weeks = Object.values(wks);
         //document.getElementById("droppable_blocks").innerHTML = "";
         //$("#droppable_blocks").append($(combineRows(demography_rows, "ADSL")));
        u_params = Object.values(ur);
+       u_weeks = Object.values(ur_wks);
        document.getElementById("droppable_agg").innerHTML = "";
-       $("#droppable_agg").append($(oneAgg_eachOption(u_params,"MEAN","ADLBC",weeks)));
+       //$("#droppable_agg").append($(oneAgg_eachOption(u_params,"MEAN","ADLBC",weeks)));
+       $("#droppable_agg").append($(oneAgg_combineSelects(u_params,"MEAN","ADLBC",u_weeks)));
        document.getElementById("droppable_blocks").innerHTML = "";
-       $("#droppable_blocks").append($(multiplyCombineRows(u_params, "ADLBC", weeks)));
+       //$("#droppable_blocks").append($(multiplyCombineRows(u_params, "ADLBC", weeks)));
+       $("#droppable_blocks").append($(combineRows(u_params, "ADLBC")));
       
     } else {
       document.getElementById("droppable_agg").innerHTML = "";
@@ -201,5 +233,7 @@ $('select#RECIPE').change(function() {
 }); // end of adlbu_params
 }); // end of adlbh_params
 }); // end of adlbc_params
-}); // end of my_weeks
+}); // end of urin weeks
+}); // end of hema weeks
+}); // end of chem weeks
 
