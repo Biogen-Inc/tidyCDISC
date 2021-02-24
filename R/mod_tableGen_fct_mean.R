@@ -116,9 +116,6 @@ IDEA_mean.BDS <- function(column, week, group = NULL, data) {
     xyz <- data.frame(grp_lvls) %>%
       rename_with(~paste(group), grp_lvls)
     
-    grp_tot <- 
-        
-    
     grouped <- 
       xyz %>%
       left_join(
@@ -127,6 +124,7 @@ IDEA_mean.BDS <- function(column, week, group = NULL, data) {
         group_by(!!group) %>%
         mean_summary("AVAL")
       )%>%
+      mutate(n = tidyr::replace_na(n, 0))%>%
       transpose_df(1)
     
     cbind(grouped, all[2])
