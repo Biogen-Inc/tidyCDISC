@@ -83,10 +83,10 @@ function oneAgg_eachOption(var_block, agg_stat, df,  select_input) {
 
 //
 function oneAgg_combineSelects(var_block, agg_stat, df, select_input) {
-  let t = Array(var_block.length)
-  for(var i = 0; i < var_block.length; ++1){
+  let t = Array(var_block.length);
+  for(var i = 0; i < var_block.length; i += 1){
     t.push(selectRecipeBlock(agg_stat, df, select_input[i]))
-  });
+  };
   t= t.join("")
   return(t)
 }
@@ -182,22 +182,22 @@ soc_pt_sel = ["NONE", "AEDECOD"]
        c_params = Object.values(bc);
        c_weeks = Object.values(bc_wks);
        document.getElementById("droppable_agg").innerHTML = "";
-       //$("#droppable_agg").append($(oneAgg_eachOption(c_params,"MEAN","ADLBC",weeks)));
-       $("#droppable_agg").append($(oneAgg_combineSelects(c_params,"MEAN","ADLBC",c_weeks)));
+       //$("#droppable_agg").append($(oneAgg_eachOption(c_params,"MEAN","ADLB",weeks)));
+       $("#droppable_agg").append($(oneAgg_combineSelects(c_params,"MEAN","ADLB",c_weeks)));
        document.getElementById("droppable_blocks").innerHTML = "";
-       //$("#droppable_blocks").append($(multiplyCombineRows(c_params, "ADLBC", weeks)));
-       $("#droppable_blocks").append($(combineRows(c_params, "ADLBC")));
+       //$("#droppable_blocks").append($(multiplyCombineRows(c_params, "ADLB", weeks)));
+       $("#droppable_blocks").append($(combineRows(c_params, "ADLB")));
 
      } else if (publisher === "Table 41: Hematology actual values by visit"){
        
        h_params = Object.values(he);
        h_weeks = Object.values(he_wks);
        document.getElementById("droppable_agg").innerHTML = "";
-       //$("#droppable_agg").append($(oneAgg_eachOption(h_params,"MEAN","ADLBC",weeks)));
-       $("#droppable_agg").append($(oneAgg_combineSelects(h_params,"MEAN","ADLBC",h_weeks)));
+       //$("#droppable_agg").append($(oneAgg_eachOption(h_params,"MEAN","ADLB",weeks)));
+       $("#droppable_agg").append($(oneAgg_combineSelects(h_params,"MEAN","ADLB",h_weeks)));
        document.getElementById("droppable_blocks").innerHTML = "";
-       //$("#droppable_blocks").append($(multiplyCombineRows(h_params, "ADLBC", weeks)));
-       $("#droppable_blocks").append($(combineRows(h_params, "ADLBC")));
+       //$("#droppable_blocks").append($(multiplyCombineRows(h_params, "ADLB", weeks)));
+       $("#droppable_blocks").append($(combineRows(h_params, "ADLB")));
        
      } else if (publisher === "Table 41: Urinalysis actual values by visit"){
 
@@ -208,11 +208,11 @@ soc_pt_sel = ["NONE", "AEDECOD"]
        u_params = Object.values(ur);
        u_weeks = Object.values(ur_wks);
        document.getElementById("droppable_agg").innerHTML = "";
-       //$("#droppable_agg").append($(oneAgg_eachOption(u_params,"MEAN","ADLBC",weeks)));
-       $("#droppable_agg").append($(oneAgg_combineSelects(u_params,"MEAN","ADLBC",u_weeks)));
+       //$("#droppable_agg").append($(oneAgg_eachOption(u_params,"MEAN","ADLB",weeks)));
+       $("#droppable_agg").append($(oneAgg_combineSelects(u_params,"MEAN","ADLB",u_weeks)));
        document.getElementById("droppable_blocks").innerHTML = "";
-       //$("#droppable_blocks").append($(multiplyCombineRows(u_params, "ADLBC", weeks)));
-       $("#droppable_blocks").append($(combineRows(u_params, "ADLBC")));
+       //$("#droppable_blocks").append($(multiplyCombineRows(u_params, "ADLB", weeks)));
+       $("#droppable_blocks").append($(combineRows(u_params, "ADLB")));
       
     } else {
       document.getElementById("droppable_agg").innerHTML = "";

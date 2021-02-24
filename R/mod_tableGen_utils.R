@@ -264,7 +264,11 @@ check_params <- function(datafile, param_vector) {
     param_lst <- purrr::map(names(param_dat), ~ 
                               param_dat[[.x]] %>%
                               filter(PARAMCD %in% param_vector) %>%
-                              filter(!(AVISIT %in% c("UNSCHEDULED", "EARLY TERMINATION"))) %>%
+                              filter(!is.na(AVISIT) & 
+                                     !(AVISIT %in% c(" ", "")) &
+                                     stringr::str_detect(toupper(AVISIT),"UNSCHEDULED",negate = TRUE) &
+                                     stringr::str_detect(toupper(AVISIT),"EARLY TERMINATION",negate = TRUE)
+                                     ) %>%
                               distinct(PARAMCD, AVISIT, AVISITN) %>%
                               varN_fctr_reorder() %>%
                               arrange(PARAMCD, AVISIT)
