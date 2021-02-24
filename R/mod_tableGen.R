@@ -244,12 +244,10 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   })
   
   
-  # Send any and all AVISITs that exist to javascript side
+  # Send any and all AVISITs that exist to javascript side (script.js)
   observe({
     req(AVISIT())
-    
     session$sendCustomMessage("my_weeks", AVISIT())
-    session$sendCustomMessage("my_weeks2", AVISIT())
   })
   
   
@@ -283,7 +281,8 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     my_loaded_adams()[substr(my_loaded_adams(),1,4) == "ADLB"] 
   })
   
-  # check if LB exists? Specifically
+  
+  # Send to Client (JS) side:
   # Hematology
   # Blood Chemistry
   # Urinalysis
@@ -293,42 +292,46 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     req(datafile(), chem_params(), hema_params(), urin_params()) # don't req("ADLBC") because then the custom message will never get sent, and hang up the UI
 
     send_chem <- send_urin <- send_hema <- c("not","used","fake","vector","to","convert","to","js","array")
+    send_chem_wks <- send_urin_wks <- send_hema_wks <- c("fake_weeky","fake_weeky2")
     
     if(!(rlang::is_empty(loaded_labs())) &
         (chem_params()$exist | hema_params()$exist| urin_params()$exist)
        ){
       
-      # Blood Chem
       
+      # Blood Chem
       if(chem_params()$exist){ # add recipe() = 'tab 41'?
         send_chem <- chem_params()$vctr
-        # send_chem <-
-          # datafile()[[chem_params()$dat_name]] %>%
-          # dplyr::filter(PARAMCD %in% c(
-          #   "ALT", "AST", "ALP", "BILI", "GGT", # Liver
-          #   "BUN", "CREAT", # Renal 
-          #   "SODIUM", "K", "CL", "BICARB", # Electrolytes
-          #   "GLUC", "CA", "PHOS", "ALB", "CHOL", "MG", "TRIG", "URATE" # Other 
-          # )) %>%
-          # dplyr::distinct(PARAMCD) %>%
-          # dplyr::pull()
+        send_chem_wks <- chem_params()$tp
       } 
       
       # Hematology
       if(hema_params()$exist){ # add specific recipe() = 'tab 41'?
         send_hema <- hema_params()$vctr
+        send_hema_wks <- hema_params()$tp
       } 
 
       # Urinalysis
       if(urin_params()$exist){ # add specific recipe() = 'tab 41'?
         send_urin <- urin_params()$vctr
+        send_urin_wks <- urin_params()$tp
       } 
       
     } # end of "if labs exist"
     
-    print(paste("chem:", as.vector(send_chem)))
-    print(paste("hema:", as.vector(send_hema)))
-    print(paste("urin:", as.vector(send_urin)))
+    # print(paste("chem:", as.vector(send_chem)))
+    # print(paste("chem_wks:", as.vector(send_chem_wks)))
+    # 
+    # print(paste("hema:", as.vector(send_hema)))
+    # print(paste("hema_wks:", as.vector(send_hema_wks)))
+    # 
+    # print(paste("urin:", as.vector(send_urin)))
+    # print(paste("urin_wks:", as.vector(send_urin_wks)))
+    
+    session$sendCustomMessage("chem_weeks", as.vector(send_chem_wks))
+    session$sendCustomMessage("hema_weeks", as.vector(send_hema_wks))
+    session$sendCustomMessage("urin_weeks", as.vector(send_urin_wks))
+    
     session$sendCustomMessage("adlbc_params", as.vector(send_chem))
     session$sendCustomMessage("adlbh_params", as.vector(send_hema))
     session$sendCustomMessage("adlbu_params", as.vector(send_urin))
