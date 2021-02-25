@@ -264,17 +264,14 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # in case there are multiple ADLBs- to use later to send data to js side
   chem_params <- reactive({
     req(datafile())
-    # chem_params <-
     check_params(datafile(), chem)
   })
   hema_params <- reactive({
     req(datafile())
-    # hema_params <-
     check_params(datafile(), hema)
   }) 
   urin_params <- reactive({
     req(datafile())
-    # urin_params <-
     check_params(datafile(), urin)
   }) 
   loaded_labs <- reactive({
@@ -318,15 +315,6 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       } 
       
     } # end of "if labs exist"
-    
-    # print(paste("chem:", as.vector(send_chem)))
-    # print(paste("chem_wks:", as.vector(send_chem_wks)))
-    # 
-    # print(paste("hema:", as.vector(send_hema)))
-    # print(paste("hema_wks:", as.vector(send_hema_wks)))
-    # 
-    # print(paste("urin:", as.vector(send_urin)))
-    # print(paste("urin_wks:", as.vector(send_urin_wks)))
     
     session$sendCustomMessage("chem_weeks", as.vector(send_chem_wks))
     session$sendCustomMessage("hema_weeks", as.vector(send_hema_wks))
