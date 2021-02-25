@@ -43,12 +43,10 @@ function combineRows(block_array, df) {
 }
 
 
-
-
-
 /*
 // this similar to combineRows above, but will add additional array into
 // the mix and loops through that too, creating a var block for every combo
+// between the two arrays. Depracated.
 function multiplyCombineRows(var_block, df, select_input) {
   let t = []
   var_block.forEach(function (blk) {
@@ -67,7 +65,8 @@ function multiplyCombineRows(var_block, df, select_input) {
 // and then scans sets the selection options/choices to only have one
 // value - one stat block per option choices. For example, it can Create
 // a mean block for every week that exists in the study. Helpful for
-// table 41 style tables of lab actuals by param and week or PK style tables
+// table 41 style tables of lab actuals by param and week or PK style 
+// tables. Depracated.
 function oneAgg_eachOption(var_block, agg_stat, df,  select_input) {
   let t = [];
   var_block.forEach(function () {
@@ -81,7 +80,9 @@ function oneAgg_eachOption(var_block, agg_stat, df,  select_input) {
 */
 
 
-//
+// The following function creates a stat block for every var block on
+// the LHS, and creates a dropdown. The var_block and select_input arrays
+// must be of the same length. Used for Table 41.
 function oneAgg_combineSelects(var_block, agg_stat, df, select_input) {
   let t = Array(var_block.length);
   for(var i = 0; i < var_block.length; i += 1){
@@ -98,7 +99,6 @@ demography_rows = ["AGEGR1", "AGE",  "SEX",  "ETHNIC", "RACE", "HEIGHTBL", "WEIG
 demography_agg =  ["FREQ",   "MEAN", "FREQ", "FREQ",   "FREQ", "MEAN",     "MEAN"]
 
 
-
 ae18_rows = ["AOCCFL", "AESEV", "AESER","DTHDT"]
 ae18_agg =  ["Y_FREQ", "MAX_FREQ", "Y_FREQ", "NON_MISSING"]
 
@@ -106,10 +106,6 @@ soc_pt_rows = ["AOCCFL", "AEBODSYS"]
 soc_pt_agg =  ["Y_FREQ", "NESTED_FREQ_DSC"]
 soc_pt_sel = ["NONE", "AEDECOD"]
 
-
-      
-
-//weeks = Object.values(wks);
 
 
 /* Create custom block recipes to automatically populate when selected */
@@ -120,7 +116,6 @@ soc_pt_sel = ["NONE", "AEDECOD"]
       $("#droppable_agg").append($(combineRows(demography_agg, "ADSL")));
       document.getElementById("droppable_blocks").innerHTML = "";
       $("#droppable_blocks").append($(combineRows(demography_rows, "ADSL")));
-      
       
       
     } else if (publisher === "Table 18: Overall summary of adverse events") {
@@ -155,7 +150,6 @@ soc_pt_sel = ["NONE", "AEDECOD"]
       document.getElementById("droppable_blocks").innerHTML = "";
       $("#droppable_blocks").append($(simpleRecipeRowBlock("USUBJID", "ADAE")));
       $("#droppable_blocks").append($(simpleRecipeRowBlock("AEBODSYS", "ADAE")));
-      
       
       
     } else if (publisher === "Table 21: Adverse events by system organ class") {

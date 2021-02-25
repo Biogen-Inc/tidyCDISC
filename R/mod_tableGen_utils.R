@@ -254,13 +254,6 @@ check_params <- function(datafile, param_vector) {
   param_dat <- datafile[sapply(datafile, function(x) "PARAMCD" %in% colnames(x)) & substr(names(datafile), 1, 4) == "ADLB"]
   
   if(!rlang::is_empty(param_dat)){
-    # param_lst <- purrr::map(names(param_dat), ~ 
-    #                          param_dat[[.x]] %>%
-    #                          filter(PARAMCD %in% param_vector) %>%
-    #                          distinct(PARAMCD) %>%
-    #                          pull() %>% as.vector()
-    # )
-    # param_vctr <- unlist(param_lst)
     param_lst <- purrr::map(names(param_dat), ~ 
                               param_dat[[.x]] %>%
                               filter(PARAMCD %in% param_vector) %>%
@@ -272,10 +265,8 @@ check_params <- function(datafile, param_vector) {
                               distinct(PARAMCD, AVISIT, AVISITN) %>%
                               varN_fctr_reorder() %>%
                               arrange(PARAMCD, AVISIT)
-                            # pull() %>% as.vector()
     )
     param_vctr <- param_lst[[1]]$PARAMCD # Will this work if two ADLB's are uploaded?
-     
     
     if(!rlang::is_empty(param_vctr)){
       visit_vctr <- param_lst[[1]]$AVISIT
