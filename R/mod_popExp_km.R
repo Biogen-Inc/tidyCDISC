@@ -18,6 +18,7 @@ km_ui <- function(id, label = "km") {
     h4("Select axes:"),
     wellPanel(
       selectInput(ns("yvar"), "Select param", choices = NULL),
+      selectInput(ns("resp_var"), "Response Variable", choices = "AVAL",selected = "AVAL"),
       selectInput(ns("group"), "Group By", choices = "NONE", selected = "NONE"),
       checkboxInput(ns("points"), "Mark censored observations?", value = TRUE),
       checkboxInput(ns("ci"), "Include 95% confidence interval?", value = FALSE)
@@ -54,6 +55,18 @@ km_srv <- function(input, output, session, data) {
                       choices = list(paramcd),
                       selected = isolate(input$yvar)
     )
+    
+    # update response variable options for user based on data
+    my_vars <- data() %>% 
+      select(one_of("AVISITN", "VISITNUM"), ends_with("DY")) %>% 
+      select_if(~!all(is.na(.))) %>%# remove NA cols
+      colnames()
+    updateSelectInput (
+      session = session,
+      inputId = "resp_var",
+      choices = c("AVAL", my_vars),
+      selected = isolate(input$resp_var)
+    )
   })
   
   observeEvent(input$yvar, {
@@ -63,6 +76,18 @@ km_srv <- function(input, output, session, data) {
     group_dat <- data() %>% 
       dplyr::filter(PARAMCD == input$yvar) %>% 
       select_if(~!all(is.na(.))) # remove NA cols
+    
+    # update response variable options for user based on data filtered to a
+    # certain param
+    my_vars <- data() %>%
+      select(one_of("AVISITN", "VISITNUM"), ends_with("DY")) %>%
+      colnames()
+    updateSelectInput (
+      session = session,
+      inputId = "resp_var",
+      choices = c("AVAL", my_vars),
+      selected = isolate(input$resp_var)
+    )
     
     # character and factor columns for grouping or faceting (separating)
     char_col <- subset_colclasses(group_dat, is.character)
@@ -86,6 +111,7 @@ km_srv <- function(input, output, session, data) {
     req(data(), input$yvar)
     IDEA_km_curve(data(), 
                  input$yvar, 
+                 # input$resp_var, 
                  input$group,
                  input$points,
                  input$ci
