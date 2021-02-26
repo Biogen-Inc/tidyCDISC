@@ -140,9 +140,9 @@ mod_popExp_server <- function(input, output, session, datafile) {
   
   # if ADTT* exists in data & it has the cnsr column, add KM curve as radioButton choice
   observeEvent(my_loaded_adams(), {
-    req(any(substr(my_loaded_adams(), 1, 4) == "ADTT"))
-    adtt_ <- my_loaded_adams()[substr(my_loaded_adams(), 1, 4) == "ADTT"]
-    req(any(purrr::map_lgl(adtt_, ~ "CNSR" %in% colnames(datafile()[[.x]]))))
+    # req(any(substr(my_loaded_adams(), 1, 4) == "ADTT"))
+    # adtt_ <- my_loaded_adams()[substr(my_loaded_adams(), 1, 4) == "ADTT"]
+    req(any(purrr::map_lgl(my_loaded_adams(), ~ "CNSR" %in% colnames(datafile()[[.x]]))))
     updateRadioButtons(session, "plot_type",
                        choices = c("Scatter Plot", 
                                    "Spaghetti Plot", 
@@ -222,8 +222,9 @@ mod_popExp_server <- function(input, output, session, datafile) {
   })
 
   km_data <- reactive({
+    req(any(purrr::map_lgl(my_loaded_adams(), ~ "CNSR" %in% colnames(datafile()[[.x]]))))
     dataset() %>% 
-      filter(substr(data_from, 1, 4) == "ADTT") %>%
+      # filter(substr(data_from, 1, 4) == "ADTT") %>%
       filter(!is.na(CNSR))
   })
   
