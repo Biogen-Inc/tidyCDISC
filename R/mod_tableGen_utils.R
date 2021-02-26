@@ -241,7 +241,7 @@ hema <- c(
 #' Urinalysis PARAMCDs used to build STAN Table 41
 # param_vector <- 
 urin <- c(
-  "PH", "COLOR", "OCCBLD", "GLUCQU", "GLUCU", "KETONESQ", "KETONES",
+  "SPGRAV", "PH", "COLOR", "OCCBLD",  "GLUCU",  "KETONES", #"GLUCQU", "KETONESQ",
   "PROTU", "MWBCQU", "MWBCU", "MRBCQU", "MRBCU"
 )
 
@@ -259,8 +259,8 @@ check_params <- function(datafile, param_vector) {
                               filter(PARAMCD %in% param_vector) %>%
                               filter(!is.na(AVISIT) & 
                                      !(AVISIT %in% c(" ", "")) &
-                                     stringr::str_detect(toupper(AVISIT),"UNSCHEDULED",negate = TRUE) &
-                                     stringr::str_detect(toupper(AVISIT),"EARLY TERMINATION",negate = TRUE)
+                                     stringr::str_detect(toupper(AVISIT),"UNSCHEDULED",negate = TRUE) #&
+                                     # stringr::str_detect(toupper(AVISIT),"EARLY TERMINATION",negate = TRUE)
                                      ) %>%
                               distinct(PARAMCD, AVISIT, AVISITN) %>%
                               varN_fctr_reorder() %>%
