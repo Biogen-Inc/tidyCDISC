@@ -5,7 +5,7 @@
 \alias{urin}
 \title{Urinalysis PARAMCDs used to build STAN Table 41}
 \format{
-An object of class \code{character} of length 12.
+An object of class \code{character} of length 11.
 }
 \usage{
 urin
