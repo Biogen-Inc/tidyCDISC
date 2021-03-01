@@ -258,7 +258,7 @@ check_params <- function(datafile, param_vector) {
     param_lst <- purrr::map(names(param_dat), ~ 
                               param_dat[[.x]] %>%
                               filter(PARAMCD %in% param_vector) %>%
-                              filter(!is.na(AVAL) &
+                              filter(!is.na(AVAL) & # only display if non-missing!
                                      !is.na(AVISIT) & 
                                      !(AVISIT %in% c(" ", "")) &
                                      stringr::str_detect(toupper(AVISIT),"UNSCHEDULED",negate = TRUE) #&
