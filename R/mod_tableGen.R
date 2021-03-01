@@ -51,6 +51,9 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
            ifelse("ADAE" %in% names(datafile()),'<option  id="tbl34">Table 34: Adverse events that led to discontinuation of study treatment by system organ class and preferred term</option>',''),
            ifelse("ADAE" %in% names(datafile()),'<option  id="tbl36">Table 36: Adverse events that led to withdrawl from study by system organ class and preferred term</option>',''),
            ifelse("ADAE" %in% names(datafile()),'<option  id="tbl38">Table 38: Adverse events that led to drug interrupted, dose reduced, or dose increased by system organ class and preferred term</option>',''),
+           ifelse(!rlang::is_empty(loaded_labs()) & chem_params()$exist,'<option  id="tbl41_b">Table 41: Blood Chemistry actual values by visit</option>',''),
+           ifelse(!rlang::is_empty(loaded_labs()) & hema_params()$exist,'<option  id="tbl41_h">Table 41: Hematology actual values by visit</option>',''),
+           ifelse(!rlang::is_empty(loaded_labs()) & urin_params()$exist,'<option  id="tbl41_u">Table 41: Urinalysis actual values by visit</option>',''),
            '</select>'))
   })
   
@@ -109,6 +112,8 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     sasdata <- names(which(sapply(sasdata0,function(df) { return(stringr::str_detect(toupper(df),"^AD[A-Z0-9\\_]+")) })))
     return(sasdata)
   })
+  
+  
   
   # If User wants to perform advance filtering, update drop down of data frames they can filter on
   observe({
@@ -234,21 +239,92 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
         pull(AVISIT) %>%
         unique()
     }
-    avisit_words
+    # print(avisit_words[avisit_words != ""])
+    avisit_words[avisit_words != ""]
   })
   
+  
+  # Send any and all AVISITs that exist to javascript side (script.js)
   observe({
     req(AVISIT())
-    
     session$sendCustomMessage("my_weeks", AVISIT())
   })
   
+  
+  # Sending columns names that could be selected for nested freq stat block
+  # just character of factor vars from the ADSL or ADAE
   observe({
     req(categ_vars())
     all_cols <- categ_vars()
     session$sendCustomMessage("all_cols", all_cols)
   })
   
+  
+  # Verify if certain lab params exist, and if so, which dataset they live in
+  # in case there are multiple ADLBs- to use later to send data to js side
+  chem_params <- reactive({
+    req(datafile())
+    check_params(datafile(), chem)
+  })
+  hema_params <- reactive({
+    req(datafile())
+    check_params(datafile(), hema)
+  }) 
+  urin_params <- reactive({
+    req(datafile())
+    check_params(datafile(), urin)
+  }) 
+  loaded_labs <- reactive({
+    my_loaded_adams()[substr(my_loaded_adams(),1,4) == "ADLB"] 
+  })
+  
+  
+  # Send to Client (JS) side:
+  # Hematology
+  # Blood Chemistry
+  # Urinalysis
+  
+  # Sending vector of specific params (if they exist) for certain labs (if they exist)
+  observe({
+    req(datafile(), chem_params(), hema_params(), urin_params()) # don't req("ADLBC") because then the custom message will never get sent, and hang up the UI
+
+    send_chem <- send_urin <- send_hema <- c("not","used","fake","vector","to","convert","to","js","array")
+    send_chem_wks <- send_urin_wks <- send_hema_wks <- c("fake_weeky","fake_weeky2")
+    
+    if(!(rlang::is_empty(loaded_labs())) &
+        (chem_params()$exist | hema_params()$exist| urin_params()$exist)
+       ){
+      
+      
+      # Blood Chem
+      if(chem_params()$exist){ # add recipe() = 'tab 41'?
+        send_chem <- chem_params()$vctr
+        send_chem_wks <- chem_params()$tp
+      } 
+      
+      # Hematology
+      if(hema_params()$exist){ # add specific recipe() = 'tab 41'?
+        send_hema <- hema_params()$vctr
+        send_hema_wks <- hema_params()$tp
+      } 
+
+      # Urinalysis
+      if(urin_params()$exist){ # add specific recipe() = 'tab 41'?
+        send_urin <- urin_params()$vctr
+        send_urin_wks <- urin_params()$tp
+      } 
+      
+    } # end of "if labs exist"
+    
+    session$sendCustomMessage("chem_weeks", as.vector(send_chem_wks))
+    session$sendCustomMessage("hema_weeks", as.vector(send_hema_wks))
+    session$sendCustomMessage("urin_weeks", as.vector(send_urin_wks))
+    
+    session$sendCustomMessage("adlbc_params", as.vector(send_chem))
+    session$sendCustomMessage("adlbh_params", as.vector(send_hema))
+    session$sendCustomMessage("adlbu_params", as.vector(send_urin))
+    
+  })
   
   # ----------------------------------------------------------------------
   # Generate table given the dropped blocks
