@@ -846,7 +846,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       
       blockData$label <- 
         purrr::map(blockData$block, function(x) attr(bds_data[[x]], 'label')) %>% 
-        unname() %>% str_trim()
+        unname() %>% stringr::str_trim()
       
       # Calculate totals for population set
       {total_for_code()}
