@@ -253,11 +253,13 @@ urin <- c(
 check_params <- function(datafile, param_vector) {
   param_dat <- datafile[sapply(datafile, function(x) "PARAMCD" %in% colnames(x)) & substr(names(datafile), 1, 4) == "ADLB"]
   
+  # apply following code to data that contains paramcd
   if(!rlang::is_empty(param_dat)){
     param_lst <- purrr::map(names(param_dat), ~ 
                               param_dat[[.x]] %>%
                               filter(PARAMCD %in% param_vector) %>%
-                              filter(!is.na(AVISIT) & 
+                              filter(!is.na(AVAL) &
+                                     !is.na(AVISIT) & 
                                      !(AVISIT %in% c(" ", "")) &
                                      stringr::str_detect(toupper(AVISIT),"UNSCHEDULED",negate = TRUE) #&
                                      # stringr::str_detect(toupper(AVISIT),"EARLY TERMINATION",negate = TRUE)
