@@ -848,6 +848,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
         purrr::map(blockData$block, function(x) attr(bds_data[[x]], 'label')) %>% 
         unname() %>% stringr::str_trim()
       
+      
       # Calculate totals for population set
       {total_for_code()}
       
@@ -861,7 +862,8 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
                        data = IDEA::data_to_use_str(d),
                        totals = total_df)) %>%
       map(setNames, IDEA::common_rownames({Rscript_use_preferred_pop_data()}, {column() %quote% 'NULL'})) %>%
-      setNames(paste(blockData$label)) %>%
+      setNames(paste(ifelse(any(blockData$label == 'NULL'),
+                          1:nrow(blockData), blockData$label))) %>%
       bind_rows(.id = 'ID') %>%
       mutate(
         ID = stringi::stri_replace_all_regex(
