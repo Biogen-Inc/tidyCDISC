@@ -14,7 +14,7 @@ mean_summary <- function(.data, to_count) {
   
   .data %>%
     summarise(
-      n = n_distinct(USUBJID),
+      n = paste(n_distinct(USUBJID)),
       `Mean (SD)` = paste0(sprintf("%.1f", round(mean(na.omit(!!to_count)), 1)),
                           " (", sprintf("%.2f", round(sd(na.omit(!!to_count)), 2)), ")"),
       Median = sprintf("%.1f", median(na.omit(!!to_count), type = 1)),
