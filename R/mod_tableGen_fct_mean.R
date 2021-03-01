@@ -124,7 +124,12 @@ IDEA_mean.BDS <- function(column, week, group = NULL, data) {
         group_by(!!group) %>%
         mean_summary("AVAL")
       )%>%
-      mutate(n = tidyr::replace_na(n, 0))%>%
+      mutate( n = tidyr::replace_na(n, ""),
+             `Mean (SD)` = tidyr::replace_na(`Mean (SD)`, ""),
+              Median = tidyr::replace_na(Median, ""),
+             `Q1 | Q3` = tidyr::replace_na(`Q1 | Q3`, ""),
+             `Min | Max` = tidyr::replace_na(`Min | Max`, ""),
+             ) %>%
       transpose_df(1)
     
     cbind(grouped, all[2])
