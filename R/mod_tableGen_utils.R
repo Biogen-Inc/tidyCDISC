@@ -39,7 +39,6 @@ combineBDS <- function(datafile, ADSL) {
   return(combined_data)
 }
 
-"PARAM" %in% colnames(bds_data) # false
 
 
 #' Function to clean and combine ADAE dataset with ADSL
