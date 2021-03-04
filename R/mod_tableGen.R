@@ -708,7 +708,9 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   text_code <- reactive({
     glue::glue(
     "
+    
     options(digits = 3)
+    
     # For HPC users, add RSPM's GHE repo:
     options(repos = c(
       CRAN = 'https://cran.rstudio.com/',
@@ -839,22 +841,24 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     )
   })
   
+  
+    
   generate_comparison_output <- reactive({
     glue::glue(
       "
       {text_code()}
       
       blockData$label <- 
-      purrr::map(blockData$block, function(x) {
-        if(!is.null(attr(bds_data[[x]], 'label'))){
+      purrr::map(blockData$block, function(x) {{
+        if(!is.null(attr(bds_data[[x]], 'label'))){{
           attr(bds_data[[x]], 'label')
-        } else {
+        }} else {{
           bds_data %>%
             filter(PARAMCD == x) %>%
             distinct(PARAM) %>%
             pull() %>% as.character()
-          }
-        }) %>% 
+          }}
+        }}) %>% 
       unname() %>% stringr::str_trim()
       
       
