@@ -861,11 +861,11 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
         }}) %>% unname() %>% stringr::str_trim()
       
       blockData$label_source <- 
-      purrr::map(blockData$block, function(x) {
-        if(!is.null(attr(bds_data[[x]], 'label'))){
+      purrr::map(blockData$block, function(x) {{
+        if(!is.null(attr(bds_data[[x]], 'label'))){{
           'SAS \"label\" attribute'
-        } else { 'PARAM' }
-      }) %>% unname() %>% stringr::str_trim()
+        }} else {{ 'PARAM' }}
+      }}) %>% unname() %>% stringr::str_trim()
       
       # Calculate totals for population set
       {total_for_code()}
@@ -880,8 +880,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
                        data = IDEA::data_to_use_str(d),
                        totals = total_df)) %>%
       map(setNames, IDEA::common_rownames({Rscript_use_preferred_pop_data()}, {column() %quote% 'NULL'})) %>%
-      setNames(paste(ifelse(any(blockData$label == 'NULL'),
-                          1:nrow(blockData), blockData$label))) %>%
+      setNames(paste(blockData$gt_group)) %>%
       bind_rows(.id = 'ID') %>%
       mutate(
         # remove html
@@ -929,7 +928,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       order_diff <- diffdf(base = sas_comp_ready, 
               compare = tg_comp_ready,
               keys = c('id_block', 'id_rn'),
-              tolerance = 0.001,
+              tolerance = 0.01,
               strict_numeric = TRUE, # Integer != Double
               strict_factor = TRUE,  # Factor != Character
               file = output_file
