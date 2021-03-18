@@ -109,7 +109,7 @@ make_machine_readable <- function(data, keep_orig_ids = FALSE){
 #'
 #' @param x a numeric vector of repeated sequence
 #'
-#' @example
+#' @examples
 #' mk_rep_seq_id(rep(1:5,2))
 #' 
 mk_rep_seq_id <- function(x){
@@ -268,7 +268,7 @@ prep_sas_table <- function(
 #' 
 temp_col_rename <- function(dat, sas_generics){
   # sas_generics <- colx # testing
-  !all(substr(sas_generics, 1, 3) == "col") stop("generic_colnames argument must be a vector with prefix 'col'")
+  if(!all(substr(sas_generics, 1, 3) == "col")) stop("generic_colnames argument must be a vector with prefix 'col'")
   colx_st <- min(as.numeric(gsub("col","",sas_generics)))
   
   
