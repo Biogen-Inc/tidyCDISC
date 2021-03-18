@@ -12,3 +12,7 @@ mk_rep_seq_id(x)
 \description{
 Make an "ID vector" that identifies groups of repeated sequences in another vector.
 }
+\examples{
+mk_rep_seq_id(rep(1:5,2))
+
+}
