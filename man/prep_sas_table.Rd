@@ -7,9 +7,9 @@
 prep_sas_table(
   sas_data,
   block_names = c("by1lbl", "vis"),
-  block_ord_names = c("cat"),
+  block_ord_names = c("cat", "by1ord"),
   stat_names = c("by2lbl", "Statlbl", "test"),
-  stat_ord_names = c("subcat"),
+  stat_ord_names = c("subcat", "by2ord"),
   tg_data,
   machine_readable = TRUE,
   keep_orig_ids = FALSE,
