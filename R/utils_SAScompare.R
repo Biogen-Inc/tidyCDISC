@@ -218,10 +218,10 @@ prep_sas_table <- function(
   # is.ordered(sas_data$by1lbl)
   # class(sas_data$by1lbl)
   
-  if(is.numeric(sas_prepped[[stat_ord_var]])){
+  if(is.numeric(sas_data[[stat_ord_var]])){
     sas_prepped0 <-
       sas_data %>%
-      filter(!!stat_ord_sym > 0 & !is.na(!!stat_ord_sym))
+      filter(!!stat_ord_sym > 0)
   } else {
     sas_prepped0 <- sas_data
   }
@@ -245,10 +245,10 @@ prep_sas_table <- function(
     group_by(id_block) %>%
     mutate(id_rn = row_number()) %>% # id_rn = !!stat_ord_sym) # has a strange numbering system
     ungroup() %>%
-    select(id_block, id_block_user, id_desc = !!blk_sym, id_stat, id_block_per_stat, id_rn,
-           Variable = descr, everything()) %>%
-    # select(-cat, -!!stat_ord_sym, -region, -pg , -id_descr, -banner) %>%
-    mutate(across(-c(id_block:Variable), function(col) trimws(col, "both")))
+    # select(id_block, id_block_user, id_desc = !!blk_sym, id_stat, id_block_per_stat, id_rn,
+    #        Variable = descr, starts_with("col")) %>% # everything()) %>%
+    select(id_block, id_desc = !!blk_sym, id_rn, Variable = descr, starts_with("col")) %>%
+    mutate(across(starts_with("col"), function(col) trimws(col, "both")))
   
   if(machine_readable){
     # separate out values that have more than 1 value embedded in cell
@@ -257,7 +257,7 @@ prep_sas_table <- function(
       keep_orig_ids = keep_orig_ids
     )
   } else {
-    sas_comp_ready <- sas_labelled
+    sas_comp_ready <- sas_labelled 
   }
   if(rm_desc_col){
     sas_comp_ready$id_desc <- NULL
@@ -280,6 +280,7 @@ prep_sas_table <- function(
 #' @param dat a data frame
 #' 
 temp_col_rename <- function(dat, sas_generics){
+  # dat <- tg00
   # sas_generics <- colx # testing
   if(!all(substr(sas_generics, 1, 3) == "col")) stop("generic_colnames argument must be a vector with prefix 'col'")
   colx_st <- min(as.numeric(gsub("col","",sas_generics)))
@@ -353,7 +354,8 @@ prep_tg_table <- function(data,
     select(id_block, id_desc = ID, id_rn, everything())
   
   tg_renamed <- temp_col_rename(tg00, sas_generics = generic_colnames)
-  tg <- tg_renamed$dat
+  tg <- tg_renamed$dat %>%
+    select(id_block, id_desc, id_rn, Variable, starts_with("col"))
   
   if(machine_readable){
     tg_comp_ready0 <- make_machine_readable(tg, keep_orig_ids = keep_orig_ids)
