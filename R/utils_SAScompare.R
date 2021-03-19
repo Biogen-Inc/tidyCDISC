@@ -32,7 +32,7 @@ delim_expand_rows <- function(data, sep){
       filter(across(
         # -c(id_block:id_rn), function(col) stringr::str_detect(col, sep)
         c(Variable, starts_with("col")), function(col) stringr::str_detect(col, sep)
-        )) %>%
+      )) %>%
       tidyr::separate_rows(#-c(id_block:id_rn),
                            c(Variable, starts_with("col")),
                            sep = sep, convert = T) # convert works for sas
@@ -61,7 +61,8 @@ make_machine_readable <- function(data, keep_orig_ids = FALSE){
   
   d <- data %>%
     mutate(var_rn = 1) %>%
-    filter(across(-c(id_block:Variable), function(col) {
+    filter(across(#-c(id_block:Variable)
+                  starts_with("col") , function(col) {
       !stringr::str_detect(col, "\\(") & !stringr::str_detect(col, "\\,") & !stringr::str_detect(col, "\\|")}
     )) %>%
     # mutate(across(-c(id_block:Variable), as.numeric)) %>% # convert fields to numeric
@@ -73,7 +74,7 @@ make_machine_readable <- function(data, keep_orig_ids = FALSE){
                            data %>% 
                            filter(Variable != "Mean (SD)") %>%
                            mutate(across(#-starts_with("id_")
-                             c(Variable,starts_with("col")),
+                             c(Variable, starts_with("col")),
                              function(col) gsub(")", "", col)))
       )
     ) %>%
@@ -81,7 +82,8 @@ make_machine_readable <- function(data, keep_orig_ids = FALSE){
       delim_expand_rows( sep = "\\(", data = 
                            data %>% 
                            filter(Variable == "Mean (SD)") %>%
-                           mutate(across(-starts_with("id_"), function(col) gsub(")", "", col)))
+                           mutate(across(#-starts_with("id_")
+                             c(Variable, starts_with("col")), function(col) gsub(")", "", col)))
       )
     ) %>%
     arrange(id_block, id_rn, var_rn) %>%
@@ -142,9 +144,9 @@ mk_rep_seq_id <- function(x){
 prep_sas_table <- function(
   sas_data,
   block_names = c("by1lbl","vis"),
-  block_ord_names = c("cat"), # not required, but helpful
+  block_ord_names = c("cat", "by1ord"), # not required, but helpful
   stat_names = c("by2lbl","Statlbl","test"),
-  stat_ord_names = c("subcat"), # not required, but helpful
+  stat_ord_names = c("subcat", "by2ord"), # not required, but helpful
   tg_data,
   machine_readable = TRUE,
   keep_orig_ids = FALSE,
@@ -182,7 +184,8 @@ prep_sas_table <- function(
   # }
   
   # Block order variable
-  blk_ord_var <- block_ord_names[block_ord_names %in% colnames(sas_data)][1]
+  blk_ord_names <- c(block_ord_names, block_names)
+  blk_ord_var <- blk_ord_names[blk_ord_names %in% colnames(sas_data)][1]
   if(rlang::is_empty(blk_ord_var) | is.na(blk_ord_var)){
     
     if(rlang::is_empty(blk_var) | is.na(blk_var)){
@@ -203,26 +206,36 @@ prep_sas_table <- function(
   # those?
   
   # ac - is this needed? do something similar to blk_var here?
-  stat_var <- stat_names[stat_names %in% colnames(sas_data)][1]
+  st_names <- c(stat_names, stat_ord_names)
+  stat_var <- st_names[st_names %in% colnames(sas_data)][1]
   stat_sym <- rlang::sym(stat_var)
   
   # If missing, that's okay
-  stat_ord_var <- stat_ord_names[stat_ord_names %in% colnames(sas_data)][1]
+  st_ord_names <- c(stat_ord_names, stat_names)
+  stat_ord_var <- st_ord_names[st_ord_names %in% colnames(sas_data)][1]
   stat_ord_sym <- rlang::sym(stat_ord_var)
   
+  # is.ordered(sas_data$by1lbl)
+  # class(sas_data$by1lbl)
   
+  if(is.numeric(sas_prepped[[stat_ord_var]])){
+    sas_prepped0 <-
+      sas_data %>%
+      filter(!!stat_ord_sym > 0 & !is.na(!!stat_ord_sym))
+  } else {
+    sas_prepped0 <- sas_data
+  }
   
   sas_prepped <-
-    sas_data %>%
-    mutate(id_block_user = as.numeric(factor(!!blk_ord_sym)),
-           id_stat = as.numeric(factor(!!stat_ord_sym)),
+    sas_prepped0 %>%
+    mutate(id_block_user = as.numeric(factor(!!blk_ord_sym, levels = unique(sas_data[[blk_ord_var]]))),
+           id_stat = as.numeric(factor(!!stat_ord_sym, levels = unique(sas_data[[stat_ord_var]]))),
            descr = trimws(!!stat_sym, which = "both") # get rid of white spaces
     )
   
   
   sas_labelled <-
-    sas_prepped %>%
-    filter(!!stat_ord_sym > 0) %>% # sometimes these rows aren't meant to exist in final table
+    sas_prepped %>% # sometimes these rows aren't meant to exist in final table
     mutate(id_block_per_stat = mk_rep_seq_id(id_stat)) %>%
     rowwise() %>%
     mutate(
