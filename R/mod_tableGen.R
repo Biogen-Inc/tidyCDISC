@@ -885,7 +885,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       mutate(
         # remove html
         Variable = gsub('<b>','', gsub('</b>','', gsub('&nbsp;',' ', Variable)))
-  ) %>%
+      ) %>%
       left_join(
         blockData %>% 
           select(ID = gt_group, block, label, label_source, dropdown) %>%
@@ -907,7 +907,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
                      machine_readable = TRUE,
                      keep_orig_ids = FALSE,
                      rm_desc_col = TRUE
-                                             )
+      )
 
       # prepare TG Table for comparison
       colx <- names(sas_table)[stringr::str_detect(names(sas_table), '^col[0-9]')]
