@@ -26,7 +26,7 @@ combineBDS <- function(datafile, ADSL) {
     # Bind all the PARAMCD files 
     all_PARAMCD <- bind_rows(PARAMCD, .id = "data_from")  %>% 
       arrange(USUBJID, AVISITN, PARAMCD) %>% 
-      select(USUBJID, AVISITN, AVISIT, PARAMCD, AVAL, CHG, data_from)
+      select(USUBJID, AVISITN, AVISIT, PARAMCD, PARAM, AVAL, CHG, data_from)
     # Join ADSL and all_PARAMCD
     combined_data <- inner_join(ADSL, all_PARAMCD, by = "USUBJID")
   } else {
@@ -65,15 +65,7 @@ prep_adsl <- function(ADSL, input_recipe) { #, stan_table_num
   dat <- ADSL
   msg <- ""
   if(!is.null(input_recipe)){ # if recipe has initialized...
-    if(stan_table_num == 5){
-      if("ITTFL" %in% colnames(dat)){
-        dat <- dat %>% filter(ITTFL == 'Y')
-        msg <- "Population Set: ITTFL = 'Y'"
-      }else {
-        msg <- "Variable 'ITTFL' doesn't exist in ADSL. STAN table not displayed because filter \"ITTFL == 'Y'\" cannot be applied!"
-        stop(msg)
-      }
-    } else if(stan_table_num %in% c(18:39, 41:47, 51:53)){
+    if(stan_table_num %in% c(18:39, 41:47, 51:53)){ # 5, nate requested 5 auto-filter be removed
       if("SAFFL" %in% colnames(dat)){
         dat <- dat %>% filter(SAFFL == 'Y')
         msg <- "Population Set: SAFFL = 'Y'"
