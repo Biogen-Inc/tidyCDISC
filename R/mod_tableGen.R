@@ -347,11 +347,13 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       purrr::map2(blockData$block, blockData$dataset, function(var, dat) {
         if(!is.null(attr(data_to_use_str(dat)[[var]], 'label'))){
           attr(data_to_use_str(dat)[[var]], 'label')
-        } else {
+        } else if("PARAMCD" %in% colnames(data_to_use_str(dat))){
           data_to_use_str(dat) %>%
             filter(PARAMCD == var) %>%
             distinct(PARAM) %>%
             pull() %>% as.character()
+        } else {
+          var
         }
       }) %>% unname() %>% stringr::str_trim()
     
@@ -359,7 +361,11 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       purrr::map2(blockData$block, blockData$dataset, function(var, dat) {
         if(!is.null(attr(data_to_use_str(dat)[[var]], 'label'))){
           'SAS "label" attribute'
-        } else { 'PARAM' }
+        } else if("PARAMCD" %in% colnames(data_to_use_str(dat))){
+          'PARAM'
+        } else {
+          'No Label'
+        }
       }) %>% unname() %>% stringr::str_trim()
     
     return(blockData)
