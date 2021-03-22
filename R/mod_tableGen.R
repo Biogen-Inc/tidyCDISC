@@ -330,12 +330,6 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # Generate table given the dropped blocks
   # ----------------------------------------------------------------------
   
-  # convert the custom shiny input to a table output
-  blocks_and_functions <- reactive({
-    convertTGOutput(input$agg_drop_zone, input$block_drop_zone) 
-  })
-  
-  column <- reactive( if (input$COLUMN == "NONE") NULL else input$COLUMN)
   
   # tell Shiny which dataframe to use when mapping through list of tables
   # to render
@@ -343,6 +337,36 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     if (x == "ADAE") { ae_data() }
     else all_data()
   }
+  
+  # convert the custom shiny input to a table output
+  blocks_and_functions <- reactive({
+    # create initial dataset
+    blockData <- convertTGOutput(input$agg_drop_zone, input$block_drop_zone)
+    
+    blockData$label <- 
+      purrr::map2(blockData$block, blockData$dataset, function(var, dat) {
+        if(!is.null(attr(data_to_use_str(dat)[[var]], 'label'))){
+          attr(data_to_use_str(dat)[[var]], 'label')
+        } else {
+          data_to_use_str(dat) %>%
+            filter(PARAMCD == var) %>%
+            distinct(PARAM) %>%
+            pull() %>% as.character()
+        }
+      }) %>% unname() %>% stringr::str_trim()
+    
+    blockData$label_source <- 
+      purrr::map2(blockData$block, blockData$dataset, function(var, dat) {
+        if(!is.null(attr(data_to_use_str(dat)[[var]], 'label'))){
+          'SAS "label" attribute'
+        } else { 'PARAM' }
+      }) %>% unname() %>% stringr::str_trim()
+    
+    return(blockData)
+  })
+  
+  column <- reactive( if (input$COLUMN == "NONE") NULL else input$COLUMN)
+  
 
   # check if the grouping column only exists in the ADAE
   is_grp_col_adae <- reactive({
@@ -842,30 +866,29 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   })
   
   
-    
+  # blockData$label <- 
+  #   purrr::map(blockData$block, function(x) {{
+  #     if(!is.null(attr(bds_data[[x]], 'label'))){{
+  #       attr(bds_data[[x]], 'label')
+  #     }} else {{
+  #       bds_data %>%
+  #         filter(PARAMCD == x) %>%
+  #         distinct(PARAM) %>%
+  #         pull() %>% as.character()
+  #     }}
+  #   }}) %>% unname() %>% stringr::str_trim()
+  # 
+  # blockData$label_source <- 
+  #   purrr::map(blockData$block, function(x) {{
+  #     if(!is.null(attr(bds_data[[x]], 'label'))){{
+  #       'SAS \"label\" attribute'
+  #     }} else {{ 'PARAM' }}
+  #   }}) %>% unname() %>% stringr::str_trim()
+  
   generate_comparison_output <- reactive({
     glue::glue(
       "
       {text_code()}
-      
-      blockData$label <- 
-      purrr::map(blockData$block, function(x) {{
-        if(!is.null(attr(bds_data[[x]], 'label'))){{
-          attr(bds_data[[x]], 'label')
-        }} else {{
-          bds_data %>%
-            filter(PARAMCD == x) %>%
-            distinct(PARAM) %>%
-            pull() %>% as.character()
-          }}
-        }}) %>% unname() %>% stringr::str_trim()
-      
-      blockData$label_source <- 
-      purrr::map(blockData$block, function(x) {{
-        if(!is.null(attr(bds_data[[x]], 'label'))){{
-          'SAS \"label\" attribute'
-        }} else {{ 'PARAM' }}
-      }}) %>% unname() %>% stringr::str_trim()
       
       # Calculate totals for population set
       {total_for_code()}
