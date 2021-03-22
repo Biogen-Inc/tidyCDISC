@@ -19,11 +19,14 @@
 delim_expand_rows <- function(data, sep){
   
   if(sep == "\\(" & !("Mean (SD" %in% unique(data$Variable))){
-    d <- data %>%
+    d <- data %>% #select(starts_with("col"))
       filter(across(
-        #-c(id_block:Variable)
-        starts_with("col"), function(col) stringr::str_detect(col, sep))) %>%
-      tidyr::separate_rows(#-c(id_block:Variable)
+        # col1:col3
+        starts_with("col")
+        )
+        , function(col) stringr::str_detect(col, sep)) %>%
+      # filter(stringr::str_detect(col1, sep) | stringr::str_detect(col2, sep)) %>%
+      tidyr::separate_rows(-
         starts_with("col"), sep = sep, convert = T)# convert works for sas
     
   } else {
@@ -205,9 +208,10 @@ prep_sas_table <- function(
   # we have any columns in common, if so, it may be a good idea to sort by
   # those?
   
-  # ac - is this needed? do something similar to blk_var here?
+  # ac - do something similar to blk_var here?
   st_names <- c(stat_names, stat_ord_names)
   stat_var <- st_names[st_names %in% colnames(sas_data)][1]
+  if(rlang::is_empty(stat_var) | is.na(stat_var)) stop("Include a stat_names argument, providing the column name (as a string) that keeps stat-level values")
   stat_sym <- rlang::sym(stat_var)
   
   # If missing, that's okay
@@ -239,8 +243,10 @@ prep_sas_table <- function(
     mutate(id_block_per_stat = mk_rep_seq_id(id_stat)) %>%
     rowwise() %>%
     mutate(
-      id_block = ifelse(all(id_block_per_stat == id_block_user) | 
-                              rlang::is_empty(stat_ord_var) | is.na(stat_ord_var), id_block_user, id_block_per_stat)
+      id_block = ifelse(length(stat_ord_names) == 1 | length(stat_names) == 1 , id_block_user,
+                        ifelse(all(id_block_per_stat == id_block_user) | 
+                              rlang::is_empty(stat_ord_var) | is.na(stat_ord_var)
+                        , id_block_user, id_block_per_stat))
     ) %>% 
     group_by(id_block) %>%
     mutate(id_rn = row_number()) %>% # id_rn = !!stat_ord_sym) # has a strange numbering system

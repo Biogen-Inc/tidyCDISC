@@ -605,7 +605,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     if(any("CDISCPILOT01" %in% ADSL()$STUDYID)){
       glue::glue("
         # create list of dataframes from CDISC pilot study
-            datalist <- list(ADSL = adsl, ADAE = adae, ADVS = advs, ADLBC = adlbc)
+            datalist <- list(ADSL = IDEA::adsl, ADAE = IDEA::adae, ADVS = IDEA::advs, ADLBC = IDEA::adlbc)
         "
       )
     } else {glue::glue("
