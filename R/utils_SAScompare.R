@@ -139,7 +139,7 @@ mk_rep_seq_id <- function(x){
 #'   the table (since they never match between base and compare)
 #'
 #' @import dplyr
-#' @import rlang
+#' @importFrom rlang sym !!
 #' @importFrom stringr str_detect
 #'
 #' @export
