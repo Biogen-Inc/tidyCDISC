@@ -872,25 +872,6 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   })
   
   
-  # blockData$label <- 
-  #   purrr::map(blockData$block, function(x) {{
-  #     if(!is.null(attr(bds_data[[x]], 'label'))){{
-  #       attr(bds_data[[x]], 'label')
-  #     }} else {{
-  #       bds_data %>%
-  #         filter(PARAMCD == x) %>%
-  #         distinct(PARAM) %>%
-  #         pull() %>% as.character()
-  #     }}
-  #   }}) %>% unname() %>% stringr::str_trim()
-  # 
-  # blockData$label_source <- 
-  #   purrr::map(blockData$block, function(x) {{
-  #     if(!is.null(attr(bds_data[[x]], 'label'))){{
-  #       'SAS \"label\" attribute'
-  #     }} else {{ 'PARAM' }}
-  #   }}) %>% unname() %>% stringr::str_trim()
-  
   generate_comparison_output <- reactive({
     glue::glue(
       "
