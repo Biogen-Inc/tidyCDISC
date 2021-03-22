@@ -605,7 +605,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     if(any("CDISCPILOT01" %in% ADSL()$STUDYID)){
       glue::glue("
         # create list of dataframes from CDISC pilot study
-            datalist <- list(ADSL = adsl, ADAE = adae, ADVS = advs, ADLBC = adlbc)
+            datalist <- list(ADSL = IDEA::adsl, ADAE = IDEA::adae, ADVS = IDEA::advs, ADLBC = IDEA::adlbc)
         "
       )
     } else {glue::glue("
@@ -708,7 +708,9 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   text_code <- reactive({
     glue::glue(
     "
+    
     options(digits = 3)
+    
     # For HPC users, add RSPM's GHE repo:
     options(repos = c(
       CRAN = 'https://cran.rstudio.com/',
@@ -839,14 +841,31 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     )
   })
   
+  
+    
   generate_comparison_output <- reactive({
     glue::glue(
       "
       {text_code()}
       
       blockData$label <- 
-        purrr::map(blockData$block, function(x) attr(bds_data[[x]], 'label')) %>% 
-        unname() %>% str_trim()
+      purrr::map(blockData$block, function(x) {{
+        if(!is.null(attr(bds_data[[x]], 'label'))){{
+          attr(bds_data[[x]], 'label')
+        }} else {{
+          bds_data %>%
+            filter(PARAMCD == x) %>%
+            distinct(PARAM) %>%
+            pull() %>% as.character()
+          }}
+        }}) %>% unname() %>% stringr::str_trim()
+      
+      blockData$label_source <- 
+      purrr::map(blockData$block, function(x) {{
+        if(!is.null(attr(bds_data[[x]], 'label'))){{
+          'SAS \"label\" attribute'
+        }} else {{ 'PARAM' }}
+      }}) %>% unname() %>% stringr::str_trim()
       
       # Calculate totals for population set
       {total_for_code()}
@@ -861,17 +880,17 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
                        data = IDEA::data_to_use_str(d),
                        totals = total_df)) %>%
       map(setNames, IDEA::common_rownames({Rscript_use_preferred_pop_data()}, {column() %quote% 'NULL'})) %>%
-      setNames(paste(blockData$label)) %>%
+      setNames(paste(blockData$gt_group)) %>%
       bind_rows(.id = 'ID') %>%
       mutate(
-        ID = stringi::stri_replace_all_regex(
-          ID, 
-          pattern = '\\\\b'%s+%pretty_blocks$Pattern%s+%'\\\\b',
-          replacement = pretty_blocks$Replacement,
-          vectorize_all = FALSE),
         # remove html
         Variable = gsub('<b>','', gsub('</b>','', gsub('&nbsp;',' ', Variable)))
-  )
+      ) %>%
+      left_join(
+        blockData %>% 
+          select(ID = gt_group, block, label, label_source, dropdown) %>%
+          distinct()
+      )
     
       # read in SAS table and convert to DF
       sas_data_dir <- 'path/to/sas/table/dataset/'
@@ -879,39 +898,49 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       sas_table <- haven::read_sas(file.path(sas_data_dir, sas_filename))
       
       # prepare SAS table for comparison
-      sas_comp_ready <- IDEA::prep_sas_table(data = sas_table,
-                                             machine_readable = TRUE,
-                                             keep_orig_ids = FALSE,
-                                             rm_desc_col = TRUE
-                                             )
+      sas_comp_ready <- IDEA::prep_sas_table(sas_data = sas_table,
+                     # block_names = 'by1lbl',
+                     # block_ord_names = 'cat',
+                     # stat_names = 'by2lbl',
+                     # stat_ord_names = 'subcat',
+                     tg_data = tg_table,
+                     machine_readable = TRUE,
+                     keep_orig_ids = FALSE,
+                     rm_desc_col = TRUE
+      )
 
       # prepare TG Table for comparison
+      colx <- names(sas_table)[stringr::str_detect(names(sas_table), '^col[0-9]')]
       tg_comp_ready <- IDEA::prep_tg_table(data = tg_table,
                                            machine_readable = TRUE,
                                            keep_orig_ids = FALSE,
                                            rm_desc_col = TRUE,
-                                           generic_colnames = TRUE
+                                           generic_colnames = colx
                                            )
       
       # Compare the two tables...
       library(diffdf)
       
       # ... by location in the tables
+      output_file <- file.path(sas_data_dir,paste0(
+        gsub('[^[:alnum:]]','_',gsub(tools::file_ext(sas_filename),'',sas_filename)),
+        'v_IDEA.log')) 
       order_diff <- diffdf(base = sas_comp_ready, 
               compare = tg_comp_ready,
               keys = c('id_block', 'id_rn'),
-              tolerance = 0.001,
+              tolerance = 0.01,
               strict_numeric = TRUE, # Integer != Double
               strict_factor = TRUE,  # Factor != Character
-              file = '{paste0(stringr::str_remove(input$sas$name, '.sas7bdat'), '_v_IDEA_order_diff_study_dir.log')}'
+              file = output_file
       )
-      order_diff # view output
+      file.edit(output_file) # open log file
       
-      diffdf_has_issues(order_diff) # any issues?
-      
-      # which rows have an issue in each data frame
-      diffdf_issuerows(sas_comp_ready, order_diff)
-      diffdf_issuerows(tg_comp_ready, order_diff)
+      # # Additional functions to review differences
+      # diffdf_has_issues(order_diff) # any issues?
+      # 
+      # # which rows have an issue in each data frame
+      # diffdf_issuerows(sas_comp_ready, order_diff)
+      # diffdf_issuerows(tg_comp_ready, order_diff)
       
       "
     )

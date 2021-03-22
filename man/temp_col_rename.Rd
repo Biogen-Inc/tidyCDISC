@@ -4,7 +4,7 @@
 \alias{temp_col_rename}
 \title{Create new Generic Names for Columns with numeric table data}
 \usage{
-temp_col_rename(dat)
+temp_col_rename(dat, sas_generics)
 }
 \arguments{
 \item{dat}{a data frame}
