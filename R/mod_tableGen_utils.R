@@ -65,7 +65,7 @@ prep_adsl <- function(ADSL, input_recipe) { #, stan_table_num
   dat <- ADSL
   msg <- ""
   if(!is.null(input_recipe)){ # if recipe has initialized...
-    if(stan_table_num %in% c(5, 18:39, 41:47, 51:53)){
+    if(stan_table_num %in% c(18:39, 41:47, 51:53)){ # 5, nate requested 5 auto-filter be removed
       if("SAFFL" %in% colnames(dat)){
         dat <- dat %>% filter(SAFFL == 'Y')
         msg <- "Population Set: SAFFL = 'Y'"
