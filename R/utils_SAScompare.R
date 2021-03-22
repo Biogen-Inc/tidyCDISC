@@ -20,19 +20,18 @@ delim_expand_rows <- function(data, sep){
   
   if(sep == "\\(" & !("Mean (SD" %in% unique(data$Variable))){
     d <- data %>% #select(starts_with("col"))
-      filter(across(
-        # col1:col3
-        starts_with("col")
-        )
-        , function(col) stringr::str_detect(col, sep)) %>%
-      # filter(stringr::str_detect(col1, sep) | stringr::str_detect(col2, sep)) %>%
-      tidyr::separate_rows(-
+      filter(if_any(
+        # -c(id_block:id_rn), function(col) stringr::str_detect(col, sep)
+        c(starts_with("col")), function(col) stringr::str_detect(col, sep)
+      )) %>%
+      mutate(Variable = ifelse(Variable == "", id_desc, Variable)) %>%
+      tidyr::separate_rows(
         starts_with("col"), sep = sep, convert = T)# convert works for sas
     
   } else {
     d <- data %>%
       # select(Variable, starts_with("col"))
-      filter(across(
+      filter(if_any(
         # -c(id_block:id_rn), function(col) stringr::str_detect(col, sep)
         c(Variable, starts_with("col")), function(col) stringr::str_detect(col, sep)
       )) %>%
@@ -64,7 +63,7 @@ make_machine_readable <- function(data, keep_orig_ids = FALSE){
   
   d <- data %>%
     mutate(var_rn = 1) %>%
-    filter(across(#-c(id_block:Variable)
+    filter(if_all(#-c(id_block:Variable)
                   starts_with("col") , function(col) {
       !stringr::str_detect(col, "\\(") & !stringr::str_detect(col, "\\,") & !stringr::str_detect(col, "\\|")}
     )) %>%
@@ -73,8 +72,8 @@ make_machine_readable <- function(data, keep_orig_ids = FALSE){
     union(delim_expand_rows(data = data, sep = "\\|")) %>% # no | for sas table, but we'll do it anyway
     union(delim_expand_rows(data = data, sep = "\\,")) %>%
     union(
-      delim_expand_rows( sep = "\\(", data = 
-                           data %>% 
+      delim_expand_rows( sep = "\\(", data =
+                           data %>%
                            filter(Variable != "Mean (SD)") %>%
                            mutate(across(#-starts_with("id_")
                              c(Variable, starts_with("col")),
