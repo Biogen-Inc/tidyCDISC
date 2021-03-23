@@ -63,7 +63,6 @@ delim_expand_rows <- function(data, sep){
 #' @importFrom stringr str_detect
 #'  
 make_machine_readable <- function(data, keep_orig_ids = FALSE){
-  str(d)
   d <- data %>%
     mutate(var_rn = 1) %>%
     filter(if_all(#-c(id_block:Variable)
