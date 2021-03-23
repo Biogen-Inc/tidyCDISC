@@ -27,17 +27,20 @@ delim_expand_rows <- function(data, sep){
       mutate(Variable = ifelse(Variable == "", id_desc, Variable)) %>%
       tidyr::separate_rows(
         starts_with("col"), sep = sep, convert = T)# convert works for sas
-    
   } else {
-    d <- data %>%
-      # select(Variable, starts_with("col"))
-      filter(if_any(
-        # -c(id_block:id_rn), function(col) stringr::str_detect(col, sep)
-        c(Variable, starts_with("col")), function(col) stringr::str_detect(col, sep)
-      )) %>%
-      tidyr::separate_rows(#-c(id_block:id_rn),
-                           c(Variable, starts_with("col")),
-                           sep = sep, convert = T) # convert works for sas
+    if(any(stringr::str_detect(tolower(unique(data$Variable)), "min") &
+           stringr::str_detect(tolower(unique(data$Variable)), "max")) | 
+       any(stringr::str_detect(tolower(unique(data$Variable)), "q1"))){
+      d <- data %>%
+        filter(if_any(c(Variable, starts_with("col")), 
+                      function(col) stringr::str_detect(col, sep))) %>%
+        tidyr::separate_rows(c(Variable, starts_with("col")), sep = sep, convert = T)
+    } else {
+      d <- data %>%
+        filter(if_any(starts_with("col"), function(col) stringr::str_detect(col, sep))) %>%
+        tidyr::separate_rows(starts_with("col"), sep = sep, convert = T)
+    }
+    
   }
   d <- d %>%
     group_by(id_block, id_rn) %>%
@@ -60,7 +63,7 @@ delim_expand_rows <- function(data, sep){
 #' @importFrom stringr str_detect
 #'  
 make_machine_readable <- function(data, keep_orig_ids = FALSE){
-  
+  str(d)
   d <- data %>%
     mutate(var_rn = 1) %>%
     filter(if_all(#-c(id_block:Variable)
@@ -69,9 +72,11 @@ make_machine_readable <- function(data, keep_orig_ids = FALSE){
     )) %>%
     # mutate(across(-c(id_block:Variable), as.numeric)) %>% # convert fields to numeric
     mutate(across(starts_with("col"), as.numeric)) %>% # convert fields to numeric
-    union(delim_expand_rows(data = data, sep = "\\|")) %>% # no | for sas table, but we'll do it anyway
-    union(delim_expand_rows(data = data, sep = "\\,")) %>%
-    union(
+    union(#d <- 
+            delim_expand_rows(data = data, sep = "\\|")) %>% # no | for sas table, but we'll do it anyway
+    union(#d <- 
+            delim_expand_rows(data = data, sep = "\\,")) %>%
+    union(#d <- 
       delim_expand_rows( sep = "\\(", data =
                            data %>%
                            filter(Variable != "Mean (SD)") %>%
@@ -80,7 +85,7 @@ make_machine_readable <- function(data, keep_orig_ids = FALSE){
                              function(col) gsub(")", "", col)))
       )
     ) %>%
-    union(
+    union(#d <- 
       delim_expand_rows( sep = "\\(", data = 
                            data %>% 
                            filter(Variable == "Mean (SD)") %>%
@@ -363,7 +368,7 @@ prep_tg_table <- function(data,
     select(id_block, id_desc, id_rn, Variable, starts_with("col"))
   
   if(machine_readable){
-    tg_comp_ready0 <- make_machine_readable(tg, keep_orig_ids = keep_orig_ids)
+    tg_comp_ready0 <- make_machine_readable(data = tg, keep_orig_ids = keep_orig_ids)
   } else {
     tg_comp_ready0 <- tg
   }
