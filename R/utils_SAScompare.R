@@ -28,9 +28,11 @@ delim_expand_rows <- function(data, sep){
       tidyr::separate_rows(
         starts_with("col"), sep = sep, convert = T)# convert works for sas
   } else {
-    if(any(stringr::str_detect(tolower(unique(data$Variable)), "min") &
+    if(any((stringr::str_detect(tolower(unique(data$Variable)), "mean") &
+           stringr::str_detect(tolower(unique(data$Variable)), "sd")) |
+           (stringr::str_detect(tolower(unique(data$Variable)), "min") &
            stringr::str_detect(tolower(unique(data$Variable)), "max")) | 
-       any(stringr::str_detect(tolower(unique(data$Variable)), "q1"))){
+       any(stringr::str_detect(tolower(unique(data$Variable)), "q1")))){
       d <- data %>%
         filter(if_any(c(Variable, starts_with("col")), 
                       function(col) stringr::str_detect(col, sep))) %>%
