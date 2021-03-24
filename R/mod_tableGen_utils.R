@@ -243,6 +243,9 @@ urin <- c(
 #' @param param_vector character vector of params to search the list of dataframes for
 #' 
 check_params <- function(datafile, param_vector) {
+  # datafile <- datalist # for testing
+  # param_vector <- chem # for testing
+  
   param_dat <- datafile[sapply(datafile, function(x) "PARAMCD" %in% colnames(x)) & substr(names(datafile), 1, 4) == "ADLB"]
   
   # apply following code to data that contains paramcd
@@ -258,6 +261,7 @@ check_params <- function(datafile, param_vector) {
                                      ) %>%
                               distinct(PARAMCD, AVISIT, AVISITN) %>%
                               varN_fctr_reorder() %>%
+                              mutate(PARAMCD = factor(PARAMCD, levels = param_vector)) %>%
                               arrange(PARAMCD, AVISIT)
     )
     param_vctr <- param_lst[[1]]$PARAMCD # Will this work if two ADLB's are uploaded?
