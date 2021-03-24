@@ -36,6 +36,9 @@ delim_expand_rows <- function(data, sep){
       d <- data %>%
         filter(if_any(c(Variable, starts_with("col")), 
                       function(col) stringr::str_detect(col, sep))) %>%
+        mutate(across(starts_with("col"), 
+          function(col) ifelse(!stringr::str_detect(col, sep), 
+                               paste(col, gsub("\\\\","", sep)), col))) %>%
         tidyr::separate_rows(c(Variable, starts_with("col")), sep = sep, convert = T)
     } else {
       d <- data %>%
@@ -67,10 +70,12 @@ delim_expand_rows <- function(data, sep){
 make_machine_readable <- function(data, keep_orig_ids = FALSE){
   d <- data %>%
     mutate(var_rn = 1) %>%
-    filter(if_all(#-c(id_block:Variable)
-                  starts_with("col") , function(col) {
-      !stringr::str_detect(col, "\\(") & !stringr::str_detect(col, "\\,") & !stringr::str_detect(col, "\\|")}
-    )) %>%
+    filter(
+      if_all(starts_with("col"), function(col) { #-c(id_block:Variable)
+        !stringr::str_detect(col, "\\(") & !stringr::str_detect(col, "\\,") & !stringr::str_detect(col, "\\|")}
+      )
+    ) %>%
+    filter(!stringr::str_detect(Variable, "\\(")) %>% # Sometimes this happens if Mean exists without SD
     # mutate(across(-c(id_block:Variable), as.numeric)) %>% # convert fields to numeric
     mutate(across(starts_with("col"), as.numeric)) %>% # convert fields to numeric
     union(#d <- 
