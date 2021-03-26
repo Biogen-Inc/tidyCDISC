@@ -240,6 +240,7 @@ prep_sas_table <- function(
     sas_prepped0 <- sas_data
   }
   
+  
   sas_prepped <-
     sas_prepped0 %>%
     mutate(id_block_user = as.numeric(factor(!!blk_ord_sym, levels = unique(sas_data[[blk_ord_var]]))),
@@ -253,16 +254,22 @@ prep_sas_table <- function(
     mutate(id_block_per_stat = mk_rep_seq_id(id_stat)) %>%
     rowwise() %>%
     mutate(
-      id_block = ifelse(length(stat_ord_names) == 1 | length(stat_names) == 1 , id_block_user,
-                        ifelse(all(id_block_per_stat == id_block_user) | 
-                              rlang::is_empty(stat_ord_var) | is.na(stat_ord_var)
-                        , id_block_user, id_block_per_stat))
+      id_block = case_when(
+        # if user specifies their own stat var, then use it, otherwise use my estimator
+        length(stat_ord_names) == 1 | length(stat_names) == 1 ~ id_block_user,
+        all(id_block_per_stat == id_block_user) |
+          rlang::is_empty(stat_ord_var) | is.na(stat_ord_var) ~ id_block_user,
+        TRUE ~ id_block_per_stat
+      )
+      # id_block =
+      #   ifelse(length(stat_ord_names) == 1 | length(stat_names) == 1 , id_block_user,
+      #                   ifelse(all(id_block_per_stat == id_block_user) | 
+      #                         rlang::is_empty(stat_ord_var) | is.na(stat_ord_var)
+      #                   , id_block_user, id_block_per_stat))
     ) %>% 
     group_by(id_block) %>%
     mutate(id_rn = row_number()) %>% # id_rn = !!stat_ord_sym) # has a strange numbering system
     ungroup() %>%
-    # select(id_block, id_block_user, id_desc = !!blk_sym, id_stat, id_block_per_stat, id_rn,
-    #        Variable = descr, starts_with("col")) %>% # everything()) %>%
     select(id_block, id_desc = !!blk_sym, id_rn, Variable = descr, starts_with("col")) %>%
     mutate(across(starts_with("col"), function(col) trimws(col, "both")))
   
