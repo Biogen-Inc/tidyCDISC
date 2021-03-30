@@ -108,9 +108,9 @@ mod_tableGen_ui <- function(id){
            # Download data.
            wellPanel(
              fluidRow(column(width = 12,
-                             textInput(ns("table_title"), "Table Title", "Table Title", width = '100%'))),
+                div(id = "table_title", textInput(ns("table_title"), "Table Title", "Table Title", width = '100%')))),
              fluidRow(column(width = 12,
-                             fluidRow(
+                             div(id = "download_table", fluidRow(
                                column(6, downloadButton(ns("download_gt"), "Download Table")),
                                column(6, offset = 0,
                                       radioButtons(ns("download_type"), "Download Type", 
@@ -118,10 +118,10 @@ mod_tableGen_ui <- function(id){
                                                                "HTML" = ".html"),
                                                    inline = TRUE))
                                
-                             )
+                             ))
              )
              )),
-           
+           # Download R Scripts
            wellPanel(
              fluidRow(
                shinyjs::useShinyjs(),

@@ -374,33 +374,52 @@ tg_guide <- cicerone::Cicerone$
   new()$
   step(
     "all-column-blocks",
-    "Uploaded Data Variables",
-    "Variables are grouped by uploaded datasets where you can drag any column from an ADSL into the Variables drop zone, and PARAMCDs from BDS files"
+    "Variables from Uploaded Data",
+    "Variables are grouped by dataset name. From here, you can drag any variable bubble into the Variable drop zone, including PARAMCDs from BDS files"
   )$
   step(
     "sortable_agg",
-    "Summay Statistic Blocks",
-    "Drag one of these blocks into the Stats drop zone to be paired with a corresponding column block.
-    Some statistc blocks will have a dropdown once dragged to allow you to choose the AVIST."
+    "Statistic Blocks",
+    "Drag one of these blocks into the Stats drop zone to be paired with a corresponding Variable block on the left hand side.
+    Additional input fields may appear on some stat blocks once dragged & dropped to allow for further customization, like choosing an AVIST for the 'MEAN' block."
   )$
   step(
     "all-output-blocks",
     "Drop Zones",
-    "Blocks are read in rows, where you can apply a statistic block on the right to the variable on the left."
+    "Blocks are analyzed by row, meaning the statistic block on the right will be applied to the variable block on the left."
   )$
   step(
     el = "COLUMN-wrapper",
     title = "Grouping Data",
-    description = "Subdivide the table's summary statistics into selected groups"
+    description = "Break down the table's statistics into levels of the chosen grouping variable"
   )$
   step(
     "filter-accordion",
-    "Filter Data",
-    "You can apply filters to your data by first selecting the datasets you want to filter by. This will populate a dropdown menu of
-    specific columns to filter by which you can then select and filter based on specific values to include"
+    "Filter your Data",
+    "To filter,  select the dataset(s) that contain the variable(s) you want to filter on.
+    Select the variables and the corresponding values to include (or exclude)."
   )$
   step(
     "RECIPE",
     "Auto-Generated Tables",
-    "This dropdown will create tables using commonly combined blocks rather than starting from scratch. If you select NONE you can clear your workspace."
+    "Instead of dragging and dropping from scratch, create tables using STAN 2.0 presets. If you select NONE you can clear your workspace."
+  )$
+  step(
+    "table_title",
+    "Customize Title",
+    "The sky is the limit! Add a table title that suits your needs."
+  )$
+  step(
+    "download_table",
+    "Keep a copy for your records",
+    "Download a table in CSV or HTML format as seen in the app. RTF support coming soon!"
+  )$
+  step(
+    "tableGen_ui_1-tblcode",
+    "Produce this table outside of the app",
+    "Have more data coming? Don't download the table, download the R script needed to produce the table. Then there's no need to even open up the app periodically to re-create your outputs!"
   )
+
+
+
+
