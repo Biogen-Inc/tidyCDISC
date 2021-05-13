@@ -210,6 +210,7 @@ mod_popExp_server <- function(input, output, session, datafile) {
 
   p_scatter <- callModule(scatterPlot_srv, "scatterPlot", data = dataset)
   p_spaghetti <- callModule(spaghettiPlot_srv, "spaghettiPlot", data = dataset)
+  p_line <- callModule(linePlot_srv, "linePlot", data = dataset)
   p_box <- callModule(boxPlot_srv, "boxPlot", data = dataset)
   
 
@@ -218,6 +219,7 @@ mod_popExp_server <- function(input, output, session, datafile) {
 
         switch(input$plot_type,
                `Scatter Plot` = p_scatter(),
+               `Line Plot` = p_line(),
                `Box Plot` = p_box(),
                `Spaghetti Plot` = p_spaghetti()
         )%>% 
