@@ -15,7 +15,7 @@
 IDEA_lineplot <- function(data, yvar, time, value = NULL, separate = "NONE", color = "NONE") {
   
   # library(dplyr)
-  data0 <- data #%>% IDEA::varN_fctr_reorder()
+  data0 <- data %>% IDEA::varN_fctr_reorder()
     
   # subset data based on yvar being paramcd or not
   if (yvar %in% colnames(data)) {
@@ -74,7 +74,7 @@ IDEA_lineplot <- function(data, yvar, time, value = NULL, separate = "NONE", col
   # Add common layers to plot
   p <- d %>%
     ggplot2::ggplot() +
-    ggplot2::aes_string(x = time, y = "MEAN")  +
+    ggplot2::aes_string(x = time, y = "MEAN", group = 1)  +
     ggplot2::geom_line() +
     ggplot2::geom_point(na.rm = TRUE) +
     ggplot2::labs(x = xl, y = yl, title = paste(var_title, by_title)) +
