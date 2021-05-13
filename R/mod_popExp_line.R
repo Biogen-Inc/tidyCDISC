@@ -25,6 +25,12 @@ linePlot_ui <- function(id, label = "spaghetti") {
       selectInput(ns("separate"), "Separate Plots By", choices = "NONE", selected = "NONE"),
       selectInput(ns("color"), "Color Plots By", choices = "NONE", selected = "NONE")
     )
+    , h4("Options:"),
+    wellPanel(
+      shinyWidgets::materialSwitch(ns("err_bars"), h6("Display error bars"),
+                                                       status = "primary", value = F)
+    )
+    
   )
 }
 
@@ -130,7 +136,7 @@ linePlot_srv <- function(input, output, session, data) {
   # or by filtering the data by PARAMCD, then using AVAL or CHG for the yaxis
   p <- reactive({
     req(data(), input$yvar, input$time)
-    IDEA_lineplot(data(), input$yvar, input$time, input$value, input$separate, input$color)
+    IDEA_lineplot(data(), input$yvar, input$time, input$value, input$separate, input$color, input$err_bars)
   })
   
   # return the plot object to parent module
