@@ -54,25 +54,29 @@ linePlot_srv <- function(input, output, session, data) {
   observe({
     req(data())
     
+    # yvar cannot be from ADAE since that data has no visit var
+    d <- data() %>% filter(data_from != "ADAE")
+    
     # get time based column names
-    seltime_init <- sort(colnames(dplyr::select(data(), ends_with("DY"), contains("VIS"))))
+    seltime_init <- sort(colnames(dplyr::select(d, ends_with("DY"), contains("VIS"))))
     
     # numeric columns, remove aval, chg, base
     # then remove the x-axis selectors
-    num_col <- subset_colclasses(data(), is.numeric)
-    num_col <- num_col[num_col != "AVAL" & num_col != "CHG" & num_col != "BASE"]
-    num_col <- sort(c(setdiff(seltime_init, num_col), setdiff(num_col, seltime_init)))
+    num_col <- subset_colclasses(d, is.numeric)
+    num_col <- num_col[!(num_col %in% c("AVAL", "CHG", "BASE", seltime_init))]
+    num_col <- num_col[substr(num_col, 1, 2) != "AE"]
+    # num_col <- sort(c(setdiff(seltime_init, num_col), setdiff(num_col, seltime_init)))
     
     # add paramcds to y-axis options
-    paramcd <- sort(na.omit(unique(data()$PARAMCD)))
+    paramcd <- sort(na.omit(unique(d$PARAMCD)))
     
     updateSelectInput(session, "yvar",
                       choices = list(`Time Dependent` = paramcd,`Time Independent` = num_col),
                       selected = isolate(input$yvar))
     
     # Update time variable based on yvar selection
-    if(input$yvar != "" & !(input$yvar %in% colnames(data()))){
-      seltime <- data() %>%
+    if(input$yvar != "" & !(input$yvar %in% colnames(d))){
+      seltime <- d %>%
         dplyr::filter(PARAMCD == input$yvar) %>% # subset data
         select_if(~!all(is.na(.))) %>%
         dplyr::select(ends_with("DY"), contains("VIS")) %>% # grab time vars remaining
