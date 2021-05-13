@@ -28,6 +28,23 @@ my_gg_color_hue <- function(n) {
   hcl(h = hues, l = 65, c = 100)[1:n]
 }
 
+#' Standard Error Calculation
+#' 
+#' Calculates the square root of variance divided by n
+#'
+#' @param x A numeric vector
+#' @param na.rm logical, should NA's be removed? Defaults to FALSE
+#'
+#' @return numeric, representing the standard error
+#'
+#' @family tableGen Functions
+#'  
+std_err <- function(x, na.rm=FALSE) {
+  if (na.rm) x <- na.omit(x)
+  sqrt(var(x)/length(x))
+}
+
+
 #' Capitalize the first letter of a string
 #' @param y the strings to capitalize
 CapStr <- function(y) {
