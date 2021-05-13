@@ -1,9 +1,9 @@
-#' IDEA spaghetti plot
+#' IDEA line plot
 #' 
-#' Create a spaghetti plot with a time dependent variable as the x-axis
+#' Create a line plot with a time variable as the x-axis
 #' and using either the selected response variable
-#' or if a PARAMCD is selected, then plot the corresponding value. 
-#' Lines are plotted by patient
+#' or if a PARAMCD is selected, then plot the corresponding value
+#' to calculate the means. Lines are plotted by patient
 #' 
 #' @param data Merged data to be used in plot
 #' @param yvar Selected y-axis 
@@ -14,35 +14,44 @@
 #' @family popExp Functions
 IDEA_lineplot <- function(data, yvar, time, value = NULL, separate = "NONE", color = "NONE") {
   
+  # library(dplyr)
+  data0 <- data #%>% IDEA::varN_fctr_reorder()
+    
   # subset data based on yvar being paramcd or not
   if (yvar %in% colnames(data)) {
     suppressWarnings(
-      d0 <- data %>% select(USUBJID, time, value = yvar, one_of(color, separate))
+      d0 <- data0 %>% select(USUBJID, time, val = yvar, one_of(color, separate))
     )
-    yvar_label <- yl <- attr(d0[[yvar]], "label")
+    yvar_label <- yl <- ifelse(rlang::is_empty(attr(data[[yvar]], "label")), yvar, attr(data[[yvar]], "label"))
   } else {
-    d0 <- data %>% dplyr::filter(PARAMCD == yvar) %>% select(USUBJID, time, value, one_of(color, separate))
-    yvar_label <- paste(unique(d0$PARAM))
-    yl <- glue::glue("{yvar_label} ({attr(d0[[value]], 'label')})")
+    d0 <- data0 %>%
+      dplyr::filter(PARAMCD == yvar) %>%
+      select(USUBJID, time, PARAM, PARAMCD, val = value, one_of(color, separate))
+    yvar_label <- ifelse(rlang::is_empty(paste(unique(d0$PARAM))), yvar, paste(unique(d0$PARAM)))
+    yl <- glue::glue("{yvar_label} ({attr(data[[value]], 'label')})")
   }
   xl <- attr(d0[[time]], "label")
+  # print("yvar_label:")
+  # print(yvar_label)
+  # print("yl:")
+  # print(yl)
   
-  
+  # mtcars %>% select("mpg" = "cyl")
+    
   # by <- sym("cyl")
   # mtcars %>%
   #   # group_by(!!by, gear) %>%
   #   group_by_at(vars(one_of("none"), gear)) %>%
   #   summarize(mean_mpg = mean(mpg))
   
-  value_sym <- rlang::sym(value)
+  val_sym <- rlang::sym("val")
   
   # Group data as needed to calc means
-  print(d0)
   d <-
     d0 %>%
     group_by_at(vars(time, one_of(color, separate))) %>%
-    summarize(MEAN = round(mean(!!value_sym, na.rm = T), 2),
-              SEM = round(std_err(!!value_sym, na.rm = T),2),
+    summarize(MEAN = round(mean(!!val_sym, na.rm = T), 2),
+              SEM = round(std_err(!!val_sym, na.rm = T),2),
               N = n_distinct(USUBJID, na.rm = T),
               # n = n(),
               .groups = "keep") %>%
@@ -53,6 +62,8 @@ IDEA_lineplot <- function(data, yvar, time, value = NULL, separate = "NONE", col
   
   # if separate or color used, include those "by" variables in title
   var_title <- paste(yvar_label, "by", xl)
+  print("var_title:")
+  print(var_title)
   by_title <- case_when(
     separate != "NONE" & color != "NONE" ~ paste("\nby", attr(data[[color]], "label"), "and", attr(data[[separate]], "label")),
     separate != "NONE" ~ paste("\nby", attr(data[[separate]], "label")),
@@ -70,7 +81,8 @@ IDEA_lineplot <- function(data, yvar, time, value = NULL, separate = "NONE", col
     ggplot2::theme_bw() +
     ggplot2::theme(text = element_text(size = 12),
                    axis.text = element_text(size = 12),
-                   plot.title = element_text(size = 16))
+                   # plot.title = element_text(size = 16)
+                   )
   
   # Add in plot layers conditional upon user selection
   if (separate != "NONE") { p <- p + ggplot2::facet_wrap(stats::as.formula(paste(".~", separate))) }
