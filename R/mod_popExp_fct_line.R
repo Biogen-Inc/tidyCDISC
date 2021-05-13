@@ -12,7 +12,7 @@
 #' AVAL, CHG, or BASE to be plotted on the y-axis
 #' 
 #' @family popExp Functions
-IDEA_lineplot <- function(data, yvar, time, value = NULL, separate = "NONE", color = "NONE") {
+IDEA_lineplot <- function(data, yvar, time, value = NULL, separate = "NONE", color = "NONE", err_bars = FALSE) {
   
   # library(dplyr)
   data0 <- data %>% IDEA::varN_fctr_reorder()
@@ -56,14 +56,12 @@ IDEA_lineplot <- function(data, yvar, time, value = NULL, separate = "NONE", col
               # n = n(),
               .groups = "keep") %>%
     ungroup() %>%
-    mutate(lower = MEAN - SEM, upper = MEAN + SEM)
+    mutate(Lower = MEAN - SEM, Upper = MEAN + SEM)
   print(d)
   
   
   # if separate or color used, include those "by" variables in title
   var_title <- paste(yvar_label, "by", xl)
-  print("var_title:")
-  print(var_title)
   by_title <- case_when(
     separate != "NONE" & color != "NONE" ~ paste("\nby", attr(data[[color]], "label"), "and", attr(data[[separate]], "label")),
     separate != "NONE" ~ paste("\nby", attr(data[[separate]], "label")),
@@ -71,22 +69,28 @@ IDEA_lineplot <- function(data, yvar, time, value = NULL, separate = "NONE", col
     TRUE ~ ""
   )
   
+  dodge <- ggplot2::position_dodge(.9)
+  
   # Add common layers to plot
   p <- d %>%
     ggplot2::ggplot() +
-    ggplot2::aes_string(x = time, y = "MEAN", group = 1)  +
-    ggplot2::geom_line() +
-    ggplot2::geom_point(na.rm = TRUE) +
+    ggplot2::aes_string(y = "MEAN", x = time, group = 1)  +
+    ggplot2::geom_line(position = ggplot2::position_dodge(.91)) +
+    ggplot2::geom_point(position = dodge, na.rm = TRUE) +
     ggplot2::labs(x = xl, y = yl, title = paste(var_title, by_title)) +
     ggplot2::theme_bw() +
     ggplot2::theme(text = element_text(size = 12),
                    axis.text = element_text(size = 12),
-                   # plot.title = element_text(size = 16)
+                   plot.title = element_text(size = 16)
                    )
   
   # Add in plot layers conditional upon user selection
+  if (color != "NONE") { p <- p + ggplot2::aes_string(color = color, group = color) }
+  if (err_bars) {
+    p <- p + ggplot2::aes(ymin = Lower, ymax = Upper) +
+    ggplot2::geom_errorbar(position = dodge, width = 1.5)
+  }
   if (separate != "NONE") { p <- p + ggplot2::facet_wrap(stats::as.formula(paste(".~", separate))) }
-  if (color != "NONE") { p <- p + ggplot2::aes_string(color = color)}
   if (by_title != "") {p <- p + theme(plot.margin = margin(t = 1.2, unit = "cm"))}
   
   return(p)

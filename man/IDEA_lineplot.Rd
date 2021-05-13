@@ -10,7 +10,8 @@ IDEA_lineplot(
   time,
   value = NULL,
   separate = "NONE",
-  color = "NONE"
+  color = "NONE",
+  err_bars = FALSE
 )
 }
 \arguments{
