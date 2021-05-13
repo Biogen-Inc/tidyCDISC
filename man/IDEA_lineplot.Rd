@@ -2,7 +2,7 @@
 % Please edit documentation in R/mod_popExp_fct_line.R
 \name{IDEA_lineplot}
 \alias{IDEA_lineplot}
-\title{IDEA spaghetti plot}
+\title{IDEA line plot}
 \usage{
 IDEA_lineplot(
   data,
@@ -24,10 +24,10 @@ IDEA_lineplot(
 AVAL, CHG, or BASE to be plotted on the y-axis}
 }
 \description{
-Create a spaghetti plot with a time dependent variable as the x-axis
+Create a line plot with a time variable as the x-axis
 and using either the selected response variable
-or if a PARAMCD is selected, then plot the corresponding value. 
-Lines are plotted by patient
+or if a PARAMCD is selected, then plot the corresponding value
+to calculate the means. Lines are plotted by patient
 }
 \seealso{
 Other popExp Functions: 
