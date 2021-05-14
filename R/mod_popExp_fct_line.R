@@ -12,7 +12,8 @@
 #' AVAL, CHG, or BASE to be plotted on the y-axis
 #' 
 #' @family popExp Functions
-IDEA_lineplot <- function(data, yvar, time, value = NULL, separate = "NONE", color = "NONE", err_bars = FALSE) {
+IDEA_lineplot <- function(data, yvar, time, value = NULL, separate = "NONE", color = "NONE",
+   err_bars = FALSE, label_points = FALSE, gtxt_x_pos = "middle", gtxt_y_pos = "top") {
   
   # library(dplyr)
   data0 <- data %>% IDEA::varN_fctr_reorder()
@@ -51,12 +52,15 @@ IDEA_lineplot <- function(data, yvar, time, value = NULL, separate = "NONE", col
     d0 %>%
     group_by_at(vars(time, one_of(color, separate))) %>%
     summarize(MEAN = round(mean(!!val_sym, na.rm = T), 2),
-              SEM = round(std_err(!!val_sym, na.rm = T),2),
+              # SEM = round(std_err(!!val_sym, na.rm = T),2), # NOT accurate?
               N = n_distinct(USUBJID, na.rm = T),
-              # n = n(),
+              n = n(),
+              STD = round(sd(!!val_sym, na.rm = T), 2),
+              SEM = round(STD/ sqrt(n), 2),
               .groups = "keep") %>%
     ungroup() %>%
-    mutate(Lower = MEAN - SEM, Upper = MEAN + SEM)
+    mutate(Lower = MEAN - SEM, Upper = MEAN + SEM) %>%
+    select( -STD , -n)
   print(d)
   
   
@@ -92,6 +96,41 @@ IDEA_lineplot <- function(data, yvar, time, value = NULL, separate = "NONE", col
   }
   if (separate != "NONE") { p <- p + ggplot2::facet_wrap(stats::as.formula(paste(".~", separate))) }
   if (by_title != "") {p <- p + theme(plot.margin = margin(t = 1.2, unit = "cm"))}
+  
+  if(label_points){
+    x_scale <- layer_scales(p)$x$range$range
+    if(all(!is.numeric(x_scale))){
+      x_nums <- sort(as.numeric(as.factor(x_scale)))
+      range <- diff(c(min(x_nums), max(x_nums)))
+    } else {
+      range <- diff(x_scale)
+    }
+    x_nudge_val <- range * .04 #* (plot_col_num /2)
+    y_nudge_val <- diff(layer_scales(p)$y$range$range)*.04
+    # gtxt_x_pos <- "right" #c("left", "middle", "right")
+    # gtxt_y_pos <- "top"   #c("bottom", "middle", "top")
+    gglook <- ggplot2::layer_data(p) %>% # to grab accurate x coordinates from existing ggplot obj since they've been transformed through position_dodge()
+      mutate(lab = sprintf("%.1f",y))
+    
+    ps <- length(unique(gglook$PANEL))
+    
+    colour_vector <- gglook %>%
+      select(colour, PANEL) %>%
+      slice(rep(1:n(), ps)) %>%
+      mutate(id = rep(1:ps, each = nrow(gglook))
+             , colour2 = ifelse(id == PANEL, colour, NA_character_)
+      ) %>% pull(colour2) %>% as.character()
+    
+    p <- p + geom_text(data = gglook, inherit.aes = FALSE, show.legend = F,
+                     aes(x = x, y = y, label = lab, group = colour, text = "")
+                     , color = colour_vector
+                     # , hjust = .5, vjust = -1 # position = dodge, # these all don't work with plotly
+                     , nudge_y = translate_pos(gtxt_y_pos) * y_nudge_val
+                     , nudge_x = translate_pos(gtxt_x_pos) * x_nudge_val,
+      )
+    # p + geom_label(aes(label = MEAN), position = dodge, size = 3)
+  }
+  
   
   return(p)
 }
