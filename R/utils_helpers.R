@@ -196,6 +196,55 @@ getLevels <- function(x) {if(is.factor(x)) levels(x) else sort(unique(x), na.las
   }
 }
 
+#' Refactor variables
+#'
+#' Refactor variables by their common "N" counterparts
+#' 
+#' @param data A data frames
+#' @param varc A character vector of variables names with character values
+#' @param varn A character vector of variables names with numeric values
+#' 
+#' @import dplyr
+#' @importFrom data.table := 
+#' @importFrom forcats fct_reorder
+#' 
+#' @family popExp Functions
+#' 
+refact <- function(data, varc, varn) {
+  datac <- deparse(substitute(data))
+  if (varc %in% colnames(data) && varn %in% colnames(data)) {
+    # if not a factor yet, make it a factor, then re-order
+    if(!is.factor(data[,(varc)])) { data[, (varc) := as.factor(get(varc))] }
+    # If a level was dropped, then don't reorder the factor
+    if(length(levels(data[[varc]])) == length(unique(data[[varc]]))){
+      # message(paste("A factor was created for", varc, "based on", varn, "levels"))
+      data[, (varc) := forcats::fct_reorder(get(varc), get(varn))] 
+    }
+  }
+}
+
+refact2 <- function(data, varc, varn) {
+  # print(!is.factor(data$AVISIT))
+  # print(levels(data$AVISIT))
+  # datac <- deparse(substitute(data))
+  if (varc %in% colnames(data) && varn %in% colnames(data)) {
+    # if not a factor yet, make it a factor, then re-order
+    # if(!is.factor(data[,(varc)])) {
+      # if(varc == "AVISIT") print("AVISIT converted to factor")
+    
+      unique(data[,c(varc, varn)])
+      data[, (varc) := factor(get(varc), levels = )]
+    # }
+    # If a level was dropped, then don't reorder the factor
+    if(length(levels(data[[varc]])) == length(unique(data[[varc]]))){
+      # message(paste("A factor was created for", varc, "based on", varn, "levels"))
+      # data %>% distinct(AVISIT) %>% str()
+      # (data[[varn]][30000:30100])
+      # (data[[varc]][30000:30100])
+      data[, (varc) := forcats::fct_reorder(get(varc), get(varn))] 
+    }
+  }
+}
 
 #' Re-order Factor Levels by VARN
 #' 
@@ -212,7 +261,7 @@ getLevels <- function(x) {if(is.factor(x)) levels(x) else sort(unique(x), na.las
 #' @export
 #' 
 varN_fctr_reorder <- function(data) {
-  
+  # data <- all_data
   # Now to refactor levels in VARN order, if they exist:
   # save the variable labels into savelbls vector
   savelbls <- sjlabelled::get_label(data)
@@ -224,8 +273,41 @@ varN_fctr_reorder <- function(data) {
   varn <- paste0(non_num_cols,"N")[paste0(non_num_cols,"N") %in% cols]
   varc <- substr(varn,1,nchar(varn) - 1)
   
+  # varn <- "AVISITN"
+  # varc <- "AVISIT"
+  
   data.table::setDT(data)
   purrr::walk2(varc, varn, ~ refact(data, .x, .y))
+  # copy SAS labels back into data
+  data <- sjlabelled::set_label(data, label = savelbls)
+  return(data)
+}
+
+varN_fctr_reorder2 <- function(data) {
+  # rm(data)
+  # data <- all_data
+  # Now to refactor levels in VARN order, if they exist:
+  # save the variable labels into savelbls vector
+  savelbls <- sjlabelled::get_label(data)
+  
+  # identify all char - numeric variables pairs that need factor re-ordering
+  cols <- colnames(data)
+  non_num_cols <- c(subset_colclasses(data, is.factor),
+                    subset_colclasses(data, is.character))
+  varn <- paste0(non_num_cols,"N")[paste0(non_num_cols,"N") %in% cols]
+  varc <- substr(varn,1,nchar(varn) - 1)
+  
+  # this_varn <- "AVISITN"
+  # this_varc <- "AVISIT"
+  purrr::walk2(varc, varn, function(this_varc, this_varn){
+    this_varn_sym <- rlang::sym(this_varn)
+    this_varc_sym <-rlang::sym(this_varc)
+    # unique(data[,c(this_varc, this_varn)]) 
+    pref_ord <- data %>% select(one_of(this_varc, this_varn)) %>% distinct() %>% arrange(!!this_varn_sym)
+    data <- data %>% mutate(!!this_varc_sym := factor(!!this_varc_sym, levels = pref_ord[[this_varc]]))
+    return(data)
+  })
+  # levels(data$AVISIT)
   # copy SAS labels back into data
   data <- sjlabelled::set_label(data, label = savelbls)
   return(data)
