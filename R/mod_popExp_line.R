@@ -22,15 +22,24 @@ linePlot_ui <- function(id, label = "spaghetti") {
       ),
     h4("Group data:"),
     wellPanel(
-      selectInput(ns("separate"), "Separate Plots By", choices = "NONE", selected = "NONE"),
-      selectInput(ns("color"), "Color Plots By", choices = "NONE", selected = "NONE")
+      selectInput(ns("color"), "Color Plots By", choices = "NONE", selected = "NONE"),
+      selectInput(ns("separate"), "Separate Plots By", choices = "NONE", selected = "NONE")
     )
     , h4("Options:"),
     wellPanel(
       shinyWidgets::materialSwitch(ns("err_bars"), h6("Display error bars"),
-                                                       status = "primary", value = F)
+                                                       status = "primary", value = F),
+      fixedRow(
+        column(4, shinyWidgets::materialSwitch(ns("label_points"), 
+           h6("Label points:"),status = "primary", value =  F)),
+        conditionalPanel("input.label_points", ns = ns,
+           column(4, selectInput(ns("gtxt_x_pos"), "Label x position:",
+             choices = c("left", "middle", "right"), selected = "middle")),
+           column(4, selectInput(ns("gtxt_y_pos"), "Label y position:",
+             choices = c("bottom", "middle", "top"), selected = "top"))
+        )
+      )
     )
-    
   )
 }
 
@@ -136,7 +145,8 @@ linePlot_srv <- function(input, output, session, data) {
   # or by filtering the data by PARAMCD, then using AVAL or CHG for the yaxis
   p <- reactive({
     req(data(), input$yvar, input$time)
-    IDEA_lineplot(data(), input$yvar, input$time, input$value, input$separate, input$color, input$err_bars)
+    IDEA_lineplot(data(), input$yvar, input$time, input$value, input$separate, input$color,
+      input$err_bars, input$label_points, input$gtxt_x_pos , input$gtxt_y_pos)
   })
   
   # return the plot object to parent module

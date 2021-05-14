@@ -44,6 +44,11 @@ std_err <- function(x, na.rm=FALSE) {
   sqrt(var(x)/length(x))
 }
 
+translate_pos <- function(dir){
+  if(dir %in% c("left","bottom")) -1
+  else if(dir %in% c("right","top")) 1
+  else 0 # middle
+}
 
 #' Capitalize the first letter of a string
 #' @param y the strings to capitalize
