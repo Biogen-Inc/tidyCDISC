@@ -16,8 +16,14 @@ IDEA_lineplot <- function(data, yvar, time, value = NULL, separate = "NONE", col
    err_bars = FALSE, label_points = FALSE, gtxt_x_pos = "middle", gtxt_y_pos = "top") {
   
   # library(dplyr)
-  data0 <- data %>% IDEA::varN_fctr_reorder()
+  data0 <- data #%>% varN_fctr_reorder()
     
+  # print(unique(data0[,c("AVISIT", "AVISITN")]))
+  # print(".")
+  # print(levels(data0$AVISIT))
+  # print(".")
+  # print(unique(data0$AVISIT))
+  # print(".")
   # subset data based on yvar being paramcd or not
   if (yvar %in% colnames(data)) {
     suppressWarnings(
