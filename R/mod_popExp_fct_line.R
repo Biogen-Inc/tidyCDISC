@@ -67,7 +67,7 @@ IDEA_lineplot <- function(data, yvar, time, value = NULL, separate = "NONE", col
     ungroup() %>%
     mutate(Lower = MEAN - SEM, Upper = MEAN + SEM) %>%
     select( -STD , -n)
-  print(d)
+  # print(d)
   
   
   # if separate or color used, include those "by" variables in title
