@@ -102,27 +102,30 @@ mod_popExp_server <- function(input, output, session, datafile) {
       # varnlst <- c("AGEGRN","AGEGR1N","SEXN","RACEN","RACETXTN","TRTAN","TRT01AN","TRT02AN","TRTPN","TRT01PN","TRT02PN","AVISITN","APHASEN","AETOXGRN","AESEVN","AERELN")
       
       
-      print(unique(all_data[,c("AVISIT", "AVISITN")]))
-      print(".")
-      print("levels:")
-      print(levels(all_data$AVISIT))
-      print(".")
-      print("unique:")
-      print(unique(all_data$AVISIT))
-      print(".")
+      # print(unique(all_data[,c("AVISIT", "AVISITN")]))
+      # print(".")
+      # print("levels:")
+      # print(levels(all_data$AVISIT))
+      # print(".")
+      # print("unique:")
+      # print(unique(all_data$AVISIT))
+      # print(".")
       # data.table::setDT(all_data)
       # purrr::walk2(varclst, varnlst, ~ refact(all_data, .x, .y))
-      all_data2 <- all_data %>% varN_fctr_reorder2() %>% select(AVISIT) %>% str()
+      all_data <- all_data %>%
+        mutate(AVISIT = stringr::str_wrap(AVISIT, width = 9),
+               VISIT = stringr::str_wrap(VISIT, width = 9)) %>%
+          varN_fctr_reorder2() #select(AVISIT) %>% str()
       # NOT COMING OUT AS FACTOR...
       
-      print(unique(all_data2[,c("AVISIT", "AVISITN")]))
-      print(".")
-      print("levels:")
-      print(levels(all_data2$AVISIT))
-      print(".")
-      print("unique:")
-      print(unique(all_data2$AVISIT))
-      print(".")
+      # print(unique(all_data2[,c("AVISIT", "AVISITN")]))
+      # print(".")
+      # print("levels:")
+      # print(levels(all_data2$AVISIT))
+      # print(".")
+      # print("unique:")
+      # print(unique(all_data2$AVISIT))
+      # print(".")
       
 
       

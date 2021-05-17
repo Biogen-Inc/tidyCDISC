@@ -223,28 +223,6 @@ refact <- function(data, varc, varn) {
   }
 }
 
-refact2 <- function(data, varc, varn) {
-  # print(!is.factor(data$AVISIT))
-  # print(levels(data$AVISIT))
-  # datac <- deparse(substitute(data))
-  if (varc %in% colnames(data) && varn %in% colnames(data)) {
-    # if not a factor yet, make it a factor, then re-order
-    # if(!is.factor(data[,(varc)])) {
-      # if(varc == "AVISIT") print("AVISIT converted to factor")
-    
-      unique(data[,c(varc, varn)])
-      data[, (varc) := factor(get(varc), levels = )]
-    # }
-    # If a level was dropped, then don't reorder the factor
-    if(length(levels(data[[varc]])) == length(unique(data[[varc]]))){
-      # message(paste("A factor was created for", varc, "based on", varn, "levels"))
-      # data %>% distinct(AVISIT) %>% str()
-      # (data[[varn]][30000:30100])
-      # (data[[varc]][30000:30100])
-      data[, (varc) := forcats::fct_reorder(get(varc), get(varn))] 
-    }
-  }
-}
 
 #' Re-order Factor Levels by VARN
 #' 
@@ -299,14 +277,23 @@ varN_fctr_reorder2 <- function(data) {
   
   # this_varn <- "AVISITN"
   # this_varc <- "AVISIT"
-  purrr::walk2(varc, varn, function(this_varc, this_varn){
+  # purrr::modify2(data, varn, function(data, this_varn){
+  #   this_varc <- substr(this_varn, 1, nchar(this_varn) - 1)
+  # purrr::walk2(varn, varc, function(this_varn, this_varc){
+  
+  # data <- purrr::map2_df(varn, varc, function(this_varn, this_varc){
+  for(i in 1:length(varn)){
+    this_varn <- varn[i]
+    this_varc <- varc[i]
     this_varn_sym <- rlang::sym(this_varn)
     this_varc_sym <-rlang::sym(this_varc)
-    # unique(data[,c(this_varc, this_varn)]) 
     pref_ord <- data %>% select(one_of(this_varc, this_varn)) %>% distinct() %>% arrange(!!this_varn_sym)
-    data <- data %>% mutate(!!this_varc_sym := factor(!!this_varc_sym, levels = pref_ord[[this_varc]]))
-    return(data)
-  })
+    data <-
+      data %>% mutate(!!this_varc_sym := factor(!!this_varc_sym, levels = pref_ord[[this_varc]]))
+    # return(data)
+  }
+  # )
+  # str(data$AVISIT)
   # levels(data$AVISIT)
   # copy SAS labels back into data
   data <- sjlabelled::set_label(data, label = savelbls)
