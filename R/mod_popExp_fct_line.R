@@ -37,7 +37,7 @@ IDEA_lineplot <- function(data, yvar, time, value = NULL, separate = "NONE", col
     yvar_label <- ifelse(rlang::is_empty(paste(unique(d0$PARAM))), yvar, paste(unique(d0$PARAM)))
     yl <- glue::glue("{yvar_label} ({attr(data[[value]], 'label')})")
   }
-  xl <- attr(d0[[time]], "label")
+  xl <- ifelse(rlang::is_empty(attr(d0[[time]], "label")), time, attr(d0[[time]], "label"))
   # print("yvar_label:")
   # print(yvar_label)
   # print("yl:")
@@ -71,7 +71,7 @@ IDEA_lineplot <- function(data, yvar, time, value = NULL, separate = "NONE", col
   
   
   # if separate or color used, include those "by" variables in title
-  var_title <- paste(yvar_label, "by", xl)
+  var_title <- paste(ifelse(value == "CHG", "Mean Change from Baseline", "Mean"), yvar_label, "by", xl)
   by_title <- case_when(
     separate != "NONE" & color != "NONE" ~ paste("\nby", attr(data[[color]], "label"), "and", attr(data[[separate]], "label")),
     separate != "NONE" ~ paste("\nby", attr(data[[separate]], "label")),
