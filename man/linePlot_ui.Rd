@@ -4,7 +4,7 @@
 \alias{linePlot_ui}
 \title{Spaghetti Plot UI}
 \usage{
-linePlot_ui(id, label = "spaghetti")
+linePlot_ui(id, label = "line")
 }
 \arguments{
 \item{id}{module ID}

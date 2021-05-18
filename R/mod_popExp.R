@@ -238,7 +238,7 @@ mod_popExp_server <- function(input, output, session, datafile) {
 
         switch(input$plot_type,
                `Scatter Plot` = p_scatter(),
-               `Line Plot` = p_line(),
+               `Line plot - mean over time` = p_line(),
                `Box Plot` = p_box(),
                `Spaghetti Plot` = p_spaghetti()
         )%>% 
