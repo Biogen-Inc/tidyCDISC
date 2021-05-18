@@ -95,20 +95,39 @@ mod_popExp_server <- function(input, output, session, datafile) {
       if ("CHG" %in% colnames(all_data) ) {
         # set CHG to zero instead of NA at Baseline
         chg_lab <- sjlabelled::get_label(all_data$CHG)
-        all_data <- mutate(all_data, CHG = ifelse(AVISIT == "Baseline", replace_na(CHG, 0), CHG))
+        all_data <- mutate(all_data, CHG = ifelse(AVISIT == "Baseline", tidyr::replace_na(CHG, 0), CHG))
         all_data$CHG <- sjlabelled::set_label(all_data$CHG, label = chg_lab)
       }
-      varclst <- c("AGEGR", "AGEGR1", "SEX", "RACE", "RACETXT", "TRTA", "TRT01A", "TRT02A", "TRTP", "TRT01P", "TRT02P", "AVISIT", "APHASE", "AETOXGR", "AESEV", "AEREL")
-      varnlst <- c("AGEGRN","AGEGR1N","SEXN","RACEN","RACETXTN","TRTAN","TRT01AN","TRT02AN","TRTPN","TRT01PN","TRT02PN","AVISITN","APHASEN","AETOXGRN","AESEVN","AERELN")
+      # varclst <- c("AGEGR", "AGEGR1", "SEX", "RACE", "RACETXT", "TRTA", "TRT01A", "TRT02A", "TRTP", "TRT01P", "TRT02P", "AVISIT", "APHASE", "AETOXGR", "AESEV", "AEREL")
+      # varnlst <- c("AGEGRN","AGEGR1N","SEXN","RACEN","RACETXTN","TRTAN","TRT01AN","TRT02AN","TRTPN","TRT01PN","TRT02PN","AVISITN","APHASEN","AETOXGRN","AESEVN","AERELN")
       
-      # save the variable labels into savelbls vector
-      savelbls <- sjlabelled::get_label(all_data)
       
-      data.table::setDT(all_data)
-      purrr::walk2(varclst, varnlst, ~ refact(all_data, .x, .y))
+      # print(unique(all_data[,c("AVISIT", "AVISITN")]))
+      # print(".")
+      # print("levels:")
+      # print(levels(all_data$AVISIT))
+      # print(".")
+      # print("unique:")
+      # print(unique(all_data$AVISIT))
+      # print(".")
+      # data.table::setDT(all_data)
+      # purrr::walk2(varclst, varnlst, ~ refact(all_data, .x, .y))
+      all_data <- all_data %>%
+        mutate(AVISIT = stringr::str_wrap(AVISIT, width = 9),
+               VISIT = stringr::str_wrap(VISIT, width = 9)) %>%
+          varN_fctr_reorder2() #select(AVISIT) %>% str()
+      # NOT COMING OUT AS FACTOR...
       
-      # copy SAS labels back into data
-      all_data <- sjlabelled::set_label(all_data, label = savelbls)
+      # print(unique(all_data2[,c("AVISIT", "AVISITN")]))
+      # print(".")
+      # print("levels:")
+      # print(levels(all_data2$AVISIT))
+      # print(".")
+      # print("unique:")
+      # print(unique(all_data2$AVISIT))
+      # print(".")
+      
+
       
     }
     return(list(all_data = all_data, adsl_cols = my_adsl_cols))
@@ -210,6 +229,7 @@ mod_popExp_server <- function(input, output, session, datafile) {
 
   p_scatter <- callModule(scatterPlot_srv, "scatterPlot", data = dataset)
   p_spaghetti <- callModule(spaghettiPlot_srv, "spaghettiPlot", data = dataset)
+  p_line <- callModule(linePlot_srv, "linePlot", data = dataset)
   p_box <- callModule(boxPlot_srv, "boxPlot", data = dataset)
   
 
@@ -218,6 +238,7 @@ mod_popExp_server <- function(input, output, session, datafile) {
 
         switch(input$plot_type,
                `Scatter Plot` = p_scatter(),
+               `Line plot - mean over time` = p_line(),
                `Box Plot` = p_box(),
                `Spaghetti Plot` = p_spaghetti()
         )%>% 
