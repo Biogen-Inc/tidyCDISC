@@ -31,9 +31,11 @@ IDEA_lineplot <- function(data, yvar, time, value = NULL, separate = "NONE", col
     )
     yvar_label <- yl <- ifelse(rlang::is_empty(attr(data[[yvar]], "label")), yvar, attr(data[[yvar]], "label"))
   } else {
-    d0 <- data0 %>%
-      dplyr::filter(PARAMCD == yvar) %>%
-      select(USUBJID, time, PARAM, PARAMCD, val = value, one_of(color, separate))
+    suppressWarnings(
+      d0 <- data0 %>%
+        dplyr::filter(PARAMCD == yvar) %>%
+        select(USUBJID, time, PARAM, PARAMCD, val = value, one_of(color, separate))
+    )
     yvar_label <- ifelse(rlang::is_empty(paste(unique(d0$PARAM))), yvar, paste(unique(d0$PARAM)))
     yl <- glue::glue("{yvar_label} ({attr(data[[value]], 'label')})")
   }
@@ -54,19 +56,21 @@ IDEA_lineplot <- function(data, yvar, time, value = NULL, separate = "NONE", col
   val_sym <- rlang::sym("val")
   
   # Group data as needed to calc means
-  d <-
-    d0 %>%
-    group_by_at(vars(time, one_of(color, separate))) %>%
-    summarize(MEAN = round(mean(!!val_sym, na.rm = T), 2),
-              # SEM = round(std_err(!!val_sym, na.rm = T),2), # NOT accurate?
-              N = n_distinct(USUBJID, na.rm = T),
-              n = n(),
-              STD = round(sd(!!val_sym, na.rm = T), 2),
-              SEM = round(STD/ sqrt(n), 2),
-              .groups = "keep") %>%
-    ungroup() %>%
-    mutate(Lower = MEAN - SEM, Upper = MEAN + SEM) %>%
-    select( -STD , -n)
+  suppressWarnings(
+    d <-
+      d0 %>%
+      group_by_at(vars(time, one_of(color, separate))) %>%
+      summarize(MEAN = round(mean(!!val_sym, na.rm = T), 2),
+                # SEM = round(std_err(!!val_sym, na.rm = T),2), # NOT accurate?
+                N = n_distinct(USUBJID, na.rm = T),
+                n = n(),
+                STD = round(sd(!!val_sym, na.rm = T), 2),
+                SEM = round(STD/ sqrt(n), 2),
+                .groups = "keep") %>%
+      ungroup() %>%
+      mutate(Lower = MEAN - SEM, Upper = MEAN + SEM) %>%
+      select( -STD , -n)
+  )
   # print(d)
   
   

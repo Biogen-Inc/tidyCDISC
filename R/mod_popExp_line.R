@@ -11,15 +11,19 @@
 #'
 #' @family popExp Functions
 #'  
-linePlot_ui <- function(id, label = "spaghetti") {
+linePlot_ui <- function(id, label = "line") {
   ns <- NS(id)
   tagList(
     h4("Select axes:"),
     wellPanel(
-      selectInput(ns("yvar"), "Select y-axis", choices = NULL),
-      fluidRow(column(12, align = "center", uiOutput(ns("include_var")))),
-      selectInput(ns("time"), "Time Variable", choices = NULL)
+      fluidRow(
+        column(6, selectInput(ns("yvar"), "Select y-axis", choices = NULL)),
+        column(6, align = "center", uiOutput(ns("include_var")))
       ),
+      fluidRow(
+        column(6, selectInput(ns("time"), "Time Variable", choices = NULL))
+      )
+    ),
     h4("Group data:"),
     wellPanel(
       selectInput(ns("color"), "Color Plots By", choices = "NONE", selected = "NONE"),
@@ -105,7 +109,7 @@ linePlot_srv <- function(input, output, session, data) {
   output$include_var <- renderUI({
     req(input$yvar %in% data()$PARAMCD)
     shinyWidgets::radioGroupButtons(ns("value"), "Value",
-                                    choices = c("AVAL", "CHG", "BASE"),
+                                    choices = c("AVAL", "CHG"),
                                     selected = isolate(input$value)
                                     )
   })
