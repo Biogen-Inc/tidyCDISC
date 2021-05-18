@@ -20,9 +20,12 @@ a conditional panel of widgets based on the plot type
 \seealso{
 Other popExp Functions: 
 \code{\link{IDEA_boxplot}()},
+\code{\link{IDEA_lineplot}()},
 \code{\link{IDEA_spaghettiplot}()},
 \code{\link{boxPlot_srv}()},
 \code{\link{boxPlot_ui}()},
+\code{\link{linePlot_srv}()},
+\code{\link{linePlot_ui}()},
 \code{\link{mod_popExp_server}()},
 \code{\link{refact}()},
 \code{\link{scatterPlot_srv}()},
