@@ -174,14 +174,6 @@ IDEA_nested_freq.default <- IDEA_nested_freq.OCCDS <- IDEA_nested_freq.ADAE <- I
       )) %>%
       select(var, x)
   }
-  # library(stringr)
-  # thanks_path <- file.path(R.home("doc"), "THANKS")
-  # thanks <- str_c(readLines(thanks_path), collapse = "\n")
-  # thanks
-  # thanks <- word(thanks, 1, 3, fixed("\n\n"))
-  # thanks
-  # wrapped <- gsub("\n","<br>",str_wrap(thanks, width = 30, indent = 8, exdent = 8))
-  # cat(wrapped, "\n")
   
   if (is.null(group)) { 
     total
