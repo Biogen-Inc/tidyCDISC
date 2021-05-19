@@ -65,6 +65,15 @@ prep_adsl <- function(ADSL, input_recipe) { #, stan_table_num
   dat <- ADSL
   msg <- ""
   if(!is.null(input_recipe)){ # if recipe has initialized...
+    if(stan_table_num %in% c(3)){ 
+      if("FASFL" %in% colnames(dat)){
+        dat <- dat %>% filter(FASFL == 'Y')
+        msg <- "Population Set: FASFL = 'Y'"
+      } else{
+        msg <- "Variable 'FASFL' doesn't exist in ADSL. STAN table not displayed because filter \"FASFL == 'Y'\" cannot be applied!"
+        stop(msg)
+      }
+    }
     if(stan_table_num %in% c(18:39, 41:47, 51:53)){ # 5, nate requested 5 auto-filter be removed
       if("SAFFL" %in% colnames(dat)){
         dat <- dat %>% filter(SAFFL == 'Y')
