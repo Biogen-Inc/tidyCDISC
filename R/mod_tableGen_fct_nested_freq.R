@@ -169,11 +169,19 @@ IDEA_nested_freq.default <- IDEA_nested_freq.OCCDS <- IDEA_nested_freq.ADAE <- I
       mutate(var = case_when(
         !!nst_var == "Overall" ~ paste0("<b>",!!column,"</b>"),
         !!nst_var == NA_character_ ~ NA_character_,
-        TRUE ~ paste0("&nbsp;&nbsp;&nbsp;&nbsp;", !!nst_var)
+        TRUE ~ #paste0("&nbsp;&nbsp;&nbsp;&nbsp;", !!nst_var)
+          paste0("&nbsp;&nbsp;&nbsp;&nbsp;", gsub("\n","<br>&nbsp;&nbsp;&nbsp;&nbsp;",stringr::str_wrap(!!nst_var, width = 65)))
       )) %>%
       select(var, x)
   }
-  
+  # library(stringr)
+  # thanks_path <- file.path(R.home("doc"), "THANKS")
+  # thanks <- str_c(readLines(thanks_path), collapse = "\n")
+  # thanks
+  # thanks <- word(thanks, 1, 3, fixed("\n\n"))
+  # thanks
+  # wrapped <- gsub("\n","<br>",str_wrap(thanks, width = 30, indent = 8, exdent = 8))
+  # cat(wrapped, "\n")
   
   if (is.null(group)) { 
     total
@@ -264,7 +272,8 @@ IDEA_nested_freq.default <- IDEA_nested_freq.OCCDS <- IDEA_nested_freq.ADAE <- I
         mutate(var = case_when(
           !!nst_var == "Overall" ~ paste0("<b>",!!column,"</b>"),
           !!nst_var == NA_character_ ~ NA_character_,
-          TRUE ~ paste0("&nbsp;&nbsp;&nbsp;&nbsp;", !!nst_var)
+          TRUE ~ #paste0("&nbsp;&nbsp;&nbsp;&nbsp;", !!nst_var)
+            paste0("&nbsp;&nbsp;&nbsp;&nbsp;", gsub("\n","<br>&nbsp;&nbsp;&nbsp;&nbsp;",stringr::str_wrap(!!nst_var, width = 29)))
         )) %>%
         select(var, everything(), x, -!!column, -!!nst_var)
       
