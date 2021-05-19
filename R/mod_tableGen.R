@@ -693,7 +693,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # capture output of filtering expression
   filter_ae_expr <- reactive({
     filter_code <- gsub("processed_data","ae_data",capture.output(attr(filtered_data(), "code")))
-    if(any(regexpr("%>%", filter_code) > 0)){
+    if(any(regexpr("%>%", filter_code) > 0) & "ADAE" %in% names(datafile())){
       glue::glue("
           # Apply small filtered data set to ADAE data
               ae_data <- ae_data %>% semi_join(filtered_data) 
