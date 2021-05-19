@@ -36,6 +36,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       HTML(paste('
            <select id="RECIPE" class="selectize-input">
            <option  id="none">NONE</option>
+           <option  id="tbl03">Table 3: Accounting of Subjects</option>
            <option  id="demography">Table 5: Demography</option>',
            ifelse("ADAE" %in% names(datafile()),'<option  id="tbl18">Table 18: Overall summary of adverse events</option>',''),
            ifelse("ADAE" %in% names(datafile()),'<option  id="tbl19">Table 19: Adverse events by system organ class and preferred term sorted by decreasing frequency</option>',''),
