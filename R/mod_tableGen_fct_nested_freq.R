@@ -71,11 +71,11 @@ IDEA_nested_freq.default <- IDEA_nested_freq.OCCDS <- IDEA_nested_freq.ADAE <- I
           summarize(n = n_distinct(USUBJID)) %>%
           ungroup()
       ) %>%
-      mutate(n = replace_na(n, 0),
+      mutate(n = tidyr::replace_na(n, 0),
              sort_n = n) %>%
       arrange(desc(sort_n)) %>%
       select(sort_n, everything())
-  } else { # alpha
+  } else { # alphabetical
 
     sort_cnts <- abc %>%
       left_join(
@@ -85,7 +85,7 @@ IDEA_nested_freq.default <- IDEA_nested_freq.OCCDS <- IDEA_nested_freq.ADAE <- I
           ungroup() 
       ) %>%
       arrange(desc(as.character(!!column))) %>% # have to reverse because we use desc() later
-      mutate(n = replace_na(n, 0),
+      mutate(n = tidyr::replace_na(n, 0),
              sort_n = 1:length(column_lvls)) %>%
       select(sort_n, everything())
   }
