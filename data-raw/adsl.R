@@ -5,12 +5,17 @@ adsl <- haven::read_xpt("data-raw/adsl.xpt") %>%
                        .fns = na_if, y = "")) %>%
   dplyr::group_by(USUBJID) %>%
   dplyr::mutate(FASFL = ITTFL,
+                RANDFL = ITTFL,
                 DTHDT = as.Date(ifelse(DTHFL == "Y", 
                         paste(sample(seq.Date(TRTSDT, TRTEDT, by = 1), size = 1))
                         , NA_character_)
                 )) %>%
   ungroup()
+
+"RANDFL" %in% names(adsl)
+
 attr(adsl$FASFL, "label") <- "Full Analysis Set Population Flag"
+attr(adsl$RANDFL, "label") <- "Randomized Population Flag"
 attr(adsl$DTHDT, "label") <- "Date of Death"
 
 usethis::use_data(adsl, overwrite = TRUE)
