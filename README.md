@@ -9,7 +9,13 @@ Installation
 ============
 
 ``` r
-remotes::install_github("IDEA")
+# For HPC users, add RSPM's GHE repo:
+options(repos = c(
+  CRAN = "https://cran.rstudio.com/",
+  ghe = "http://10.240.22.159:4242/Git-Biogen/latest")
+)
+options('repos') # to confirm "ghe" was added
+install.packages("IDEA")
 ```
 
 Use Case
@@ -20,6 +26,7 @@ Using the dev/run\_dev.R file, you can run the application locally:
 ``` r
 # Set options here
 options(golem.app.prod = FALSE) # TRUE = production mode, FALSE = development mode
+options(shiny.sanitize.errors = FALSE)
 
 # Detach all loaded packages and clean your environment
 golem::detach_all_attached()
@@ -29,4 +36,15 @@ golem::document_and_reload()
 
 # Run the application 
 run_app()
+```
+
+Or (equivalently) this works outside the app...
+
+``` r
+# Set options here
+options( "golem.app.prod" = TRUE)
+options(shiny.sanitize.errors = FALSE)
+
+# Run the application 
+IDEA::run_app()
 ```

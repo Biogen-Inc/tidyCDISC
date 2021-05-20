@@ -70,6 +70,7 @@ Other tableGen Functions:
 \code{\link{rowArea}()},
 \code{\link{rowBlock}()},
 \code{\link{rowPallete}()},
+\code{\link{std_err}()},
 \code{\link{tg_guide}}
 
 Other tableGen Functions: 
@@ -92,6 +93,7 @@ Other tableGen Functions:
 \code{\link{rowArea}()},
 \code{\link{rowBlock}()},
 \code{\link{rowPallete}()},
+\code{\link{std_err}()},
 \code{\link{tg_guide}}
 
 Other tableGen Functions: 
@@ -114,6 +116,7 @@ Other tableGen Functions:
 \code{\link{rowArea}()},
 \code{\link{rowBlock}()},
 \code{\link{rowPallete}()},
+\code{\link{std_err}()},
 \code{\link{tg_guide}}
 
 Other tableGen Functions: 
@@ -136,6 +139,7 @@ Other tableGen Functions:
 \code{\link{rowArea}()},
 \code{\link{rowBlock}()},
 \code{\link{rowPallete}()},
+\code{\link{std_err}()},
 \code{\link{tg_guide}}
 
 Other tableGen Functions: 
@@ -158,6 +162,7 @@ Other tableGen Functions:
 \code{\link{rowArea}()},
 \code{\link{rowBlock}()},
 \code{\link{rowPallete}()},
+\code{\link{std_err}()},
 \code{\link{tg_guide}}
 
 Other tableGen Functions: 
@@ -180,6 +185,7 @@ Other tableGen Functions:
 \code{\link{rowArea}()},
 \code{\link{rowBlock}()},
 \code{\link{rowPallete}()},
+\code{\link{std_err}()},
 \code{\link{tg_guide}}
 }
 \concept{tableGen Functions}
