@@ -12,6 +12,7 @@ readData <- function(study_directory, file_names) {
 #' Function to bind data rows from the list of user supplied data frames
 #' 
 #' @param datafile list of ADaM-ish dataframes 
+#' @param ADSL A dataframe which contains the ADSL data
 #' 
 #' @export
 #' 
@@ -25,7 +26,7 @@ combineBDS <- function(datafile, ADSL) {
     # Bind all the PARAMCD files 
     all_PARAMCD <- bind_rows(PARAMCD, .id = "data_from")  %>% 
       arrange(USUBJID, AVISITN, PARAMCD) %>% 
-      select(USUBJID, AVISITN, AVISIT, PARAMCD, AVAL, CHG, data_from)
+      select(USUBJID, AVISITN, AVISIT, PARAMCD, PARAM, AVAL, CHG, data_from)
     # Join ADSL and all_PARAMCD
     combined_data <- inner_join(ADSL, all_PARAMCD, by = "USUBJID")
   } else {
@@ -38,33 +39,7 @@ combineBDS <- function(datafile, ADSL) {
   return(combined_data)
 }
 
-#' Function to clean and combine ADAE dataset with ADSL
-#' 
-#' @param datafile list of ADaM-ish dataframes 
-#' 
-#' @export
-#' 
-cleanADAE <- function(datafile, ADSL) {
-  if("ADAE" %in% names(datafile)){
-    # find columns the ADAE & ADSL have in common (besides Usubjid), remove
-    # them from the ADAE, so that the ADSL cols are used instead. Then join
-    # on usubjid and re-order the colnames to match the adae
-    adae_cols <- colnames(datafile$ADAE)
-    common_cols <- dplyr::intersect(adae_cols, colnames(ADSL))
-    com_cols_excp_u <- common_cols[common_cols != "USUBJID"]
-    adae_adsl <- datafile$ADAE %>% 
-      select(-one_of(com_cols_excp_u)) %>%
-      inner_join(ADSL, by = "USUBJID")
-    preferred_col_order <- c(adae_cols, dplyr::setdiff(colnames(ADSL), adae_cols))
-    if(all(sort(colnames(adae_adsl)) == sort(preferred_col_order))){
-      varN_fctr_reorder(adae_adsl[,preferred_col_order]) # add this after filter?
-    } else {
-      varN_fctr_reorder(adae_adsl)
-    }
-  } else {
-    varN_fctr_reorder(ADSL)
-  }
-}
+
 
 #' Function to clean and combine ADAE dataset with ADSL
 #' 
@@ -90,15 +65,7 @@ prep_adsl <- function(ADSL, input_recipe) { #, stan_table_num
   dat <- ADSL
   msg <- ""
   if(!is.null(input_recipe)){ # if recipe has initialized...
-    if(stan_table_num == 5){
-      if("ITTFL" %in% colnames(dat)){
-        dat <- dat %>% filter(ITTFL == 'Y')
-        msg <- "Population Set: ITTFL = 'Y'"
-      }else {
-        msg <- "Variable 'ITTFL' doesn't exist in ADSL. STAN table not displayed because filter \"ITTFL == 'Y'\" cannot be applied!"
-        stop(msg)
-      }
-    } else if(stan_table_num %in% c(18:39)){
+    if(stan_table_num %in% c(18:39, 41:47, 51:53)){ # 5, nate requested 5 auto-filter be removed
       if("SAFFL" %in% colnames(dat)){
         dat <- dat %>% filter(SAFFL == 'Y')
         msg <- "Population Set: SAFFL = 'Y'"
@@ -110,6 +77,35 @@ prep_adsl <- function(ADSL, input_recipe) { #, stan_table_num
   }
   
   return(list(data = dat, message = msg))
+}
+
+#' Function to clean and combine ADAE dataset with ADSL
+#' 
+#' @param datafile list of ADaM-ish dataframes 
+#' @param ADSL A dataframe which contains the ADSL data
+#' 
+#' @export
+#' 
+cleanADAE <- function(datafile, ADSL) {
+  if("ADAE" %in% names(datafile)){
+    # find columns the ADAE & ADSL have in common (besides Usubjid), remove
+    # them from the ADAE, so that the ADSL cols are used instead. Then join
+    # on usubjid and re-order the colnames to match the adae
+    adae_cols <- colnames(datafile$ADAE)
+    common_cols <- dplyr::intersect(adae_cols, colnames(ADSL))
+    com_cols_excp_u <- common_cols[common_cols != "USUBJID"]
+    adae_adsl <- datafile$ADAE %>% 
+      select(-one_of(com_cols_excp_u)) %>%
+      inner_join(ADSL, by = "USUBJID")
+    preferred_col_order <- c(adae_cols, dplyr::setdiff(colnames(ADSL), adae_cols))
+    if(all(sort(colnames(adae_adsl)) == sort(preferred_col_order))){
+      varN_fctr_reorder(adae_adsl[,preferred_col_order]) # add this after filter?
+    } else {
+      varN_fctr_reorder(adae_adsl)
+    }
+  } else {
+    varN_fctr_reorder(ADSL)
+  }
 }
 
 #' Function to pre-filter the ADAE depending on the stan table selected
@@ -124,7 +120,7 @@ prep_adae <- function(datafile, ADSL, input_recipe) { #, stan_table_num
   stan_table_num <- numeric_stan_table(input_recipe)
   dat <- cleanADAE(datafile = datafile, ADSL = ADSL)
   msg <- ""
-  if(!is.null(input_recipe)){ # if recipe has initialized...
+  if(!is.null(input_recipe) & "ADAE" %in% names(datafile)){ # if recipe has initialized...
     
     if(stan_table_num %in% c(25, 26)){
       if("AESEV" %in% colnames(dat)){
@@ -218,9 +214,84 @@ prep_adae <- function(datafile, ADSL, input_recipe) { #, stan_table_num
   return(list(data = dat, message = msg))
 }
 
+#' Blood Chemistry PARAMCDs used to build STAN Table 41
+chem <- c(
+  "ALT", "AST", "ALP", "BILI", "GGT", # Liver
+  "BUN", "CREAT", # Renal
+  "SODIUM", "K", "CL", "BICARB", # Electrolytes
+  "GLUC", "CA", "PHOS", "ALB", "CHOL", "MG", "TRIG", "URATE" # Other
+)
 
+#' Hematology PARAMCDs used to build STAN Table 41
+# param_vector <-
+hema <- c(
+  # white blood cells 
+  "LYM", "NEUT", "MONO", "EOS", "BASO", #"LYMLE", "NEUTLE", "MONOLE", "EOSLE", "BASOLE",
+  "RBC", "HGB", "HCT", "PLAT"
+)
 
+#' Urinalysis PARAMCDs used to build STAN Table 41
+# param_vector <- 
+urin <- c(
+  "SPGRAV", "PH", "COLOR", "OCCBLD",  "GLUCU",  "KETONES", #"GLUCQU", "KETONESQ",
+  "PROTU", "MWBCQU", "MWBCU", "MRBCQU", "MRBCU"
+)
 
+#' A function that checks if certain parameters exist in any dataframe within a list of dataframes
+#' 
+#' @param datafile list of ADaM-ish dataframes 
+#' @param param_vector character vector of params to search the list of dataframes for
+#' 
+check_params <- function(datafile, param_vector) {
+  # datafile <- datalist # for testing
+  # param_vector <- chem # for testing
+  
+  param_dat <- datafile[sapply(datafile, function(x) "PARAMCD" %in% colnames(x)) & substr(names(datafile), 1, 4) == "ADLB"]
+  
+  # apply following code to data that contains paramcd
+  if(!rlang::is_empty(param_dat)){
+    param_lst <- purrr::map(names(param_dat), ~ 
+                              param_dat[[.x]] %>%
+                              filter(PARAMCD %in% param_vector) %>%
+                              filter(!is.na(AVAL) & # only display if non-missing!
+                                     !is.na(AVISIT) & 
+                                     !(AVISIT %in% c(" ", "")) &
+                                     stringr::str_detect(toupper(AVISIT),"UNSCHEDULED",negate = TRUE) #&
+                                     # stringr::str_detect(toupper(AVISIT),"EARLY TERMINATION",negate = TRUE)
+                                     ) %>%
+                              distinct(PARAMCD, AVISIT, AVISITN) %>%
+                              varN_fctr_reorder() %>%
+                              mutate(PARAMCD = factor(PARAMCD, levels = param_vector)) %>%
+                              arrange(PARAMCD, AVISIT)
+    )
+    param_vctr <- param_lst[[1]]$PARAMCD # Will this work if two ADLB's are uploaded?
+    
+    if(!rlang::is_empty(param_vctr)){
+      visit_vctr <- param_lst[[1]]$AVISIT
+      dat_lgls <- purrr::map_lgl(param_lst, ~length(.x) > 0)
+      param_lgl <- any(dat_lgls)
+      dat_names <- purrr::map_chr(dat_lgls, ~names(param_dat[.x]))
+    } else {
+      param_lgl <- FALSE
+      dat_names <- NA_character_
+      param_vctr <- NA_character_
+      visit_vctr <- c("fake_weeky","fake_weeky2")
+    }
+  } else {
+    param_lgl <- FALSE
+    dat_names <- NA_character_
+    param_vctr <- NA_character_
+    visit_vctr <- c("fake_weeky","fake_weeky2")
+  }
+  return(
+    list(
+      exist = param_lgl,
+      dat_name = dat_names,
+      vctr = param_vctr,
+      tp = visit_vctr
+    )
+  )
+}
 
 #' The smallest possible data set we could filter to semi-join later
 #' 
@@ -303,33 +374,52 @@ tg_guide <- cicerone::Cicerone$
   new()$
   step(
     "all-column-blocks",
-    "Uploaded Data Variables",
-    "Variables are grouped by uploaded datasets where you can drag any column from an ADSL into the Variables drop zone, and PARAMCDs from BDS files"
+    "Variables from Uploaded Data",
+    "Variables are grouped by dataset name. From here, you can drag any variable bubble into the Variable drop zone, including PARAMCDs from BDS files"
   )$
   step(
     "sortable_agg",
-    "Summay Statistic Blocks",
-    "Drag one of these blocks into the Stats drop zone to be paired with a corresponding column block.
-    Some statistc blocks will have a dropdown once dragged to allow you to choose the AVIST."
+    "Statistic Blocks",
+    "Drag one of these blocks into the Stats drop zone to be paired with a corresponding Variable block on the left hand side.
+    Additional input fields may appear on some stat blocks once dragged & dropped to allow for further customization, like choosing an AVIST for the 'MEAN' block."
   )$
   step(
     "all-output-blocks",
     "Drop Zones",
-    "Blocks are read in rows, where you can apply a statistic block on the right to the variable on the left."
+    "Blocks are analyzed by row, meaning the statistic block on the right will be applied to the variable block on the left."
   )$
   step(
     el = "COLUMN-wrapper",
     title = "Grouping Data",
-    description = "Subdivide the table's summary statistics into selected groups"
+    description = "Break down the table's statistics into levels of the chosen grouping variable"
   )$
   step(
     "filter-accordion",
-    "Filter Data",
-    "You can apply filters to your data by first selecting the datasets you want to filter by. This will populate a dropdown menu of
-    specific columns to filter by which you can then select and filter based on specific values to include"
+    "Filter your Data",
+    "To filter,  select the dataset(s) that contain the variable(s) you want to filter on.
+    Select the variables and the corresponding values to include (or exclude)."
   )$
   step(
     "RECIPE",
     "Auto-Generated Tables",
-    "This dropdown will create tables using commonly combined blocks rather than starting from scratch. If you select NONE you can clear your workspace."
+    "Instead of dragging and dropping from scratch, create tables using STAN 2.0 presets. If you select NONE you can clear your workspace."
+  )$
+  step(
+    "table_title",
+    "Customize Title",
+    "The sky is the limit! Add a table title that suits your needs."
+  )$
+  step(
+    "download_table",
+    "Keep a copy for your records",
+    "Download a table in CSV or HTML format as seen in the app. RTF support coming soon!"
+  )$
+  step(
+    "tableGen_ui_1-tblcode",
+    "Produce this table outside of the app",
+    "Have more data coming? Don't download the table, download the R script needed to produce the table. Then there's no need to even open up the app periodically to re-create your outputs!"
   )
+
+
+
+

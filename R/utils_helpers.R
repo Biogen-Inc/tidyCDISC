@@ -28,6 +28,28 @@ my_gg_color_hue <- function(n) {
   hcl(h = hues, l = 65, c = 100)[1:n]
 }
 
+#' Standard Error Calculation
+#' 
+#' Calculates the square root of variance divided by n
+#'
+#' @param x A numeric vector
+#' @param na.rm logical, should NA's be removed? Defaults to FALSE
+#'
+#' @return numeric, representing the standard error
+#'
+#' @family tableGen Functions
+#'  
+std_err <- function(x, na.rm=FALSE) {
+  if (na.rm) x <- na.omit(x)
+  sqrt(var(x)/length(x))
+}
+
+translate_pos <- function(dir){
+  if(dir %in% c("left","bottom")) -1
+  else if(dir %in% c("right","top")) 1
+  else 0 # middle
+}
+
 #' Capitalize the first letter of a string
 #' @param y the strings to capitalize
 CapStr <- function(y) {
@@ -152,12 +174,10 @@ filters_in_english <- function(filtered_data, filter_header = "Filters Applied:"
 #' Return levels of a factor/vector
 #'
 #' @param x a vector
-#' 
-#'   DO NOT REMOVE.
 #'   
 #' @return x vector 
 #' 
-#' @noRd
+#' @export
 #' 
 getLevels <- function(x) {if(is.factor(x)) levels(x) else sort(unique(x), na.last = T) } 
 
@@ -173,6 +193,33 @@ getLevels <- function(x) {if(is.factor(x)) levels(x) else sort(unique(x), na.las
     y
   } else {
     paste0("\'",x,"\'") #sQuote(x) # old
+  }
+}
+
+#' Refactor variables
+#'
+#' Refactor variables by their common "N" counterparts
+#' 
+#' @param data A data frames
+#' @param varc A character vector of variables names with character values
+#' @param varn A character vector of variables names with numeric values
+#' 
+#' @import dplyr
+#' @importFrom data.table := 
+#' @importFrom forcats fct_reorder
+#' 
+#' @family popExp Functions
+#' 
+refact <- function(data, varc, varn) {
+  datac <- deparse(substitute(data))
+  if (varc %in% colnames(data) && varn %in% colnames(data)) {
+    # if not a factor yet, make it a factor, then re-order
+    if(!is.factor(data[,(varc)])) { data[, (varc) := as.factor(get(varc))] }
+    # If a level was dropped, then don't reorder the factor
+    if(length(levels(data[[varc]])) == length(unique(data[[varc]]))){
+      # message(paste("A factor was created for", varc, "based on", varn, "levels"))
+      data[, (varc) := forcats::fct_reorder(get(varc), get(varn))] 
+    }
   }
 }
 
@@ -192,7 +239,7 @@ getLevels <- function(x) {if(is.factor(x)) levels(x) else sort(unique(x), na.las
 #' @export
 #' 
 varN_fctr_reorder <- function(data) {
-  
+  # data <- all_data
   # Now to refactor levels in VARN order, if they exist:
   # save the variable labels into savelbls vector
   savelbls <- sjlabelled::get_label(data)
@@ -204,8 +251,50 @@ varN_fctr_reorder <- function(data) {
   varn <- paste0(non_num_cols,"N")[paste0(non_num_cols,"N") %in% cols]
   varc <- substr(varn,1,nchar(varn) - 1)
   
+  # varn <- "AVISITN"
+  # varc <- "AVISIT"
+  
   data.table::setDT(data)
   purrr::walk2(varc, varn, ~ refact(data, .x, .y))
+  # copy SAS labels back into data
+  data <- sjlabelled::set_label(data, label = savelbls)
+  return(data)
+}
+
+varN_fctr_reorder2 <- function(data) {
+  # rm(data)
+  # data <- all_data
+  # Now to refactor levels in VARN order, if they exist:
+  # save the variable labels into savelbls vector
+  savelbls <- sjlabelled::get_label(data)
+  
+  # identify all char - numeric variables pairs that need factor re-ordering
+  cols <- colnames(data)
+  non_num_cols <- c(subset_colclasses(data, is.factor),
+                    subset_colclasses(data, is.character))
+  varn <- paste0(non_num_cols,"N")[paste0(non_num_cols,"N") %in% cols]
+  varc <- substr(varn,1,nchar(varn) - 1)
+  
+  # this_varn <- "AVISITN"
+  # this_varc <- "AVISIT"
+  # purrr::modify2(data, varn, function(data, this_varn){
+  #   this_varc <- substr(this_varn, 1, nchar(this_varn) - 1)
+  # purrr::walk2(varn, varc, function(this_varn, this_varc){
+  
+  # data <- purrr::map2_df(varn, varc, function(this_varn, this_varc){
+  for(i in 1:length(varn)){
+    this_varn <- varn[i]
+    this_varc <- varc[i]
+    this_varn_sym <- rlang::sym(this_varn)
+    this_varc_sym <-rlang::sym(this_varc)
+    pref_ord <- data %>% select(one_of(this_varc, this_varn)) %>% distinct() %>% arrange(!!this_varn_sym)
+    data <-
+      data %>% mutate(!!this_varc_sym := factor(!!this_varc_sym, levels = pref_ord[[this_varc]]))
+    # return(data)
+  }
+  # )
+  # str(data$AVISIT)
+  # levels(data$AVISIT)
   # copy SAS labels back into data
   data <- sjlabelled::set_label(data, label = savelbls)
   return(data)

@@ -44,15 +44,18 @@ Imports:
     forcats,
     tidyr,
     tibble,
-    IDEAFilter (>= 0.0.2),
     magrittr,
     cicerone,
     tidyselect,
     broom,
     pkgload,
     rsconnect (>= 0.8.16.9001),
+<<<<<<< HEAD
     GGally,
     survival
+=======
+    IDEAFilter
+>>>>>>> master
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1
@@ -64,7 +67,6 @@ Suggests:
     scales
 Remotes: 
     JohnCoene/tippy,
-    MayaGans/IDEAFilter,
     rstudio/rsconnect
 Depends: 
     R (>= 2.10)

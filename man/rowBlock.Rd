@@ -35,6 +35,7 @@ Other tableGen Functions:
 \code{\link{mod_tableGen_ui}()},
 \code{\link{rowArea}()},
 \code{\link{rowPallete}()},
+\code{\link{std_err}()},
 \code{\link{tg_guide}}
 }
 \concept{tableGen Functions}

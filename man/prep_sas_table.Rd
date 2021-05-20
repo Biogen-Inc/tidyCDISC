@@ -2,17 +2,24 @@
 % Please edit documentation in R/utils_SAScompare.R
 \name{prep_sas_table}
 \alias{prep_sas_table}
-\title{Organize SAS table into a format for comparing}
+\title{Organize SAS into a format for comparing}
 \usage{
 prep_sas_table(
-  data,
+  sas_data,
+  block_names = c("by1lbl", "vis"),
+  block_ord_names = c("cat", "by1ord"),
+  stat_names = c("by2lbl", "Statlbl", "test"),
+  stat_ord_names = c("subcat", "by2ord"),
+  tg_data,
   machine_readable = TRUE,
   keep_orig_ids = FALSE,
   rm_desc_col = FALSE
 )
 }
 \arguments{
-\item{data}{the sas_table dataframe, output from IDEA}
+\item{sas_data}{the sas table dataframe, output from stat programmer}
+
+\item{tg_data}{the table generator table dataframe, output from IDEA}
 
 \item{machine_readable}{a logical; should the table be prepared for optimal
 machine readability; that is, should cells with multiple values be pivoted
@@ -24,7 +31,11 @@ the table}
 
 \item{rm_desc_col}{a logical; should the description column be removed from
 the table (since they never match between base and compare)}
+
+\item{chk_block_names}{case sensitive}
+
+\item{chk_stat_names}{case sensitive}
 }
 \description{
-Organize SAS table into a format for comparing
+Organize SAS into a format for comparing
 }
