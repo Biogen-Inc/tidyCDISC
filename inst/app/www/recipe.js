@@ -115,13 +115,13 @@ soc_pt_sel = ["NONE", "AEDECOD"]
     
       document.getElementById("droppable_blocks").innerHTML = "";
       $("#droppable_blocks").append($(simpleRecipeRowBlock("RANDFL", "ADSL")));
-      $("#droppable_blocks").append($(simpleRecipeRowBlock("TRTSDT", "ADSL")));
+      $("#droppable_blocks").append($(simpleRecipeRowBlock("SAFFL", "ADSL")));
       $("#droppable_blocks").append($(simpleRecipeRowBlock("EOTSTT", "ADSL")));
       $("#droppable_blocks").append($(simpleRecipeRowBlock("EOSSTT", "ADSL")));
       
       document.getElementById("droppable_agg").innerHTML = "";
       $("#droppable_agg").append($(simpleRecipeRowBlock("Y_FREQ", "ADAE")));
-      $("#droppable_agg").append($(simpleRecipeRowBlock("NON_MISSING", "ADSL")));
+      $("#droppable_agg").append($(simpleRecipeRowBlock("FREQ", "ADSL")));
       $("#droppable_agg").append($(selectRecipeBlock("NESTED_FREQ_DSC", "ADSL", "DCTREAS")));
       $("#droppable_agg").append($(selectRecipeBlock("NESTED_FREQ_DSC", "ADSL", "DCSREAS")));
     } else if (publisher === "Table 5: Demography") {
