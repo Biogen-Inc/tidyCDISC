@@ -14,8 +14,6 @@ adsl <- haven::read_xpt("data-raw/adsl.xpt") %>%
                 )) %>%
   ungroup()
 
-"RANDFL" %in% names(adsl)
-
 attr(adsl$FASFL, "label") <- "Full Analysis Set Population Flag"
 attr(adsl$RANDFL, "label") <- "Randomized Population Flag"
 attr(adsl$EOTSTT, "label") <- "End of Treatment Status"
