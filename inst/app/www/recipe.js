@@ -122,8 +122,8 @@ soc_pt_sel = ["NONE", "AEDECOD"]
       document.getElementById("droppable_agg").innerHTML = "";
       $("#droppable_agg").append($(simpleRecipeRowBlock("Y_FREQ", "ADAE")));
       $("#droppable_agg").append($(simpleRecipeRowBlock("FREQ", "ADSL")));
-      $("#droppable_agg").append($(selectRecipeBlock("NESTED_FREQ_DSC", "ADSL", "DCTREAS")));
-      $("#droppable_agg").append($(selectRecipeBlock("NESTED_FREQ_DSC", "ADSL", "DCSREAS")));
+      $("#droppable_agg").append($(selectRecipeBlock("NESTED_FREQ_ABC", "ADSL", "DCTREAS")));
+      $("#droppable_agg").append($(selectRecipeBlock("NESTED_FREQ_ABC", "ADSL", "DCSREAS")));
     } else if (publisher === "Table 5: Demography") {
       document.getElementById("droppable_agg").innerHTML = "";
       $("#droppable_agg").append($(combineRows(demography_agg, "ADSL")));
