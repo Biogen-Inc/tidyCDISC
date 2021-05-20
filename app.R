@@ -10,7 +10,7 @@ options(shiny.sanitize.errors = FALSE)
 #   CRAN = "https://cran.rstudio.com/",
 #   ghe = "http://10.240.22.159:4242/Git-Biogen/latest")
 # )
-# options('repos') 
+# options('repos')
 # rsconnect::writeManifest() # ac added
 IDEA::run_app() # add parameters here (if any)
 
