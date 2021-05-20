@@ -17,11 +17,20 @@ km_ui <- function(id, label = "km") {
   tagList(
     h4("Select axes:"),
     wellPanel(
-      selectInput(ns("yvar"), "Select param", choices = NULL),
-      selectInput(ns("resp_var"), "Response Variable", choices = "AVAL",selected = "AVAL"),
-      selectInput(ns("group"), "Group By", choices = "NONE", selected = "NONE"),
-      checkboxInput(ns("points"), "Mark censored observations?", value = TRUE),
-      checkboxInput(ns("ci"), "Include 95% confidence interval?", value = FALSE)
+      fluidRow(
+        column(6, selectInput(ns("yvar"), "Select param", choices = NULL)),
+        column(6, selectInput(ns("resp_var"), "Response Variable", choices = "AVAL",selected = "AVAL"))
+      ),
+      fluidRow(
+        column(6, selectInput(ns("group"), "Group By", choices = "NONE", selected = "NONE")),
+        column(6, selectInput(ns("cnsr_var"), "Censor Variable (0,1)", choices = "CNSR", selected = "CNSR"))
+      ),
+      shinyWidgets::materialSwitch(ns("points"), h6("Mark censored observations?"),
+                                   status = "primary", value = TRUE),
+      shinyWidgets::materialSwitch(ns("ci"), h6("Include 95% confidence interval?"),
+                                   status = "primary", value = FALSE)
+      # checkboxInput(ns("points"), "Mark censored observations?", value = TRUE),
+      # checkboxInput(ns("ci"), "Include 95% confidence interval?", value = FALSE)
     )
   )
 }
@@ -55,12 +64,22 @@ km_srv <- function(input, output, session, data) {
                       choices = list(paramcd),
                       selected = isolate(input$yvar)
     )
+  })
+  
     
-    # update response variable options for user based on data
-    my_vars <- data() %>% 
+  # update response variable options for user based on data filtered to a
+  # certain param
+  observeEvent(input$yvar, {
+    req(input$yvar != "")
+    
+    d <- data()
+    my_vars <- d %>% 
+      dplyr::filter(PARAMCD == input$yvar) %>% 
+      dplyr::filter(data_from == "ADTTE") %>% # Numeric visit var has to exist in TTE data
       select(one_of("AVISITN", "VISITNUM"), ends_with("DY")) %>% 
-      select_if(~!all(is.na(.))) %>%# remove NA cols
+      select_if(~!all(is.na(.))) %>% # remove NA cols
       colnames()
+    
     updateSelectInput (
       session = session,
       inputId = "resp_var",
@@ -69,6 +88,33 @@ km_srv <- function(input, output, session, data) {
     )
   })
   
+  # update censor variable options for user based on data filtered to a
+  # certain param
+  observeEvent(input$yvar, {
+    req(input$yvar != "")
+    
+    # col <- c(1:4)
+    # col <- c(0, 1, 1, 1)
+    # col <- c(1, 1, 1)
+    
+    d0 <- data()
+    my_cvars <- d0 %>% 
+      dplyr::filter(PARAMCD == input$yvar) %>% 
+      dplyr::filter(data_from == "ADTTE") %>% # Numeric visit var has to exist in TTE data
+      select(where(is.numeric)) %>%
+      select(where(function(col) all( unique(col) %in% c(0,1) ))) %>%
+      select_if(~!all(is.na(.))) %>% # remove NA cols
+      colnames()
+    
+    updateSelectInput (
+      session = session,
+      inputId = "cnsr_var",
+      choices = c("CNSR", my_cvars[my_cvars != "CNSR"]),
+      selected = isolate(input$cnsr_var)
+    )
+  })
+  
+  
   observeEvent(input$yvar, {
     req(input$yvar != "")
     
@@ -76,18 +122,6 @@ km_srv <- function(input, output, session, data) {
     group_dat <- data() %>% 
       dplyr::filter(PARAMCD == input$yvar) %>% 
       select_if(~!all(is.na(.))) # remove NA cols
-    
-    # update response variable options for user based on data filtered to a
-    # certain param
-    my_vars <- data() %>%
-      select(one_of("AVISITN", "VISITNUM"), ends_with("DY")) %>%
-      colnames()
-    updateSelectInput (
-      session = session,
-      inputId = "resp_var",
-      choices = c("AVAL", my_vars),
-      selected = isolate(input$resp_var)
-    )
     
     # character and factor columns for grouping or faceting (separating)
     char_col <- subset_colclasses(group_dat, is.character)
@@ -111,7 +145,7 @@ km_srv <- function(input, output, session, data) {
     req(data(), input$yvar)
     IDEA_km_curve(data(), 
                  input$yvar, 
-                 # input$resp_var, 
+                 input$resp_var,
                  input$group,
                  input$points,
                  input$ci

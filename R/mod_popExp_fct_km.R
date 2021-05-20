@@ -16,18 +16,21 @@
 #' 
 #' @family popExp functions
 #' 
-IDEA_km_curve <- function(data, yvar, group = "NONE", points = TRUE, ci = FALSE) {
+IDEA_km_curve <- function(data, yvar, resp_var, group = "NONE", points = TRUE, ci = FALSE) {
     
+  # resp_var_sym <- rlang::sym(resp_var)
+  
   # Filter data by param selected
   suppressWarnings(
     d <- data %>% 
       dplyr::filter(PARAMCD == yvar) %>%
-      dplyr::select(USUBJID, PARAM, PARAMCD, AVAL, CNSR, one_of(group)) %>%
+      dplyr::select(USUBJID, PARAM, PARAMCD, one_of(resp_var), CNSR, one_of(group)) %>%
       dplyr::distinct()
   )
+  # print(d)
   
   fit <- survival::survfit(
-    as.formula(paste("survival::Surv(AVAL, CNSR) ~ ", 
+    as.formula(paste0("survival::Surv(",resp_var,", CNSR) ~ ", 
        if(group != "NONE" & !rlang::is_empty(group)) group else 1)),
     data = d)
   
