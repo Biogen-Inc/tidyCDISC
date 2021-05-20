@@ -62,14 +62,15 @@ mod_dataComply_server <- function(input, output, session,
                            datalist = datalist,
                            all_df_rules = all_df_rules,
                            expl_rules = expl_rules,
-                           df_incl_rules = df_incl_rules)
+                           df_incl_rules = df_incl_rules,
+                           df_incl_rules_except_tte = df_incl_rules_except_tte)
     
     # Run "the warning check" to see if any recommended rules were violated
     wrn_tab <- gather_reqs(disp_type = "warn",
                            datalist = datalist,
                            all_df_rules = all_df_rules,
                            expl_rules = expl_rules,
-                           df_incl_rules = df_incl_rules)
+                           df_incl_rules_except_tte = df_incl_rules_except_tte)
     
     # First, check if any compliance errors. If so, display Modal Conditionally
     # (Note: this modal will show both warnings and Errors if warnings exist)
