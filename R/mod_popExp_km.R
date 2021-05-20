@@ -61,7 +61,7 @@ km_srv <- function(input, output, session, data) {
     # get unique paramcd
     paramcd <- sort(na.omit(unique(data()$PARAMCD)))
     updateSelectInput(session, "yvar",
-                      choices = list(paramcd),
+                      choices = as.list(paramcd),
                       selected = isolate(input$yvar)
     )
   })

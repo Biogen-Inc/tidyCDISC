@@ -24,9 +24,14 @@ expl_rules <-
   )
 
 # Rules for dfs that include certain variables
-df_incl_rules <- 
+df_incl_rules_except_tte <- 
   list(
     PARAMCD = list(error = c("AVISITN", "AVISIT", "PARAMCD", "PARAM", "AVAL", "CHG", "BASE"),
+                   warn = c(""))
+  )
+df_incl_rules <- 
+  list(
+    CNSR = list(error = c("PARAMCD", "CNSR", "AVAL"),
                    warn = c(""))
   )
 
@@ -37,24 +42,32 @@ df_incl_rules <-
 #' Gather Rules For Help UI
 #'
 #' Gather Rules into a shiny tagList to be included in the UI for "help"
-#'   purposes, conditionally containing different required and/or recommended rule
-#'   sets (if they exist).
+#' purposes, conditionally containing different required and/or recommended rule
+#' sets (if they exist).
 #'
 #' @param input,output,session Internal parameters for {shiny}.
 #' @param all_df_rules A double-nested list: inner list is named list of
 #'   variables names that should result in \code{error} or \code{warn} if
-#'   variables do not exist or are missing for ANY data frame. Outter list is
+#'   variables do not exist or are missing for ANY data frame. Outer list is
 #'   unnamed.
-#' @param expl_rules A double-nested list: outter list is a named list
+#' @param expl_rules A double-nested list: outer list is a named list
 #'   dataframes. Inner list (for each data frame) contains named lists of
 #'   variables names that should result in \code{error} or \code{warn} if
 #'   variables do not exist or are missing for the specified parent data frame
-#' @param df_incl_rules A double-nested list: outter list is a named list
+#' @param df_incl_rules A double-nested list: outer list is a named list
 #'   variable names used to identify a particular class of data frame. For
 #'   example, the variable name PARAMCD would id BDS class data frames, and the
 #'   inner list would contain a named lists of variables names that should
 #'   result in \code{error} or \code{warn} if variables do not exist or are
 #'   missing for the implied parent data frame.
+#' @param df_incl_rules_except_tte A double-nested list: outer list is a named
+#'   list variable names used to identify a particular class of data frame. For
+#'   example, the variable name PARAMCD would id BDS class data frames WHERE
+#'   Time to event (TTE) is an exception, and the inner list would contain a
+#'   named lists of variables names that should result in \code{error} or
+#'   \code{warn} if variables do not exist or are missing for the implied parent
+#'   data frame.
+#'
 #'
 #' @import shiny
 #' @import dplyr
@@ -62,21 +75,23 @@ df_incl_rules <-
 #' @importFrom rlang is_empty
 #' @importFrom data.table rbindlist
 #' @importFrom purrr map2 pmap
-#' 
+#'
 #' @return An shiny tagList
-#' 
+#'
 #' @family dataComply Functions
-#' 
+#'   
 gather_rules <- function(input, output, session,
                          all_df_rules = list(error = c(""), warn = c("") ),
                          expl_rules = list( list(error = c(""), warn = c("")) ),
-                         df_incl_rules = list( list(error = c(""), warn = c("")) )
+                         df_incl_rules = list( list(error = c(""), warn = c("")) ),
+                         df_incl_rules_except_tte = list( list(error = c(""), warn = c("")) )
 ) {
   
   # If there are no rules supplied, alert R developer and suggest removing the
   # module from app
   if((is.null(expl_rules) | is.null(names(expl_rules))) & 
      (is.null(df_incl_rules) | is.null(names(df_incl_rules))) &
+     (is.null(df_incl_rules_except_tte) | is.null(names(df_incl_rules_except_tte))) &
      (is.null(all_df_rules) | is.null(names(all_df_rules))) 
   ) {
     stop("No Rules Supplied. Without rules, the data compliance module is useless. Please remove the Module.")
@@ -160,6 +175,39 @@ gather_rules <- function(input, output, session,
     dfw_wrn <- character(0) # ""
   }
   
+  # Unlist Rules for data frames containing certain vars (df_vars), and
+  # organize them into a vector of easy to read strings
+  if(!is.null(df_incl_rules_except_tte) & !is.null(names(df_incl_rules_except_tte))) {
+    dfw_ette <-
+      lapply(df_incl_rules_except_tte, data.frame, stringsAsFactors = FALSE) %>%
+      data.table::rbindlist(fill=TRUE, idcol = "df_var")
+    
+    dfw_ette_err <-
+      dfw_ette %>%
+      distinct(df_var,error) %>%
+      subset(error != "") %>%
+      group_by(df_var) %>%
+      summarize(p = paste(error, collapse = ", ")) %>%
+      ungroup() %>%
+      mutate(f = paste(df_var, p, sep = ": ")) %>%
+      pull(f)
+    
+    dfw_ette_wrn <-
+      dfw_ette %>%
+      distinct(df_var,warn) %>%
+      subset(warn != "") %>%
+      group_by(df_var) %>%
+      summarize(p = paste(warn, collapse = ", ")) %>%
+      ungroup() %>%
+      mutate(f = paste(df_var, p, sep = ": ")) %>%
+      pull(f)
+    
+  } else {
+    # dfw_ette <- data.frame(df_var = character(), error = character(), warn = character())
+    dfw_ette_err <- character(0) # ""
+    dfw_ette_wrn <- character(0) # ""
+  }
+  
   ui<- tagList( 
     # start UI of modal
     
@@ -214,7 +262,6 @@ gather_rules <- function(input, output, session,
     
     # If they exist, format Rules for Data Sets That Contain Certain Variables
     # into a collapsed HTML string
-    # 
     tagList(
       if(!is_empty(dfw_err) | !is_empty(dfw_wrn)){
         tagList(
@@ -237,7 +284,34 @@ gather_rules <- function(input, output, session,
             } else {""}
           )) # end div
         )
+      }),
+    
+    # If they exist, format Rules for Data Sets That Contain Certain Variables
+    # into a collapsed HTML string
+    tagList(
+      if(!is_empty(dfw_ette_err) | !is_empty(dfw_ette_wrn)){
+        tagList(
+          br(),
+          h5(strong("Rules for all Data Sets That Contain Certain Variables, except 'Time to Event'")),
+          div(style = "font-size: 12px;", tagList(
+            if(!is_empty(dfw_ette_err)){
+              tagList(
+                HTML(paste0("&nbsp;&nbsp;&nbsp;Required:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;",
+                            paste(dfw_ette_err, collapse = "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"))),
+                br(),br(),
+              )
+            } else {""},
+            if(!is_empty(dfw_ette_wrn)){
+              tagList(
+                HTML(paste0("&nbsp;&nbsp;&nbsp;Recommended:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;",
+                            paste(dfw_ette_wrn, collapse = "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"))),
+                br(),br(),
+              )
+            } else {""}
+          )) # end div
+        )
       })
+    
   ) # end of tagList UI
   
   return(ui)
@@ -252,6 +326,7 @@ gather_rules <- function(input, output, session,
 ###############################################################
 rulesUI <- gather_rules(all_df_rules = all_df_rules,
                         expl_rules = expl_rules,
-                        df_incl_rules = df_incl_rules)
+                        df_incl_rules = df_incl_rules,
+                        df_incl_rules_except_tte = df_incl_rules_except_tte)
 
 
