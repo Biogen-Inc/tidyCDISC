@@ -10,7 +10,7 @@ options(shiny.sanitize.errors = FALSE)
 #   CRAN = "https://cran.rstudio.com/",
 #   ghe = "https://cran.rstudio.com")
 # )
-# options('repos') 
+# options('repos')
 # rsconnect::writeManifest() # ac added
 IDEA::run_app() # add parameters here (if any)
 
