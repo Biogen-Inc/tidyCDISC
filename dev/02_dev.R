@@ -40,7 +40,16 @@ usethis::use_package("knitr")
 usethis::use_package("rlang")
 usethis::use_package("stringi")
 usethis::use_dev_package("tippy") #remotes::install_github("JohnCoene/tippy")
-usethis::use_dev_package("IDEAFilter") # devtools::install_github("MayaGans/IDEAFilter")
+
+# options('repos')
+# options(repos = c(
+#   CRAN = "https://cran.rstudio.com/",
+#   ghe = "https://cran.rstudio.com")
+# )
+# options('repos')
+usethis::use_package("IDEAFilter") # install.packages("IDEAFilter")
+# usethis::use_dev_package("IDEAFilter") # devtools::install_github("MayaGans/IDEAFilter")
+
 usethis::use_dev_package("rsconnect") 
 usethis::use_package("ggplot2")
 usethis::use_package("dplyr")

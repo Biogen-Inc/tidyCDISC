@@ -9,7 +9,7 @@ prep_tg_table(
   machine_readable = TRUE,
   keep_orig_ids = FALSE,
   rm_desc_col = FALSE,
-  generic_colnames = TRUE
+  generic_colnames = "NONE"
 )
 }
 \arguments{
