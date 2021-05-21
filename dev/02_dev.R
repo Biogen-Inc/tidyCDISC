@@ -64,6 +64,9 @@ usethis::use_package("glue")
 usethis::use_package("remotes")
 usethis::use_package("lazyeval",type="Suggests")
 usethis::use_package("scales",type = "Suggests")
+usethis::use_package("GGally")
+usethis::use_package("survival")
+usethis::use_package("remotes")
 usethis::use_pipe()
 
 
@@ -150,6 +153,7 @@ usethis::use_data_raw( name = "adsl", open = FALSE ) # ran
 usethis::use_data_raw( name = "adlbc", open = FALSE ) # ran
 usethis::use_data_raw( name = "advs", open = FALSE ) # ran
 usethis::use_data_raw( name = "adae", open = FALSE ) # ran
+usethis::use_data_raw( name = "adtte", open = T ) # ran
 
 ## Tests ---- not run
 ## Add one line by test you want to create

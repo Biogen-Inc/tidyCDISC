@@ -21,6 +21,8 @@ Other popExp Functions:
 \code{\link{IDEA_lineplot}()},
 \code{\link{IDEA_spaghettiplot}()},
 \code{\link{boxPlot_srv}()},
+\code{\link{km_srv}()},
+\code{\link{km_ui}()},
 \code{\link{linePlot_srv}()},
 \code{\link{linePlot_ui}()},
 \code{\link{mod_popExp_server}()},

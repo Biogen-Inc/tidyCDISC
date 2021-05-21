@@ -153,7 +153,11 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       #     distinct(USUBJID)
       #   )
   })
-  BDS <- reactive({  datafile()[sapply(datafile(), function(x) "PARAMCD" %in% colnames(x))] })
+  BDS <- reactive({ 
+    init <- sapply(datafile(), function(x) "PARAMCD" %in% colnames(x) & !("CNSR" %in% colnames(x)))
+    datafile()[init] 
+    # datafile()[sapply(datafile(), function(x) "PARAMCD" %in% colnames(x))]
+  })
   ADAE <- reactive({ pre_ADAE()$data })
  
   # combine all BDS data files into one large data set
@@ -204,9 +208,13 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     # req(any(purrr::map_lgl(datafile(), ~"AVISIT" %in% colnames(.x))))
     
     if(any(purrr::map_lgl(datafile(), ~"AVISIT" %in% colnames(.x)))){
-      purrr::map(BDS(), function(x) x %>% dplyr::select(AVISIT)) %>%
-        dplyr::bind_rows() %>%
-        dplyr::pull(AVISIT)
+      # if("AVISIT" %in% colnames(BDS())){
+        purrr::map(BDS(), function(x) x %>% dplyr::select(AVISIT)) %>%
+          dplyr::bind_rows() %>%
+          dplyr::pull(AVISIT)
+      # }else {
+      #   c("fake_weeky","dummy_weeky")
+      # }
     } else {
       c("fake_weeky","dummy_weeky")
     }
@@ -215,12 +223,16 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   
   avisit_fctr  <- reactive({
     req(datafile())
-    # req(any(purrr::map_lgl(datafile(), ~"AVISIT" %in% colnames(.x))))
+    req(any(purrr::map_lgl(datafile(), ~"AVISIT" %in% colnames(.x))))
     
     if(any(purrr::map_lgl(datafile(), ~"AVISIT" %in% colnames(.x)))){
-      purrr::map(BDS(), function(x) x %>% dplyr::select(AVISITN)) %>%
-        dplyr::bind_rows() %>%
-        dplyr::pull(AVISITN)
+      # if("AVISITN" %in% colnames(BDS())){
+        purrr::map(BDS(), function(x) x %>% dplyr::select(AVISITN)) %>%
+          dplyr::bind_rows() %>%
+          dplyr::pull(AVISITN)
+      # } else {
+      #   1:2
+      # }
     } else {
       1:2
     }
@@ -229,7 +241,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   
   AVISIT <- reactive({
     req(datafile())
-    # req(BDS())
+
     if (is.null(avisit_words())) {
       avisit_words <- c("fake_weeky","dummy_weeky")
     } else {
@@ -636,7 +648,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     if(any("CDISCPILOT01" %in% ADSL()$STUDYID)){
       glue::glue("
         # create list of dataframes from CDISC pilot study
-            datalist <- list(ADSL = IDEA::adsl, ADAE = IDEA::adae, ADVS = IDEA::advs, ADLBC = IDEA::adlbc)
+        datalist <- list(ADSL = IDEA::adsl, ADAE = IDEA::adae, ADVS = IDEA::advs, ADLBC = IDEA::adlbc, ADTTE = IDEA::adtte)
         "
       )
     } else {glue::glue("
