@@ -34,8 +34,10 @@ IDEA_nested_freq.default <- IDEA_nested_freq.OCCDS <- IDEA_nested_freq.ADAE <- I
   function(column, nested_var = "NONE", group = NULL, data, totals, sort) {
     
   # # ########## ######### ######## #########
-  # column <- "ETHNIC"
-  # nested_var <- "RACE"
+  # column <- "EOSSTT"
+  # nested_var <- "DCSREAS"
+  #   # column <- "ETHNIC"
+  #   # nested_var <- "RACE"
   # group <- "TRT01P"
   # data <- bds_data
   # totals <- total_df
@@ -71,11 +73,11 @@ IDEA_nested_freq.default <- IDEA_nested_freq.OCCDS <- IDEA_nested_freq.ADAE <- I
           summarize(n = n_distinct(USUBJID)) %>%
           ungroup()
       ) %>%
-      mutate(n = replace_na(n, 0),
+      mutate(n = tidyr::replace_na(n, 0),
              sort_n = n) %>%
       arrange(desc(sort_n)) %>%
       select(sort_n, everything())
-  } else { # alpha
+  } else { # alphabetical
 
     sort_cnts <- abc %>%
       left_join(
@@ -85,7 +87,7 @@ IDEA_nested_freq.default <- IDEA_nested_freq.OCCDS <- IDEA_nested_freq.ADAE <- I
           ungroup() 
       ) %>%
       arrange(desc(as.character(!!column))) %>% # have to reverse because we use desc() later
-      mutate(n = replace_na(n, 0),
+      mutate(n = tidyr::replace_na(n, 0),
              sort_n = 1:length(column_lvls)) %>%
       select(sort_n, everything())
   }
@@ -107,7 +109,8 @@ IDEA_nested_freq.default <- IDEA_nested_freq.OCCDS <- IDEA_nested_freq.ADAE <- I
   } else {
     nst_var <- rlang::sym(as.character(nested_var))
     
-    inner_lvls0 <- 
+
+    inner_lvls00 <- 
       total0 %>% 
       select(-x) %>%
       left_join(
@@ -120,8 +123,20 @@ IDEA_nested_freq.default <- IDEA_nested_freq.OCCDS <- IDEA_nested_freq.ADAE <- I
                  prop = n / n_tot,
                  x = paste0(n, ' (', sprintf("%.1f", round(prop*100, 1)), ')')
           ) %>%
-          mutate(sort = 1) 
+          mutate(sort = 1)
       )
+    
+    # if there is only 1 row that is NA, or missing, don't display any inner/sub levels
+    inner_lvls0 <-
+      inner_lvls00 %>%
+      left_join(
+        inner_lvls00 %>%
+          group_by(!!column) %>%
+          summarise( n_subgroups = n())
+      ) %>%
+      filter(!(!!nst_var == "" & n_subgroups == 1)) %>%
+      select(-n_subgroups)
+    
     if(sort == "desc_tot") {
       inner_lvls <- inner_lvls0 %>%
         mutate(inner_sort = n) %>%
@@ -154,11 +169,11 @@ IDEA_nested_freq.default <- IDEA_nested_freq.OCCDS <- IDEA_nested_freq.ADAE <- I
       mutate(var = case_when(
         !!nst_var == "Overall" ~ paste0("<b>",!!column,"</b>"),
         !!nst_var == NA_character_ ~ NA_character_,
-        TRUE ~ paste0("&nbsp;&nbsp;&nbsp;&nbsp;", !!nst_var)
+        TRUE ~ #paste0("&nbsp;&nbsp;&nbsp;&nbsp;", !!nst_var)
+          paste0("&nbsp;&nbsp;&nbsp;&nbsp;", gsub("\n","<br>&nbsp;&nbsp;&nbsp;&nbsp;",stringr::str_wrap(!!nst_var, width = 65)))
       )) %>%
       select(var, x)
   }
-  
   
   if (is.null(group)) { 
     total
@@ -205,7 +220,7 @@ IDEA_nested_freq.default <- IDEA_nested_freq.OCCDS <- IDEA_nested_freq.ADAE <- I
     if(nested_var == "NONE"){
       groups <- 
         col_grp  %>% 
-        pivot_wider(!!column, names_from = !!group, values_from = v) %>%
+        tidyr::pivot_wider(!!column, names_from = !!group, values_from = v) %>%
         left_join(total0) %>%
         arrange(desc(sort_n)) %>%
         select(-sort_n)
@@ -220,11 +235,12 @@ IDEA_nested_freq.default <- IDEA_nested_freq.OCCDS <- IDEA_nested_freq.ADAE <- I
           )
         )
       
+
       groups <- 
         total_by %>%
         left_join(
           col_grp %>%
-            pivot_wider(!!column, names_from = !!group, values_from = v) %>%
+            tidyr::pivot_wider(!!column, names_from = !!group, values_from = v) %>%
             mutate(pt = 'Overall') %>%
             rename_with(~nested_var, pt) %>%
             bind_rows(
@@ -241,14 +257,15 @@ IDEA_nested_freq.default <- IDEA_nested_freq.OCCDS <- IDEA_nested_freq.ADAE <- I
                        v = paste0(n, ' (', sprintf("%.1f", round(prop*100, 1)), ')')
                 ) %>%
                 select(-n, -prop, -n_tot) %>%
-                spread(!!group, v) # can use spread since we are using bind rows and the prev df is in order
+                tidyr::spread(!!group, v) # can use spread since we are using bind rows and the prev df is in order
             )
         )%>%
         select(-x, x) %>%
         mutate(var = case_when(
           !!nst_var == "Overall" ~ paste0("<b>",!!column,"</b>"),
           !!nst_var == NA_character_ ~ NA_character_,
-          TRUE ~ paste0("&nbsp;&nbsp;&nbsp;&nbsp;", !!nst_var)
+          TRUE ~ #paste0("&nbsp;&nbsp;&nbsp;&nbsp;", !!nst_var)
+            paste0("&nbsp;&nbsp;&nbsp;&nbsp;", gsub("\n","<br>&nbsp;&nbsp;&nbsp;&nbsp;",stringr::str_wrap(!!nst_var, width = 26)))
         )) %>%
         select(var, everything(), x, -!!column, -!!nst_var)
       

@@ -39,10 +39,10 @@ IDEA_freq.default <- function(column, group, data, totals) {
 #' @family tableGen Functions
 IDEA_freq.ADAE <- IDEA_freq.ADSL <- function(column, group = NULL, data, totals) {
   # ########## ######### ######## #########
-  # column <- "AOCCFL"
+  # column <- "SAFFL"
   # group = "TRT01P"
   # # # group <- "NONE"
-  # data = ae_data #%>% filter(SAFFL == 'Y')
+  # data = bds_data #%>% filter(SAFFL == 'Y')
   # totals <- total_df
   # ########## ######### ######## #########
   
@@ -52,13 +52,27 @@ IDEA_freq.ADAE <- IDEA_freq.ADSL <- function(column, group = NULL, data, totals)
     stop(paste("Can't calculate frequency, ", column, " is not categorical"))
   }
   
-  total <- data %>%
+  total00 <- data %>%
     distinct(USUBJID, !!column) %>%
-    count(!!column) %>%
+    count(!!column)
+  
+  # special case: if the result has only one value -
+  #  all 'Y' or all 'N', then include the other val
+  if(nrow(total00) == 1 & all(total00[[1]] %in% c('Y', 'N'))){
+    grp_lvls <- c('Y', 'N')
+    xyz <- data.frame(grp_lvls) %>%
+      rename_with(~paste(column), grp_lvls)
+    total0 <- xyz %>% left_join(total00)
+  } else {
+    total0 <- total00
+  }
+  
+  total <- total0 %>%
     group_by(!!column) %>%
     summarise(n = sum(n)) %>%
     ungroup() %>%
-    mutate(prop = n/totals[nrow(totals),"n_tot"]) %>%
+    mutate(n = tidyr::replace_na(n, 0),
+      prop = ifelse(n == 0, 0, n/totals[nrow(totals),"n_tot"])) %>%
     mutate(x = paste0(n, " (", sprintf("%.1f", round(prop*100, 1)), ")")) %>%
     select(!!column, x)
   
@@ -80,26 +94,40 @@ IDEA_freq.ADAE <- IDEA_freq.ADSL <- function(column, group = NULL, data, totals)
     grp_tot <- xyz %>%
       left_join(
         totals %>% filter(!!group != "Total")
-        # data %>%
-        # group_by(!!group) %>%
-        # summarize(n_tot = n_distinct(USUBJID)) %>%
-        # ungroup()
-      )#%>%
-    # mutate(n_tot = tidyr::replace_na(n_tot, 0))
+      )
+    
+    
+    grp_innards0 <- data %>%
+      distinct(USUBJID, !!column, !!group) %>%
+      count(!!column, !!group)
+    
+    # special case: if the result has only one value -
+    #  all 'Y' or all 'N', then include the other val
+    if(all(grp_innards0[[1]] %in% c('Y')) | all(grp_innards0[[1]] %in% c('N'))){
+      grp_lvls <- c('Y', 'N')
+      xyz <- data.frame(grp_lvls) %>%
+        rename_with(~paste(column), grp_lvls)
+      
+      grp_innards <- xyz %>%
+        tidyr::crossing(grp_tot %>% select(!!group)) %>%
+        left_join(
+          data %>%
+          distinct(USUBJID, !!column, !!group) %>%
+          count(!!column, !!group)
+        )
+    } else {
+      grp_innards <- grp_innards0
+    }
     
     groups <- 
       grp_tot %>%
-      left_join(
-        data %>%
-        distinct(USUBJID, !!column, !!group) %>%
-        count(!!column, !!group)
-      ) %>%
+      left_join(grp_innards) %>%
       # group_by(!!group) %>%
       mutate(n = tidyr::replace_na(n, 0),
              prop = ifelse(n_tot == 0, 0, n / n_tot),
              v = paste0(n, ' (', sprintf("%.1f", round(prop*100, 1)), ')')) %>%
       select(-n, -prop) %>%
-      pivot_wider(!!column, names_from = !!group, values_from = v)
+      tidyr::pivot_wider(!!column, names_from = !!group, values_from = v)
     
     cbind(groups, total$x)
   }
