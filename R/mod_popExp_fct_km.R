@@ -72,7 +72,7 @@ IDEA_km_curve <- function(data, yvar, resp_var, cnsr_var, group = "NONE", points
   
   # Add in plot layers conditional upon user selection
   if (by_title != "") {
-    p <- p + theme(plot.margin = margin(t = .4, unit = "cm")) #+
+    p <- p + theme(plot.margin = margin(t = 1.2, unit = "cm")) #+
         # survminer::ggsurvplot_group_by(fit, group.by = group)
   }
   
