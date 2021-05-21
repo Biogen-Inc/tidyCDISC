@@ -33,6 +33,7 @@ IDEA_km_curve <- function(data, yvar, resp_var, group = "NONE", points = TRUE, c
     as.formula(paste0("survival::Surv(",resp_var,", CNSR) ~ ", 
        if(group != "NONE" & !rlang::is_empty(group)) group else 1)),
     data = d)
+  # print(fit)
   
   # Initialize title of variables plotted
   # if group used, include those "by" variables in title
@@ -45,8 +46,9 @@ IDEA_km_curve <- function(data, yvar, resp_var, group = "NONE", points = TRUE, c
   p <- 
     GGally::ggsurv(fit,
                     order.legend = FALSE, # use data order, not survival order
-                    CI = ci, 
+                    CI = ci,
                     plot.cens = points) +
+    # survminer::ggsurvplot(fit,conf.int = ci) +
     ggplot2::xlab(glue::glue("{unique(d$PARAM)}")) +
     ggplot2::theme_bw() +
     theme(
@@ -59,7 +61,10 @@ IDEA_km_curve <- function(data, yvar, resp_var, group = "NONE", points = TRUE, c
     )
   
   # Add in plot layers conditional upon user selection
-  if (by_title != "") {p <- p + theme(plot.margin = margin(t = 1.2, unit = "cm"))}
+  if (by_title != "") {
+    p <- p + theme(plot.margin = margin(t = .6, unit = "cm")) #+
+        # survminer::ggsurvplot_group_by(fit, group.by = group)
+  }
   
   return(p)
 }

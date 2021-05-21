@@ -127,6 +127,12 @@ km_srv <- function(input, output, session, data) {
     char_col <- subset_colclasses(group_dat, is.character)
     fac_col <- subset_colclasses(group_dat, is.factor)
     group <- sort(c(fac_col, char_col))
+    # print("char_col:")
+    # print(char_col)
+    # print("fac_col:")
+    # print(fac_col)
+    # print(".")
+    # print(".")
     
     # remove some variables...
     grp <- group[!(group %in% c("data_from", "PARAM", "PARAMCD", "USUBJID"))]
@@ -142,7 +148,8 @@ km_srv <- function(input, output, session, data) {
   # create plot object using the numeric column on the yaxis
   # or by filtering the data by PARAMCD, then using AVAL or CHG for the yaxis
   p <- reactive({
-    req(data(), input$yvar)
+    req(data(), input$yvar )
+    #, input$resp_var,input$group,input$points,input$ci) # can't include these in req
     IDEA_km_curve(data(), 
                  input$yvar, 
                  input$resp_var,
