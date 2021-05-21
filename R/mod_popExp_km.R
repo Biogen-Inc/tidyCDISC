@@ -153,6 +153,7 @@ km_srv <- function(input, output, session, data) {
     IDEA_km_curve(data(), 
                  input$yvar, 
                  input$resp_var,
+                 input$cnsr_var,
                  input$group,
                  input$points,
                  input$ci
