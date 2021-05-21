@@ -111,7 +111,20 @@ soc_pt_sel = ["NONE", "AEDECOD"]
 /* Create custom block recipes to automatically populate when selected */
   $("#RECIPE").bind("change", function(event, ui) {
     var publisher = $("#RECIPE").val();
-    if (publisher === "Table 5: Demography") {
+    if (publisher === "Table 3: Accounting of Subjects") {
+    
+      document.getElementById("droppable_blocks").innerHTML = "";
+      $("#droppable_blocks").append($(simpleRecipeRowBlock("RANDFL", "ADSL")));
+      $("#droppable_blocks").append($(simpleRecipeRowBlock("SAFFL", "ADSL")));
+      $("#droppable_blocks").append($(simpleRecipeRowBlock("EOTSTT", "ADSL")));
+      $("#droppable_blocks").append($(simpleRecipeRowBlock("EOSSTT", "ADSL")));
+      
+      document.getElementById("droppable_agg").innerHTML = "";
+      $("#droppable_agg").append($(simpleRecipeRowBlock("Y_FREQ", "ADAE")));
+      $("#droppable_agg").append($(simpleRecipeRowBlock("FREQ", "ADSL")));
+      $("#droppable_agg").append($(selectRecipeBlock("NESTED_FREQ_ABC", "ADSL", "DCTREAS")));
+      $("#droppable_agg").append($(selectRecipeBlock("NESTED_FREQ_ABC", "ADSL", "DCSREAS")));
+    } else if (publisher === "Table 5: Demography") {
       document.getElementById("droppable_agg").innerHTML = "";
       $("#droppable_agg").append($(combineRows(demography_agg, "ADSL")));
       document.getElementById("droppable_blocks").innerHTML = "";
