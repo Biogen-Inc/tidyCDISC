@@ -12,7 +12,8 @@ gather_reqs(
   datalist = reactive(NULL),
   all_df_rules = list(error = c(""), warn = c("")),
   expl_rules = list(list(error = c(""), warn = c(""))),
-  df_incl_rules = list(list(error = c(""), warn = c("")))
+  df_incl_rules = list(list(error = c(""), warn = c(""))),
+  df_incl_rules_except_tte = list(list(error = c(""), warn = c("")))
 )
 }
 \arguments{
@@ -25,20 +26,28 @@ variables) or warning (recommended variables)}
 
 \item{all_df_rules}{A double-nested list: inner list is named list of
 variables names that should result in \code{error} or \code{warn} if
-variables do not exist or are missing for ANY data frame. Outter list is
+variables do not exist or are missing for ANY data frame. Outer list is
 unnamed.}
 
-\item{expl_rules}{A double-nested list: outter list is a named list
+\item{expl_rules}{A double-nested list: outer list is a named list
 dataframes. Inner list (for each data frame) contains named lists of
 variables names that should result in \code{error} or \code{warn} if
 variables do not exist or are missing for the specified parent data frame}
 
-\item{df_incl_rules}{A double-nested list: outter list is a named list
+\item{df_incl_rules}{A double-nested list: outer list is a named list
 variable names used to identify a particular class of data frame. For
 example, the variable name PARAMCD would id BDS class data frames, and the
 inner list would contain a named lists of variables names that should
 result in \code{error} or \code{warn} if variables do not exist or are
 missing for the implied parent data frame.}
+
+\item{df_incl_rules_except_tte}{A double-nested list: outer list is a named
+list variable names used to identify a particular class of data frame. For
+example, the variable name PARAMCD would id BDS class data frames WHERE
+Time to event (TTE) is an exception, and the inner list would contain a
+named lists of variables names that should result in \code{error} or
+\code{warn} if variables do not exist or are missing for the implied parent
+data frame.}
 }
 \value{
 A list of dataframes that are compliant with the rules in addition to

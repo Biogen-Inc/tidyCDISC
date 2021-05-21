@@ -102,7 +102,7 @@ mod_popExp_server <- function(input, output, session, datafile) {
       if("AVISIT" %in% colnames(all_data)) all_data <- all_data %>% mutate(AVISIT = stringr::str_wrap(AVISIT, width = 9))
       if("VISIT" %in% colnames(all_data)) all_data <- all_data %>% mutate(VISIT = stringr::str_wrap(VISIT, width = 9))
         
-      all_data <- all_data %>%varN_fctr_reorder2() 
+      all_data <- all_data %>% varN_fctr_reorder() #%>% varN_fctr_reorder2() 
 
     }
     return(list(all_data = all_data, adsl_cols = my_adsl_cols))
@@ -130,6 +130,20 @@ mod_popExp_server <- function(input, output, session, datafile) {
   # If User wants to perform advance filtering, update drop down of data frames they can filter on
   observe({
     updateSelectInput("filter_df", session = session, choices = as.list(my_loaded_adams()))
+  })
+  
+  # if ADTT* exists in data & it has the cnsr column, add KM curve as radioButton choice
+  observeEvent(my_loaded_adams(), {
+    # req(any(substr(my_loaded_adams(), 1, 4) == "ADTT"))
+    # adtt_ <- my_loaded_adams()[substr(my_loaded_adams(), 1, 4) == "ADTT"]
+    req(any(purrr::map_lgl(my_loaded_adams(), ~ "CNSR" %in% colnames(datafile()[[.x]]))))
+    updateRadioButtons(session, "plot_type",
+                       choices = c("Scatter Plot", 
+                                   "Line plot - mean over time",
+                                   "Spaghetti Plot", 
+                                   "Box Plot",
+                                   "Kaplan-Meier Curve") # new ... added KM
+    )
   })
   
   # must make reactive
@@ -202,10 +216,18 @@ mod_popExp_server <- function(input, output, session, datafile) {
     return(d)
   })
 
+  km_data <- reactive({
+    req(any(purrr::map_lgl(my_loaded_adams(), ~ "CNSR" %in% colnames(datafile()[[.x]]))))
+    dataset() %>% 
+      # filter(substr(data_from, 1, 4) == "ADTT") %>%
+      filter(!is.na(CNSR))
+  })
+  
   p_scatter <- callModule(scatterPlot_srv, "scatterPlot", data = dataset)
   p_spaghetti <- callModule(spaghettiPlot_srv, "spaghettiPlot", data = dataset)
   p_line <- callModule(linePlot_srv, "linePlot", data = dataset)
   p_box <- callModule(boxPlot_srv, "boxPlot", data = dataset)
+  p_km <- callModule(km_srv, "km", data = km_data)
   
 
   # use plot output of the module to create the plot 
@@ -216,6 +238,7 @@ mod_popExp_server <- function(input, output, session, datafile) {
                `Line plot - mean over time` = p_line(),
                `Box Plot` = p_box(),
                `Spaghetti Plot` = p_spaghetti()
+               , `Kaplan-Meier Curve` = p_km()
         )%>% 
         plotly::ggplotly() %>%
           config(displaylogo = FALSE, 
