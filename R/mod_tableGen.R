@@ -154,7 +154,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   })
   BDS <- reactive({ 
     init <- sapply(datafile(), function(x) "PARAMCD" %in% colnames(x) & !("CNSR" %in% colnames(x)))
-    datafile()[init[substr(names(init),1,4) != "ADTT"]] # remove TTE class df's because `AVISIT` col doesn't exist in that class of df
+    datafile()[init] 
     # datafile()[sapply(datafile(), function(x) "PARAMCD" %in% colnames(x))]
   })
   ADAE <- reactive({ pre_ADAE()$data })
@@ -207,9 +207,13 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     # req(any(purrr::map_lgl(datafile(), ~"AVISIT" %in% colnames(.x))))
     
     if(any(purrr::map_lgl(datafile(), ~"AVISIT" %in% colnames(.x)))){
-      purrr::map(BDS(), function(x) x %>% dplyr::select(AVISIT)) %>%
-        dplyr::bind_rows() %>%
-        dplyr::pull(AVISIT)
+      # if("AVISIT" %in% colnames(BDS())){
+        purrr::map(BDS(), function(x) x %>% dplyr::select(AVISIT)) %>%
+          dplyr::bind_rows() %>%
+          dplyr::pull(AVISIT)
+      # }else {
+      #   c("fake_weeky","dummy_weeky")
+      # }
     } else {
       c("fake_weeky","dummy_weeky")
     }
@@ -218,12 +222,16 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   
   avisit_fctr  <- reactive({
     req(datafile())
-    # req(any(purrr::map_lgl(datafile(), ~"AVISIT" %in% colnames(.x))))
+    req(any(purrr::map_lgl(datafile(), ~"AVISIT" %in% colnames(.x))))
     
     if(any(purrr::map_lgl(datafile(), ~"AVISIT" %in% colnames(.x)))){
-      purrr::map(BDS(), function(x) x %>% dplyr::select(AVISITN)) %>%
-        dplyr::bind_rows() %>%
-        dplyr::pull(AVISITN)
+      # if("AVISITN" %in% colnames(BDS())){
+        purrr::map(BDS(), function(x) x %>% dplyr::select(AVISITN)) %>%
+          dplyr::bind_rows() %>%
+          dplyr::pull(AVISITN)
+      # } else {
+      #   1:2
+      # }
     } else {
       1:2
     }
@@ -232,7 +240,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   
   AVISIT <- reactive({
     req(datafile())
-    # req(BDS())
+
     if (is.null(avisit_words())) {
       avisit_words <- c("fake_weeky","dummy_weeky")
     } else {
