@@ -36,6 +36,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       HTML(paste('
            <select id="RECIPE" class="selectize-input">
            <option  id="none">NONE</option>
+           <option  id="tbl03">Table 3: Accounting of Subjects</option>
            <option  id="demography">Table 5: Demography</option>',
            ifelse("ADAE" %in% names(datafile()),'<option  id="tbl18">Table 18: Overall summary of adverse events</option>',''),
            ifelse("ADAE" %in% names(datafile()),'<option  id="tbl19">Table 19: Adverse events by system organ class and preferred term sorted by decreasing frequency</option>',''),
@@ -693,7 +694,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # capture output of filtering expression
   filter_ae_expr <- reactive({
     filter_code <- gsub("processed_data","ae_data",capture.output(attr(filtered_data(), "code")))
-    if(any(regexpr("%>%", filter_code) > 0)){
+    if(any(regexpr("%>%", filter_code) > 0) & "ADAE" %in% names(datafile())){
       glue::glue("
           # Apply small filtered data set to ADAE data
               ae_data <- ae_data %>% semi_join(filtered_data) 
