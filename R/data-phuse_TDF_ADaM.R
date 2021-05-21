@@ -40,3 +40,14 @@
 #' @format Data frame with 32,139 features and 34 fields
 #' 
 "adae"
+
+
+#' ADTTE
+#'
+#' Time to Event Analysis Dataset from Phuse Test Data Fractory Project's github.
+#'
+#' @source <https://github.com/phuse-org/TestDataFactory/blob/master/Updated/TDF_ADaM/adtte.xpt>, downloaded 2021-01-26
+#'
+#' @format Data frame with 32,740 features and 58 fields
+#' 
+"adtte"

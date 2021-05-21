@@ -67,6 +67,42 @@
         "Built": "R 4.0.3; ; 2020-10-14 09:27:10 UTC; windows"
       }
     },
+    "GGally": {
+      "Source": "CRAN",
+      "Repository": "https://cran.rstudio.com/",
+      "GithubRepo": null,
+      "GithubUsername": null,
+      "GithubRef": null,
+      "GithubSha1": null,
+      "description": {
+        "Package": "GGally",
+        "Version": "2.1.0",
+        "License": "GPL (>= 2.0)",
+        "Title": "Extension to 'ggplot2'",
+        "Type": "Package",
+        "LazyLoad": "yes",
+        "LazyData": "true",
+        "URL": "https://ggobi.github.io/ggally/, https://github.com/ggobi/ggally",
+        "BugReports": "https://github.com/ggobi/ggally/issues",
+        "Authors@R": "c(\n    person(\"Barret\", \"Schloerke\", role = c(\"aut\", \"cre\"), email = \"schloerke@gmail.com\"),\n    person(\"Di\", \"Cook\", role = c(\"aut\", \"ths\"), email = \"dicook@monash.edu\"),\n    person(\"Joseph\", \"Larmarange\", role = \"aut\", email = \"joseph@larmarange.net\"),\n    person(\"Francois\", \"Briatte\", role = \"aut\", email = \"f.briatte@gmail.com\"),\n    person(\"Moritz\", \"Marbach\", role = \"aut\", email = \"mmarbach@mail.uni-mannheim.de\"),\n    person(\"Edwin\", \"Thoen\", role = \"aut\", email = \"edwinthoen@gmail.com\"),\n    person(\"Amos\", \"Elberg\", role = \"aut\", email = \"amos.elberg@gmail.com\"),\n    person(\"Ott\", \"Toomet\", role = \"ctb\", email = \"otoomet@gmail.com\"),\n    person(\"Jason\", \"Crowley\", role = \"aut\", email = \"crowley.jason.s@gmail.com\"),\n    person(\"Heike\", \"Hofmann\", role = \"ths\", email = \"hofmann@iastate.edu\"),\n    person(\"Hadley\", \"Wickham\", role = \"ths\", email = \"h.wickham@gmail.com\")\n    )",
+        "Description": "\n    The R package 'ggplot2' is a plotting system based on the grammar of graphics.\n    'GGally' extends 'ggplot2' by adding several functions\n    to reduce the complexity of combining geometric objects with transformed data.\n    Some of these functions include a pairwise plot matrix, a two group pairwise plot\n    matrix, a parallel coordinates plot, a survival plot, and several functions to\n    plot networks.",
+        "Depends": "R (>= 3.1), ggplot2 (>= 3.3.0)",
+        "Imports": "dplyr (>= 1.0.0), forcats, grDevices, grid, gtable (>= 0.2.0),\nlifecycle, plyr (>= 1.8.3), progress, RColorBrewer, reshape (>=\n0.8.5), rlang, scales (>= 1.1.0), tidyr, utils",
+        "Suggests": "broom (>= 0.7.0), broom.helpers (>= 1.1.0), chemometrics,\ngeosphere (>= 1.5-1), ggforce, Hmisc, igraph (>= 1.0.1),\nintergraph (>= 2.0-2), labelled, maps (>= 3.1.0), mapproj,\nnnet, network (>= 1.12.0), scagnostics, sna (>= 2.3-2),\nsurvival, rmarkdown, roxygen2, testthat, crosstalk, knitr,\nspelling",
+        "RoxygenNote": "7.1.1",
+        "SystemRequirements": "openssl",
+        "Encoding": "UTF-8",
+        "Language": "en-US",
+        "RdMacros": "lifecycle",
+        "NeedsCompilation": "no",
+        "Packaged": "2021-01-04 14:53:05 UTC; barret",
+        "Author": "Barret Schloerke [aut, cre],\n  Di Cook [aut, ths],\n  Joseph Larmarange [aut],\n  Francois Briatte [aut],\n  Moritz Marbach [aut],\n  Edwin Thoen [aut],\n  Amos Elberg [aut],\n  Ott Toomet [ctb],\n  Jason Crowley [aut],\n  Heike Hofmann [ths],\n  Hadley Wickham [ths]",
+        "Maintainer": "Barret Schloerke <schloerke@gmail.com>",
+        "Repository": "CRAN",
+        "Date/Publication": "2021-01-06 01:20:06 UTC",
+        "Built": "R 4.0.3; ; 2021-01-23 20:24:13 UTC; windows"
+      }
+    },
     "IDEAFilter": {
       "Source": "ghe",
       "Repository": "http://10.240.22.159:4242/Git-Biogen/latest",
@@ -1310,35 +1346,44 @@
       }
     },
     "forcats": {
-      "Source": "CRAN",
-      "Repository": "https://cran.rstudio.com/",
-      "GithubRepo": null,
-      "GithubUsername": null,
-      "GithubRef": null,
-      "GithubSha1": null,
+      "Source": "github",
+      "Repository": null,
+      "GithubRepo": "forcats",
+      "GithubUsername": "tidyverse",
+      "GithubRef": "HEAD",
+      "GithubSha1": "b5fce89f9527edaff8e83e4e1da645335748d2bb",
       "description": {
         "Package": "forcats",
         "Title": "Tools for Working with Categorical Variables (Factors)",
-        "Version": "0.5.0",
+        "Version": "0.5.1.9000",
         "Authors@R": "\n    c(person(given = \"Hadley\",\n             family = \"Wickham\",\n             role = c(\"aut\", \"cre\"),\n             email = \"hadley@rstudio.com\"),\n      person(given = \"RStudio\",\n             role = c(\"cph\", \"fnd\")))",
         "Description": "Helpers for reordering factor levels (including\n    moving specified levels to front, ordering by first appearance,\n    reversing, and randomly shuffling), and tools for modifying factor\n    levels (including collapsing rare levels into other, 'anonymising',\n    and manually 'recoding').",
-        "License": "GPL-3",
-        "URL": "http://forcats.tidyverse.org, https://github.com/tidyverse/forcats",
+        "License": "MIT + file LICENSE",
+        "URL": "https://forcats.tidyverse.org,\nhttps://github.com/tidyverse/forcats",
         "BugReports": "https://github.com/tidyverse/forcats/issues",
         "Depends": "R (>= 3.2)",
         "Imports": "ellipsis, magrittr, rlang, tibble",
-        "Suggests": "covr, ggplot2, testthat, readr, knitr, rmarkdown, dplyr",
+        "Suggests": "covr, dplyr, ggplot2, knitr, readr, rmarkdown, testthat",
+        "VignetteBuilder": "knitr",
         "Encoding": "UTF-8",
         "LazyData": "true",
-        "RoxygenNote": "7.0.2",
-        "VignetteBuilder": "knitr",
+        "Roxygen": "list(markdown = TRUE)",
+        "RoxygenNote": "7.1.1",
+        "RemoteType": "github",
+        "RemoteHost": "api.github.com",
+        "RemoteRepo": "forcats",
+        "RemoteUsername": "tidyverse",
+        "RemoteRef": "HEAD",
+        "RemoteSha": "b5fce89f9527edaff8e83e4e1da645335748d2bb",
+        "GithubRepo": "forcats",
+        "GithubUsername": "tidyverse",
+        "GithubRef": "HEAD",
+        "GithubSHA1": "b5fce89f9527edaff8e83e4e1da645335748d2bb",
         "NeedsCompilation": "no",
-        "Packaged": "2020-03-01 17:20:37 UTC; hadley",
+        "Packaged": "2021-04-28 13:05:38 UTC; aclark5",
         "Author": "Hadley Wickham [aut, cre],\n  RStudio [cph, fnd]",
         "Maintainer": "Hadley Wickham <hadley@rstudio.com>",
-        "Repository": "CRAN",
-        "Date/Publication": "2020-03-01 18:10:02 UTC",
-        "Built": "R 4.0.2; ; 2020-10-08 16:49:48 UTC; windows"
+        "Built": "R 4.0.3; ; 2021-04-28 13:05:41 UTC; windows"
       }
     },
     "fs": {
@@ -2793,6 +2838,38 @@
         "Built": "R 4.0.2; ; 2020-10-08 18:22:02 UTC; windows"
       }
     },
+    "plyr": {
+      "Source": "CRAN",
+      "Repository": "https://cran.rstudio.com/",
+      "GithubRepo": null,
+      "GithubUsername": null,
+      "GithubRef": null,
+      "GithubSha1": null,
+      "description": {
+        "Package": "plyr",
+        "Title": "Tools for Splitting, Applying and Combining Data",
+        "Version": "1.8.6",
+        "Authors@R": "\n    person(given = \"Hadley\",\n           family = \"Wickham\",\n           role = c(\"aut\", \"cre\"),\n           email = \"hadley@rstudio.com\")",
+        "Description": "A set of tools that solves a common set of\n    problems: you need to break a big problem down into manageable pieces,\n    operate on each piece and then put all the pieces back together.  For\n    example, you might want to fit a model to each spatial location or\n    time point in your study, summarise data by panels or collapse\n    high-dimensional arrays to simpler summary statistics. The development\n    of 'plyr' has been generously supported by 'Becton Dickinson'.",
+        "License": "MIT + file LICENSE",
+        "URL": "http://had.co.nz/plyr, https://github.com/hadley/plyr",
+        "BugReports": "https://github.com/hadley/plyr/issues",
+        "Depends": "R (>= 3.1.0)",
+        "Imports": "Rcpp (>= 0.11.0)",
+        "Suggests": "abind, covr, doParallel, foreach, iterators, itertools,\ntcltk, testthat",
+        "LinkingTo": "Rcpp",
+        "Encoding": "UTF-8",
+        "LazyData": "true",
+        "RoxygenNote": "7.0.2",
+        "NeedsCompilation": "yes",
+        "Packaged": "2020-03-02 23:46:56 UTC; hadley",
+        "Author": "Hadley Wickham [aut, cre]",
+        "Maintainer": "Hadley Wickham <hadley@rstudio.com>",
+        "Repository": "CRAN",
+        "Date/Publication": "2020-03-03 14:40:02 UTC",
+        "Built": "R 4.0.2; x86_64-w64-mingw32; 2020-10-08 13:07:04 UTC; windows"
+      }
+    },
     "praise": {
       "Source": "CRAN",
       "Repository": "https://cran.rstudio.com/",
@@ -2876,6 +2953,35 @@
         "Repository": "CRAN",
         "Date/Publication": "2020-09-03 13:00:03 UTC",
         "Built": "R 4.0.2; x86_64-w64-mingw32; 2020-10-08 11:34:45 UTC; windows"
+      }
+    },
+    "progress": {
+      "Source": "CRAN",
+      "Repository": "https://cran.rstudio.com/",
+      "GithubRepo": null,
+      "GithubUsername": null,
+      "GithubRef": null,
+      "GithubSha1": null,
+      "description": {
+        "Package": "progress",
+        "Title": "Terminal Progress Bars",
+        "Version": "1.2.2",
+        "Author": "Gábor Csárdi [aut, cre], Rich FitzJohn [aut]",
+        "Maintainer": "Gábor Csárdi <csardi.gabor@gmail.com>",
+        "Description": "Configurable Progress bars, they may include percentage,\n    elapsed time, and/or the estimated completion time. They work in\n    terminals, in 'Emacs' 'ESS', 'RStudio', 'Windows' 'Rgui' and the\n    'macOS' 'R.app'. The package also provides a 'C++' 'API', that works\n    with or without 'Rcpp'.",
+        "License": "MIT + file LICENSE",
+        "LazyData": "true",
+        "URL": "https://github.com/r-lib/progress#readme",
+        "BugReports": "https://github.com/r-lib/progress/issues",
+        "Imports": "hms, prettyunits, R6, crayon",
+        "Suggests": "Rcpp, testthat, withr",
+        "RoxygenNote": "6.1.0",
+        "Encoding": "UTF-8",
+        "NeedsCompilation": "no",
+        "Packaged": "2019-05-15 20:28:47 UTC; gaborcsardi",
+        "Repository": "CRAN",
+        "Date/Publication": "2019-05-16 21:30:03 UTC",
+        "Built": "R 4.0.2; ; 2020-10-08 15:49:46 UTC; windows"
       }
     },
     "promises": {
@@ -3106,6 +3212,33 @@
         "Built": "R 4.0.2; ; 2020-10-08 11:37:27 UTC; windows"
       }
     },
+    "reshape": {
+      "Source": "CRAN",
+      "Repository": "https://cran.rstudio.com/",
+      "GithubRepo": null,
+      "GithubUsername": null,
+      "GithubRef": null,
+      "GithubSha1": null,
+      "description": {
+        "Package": "reshape",
+        "Version": "0.8.8",
+        "Title": "Flexibly Reshape Data",
+        "Description": "Flexibly restructure and aggregate data using \n  just two functions: melt and cast.",
+        "Authors@R": "\n    person(\"Hadley\", \"Wickham\", , \"hadley@rstudio.com\", c(\"aut\", \"cre\"))",
+        "URL": "http://had.co.nz/reshape",
+        "Depends": "R (>= 2.6.1)",
+        "Imports": "plyr",
+        "License": "MIT + file LICENSE",
+        "LazyData": "true",
+        "NeedsCompilation": "yes",
+        "Packaged": "2018-10-23 18:21:49 UTC; hadley",
+        "Author": "Hadley Wickham [aut, cre]",
+        "Maintainer": "Hadley Wickham <hadley@rstudio.com>",
+        "Repository": "CRAN",
+        "Date/Publication": "2018-10-23 18:50:03 UTC",
+        "Built": "R 4.0.3; ; 2021-01-23 13:43:18 UTC; windows"
+      }
+    },
     "rlang": {
       "Source": "CRAN",
       "Repository": "https://cran.rstudio.com/",
@@ -3152,26 +3285,26 @@
         "Package": "rmarkdown",
         "Type": "Package",
         "Title": "Dynamic Documents for R",
-        "Version": "2.4",
-        "Authors@R": "c(\n  person(\"JJ\", \"Allaire\", role = \"aut\", email = \"jj@rstudio.com\"),\n  person(\"Yihui\", \"Xie\", role = c(\"aut\", \"cre\"), email = \"xie@yihui.name\", comment = c(ORCID = \"0000-0003-0645-5666\")),\n  person(\"Jonathan\", \"McPherson\", role = \"aut\", email = \"jonathan@rstudio.com\"),\n  person(\"Javier\", \"Luraschi\", role = \"aut\", email = \"javier@rstudio.com\"),\n  person(\"Kevin\", \"Ushey\", role = \"aut\", email = \"kevin@rstudio.com\"),\n  person(\"Aron\", \"Atkins\", role = \"aut\", email = \"aron@rstudio.com\"),\n  person(\"Hadley\", \"Wickham\", role = \"aut\", email = \"hadley@rstudio.com\"),\n  person(\"Joe\", \"Cheng\", role = \"aut\", email = \"joe@rstudio.com\"),\n  person(\"Winston\", \"Chang\", role = \"aut\", email = \"winston@rstudio.com\"),\n  person(\"Richard\", \"Iannone\", role = \"aut\", email = \"rich@rstudio.com\", comment = c(ORCID = \"0000-0003-3925-190X\")),\n  #\n  # Contributors, ordered alphabetically by first name\n  person(\"Andrew\", \"Dunning\", role = \"ctb\", comment = c(ORCID = \"0000-0003-0464-5036\")),\n  person(\"Atsushi\", \"Yasumoto\", role = c(\"ctb\", \"cph\"),\n         comment = c(ORCID = \"0000-0002-8335-495X\",\n                     cph = \"Number sections Lua filter\")),\n  person(\"Barret\", \"Schloerke\", role = \"ctb\"),\n  person(\"Christophe\", \"Dervieux\", role = \"ctb\"),\n  person(\"Frederik\", \"Aust\", role = \"ctb\", email = \"frederik.aust@uni-koeln.de\", comment = c(ORCID = \"0000-0003-4900-788X\")),\n  person(\"Jeff\", \"Allen\", role = \"ctb\", email = \"jeff@rstudio.com\"),\n  person(\"JooYoung\", \"Seo\", role=\"ctb\", comment = c(ORCID = \"0000-0002-4064-6012\")),\n  person(\"Malcolm\", \"Barrett\", role = \"ctb\"),\n  person(\"Rob\", \"Hyndman\", role = \"ctb\", email = \"Rob.Hyndman@monash.edu\"),\n  person(\"Romain\", \"Lesur\", role = \"ctb\"),\n  person(\"Roy\", \"Storey\", role = \"ctb\"),\n  person(\"Ruben\", \"Arslan\", role = \"ctb\", email = \"ruben.arslan@uni-goettingen.de\"),\n  person(\"Sergio\", \"Oller\", role = \"ctb\"),\n  #\n  # Copyright holders\n  person(family = \"RStudio, PBC\", role = \"cph\"),\n  person(family = \"jQuery Foundation\", role = \"cph\",\n         comment = \"jQuery library\"),\n  person(family = \"jQuery contributors\", role = c(\"ctb\", \"cph\"),\n         comment = \"jQuery library; authors listed in inst/rmd/h/jquery-AUTHORS.txt\"),\n  person(family = \"jQuery UI contributors\", role = c(\"ctb\", \"cph\"),\n         comment = \"jQuery UI library; authors listed in inst/rmd/h/jqueryui-AUTHORS.txt\"),\n  person(\"Mark\", \"Otto\", role = \"ctb\",\n         comment = \"Bootstrap library\"),\n  person(\"Jacob\", \"Thornton\", role = \"ctb\",\n         comment = \"Bootstrap library\"),\n  person(family = \"Bootstrap contributors\", role = \"ctb\",\n         comment = \"Bootstrap library\"),\n  person(family = \"Twitter, Inc\", role = \"cph\",\n         comment = \"Bootstrap library\"),\n  person(\"Alexander\", \"Farkas\", role = c(\"ctb\", \"cph\"),\n         comment = \"html5shiv library\"),\n  person(\"Scott\", \"Jehl\", role = c(\"ctb\", \"cph\"),\n         comment = \"Respond.js library\"),\n  person(\"Ivan\", \"Sagalaev\", role = c(\"ctb\", \"cph\"),\n         comment = \"highlight.js library\"),\n  person(\"Greg\", \"Franko\", role = c(\"ctb\", \"cph\"),\n         comment = \"tocify library\"),\n  person(\"John\", \"MacFarlane\", role = c(\"ctb\", \"cph\"),\n         comment = \"Pandoc templates\"),\n  person(family = \"Google, Inc.\", role = c(\"ctb\", \"cph\"),\n         comment = \"ioslides library\"),\n  person(\"Dave\", \"Raggett\", role = \"ctb\",\n         comment = \"slidy library\"),\n  person(family = \"W3C\", role = \"cph\",\n         comment = \"slidy library\"),\n  person(\"Dave\", \"Gandy\", role = c(\"ctb\", \"cph\"),\n         comment = \"Font-Awesome\"),\n  person(\"Ben\", \"Sperry\", role = \"ctb\",\n         comment = \"Ionicons\"),\n  person(family = \"Drifty\", role = \"cph\",\n         comment = \"Ionicons\"),\n  person(\"Aidan\", \"Lister\", role = c(\"ctb\", \"cph\"), \n         comment = \"jQuery StickyTabs\"),\n  person(\"Benct Philip\", \"Jonsson\", role = c(\"ctb\", \"cph\"), \n         comment = \"pagebreak Lua filter\"),\n  person(\"Albert\", \"Krewinkel\", role = c(\"ctb\", \"cph\"), \n         comment = \"pagebreak Lua filter\")\n  )",
+        "Version": "2.7",
+        "Authors@R": "c(\n  person(\"JJ\", \"Allaire\", role = \"aut\", email = \"jj@rstudio.com\"),\n  person(\"Yihui\", \"Xie\", role = c(\"aut\", \"cre\"), email = \"xie@yihui.name\", comment = c(ORCID = \"0000-0003-0645-5666\")),\n  person(\"Jonathan\", \"McPherson\", role = \"aut\", email = \"jonathan@rstudio.com\"),\n  person(\"Javier\", \"Luraschi\", role = \"aut\", email = \"javier@rstudio.com\"),\n  person(\"Kevin\", \"Ushey\", role = \"aut\", email = \"kevin@rstudio.com\"),\n  person(\"Aron\", \"Atkins\", role = \"aut\", email = \"aron@rstudio.com\"),\n  person(\"Hadley\", \"Wickham\", role = \"aut\", email = \"hadley@rstudio.com\"),\n  person(\"Joe\", \"Cheng\", role = \"aut\", email = \"joe@rstudio.com\"),\n  person(\"Winston\", \"Chang\", role = \"aut\", email = \"winston@rstudio.com\"),\n  person(\"Richard\", \"Iannone\", role = \"aut\", email = \"rich@rstudio.com\", comment = c(ORCID = \"0000-0003-3925-190X\")),\n  #\n  # Contributors, ordered alphabetically by first name\n  person(\"Andrew\", \"Dunning\", role = \"ctb\", comment = c(ORCID = \"0000-0003-0464-5036\")),\n  person(\"Atsushi\", \"Yasumoto\", role = c(\"ctb\", \"cph\"),\n         comment = c(ORCID = \"0000-0002-8335-495X\",\n                     cph = \"Number sections Lua filter\")),\n  person(\"Barret\", \"Schloerke\", role = \"ctb\"),\n  person(\"Carson\", \"Sievert\", role = \"ctb\", comment = c(ORCID = \"0000-0002-4958-2844\")),\n  person(\"Christophe\", \"Dervieux\", role = \"ctb\"),\n  person(\"Frederik\", \"Aust\", role = \"ctb\", email = \"frederik.aust@uni-koeln.de\", comment = c(ORCID = \"0000-0003-4900-788X\")),\n  person(\"Jeff\", \"Allen\", role = \"ctb\", email = \"jeff@rstudio.com\"),\n  person(\"JooYoung\", \"Seo\", role=\"ctb\", comment = c(ORCID = \"0000-0002-4064-6012\")),\n  person(\"Malcolm\", \"Barrett\", role = \"ctb\"),\n  person(\"Rob\", \"Hyndman\", role = \"ctb\", email = \"Rob.Hyndman@monash.edu\"),\n  person(\"Romain\", \"Lesur\", role = \"ctb\"),\n  person(\"Roy\", \"Storey\", role = \"ctb\"),\n  person(\"Ruben\", \"Arslan\", role = \"ctb\", email = \"ruben.arslan@uni-goettingen.de\"),\n  person(\"Sergio\", \"Oller\", role = \"ctb\"),\n  #\n  # Copyright holders\n  person(family = \"RStudio, PBC\", role = \"cph\"),\n  person(family = \"jQuery Foundation\", role = \"cph\",\n         comment = \"jQuery library\"),\n  person(family = \"jQuery contributors\", role = c(\"ctb\", \"cph\"),\n         comment = \"jQuery library; authors listed in inst/rmd/h/jquery-AUTHORS.txt\"),\n  person(family = \"jQuery UI contributors\", role = c(\"ctb\", \"cph\"),\n         comment = \"jQuery UI library; authors listed in inst/rmd/h/jqueryui-AUTHORS.txt\"),\n  person(\"Mark\", \"Otto\", role = \"ctb\",\n         comment = \"Bootstrap library\"),\n  person(\"Jacob\", \"Thornton\", role = \"ctb\",\n         comment = \"Bootstrap library\"),\n  person(family = \"Bootstrap contributors\", role = \"ctb\",\n         comment = \"Bootstrap library\"),\n  person(family = \"Twitter, Inc\", role = \"cph\",\n         comment = \"Bootstrap library\"),\n  person(\"Alexander\", \"Farkas\", role = c(\"ctb\", \"cph\"),\n         comment = \"html5shiv library\"),\n  person(\"Scott\", \"Jehl\", role = c(\"ctb\", \"cph\"),\n         comment = \"Respond.js library\"),\n  person(\"Ivan\", \"Sagalaev\", role = c(\"ctb\", \"cph\"),\n         comment = \"highlight.js library\"),\n  person(\"Greg\", \"Franko\", role = c(\"ctb\", \"cph\"),\n         comment = \"tocify library\"),\n  person(\"John\", \"MacFarlane\", role = c(\"ctb\", \"cph\"),\n         comment = \"Pandoc templates\"),\n  person(family = \"Google, Inc.\", role = c(\"ctb\", \"cph\"),\n         comment = \"ioslides library\"),\n  person(\"Dave\", \"Raggett\", role = \"ctb\",\n         comment = \"slidy library\"),\n  person(family = \"W3C\", role = \"cph\",\n         comment = \"slidy library\"),\n  person(\"Dave\", \"Gandy\", role = c(\"ctb\", \"cph\"),\n         comment = \"Font-Awesome\"),\n  person(\"Ben\", \"Sperry\", role = \"ctb\",\n         comment = \"Ionicons\"),\n  person(family = \"Drifty\", role = \"cph\",\n         comment = \"Ionicons\"),\n  person(\"Aidan\", \"Lister\", role = c(\"ctb\", \"cph\"), \n         comment = \"jQuery StickyTabs\"),\n  person(\"Benct Philip\", \"Jonsson\", role = c(\"ctb\", \"cph\"), \n         comment = \"pagebreak Lua filter\"),\n  person(\"Albert\", \"Krewinkel\", role = c(\"ctb\", \"cph\"), \n         comment = \"pagebreak Lua filter\")\n  )",
         "Maintainer": "Yihui Xie <xie@yihui.name>",
         "Description": "Convert R Markdown documents into a variety of formats.",
         "Depends": "R (>= 3.0)",
-        "Imports": "tools, utils, knitr (>= 1.22), yaml (>= 2.1.19), htmltools (>=\n0.3.5), evaluate (>= 0.13), jsonlite, mime, tinytex (>= 0.11),\nxfun, methods, stringr (>= 1.2.0)",
-        "Suggests": "shiny (>= 0.11), tufte, testthat, digest, dygraphs, tibble,\nfs, rsconnect",
+        "Imports": "tools, utils, knitr (>= 1.22), yaml (>= 2.1.19), htmltools (>=\n0.3.5), evaluate (>= 0.13), jsonlite, tinytex (>= 0.11), xfun\n(>= 0.15), methods, stringr (>= 1.2.0)",
+        "Suggests": "shiny (>= 1.6.0), tufte, testthat (>= 3.0.0), digest,\ndygraphs, vctrs, tibble, fs, rsconnect, withr (>= 2.3.0), bslib\n(>= 0.2.4), sass",
         "SystemRequirements": "pandoc (>= 1.14) - http://pandoc.org",
-        "URL": "https://github.com/rstudio/rmarkdown",
+        "URL": "https://github.com/rstudio/rmarkdown,\nhttps://rmarkdown.rstudio.com/docs/",
         "BugReports": "https://github.com/rstudio/rmarkdown/issues",
         "License": "GPL-3",
         "RoxygenNote": "7.1.1",
         "Encoding": "UTF-8",
         "VignetteBuilder": "knitr",
         "NeedsCompilation": "no",
-        "Packaged": "2020-09-30 12:59:01 UTC; yihui",
-        "Author": "JJ Allaire [aut],\n  Yihui Xie [aut, cre] (<https://orcid.org/0000-0003-0645-5666>),\n  Jonathan McPherson [aut],\n  Javier Luraschi [aut],\n  Kevin Ushey [aut],\n  Aron Atkins [aut],\n  Hadley Wickham [aut],\n  Joe Cheng [aut],\n  Winston Chang [aut],\n  Richard Iannone [aut] (<https://orcid.org/0000-0003-3925-190X>),\n  Andrew Dunning [ctb] (<https://orcid.org/0000-0003-0464-5036>),\n  Atsushi Yasumoto [ctb, cph] (<https://orcid.org/0000-0002-8335-495X>,\n    Number sections Lua filter),\n  Barret Schloerke [ctb],\n  Christophe Dervieux [ctb],\n  Frederik Aust [ctb] (<https://orcid.org/0000-0003-4900-788X>),\n  Jeff Allen [ctb],\n  JooYoung Seo [ctb] (<https://orcid.org/0000-0002-4064-6012>),\n  Malcolm Barrett [ctb],\n  Rob Hyndman [ctb],\n  Romain Lesur [ctb],\n  Roy Storey [ctb],\n  Ruben Arslan [ctb],\n  Sergio Oller [ctb],\n  RStudio, PBC [cph],\n  jQuery Foundation [cph] (jQuery library),\n  jQuery contributors [ctb, cph] (jQuery library; authors listed in\n    inst/rmd/h/jquery-AUTHORS.txt),\n  jQuery UI contributors [ctb, cph] (jQuery UI library; authors listed in\n    inst/rmd/h/jqueryui-AUTHORS.txt),\n  Mark Otto [ctb] (Bootstrap library),\n  Jacob Thornton [ctb] (Bootstrap library),\n  Bootstrap contributors [ctb] (Bootstrap library),\n  Twitter, Inc [cph] (Bootstrap library),\n  Alexander Farkas [ctb, cph] (html5shiv library),\n  Scott Jehl [ctb, cph] (Respond.js library),\n  Ivan Sagalaev [ctb, cph] (highlight.js library),\n  Greg Franko [ctb, cph] (tocify library),\n  John MacFarlane [ctb, cph] (Pandoc templates),\n  Google, Inc. [ctb, cph] (ioslides library),\n  Dave Raggett [ctb] (slidy library),\n  W3C [cph] (slidy library),\n  Dave Gandy [ctb, cph] (Font-Awesome),\n  Ben Sperry [ctb] (Ionicons),\n  Drifty [cph] (Ionicons),\n  Aidan Lister [ctb, cph] (jQuery StickyTabs),\n  Benct Philip Jonsson [ctb, cph] (pagebreak Lua filter),\n  Albert Krewinkel [ctb, cph] (pagebreak Lua filter)",
+        "Packaged": "2021-02-19 04:20:47 UTC; yihui",
+        "Author": "JJ Allaire [aut],\n  Yihui Xie [aut, cre] (<https://orcid.org/0000-0003-0645-5666>),\n  Jonathan McPherson [aut],\n  Javier Luraschi [aut],\n  Kevin Ushey [aut],\n  Aron Atkins [aut],\n  Hadley Wickham [aut],\n  Joe Cheng [aut],\n  Winston Chang [aut],\n  Richard Iannone [aut] (<https://orcid.org/0000-0003-3925-190X>),\n  Andrew Dunning [ctb] (<https://orcid.org/0000-0003-0464-5036>),\n  Atsushi Yasumoto [ctb, cph] (<https://orcid.org/0000-0002-8335-495X>,\n    Number sections Lua filter),\n  Barret Schloerke [ctb],\n  Carson Sievert [ctb] (<https://orcid.org/0000-0002-4958-2844>),\n  Christophe Dervieux [ctb],\n  Frederik Aust [ctb] (<https://orcid.org/0000-0003-4900-788X>),\n  Jeff Allen [ctb],\n  JooYoung Seo [ctb] (<https://orcid.org/0000-0002-4064-6012>),\n  Malcolm Barrett [ctb],\n  Rob Hyndman [ctb],\n  Romain Lesur [ctb],\n  Roy Storey [ctb],\n  Ruben Arslan [ctb],\n  Sergio Oller [ctb],\n  RStudio, PBC [cph],\n  jQuery Foundation [cph] (jQuery library),\n  jQuery contributors [ctb, cph] (jQuery library; authors listed in\n    inst/rmd/h/jquery-AUTHORS.txt),\n  jQuery UI contributors [ctb, cph] (jQuery UI library; authors listed in\n    inst/rmd/h/jqueryui-AUTHORS.txt),\n  Mark Otto [ctb] (Bootstrap library),\n  Jacob Thornton [ctb] (Bootstrap library),\n  Bootstrap contributors [ctb] (Bootstrap library),\n  Twitter, Inc [cph] (Bootstrap library),\n  Alexander Farkas [ctb, cph] (html5shiv library),\n  Scott Jehl [ctb, cph] (Respond.js library),\n  Ivan Sagalaev [ctb, cph] (highlight.js library),\n  Greg Franko [ctb, cph] (tocify library),\n  John MacFarlane [ctb, cph] (Pandoc templates),\n  Google, Inc. [ctb, cph] (ioslides library),\n  Dave Raggett [ctb] (slidy library),\n  W3C [cph] (slidy library),\n  Dave Gandy [ctb, cph] (Font-Awesome),\n  Ben Sperry [ctb] (Ionicons),\n  Drifty [cph] (Ionicons),\n  Aidan Lister [ctb, cph] (jQuery StickyTabs),\n  Benct Philip Jonsson [ctb, cph] (pagebreak Lua filter),\n  Albert Krewinkel [ctb, cph] (pagebreak Lua filter)",
         "Repository": "CRAN",
-        "Date/Publication": "2020-09-30 18:40:06 UTC",
-        "Built": "R 4.0.2; ; 2020-10-08 14:35:07 UTC; windows"
+        "Date/Publication": "2021-02-19 08:10:02 UTC",
+        "Built": "R 4.0.3; ; 2021-03-24 20:23:23 UTC; windows"
       }
     },
     "roxygen2": {
@@ -3536,8 +3669,8 @@
       "description": {
         "Package": "shinyWidgets",
         "Title": "Custom Inputs Widgets for Shiny",
-        "Version": "0.5.4",
-        "Authors@R": "c(\n  person(\"Victor\", \"Perrier\", email = \"victor.perrier@dreamrs.fr\", role = c(\"aut\", \"cre\", \"cph\")),\n  person(\"Fanny\", \"Meyer\", role = \"aut\"),\n  person(\"David\", \"Granjon\", role = \"aut\"),\n  person(\"Ian\", \"Fellows\", role = \"ctb\", comment = \"Methods for mutating vertical tabs & updateMultiInput\"),\n  person(\"Wil\", \"Davis\", role = \"ctb\", comment = \"numericRangeInput function\"),\n  person(\"Spencer\", \"Matthews\", role = \"ctb\", comment = \"autoNumeric methods\")\n  )",
+        "Version": "0.6.0",
+        "Authors@R": "c(\n  person(\"Victor\", \"Perrier\", email = \"victor.perrier@dreamrs.fr\", role = c(\"aut\", \"cre\", \"cph\")),\n  person(\"Fanny\", \"Meyer\", role = \"aut\"),\n  person(\"David\", \"Granjon\", role = \"aut\"),\n  person(\"Ian\", \"Fellows\", role = \"ctb\", comment = \"Methods for mutating vertical tabs & updateMultiInput\"),\n  person(\"Wil\", \"Davis\", role = \"ctb\", comment = \"numericRangeInput function\"),\n  person(\"Spencer\", \"Matthews\", role = \"ctb\", comment = \"autoNumeric methods\"),\n  person(family = \"JavaScript and CSS libraries authors\", role = c(\"ctb\", \"cph\"), comment = \"All authors are listed in LICENSE.md\")\n  )",
         "Description": "Collection of custom input controls and user interface components for 'Shiny' applications. \n  Give your applications a unique and colorful style !",
         "URL": "https://github.com/dreamRs/shinyWidgets",
         "BugReports": "https://github.com/dreamRs/shinyWidgets/issues",
@@ -3546,15 +3679,15 @@
         "LazyData": "true",
         "RoxygenNote": "7.1.1",
         "Depends": "R (>= 3.1.0)",
-        "Imports": "shiny (>= 0.14), htmltools, jsonlite, grDevices",
-        "Suggests": "shinydashboard, testthat, covr, shinydashboardPlus, bs4Dash,\nargonR, argonDash, tablerDash, ggplot2, DT, scales",
+        "Imports": "bslib, sass, shiny (>= 0.14), htmltools, jsonlite, grDevices",
+        "Suggests": "shinydashboard, testthat, covr, shinydashboardPlus (>=\n2.0.0), bs4Dash, argonR, argonDash, tablerDash, ggplot2, DT,\nscales",
         "NeedsCompilation": "no",
-        "Packaged": "2020-10-06 08:30:09 UTC; perri",
-        "Author": "Victor Perrier [aut, cre, cph],\n  Fanny Meyer [aut],\n  David Granjon [aut],\n  Ian Fellows [ctb] (Methods for mutating vertical tabs &\n    updateMultiInput),\n  Wil Davis [ctb] (numericRangeInput function),\n  Spencer Matthews [ctb] (autoNumeric methods)",
+        "Packaged": "2021-03-15 20:24:55 UTC; perri",
+        "Author": "Victor Perrier [aut, cre, cph],\n  Fanny Meyer [aut],\n  David Granjon [aut],\n  Ian Fellows [ctb] (Methods for mutating vertical tabs &\n    updateMultiInput),\n  Wil Davis [ctb] (numericRangeInput function),\n  Spencer Matthews [ctb] (autoNumeric methods),\n  JavaScript and CSS libraries authors [ctb, cph] (All authors are listed\n    in LICENSE.md)",
         "Maintainer": "Victor Perrier <victor.perrier@dreamrs.fr>",
         "Repository": "CRAN",
-        "Date/Publication": "2020-10-06 09:10:03 UTC",
-        "Built": "R 4.0.2; ; 2020-10-08 07:56:30 UTC; windows"
+        "Date/Publication": "2021-03-15 20:50:02 UTC",
+        "Built": "R 4.0.4; ; 2021-03-23 11:08:07 UTC; windows"
       }
     },
     "shinyjs": {
@@ -3771,6 +3904,37 @@
         "Repository": "CRAN",
         "Date/Publication": "2019-02-10 03:40:03 UTC",
         "Built": "R 4.0.2; ; 2020-10-08 13:07:04 UTC; windows"
+      }
+    },
+    "survival": {
+      "Source": "CRAN",
+      "Repository": "https://cran.rstudio.com/",
+      "GithubRepo": null,
+      "GithubUsername": null,
+      "GithubRef": null,
+      "GithubSha1": null,
+      "description": {
+        "Title": "Survival Analysis",
+        "Priority": "recommended",
+        "Package": "survival",
+        "Version": "3.2-7",
+        "Date": "2020-09-24",
+        "Depends": "R (>= 3.4.0)",
+        "Imports": "graphics, Matrix, methods, splines, stats, utils",
+        "LazyData": "Yes",
+        "LazyLoad": "Yes",
+        "ByteCompile": "Yes",
+        "Authors@R": "c(person(c(\"Terry\", \"M\"), \"Therneau\",\n                    email=\"therneau.terry@mayo.edu\",\n\t            role=c(\"aut\", \"cre\")),\n               person(\"Thomas\", \"Lumley\", role=c(\"ctb\", \"trl\"),\n\t       comment=\"original S->R port and R maintainer until 2009\"),\n\t       person(\"Atkinson\", \"Elizabeth\", role=\"ctb\"),\n\t       person(\"Crowson\", \"Cynthia\", role=\"ctb\"))",
+        "Description": "Contains the core survival analysis routines, including\n\t     definition of Surv objects, \n\t     Kaplan-Meier and Aalen-Johansen (multi-state) curves, Cox models,\n\t     and parametric accelerated failure time models.",
+        "License": "LGPL (>= 2)",
+        "URL": "https://github.com/therneau/survival",
+        "NeedsCompilation": "yes",
+        "Packaged": "2020-09-25 17:55:24 UTC; therneau",
+        "Author": "Terry M Therneau [aut, cre],\n  Thomas Lumley [ctb, trl] (original S->R port and R maintainer until\n    2009),\n  Atkinson Elizabeth [ctb],\n  Crowson Cynthia [ctb]",
+        "Maintainer": "Terry M Therneau <therneau.terry@mayo.edu>",
+        "Repository": "CRAN",
+        "Date/Publication": "2020-09-28 08:20:02 UTC",
+        "Built": "R 4.0.3; x86_64-w64-mingw32; 2020-10-10 12:53:45 UTC; windows"
       }
     },
     "sys": {
@@ -4445,7 +4609,7 @@
       "checksum": "ebcc56144abaa5f7e0c57dcf20d0f87d"
     },
     "app.R": {
-      "checksum": "b68ad6feedfa4892dc8d28a00b846f3e"
+      "checksum": "7ed6aef247ccf86a8305c7489d2a22a5"
     },
     "CODE_OF_CONDUCT.md": {
       "checksum": "2e8c60771c15eeca105d658c3523b2af"
@@ -4468,6 +4632,12 @@
     "data-raw/adsl.xpt": {
       "checksum": "5e1cf74cc6c32c99cdc2256f498ecbb9"
     },
+    "data-raw/adtte.R": {
+      "checksum": "32e734bc5884294af305fcc3c3f83c00"
+    },
+    "data-raw/adtte.xpt": {
+      "checksum": "8f17bfd7010d89d1ed7c03e16e7f1bff"
+    },
     "data-raw/advs.R": {
       "checksum": "2bcaafbd8a85e29d5b9540f8ff9e3d97"
     },
@@ -4483,29 +4653,32 @@
     "data/adsl.rda": {
       "checksum": "f0491f5cb59dfe9ffef542fa0f28c2fb"
     },
+    "data/adtte.rda": {
+      "checksum": "4eeab2add0a28a5ef916b84dd2fe6699"
+    },
     "data/advs.rda": {
       "checksum": "61efa82920fa062e23d6215dfbdb74be"
     },
     "DESCRIPTION": {
-      "checksum": "cf2f4d0b5cc8d9d5bc44d5ff75bd0057"
+      "checksum": "b1fd7d58bd41d85cf90f6f672ccd6682"
     },
     "dev/01_start.R": {
       "checksum": "6992ea42b2ce8c44c53dd72e75724aac"
     },
     "dev/02_dev.R": {
-      "checksum": "86b3922bbf29148a14e289ba3d651e1e"
+      "checksum": "1e14e6887dc318fcb412bf7ffc9e269a"
     },
     "dev/03_deploy.R": {
       "checksum": "7b413fcf3e7273e8b80cb6971b2190a4"
     },
     "dev/run_dev.R": {
-      "checksum": "aecd1bce40ae06a421efd4f47a45c582"
+      "checksum": "bd4b0ecad5b93f9dcf35243383e5276f"
     },
     "inst/app/www/accordian.js": {
       "checksum": "5048ecc1f9e9a74fd44026e371cf610a"
     },
     "inst/app/www/analytics.js": {
-      "checksum": "c621f11d9291ed59399c57e315323908"
+      "checksum": "30037457a75019b28df49c20fa060ce6"
     },
     "inst/app/www/batchDownload_html.Rmd": {
       "checksum": "a2e7afbb02fc3a54acc49fcdc222a4f2"
@@ -4564,14 +4737,17 @@
     "man/adsl.Rd": {
       "checksum": "ef1fa59a5fc5bdefe63b69b95d0878dc"
     },
+    "man/adtte.Rd": {
+      "checksum": "e3ba90ca1f0fb1c63e2892a7637b50e3"
+    },
     "man/advs.Rd": {
       "checksum": "ee89343a9e63fa9a668a57d8698f7fad"
     },
     "man/boxPlot_srv.Rd": {
-      "checksum": "f8b3b8405da51ea260b93b0bba8746b2"
+      "checksum": "42255b5b7e5667c8f878efd44ebc2dc9"
     },
     "man/boxPlot_ui.Rd": {
-      "checksum": "f9ee044790122d649663702f28781987"
+      "checksum": "c6f2c0d59dfa380ab24aef6826afc2a8"
     },
     "man/build_events.Rd": {
       "checksum": "38d15da06bc8d975d2d6d0cde2b9c4ed"
@@ -4601,10 +4777,10 @@
       "checksum": "7da04db576ab7171a8e25480f58b4287"
     },
     "man/convertTGOutput.Rd": {
-      "checksum": "2c2aeb99a908a94deec98d349c08a81b"
+      "checksum": "1641e25597a6f03dffb8c62c8870d38f"
     },
     "man/custom_class.Rd": {
-      "checksum": "3a3f1a23c2d92daaf842020c9f3e7570"
+      "checksum": "82b07e77db871d2633b3d7059ae1442b"
     },
     "man/data_to_filter.Rd": {
       "checksum": "e3008c95974e65629142918bc6a6952e"
@@ -4616,7 +4792,7 @@
       "checksum": "22941ccae0ef7b195979eaf145a3a46a"
     },
     "man/dropArea.Rd": {
-      "checksum": "e19f323945f9be61c0c02cb541681886"
+      "checksum": "a4825975c6d9756d438c45b6ce056619"
     },
     "man/fnIndvExplVisits.Rd": {
       "checksum": "0a20ab9e1c32c63f43c4eb27ee3046d8"
@@ -4670,52 +4846,70 @@
       "checksum": "a003308775a9f03ebec3bac171f0153a"
     },
     "man/IDEA_anova.Rd": {
-      "checksum": "61bcd8afe8fea465a958f4c13732c89a"
+      "checksum": "aa80aa49fab27a2515b181cb843aebfb"
     },
     "man/IDEA_boxplot.Rd": {
-      "checksum": "d4cba9546ceb53a8a55340075aced770"
+      "checksum": "6f4ef4a89ad5e918affb164707bc4831"
     },
     "man/IDEA_chg.Rd": {
-      "checksum": "bd85610c48d88b17285885f0ee71377e"
+      "checksum": "2fcbad9f9a3bab87c4301d81ddb801b3"
     },
     "man/IDEA_freq.Rd": {
-      "checksum": "2df96c5800ce7af4f313834d7a277b42"
+      "checksum": "a637d7b21e55397622cfb11e2d1c177e"
+    },
+    "man/IDEA_km_curve.Rd": {
+      "checksum": "db2e19dc96cc269b63f5a9e12ebb4e83"
+    },
+    "man/IDEA_lineplot.Rd": {
+      "checksum": "cca083de7a089eff92c46d4a00ca2743"
     },
     "man/IDEA_max_freq.Rd": {
-      "checksum": "d1fe4ca17b89a8bd7e2e6f3c6566c5f0"
+      "checksum": "e363417707f74fda86363cf40a48839e"
     },
     "man/IDEA_mean.ADAE.Rd": {
-      "checksum": "d279ae0a2f95b0e5950a3b0990618a9c"
+      "checksum": "e6150c51eddb24b67fbff1bd907ef9a7"
     },
     "man/IDEA_mean.BDS.Rd": {
-      "checksum": "8a4dfa1f9da0e3b260cb137030557155"
+      "checksum": "217c69ff362945e8cca37ee9b368eb6b"
     },
     "man/IDEA_mean.Rd": {
-      "checksum": "63e6818de2db7aa3a97a79f2359d7551"
+      "checksum": "9765d0480a311539d3b6afbcb4d99df3"
     },
     "man/IDEA_methods.Rd": {
-      "checksum": "78f366991fe93484af65977f5e51f0fa"
+      "checksum": "96ff079ef9461fcd4b2d00fa5b12a63d"
     },
     "man/IDEA_nested_freq.Rd": {
-      "checksum": "761495a316b4f5f89bbb48e2417a7846"
+      "checksum": "5d9d81ebd8b446319e052910c8fa1ce1"
     },
     "man/IDEA_non_missing.Rd": {
-      "checksum": "4baba36d70f34c31fb5dddfd71ebd4dd"
+      "checksum": "5aff1a65dbdace89d58156d3833a09d4"
     },
     "man/IDEA_scatterplot.Rd": {
-      "checksum": "f21ef93bf7966fb9114b10c611dab59a"
+      "checksum": "8e68307dc0728c3d9b09fd5777285d75"
     },
     "man/IDEA_spaghettiplot.Rd": {
-      "checksum": "cb92ade4b4ebac22c0d53891283794e5"
+      "checksum": "3b2be0e3f8fc4e4524fbb3277a1d6b7b"
     },
     "man/IDEA_y.Rd": {
-      "checksum": "e356d6ca0d44b6329c7fdf3f96269872"
+      "checksum": "ad6fce19b22ee8950909325fa3276e5e"
+    },
+    "man/km_srv.Rd": {
+      "checksum": "d7359f7975764108289bb750f80a42ae"
+    },
+    "man/km_ui.Rd": {
+      "checksum": "6bf00d456a0ddb169964dff40efc49da"
+    },
+    "man/linePlot_srv.Rd": {
+      "checksum": "9c8c9478a339c632c02a7b6857de76ab"
+    },
+    "man/linePlot_ui.Rd": {
+      "checksum": "476484b69c3a918c8c520cf4d9a26626"
     },
     "man/make_machine_readable.Rd": {
       "checksum": "bdd8cc885d233a84dc76ab2c3c6bf3ff"
     },
     "man/mean_summary.Rd": {
-      "checksum": "dc732e36c9ad7bfa62045c5519e1c075"
+      "checksum": "c5b1ced54cb431ca2350980ab16867b9"
     },
     "man/mk_rep_seq_id.Rd": {
       "checksum": "a1178ae246c89fa768d89b831f4ccd5f"
@@ -4754,16 +4948,16 @@
       "checksum": "90ab757e94ac6a82f19479ca0150b840"
     },
     "man/mod_popExp_server.Rd": {
-      "checksum": "e9259f212d5297e3ad6596de4e4856f8"
+      "checksum": "7c37b83d86122ac19b647014c98d4531"
     },
     "man/mod_popExp_ui.Rd": {
-      "checksum": "971cb8a2156843baff4a2245a1731011"
+      "checksum": "aedfe7652da8041963a3917e686c0c97"
     },
     "man/mod_tableGen_server.Rd": {
-      "checksum": "036e7b5731d3ad91026cce12f4aea5a4"
+      "checksum": "203582651bbb43ab27b640550130c3df"
     },
     "man/mod_tableGen_ui.Rd": {
-      "checksum": "cda3c1af8ed49e9bf4fd4bec3f74196f"
+      "checksum": "7658bcd17d9cd6b672392935da400782"
     },
     "man/my_gg_color_hue.Rd": {
       "checksum": "40beccf24f4bbbaad8c49e5fae7c54d1"
@@ -4796,34 +4990,37 @@
       "checksum": "78fe3904d7028ba5f1c1d1bafa60fedf"
     },
     "man/refact.Rd": {
-      "checksum": "929e42dafeb5efd3fc34826db73a3fd1"
+      "checksum": "73cdb389fcc36c7c68631cbe23f4925b"
     },
     "man/revert_temp_colnames.Rd": {
       "checksum": "332c4603a0ad00a1f9cd9750b5625b31"
     },
     "man/rowArea.Rd": {
-      "checksum": "50773c4b94ca278122b67a80ab7a47e5"
+      "checksum": "beef45fb7c0d09231f1a75262841ba79"
     },
     "man/rowBlock.Rd": {
-      "checksum": "8f0517947acb3d1518eaf3eb0c206079"
+      "checksum": "874333e7c3524de56d3ffb5cc534dd89"
     },
     "man/rowPallete.Rd": {
-      "checksum": "3818b537b82a65a01c549f172b99477a"
+      "checksum": "edd65f5ba353f206bf3fa9150bc064a8"
     },
     "man/run_app.Rd": {
       "checksum": "7a396c0f003ae12fe3889dfc297a7d75"
     },
     "man/scatterPlot_srv.Rd": {
-      "checksum": "dace487fdac226d0cb66a9678b6e73ed"
+      "checksum": "3cec1fa9a0271703ee6cce3b14bc7360"
     },
     "man/scatterPlot_ui.Rd": {
-      "checksum": "2945746e05dcc08767ee6c9675413fea"
+      "checksum": "b6d479128ef9894eb61261e3b9cd242d"
     },
     "man/spaghettiPlot_srv.Rd": {
-      "checksum": "1b59f2e03b928329caa17ffb66e6769c"
+      "checksum": "311ebad82fece6d9ee3ef8a23e05cb05"
     },
     "man/spaghettiPlot_ui.Rd": {
-      "checksum": "acdcbdf27824038d9fe5917b13b9e0df"
+      "checksum": "acfbf6936cc8e48449e821d832ca47f2"
+    },
+    "man/std_err.Rd": {
+      "checksum": "07aa26a0bb1e59da2b369707a7dbcfdc"
     },
     "man/temp_col_rename.Rd": {
       "checksum": "6cc861708bf7e012c6a3f731bddde813"
@@ -4832,7 +5029,7 @@
       "checksum": "266eb88132d4b6cf30713df840b30e45"
     },
     "man/tg_guide.Rd": {
-      "checksum": "5d380a17ad8edadd1c13b7be08537d7b"
+      "checksum": "e9c3ef18bfecf34e639379a33d6df155"
     },
     "man/transpose_df.Rd": {
       "checksum": "ba5f6fe66141ebcc5508500a0aba8d10"
@@ -4844,7 +5041,7 @@
       "checksum": "1f30916e3676d3e5c2c331509bfb0b27"
     },
     "NAMESPACE": {
-      "checksum": "4d65390accf5dde07be410dc35b01452"
+      "checksum": "7cf4612b201c2d05e53ec9b29c32a13b"
     },
     "NEWS.md": {
       "checksum": "21f8e405477b1f0ed1d22ae9407c1f68"
@@ -4958,7 +5155,7 @@
       "checksum": "0b4295eded9b2f7a16379f38b562b4ad"
     },
     "packrat/desc/forcats": {
-      "checksum": "c9bd495042475332a926ea0045def05d"
+      "checksum": "8ccac393cb312945f23cc30ac04ba6f7"
     },
     "packrat/desc/fs": {
       "checksum": "bfe07fc37cc1bfdc57490ea76686c693"
@@ -4968,6 +5165,9 @@
     },
     "packrat/desc/gert": {
       "checksum": "ec807f360878bb2c1ede44e939e84e0e"
+    },
+    "packrat/desc/GGally": {
+      "checksum": "69d76277beb0a6e5b08902051672e893"
     },
     "packrat/desc/ggplot2": {
       "checksum": "67cb85870f577cd5262856e0f1661a67"
@@ -5107,6 +5307,9 @@
     "packrat/desc/plotly": {
       "checksum": "c987f2a953694b194bb08c004362744b"
     },
+    "packrat/desc/plyr": {
+      "checksum": "c76ff8cb9d419d8cec49b4ef5ccd3245"
+    },
     "packrat/desc/praise": {
       "checksum": "11752540f579dc75f14a11c027a3d871"
     },
@@ -5115,6 +5318,9 @@
     },
     "packrat/desc/processx": {
       "checksum": "42a2ea698813432982afd09cccc72c70"
+    },
+    "packrat/desc/progress": {
+      "checksum": "82d9ca31943f91330f00a582460398ee"
     },
     "packrat/desc/promises": {
       "checksum": "55078326c56202c98e3069a654b6b3c5"
@@ -5146,11 +5352,14 @@
     "packrat/desc/remotes": {
       "checksum": "34fd50a9abb94d52deaf0566ce0f3f05"
     },
+    "packrat/desc/reshape": {
+      "checksum": "0c5be81d8942449d9977efb2f5d44459"
+    },
     "packrat/desc/rlang": {
       "checksum": "1c01c55f058659b35736b4a975f17dbc"
     },
     "packrat/desc/rmarkdown": {
-      "checksum": "4d6fcd69945d90edd0e4de79129bdd19"
+      "checksum": "8ebcade1d546e81a5f179c968409f495"
     },
     "packrat/desc/roxygen2": {
       "checksum": "8b3c99408beccb3d81a18342d3475780"
@@ -5192,7 +5401,7 @@
       "checksum": "2e705e31e8f0c0ee1f9d132490bf6767"
     },
     "packrat/desc/shinyWidgets": {
-      "checksum": "a85ba9d0cf59401dc20485bcc28af9c0"
+      "checksum": "fef0f2f16c1808f07ad6b86fa01e61f2"
     },
     "packrat/desc/sjlabelled": {
       "checksum": "c0a81e95e8fa8ca4daf36b1e9c53c524"
@@ -5208,6 +5417,9 @@
     },
     "packrat/desc/stringr": {
       "checksum": "b56c455eb57302c1285432f3bd85852f"
+    },
+    "packrat/desc/survival": {
+      "checksum": "68b99c31e5689214ff662cd855012b98"
     },
     "packrat/desc/sys": {
       "checksum": "c265dad1e157f937f8f7aa4c9dd63dea"
@@ -5273,7 +5485,7 @@
       "checksum": "7fe1888ff360650909c9555c6d2cce19"
     },
     "packrat/packrat.lock": {
-      "checksum": "1ed191c054c200b51b56b1f4e1bb1f3f"
+      "checksum": "cf5619b8a33c8c5aebf5e05819b2db0d"
     },
     "R/_disable_autoload.R": {
       "checksum": "096340080b9473cac73b1e51e08a0b68"
@@ -5288,7 +5500,7 @@
       "checksum": "5076fa51aa99e4e24a7f0d83c97e367f"
     },
     "R/data-phuse_TDF_ADaM.R": {
-      "checksum": "b85eb6736915b3e8a8c5efe39cff3957"
+      "checksum": "7d2f89edd5561a90b863ac4490f824e7"
     },
     "R/data-tg_data.R": {
       "checksum": "666e68efbaf8f4abddea4f99870fdb9d"
@@ -5315,7 +5527,7 @@
       "checksum": "29d497461d20444d030f1aebf24adda1"
     },
     "R/mod_dataUpload.R": {
-      "checksum": "54ea56c086d643c7c28c430fa1cc1aeb"
+      "checksum": "ceb01d282878fcaf6798bf2c0d244915"
     },
     "R/mod_indvExp_fct_buildEvents.R": {
       "checksum": "4a5c00b87accc81c3d1238579402685d"
@@ -5345,22 +5557,34 @@
       "checksum": "acc77fdff82e38d63a93ee010aa41575"
     },
     "R/mod_popExp.R": {
-      "checksum": "10c399cd9aa7f167e0d9bf8bc2753242"
+      "checksum": "5fe845112d21fc88a9e10e3107952e4f"
     },
     "R/mod_popExp_boxplot.R": {
       "checksum": "fb91ac849067b34ddba1ecc454e1cfd2"
     },
     "R/mod_popExp_fct.R": {
-      "checksum": "1dc0c7acd3ad4426165354c78061064e"
+      "checksum": "f4ee302afbce0b94cd33c6b3941d19e2"
     },
     "R/mod_popExp_fct_boxplot.R": {
       "checksum": "f69884474dff4c1eea71c1b348345a3a"
+    },
+    "R/mod_popExp_fct_km.R": {
+      "checksum": "44d116a6a72467505cbf4b807884c794"
+    },
+    "R/mod_popExp_fct_line.R": {
+      "checksum": "0bed9d6d83b92ce499978b7cfb9126d9"
     },
     "R/mod_popExp_fct_scatterplot.R": {
       "checksum": "6e057a35ac630d3a88152f5a67931472"
     },
     "R/mod_popExp_fct_spaghettiplot.R": {
       "checksum": "4b0447aea6a6af28b3ba6459ac45ffb3"
+    },
+    "R/mod_popExp_km.R": {
+      "checksum": "1bb6e8ed33e270360abaf01f2929eebb"
+    },
+    "R/mod_popExp_line.R": {
+      "checksum": "3af8ec2e0dad519a8db42d61449cbd2e"
     },
     "R/mod_popExp_scatter.R": {
       "checksum": "daf1def06c35187428ebd321e0a9608f"
@@ -5369,7 +5593,7 @@
       "checksum": "730959ec36da454ee64208cf368b7d6a"
     },
     "R/mod_popExp_ui.R": {
-      "checksum": "50336afcd26da9f2d6166bb47b3ca03a"
+      "checksum": "ae55b9236a78b8f67507cac1ffefd37d"
     },
     "R/mod_popExp_utils.R": {
       "checksum": "cc56abd502009cd9b0b34e751474e610"
@@ -5378,7 +5602,7 @@
       "checksum": "5ff77fa3b4d84afeaeafa910bbea01e5"
     },
     "R/mod_tableGen.R": {
-      "checksum": "a695a3e2abeacac60a07e755597733c6"
+      "checksum": "376b97b3679f420d2024e9a198cb8838"
     },
     "R/mod_tableGen_fct_anova.R": {
       "checksum": "8d91b2fd993c255b952aea937106a8da"
@@ -5414,10 +5638,10 @@
       "checksum": "98aa4d65facc9b5da91d7e670f96069a"
     },
     "R/mod_tableGen_ui.R": {
-      "checksum": "6790c5a1dd8bcde45f2b59c1f92b4b5e"
+      "checksum": "3210b3b1ae264fa49c3d904bf811a701"
     },
     "R/mod_tableGen_utils.R": {
-      "checksum": "8e4af48153f546f15bd6ba1756c2d1bd"
+      "checksum": "bd797b702416b90fa2cedcd288a9e08c"
     },
     "R/run_app.R": {
       "checksum": "84781c4a639edd105b3236fbf9b4390a"
@@ -5426,10 +5650,10 @@
       "checksum": "3ae23ff1c90581c3e5651878b3705fff"
     },
     "R/utils_helpers.R": {
-      "checksum": "85e0c0f72da5d541021e034bb7d69acb"
+      "checksum": "b4ae9d8f6d3171ab66c27df0ab4abffa"
     },
     "R/utils_SAScompare.R": {
-      "checksum": "37d60dd0099a5c68482a711a1aa8c9a0"
+      "checksum": "30e6d0219a6ebea99ff2549d980b1961"
     },
     "R/utils_strObjs.R": {
       "checksum": "f5eaae4506619743ce01cc43a30ccf7f"

@@ -42,4 +42,8 @@ Create scatter plot where if the variables are numeric then they
 are plotted, and if they are PARAMCD's then a week and value 
 must be selected for plotting.
 }
+\seealso{
+Other popExp functions: 
+\code{\link{IDEA_km_curve}()}
+}
 \concept{popExp functions}
