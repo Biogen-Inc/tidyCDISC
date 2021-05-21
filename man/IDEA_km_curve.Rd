@@ -4,7 +4,15 @@
 \alias{IDEA_km_curve}
 \title{IDEA Kaplan-Meier Curve}
 \usage{
-IDEA_km_curve(data, yvar, resp_var, group = "NONE", points = TRUE, ci = FALSE)
+IDEA_km_curve(
+  data,
+  yvar,
+  resp_var,
+  cnsr_var,
+  group = "NONE",
+  points = TRUE,
+  ci = FALSE
+)
 }
 \arguments{
 \item{data}{Merged data to be used in plot}
