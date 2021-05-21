@@ -16,24 +16,34 @@
 #' 
 #' @family popExp functions
 #' 
-IDEA_km_curve <- function(data, yvar, resp_var, group = "NONE", points = TRUE, ci = FALSE) {
+IDEA_km_curve <- function(data, yvar, resp_var, cnsr_var, group = "NONE", points = TRUE, ci = FALSE) {
     
-  # resp_var_sym <- rlang::sym(resp_var)
+  resp_var_sym <- rlang::sym(resp_var)
   
   # Filter data by param selected
   suppressWarnings(
     d <- data %>% 
       dplyr::filter(PARAMCD == yvar) %>%
-      dplyr::select(USUBJID, PARAM, PARAMCD, one_of(resp_var), CNSR, one_of(group)) %>%
+      dplyr::select(USUBJID, PARAM, PARAMCD, one_of(resp_var), one_of(cnsr_var), one_of(group)) %>%
+      filter(!is.na(!!resp_var_sym)) %>%
       dplyr::distinct()
   )
   # print(d)
+  # if(group != "NONE"){
+  #   group_counts <- 
+  #     d %>%
+  #     group_by_at(vars(one_of(group))) %>%
+  #     summarize(n = n())
+  #   print(group_counts)
+  # }
   
-  fit <- survival::survfit(
-    as.formula(paste0("survival::Surv(",resp_var,", CNSR) ~ ", 
-       if(group != "NONE" & !rlang::is_empty(group)) group else 1)),
-    data = d)
-  # print(fit)
+  
+  fit_formula <- paste0("survival::Surv(",resp_var,", ",cnsr_var,") ~ ", 
+                        if(group != "NONE" & !rlang::is_empty(group)) group else 1)
+  fit <- survival::survfit(as.formula(fit_formula),data = d)
+  # print(fit_formula)
+  # print(fit)  
+  # print(summary(fit))
   
   # Initialize title of variables plotted
   # if group used, include those "by" variables in title
@@ -48,7 +58,7 @@ IDEA_km_curve <- function(data, yvar, resp_var, group = "NONE", points = TRUE, c
                     order.legend = FALSE, # use data order, not survival order
                     CI = ci,
                     plot.cens = points) +
-    # survminer::ggsurvplot(fit,conf.int = ci) +
+    # survminer::ggsurvplot(fit,conf.int = ci) + # didn't work
     ggplot2::xlab(glue::glue("{unique(d$PARAM)}")) +
     ggplot2::theme_bw() +
     theme(
@@ -62,7 +72,7 @@ IDEA_km_curve <- function(data, yvar, resp_var, group = "NONE", points = TRUE, c
   
   # Add in plot layers conditional upon user selection
   if (by_title != "") {
-    p <- p + theme(plot.margin = margin(t = .6, unit = "cm")) #+
+    p <- p + theme(plot.margin = margin(t = .4, unit = "cm")) #+
         # survminer::ggsurvplot_group_by(fit, group.by = group)
   }
   
