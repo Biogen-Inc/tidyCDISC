@@ -275,26 +275,19 @@ varN_fctr_reorder2 <- function(data) {
   varn <- paste0(non_num_cols,"N")[paste0(non_num_cols,"N") %in% cols]
   varc <- substr(varn,1,nchar(varn) - 1)
   
-  # this_varn <- "AVISITN"
-  # this_varc <- "AVISIT"
-  # purrr::modify2(data, varn, function(data, this_varn){
-  #   this_varc <- substr(this_varn, 1, nchar(this_varn) - 1)
-  # purrr::walk2(varn, varc, function(this_varn, this_varc){
-  
-  # data <- purrr::map2_df(varn, varc, function(this_varn, this_varc){
-  for(i in 1:length(varn)){
-    this_varn <- varn[i]
-    this_varc <- varc[i]
-    this_varn_sym <- rlang::sym(this_varn)
-    this_varc_sym <-rlang::sym(this_varc)
-    pref_ord <- data %>% select(one_of(this_varc, this_varn)) %>% distinct() %>% arrange(!!this_varn_sym)
-    data <-
-      data %>% mutate(!!this_varc_sym := factor(!!this_varc_sym, levels = pref_ord[[this_varc]]))
-    # return(data)
+  if(!rlang::is_empty(varn)){
+    for(i in 1:length(varn)){
+      this_varn <- as.character(varn[i])
+      this_varc <- varc[i]
+      this_varn_sym <- rlang::sym(this_varn)
+      this_varc_sym <-rlang::sym(this_varc)
+      pref_ord <- data %>% select(one_of(this_varc, this_varn)) %>% distinct() %>% arrange(!!this_varn_sym)
+      data <-
+        data %>% mutate(!!this_varc_sym := factor(!!this_varc_sym, levels = pref_ord[[this_varc]]))
+      # return(data)
+    }
   }
-  # )
-  # str(data$AVISIT)
-  # levels(data$AVISIT)
+
   # copy SAS labels back into data
   data <- sjlabelled::set_label(data, label = savelbls)
   return(data)
