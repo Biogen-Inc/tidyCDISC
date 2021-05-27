@@ -16,7 +16,11 @@ IDEA_lineplot <- function(data, yvar, time, value = NULL, separate = "NONE", col
    err_bars = FALSE, label_points = FALSE, gtxt_x_pos = "middle", gtxt_y_pos = "top") {
   
   # library(dplyr)
-  data0 <- data #%>% varN_fctr_reorder()
+  data0 <- data 
+  
+  timeN <- paste0(time, "N")
+  colorN <- paste0(color, "N")
+  separateN <- paste0(separate, "N")
     
   # print(unique(data0[,c("AVISIT", "AVISITN")]))
   # print(".")
@@ -27,38 +31,26 @@ IDEA_lineplot <- function(data, yvar, time, value = NULL, separate = "NONE", col
   # subset data based on yvar being paramcd or not
   if (yvar %in% colnames(data)) {
     suppressWarnings(
-      d0 <- data0 %>% select(USUBJID, time, val = yvar, one_of(color, separate))
+      d0 <- data0 %>% select(USUBJID, time, one_of(timeN), val = yvar, one_of(color, colorN, separate, separateN))
     )
     yvar_label <- yl <- ifelse(rlang::is_empty(attr(data[[yvar]], "label")), yvar, attr(data[[yvar]], "label"))
   } else {
     suppressWarnings(
       d0 <- data0 %>%
         dplyr::filter(PARAMCD == yvar) %>%
-        select(USUBJID, time, PARAM, PARAMCD, val = value, one_of(color, separate))
+        select(USUBJID, time, one_of(timeN), PARAM, PARAMCD, val = value, one_of(color, colorN, separate, separateN))
     )
     yvar_label <- ifelse(rlang::is_empty(paste(unique(d0$PARAM))), yvar, paste(unique(d0$PARAM)))
     yl <- glue::glue("{yvar_label} ({attr(data[[value]], 'label')})")
   }
   xl <- ifelse(rlang::is_empty(attr(d0[[time]], "label")), time, attr(d0[[time]], "label"))
-  # print("yvar_label:")
-  # print(yvar_label)
-  # print("yl:")
-  # print(yl)
-  
-  # mtcars %>% select("mpg" = "cyl")
-    
-  # by <- sym("cyl")
-  # mtcars %>%
-  #   # group_by(!!by, gear) %>%
-  #   group_by_at(vars(one_of("none"), gear)) %>%
-  #   summarize(mean_mpg = mean(mpg))
   
   val_sym <- rlang::sym("val")
   
   # Group data as needed to calc means
   suppressWarnings(
     d <-
-      d0 %>%
+      d0 %>% varN_fctr_reorder2() %>%
       group_by_at(vars(time, one_of(color, separate))) %>%
       summarize(MEAN = round(mean(!!val_sym, na.rm = T), 2),
                 # SEM = round(std_err(!!val_sym, na.rm = T),2), # NOT accurate?
