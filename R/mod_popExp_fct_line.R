@@ -60,7 +60,7 @@ IDEA_lineplot <- function(data, yvar, time, value = NULL, separate = "NONE", col
                 SEM = round(STD/ sqrt(n), 2),
                 .groups = "keep") %>%
       ungroup() %>%
-      mutate(Lower = MEAN - SEM, Upper = MEAN + SEM) %>%
+      mutate(Lower = MEAN - (1.96 * SEM), Upper = MEAN + (1.96 * SEM)) %>%
       select( -STD , -n)
   )
   # print(d)
