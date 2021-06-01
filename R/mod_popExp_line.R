@@ -21,7 +21,23 @@ linePlot_ui <- function(id, label = "line") {
         column(6, align = "center", uiOutput(ns("include_var")))
       ),
       fluidRow(
-        column(6, selectInput(ns("time"), "Time Variable", choices = NULL))
+        column(6, selectInput(ns("time"), "Time Variable", choices = NULL)),
+        conditionalPanel("input.yvar && input.time", ns = ns,
+           column(6, shinyWidgets::materialSwitch(ns("add_line"), 
+              h6("Overlay static line"), status = "primary", value = F))
+        )
+      )
+      , conditionalPanel("input.add_line", ns = ns,
+        fluidRow(
+           column(6,# uiOutput(ns("add_vert_ui"))
+                  selectInput(ns("add_vert"), "Vertical line's x-intercept:",
+                    choices = "NONE", selected = "NONE")
+                  ),
+           column(6, # uiOutput(ns("add_hor_ui"))
+                  selectInput(ns("add_hor"), "Horizontal line's y-intercept:",
+                    choices = "NONE", selected = "NONE")
+                  )
+        )
       )
     ),
     h4("Group data:"),
@@ -112,6 +128,35 @@ linePlot_srv <- function(input, output, session, data) {
                                     choices = c("AVAL", "CHG"),
                                     selected = isolate(input$value)
                                     )
+  })
+  
+  observe({
+    # output$add_vert_ui <- renderUI({
+    # output$add_hor_ui <- renderUI({
+
+    if(input$add_line){
+      d <- data()
+
+      if(input$yvar != "" & !(input$yvar %in% colnames(d))){
+        sel_d <- d %>% dplyr::filter(PARAMCD == input$yvar) #%>% select_if(~!all(is.na(.)))
+        sel_y_vals <- sel_d %>% select(input$value) %>% distinct() %>% pull()
+      } else {
+        sel_d <- d
+        sel_y_vals <- sel_d %>% select(input$yvar) %>% distinct() %>% pull()
+      }
+      
+      sel_time_vals <- sel_d %>% select(input$time) %>% distinct() %>% pull()
+      
+      # add_vert
+      updateSelectInput(session, "add_vert", choices = c("NONE", sel_time_vals),
+        selected = ifelse(isolate(input$add_vert) %in% sel_time_vals,
+                          isolate(input$add_vert), "NONE"))
+      
+      # add_hor
+      updateSelectInput(session, "add_hor", choices = c("NONE", sel_y_vals),
+                        selected = ifelse(isolate(input$add_hor) %in% sel_y_vals,
+                                          isolate(input$add_hor), "NONE"))
+    }
   })
   
   observeEvent(list(input$yvar), {
