@@ -31,7 +31,7 @@ linePlot_ui <- function(id, label = "line") {
     )
     , h4("Options:"),
     wellPanel(
-      shinyWidgets::materialSwitch(ns("err_bars"), h6("Display error bars"),
+      shinyWidgets::materialSwitch(ns("err_bars"), h6("Display 95% CI"),
                                                        status = "primary", value = F),
       fixedRow(
         column(4, shinyWidgets::materialSwitch(ns("label_points"), 
