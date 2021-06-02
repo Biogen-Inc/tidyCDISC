@@ -124,7 +124,7 @@ linePlot_srv <- function(input, output, session, data) {
   
   output$include_var <- renderUI({
     req(input$yvar %in% data()$PARAMCD)
-    shinyWidgets::radioGroupButtons(ns("value"), "Value",
+    shinyWidgets::radioGroupButtons(ns("value"), "Value", justified = T,
                                     choices = c("AVAL", "CHG"),
                                     selected = isolate(input$value)
                                     )
@@ -135,17 +135,48 @@ linePlot_srv <- function(input, output, session, data) {
     # output$add_hor_ui <- renderUI({
 
     if(input$add_line){
+      # d <- all_data
       d <- data()
 
       if(input$yvar != "" & !(input$yvar %in% colnames(d))){
         sel_d <- d %>% dplyr::filter(PARAMCD == input$yvar) #%>% select_if(~!all(is.na(.)))
-        sel_y_vals <- sel_d %>% select(input$value) %>% distinct() %>% pull()
+        sel_y_vals <- sel_d %>% select(input$value) %>% distinct() %>% pull() %>% sort()
       } else {
         sel_d <- d
-        sel_y_vals <- sel_d %>% select(input$yvar) %>% distinct() %>% pull()
+        sel_y_vals <- sel_d %>% select(input$yvar) %>% distinct() %>% pull() %>% sort()
       }
       
-      sel_time_vals <- sel_d %>% select(input$time) %>% distinct() %>% pull()
+      varN <- paste0(input$time,"N")
+      suppressWarnings(
+        sel_time_vals0 <- sel_d %>%
+          select(input$time, one_of(varN)) %>%
+          distinct() %>%
+          varN_fctr_reorder2()
+      )
+      
+      if(is.factor(sel_time_vals0[[1]])) {
+        print("is.factor")
+        sel_time_vals <- sel_time_vals0 %>%
+          arrange_at(vars(one_of(varN), input$time)) %>%
+          pull(input$time) %>%
+          as.character()
+      } else if(toupper(substr(input$time, nchar(input$time) - 1, nchar(input$time))) == "DT") {
+        print("is.DT")
+        sel_time_vals <- sel_time_vals0 %>%
+          select(input$time) %>%
+          mutate_all(as.character) %>%
+          mutate_all(as.Date) %>%
+          pull() %>% sort()
+      } else if(typeof(sel_time_vals0[[1]]) %in% c("integer", "double")){
+        print("is.double | is.integer")
+        sel_time_vals <- sel_time_vals0 %>% pull(input$time) %>% sort()
+      } else {
+        print("else")
+        sel_time_vals <- sel_time_vals0 %>% arrange_at(vars(input$time)) %>% pull() %>% as.character()
+      }
+      print(".")
+      print(".")
+      # sel_time_vals <- sel_time_vals0 %>% arrange() %>% pull() %>% as.character() 
       
       # add_vert
       updateSelectInput(session, "add_vert", choices = c("NONE", sel_time_vals),
@@ -189,7 +220,25 @@ linePlot_srv <- function(input, output, session, data) {
   # -------------------------------------------------
   # Create plot using inputs
   # -------------------------------------------------
-  
+  # input <- list(
+  #   yvar = "ALB"
+  #   ,
+  #   time = "VISIT1DT"
+  #   ,
+  #   value = "AVAL"
+  #   ,
+  #   separate = "NONE"
+  #   ,
+  #   color = "NONE"
+  #   ,
+  #   err_bars = F
+  #   ,
+  #   label_points = F
+  #   ,
+  #   gtxt_x_pos = NULL
+  #   ,
+  #   gtxt_y_pos = NULL
+  # )
   # create plot object using the numeric column on the yaxis
   # or by filtering the data by PARAMCD, then using AVAL or CHG for the yaxis
   p <- reactive({
