@@ -13,7 +13,8 @@
 #' 
 #' @family popExp Functions
 IDEA_lineplot <- function(data, yvar, time, value = NULL, separate = "NONE", color = "NONE",
-   err_bars = FALSE, label_points = FALSE, gtxt_x_pos = "middle", gtxt_y_pos = "top") {
+   err_bars = FALSE, label_points = FALSE, gtxt_x_pos = "middle", gtxt_y_pos = "top",
+   add_vert, vert_x_int, add_hor, hor_y_int) {
   
   # library(dplyr)
   data0 <- data 
@@ -130,7 +131,17 @@ IDEA_lineplot <- function(data, yvar, time, value = NULL, separate = "NONE", col
                      , nudge_y = translate_pos(gtxt_y_pos) * y_nudge_val
                      , nudge_x = translate_pos(gtxt_x_pos) * x_nudge_val,
       )
-    # p + geom_label(aes(label = MEAN), position = dodge, size = 3)
+  }
+  if(add_vert){
+    if(is.character(vert_x_int)){
+      time_lvls <- getLevels(d[[time]])
+      p <- p + geom_vline(xintercept = which(time_lvls == vert_x_int), color = "darkred")
+    } else { # numeric
+      p <- p + geom_vline(xintercept = as.numeric(vert_x_int), color = "darkred")
+    }
+  }
+  if(add_hor){
+    p <- p + geom_hline(yintercept = hor_y_int, color = "darkred")
   }
   
   
