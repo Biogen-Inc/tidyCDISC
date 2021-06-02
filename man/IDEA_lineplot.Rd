@@ -14,7 +14,11 @@ IDEA_lineplot(
   err_bars = FALSE,
   label_points = FALSE,
   gtxt_x_pos = "middle",
-  gtxt_y_pos = "top"
+  gtxt_y_pos = "top",
+  add_vert,
+  vert_x_int,
+  add_hor,
+  hor_y_int
 )
 }
 \arguments{

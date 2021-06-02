@@ -195,12 +195,14 @@ linePlot_srv <- function(input, output, session, data) {
         arrange_at(vars(one_of(varN), input$time)) %>%
         pull(input$time) %>%
         as.character()
-      print(sel_time_vals)
+      # print(sel_time_vals)
+      
+      sel_time <- na.omit(sel_time_vals)
       
       output$add_vert_ui <- renderUI({
-        selectInput(ns("vert_x_int"), "X-intercept:", choices = sel_time_vals,
-                    selected = ifelse(isolate(input$vert_x_int) %in% sel_time_vals,
-                                      isolate(input$vert_x_int), sel_time_vals[1]))
+        selectInput(ns("vert_x_int"), "X-intercept:", choices = sel_time,
+                    selected = ifelse(isolate(input$vert_x_int) %in% sel_time,
+                                      isolate(input$vert_x_int), sel_time[1]))
       })
       
     } else if(toupper(substr(input$time, nchar(input$time) - 1, nchar(input$time))) == "DT") {
@@ -211,9 +213,9 @@ linePlot_srv <- function(input, output, session, data) {
         mutate_all(as.Date) %>%
         pull() %>% sort()
       sel_time <- na.omit(sel_time_vals)
-      print(sel_time)
-      print(paste("isolate(input$vert_x_int):", isolate(input$vert_x_int)))
-      print(paste("!lubridate::is.Date(isolate(input$vert_x_int)):", !lubridate::is.Date(isolate(input$vert_x_int))))
+      # print(sel_time)
+      # print(paste("isolate(input$vert_x_int):", isolate(input$vert_x_int)))
+      # print(paste("!lubridate::is.Date(isolate(input$vert_x_int)):", !lubridate::is.Date(isolate(input$vert_x_int))))
       
       output$add_vert_ui <- renderUI({
         dateInput(ns('vert_x_int'), "X-intercept:",
@@ -228,7 +230,7 @@ linePlot_srv <- function(input, output, session, data) {
       print("is.double | is.integer")
       sel_time_vals <- sel_time_vals0 %>% pull(input$time) %>% sort()
       sel_time <- na.omit(sel_time_vals)
-      print(sel_time)
+      # print(sel_time)C
       
       output$add_vert_ui <- renderUI({
         sliderInput(ns('vert_x_int'), "X-intercept:",
@@ -242,16 +244,17 @@ linePlot_srv <- function(input, output, session, data) {
       print("else")
       sel_time_vals <- sel_time_vals0 %>% arrange_at(vars(input$time)) %>%
         pull() %>% as.character()
-      print(sel_time_vals)
+      # print(sel_time_vals)
       
+      sel_time <- na.omit(sel_time_vals)
       output$add_vert_ui <- renderUI({
-        selectInput(ns("vert_x_int"), "X-intercept:", choices = sel_time_vals,
-                    selected = ifelse(isolate(input$vert_x_int) %in% sel_time_vals,
-                                      isolate(input$vert_x_int), sel_time_vals[1]))
+        selectInput(ns("vert_x_int"), "X-intercept:", choices = sel_time,
+                    selected = ifelse(isolate(input$vert_x_int) %in% sel_time,
+                                      isolate(input$vert_x_int), sel_time[1]))
       })
     }
-    print(".")
-    print(".")
+    # print(".")
+    # print(".")
 
   })
   
@@ -309,7 +312,8 @@ linePlot_srv <- function(input, output, session, data) {
   p <- reactive({
     req(data(), input$yvar, input$time)
     IDEA_lineplot(data(), input$yvar, input$time, input$value, input$separate, input$color,
-      input$err_bars, input$label_points, input$gtxt_x_pos , input$gtxt_y_pos)
+      input$err_bars, input$label_points, input$gtxt_x_pos , input$gtxt_y_pos,
+      input$add_vert, input$vert_x_int, input$add_hor, input$hor_y_int)
   })
   
   # return the plot object to parent module
