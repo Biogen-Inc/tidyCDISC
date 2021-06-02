@@ -62,7 +62,7 @@ IDEA_lineplot <- function(data, yvar, time, value = NULL, separate = "NONE", col
                 .groups = "keep") %>%
       ungroup() %>%
       mutate(Lower = MEAN - (1.96 * SEM), Upper = MEAN + (1.96 * SEM)) %>%
-      select( -STD , -n)
+      select( -n)
   )
   # print(d)
   
@@ -77,11 +77,24 @@ IDEA_lineplot <- function(data, yvar, time, value = NULL, separate = "NONE", col
   )
   
   dodge <- ggplot2::position_dodge(.9)
+  time_sym <- rlang::sym(time)
+  color_sym <- rlang::sym(color)
   
   # Add common layers to plot
   p <- d %>%
     ggplot2::ggplot() +
-    ggplot2::aes_string(y = "MEAN", x = time, group = 1)  +
+    ggplot2::aes(x = !!time_sym, y = MEAN, group = 1,
+      text = paste0(
+        "<b>", time,": ", !!time_sym, "<br>",# y_lab, 
+        ifelse(rep(err_bars, nrow(d)), paste0("MEAN + 1.96*SE: ", sprintf("%.1f",Upper), "<br>"), ""),# y_lab, 
+        "MEAN: ", sprintf("%.1f",MEAN),
+        ifelse(rep(err_bars, nrow(d)), paste0("<br>MEAN - 1.96*SE: ", sprintf("%.1f",Lower)), ""),
+        "<br>SE: ", SEM,
+        "<br>SD: ", STD,
+        "<br>N: ", N,
+        ifelse(rep(color == "NONE", nrow(d)), "", paste0("<br>",color,": ", !!color_sym)),
+        # ifelse(rep(color, nrow(d)), paste0("<br>Color: ", sprintf("%.1f",color)), ""),
+        "</b>"))  +
     ggplot2::geom_line(position = ggplot2::position_dodge(.91)) +
     ggplot2::geom_point(position = dodge, na.rm = TRUE) +
     ggplot2::labs(x = xl, y = yl, title = paste(var_title, by_title)) +
