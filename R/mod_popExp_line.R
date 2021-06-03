@@ -160,6 +160,7 @@ linePlot_srv <- function(input, output, session, data) {
 
     data0 <- data()
     # data0 <- all_data
+    yvar <- input$yvar
     value <- input$value
     time <- input$time
     color <- input$color
@@ -202,8 +203,8 @@ linePlot_srv <- function(input, output, session, data) {
     )
     
     sel_y <- na.omit(d$MEAN)
-    sel_y_low <- floor(min(d$Lower, na.rm = T))
-    sel_y_up <- ceiling(max(d$Upper, na.rm = T))
+    sel_y_low <- floor(min(d[[ifelse(input$err_bars, "Lower", "MEAN")]], na.rm = T))
+    sel_y_up <- ceiling(max(d[[ifelse(input$err_bars, "Upper", "MEAN")]], na.rm = T))
     updateSliderInput(session, "hor_y_int", min = sel_y_low, max = sel_y_up, step = .1,
       value = ifelse(between(isolate(input$hor_y_int), sel_y_low, sel_y_up),
                         isolate(input$hor_y_int), floor(median(sel_y))))
