@@ -147,20 +147,65 @@ linePlot_srv <- function(input, output, session, data) {
   observe({
     req(input$add_hor)
     
-    # d <- all_data
-    d <- data()
+    # # d <- all_data
+    # d <- data()
+    # 
+    # if(input$yvar != "" & !(input$yvar %in% colnames(d))){
+    #   sel_d <- d %>% dplyr::filter(PARAMCD == input$yvar) #%>% select_if(~!all(is.na(.)))
+    #   sel_y_vals <- sel_d %>% select(input$value) %>% distinct() %>% pull() %>% sort()
+    # } else {
+    #   sel_d <- d
+    #   sel_y_vals <- sel_d %>% select(input$yvar) %>% distinct() %>% pull() %>% sort()
+    # }
 
-    if(input$yvar != "" & !(input$yvar %in% colnames(d))){
-      sel_d <- d %>% dplyr::filter(PARAMCD == input$yvar) #%>% select_if(~!all(is.na(.)))
-      sel_y_vals <- sel_d %>% select(input$value) %>% distinct() %>% pull() %>% sort()
-    } else {
-      sel_d <- d
-      sel_y_vals <- sel_d %>% select(input$yvar) %>% distinct() %>% pull() %>% sort()
+    data0 <- data()
+    # data0 <- all_data
+    value <- input$value
+    time <- input$time
+    color <- input$color
+    separate <- input$separate
+    
+    timeN <- paste0(time, "N")
+    colorN <- paste0(color, "N")
+    separateN <- paste0(separate, "N")
+
+    # subset data based on yvar being paramcd or not
+    if (yvar %in% colnames(data)) {
+      suppressWarnings(
+        d0 <- data0 %>% select(USUBJID, time, one_of(timeN), val = yvar, one_of(color, colorN, separate, separateN))
+      )
+    } else { # yvar is a paramcd
+      suppressWarnings(
+        d0 <- data0 %>%
+          dplyr::filter(PARAMCD == yvar) %>%
+          select(USUBJID, time, one_of(timeN), PARAM, PARAMCD, val = one_of(value), one_of(color, colorN, separate, separateN))
+      )
     }
 
-    sel_y <- na.omit(sel_y_vals)
-    updateSliderInput(session, "hor_y_int", min = min(sel_y), max = max(sel_y), step = .1,
-      value = ifelse(between(isolate(input$hor_y_int), min(sel_y), max(sel_y)),
+    val_sym <- rlang::sym("val")
+    
+    # Group data as needed to calc means
+    suppressWarnings(
+      d <-
+        d0 %>% varN_fctr_reorder2() %>%
+        group_by_at(vars(time, one_of(color, separate))) %>%
+        summarize(MEAN = round(mean(!!val_sym, na.rm = T), 2),
+                  # SEM = round(std_err(!!val_sym, na.rm = T),2), # NOT accurate?
+                  N = n_distinct(USUBJID, na.rm = T),
+                  n = n(),
+                  STD = round(sd(!!val_sym, na.rm = T), 2),
+                  SEM = round(STD/ sqrt(n), 2),
+                  .groups = "keep") %>%
+        ungroup() %>%
+        mutate(Lower = MEAN - (1.96 * SEM), Upper = MEAN + (1.96 * SEM)) %>%
+        select( -n)
+    )
+    
+    sel_y <- na.omit(d$MEAN)
+    sel_y_low <- floor(min(d$Lower, na.rm = T))
+    sel_y_up <- ceiling(max(d$Upper, na.rm = T))
+    updateSliderInput(session, "hor_y_int", min = sel_y_low, max = sel_y_up, step = .1,
+      value = ifelse(between(isolate(input$hor_y_int), sel_y_low, sel_y_up),
                         isolate(input$hor_y_int), floor(median(sel_y))))
 
   })
