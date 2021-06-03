@@ -355,13 +355,18 @@ linePlot_srv <- function(input, output, session, data) {
   # )
   # create plot object using the numeric column on the yaxis
   # or by filtering the data by PARAMCD, then using AVAL or CHG for the yaxis
-  p <- reactive({
+  p_both <- reactive({
     req(data(), input$yvar, input$time)
-    IDEA_lineplot(data(), input$yvar, input$time, input$value, input$separate, input$color,
+    pp <- IDEA_lineplot(data(), input$yvar, input$time, input$value, input$separate, input$color,
       input$err_bars, input$label_points, input$gtxt_x_pos , input$gtxt_y_pos,
       input$add_vert, input$vert_x_int, input$add_hor, input$hor_y_int)
+    return(list(plot = pp$plot, data = pp$data))
   })
+  p <- reactive( p_both()$plot )
+  p_data <- reactive( p_both()$data )
   
   # return the plot object to parent module
-  return(p)
+  # return(p)
+  return(list(plot = p, #plot_ht = px_ht_num, plot_nm = dwnld_nm,
+              plot_data = p_data))
 }

@@ -73,7 +73,10 @@ mod_popExp_ui <- function(id, label = "Population Explorer"){
                       wellPanel(
                         plotlyOutput(ns("plot_output"), height = 700),
                         div(style = "color: #0275d8; font-size: 12px;", htmlOutput(ns("applied_filters")))
-                      )
+                        , br(), br()
+                        ,DT::dataTableOutput(ns("plot_data"))
+                        
+                        )
                     )
                   )
     )
