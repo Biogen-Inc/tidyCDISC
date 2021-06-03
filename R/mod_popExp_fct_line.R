@@ -45,6 +45,7 @@ IDEA_lineplot <- function(data, yvar, time, value = NULL, separate = "NONE", col
     yl <- glue::glue("{yvar_label} ({attr(data[[value]], 'label')})")
   }
   xl <- ifelse(rlang::is_empty(attr(d0[[time]], "label")), time, attr(d0[[time]], "label"))
+  y_lab <- paste(ifelse(value == "CHG", "Mean Change from Baseline", "Mean"), yvar_label)
   
   val_sym <- rlang::sym("val")
   
@@ -69,7 +70,7 @@ IDEA_lineplot <- function(data, yvar, time, value = NULL, separate = "NONE", col
   my_d <- d %>%
     ungroup() %>%
     rename_with(toupper) %>%
-    rename_with(~yl, "MEAN") %>%
+    rename_with(~y_lab, "MEAN") %>%
     rename_with(~"Std. Error", "SEM") %>%
     rename_with(~"Std. Deviation", "STD") %>%
     rename_with(~"Visit", time) 
@@ -83,7 +84,7 @@ IDEA_lineplot <- function(data, yvar, time, value = NULL, separate = "NONE", col
   }
   
   # if separate or color used, include those "by" variables in title
-  var_title <- paste(ifelse(value == "CHG", "Mean Change from Baseline", "Mean"), yvar_label, "by", xl)
+  var_title <- paste(y_lab, "by", xl)
   by_title <- case_when(
     separate != "NONE" & color != "NONE" ~ paste("\nby", attr(data[[color]], "label"), "and", attr(data[[separate]], "label")),
     separate != "NONE" ~ paste("\nby", attr(data[[separate]], "label")),
@@ -112,7 +113,7 @@ IDEA_lineplot <- function(data, yvar, time, value = NULL, separate = "NONE", col
         "</b>"))  +
     ggplot2::geom_line(position = ggplot2::position_dodge(.91)) +
     ggplot2::geom_point(position = dodge, na.rm = TRUE) +
-    ggplot2::labs(x = xl, y = yl, title = paste(var_title, by_title)) +
+    ggplot2::labs(x = xl, y = y_lab, title = paste(var_title, by_title)) +
     ggplot2::theme_bw() +
     ggplot2::theme(text = element_text(size = 12),
                    axis.text = element_text(size = 12),
