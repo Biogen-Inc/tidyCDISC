@@ -66,6 +66,21 @@ IDEA_lineplot <- function(data, yvar, time, value = NULL, separate = "NONE", col
   )
   # print(d)
   
+  my_d <- d %>%
+    ungroup() %>%
+    rename_with(toupper) %>%
+    rename_with(~yl, "MEAN") %>%
+    rename_with(~"Std. Error", "SEM") %>%
+    rename_with(~"Std. Deviation", "STD") %>%
+    rename_with(~"Visit", time) 
+  
+  if(err_bars) {
+    my_d <- my_d %>%
+      rename_with(~"Upper Bound", "UPPER") %>%
+      rename_with(~"Lower Bound", "LOWER")
+  } else {
+    my_d <- my_d %>% select(-UPPER, -LOWER)
+  }
   
   # if separate or color used, include those "by" variables in title
   var_title <- paste(ifelse(value == "CHG", "Mean Change from Baseline", "Mean"), yvar_label, "by", xl)
@@ -158,5 +173,5 @@ IDEA_lineplot <- function(data, yvar, time, value = NULL, separate = "NONE", col
   }
   
   
-  return(p)
+  return(list(plot = p, data = my_d))
 }
