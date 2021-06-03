@@ -232,15 +232,13 @@ mod_popExp_server <- function(input, output, session, datafile) {
 
   # use plot output of the module to create the plot 
   output$plot_output <- renderPlotly({
-
         switch(input$plot_type,
-               `Scatter Plot` = p_scatter(),
-               `Line plot - mean over time` = p_line(),
-               `Box Plot` = p_box(),
-               `Spaghetti Plot` = p_spaghetti()
-               , `Kaplan-Meier Curve` = p_km()
-        )%>% 
-        plotly::ggplotly() %>%
+         `Scatter Plot` = p_scatter() %>% plotly::ggplotly(),
+         `Line plot - mean over time` = p_line() %>% plotly::ggplotly(tooltip = c("text")),
+         `Box Plot` = p_box() %>% plotly::ggplotly(),
+         `Spaghetti Plot` = p_spaghetti() %>% plotly::ggplotly()
+         , `Kaplan-Meier Curve` = p_km() %>% plotly::ggplotly()
+        ) %>%
           config(displaylogo = FALSE, 
                 modeBarButtonsToRemove = 
                   c("zoom2d", "pan2d", "select2d", "lasso2d", "zoomIn2d", "zoomOut2d", "autoScale2d", "resetScale2d",
