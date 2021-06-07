@@ -77,9 +77,10 @@ IDEA_heatmap <- function(data, yvar_x, yvar_y, time, value = "AVAL", cor_mthd = 
         round(5) %>% as.data.frame() %>%
         mutate(!!time_sym := time_val,
                param_y = row.names(.))
-      print(c)
-      print(yvar_y)
+      # print(c)
+      # print(yvar_y)
       c <- c %>% filter(param_y %in% yvar_y)
+      
       row.names(c) <- NULL
       return(c)
     })
@@ -96,7 +97,8 @@ IDEA_heatmap <- function(data, yvar_x, yvar_y, time, value = "AVAL", cor_mthd = 
       rename_with(~"Parameter X", "param_x")
     
     # head(gathered, 10)
-    
+    p <- qplot(x = mtcars$wt, y = mtcars$mpg)
+
   } else { 
     
     ####################
@@ -129,16 +131,39 @@ IDEA_heatmap <- function(data, yvar_x, yvar_y, time, value = "AVAL", cor_mthd = 
       stop("No Valid X or Y Vars chosen")
     }
     
-    gathered <- wide_dat %>% select_if(is.numeric) %>%
-      cor(., wide_dat[,yvar_x], use = "na.or.complete", method = cor_mthd) %>%
+    m0 <- wide_dat %>% select_if(is.numeric) %>%
+      cor(., wide_dat[,yvar_x], use = "na.or.complete", method = cor_mthd)
+    m <- m0[rownames(m0) %in% yvar_y,]
+    
+    gathered <- m %>%
       round(5) %>% as.data.frame() %>%
       mutate(param_y = row.names(.)) %>%
       mutate(across(yvar_x, function(col) sprintf("%.3f", col))) %>% 
       select(param_y, everything()) %>%
-      filter(param_y %in% yvar_y) %>%
+      # filter(param_y %in% yvar_y) %>%
       rename_with(~"Parameter Y", "param_y")  
     row.names(gathered) <- NULL
     # head(gathered, 10)
+
+    # Check correlations (as scatterplots), distribution and print corrleation coefficient 
+    # p <- GGally::ggpairs(as.data.frame(m), title="correlogram with ggpairs()") 
+    # p <- GGally::ggcorr(data = wide_dat %>% select_if(is.numeric),
+    #                method = c("na.or.complete", cor_mthd),
+    #                # cor_matrix = m,
+    #                label = T, #label_alpha = T,
+    #                title="correlogram with ggpairs()")
+    # http://www.sthda.com/english/wiki/ggcorrplot-visualization-of-a-correlation-matrix-using-ggplot2
+    
+    p.mat <- wide_dat %>% dplyr::select_if(is.numeric) %>% ggcorrplot::cor_pmat()
+    p <- ggcorrplot::ggcorrplot(t(m),
+                                lab = T,
+                                colors = c(low = "#3B9AB2",mid = "#EEEEEE",high = "#F21A00"),
+                                p.mat = t(p.mat[yvar_y, yvar_x]),
+                                title = "Correlation Matrix")
+    # Can I facet this?
+    # library(ggplot2)
+    # ggplot2::ggplot_build(p)
+    # p + ggplot2::facet_grid(~AGE)
   }
   
   my_d <- gathered #%>%
@@ -246,7 +271,7 @@ IDEA_heatmap <- function(data, yvar_x, yvar_y, time, value = "AVAL", cor_mthd = 
   # if(add_hor){
   #   p <- p + geom_hline(yintercept = hor_y_int, color = "darkred")
   # }
-  p <- qplot(x = mtcars$wt, y = mtcars$mpg)
+  # p <- qplot(x = mtcars$wt, y = mtcars$mpg)
   
   
   return(list(plot = p, data = my_d))
