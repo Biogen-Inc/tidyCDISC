@@ -139,9 +139,10 @@ mod_popExp_server <- function(input, output, session, datafile) {
     req(any(purrr::map_lgl(my_loaded_adams(), ~ "CNSR" %in% colnames(datafile()[[.x]]))))
     updateRadioButtons(session, "plot_type",
                        choices = c("Scatter Plot", 
-                                   "Line plot - mean over time",
                                    "Spaghetti Plot", 
                                    "Box Plot",
+                                   "Line plot - mean over time",
+                                   "Heatmap of correlations",
                                    "Kaplan-Meier Curve") # new ... added KM
     )
   })
@@ -225,8 +226,9 @@ mod_popExp_server <- function(input, output, session, datafile) {
   
   p_scatter <- callModule(scatterPlot_srv, "scatterPlot", data = dataset)
   p_spaghetti <- callModule(spaghettiPlot_srv, "spaghettiPlot", data = dataset)
-  p_line <- callModule(linePlot_srv, "linePlot", data = dataset)
   p_box <- callModule(boxPlot_srv, "boxPlot", data = dataset)
+  p_line <- callModule(linePlot_srv, "linePlot", data = dataset)
+  p_heatmap <- callModule(heatmap_srv, "heatmap", data = dataset)
   p_km <- callModule(km_srv, "km", data = km_data)
   
 
@@ -234,9 +236,10 @@ mod_popExp_server <- function(input, output, session, datafile) {
   output$plot_output <- renderPlotly({
         switch(input$plot_type,
          `Scatter Plot` = p_scatter() %>% plotly::ggplotly(),
-         `Line plot - mean over time` = p_line$plot() %>% plotly::ggplotly(tooltip = c("text")),
          `Box Plot` = p_box() %>% plotly::ggplotly(),
-         `Spaghetti Plot` = p_spaghetti() %>% plotly::ggplotly()
+         `Spaghetti Plot` = p_spaghetti() %>% plotly::ggplotly(),
+         `Line plot - mean over time` = p_line$plot() %>% plotly::ggplotly(tooltip = c("text")),
+         `Heatmap of correlations` = p_heatmap$plot() %>% plotly::ggplotly(tooltip = c("text"))
          , `Kaplan-Meier Curve` = p_km() %>% plotly::ggplotly()
         ) %>%
           config(displaylogo = FALSE, 
@@ -266,21 +269,23 @@ mod_popExp_server <- function(input, output, session, datafile) {
       req(input$plot_type)
       switch(input$plot_type,
              `Scatter Plot` = NULL, #p_scatter$data(),
-             `Line plot - mean over time` = p_line$plot_data(),
              `Box Plot` = NULL, #p_box$data(),
              `Spaghetti Plot` = NULL, #p_spaghetti$data(),
+             `Line plot - mean over time` = p_line$plot_data(),
+             `Heatmap of correlations` = p_heatmap$plot_data(),
              `Kaplan-Meier Curve` =  NULL, #p_km$data()
       )
     })
 
-  # p_filename_base <- 
+  # p_filename_base <-
   #   reactive({
   #     req(input$plot_type)
   #     switch(input$plot_type,
   #            `Scatter Plot` = NULL, #p_scatter$data(),
-  #            `Line plot - mean over time` = "Line Plot of Mean over time", #p_line$plot_nm(),
   #            `Box Plot` = NULL, #p_box$data(),
   #            `Spaghetti Plot` = NULL, #p_spaghetti$data(),
+  #            `Line plot - mean over time` = "Line Plot of Mean over time", #p_line$plot_nm(),
+  #            `Heatmap of correlations` = "Line Plot of Mean over time", #p_heatmap$plot_nm(),
   #            `Kaplan-Meier Curve` =  NULL, #p_km$data()
   #     )
   #   })

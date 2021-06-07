@@ -22,10 +22,13 @@ parent Population Explorer module
 \seealso{
 Other popExp Functions: 
 \code{\link{IDEA_boxplot}()},
+\code{\link{IDEA_heatmap}()},
 \code{\link{IDEA_lineplot}()},
 \code{\link{IDEA_spaghettiplot}()},
 \code{\link{boxPlot_srv}()},
 \code{\link{boxPlot_ui}()},
+\code{\link{heatmap_srv}()},
+\code{\link{heatmap_ui}()},
 \code{\link{km_srv}()},
 \code{\link{km_ui}()},
 \code{\link{linePlot_srv}()},
