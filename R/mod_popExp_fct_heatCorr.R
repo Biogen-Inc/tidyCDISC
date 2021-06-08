@@ -12,7 +12,8 @@
 #' AVAL, CHG, or BASE to be plotted on the y-axis
 #' 
 #' @family popExp Functions
-IDEA_heatmap <- function(data, yvar_x, yvar_y, time, value = "AVAL", cor_mthd = "pearson") {
+IDEA_heatmap <- function(data, yvar_x, yvar_y, time, value = "AVAL",
+                         cor_mthd = "pearson", show_sig = F, sig_level = .05) {
   
   
   
@@ -22,7 +23,7 @@ IDEA_heatmap <- function(data, yvar_x, yvar_y, time, value = "AVAL", cor_mthd = 
   yvar_x_pcd <- yvar_x[!yvar_x %in% colnames(data)]
   yvar_y_pcd <- yvar_y[!yvar_y %in% colnames(data)]
   
-  non_pcd_exists <- any(yvar_x %in% colnames(data)) | any(!yvar_x %in% colnames(data))
+  non_pcd_exists <- any(yvar_x %in% colnames(data)) | any(yvar_y %in% colnames(data))
   yvar_x_norm <- yvar_x[yvar_x %in% colnames(data)]
   yvar_y_norm <- yvar_y[yvar_y %in% colnames(data)]
   
@@ -131,39 +132,56 @@ IDEA_heatmap <- function(data, yvar_x, yvar_y, time, value = "AVAL", cor_mthd = 
       stop("No Valid X or Y Vars chosen")
     }
     
+    # library(dplyr)
     m0 <- wide_dat %>% select_if(is.numeric) %>%
       cor(., wide_dat[,yvar_x], use = "na.or.complete", method = cor_mthd)
-    m <- m0[rownames(m0) %in% yvar_y,]
+    m <- subset(m0, rownames(m0) %in% yvar_y)
     
     gathered <- m %>%
       round(5) %>% as.data.frame() %>%
       mutate(param_y = row.names(.)) %>%
       mutate(across(yvar_x, function(col) sprintf("%.3f", col))) %>% 
       select(param_y, everything()) %>%
-      # filter(param_y %in% yvar_y) %>%
       rename_with(~"Parameter Y", "param_y")  
     row.names(gathered) <- NULL
     # head(gathered, 10)
-
-    # Check correlations (as scatterplots), distribution and print corrleation coefficient 
-    # p <- GGally::ggpairs(as.data.frame(m), title="correlogram with ggpairs()") 
-    # p <- GGally::ggcorr(data = wide_dat %>% select_if(is.numeric),
-    #                method = c("na.or.complete", cor_mthd),
-    #                # cor_matrix = m,
-    #                label = T, #label_alpha = T,
-    #                title="correlogram with ggpairs()")
-    # http://www.sthda.com/english/wiki/ggcorrplot-visualization-of-a-correlation-matrix-using-ggplot2
+   
     
+    # Calculate p-value matrix
     p.mat <- wide_dat %>% dplyr::select_if(is.numeric) %>% ggcorrplot::cor_pmat()
-    p <- ggcorrplot::ggcorrplot(t(m),
-                                lab = T,
-                                colors = c(low = "#3B9AB2",mid = "#EEEEEE",high = "#F21A00"),
-                                p.mat = t(p.mat[yvar_y, yvar_x]),
-                                title = "Correlation Matrix")
-    # Can I facet this?
+    
+    # Create geom_tile
+    tile_data <- t(m) %>%
+      as.data.frame.table(responseName = "corr") %>%
+      left_join(
+        t(p.mat[yvar_y, yvar_x, drop = F]) %>%
+          as.data.frame.table(responseName = "pval")
+      ) %>%
+      rename_with(~"param_x", "Var1") %>%
+      rename_with(~"param_y", "Var2") %>%
+      mutate(
+        corr_lab = case_when(show_sig == F ~ sprintf("%.2f", corr),
+                             pval <= sig_level ~ sprintf("%.2f", corr),
+                             TRUE ~ ""),
+        param_y = factor(param_y, levels = rev(yvar_y))
+      )
+   
+    
     # library(ggplot2)
-    # ggplot2::ggplot_build(p)
-    # p + ggplot2::facet_grid(~AGE)
+    p <- ggplot(tile_data, aes(param_x, param_y, fill=corr, label = corr_lab)) +
+      geom_tile(height=0.8, width=0.8) +
+      geom_text(cex = 4.5) +
+      scale_fill_gradient2(low = "#3B9AB2", mid = "#EEEEEE", high = "#F21A00") +
+      theme_minimal() +
+      # coord_equal() +
+      labs(x="X Parameter(s)",y="Y Parameter(s)",fill="Corr") +
+      theme(axis.title=element_text(colour="gray20"),
+            axis.text.x=element_text(size=13, angle=0, vjust=1, hjust=1, 
+                                     margin=margin(-3,0,10,0)),
+            axis.text.y=element_text(size=13, margin=margin(0,-3,0,10)),
+            panel.grid.major=element_blank())
+    # if (time != "NONE") { p <- p + ggplot2::facet_wrap(stats::as.formula(paste(".~", separate))) }
+    p
   }
   
   my_d <- gathered #%>%
@@ -173,106 +191,34 @@ IDEA_heatmap <- function(data, yvar_x, yvar_y, time, value = "AVAL", cor_mthd = 
   #   rename_with(~"Std. Error", "SEM") %>%
   #   rename_with(~"Std. Deviation", "STD") %>%
   #   rename_with(~"Visit", time) 
-  # 
-  # if(err_bars) {
-  #   my_d <- my_d %>%
-  #     rename_with(~"Upper Bound", "UPPER") %>%
-  #     rename_with(~"Lower Bound", "LOWER")
-  # } else {
-  #   my_d <- my_d %>% select(-UPPER, -LOWER)
-  # }
-  
-  # if separate or color used, include those "by" variables in title
-  # var_title <- paste(y_lab, "by", xl)
-  # by_title <- case_when(
-  #   separate != "NONE" & color != "NONE" ~ paste("\nby", attr(data[[color]], "label"), "and", attr(data[[separate]], "label")),
-  #   separate != "NONE" ~ paste("\nby", attr(data[[separate]], "label")),
-  #   color != "NONE" ~ paste("\nby", attr(data[[color]], "label")), 
-  #   TRUE ~ ""
-  # )
-  # 
-  # dodge <- ggplot2::position_dodge(.9)
-  # time_sym <- rlang::sym(time)
-  # color_sym <- rlang::sym(color)
-  # 
-  # # Add common layers to plot
-  # p <- d %>%
-  #   ggplot2::ggplot() +
-  #   ggplot2::aes(x = !!time_sym, y = MEAN, group = 1,
-  #     text = paste0(
-  #       "<b>", time,": ", !!time_sym, "<br>",# y_lab, 
-  #       ifelse(rep(err_bars, nrow(d)), paste0("MEAN + 1.96*SE: ", sprintf("%.1f",Upper), "<br>"), ""),# y_lab, 
-  #       "MEAN: ", sprintf("%.1f",MEAN),
-  #       ifelse(rep(err_bars, nrow(d)), paste0("<br>MEAN - 1.96*SE: ", sprintf("%.1f",Lower)), ""),
-  #       "<br>SE: ", SEM,
-  #       "<br>SD: ", STD,
-  #       "<br>N: ", N,
-  #       ifelse(rep(color == "NONE", nrow(d)), "", paste0("<br>",color,": ", !!color_sym)),
-  #       # ifelse(rep(color, nrow(d)), paste0("<br>Color: ", sprintf("%.1f",color)), ""),
-  #       "</b>"))  +
-  #   ggplot2::geom_line(position = ggplot2::position_dodge(.91)) +
-  #   ggplot2::geom_point(position = dodge, na.rm = TRUE) +
-  #   ggplot2::labs(x = xl, y = y_lab, title = paste(var_title, by_title)) +
-  #   ggplot2::theme_bw() +
-  #   ggplot2::theme(text = element_text(size = 12),
-  #                  axis.text = element_text(size = 12),
-  #                  plot.title = element_text(size = 16)
-  #                  )
-  # 
-  # # Add in plot layers conditional upon user selection
-  # if (color != "NONE") { p <- p + ggplot2::aes_string(color = color, group = color) }
-  # if (err_bars) {
-  #   p <- p + ggplot2::aes(ymin = Lower, ymax = Upper) +
-  #   ggplot2::geom_errorbar(position = dodge, width = 1.5)
-  # }
-  # if (separate != "NONE") { p <- p + ggplot2::facet_wrap(stats::as.formula(paste(".~", separate))) }
-  # if (by_title != "") {p <- p + theme(plot.margin = margin(t = 1.2, unit = "cm"))}
-  # 
-  # if(label_points){
-  #   x_scale <- layer_scales(p)$x$range$range
-  #   if(all(!is.numeric(x_scale))){
-  #     x_nums <- sort(as.numeric(as.factor(x_scale)))
-  #     range <- diff(c(min(x_nums), max(x_nums)))
-  #   } else {
-  #     range <- diff(x_scale)
-  #   }
-  #   x_nudge_val <- range * .04 #* (plot_col_num /2)
-  #   y_nudge_val <- diff(layer_scales(p)$y$range$range)*.04
-  #   # gtxt_x_pos <- "right" #c("left", "middle", "right")
-  #   # gtxt_y_pos <- "top"   #c("bottom", "middle", "top")
-  #   gglook <- ggplot2::layer_data(p) %>% # to grab accurate x coordinates from existing ggplot obj since they've been transformed through position_dodge()
-  #     mutate(lab = sprintf("%.1f",y))
-  #   
-  #   ps <- length(unique(gglook$PANEL))
-  #   
-  #   colour_vector <- gglook %>%
-  #     select(colour, PANEL) %>%
-  #     slice(rep(1:n(), ps)) %>%
-  #     mutate(id = rep(1:ps, each = nrow(gglook))
-  #            , colour2 = ifelse(id == PANEL, colour, NA_character_)
-  #     ) %>% pull(colour2) %>% as.character()
-  #   
-  #   p <- p + geom_text(data = gglook, inherit.aes = FALSE, show.legend = F,
-  #                    aes(x = x, y = y, label = lab, group = colour, text = "")
-  #                    , color = colour_vector
-  #                    # , hjust = .5, vjust = -1 # position = dodge, # these all don't work with plotly
-  #                    , nudge_y = translate_pos(gtxt_y_pos) * y_nudge_val
-  #                    , nudge_x = translate_pos(gtxt_x_pos) * x_nudge_val,
-  #     )
-  # }
-  # if(add_vert){
-  #   if(is.character(vert_x_int)){
-  #     time_lvls <- getLevels(d[[time]])
-  #     p <- p + geom_vline(xintercept = which(time_lvls == vert_x_int), color = "darkred")
-  #   } else { # numeric
-  #     p <- p + geom_vline(xintercept = as.numeric(vert_x_int), color = "darkred")
-  #   }
-  # }
-  # if(add_hor){
-  #   p <- p + geom_hline(yintercept = hor_y_int, color = "darkred")
-  # }
-  # p <- qplot(x = mtcars$wt, y = mtcars$mpg)
-  
+ 
   
   return(list(plot = p, data = my_d))
 }
+
+
+
+
+
+
+
+
+
+# Check correlations (as scatterplots), distribution and print corrleation coefficient 
+# p <- GGally::ggpairs(as.data.frame(m), title="correlogram with ggpairs()") 
+# p <- GGally::ggcorr(data = wide_dat %>% select_if(is.numeric),
+#                method = c("na.or.complete", cor_mthd),
+#                # cor_matrix = m,
+#                label = T, #label_alpha = T,
+#                title="correlogram with ggpairs()")
+# http://www.sthda.com/english/wiki/ggcorrplot-visualization-of-a-correlation-matrix-using-ggplot2
+
+# p.mat <- wide_dat %>% dplyr::select_if(is.numeric) %>% ggcorrplot::cor_pmat()
+# t(p.mat[yvar_y, yvar_x])
+# p <- ggcorrplot::ggcorrplot(t(m),
+#                             lab = T,
+#                             colors = c(low = "#3B9AB2",mid = "#EEEEEE",high = "#F21A00"),
+#                             p.mat = t(p.mat[yvar_y, yvar_x]),
+#                             title = "Correlation Matrix")
+# p
+
