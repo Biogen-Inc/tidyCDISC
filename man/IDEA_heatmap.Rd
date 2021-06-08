@@ -4,7 +4,16 @@
 \alias{IDEA_heatmap}
 \title{IDEA line plot}
 \usage{
-IDEA_heatmap(data, yvar_x, yvar_y, time, value = "AVAL", cor_mthd = "pearson")
+IDEA_heatmap(
+  data,
+  yvar_x,
+  yvar_y,
+  time,
+  value = "AVAL",
+  cor_mthd = "pearson",
+  show_sig = F,
+  sig_level = 0.05
+)
 }
 \arguments{
 \item{data}{Merged data to be used in plot}

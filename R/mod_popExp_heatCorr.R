@@ -33,7 +33,15 @@ heatmap_ui <- function(id, label = "line") {
       selectInput(ns("cor_mthd"), "Select correlation coefficient",
                   choices = c("Pearson" = "pearson","Spearman" = "spearman"),
                   selected = "Pearson"
-        
+      ),
+      fixedRow(
+        column(6, shinyWidgets::materialSwitch(ns("show_sig"), 
+           h6("Only label significant:"),status = "primary", value =  F)),
+        conditionalPanel("input.show_sig", ns = ns,
+             column(6, numericInput(ns("sig_level"), "Set significance level:",
+                value = .05, min = 0, max = .1, step = .01))
+                         
+        )
       )
     )
   )
@@ -136,42 +144,22 @@ heatmap_srv <- function(input, output, session, data) {
   # -------------------------------------------------
   # Create plot using inputs
   # -------------------------------------------------
-  # input <- list(
-  #   yvar = "ALB"
-  #   ,
-  #   time = "VISIT1DT"
-  #   ,
-  #   value = "AVAL"
-  #   ,
-  #   separate = "NONE"
-  #   ,
-  #   color = "NONE"
-  #   ,
-  #   err_bars = F
-  #   ,
-  #   label_points = F
-  #   ,
-  #   gtxt_x_pos = NULL
-  #   ,
-  #   gtxt_y_pos = NULL
-  # )
   # create plot object using the numeric column on the yaxis
   # or by filtering the data by PARAMCD, then using AVAL or CHG for the yaxis
   p_both <- reactive({
     req(data(), input$yvar_x, input$yvar_y) #, input$time, input$cor_mthd)
-    # print(data()[[input$time]])
-    pp <- IDEA_heatmap(data() #%>% varN_fctr_reorder2()
-                       , input$yvar_x, input$yvar_y, input$time, "AVAL", input$cor_mthd)
+
+    pp <- IDEA_heatmap(data(), input$yvar_x, input$yvar_y, input$time, "AVAL",
+                       input$cor_mthd, input$show_sig, input$sig_level)
     
-    # pp <- list(plot = qplot(x = mtcars$wt, y = mtcars$mpg),
-    #            data = mtcars[, 4:6])
     return(list(plot = pp$plot, data = pp$data))
   })
+  
+  # put each piece in it's own container
   p <- reactive( p_both()$plot )
   p_data <- reactive( p_both()$data )
   
   # return the plot object to parent module
-  # return(p)
   return(list(plot = p, #plot_ht = px_ht_num, plot_nm = dwnld_nm,
               plot_data = p_data))
 }
