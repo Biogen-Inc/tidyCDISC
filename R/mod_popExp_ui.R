@@ -56,7 +56,7 @@ mod_popExp_ui <- function(id, label = "Population Explorer"){
                                          "Spaghetti Plot", 
                                          "Box Plot",
                                          "Line plot - mean over time",
-                                         "Heatmap of correlations"
+                                         "Heatmap - endpoint correlations"
                                          )
                         )
                       )
@@ -68,7 +68,7 @@ mod_popExp_ui <- function(id, label = "Population Explorer"){
                conditionalPanel("input.plot_type === 'Scatter Plot'", ns = ns, scatterPlot_ui(ns("scatterPlot"))),
                conditionalPanel("input.plot_type === 'Kaplan-Meier Curve'", ns = ns, km_ui(ns("km"))),
                conditionalPanel("input.plot_type === 'Line plot - mean over time'", ns = ns, linePlot_ui(ns("linePlot"))),
-               conditionalPanel("input.plot_type === 'Heatmap of correlations'", ns = ns, heatmap_ui(ns("heatmap")))
+               conditionalPanel("input.plot_type === 'Heatmap - endpoint correlations'", ns = ns, heatmap_ui(ns("heatmap")))
              )
            ),
            column(width = 9,
