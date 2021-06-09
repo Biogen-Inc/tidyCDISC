@@ -78,6 +78,7 @@ heatmap_srv <- function(input, output, session, data) {
     
     # get time based column names
     seltime_init <- sort(colnames(dplyr::select(d, ends_with("DY"), contains("VIS"))))
+
     
     # numeric columns, remove aval, chg, base
     # then remove the x-axis selectors
@@ -86,8 +87,25 @@ heatmap_srv <- function(input, output, session, data) {
     num_col <- num_col[substr(num_col, 1, 2) != "AE"]
     # num_col <- sort(c(setdiff(seltime_init, num_col), setdiff(num_col, seltime_init)))
     
-    # add paramcds to y-axis options
-    paramcd <- sort(na.omit(unique(d$PARAMCD)))
+    # add paramcds to y-axis options. Need to get rid of any paramcds that
+    # have multiple avals for each visit
+    potential_paramcds <- sort(na.omit(unique(d$PARAMCD)))
+    # test_pcd <- potential_paramcds[1]
+    paramcd <- purrr::map_chr(potential_paramcds, function(test_pcd){
+      tpcd_sym <- rlang::sym(test_pcd)
+      rows <-
+        d %>% filter(PARAMCD == test_pcd) %>%
+        filter(!is.na(AVAL)) %>% # aval is not missing...
+        select(USUBJID, AVISIT, PARAMCD, AVAL) %>%
+        filter(AVISIT != "" & !is.na(AVISIT)) %>%
+        group_by_at(vars("USUBJID", "AVISIT", "PARAMCD")) %>%
+        summarize(n = n(), .groups = "keep") %>%
+        ungroup() %>%
+        filter(n > 1) %>%
+        nrow()
+      ifelse(rows > 0, NA_character_, test_pcd)
+    }) %>%
+      na.omit() %>% as.character()
     
     updateSelectInput(session, "yvar_x",
                       choices = list(`Time Dependent` = paramcd,`Time Independent` = num_col),
