@@ -142,7 +142,7 @@ mod_popExp_server <- function(input, output, session, datafile) {
                                    "Spaghetti Plot", 
                                    "Box Plot",
                                    "Line plot - mean over time",
-                                   "Heatmap of correlations",
+                                   "Heatmap - endpoint correlations",
                                    "Kaplan-Meier Curve") # new ... added KM
     )
   })
@@ -239,7 +239,7 @@ mod_popExp_server <- function(input, output, session, datafile) {
          `Box Plot` = p_box() %>% plotly::ggplotly(),
          `Spaghetti Plot` = p_spaghetti() %>% plotly::ggplotly(),
          `Line plot - mean over time` = p_line$plot() %>% plotly::ggplotly(tooltip = c("text")),
-         `Heatmap of correlations` = p_heatmap$plot() %>% plotly::ggplotly(tooltip = c("text"))
+         `Heatmap - endpoint correlations` = p_heatmap$plot() %>% plotly::ggplotly(tooltip = c("text"))
          , `Kaplan-Meier Curve` = p_km() %>% plotly::ggplotly()
         ) %>%
           config(displaylogo = FALSE, 
@@ -272,7 +272,7 @@ mod_popExp_server <- function(input, output, session, datafile) {
              `Box Plot` = NULL, #p_box$data(),
              `Spaghetti Plot` = NULL, #p_spaghetti$data(),
              `Line plot - mean over time` = p_line$plot_data(),
-             `Heatmap of correlations` = p_heatmap$plot_data(),
+             `Heatmap - endpoint correlations` = p_heatmap$plot_data(),
              `Kaplan-Meier Curve` =  NULL, #p_km$data()
       )
     })
@@ -285,7 +285,7 @@ mod_popExp_server <- function(input, output, session, datafile) {
   #            `Box Plot` = NULL, #p_box$data(),
   #            `Spaghetti Plot` = NULL, #p_spaghetti$data(),
   #            `Line plot - mean over time` = "Line Plot of Mean over time", #p_line$plot_nm(),
-  #            `Heatmap of correlations` = "Line Plot of Mean over time", #p_heatmap$plot_nm(),
+  #            `Heatmap - endpoint correlations` = "Line Plot of Mean over time", #p_heatmap$plot_nm(),
   #            `Kaplan-Meier Curve` =  NULL, #p_km$data()
   #     )
   #   })
