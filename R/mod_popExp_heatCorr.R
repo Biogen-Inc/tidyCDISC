@@ -109,26 +109,47 @@ heatmap_srv <- function(input, output, session, data) {
     
     # get time based column names
     seltime_init <- sort(colnames(dplyr::select(d, ends_with("DY"), contains("VIS"))))
+    
+    # count on if one, both, or none of param_x or param_y have a paramcd
+    
+    px_pcd <- input$yvar_x[!(input$yvar_x %in% colnames(d))]
+    py_pcd <-  input$yvar_y[!(input$yvar_y %in% colnames(d))]
+    pcds <- unique(c(px_pcd, py_pcd))
+    num_pcds <- length(pcds)
+    
     # Update time variable based on yvar selection
-    if((any(!(input$yvar_x %in% colnames(d)))) |
-       (any(!(input$yvar_y %in% colnames(d))))){
-      if(any(!(input$yvar_x %in% colnames(d)))){
-        d <- d %>% dplyr::filter(PARAMCD %in% input$yvar_x)
-      }
-      if(any(!(input$yvar_y %in% colnames(d)))){
-        d <- d %>% dplyr::filter(PARAMCD %in% input$yvar_x)
-      }
+    if(num_pcds > 0){
+      # if(!rlang::is_empty(pcds)) d <- d %>% filter(PARAMCD %in% pcds)
+      
       seltime_dat <- d %>%
+        filter(PARAMCD %in% pcds) %>%
         filter(!is.na(AVAL)) %>% # aval is not missing...
         select_if(~!all(is.na(.)))  # grab time vars remaining
       
-      seltime <- seltime_dat %>%
+      potential_times <- seltime_dat %>%
         select(ends_with("DY"), contains("VIS")) %>%
         colnames() %>% sort()
+      
+      # Only allows visit variables that have only 1 aval
+      # test_time <- potential_times[3]
+      seltime <- purrr::map_chr(potential_times, function(test_time){
+        tt_sym <- rlang::sym(test_time)
+        rows <-
+          seltime_dat %>% filter(!is.na(!!tt_sym) & as.character(!!tt_sym) != "") %>%
+            select(USUBJID, test_time, PARAMCD, AVAL) %>%
+            group_by_at(vars("USUBJID", test_time, "PARAMCD")) %>%
+            summarize(n = n(), .groups = "keep") %>%
+            ungroup() %>%
+            filter(n > 1) %>%
+            nrow()
+        ifelse(rows > 0, NA_character_, test_time)
+      }) %>%
+        na.omit() %>% as.character()
+      
     } else {
-      seltime <- seltime_init
+      seltime <- "NONE"
     }
-    updateSelectInput(session, "time", choices = c("NONE", seltime), selected = isolate(input$time))
+    updateSelectInput(session, "time", choices = unique(c("NONE", seltime)), selected = isolate(input$time))
   })
   # output$include_var <- renderUI({
   #   req(input$yvar %in% data()$PARAMCD)
@@ -146,6 +167,27 @@ heatmap_srv <- function(input, output, session, data) {
   # -------------------------------------------------
   # create plot object using the numeric column on the yaxis
   # or by filtering the data by PARAMCD, then using AVAL or CHG for the yaxis
+  # input <- list(
+  #   data <- bds_data
+  #   ,
+  #   yvar_x = c("ALP", "AGE", "ALB")
+  #   ,
+  #   yvar_y = c("ALB","ALT", "BILI")
+  #   ,
+  #   show_sig = T
+  #   ,
+  #   sig_level = .05
+  #   ,
+  #   # time <- "AVISIT"
+  #   time <- "VISIT"
+  #   # time <- "NONE"
+  #   ,
+  #   value <- "AVAL"
+  #   # value <- "CHG"
+  #   ,
+  #   cor_mthd <- "pearson"
+  #   # cor_mthd <- "spearman"
+  # )
   p_both <- reactive({
     req(data(), input$yvar_x, input$yvar_y) #, input$time, input$cor_mthd)
 

@@ -30,6 +30,7 @@ IDEA_heatmap <- function(data, yvar_x, yvar_y, time, value = "AVAL",
   
   # create a smaller dataset with just the variables needed by function, and
   # reorder var w/ varn's
+  # library(dplyr)
   data0 <- data %>%
     select(USUBJID, AVISIT, one_of("PARAMCD", "AVAL"), one_of(time, paste0(time,"N")),
            yvar_x_norm, yvar_y_norm)  %>%
@@ -40,8 +41,8 @@ IDEA_heatmap <- function(data, yvar_x, yvar_y, time, value = "AVAL",
   if(time != "NONE"){ # results need to be grouped by time var
     
     time_vals0 <- getLevels(data0[[time]])
-    print(time_vals0)
-    time_vals <- time_vals0[time_vals0 != ""]
+    # print(time_vals0)
+    time_vals <- time_vals0[time_vals0 != "" & !is.na(time_vals0)]
     
     g <- purrr::map_dfr(time_vals, function(time_val){
       # time_val <- time_vals[2]
@@ -68,14 +69,14 @@ IDEA_heatmap <- function(data, yvar_x, yvar_y, time, value = "AVAL",
       } else if(pcd_exists & !non_pcd_exists){
         wide_dat <- param_dat
       } else if(!pcd_exists & non_pcd_exists){
-        wide_dat <- non_param_dat
+        wide_dat <- non_pcd_dat
       } else {
         stop("No Valid X or Y Vars chosen")
       }
       
       # get corrs
       m0 <- wide_dat %>% select_if(is.numeric) %>%
-        cor(., wide_dat[,yvar_x], use = "na.or.complete", method = cor_mthd)
+        cor(., wide_dat %>% select(yvar_x), use = "na.or.complete", method = cor_mthd)
       m <- subset(m0, rownames(m0) %in% yvar_y)
       c <- m %>% round(5) %>% as.data.frame() %>%
         mutate(!!time_sym := time_val,
@@ -123,36 +124,6 @@ IDEA_heatmap <- function(data, yvar_x, yvar_y, time, value = "AVAL",
                              TRUE ~ ""),
         param_y = factor(param_y, levels = rev(yvar_y))
       )
-    
-    # library(ggplot2)
-    # # p <- qplot(x = mtcars$wt, y = mtcars$mpg)
-    # p <- ggplot(tile_data, 
-    #             # aes(!!time_sym, param_y, fill=corr, label = corr_lab,
-    #             aes(param_x, param_y, fill=corr, label = corr_lab,
-    #                            text = paste0(
-    #                              "<b>Param X: ", param_x,
-    #                              "<br>Param Y: ", param_y,
-    #                              "<br>Corr coeff: ", corr_lab_hover,
-    #                              "<br>Corr method: ", cor_mthd,
-    #                              "<br>P-value: ", pval_hover,
-    #                              "</b>")
-    # ))  +
-    #   geom_tile(height=0.8, width=0.8) +
-    #   # facet_grid(~param_x) +
-    #   facet_grid(stats::as.formula(paste(".~", time))) +
-    #   geom_text(cex = 4.5) +
-    #   scale_fill_gradient2(low = "#3B9AB2", mid = "#EEEEEE", high = "#F21A00") +
-    #   theme_minimal() +
-    #   # coord_equal() +
-    #   labs(x="X Parameter(s)",y="Y Parameter(s)",fill="Corr") +
-    #   theme(axis.title=element_text(colour="gray20"),
-    #         axis.text.x=element_text(size=13, angle=0, vjust=1, hjust=1, 
-    #                                  margin=margin(-3,0,10,0)),
-    #         axis.text.y=element_text(size=13, margin=margin(0,-3,0,10)),
-    #         panel.grid.major=element_blank())
-    # # if (time != "NONE") { p <- p + ggplot2::facet_wrap(stats::as.formula(paste(".~", separate))) }
-    # p
-    
 
   } else { 
     
@@ -181,14 +152,14 @@ IDEA_heatmap <- function(data, yvar_x, yvar_y, time, value = "AVAL",
     } else if(pcd_exists & !non_pcd_exists){
       wide_dat <- param_dat
     } else if(!pcd_exists & non_pcd_exists){
-      wide_dat <- non_param_dat
+      wide_dat <- non_pcd_dat
     } else {
       stop("No Valid X or Y Vars chosen")
     }
     
     # library(dplyr)
     m0 <- wide_dat %>% select_if(is.numeric) %>%
-      cor(., wide_dat[,yvar_x], use = "na.or.complete", method = cor_mthd)
+      cor(., wide_dat %>% select(yvar_x), use = "na.or.complete", method = cor_mthd)
     m <- subset(m0, rownames(m0) %in% yvar_y)
     
     gathered <- m %>%
@@ -259,7 +230,7 @@ IDEA_heatmap <- function(data, yvar_x, yvar_y, time, value = "AVAL",
   }
   p
   
-  
+
   my_d <- gathered #%>%
   #   ungroup() %>%
   #   rename_with(toupper) %>%
