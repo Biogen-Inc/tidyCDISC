@@ -1,15 +1,11 @@
-#' IDEA line plot
+#' IDEA heatmap plot of endpoint correlations
 #' 
 #' Create a line plot with a time variable as the x-axis
 #' and using either the selected response variable
 #' or if a PARAMCD is selected, then plot the corresponding value
 #' to calculate the means. Lines are plotted by patient
 #' 
-#' @param data Merged data to be used in plot
-#' @param yvar Selected y-axis 
-#' @param time Selected x-axis constained to time dependent columns
-#' @param value If yvar is a PARAMCD then the user must select 
-#' AVAL, CHG, or BASE to be plotted on the y-axis
+#' @importFrom ggcorrplot cor_pmat
 #' 
 #' @family popExp Functions
 IDEA_heatmap <- function(data, yvar_x, yvar_y, time, value = "AVAL",
@@ -251,25 +247,4 @@ IDEA_heatmap <- function(data, yvar_x, yvar_y, time, value = "AVAL",
 
 
 
-
-
-
-
-# Check correlations (as scatterplots), distribution and print corrleation coefficient 
-# p <- GGally::ggpairs(as.data.frame(m), title="correlogram with ggpairs()") 
-# p <- GGally::ggcorr(data = wide_dat %>% select_if(is.numeric),
-#                method = c("na.or.complete", cor_mthd),
-#                # cor_matrix = m,
-#                label = T, #label_alpha = T,
-#                title="correlogram with ggpairs()")
-# http://www.sthda.com/english/wiki/ggcorrplot-visualization-of-a-correlation-matrix-using-ggplot2
-
-# p.mat <- wide_dat %>% dplyr::select_if(is.numeric) %>% ggcorrplot::cor_pmat()
-# t(p.mat[yvar_y, yvar_x])
-# p <- ggcorrplot::ggcorrplot(t(m),
-#                             lab = T,
-#                             colors = c(low = "#3B9AB2",mid = "#EEEEEE",high = "#F21A00"),
-#                             p.mat = t(p.mat[yvar_y, yvar_x]),
-#                             title = "Correlation Matrix")
-# p
 
