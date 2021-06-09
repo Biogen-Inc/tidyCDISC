@@ -36,12 +36,12 @@ IDEA_heatmap <- function(data, yvar_x, yvar_y, time, value = "AVAL",
     varN_fctr_reorder2()
   
   # Start of function
+  time_sym <- rlang::sym(time)
   if(time != "NONE"){ # results need to be grouped by time var
     
     time_vals0 <- getLevels(data0[[time]])
     print(time_vals0)
     time_vals <- time_vals0[time_vals0 != ""]
-    time_sym <- rlang::sym(time)
     
     g <- purrr::map_dfr(time_vals, function(time_val){
       # time_val <- time_vals[2]
@@ -73,32 +73,86 @@ IDEA_heatmap <- function(data, yvar_x, yvar_y, time, value = "AVAL",
         stop("No Valid X or Y Vars chosen")
       }
       
-      c <- wide_dat %>% select(-USUBJID) %>% select_if(is.numeric) %>%
-        cor(., wide_dat[,yvar_x], use = "na.or.complete", method = cor_mthd) %>%
-        round(5) %>% as.data.frame() %>%
+      # get corrs
+      m0 <- wide_dat %>% select_if(is.numeric) %>%
+        cor(., wide_dat[,yvar_x], use = "na.or.complete", method = cor_mthd)
+      m <- subset(m0, rownames(m0) %in% yvar_y)
+      c <- m %>% round(5) %>% as.data.frame() %>%
         mutate(!!time_sym := time_val,
                param_y = row.names(.))
-      # print(c)
-      # print(yvar_y)
-      c <- c %>% filter(param_y %in% yvar_y)
-      
       row.names(c) <- NULL
-      return(c)
+      
+      # Calculate p-value matrix
+      p.mat <- wide_dat %>% dplyr::select_if(is.numeric) %>% ggcorrplot::cor_pmat()
+      p.vals <- t(p.mat[yvar_y, yvar_x, drop = F]) %>%
+        as.data.frame.table(responseName = "pval") %>%
+        rename_with(~"param_x", "Var1") %>%
+        rename_with(~"param_y", "Var2")
+      
+      # bring it all together
+      c_long <- c %>%
+        # mutate(across(yvar_x, function(col) sprintf("%.3f", col))) %>%
+        tidyr::pivot_longer(cols = yvar_x, names_to = "param_x", values_to = "corr") %>%
+        select(time, param_x, param_y, everything()) %>%
+        arrange_at(vars("param_x", "param_y")) %>% #, one_of(time)  
+        filter(param_y != param_x) %>%
+        left_join(p.vals)
+      
+      return(c_long)
     })
     
+    g
+    
     gathered <- g %>%
-      mutate(across(yvar_x, function(col) sprintf("%.3f", col))) %>%
-      tidyr::pivot_longer(cols = yvar_x, names_to = "param_x", values_to = "cor") %>%
-      select(one_of(time), param_x, param_y, everything()) %>%
-      arrange_at(vars("param_x", "param_y")) %>% #, one_of(time)  
-      filter(param_y != param_x) %>%
+      select(-pval) %>%
+      mutate(corr = sprintf("%.3f", corr)) %>%
       tidyr::pivot_wider(names_from = time,
-                         values_from = "cor") %>%
+                         values_from = "corr") %>%
       rename_with(~"Parameter Y", "param_y") %>%
       rename_with(~"Parameter X", "param_x")
     
     # head(gathered, 10)
-    p <- qplot(x = mtcars$wt, y = mtcars$mpg)
+    
+    # Create geom_tile
+    tile_data <- g %>%
+      mutate(
+        pval_hover = sprintf("%.4f", pval),
+        corr_lab_hover = sprintf("%.3f", corr),
+        corr_lab = case_when(show_sig == F ~ sprintf("%.2f", corr),
+                             pval <= sig_level ~ sprintf("%.2f", corr),
+                             TRUE ~ ""),
+        param_y = factor(param_y, levels = rev(yvar_y))
+      )
+    
+    # library(ggplot2)
+    # # p <- qplot(x = mtcars$wt, y = mtcars$mpg)
+    # p <- ggplot(tile_data, 
+    #             # aes(!!time_sym, param_y, fill=corr, label = corr_lab,
+    #             aes(param_x, param_y, fill=corr, label = corr_lab,
+    #                            text = paste0(
+    #                              "<b>Param X: ", param_x,
+    #                              "<br>Param Y: ", param_y,
+    #                              "<br>Corr coeff: ", corr_lab_hover,
+    #                              "<br>Corr method: ", cor_mthd,
+    #                              "<br>P-value: ", pval_hover,
+    #                              "</b>")
+    # ))  +
+    #   geom_tile(height=0.8, width=0.8) +
+    #   # facet_grid(~param_x) +
+    #   facet_grid(stats::as.formula(paste(".~", time))) +
+    #   geom_text(cex = 4.5) +
+    #   scale_fill_gradient2(low = "#3B9AB2", mid = "#EEEEEE", high = "#F21A00") +
+    #   theme_minimal() +
+    #   # coord_equal() +
+    #   labs(x="X Parameter(s)",y="Y Parameter(s)",fill="Corr") +
+    #   theme(axis.title=element_text(colour="gray20"),
+    #         axis.text.x=element_text(size=13, angle=0, vjust=1, hjust=1, 
+    #                                  margin=margin(-3,0,10,0)),
+    #         axis.text.y=element_text(size=13, margin=margin(0,-3,0,10)),
+    #         panel.grid.major=element_blank())
+    # # if (time != "NONE") { p <- p + ggplot2::facet_wrap(stats::as.formula(paste(".~", separate))) }
+    # p
+    
 
   } else { 
     
@@ -160,6 +214,8 @@ IDEA_heatmap <- function(data, yvar_x, yvar_y, time, value = "AVAL",
       rename_with(~"param_x", "Var1") %>%
       rename_with(~"param_y", "Var2") %>%
       mutate(
+        pval_hover = sprintf("%.4f", pval),
+        corr_lab_hover = sprintf("%.3f", corr),
         corr_lab = case_when(show_sig == F ~ sprintf("%.2f", corr),
                              pval <= sig_level ~ sprintf("%.2f", corr),
                              TRUE ~ ""),
@@ -167,22 +223,42 @@ IDEA_heatmap <- function(data, yvar_x, yvar_y, time, value = "AVAL",
       )
    
     
-    # library(ggplot2)
-    p <- ggplot(tile_data, aes(param_x, param_y, fill=corr, label = corr_lab)) +
-      geom_tile(height=0.8, width=0.8) +
-      geom_text(cex = 4.5) +
-      scale_fill_gradient2(low = "#3B9AB2", mid = "#EEEEEE", high = "#F21A00") +
-      theme_minimal() +
-      # coord_equal() +
-      labs(x="X Parameter(s)",y="Y Parameter(s)",fill="Corr") +
-      theme(axis.title=element_text(colour="gray20"),
-            axis.text.x=element_text(size=13, angle=0, vjust=1, hjust=1, 
-                                     margin=margin(-3,0,10,0)),
-            axis.text.y=element_text(size=13, margin=margin(0,-3,0,10)),
-            panel.grid.major=element_blank())
-    # if (time != "NONE") { p <- p + ggplot2::facet_wrap(stats::as.formula(paste(".~", separate))) }
-    p
+    
   }
+  # make sure the factor levels of tile_data match those of data0
+  if (time != "NONE") {
+    lvls <- getLevels(data0[[time]])
+    tile_data <- tile_data %>%
+      mutate(!!time_sym := factor(!!time_sym, levels = lvls))
+  }
+  
+  # library(ggplot2)
+  p <- ggplot(tile_data, aes(param_x, param_y, fill=corr, label = corr_lab,
+         text = paste0(
+           "<b>Param X: ", param_x,
+           "<br>Param Y: ", param_y,
+           "<br>Corr coeff: ", corr_lab_hover,
+           "<br>Corr method: ", cor_mthd,
+           "<br>P-value: ", pval_hover,
+           ifelse(rep(time == "NONE", nrow(tile_data)), "", paste0("<br>",time,": ", !!time_sym)),
+           "</b>")
+  ))  +
+    geom_tile(height=0.8, width=0.8) +
+    geom_text(cex = 4.5) +
+    scale_fill_gradient2(low = "#3B9AB2", mid = "#EEEEEE", high = "#F21A00") +
+    theme_minimal() +
+    # coord_equal() +
+    labs(x="X Parameter(s)",y="Y Parameter(s)",fill="Corr") +
+    theme(axis.title=element_text(colour="gray20"),
+          axis.text.x=element_text(size=13, angle=0, vjust=1, hjust=1, 
+                                   margin=margin(-3,0,10,0)),
+          axis.text.y=element_text(size=13, margin=margin(0,-3,0,10)),
+          panel.grid.major=element_blank())
+  if (time != "NONE") { 
+    p <- p + ggplot2::facet_wrap(stats::as.formula(paste(".~", time)), scales = "free")
+  }
+  p
+  
   
   my_d <- gathered #%>%
   #   ungroup() %>%
