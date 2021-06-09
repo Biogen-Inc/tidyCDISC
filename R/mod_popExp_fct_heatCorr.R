@@ -203,6 +203,8 @@ IDEA_heatmap <- function(data, yvar_x, yvar_y, time, value = "AVAL",
       mutate(!!time_sym := factor(!!time_sym, levels = lvls))
   }
   
+  time_lab <- ifelse(rlang::is_empty(attr(data[["time"]], "label")), time, attr(data[[time]], "label"))
+  
   # library(ggplot2)
   p <- ggplot(tile_data, aes(param_x, param_y, fill=corr, label = corr_lab,
          text = paste0(
@@ -219,12 +221,14 @@ IDEA_heatmap <- function(data, yvar_x, yvar_y, time, value = "AVAL",
     scale_fill_gradient2(low = "#3B9AB2", mid = "#EEEEEE", high = "#F21A00") +
     theme_minimal() +
     # coord_equal() +
-    labs(x="X Parameter(s)",y="Y Parameter(s)",fill="Corr") +
+    labs(title = paste("Endpoint Corrlation Matrix", ifelse(time == "NONE", "", paste("by", time_lab))),
+      x ="X Parameter(s)",y = "Y Parameter(s)", fill = "Corr") +
     theme(axis.title=element_text(colour="gray20"),
           axis.text.x=element_text(size=13, angle=0, vjust=1, hjust=1, 
                                    margin=margin(-3,0,10,0)),
           axis.text.y=element_text(size=13, margin=margin(0,-3,0,10)),
-          panel.grid.major=element_blank())
+          panel.grid.major=element_blank(),
+          plot.title = element_text(size = 16))
   if (time != "NONE") { 
     p <- p + ggplot2::facet_wrap(stats::as.formula(paste(".~", time)), scales = "free")
   }
