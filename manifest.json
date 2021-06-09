@@ -1486,6 +1486,40 @@
         "Built": "R 4.0.3; x86_64-w64-mingw32; 2020-12-13 08:26:50 UTC; windows"
       }
     },
+    "ggcorrplot": {
+      "Source": "CRAN",
+      "Repository": "https://cran.rstudio.com/",
+      "GithubRepo": null,
+      "GithubUsername": null,
+      "GithubRef": null,
+      "GithubSha1": null,
+      "description": {
+        "Package": "ggcorrplot",
+        "Type": "Package",
+        "Title": "Visualization of a Correlation Matrix using 'ggplot2'",
+        "Version": "0.1.3",
+        "Date": "2019-05-19",
+        "Authors@R": "c(\n    person(\"Alboukadel\", \"Kassambara\", role = c(\"aut\", \"cre\"), email = \"alboukadel.kassambara@gmail.com\"))",
+        "Description": "The 'ggcorrplot' package can be used to visualize easily a\n    correlation matrix using 'ggplot2'. It provides a solution for reordering the\n    correlation matrix and displays the significance level on the plot. It also\n    includes a function for computing a matrix of correlation p-values.",
+        "License": "GPL-2",
+        "LazyData": "TRUE",
+        "Encoding": "UTF-8",
+        "Depends": "ggplot2",
+        "Imports": "reshape2, stats",
+        "Suggests": "knitr, spelling",
+        "URL": "http://www.sthda.com/english/wiki/ggcorrplot",
+        "BugReports": "https://github.com/kassambara/ggcorrplot/issues",
+        "RoxygenNote": "6.1.1",
+        "Language": "en-US",
+        "NeedsCompilation": "no",
+        "Packaged": "2019-05-19 09:44:53 UTC; kassambara",
+        "Author": "Alboukadel Kassambara [aut, cre]",
+        "Maintainer": "Alboukadel Kassambara <alboukadel.kassambara@gmail.com>",
+        "Repository": "CRAN",
+        "Date/Publication": "2019-05-19 10:10:02 UTC",
+        "Built": "R 4.0.5; ; 2021-06-04 07:55:45 UTC; windows"
+      }
+    },
     "ggplot2": {
       "Source": "CRAN",
       "Repository": "https://cran.rstudio.com/",
@@ -3239,6 +3273,37 @@
         "Built": "R 4.0.3; ; 2021-01-23 13:43:18 UTC; windows"
       }
     },
+    "reshape2": {
+      "Source": "CRAN",
+      "Repository": "https://cran.rstudio.com/",
+      "GithubRepo": null,
+      "GithubUsername": null,
+      "GithubRef": null,
+      "GithubSha1": null,
+      "description": {
+        "Package": "reshape2",
+        "Title": "Flexibly Reshape Data: A Reboot of the Reshape Package",
+        "Version": "1.4.4",
+        "Author": "Hadley Wickham <h.wickham@gmail.com>",
+        "Maintainer": "Hadley Wickham <h.wickham@gmail.com>",
+        "Description": "Flexibly restructure and aggregate data using just two\n    functions: melt and 'dcast' (or 'acast').",
+        "License": "MIT + file LICENSE",
+        "URL": "https://github.com/hadley/reshape",
+        "BugReports": "https://github.com/hadley/reshape/issues",
+        "Depends": "R (>= 3.1)",
+        "Imports": "plyr (>= 1.8.1), Rcpp, stringr",
+        "Suggests": "covr, lattice, testthat (>= 0.8.0)",
+        "LinkingTo": "Rcpp",
+        "Encoding": "UTF-8",
+        "LazyData": "true",
+        "RoxygenNote": "7.1.0",
+        "NeedsCompilation": "yes",
+        "Packaged": "2020-04-09 12:27:19 UTC; hadley",
+        "Repository": "CRAN",
+        "Date/Publication": "2020-04-09 13:50:02 UTC",
+        "Built": "R 4.0.2; x86_64-w64-mingw32; 2020-10-08 13:07:52 UTC; windows"
+      }
+    },
     "rlang": {
       "Source": "CRAN",
       "Repository": "https://cran.rstudio.com/",
@@ -4608,8 +4673,11 @@
     ".Rbuildignore": {
       "checksum": "ebcc56144abaa5f7e0c57dcf20d0f87d"
     },
+    ".RData": {
+      "checksum": "cd3e1ef7b7b614f0dfd977879685e01e"
+    },
     "app.R": {
-      "checksum": "7ed6aef247ccf86a8305c7489d2a22a5"
+      "checksum": "24d788539d00c000594c0a6a580a4ac9"
     },
     "CODE_OF_CONDUCT.md": {
       "checksum": "2e8c60771c15eeca105d658c3523b2af"
@@ -4627,7 +4695,7 @@
       "checksum": "09150cf26d5709b5d673ce9be78a4b3d"
     },
     "data-raw/adsl.R": {
-      "checksum": "c1b3351e261ec5ef25b146d8065ea37b"
+      "checksum": "d190cb734969810b5113bc5e62283394"
     },
     "data-raw/adsl.xpt": {
       "checksum": "5e1cf74cc6c32c99cdc2256f498ecbb9"
@@ -4651,7 +4719,7 @@
       "checksum": "807c2754ddabe4035928165018027e6d"
     },
     "data/adsl.rda": {
-      "checksum": "f0491f5cb59dfe9ffef542fa0f28c2fb"
+      "checksum": "938892677ebf9c29695c3857d8147014"
     },
     "data/adtte.rda": {
       "checksum": "4eeab2add0a28a5ef916b84dd2fe6699"
@@ -4660,13 +4728,13 @@
       "checksum": "61efa82920fa062e23d6215dfbdb74be"
     },
     "DESCRIPTION": {
-      "checksum": "b1fd7d58bd41d85cf90f6f672ccd6682"
+      "checksum": "e9307bed126062945ce8cefccc47bd06"
     },
     "dev/01_start.R": {
       "checksum": "6992ea42b2ce8c44c53dd72e75724aac"
     },
     "dev/02_dev.R": {
-      "checksum": "1e14e6887dc318fcb412bf7ffc9e269a"
+      "checksum": "3d08be8c84c6dd8b61fd87d1db8d22ff"
     },
     "dev/03_deploy.R": {
       "checksum": "7b413fcf3e7273e8b80cb6971b2190a4"
@@ -4702,7 +4770,7 @@
       "checksum": "deef254862ca7318d0738e95d6fac2b0"
     },
     "inst/app/www/recipe.js": {
-      "checksum": "2f9ffece47c4afdfd0585916975825b8"
+      "checksum": "1dfae0b93235219d72f14d3be26a33ed"
     },
     "inst/app/www/red_x.png": {
       "checksum": "71ee35ce4c01cb0435f41f91f646eac6"
@@ -4744,10 +4812,10 @@
       "checksum": "ee89343a9e63fa9a668a57d8698f7fad"
     },
     "man/boxPlot_srv.Rd": {
-      "checksum": "42255b5b7e5667c8f878efd44ebc2dc9"
+      "checksum": "d04f2c359fb44ea4680b773d25146990"
     },
     "man/boxPlot_ui.Rd": {
-      "checksum": "c6f2c0d59dfa380ab24aef6826afc2a8"
+      "checksum": "2453142a95c67b61239e376f762c57a1"
     },
     "man/build_events.Rd": {
       "checksum": "38d15da06bc8d975d2d6d0cde2b9c4ed"
@@ -4798,10 +4866,10 @@
       "checksum": "0a20ab9e1c32c63f43c4eb27ee3046d8"
     },
     "man/gather_reqs.Rd": {
-      "checksum": "1a78f7c5fa0035284918a0f455bf09fe"
+      "checksum": "b6c120892d0b04b7bde67cb2a54b4edb"
     },
     "man/gather_rules.Rd": {
-      "checksum": "72ab6ba556400fb0df0ccd9bffa89cff"
+      "checksum": "8e6ce6dc29a35014676316670d3544e7"
     },
     "man/getLevels.Rd": {
       "checksum": "dd4b1b9fa80d9f890d7dd223b92c197f"
@@ -4842,6 +4910,12 @@
     "man/guide_popex_sel_adv.Rd": {
       "checksum": "c4818ee6053126b2de6287d89e371f2c"
     },
+    "man/heatmap_srv.Rd": {
+      "checksum": "2e9c99edfbf16ef7047eb7011f9ba1d7"
+    },
+    "man/heatmap_ui.Rd": {
+      "checksum": "7552816771afbdb79e47aa3ef2eeb0db"
+    },
     "man/hema.Rd": {
       "checksum": "a003308775a9f03ebec3bac171f0153a"
     },
@@ -4849,7 +4923,7 @@
       "checksum": "aa80aa49fab27a2515b181cb843aebfb"
     },
     "man/IDEA_boxplot.Rd": {
-      "checksum": "6f4ef4a89ad5e918affb164707bc4831"
+      "checksum": "e5987457d36b79ee96c7f99d3f1a2bc6"
     },
     "man/IDEA_chg.Rd": {
       "checksum": "2fcbad9f9a3bab87c4301d81ddb801b3"
@@ -4857,11 +4931,14 @@
     "man/IDEA_freq.Rd": {
       "checksum": "a637d7b21e55397622cfb11e2d1c177e"
     },
+    "man/IDEA_heatmap.Rd": {
+      "checksum": "3f41bebdd7f5713e75adc5342d0e0eed"
+    },
     "man/IDEA_km_curve.Rd": {
-      "checksum": "db2e19dc96cc269b63f5a9e12ebb4e83"
+      "checksum": "3942f896f07beb06ec92e6ca6c4abf66"
     },
     "man/IDEA_lineplot.Rd": {
-      "checksum": "cca083de7a089eff92c46d4a00ca2743"
+      "checksum": "f8255526e780034afbed3399fe60c145"
     },
     "man/IDEA_max_freq.Rd": {
       "checksum": "e363417707f74fda86363cf40a48839e"
@@ -4888,22 +4965,22 @@
       "checksum": "8e68307dc0728c3d9b09fd5777285d75"
     },
     "man/IDEA_spaghettiplot.Rd": {
-      "checksum": "3b2be0e3f8fc4e4524fbb3277a1d6b7b"
+      "checksum": "a0147cdbd31b0bc412c386650401d26f"
     },
     "man/IDEA_y.Rd": {
       "checksum": "ad6fce19b22ee8950909325fa3276e5e"
     },
     "man/km_srv.Rd": {
-      "checksum": "d7359f7975764108289bb750f80a42ae"
+      "checksum": "fc95593660af044eb083f764c89e9c67"
     },
     "man/km_ui.Rd": {
-      "checksum": "6bf00d456a0ddb169964dff40efc49da"
+      "checksum": "3915cd84deec7b7725db05a0a3f7d74e"
     },
     "man/linePlot_srv.Rd": {
-      "checksum": "9c8c9478a339c632c02a7b6857de76ab"
+      "checksum": "6efbd9803959dfaaedb07fd73e2e245b"
     },
     "man/linePlot_ui.Rd": {
-      "checksum": "476484b69c3a918c8c520cf4d9a26626"
+      "checksum": "e161a9f6837ffa16c77095be88cbd96d"
     },
     "man/make_machine_readable.Rd": {
       "checksum": "bdd8cc885d233a84dc76ab2c3c6bf3ff"
@@ -4948,10 +5025,10 @@
       "checksum": "90ab757e94ac6a82f19479ca0150b840"
     },
     "man/mod_popExp_server.Rd": {
-      "checksum": "7c37b83d86122ac19b647014c98d4531"
+      "checksum": "b98da2fc63b06cc99b7c75ac1087aacc"
     },
     "man/mod_popExp_ui.Rd": {
-      "checksum": "aedfe7652da8041963a3917e686c0c97"
+      "checksum": "b7b0a1d046f43bd54362d4d3f33bccea"
     },
     "man/mod_tableGen_server.Rd": {
       "checksum": "203582651bbb43ab27b640550130c3df"
@@ -4990,7 +5067,7 @@
       "checksum": "78fe3904d7028ba5f1c1d1bafa60fedf"
     },
     "man/refact.Rd": {
-      "checksum": "73cdb389fcc36c7c68631cbe23f4925b"
+      "checksum": "b0b7618612fc2e73c7e6c4081d4e96f7"
     },
     "man/revert_temp_colnames.Rd": {
       "checksum": "332c4603a0ad00a1f9cd9750b5625b31"
@@ -5008,16 +5085,16 @@
       "checksum": "7a396c0f003ae12fe3889dfc297a7d75"
     },
     "man/scatterPlot_srv.Rd": {
-      "checksum": "3cec1fa9a0271703ee6cce3b14bc7360"
+      "checksum": "475256f3cbcaa60b239bd578c97e2656"
     },
     "man/scatterPlot_ui.Rd": {
-      "checksum": "b6d479128ef9894eb61261e3b9cd242d"
+      "checksum": "ccc4ff43c6f75cd169af0dcf02d70a1f"
     },
     "man/spaghettiPlot_srv.Rd": {
-      "checksum": "311ebad82fece6d9ee3ef8a23e05cb05"
+      "checksum": "cbe9f7c648791c6281759a3e06450b73"
     },
     "man/spaghettiPlot_ui.Rd": {
-      "checksum": "acfbf6936cc8e48449e821d832ca47f2"
+      "checksum": "0dba996db021398c021b4849679b9b5e"
     },
     "man/std_err.Rd": {
       "checksum": "07aa26a0bb1e59da2b369707a7dbcfdc"
@@ -5041,7 +5118,7 @@
       "checksum": "1f30916e3676d3e5c2c331509bfb0b27"
     },
     "NAMESPACE": {
-      "checksum": "7cf4612b201c2d05e53ec9b29c32a13b"
+      "checksum": "cac166bfd206c49560c4fd17dc32ebd4"
     },
     "NEWS.md": {
       "checksum": "21f8e405477b1f0ed1d22ae9407c1f68"
@@ -5168,6 +5245,9 @@
     },
     "packrat/desc/GGally": {
       "checksum": "69d76277beb0a6e5b08902051672e893"
+    },
+    "packrat/desc/ggcorrplot": {
+      "checksum": "3ac2b11e8f46d8d50cafa5a0d3b63fb2"
     },
     "packrat/desc/ggplot2": {
       "checksum": "67cb85870f577cd5262856e0f1661a67"
@@ -5355,6 +5435,9 @@
     "packrat/desc/reshape": {
       "checksum": "0c5be81d8942449d9977efb2f5d44459"
     },
+    "packrat/desc/reshape2": {
+      "checksum": "f1e1268366eb78a1b89a232763d6ff68"
+    },
     "packrat/desc/rlang": {
       "checksum": "1c01c55f058659b35736b4a975f17dbc"
     },
@@ -5485,7 +5568,7 @@
       "checksum": "7fe1888ff360650909c9555c6d2cce19"
     },
     "packrat/packrat.lock": {
-      "checksum": "cf5619b8a33c8c5aebf5e05819b2db0d"
+      "checksum": "e1a0789203d516c282b8c54bb65f2bf5"
     },
     "R/_disable_autoload.R": {
       "checksum": "096340080b9473cac73b1e51e08a0b68"
@@ -5515,16 +5598,16 @@
       "checksum": "a97d737c89111d4834c7390d151e4660"
     },
     "R/mod_dataComply.R": {
-      "checksum": "704d86ffbdf003d4f7572608d14ebe47"
+      "checksum": "746485001843e28467a75a309aab94fb"
     },
     "R/mod_dataComply_fct_helpers.R": {
-      "checksum": "a47403dfc507fd97296862d9875761bd"
+      "checksum": "4a22c73ca72efa1796d5fe0e929f596e"
     },
     "R/mod_dataComplyRules.R": {
       "checksum": "e418bb8e3cea35522421c05e967dd79c"
     },
     "R/mod_dataComplyRules_fct_helpers.R": {
-      "checksum": "29d497461d20444d030f1aebf24adda1"
+      "checksum": "2fb24049d9b7b48d6044e55fb6ed635a"
     },
     "R/mod_dataUpload.R": {
       "checksum": "ceb01d282878fcaf6798bf2c0d244915"
@@ -5557,7 +5640,7 @@
       "checksum": "acc77fdff82e38d63a93ee010aa41575"
     },
     "R/mod_popExp.R": {
-      "checksum": "5fe845112d21fc88a9e10e3107952e4f"
+      "checksum": "16e0d676d6b3252d737091e810afdcd5"
     },
     "R/mod_popExp_boxplot.R": {
       "checksum": "fb91ac849067b34ddba1ecc454e1cfd2"
@@ -5568,11 +5651,14 @@
     "R/mod_popExp_fct_boxplot.R": {
       "checksum": "f69884474dff4c1eea71c1b348345a3a"
     },
+    "R/mod_popExp_fct_heatCorr.R": {
+      "checksum": "904ad21fd7125196fe3377f512299f2e"
+    },
     "R/mod_popExp_fct_km.R": {
-      "checksum": "44d116a6a72467505cbf4b807884c794"
+      "checksum": "a81298510ce9c6e223da9967823fdac0"
     },
     "R/mod_popExp_fct_line.R": {
-      "checksum": "0bed9d6d83b92ce499978b7cfb9126d9"
+      "checksum": "ceaa9530b4b6d749c20692d7fafda5c9"
     },
     "R/mod_popExp_fct_scatterplot.R": {
       "checksum": "6e057a35ac630d3a88152f5a67931472"
@@ -5580,11 +5666,14 @@
     "R/mod_popExp_fct_spaghettiplot.R": {
       "checksum": "4b0447aea6a6af28b3ba6459ac45ffb3"
     },
+    "R/mod_popExp_heatCorr.R": {
+      "checksum": "d0be1f03f942af75935adf05b61c7736"
+    },
     "R/mod_popExp_km.R": {
-      "checksum": "1bb6e8ed33e270360abaf01f2929eebb"
+      "checksum": "4f06781573d6d00a3abfb729fd179d56"
     },
     "R/mod_popExp_line.R": {
-      "checksum": "3af8ec2e0dad519a8db42d61449cbd2e"
+      "checksum": "8d162ee076eac52afbfce39595bcd9c7"
     },
     "R/mod_popExp_scatter.R": {
       "checksum": "daf1def06c35187428ebd321e0a9608f"
@@ -5593,7 +5682,7 @@
       "checksum": "730959ec36da454ee64208cf368b7d6a"
     },
     "R/mod_popExp_ui.R": {
-      "checksum": "ae55b9236a78b8f67507cac1ffefd37d"
+      "checksum": "2a811ed14db0dfaccc81774f8d52f40f"
     },
     "R/mod_popExp_utils.R": {
       "checksum": "cc56abd502009cd9b0b34e751474e610"
@@ -5602,7 +5691,7 @@
       "checksum": "5ff77fa3b4d84afeaeafa910bbea01e5"
     },
     "R/mod_tableGen.R": {
-      "checksum": "376b97b3679f420d2024e9a198cb8838"
+      "checksum": "fbcdfc45a79457d24e53ff70126838cc"
     },
     "R/mod_tableGen_fct_anova.R": {
       "checksum": "8d91b2fd993c255b952aea937106a8da"
@@ -5614,7 +5703,7 @@
       "checksum": "13f92e980914e727bcf46459829f5351"
     },
     "R/mod_tableGen_fct_freq.R": {
-      "checksum": "332146917e8161fd5946457254357587"
+      "checksum": "f3185e2aebc9a726c7fcf349e3e4e1d4"
     },
     "R/mod_tableGen_fct_max_freq.R": {
       "checksum": "4ffb577dfd5fdb06511b18e0d97a982c"
@@ -5629,7 +5718,7 @@
       "checksum": "a815699fb1651639710281f991581634"
     },
     "R/mod_tableGen_fct_nested_freq.R": {
-      "checksum": "e6bfa0b0468148d95073dd29427ddc13"
+      "checksum": "d021a332b522904b47e2f2cf6f12a7a6"
     },
     "R/mod_tableGen_fct_non_missing.R": {
       "checksum": "7cd5ed5e7d632d56a9696f715d2699fb"
@@ -5641,7 +5730,7 @@
       "checksum": "3210b3b1ae264fa49c3d904bf811a701"
     },
     "R/mod_tableGen_utils.R": {
-      "checksum": "bd797b702416b90fa2cedcd288a9e08c"
+      "checksum": "a0945f0983c077dbc3fdbc6f1d3a31ad"
     },
     "R/run_app.R": {
       "checksum": "84781c4a639edd105b3236fbf9b4390a"
@@ -5650,7 +5739,7 @@
       "checksum": "3ae23ff1c90581c3e5651878b3705fff"
     },
     "R/utils_helpers.R": {
-      "checksum": "b4ae9d8f6d3171ab66c27df0ab4abffa"
+      "checksum": "8a8e57451aa9f195380a32f4ed7f9d32"
     },
     "R/utils_SAScompare.R": {
       "checksum": "30e6d0219a6ebea99ff2549d980b1961"

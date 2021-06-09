@@ -67,6 +67,7 @@ usethis::use_package("scales",type = "Suggests")
 usethis::use_package("GGally")
 usethis::use_package("survival")
 usethis::use_package("remotes")
+usethis::use_package("ggcorrplot")
 usethis::use_pipe()
 
 
