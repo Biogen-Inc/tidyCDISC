@@ -2,7 +2,7 @@
 % Please edit documentation in R/mod_popExp_fct_heatCorr.R
 \name{IDEA_heatmap}
 \alias{IDEA_heatmap}
-\title{IDEA line plot}
+\title{IDEA heatmap plot of endpoint correlations}
 \usage{
 IDEA_heatmap(
   data,
@@ -14,16 +14,6 @@ IDEA_heatmap(
   show_sig = F,
   sig_level = 0.05
 )
-}
-\arguments{
-\item{data}{Merged data to be used in plot}
-
-\item{time}{Selected x-axis constained to time dependent columns}
-
-\item{value}{If yvar is a PARAMCD then the user must select 
-AVAL, CHG, or BASE to be plotted on the y-axis}
-
-\item{yvar}{Selected y-axis}
 }
 \description{
 Create a line plot with a time variable as the x-axis

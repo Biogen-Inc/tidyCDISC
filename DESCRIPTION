@@ -52,7 +52,8 @@ Imports:
     GGally,
     survival,
     IDEAFilter,
-    rsconnect (>= 0.8.16.9001)
+    rsconnect (>= 0.8.16.9001),
+    ggcorrplot
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1
