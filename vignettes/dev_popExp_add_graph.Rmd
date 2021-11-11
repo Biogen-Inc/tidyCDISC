@@ -27,7 +27,7 @@ knitr::include_graphics("figures/popExp/boxplot.png")
 
 ## Create the Plotting Widgets ("ui")
 
-Inside `mod_popExp_boxplot.R`, `boxPlot_ui` is where we specify the widgets we need to create a boxplot, all wrapped inside a `wellPanel`
+Inside `mod_popExp_boxplot.R`, `boxPlot_ui` is where we specify the widgets; we need to create a boxplot, all wrapped inside a `wellPanel`
 ```{r}
 boxPlot_ui <- function(id, label = "box") {
   ns <- NS(id)
@@ -108,7 +108,7 @@ CDISC_boxplot <- function(data, yvar, group, value = NULL, points = FALSE) {
 
 ### Connect to ui
 
-Inside `mod_popExp_ui`, the radioButtons `plot_type` control which plot widgets and plot output the user sees. Therefore the first step is to add your graph name to the types of graphs we can create:
+Inside `mod_popExp_ui`, the radioButtons `plot_type` control which plot widgets and plot output the user sees. Therefore, the first step is to add your graph name to the types of graphs we can create:
 
 
 ```{r, eval=FALSE}
@@ -121,7 +121,7 @@ radioButtons(ns("plot_type"), NULL,
                   )
 ```
 
-Next we use `conditionalPanel` statements to show the correct inputs based on which plot the user selects. When the `input.plot_type` is `Box Plot` the `boxPlot_ui` function is called and the "boxPlot" name space is added so that the inputs all have a prefix of both the Population Explorer module and the Box Plot module.  Do the same for your new graph.
+Next, we use `conditionalPanel` statements to show the correct inputs based on which plot the user selects. When the `input.plot_type` is `Box Plot` the `boxPlot_ui` function is called and the "boxPlot" name space is added so that the inputs all have a prefix of both the Population Explorer module and the Box Plot module.  Do the same for your new graph.
 
 ```{r, eval=FALSE}
 #wellPanel(uiOutput(ns("plot_ui")))
