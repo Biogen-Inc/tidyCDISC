@@ -20,7 +20,7 @@ knitr::include_graphics("figures/IndvExp/01_dataUpload.PNG")
 
 ## Patient Oriented from the Start
 
-Upon selecting the `Individual Explorer` tab, you'll be greeted with the following prompt (below) asking to select a patient, by UBSUBJID. All the data presented from here out will be tied directly the patient you select. If you ever need help while navigating the patient selection widget, feel free to click the blue question mark in the upper right hand corner for a step-by-step guide through the widget, or keep reading this tutorial.
+Upon selecting the `Individual Explorer` tab, you'll be greeted with the following prompt (below) asking to select a patient, by UBSUBJID. All the data presented from here out will be tied directly the patient you select. If you ever need help while navigating the patient selection widget, feel free to click the blue question mark in the upper right-hand corner for a step-by-step guide through the widget, or keep reading this tutorial.
 
 <br>
 
@@ -56,7 +56,7 @@ knitr::include_graphics("figures/IndvExp/04_adv_filt_2_dfs.PNG")
 
 <br>
 
-`AEDECOD` is the name of the variable that contains all the adverse events experience by patient's from this study. Since `AEDECOD` is a "character" variable, a drop-down list will appear containing all the unique values when selected. You may scroll through the list of adverse events or start typing "Abdominal" to have the drop-down selector auto-suggest existing variable names that match what you type. You'll notice that the number of rows of data is displayed to the right of the variable name. In this case, there is 1,191 rows of data when you combine the `ADSL` and `ADAE` data sets. However, after selecting both "Abdominal Discomfort", "Abdominal Pain", & "Nausea", there are only 28 rows remaining. This is a useful feature to understand the size of your sub-population when filtering.
+`AEDECOD` is the name of the variable that contains all the adverse events experience by patients from this study. Since `AEDECOD` is a "character" variable, a drop-down list will appear containing all the unique values when selected. You may scroll through the list of adverse events or start typing "Abdominal" to have the drop-down selector auto-suggest existing variable names that match what you type. You'll notice that the number of rows of data is displayed to the right of the variable name. In this case, there is 1,191 rows of data when you combine the `ADSL` and `ADAE` data sets. However, after selecting both "Abdominal Discomfort", "Abdominal Pain", & "Nausea", there are only 28 rows remaining. This is a useful feature to understand the size of your sub-population when filtering.
 
 <br>
 
@@ -79,7 +79,7 @@ knitr::include_graphics("figures/IndvExp/06_adv_filt_2_dfs_age.PNG")
 
 <br>
 
-Note that the order these filters are applied will affect the order in which they are applied to the underlying data. You can also drag and drop these filters by clicking the the 6 grey dots to the left of the variable name, holding the click, and dragging them into the desired order where filters at the top execute first and filters at the bottom execute last.
+Note that the order these filters are applied will affect the order in which they are applied to the underlying data. You can also drag and drop these filters by clicking the 6 grey dots to the left of the variable name, holding the click, and dragging them into the desired order where filters at the top execute first and filters at the bottom execute last.
 
 Now that we have our sub population of interest, it's time to select one of our patients that meet the desire criteria. After opening up the USUBJID drop-down list, you'll see there are only a few patients available to select.
 
@@ -95,7 +95,7 @@ knitr::include_graphics("figures/IndvExp/07_selPatNo.PNG")
 
 <br>
 
-First take note of the brief `Patient Demographic Info` table that contains handy data about the patient selected (if these variables exists in the ADSL), including physical, geographic, and study characteristics. Immediately below that, two tabs display which contain visualizations for both Events and Visits. The `Events` tab plots dates on an interactive timeline (designed for OCCDs files) while the `Visits` tab plots PARAMs by Study Visit (using solely BDS files). No matter what tab you've selected, the basic demographic table is conveniently located just above for reference.
+First take note of the brief `Patient Demographic Info` table that contains handy data about the patient selected (if these variables exist in the ADSL), including physical, geographic, and study characteristics. Immediately below that, two tabs display which contain visualizations for both Events and Visits. The `Events` tab plots dates on an interactive timeline (designed for OCCDs files) while the `Visits` tab plots PARAMs by Study Visit (using solely BDS files). No matter what tab you've selected, the basic demographic table is conveniently located just above for reference.
 
 <br>
 
@@ -115,7 +115,7 @@ Next, we'll select all available check boxes to show off the interactive timelin
 
 ### Timeline Visual
 
-When each check box is selected, a new "swim-lane" is added to the plot, populated with that file's date data. Each data element in the swim-lane are color coded for easy identification. In this case: Milestones are green, chemistry labs grey, and adverse events purple. Each box has a line that extends down to the x-axis. The "x-axis" contains dates that span the length of the study. 
+When each check box is selected, a new "swim-lane" is added to the plot, populated with that file's date data. Each data element in the swim-lane is color coded for easy identification. In this case: Milestones are green, chemistry labs grey, and adverse events purple. Each box has a line that extends down to the x-axis. The "x-axis" contains dates that span the length of the study. 
 
 <br>
 
@@ -126,7 +126,7 @@ knitr::include_graphics("figures/IndvExp/09_events_all.PNG")
 
 <br>
 
-However, the date range displayed is subject to where the user wishes to zoom & pan. The user can either "hover and scroll" or leverage the small `+` or `-` sign on the top-right corner of the plot to zoom. To pan, the you can click and drag the timeline plot's screen to the left or right. As you zoom & pan, you'll see more and more detail in the x-axis and the events plotted will begin to spread out. See animation below:
+However, the date range displayed is subject to where the user wishes to zoom & pan. The user can either "hover and scroll" or leverage the small `+` or `-` sign on the top-right corner of the plot to zoom. To pan, you can click and drag the timeline plot's screen to the left or right. As you zoom & pan, you'll see more and more detail in the x-axis and the events plotted will begin to spread out. See animation below:
 
 <br>
 
@@ -195,9 +195,9 @@ knitr::include_graphics("figures/IndvExp/Visits_Plot_Interactivity.gif")
 <br> 
 
 
-Let's walk through each input and how it impacts the plot. Remember, if you ever need help while navigating the `Visits` tab, feel free to click the blue question mark in the upper right hand corner for a step-by-step guide through the tab, or continue reading this tutorial.
+Let's walk through each input and how it impacts the plot. Remember, if you ever need help while navigating the `Visits` tab, feel free to click the blue question mark in the upper right-hand corner for a step-by-step guide through the tab, or continue reading this tutorial.
 
-First: the "Select a loaded ADaM with columns 'PARAM' & 'AVAL'" input is hinting that only data sets of the BDS-class format will populate the drop-down. Notice that the lab and vital signs data meet these requirements. Once a data set is selected, we'll use it's data for plotting. We'll continue on with the `ADLBC` data set.
+First: the "Select a loaded ADaM with columns 'PARAM' & 'AVAL'" input is hinting that only data sets of the BDS-class format will populate the drop-down. Notice that the lab and vital signs data meet these requirements. Once a data set is selected, we'll use its data for plotting. We'll continue on with the `ADLBC` data set.
 
 
 <br>
@@ -280,7 +280,7 @@ knitr::include_graphics("figures/IndvExp/20_visits_sel_overlay_events_prefilters
 
 <br>
 
-If we'd like to filter the displayed events in a manner that's not consistent with out advanced pre-filters, we can instead select `Manually Filter` and scroll through a list of adverse events this patient has experienced during the study. Or, when there are too many to scroll through, just start typing the name of an adverse event and the drop-down list will auto-suggest the event you are looking for. When we select "Application Site Irritation", notice how that is the only vertical line present on the graph below:
+If we'd like to filter the displayed events in a manner that's not consistent without advanced pre-filters, we can instead select `Manually Filter` and scroll through a list of adverse events this patient has experienced during the study. Or, when there are too many to scroll through, just start typing the name of an adverse event and the drop-down list will auto-suggest the event you are looking for. When we select "Application Site Irritation", notice how that is the only vertical line present on the graph below:
 
 <br>
 
