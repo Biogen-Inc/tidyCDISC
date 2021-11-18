@@ -52,10 +52,12 @@ mod_popExp_ui <- function(id, label = "Population Explorer"){
                wellPanel(
                         br(),
                         radioButtons(ns("plot_type"), NULL, 
-                                     choices = c("Scatter Plot", 
-                                                 "Line plot - mean over time",
-                                                 "Spaghetti Plot", 
-                                                 "Box Plot")
+                             choices = c("Scatter Plot", 
+                                         "Spaghetti Plot", 
+                                         "Box Plot",
+                                         "Line plot - mean over time",
+                                         "Heatmap - endpoint correlations"
+                                         )
                         )
                       )
              ),
@@ -65,7 +67,8 @@ mod_popExp_ui <- function(id, label = "Population Explorer"){
                conditionalPanel("input.plot_type === 'Spaghetti Plot'", ns = ns, spaghettiPlot_ui(ns("spaghettiPlot"))),
                conditionalPanel("input.plot_type === 'Scatter Plot'", ns = ns, scatterPlot_ui(ns("scatterPlot"))),
                conditionalPanel("input.plot_type === 'Kaplan-Meier Curve'", ns = ns, km_ui(ns("km"))),
-               conditionalPanel("input.plot_type === 'Line plot - mean over time'", ns = ns, linePlot_ui(ns("linePlot")))
+               conditionalPanel("input.plot_type === 'Line plot - mean over time'", ns = ns, linePlot_ui(ns("linePlot"))),
+               conditionalPanel("input.plot_type === 'Heatmap - endpoint correlations'", ns = ns, heatmap_ui(ns("heatmap")))
              )
            ),
            column(width = 9,
@@ -73,7 +76,10 @@ mod_popExp_ui <- function(id, label = "Population Explorer"){
                       wellPanel(
                         plotlyOutput(ns("plot_output"), height = 700),
                         div(style = "color: #0275d8; font-size: 12px;", htmlOutput(ns("applied_filters")))
-                      )
+                        , br(), br()
+                        ,DT::dataTableOutput(ns("plot_data"))
+                        
+                        )
                     )
                   )
     )
