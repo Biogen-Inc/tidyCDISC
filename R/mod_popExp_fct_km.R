@@ -8,7 +8,7 @@
 #' @param yvar Selected xy-axis 
 #' @param group namne of grouping variable (categorical or factor)
 #' @param points logical, whether to plot + symbols when patients censored
-#' @param ci logical, whether the curve(s) should be accompanied with a 95% CI
+#' @param ci logical, whether the curve(s) should be accompanied with a 95\% CI
 #' 
 #' @importFrom stats as.formula
 #' @importFrom GGally ggsurv
