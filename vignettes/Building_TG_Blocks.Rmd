@@ -65,12 +65,12 @@ Let's look at `mod_tableGen_fct_freq` as an example:
 ### Create a function
 
 ```{r, eval=FALSE}
-IDEA_freq <- function(column, week, group, data) {
-  UseMethod("IDEA_freq", column)
+app_freq <- function(column, week, group, data) {
+  UseMethod("app_freq", column)
 }
 
 
-IDEA_freq.default <- function(column, week, group, data) {
+app_freq.default <- function(column, week, group, data) {
   rlang::abort(glue::glue(
     "Can't calculate mean because data is not classified as ADLB, BDS or OCCDS"
   ))
@@ -83,7 +83,7 @@ IDEA_freq.default <- function(column, week, group, data) {
 In the case of ADSL we need to calculate the frequency for the entire table, or if groups are selected and return a table of values to be used in gt.
 
 ```{r, eval=FALSE}
-IDEA_freq.ADSL <- function(column, week, group = NULL, data) {
+app_freq.ADSL <- function(column, week, group = NULL, data) {
   
   column <- rlang::sym(as.character(column))
   
@@ -125,7 +125,7 @@ IDEA_freq.ADSL <- function(column, week, group = NULL, data) {
 We don't need a method for BDS because we currently only import PARAMCD blocks and since AVAL and CHG are numeric we can't calculate frequency:
 
 ```{r, eval=FALSE}
-IDEA_freq.BDS <- function(column, week, group = NULL, data) {
+app_freq.BDS <- function(column, week, group = NULL, data) {
   rlang::abort(glue::glue(
     "Can't calculate frequency for BDS - {column} is numeric"
   ))
@@ -136,18 +136,18 @@ Feel free to explore the mean, ANOVA, and chg files for other statistical exampl
 
 # Putting it all together
 
-Once you have your statistical function, you need to add it to the `IDEA_methods` function:
+Once you have your statistical function, you need to add it to the `app_methods` function:
 
 ```{r, eval=FALSE}
-IDEA_methods <- function(agg, column, week, group, data) {
+app_methods <- function(agg, column, week, group, data) {
   if (agg == "MEAN") {
-    IDEA_mean(column, week, group, data)
+    app_mean(column, week, group, data)
   } else if (agg == "FREQ") {
-    IDEA_freq(column, week, group, data)
+    app_freq(column, week, group, data)
   } else if (agg == "ANOVA") {
-    IDEA_anova(column, week, group, data)
+    app_anova(column, week, group, data)
   } else {
-    IDEA_chg(column, week, group, data)
+    app_chg(column, week, group, data)
   }
 }
 ```
