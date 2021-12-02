@@ -12,7 +12,7 @@
 #' AVAL, CHG, or BASE to be plotted on the y-axis
 #' 
 #' @family popExp Functions
-IDEA_spaghettiplot <- function(data, yvar, time, value = NULL) {
+app_spaghettiplot <- function(data, yvar, time, value = NULL) {
   if (yvar %in% colnames(data)) {
     
     # initialize plot

@@ -18,7 +18,7 @@
 #' 
 #' @family tableGen Functions
 #' @export
-IDEA_methods <- function(agg, column, week, group, data, totals) {
+app_methods <- function(agg, column, week, group, data, totals) {
   # informative error in case the selected variable doesn't exist in data
   # if no data in the source, do not run the pmap, just show this msg:
   if(nrow(data) == 0){
@@ -30,23 +30,23 @@ IDEA_methods <- function(agg, column, week, group, data, totals) {
     stop(glue::glue("{column} variable doesn't exist in data, please remove or replace that variable from drop zone."))
   }
   if (agg == "MEAN") {
-    IDEA_mean(column, week, group, data)
+    app_mean(column, week, group, data)
   } else if (agg == "FREQ") {
-    IDEA_freq(column, group, data, totals)
+    app_freq(column, group, data, totals)
   } else if (agg == "ANOVA") {
-    IDEA_anova(column, week, group, data)
+    app_anova(column, week, group, data)
   } else if (agg == "NESTED_FREQ_DSC"){
-    IDEA_nested_freq(column, week, group, data, totals, sort = "desc_tot")
+    app_nested_freq(column, week, group, data, totals, sort = "desc_tot")
   } else if (agg == "NESTED_FREQ_ABC"){
-    IDEA_nested_freq(column, week, group, data, totals, sort = "alpha")
+    app_nested_freq(column, week, group, data, totals, sort = "alpha")
   } else if (agg == "Y_FREQ"){
-    IDEA_y(column, group, data, totals)
+    app_y(column, group, data, totals)
   } else if (agg == "MAX_FREQ"){
-    IDEA_max_freq(column, group, data, totals)
+    app_max_freq(column, group, data, totals)
   } else if (agg == "NON_MISSING"){
-    IDEA_non_missing(column, group, data, totals)
+    app_non_missing(column, group, data, totals)
   } else {
-    IDEA_chg(column, week, group, data)
+    app_chg(column, week, group, data)
   }
 }
 

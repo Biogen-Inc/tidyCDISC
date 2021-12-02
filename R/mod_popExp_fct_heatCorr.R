@@ -8,7 +8,7 @@
 #' @importFrom ggcorrplot cor_pmat
 #' 
 #' @family popExp Functions
-IDEA_heatmap <- function(data, yvar_x, yvar_y, time, value = "AVAL",
+app_heatmap <- function(data, yvar_x, yvar_y, time, value = "AVAL",
                          cor_mthd = "pearson", show_sig = F, sig_level = .05) {
   
   

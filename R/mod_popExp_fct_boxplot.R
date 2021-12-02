@@ -13,7 +13,7 @@
 #' 
 #' @family popExp Functions
 #' 
-IDEA_boxplot <- function(data, yvar, group, value = NULL, points = FALSE) {
+app_boxplot <- function(data, yvar, group, value = NULL, points = FALSE) {
   
   # BDS Parameter not selected
   if (yvar %in% colnames(data)) {
