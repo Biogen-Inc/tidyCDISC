@@ -9,3 +9,6 @@ $run_dev.*
 ^CODE_OF_CONDUCT\.md$
 ^app\.R$
 ^rsconnect$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
