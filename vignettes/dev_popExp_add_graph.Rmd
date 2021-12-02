@@ -48,7 +48,7 @@ Customize this to whatever widgets your graph requires.
 
 ## Create the Plotting Output ("server")
 
-The bulk of the server function, `boxPlot_srv` uses `updateSelectInput`s to populate the dropdown fields of the widget based on the module's data argument. The data is a reactive that is passed down from the parent module. The boxplot itself is created using the function `IDEA_boxplot()`, located in `mod_popExp_fct_boxplot.R`. This function takes on the selected inputs from the widget.
+The bulk of the server function, `boxPlot_srv` uses `updateSelectInput`s to populate the dropdown fields of the widget based on the module's data argument. The data is a reactive that is passed down from the parent module. The boxplot itself is created using the function `app_boxplot()`, located in `mod_popExp_fct_boxplot.R`. This function takes on the selected inputs from the widget.
 
 Here is the code for `mod_popExp_fct_boxplot.R`
 
@@ -68,7 +68,7 @@ Here is the code for `mod_popExp_fct_boxplot.R`
 #' 
 #' @family popExp Functions
 
-IDEA_boxplot <- function(data, yvar, group, value = NULL, points = FALSE) {
+app_boxplot <- function(data, yvar, group, value = NULL, points = FALSE) {
   
   if (yvar %in% colnames(data)) {
     p <- ggplot2::ggplot(data) + 
@@ -171,19 +171,19 @@ require(testthat)
 context("Create popExp Boxplot")
 
 test_that("numeric response variable works", {
-  plot <- IDEA_boxplot(tg_data, "AGE", "SEX")
+  plot <- app_boxplot(tg_data, "AGE", "SEX")
   expect_equal(quo_get_expr(plot$mapping$x), sym("SEX"))
   expect_equal(quo_get_expr(plot$mapping$y), sym("AGE"))
 })
 
 test_that("PARAMCD response variable works", {
-  plot <- IDEA_boxplot(tg_data, "DIABP", "SEX", value = "AVAL")
+  plot <- app_boxplot(tg_data, "DIABP", "SEX", value = "AVAL")
   expect_equal(quo_get_expr(plot$mapping$x), sym("SEX"))
   expect_equal(quo_get_expr(plot$mapping$y), sym("AVAL"))
 })
 
 test_that("adding jitter works", {
-  plot <- IDEA_boxplot(tg_data, "AGE", "SEX", points = TRUE)
+  plot <- app_boxplot(tg_data, "AGE", "SEX", points = TRUE)
   expect_equal("PositionJitter", class(plot$layers[[2]]$position)[1])
 })
 ```
