@@ -163,8 +163,13 @@ usethis::use_test( "app" )
 # Documentation
 
 ## Vignette ---- not run
-usethis::use_vignette("IDEA")
-devtools::build_vignettes()
+# usethis::use_vignette("IDEA")
+# devtools::build_vignettes() # don't use, instead use...
+# devtools::build()
+
+# usethis::use_pkgdown() # Run once to configure your package to use pkgdown
+pkgdown::build_reference_index(pkg = rprojroot::is_r_package$find_file())
+pkgdown::build_site(pkg = rprojroot::is_r_package$find_file()) # Run to build the website
 
 ## Code coverage ---- not run
 ## (You'll need GitHub there)
