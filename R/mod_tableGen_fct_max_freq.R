@@ -11,8 +11,8 @@
 #' @return a frequency table of grouped variables
 #'
 #' @family tableGen Functions
-IDEA_max_freq <- function(column, group, data, totals) {
-  UseMethod("IDEA_max_freq", column)
+app_max_freq <- function(column, group, data, totals) {
+  UseMethod("app_max_freq", column)
 }
 
 
@@ -24,10 +24,10 @@ IDEA_max_freq <- function(column, group, data, totals) {
 #' @import dplyr
 #' 
 #' @return frequency table of ADSL column
-#' @rdname IDEA_max_freq
+#' @rdname app_max_freq
 #' 
 #' @family tableGen Functionss
-IDEA_max_freq.default <- IDEA_max_freq.OCCDS <- IDEA_max_freq.ADAE <- IDEA_max_freq.ADSL <- 
+app_max_freq.default <- app_max_freq.OCCDS <- app_max_freq.ADAE <- app_max_freq.ADSL <- 
   function(column, group = NULL, data, totals) {
   # # ########## ######### ######## #########
   # column <- "AESEV"
@@ -125,20 +125,20 @@ IDEA_max_freq.default <- IDEA_max_freq.OCCDS <- IDEA_max_freq.ADAE <- IDEA_max_f
 
 
 #' @return NULL
-#' @rdname IDEA_max_freq
+#' @rdname app_max_freq
 #' 
 #' @family tableGen Functions
-IDEA_max_freq.BDS <- function(column, group = NULL, data, totals) {
+app_max_freq.BDS <- function(column, group = NULL, data, totals) {
   rlang::abort(glue::glue(
     "Can't calculate Max Frequency for for BDS variables"
   ))
 }
 
 #' @return NULL
-#' @rdname IDEA_max_freq
+#' @rdname app_max_freq
 #' 
 #' @family tableGen Functions
-IDEA_max_freq.custom <- function(column, group, data, totals) {
+app_max_freq.custom <- function(column, group, data, totals) {
   rlang::abort(glue::glue(
     "Can't calculate Max Frequency for custom class data set."
   ))
