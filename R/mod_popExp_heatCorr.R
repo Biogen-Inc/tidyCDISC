@@ -209,7 +209,7 @@ heatmap_srv <- function(input, output, session, data) {
   p_both <- reactive({
     req(data(), input$yvar_x, input$yvar_y) #, input$time, input$cor_mthd)
 
-    pp <- IDEA_heatmap(data(), input$yvar_x, input$yvar_y, input$time, "AVAL",
+    pp <- app_heatmap(data(), input$yvar_x, input$yvar_y, input$time, "AVAL",
                        input$cor_mthd, input$show_sig, input$sig_level)
     
     return(list(plot = pp$plot, data = pp$data))

@@ -12,7 +12,7 @@
 #' AVAL, CHG, or BASE to be plotted on the y-axis
 #' 
 #' @family popExp Functions
-IDEA_lineplot <- function(data, yvar, time, value = NULL, separate = "NONE", color = "NONE",
+app_lineplot <- function(data, yvar, time, value = NULL, separate = "NONE", color = "NONE",
    err_bars = FALSE, label_points = FALSE, gtxt_x_pos = "middle", gtxt_y_pos = "top",
    add_vert, vert_x_int, add_hor, hor_y_int) {
   

@@ -150,7 +150,7 @@ km_srv <- function(input, output, session, data) {
   p <- reactive({
     req(data(), input$yvar )
     #, input$resp_var,input$group,input$points,input$ci) # can't include these in req
-    IDEA_km_curve(data(), 
+    app_km_curve(data(), 
                  input$yvar, 
                  input$resp_var,
                  input$cnsr_var,

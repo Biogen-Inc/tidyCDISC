@@ -357,7 +357,7 @@ linePlot_srv <- function(input, output, session, data) {
   # or by filtering the data by PARAMCD, then using AVAL or CHG for the yaxis
   p_both <- reactive({
     req(data(), input$yvar, input$time)
-    pp <- IDEA_lineplot(data(), input$yvar, input$time, input$value, input$separate, input$color,
+    pp <- app_lineplot(data(), input$yvar, input$time, input$value, input$separate, input$color,
       input$err_bars, input$label_points, input$gtxt_x_pos , input$gtxt_y_pos,
       input$add_vert, input$vert_x_int, input$add_hor, input$hor_y_int)
     return(list(plot = pp$plot, data = pp$data))

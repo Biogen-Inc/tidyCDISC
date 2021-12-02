@@ -18,7 +18,7 @@ test_that("convertTGOutput creates a dataframe row from input blocks", {
   expect_equal(output$gt_group, "MEAN of AGE")
 })
 
-test_that("combining all idea functions as IDEA_methods", {
+test_that("combining all idea functions as app_methods", {
   output <- convertTGOutput(agg, block)
-  IDEA_methods(output$agg, output$S3[[1]], output$dropdown, NULL, tg_data)
+  app_methods(output$agg, output$S3[[1]], output$dropdown, NULL, tg_data)
 })

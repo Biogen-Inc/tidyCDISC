@@ -10,8 +10,8 @@
 #' @return a frequency table of grouped variables
 #'
 #' @family tableGen Functions
-IDEA_non_missing <- function(column, group, data, totals) {
-  UseMethod("IDEA_non_missing", column)
+app_non_missing <- function(column, group, data, totals) {
+  UseMethod("app_non_missing", column)
 }
 
 
@@ -23,10 +23,10 @@ IDEA_non_missing <- function(column, group, data, totals) {
 #' @import dplyr
 #' 
 #' @return frequency table of ADSL column
-#' @rdname IDEA_non_missing
+#' @rdname app_non_missing
 #' 
 #' @family tableGen Functionss
-IDEA_non_missing.default <- IDEA_non_missing.BDS <- IDEA_non_missing.OCCDS <- IDEA_non_missing.ADAE <- IDEA_non_missing.ADSL <- 
+app_non_missing.default <- app_non_missing.BDS <- app_non_missing.OCCDS <- app_non_missing.ADAE <- app_non_missing.ADSL <- 
   function(column, group = NULL, data, totals) {
   # # ########## ######### ######## #########
   # column <- "USUBJID"
@@ -101,20 +101,20 @@ IDEA_non_missing.default <- IDEA_non_missing.BDS <- IDEA_non_missing.OCCDS <- ID
 
 
 #' @return NULL
-#' @rdname IDEA_non_missing
+#' @rdname app_non_missing
 #' 
 #' @family tableGen Functions
-IDEA_non_missing.BDS <- function(column, group = NULL, data, totals) {
+app_non_missing.BDS <- function(column, group = NULL, data, totals) {
   rlang::abort(glue::glue(
     "Can't calculate Non Missings for BDS yet"
   ))
 }
 
 #' @return NULL
-#' @rdname IDEA_non_missing
+#' @rdname app_non_missing
 #' 
 #' @family tableGen Functions
-IDEA_non_missing.custom <- function(column, group, data, totals) {
+app_non_missing.custom <- function(column, group, data, totals) {
   rlang::abort(glue::glue(
     "Can't calculate mean, data is not classified as ADLB, BDS or OCCDS"
   ))

@@ -12,15 +12,15 @@
 #' 
 #' @family tableGen Functions
 
-IDEA_chg <- function(column, week, group, data) {
-  UseMethod("IDEA_chg", column)
+app_chg <- function(column, week, group, data) {
+  UseMethod("app_chg", column)
 }
 
 #' @return an ANOVA table of grouped variables
-#' @rdname IDEA_chg
+#' @rdname app_chg
 #' 
 #' @family tableGen Functions
-IDEA_chg.default <- function(column, week, group, data) {
+app_chg.default <- function(column, week, group, data) {
   rlang::abort(glue::glue(
     "Can't calculate mean because data is not classified as ADLB, BDS or OCCDS"
   ))
@@ -30,10 +30,10 @@ IDEA_chg.default <- function(column, week, group, data) {
 #'
 #' @return NULL
 #' 
-#' @rdname IDEA_chg
+#' @rdname app_chg
 #' 
 #' @family tableGen Functions
-IDEA_chg.ADSL <- function(column, week, group = NULL, data) {
+app_chg.ADSL <- function(column, week, group = NULL, data) {
   rlang::abort(glue::glue(
     "Can't calculate change from baseline, {column} from ADSL - please choose a variable from BDS"
   ))
@@ -47,10 +47,10 @@ IDEA_chg.ADSL <- function(column, week, group = NULL, data) {
 #' @importFrom rlang sym !! 
 #' @return change from baseline summary statistics table
 #' 
-#' @rdname IDEA_chg
+#' @rdname app_chg
 #' 
 #' @family tableGen Functions
-IDEA_chg.BDS <- function(column, week, group = NULL, data) {
+app_chg.BDS <- function(column, week, group = NULL, data) {
   
   column <- as.character(column)
   
@@ -86,10 +86,10 @@ IDEA_chg.BDS <- function(column, week, group = NULL, data) {
 #' Currently cannot calculate change from baseline from OCCDS data
 #' @return NULL
 #' 
-#' @rdname IDEA_chg
+#' @rdname app_chg
 #' 
 #' @family tableGen Functions
-IDEA_chg.OCCDS <- function(column, week = NULL, group = NULL, data) {
+app_chg.OCCDS <- function(column, week = NULL, group = NULL, data) {
   rlang::abort(glue::glue(
     "Can't calculate change from baseline of OCCDS"
   ))
@@ -98,10 +98,10 @@ IDEA_chg.OCCDS <- function(column, week = NULL, group = NULL, data) {
 #' Currently cannot calculate change from baseline from OCCDS data
 #' @return NULL
 #' 
-#' @rdname IDEA_chg
+#' @rdname app_chg
 #' 
 #' @family tableGen Functions
-IDEA_chg.ADAE <- function(column, week = NULL, group = NULL, data) {
+app_chg.ADAE <- function(column, week = NULL, group = NULL, data) {
   rlang::abort(glue::glue(
     "Can't calculate change from baseline of ADAE"
   ))
@@ -110,10 +110,10 @@ IDEA_chg.ADAE <- function(column, week = NULL, group = NULL, data) {
 #' Currently cannot calculate change from baseline for custom data
 #' @return NULL
 #' 
-#' @rdname IDEA_chg
+#' @rdname app_chg
 #' 
 #' @family tableGen Functions
-IDEA_chg.custom <- function(column, week = NULL, group = NULL, data) {
+app_chg.custom <- function(column, week = NULL, group = NULL, data) {
   rlang::abort(glue::glue(
     "Can't calculate change from baseline, data is not classified as ADLB, BDS or OCCDS"
   ))

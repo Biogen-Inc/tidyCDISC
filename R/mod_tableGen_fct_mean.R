@@ -12,15 +12,15 @@
 #' 
 #' @family tableGen Functions
 #' 
-IDEA_mean <- function(column, week, group, data) {
-  UseMethod("IDEA_mean", column)
+app_mean <- function(column, week, group, data) {
+  UseMethod("app_mean", column)
 }
 
 
 #' @return NULL
-#' @rdname IDEA_mean
+#' @rdname app_mean
 #' @family tableGen Functions
-IDEA_mean.default <- function(column, week, group, data) {
+app_mean.default <- function(column, week, group, data) {
   rlang::abort(glue::glue(
     "Can't calculate mean because data is not classified as ADLB, BDS or OCCDS",
   ))
@@ -42,7 +42,7 @@ IDEA_mean.default <- function(column, week, group, data) {
 #' @param data the data to use 
 #' 
 #' @family tableGen Functions
-IDEA_mean.ADAE <- IDEA_mean.ADSL <- function(column, week, group = NULL, data) {
+app_mean.ADAE <- app_mean.ADSL <- function(column, week, group = NULL, data) {
   
   column <- as.character(column)
   
@@ -85,7 +85,7 @@ IDEA_mean.ADAE <- IDEA_mean.ADSL <- function(column, week, group = NULL, data) {
 #' @param data the data to use 
 #' 
 #' @family tableGen Functions
-IDEA_mean.BDS <- function(column, week, group = NULL, data) {
+app_mean.BDS <- function(column, week, group = NULL, data) {
   
   ################################
   # column <- "K"
@@ -140,10 +140,10 @@ IDEA_mean.BDS <- function(column, week, group = NULL, data) {
 }
 
 #' @return NULL
-#' @rdname IDEA_mean
+#' @rdname app_mean
 #' 
 #' @family tableGen Functions
-IDEA_mean.OCCDS <- function(column, week = NULL, group, data) {
+app_mean.OCCDS <- function(column, week = NULL, group, data) {
   rlang::abort(glue::glue(
     "Currently no method to perform summary statistics on OCCDS"
   ))
@@ -151,10 +151,10 @@ IDEA_mean.OCCDS <- function(column, week = NULL, group, data) {
 
 
 #' @return NULL
-#' @rdname IDEA_mean
+#' @rdname app_mean
 #' 
 #' @family tableGen Functions
-IDEA_mean.custom <- function(column, week = NULL, group, data) {
+app_mean.custom <- function(column, week = NULL, group, data) {
   rlang::abort(glue::glue(
     "Can't calculate mean, data is not classified as ADLB, BDS or OCCDS"
   ))
