@@ -51,7 +51,7 @@ mod_tableGen_ui <- function(id){
            wellPanel(
              fluidRow(
                column(12, 
-                      "STAN Tables", 
+                      "Standard Analysis Tables", 
                       # recipe,
                       uiOutput(ns("stan_recipe_ui")),
                       br(),
