@@ -94,7 +94,7 @@ boxPlot_srv <- function(input, output, session, data) {
   # or by filtering the data by PARAMCD, then using AVAL or CHG for the yaxis
   p <- reactive({
     req(data(), input$yvar, input$group)
-    IDEA_boxplot(data(), input$yvar, input$group, input$value, input$points)
+    app_boxplot(data(), input$yvar, input$group, input$value, input$points)
   })
   
   # return the plot object to parent module

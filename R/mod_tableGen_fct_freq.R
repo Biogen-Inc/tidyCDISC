@@ -12,15 +12,15 @@
 #' @return a frequency table of grouped variables
 #' 
 #' @family tableGen Functions
-IDEA_freq <- function(column, group, data, totals) {
-  UseMethod("IDEA_freq", column)
+app_freq <- function(column, group, data, totals) {
+  UseMethod("app_freq", column)
 }
 
 #' @return NULL
-#' @rdname IDEA_freq
+#' @rdname app_freq
 #' 
 #' @family tableGen Functions
-IDEA_freq.default <- function(column, group, data, totals) {
+app_freq.default <- function(column, group, data, totals) {
   rlang::abort(glue::glue(
     "Can't calculate mean because data is not classified as ADLB, BDS or OCCDS"
   ))
@@ -34,10 +34,10 @@ IDEA_freq.default <- function(column, group, data, totals) {
 #' @import dplyr
 #' 
 #' @return frequency table of ADSL column
-#' @rdname IDEA_freq
+#' @rdname app_freq
 #' 
 #' @family tableGen Functions
-IDEA_freq.ADAE <- IDEA_freq.ADSL <- function(column, group = NULL, data, totals) {
+app_freq.ADAE <- app_freq.ADSL <- function(column, group = NULL, data, totals) {
   # ########## ######### ######## #########
   # column <- "SAFFL"
   # group = "TRT01P"
@@ -135,20 +135,20 @@ IDEA_freq.ADAE <- IDEA_freq.ADSL <- function(column, group = NULL, data, totals)
 
 
 #' @return NULL
-#' @rdname IDEA_freq
+#' @rdname app_freq
 #' 
 #' @family tableGen Functions
-IDEA_freq.BDS <- function(column, group = NULL, data, totals) {
+app_freq.BDS <- function(column, group = NULL, data, totals) {
   rlang::abort(glue::glue(
     "Can't calculate frequency for BDS - {column} is numeric"
   ))
 }
 
 #' @return NULL
-#' @rdname IDEA_freq
+#' @rdname app_freq
 #' 
 #' @family tableGen Functions
-IDEA_freq.OCCDS <- function(column, group, data, totals) {
+app_freq.OCCDS <- function(column, group, data, totals) {
   rlang::abort(glue::glue(
     "Currently no method to perform frequency statistics on OCCDS"
   ))
@@ -156,10 +156,10 @@ IDEA_freq.OCCDS <- function(column, group, data, totals) {
 
 
 #' @return NULL
-#' @rdname IDEA_freq
+#' @rdname app_freq
 #' 
 #' @family tableGen Functions
-IDEA_freq.custom <- function(column, group, data, totals) {
+app_freq.custom <- function(column, group, data, totals) {
   rlang::abort(glue::glue(
     "Can't calculate mean, data is not classified as ADLB, BDS or OCCDS"
   ))

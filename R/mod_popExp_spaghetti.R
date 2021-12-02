@@ -95,7 +95,7 @@ spaghettiPlot_srv <- function(input, output, session, data) {
   # or by filtering the data by PARAMCD, then using AVAL or CHG for the yaxis
   p <- reactive({
     req(data(), input$yvar, input$time)
-    IDEA_spaghettiplot(data(), input$yvar, input$time, input$value)
+    app_spaghettiplot(data(), input$yvar, input$time, input$value)
   })
   
   # return the plot object to parent module
