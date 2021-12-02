@@ -2,7 +2,7 @@
 title: "Users Guide to the Individual Explorer Tab"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{User Guide to the Individual Explorer Tab}
+  %\VignetteIndexEntry{Users Guide to the Individual Explorer Tab}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
