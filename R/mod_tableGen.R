@@ -494,7 +494,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
                       blocks_and_functions()$dropdown,
                       blocks_and_functions()$dataset), 
                  function(x,y,z,d) 
-                   IDEA_methods(x,y,z, 
+                   app_methods(x,y,z, 
                                 group = column(), 
                                 data  = data_to_use_str(d),
                                 totals = total_df())) %>%
@@ -844,7 +844,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
                   blockData$S3,
                   blockData$dropdown,
                   blockData$dataset), 
-          function(x,y,z,d) IDEA::IDEA_methods(x,y,z,
+          function(x,y,z,d) IDEA::app_methods(x,y,z,
                        group = {column() %quote% 'NULL'}, 
                        data = IDEA::data_to_use_str(d),
                        totals = total_df)) %>%
@@ -898,7 +898,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
               blockData$S3,
               blockData$dropdown,
               blockData$dataset), 
-          function(x,y,z,d) IDEA::IDEA_methods(x,y,z, 
+          function(x,y,z,d) IDEA::app_methods(x,y,z, 
                        group = {column() %quote% 'NULL'}, 
                        data = IDEA::data_to_use_str(d),
                        totals = total_df)) %>%

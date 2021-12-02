@@ -16,7 +16,7 @@
 #' 
 #' @family popExp functions
 #' 
-IDEA_km_curve <- function(data, yvar, resp_var, cnsr_var, group = "NONE", points = TRUE, ci = FALSE) {
+app_km_curve <- function(data, yvar, resp_var, cnsr_var, group = "NONE", points = TRUE, ci = FALSE) {
     
   resp_var_sym <- rlang::sym(resp_var)
   
