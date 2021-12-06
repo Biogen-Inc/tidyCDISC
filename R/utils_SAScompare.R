@@ -156,6 +156,7 @@ mk_rep_seq_id <- function(x){
 #' @importFrom stringr str_detect
 #'
 #' @export
+#' @keywords tabGen_compare
 #' 
 prep_sas_table <- function(
   sas_data,
@@ -365,6 +366,7 @@ revert_temp_colnames <- function(dat, orig_grp_names){
 #' @importFrom stringr str_detect
 #'
 #' @export
+#' @keywords tabGen_compare
 #' 
 prep_tg_table <- function(data,
                           machine_readable = TRUE,

@@ -45,18 +45,22 @@ Other tableGen Functions:
 \code{\link{app_anova}()},
 \code{\link{app_chg}()},
 \code{\link{app_freq}()},
-\code{\link{app_mean.ADAE}()},
-\code{\link{app_mean.BDS}()},
 \code{\link{app_mean}()},
 \code{\link{app_methods}()},
 \code{\link{app_nested_freq}()},
 \code{\link{app_non_missing}()},
-\code{\link{app_y}()},
-\code{\link{convertTGOutput}()},
-\code{\link{custom_class}()},
-\code{\link{mean_summary}()}
+\code{\link{app_y}()}
 
 Other tableGen Functionss: 
+\code{\link{app_non_missing}()},
+\code{\link{app_y}()}
+
+Other tableGen Functions: 
+\code{\link{app_anova}()},
+\code{\link{app_chg}()},
+\code{\link{app_freq}()},
+\code{\link{app_mean}()},
+\code{\link{app_methods}()},
 \code{\link{app_nested_freq}()},
 \code{\link{app_non_missing}()},
 \code{\link{app_y}()}
@@ -65,31 +69,12 @@ Other tableGen Functions:
 \code{\link{app_anova}()},
 \code{\link{app_chg}()},
 \code{\link{app_freq}()},
-\code{\link{app_mean.ADAE}()},
-\code{\link{app_mean.BDS}()},
 \code{\link{app_mean}()},
 \code{\link{app_methods}()},
 \code{\link{app_nested_freq}()},
 \code{\link{app_non_missing}()},
-\code{\link{app_y}()},
-\code{\link{convertTGOutput}()},
-\code{\link{custom_class}()},
-\code{\link{mean_summary}()}
-
-Other tableGen Functions: 
-\code{\link{app_anova}()},
-\code{\link{app_chg}()},
-\code{\link{app_freq}()},
-\code{\link{app_mean.ADAE}()},
-\code{\link{app_mean.BDS}()},
-\code{\link{app_mean}()},
-\code{\link{app_methods}()},
-\code{\link{app_nested_freq}()},
-\code{\link{app_non_missing}()},
-\code{\link{app_y}()},
-\code{\link{convertTGOutput}()},
-\code{\link{custom_class}()},
-\code{\link{mean_summary}()}
+\code{\link{app_y}()}
 }
 \concept{tableGen Functions}
 \concept{tableGen Functionss}
+\keyword{tabGen}

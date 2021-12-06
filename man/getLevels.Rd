@@ -15,3 +15,4 @@ x vector
 \description{
 Return levels of a factor/vector
 }
+\keyword{helpers}

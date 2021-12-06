@@ -7,6 +7,7 @@
 #' @import dplyr
 #' 
 #' @family tableGen Functions
+#' @noRd
 #' 
 mean_summary <- function(.data, to_count) {
   

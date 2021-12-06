@@ -47,3 +47,4 @@ Other popExp functions:
 \code{\link{app_km_curve}()}
 }
 \concept{popExp functions}
+\keyword{popEx}

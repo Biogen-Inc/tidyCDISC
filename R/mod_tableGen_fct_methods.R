@@ -18,6 +18,8 @@
 #' 
 #' @family tableGen Functions
 #' @export
+#' @keywords tabGen_repro
+#' 
 app_methods <- function(agg, column, week, group, data, totals) {
   # informative error in case the selected variable doesn't exist in data
   # if no data in the source, do not run the pmap, just show this msg:
@@ -60,6 +62,7 @@ app_methods <- function(agg, column, week, group, data, totals) {
 #' @importFrom dplyr case_when
 #' 
 #' @family tableGen Functions
+#' @noRd
 #' 
 custom_class <- function(x, df) {
   class(x) <- 
@@ -90,6 +93,7 @@ custom_class <- function(x, df) {
 #' to the column name to apply statistic on
 #' 
 #' @family tableGen Functions
+#' @noRd
 #' 
 convertTGOutput <- function(agg, blocks) {
   

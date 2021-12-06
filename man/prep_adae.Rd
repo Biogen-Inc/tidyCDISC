@@ -16,3 +16,4 @@ prep_adae(datafile, ADSL, input_recipe)
 \description{
 Function to pre-filter the ADAE depending on the stan table selected
 }
+\keyword{tabGen_repro}

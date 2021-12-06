@@ -39,3 +39,4 @@ the table (since they never match between base and compare)}
 \description{
 Organize SAS into a format for comparing
 }
+\keyword{tabGen_compare}
