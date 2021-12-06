@@ -86,15 +86,59 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-
-<div id="idea" class="section level1">
+<div id="idea-" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
-<a href="#idea" class="anchor"></a>IDEA</h1></div>
-<p>The purpose of IDEA is a shiny app to easily create custom tables and figures from ADaM datasets.</p>
+<a href="#idea-" class="anchor"></a>IDEA <a href="https://github.biogen.com/pages/biometrics/SEER/"><img src="reference/figures/app_ICON.png" align="right" height="139"></a>
+</h1></div>
+<p>IDEA is a shiny app to easily create custom tables and figures from ADaM-ish datasets.</p>
+<div id="purpose" class="section level2">
+<h2 class="hasAnchor">
+<a href="#purpose" class="anchor"></a>Purpose</h2>
+<p>One of <code>IDEA</code>‘s goals is to develop clinical tables that abide to Biogen’s table standards leveraged for submission filings, officially called “<a href="https://biib.sharepoint.com/:w:/r/sites/ADSTCS/DS&amp;G/_layouts/15/Doc.aspx?sourcedoc=%7B86cf7567-db46-4983-9a12-fdc63e77cf98%7D&amp;action=view&amp;wdAccPdf=0&amp;wdparaid=688A3ED1&amp;CID=B3A09B8B-6A35-4F43-A484-5E9EF88CD5FA&amp;wdLOR=c8053EEAB-66ED-4CA0-9B71-331B73267CD8">STAN</a>” (short for ’standard analysis’). However, this is only secondary to the app’s primary purpose: providing rich exploratory capabilities for clinical studies. High-level features of the app allows users to produce customized tables using a point-and-click interface, examine trends in a patient populations with dynamic figures, and supply visualizations that narrow in on single patient profile. The beauty of this application is that the user doesn’t have to write a lick of code to acquire abundant insights on your study data, so it aims to serve a large population of clinical personnel.</p>
 </div>
-<div id="installation" class="section level1">
-<h1 class="hasAnchor">
-<a href="#installation" class="anchor"></a>Installation</h1>
+<div id="scope" class="section level2">
+<h2 class="hasAnchor">
+<a href="#scope" class="anchor"></a>Scope</h2>
+<p>As previously mentioned, IDEA can only accept datasets that conform to CDISC ADaM standards with some minor flexibility (see upload requirements for more details <span class="math display"><em>i</em><em>n</em><em>s</em><em>e</em><em>r</em><em>t</em><em>l</em><em>i</em><em>n</em><em>k</em><em>h</em><em>e</em><em>r</em><em>e</em></span>. At this time, the app only accepts sas7bdat files.</p>
+<p>If you’re looking to regularly generate R code for tables, the IDEA app has a built-in export feature that downloads an R script that reproduces any analysis performed in the app. However, if you already have experience with R programming, we’d highly recommend learning Biogen’s (internal) <a href="https://www.google.com/"><code>stanly</code></a> package to expand on the R code that IDEA yields for STAN-complaint tables. To summarize, the <code>stanly</code> package is a suite of functions designed for Biogen SAS programmers capable of producing 50+ STAN outputs.</p>
+</div>
+<div id="usage" class="section level2">
+<h2 class="hasAnchor">
+<a href="#usage" class="anchor"></a>Usage</h2>
+<p>IDEA is primarily an application, so no installation is necessary. Simply access Biogen’s network and start using the app: <a href="https://bit.ly/tidyCDISC/">IDEA application</a> However, if you choose to export R code from the Table Generatory, you will need a the <code>IDEA</code> package installed on your machine locally. See installation instructions in the next section below.</p>
+<p>Please review the “<a href="https://biogen-inc.github.io/tidyCDISC/articles/IDEA.html">Getting Started</a>” guide to to learn how to answer all your analysis questions with <code>IDEA</code> . If the application can’t solve your question, we want to know about it! Submit all feature requests to <code>example@email.com</code> and mention <code>IDEA</code>.</p>
+<p>Below are visuals of IDEA’S primary features/ tabs mentioned above.</p>
+<div id="table-generator" class="section level3">
+<h3 class="hasAnchor">
+<a href="#table-generator" class="anchor"></a>Table Generator</h3>
+<p><span class="math display"><em>i</em><em>n</em><em>s</em><em>e</em><em>r</em><em>t</em><em>g</em><em>i</em><em>f</em></span></p>
+</div>
+<div id="population-explorer" class="section level3">
+<h3 class="hasAnchor">
+<a href="#population-explorer" class="anchor"></a>Population Explorer</h3>
+<p><span class="math display"><em>i</em><em>n</em><em>s</em><em>e</em><em>r</em><em>t</em><em>g</em><em>i</em><em>f</em></span></p>
+</div>
+<div id="individual-explorer" class="section level3">
+<h3 class="hasAnchor">
+<a href="#individual-explorer" class="anchor"></a>Individual Explorer</h3>
+<p><span class="math display"><em>i</em><em>n</em><em>s</em><em>e</em><em>r</em><em>t</em><em>g</em><em>i</em><em>f</em></span></p>
+</div>
+</div>
+<div id="install-idea-r-package" class="section level2">
+<h2 class="hasAnchor">
+<a href="#install-idea-r-package" class="anchor"></a>Install IDEA R package</h2>
+<p>If you’d like to run code generated by <code>IDEA</code> or if you are an R developer looking to contribute to the package, welcome! We’ve provided a slurry of information for on-boarding with IDEA.</p>
+<p>The good news is that you don’t need GitHub access in order to install IDEA. You just need to be an HPC user to access Biogen’s internal <a href="https://www.google.com/">Rstudio Package Manager</a> (RSPM) where the package is hosted. If you cannot access RSPM from the above link, then you’ll need to submit a simple BAM request as detailed below. If you can access the RSPM link, you can skip the access request step below.</p>
+<div id="request-access-for-hpc-account" class="section level4">
+<h4 class="hasAnchor">
+<a href="#request-access-for-hpc-account" class="anchor"></a>Request Access for HPC account</h4>
+<p>Click this <a href="https://biogen.service-now.com/it?id=sc_cat_item&amp;sys_id=e9b6a50edb026380846573198c96197f">service-now link</a> OR go to Synapse &gt; IT Help &gt; Infrastructure &amp; Operation &gt; HPC (High Performance Computing). When redirected to the request form, select “Access Request” for the <code>HPC Request Type</code>, then “HPC Account” for the <code>Access request</code> field that appears.</p>
+<p>In the description field, type: “Please create an account for me on the ***REMOVED***.” Also include the name of your department . You will receive an email when your account is provisioned, typically within one business day.</p>
+</div>
+<div id="install-idea-from-rspm" class="section level4">
+<h4 class="hasAnchor">
+<a href="#install-idea-from-rspm" class="anchor"></a>Install IDEA from RSPM</h4>
+<p>Once you have confirmed access to RSPM, then execute the following code to install the package to your local machine:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># For HPC users, add RSPM's GHE repo:</span>
 <span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span><span class="op">(</span>repos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>
@@ -103,15 +147,10 @@
 <span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span><span class="op">(</span><span class="st">'repos'</span><span class="op">)</span> <span class="co"># to confirm "ghe" was added</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"IDEA"</span><span class="op">)</span></code></pre></div>
-</div>
-<div id="use-case" class="section level1">
-<h1 class="hasAnchor">
-<a href="#use-case" class="anchor"></a>Use Case</h1>
-<p>Using the dev/run_dev.R file, you can run the application locally:</p>
+<p>Now you can access all the exported function from <code>IDEA</code> that help users reproduce analysis performed in the app. Using the dev/run_dev.R file, you can even run the application locally:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Set options here</span>
 <span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span><span class="op">(</span>golem.app.prod <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="co"># TRUE = production mode, FALSE = development mode</span>
-<span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span><span class="op">(</span>shiny.sanitize.errors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
 
 <span class="co"># Detach all loaded packages and clean your environment</span>
 <span class="fu">golem</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/golem/man/detach_all_attached.html">detach_all_attached</a></span><span class="op">(</span><span class="op">)</span>
@@ -121,16 +160,9 @@
 
 <span class="co"># Run the application </span>
 <span class="fu"><a href="reference/run_app.html">run_app</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<p>Or (equivalently) this works outside the app…</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Set options here</span>
-<span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span><span class="op">(</span> <span class="st">"golem.app.prod"</span> <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span><span class="op">(</span>shiny.sanitize.errors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-
-<span class="co"># Run the application </span>
-<span class="fu">IDEA</span><span class="fu">::</span><span class="fu"><a href="reference/run_app.html">run_app</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 </div>
-
+</div>
+</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

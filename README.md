@@ -84,7 +84,7 @@ above link, then you’ll need to submit a simple BAM request as detailed
 below. If you can access the RSPM link, you can skip the access request
 step below.
 
-##### Request Access for HPC account
+#### Request Access for HPC account
 
 Click this [service-now
 link](https://www.google.com/)
@@ -99,7 +99,7 @@ department . You will
 receive an email when your account is provisioned, typically within one
 business day.
 
-##### Install IDEA from RSPM
+#### Install IDEA from RSPM
 
 Once you have confirmed access to RSPM, then execute the following code
 to install the package to your local machine:

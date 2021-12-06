@@ -14,3 +14,4 @@ Function to that looks for VARN counterparts to any character or factor VAR
 variables in any dataframe and re-orders there factor levels, taking the lead
 from VARN's numeric guide.
 }
+\keyword{helpers}

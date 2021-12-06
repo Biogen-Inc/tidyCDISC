@@ -3,6 +3,8 @@
 #' @param datalist list of CDISC dataframes 
 #' 
 #' @export
+#' @keywords tabGen_repro
+#' 
 readData <- function(study_directory, file_names) {
   purrr::map(file_names, ~haven::read_sas(file.path(study_directory,.x))) %>%
     setNames(toupper(stringr::str_remove(file_names, ".sas7bdat")))
@@ -15,6 +17,7 @@ readData <- function(study_directory, file_names) {
 #' @param ADSL A dataframe which contains the ADSL data
 #' 
 #' @export
+#' @keywords tabGen_repro
 #' 
 combineBDS <- function(datafile, ADSL) {
   init <- sapply(datafile, function(x) "PARAMCD" %in% colnames(x) & !("CNSR" %in% colnames(x)))
@@ -60,6 +63,7 @@ numeric_stan_table <- function(input_recipe){
 #' @param input_recipe The shiny input that keeps track of the recipe selected
 #' 
 #' @export
+#' @keywords tabGen_repro
 #' 
 prep_adsl <- function(ADSL, input_recipe) { #, stan_table_num
   stan_table_num <- numeric_stan_table(input_recipe)
@@ -100,6 +104,7 @@ prep_adsl <- function(ADSL, input_recipe) { #, stan_table_num
 #' @param ADSL A dataframe which contains the ADSL data
 #' 
 #' @export
+#' @keywords tabGen_repro
 #' 
 cleanADAE <- function(datafile, ADSL) {
   if("ADAE" %in% names(datafile)){
@@ -130,6 +135,7 @@ cleanADAE <- function(datafile, ADSL) {
 #' @param input_recipe The shiny input that keeps track of the recipe selected
 #' 
 #' @export
+#' @keywords tabGen_repro
 #' 
 prep_adae <- function(datafile, ADSL, input_recipe) { #, stan_table_num
   stan_table_num <- numeric_stan_table(input_recipe)
@@ -230,6 +236,7 @@ prep_adae <- function(datafile, ADSL, input_recipe) { #, stan_table_num
 }
 
 #' Blood Chemistry PARAMCDs used to build STAN Table 41
+#' @noRd
 chem <- c(
   "ALT", "AST", "ALP", "BILI", "GGT", # Liver
   "BUN", "CREAT", # Renal
@@ -350,6 +357,7 @@ data_to_filter <- function(datafile, input_filter_df) {
 #' @param datafile list of ADaM-ish dataframes 
 #' 
 #' @export
+#' @keywords tabGen_repro
 #' 
 data_to_use_str <- function(x) {
   if (x == "ADAE") { ae_data }
@@ -364,6 +372,7 @@ data_to_use_str <- function(x) {
 #' 
 #' @importFrom tibble tibble
 #' @export
+#' @keywords tabGen_repro
 #' 
 pretty_blocks <- tibble::tibble(
   Pattern = c("MEAN", "FREQ", "CHG", "Y_FREQ", "MAX_FREQ", "NON_MISSING",

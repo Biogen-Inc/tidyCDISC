@@ -12,6 +12,8 @@
 #' @param points \code{logical} whether to add a jitter to the plot
 #' 
 #' @family popExp Functions
+#' @export
+#' @keywords popEx
 #' 
 app_boxplot <- function(data, yvar, group, value = NULL, points = FALSE) {
   

@@ -29,3 +29,4 @@ Other popExp Functions:
 \code{\link{app_lineplot}()}
 }
 \concept{popExp Functions}
+\keyword{popEx}

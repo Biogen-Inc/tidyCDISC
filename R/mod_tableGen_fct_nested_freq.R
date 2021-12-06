@@ -14,6 +14,9 @@
 #' @return a frequency table of grouped variables
 #'
 #' @family tableGen Functions
+#' @export
+#' @keywords tabGen
+#' 
 app_nested_freq <- function(column, nested_var = "NONE", group, data, totals, sort) {
   UseMethod("app_nested_freq", column)
 }
@@ -29,7 +32,8 @@ app_nested_freq <- function(column, nested_var = "NONE", group, data, totals, so
 #' @return frequency table of ADSL column
 #' @rdname app_nested_freq
 #' 
-#' @family tableGen Functionss
+#' @family tableGen Functions
+
 app_nested_freq.default <- app_nested_freq.OCCDS <- app_nested_freq.ADAE <- app_nested_freq.ADSL <- 
   function(column, nested_var = "NONE", group = NULL, data, totals, sort) {
     
@@ -282,6 +286,7 @@ app_nested_freq.default <- app_nested_freq.OCCDS <- app_nested_freq.ADAE <- app_
 #' @rdname app_nested_freq
 #' 
 #' @family tableGen Functions
+
 app_nested_freq.BDS <- function(column, nested_var = "NONE", group = NULL, data, totals, sort) {
   rlang::abort(glue::glue(
     "Can't calculate Distinct Frequency for for BDS variables"
@@ -292,6 +297,7 @@ app_nested_freq.BDS <- function(column, nested_var = "NONE", group = NULL, data,
 #' @rdname app_nested_freq
 #' 
 #' @family tableGen Functions
+
 app_nested_freq.custom <- function(column, nested_var = "NONE", group, data, totals, sort) {
   rlang::abort(glue::glue(
     "Can't calculate Distinct Frequency for custom class data set."

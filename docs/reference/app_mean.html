@@ -43,7 +43,12 @@ using table generator blocks — app_mean • IDEA</title>
 <meta property="og:title" content="Generate summary statistics 
 using table generator blocks — app_mean" />
 <meta property="og:description" content="Generate summary statistics 
-using table generator blocks" />
+using table generator blocks
+if ADSL supplied look for the column to take mean of
+and look for a grouping variable to group_by
+if BDS filter by paramcd and week
+We need to calculate the difference in N for this
+and report missing values from the mean, if any" />
 
 
 
@@ -142,18 +147,20 @@ using table generator blocks</h1>
     <div class="ref-description">
     <p>Generate summary statistics 
 using table generator blocks</p>
+<p>if ADSL supplied look for the column to take mean of
+and look for a grouping variable to group_by</p>
+<p>if BDS filter by paramcd and week
+We need to calculate the difference in N for this
+and report missing values from the mean, if any</p>
     </div>
 
     <pre class="usage"><span class='fu'>app_mean</span><span class='op'>(</span><span class='va'>column</span>, <span class='va'>week</span>, <span class='va'>group</span>, <span class='va'>data</span><span class='op'>)</span>
 
-<span class='co'># S3 method for default</span>
-<span class='fu'>app_mean</span><span class='op'>(</span><span class='va'>column</span>, <span class='va'>week</span>, <span class='va'>group</span>, <span class='va'>data</span><span class='op'>)</span>
+<span class='co'># S3 method for ADAE</span>
+<span class='fu'>app_mean</span><span class='op'>(</span><span class='va'>column</span>, <span class='va'>week</span>, group <span class='op'>=</span> <span class='cn'>NULL</span>, <span class='va'>data</span><span class='op'>)</span>
 
-<span class='co'># S3 method for OCCDS</span>
-<span class='fu'>app_mean</span><span class='op'>(</span><span class='va'>column</span>, week <span class='op'>=</span> <span class='cn'>NULL</span>, <span class='va'>group</span>, <span class='va'>data</span><span class='op'>)</span>
-
-<span class='co'># S3 method for custom</span>
-<span class='fu'>app_mean</span><span class='op'>(</span><span class='va'>column</span>, week <span class='op'>=</span> <span class='cn'>NULL</span>, <span class='va'>group</span>, <span class='va'>data</span><span class='op'>)</span></pre>
+<span class='co'># S3 method for BDS</span>
+<span class='fu'>app_mean</span><span class='op'>(</span><span class='va'>column</span>, <span class='va'>week</span>, group <span class='op'>=</span> <span class='cn'>NULL</span>, <span class='va'>data</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -181,6 +188,8 @@ based on the data file the column came from</p></td>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>an summary statistic table of grouped variables</p>
+<p>an summary statistic table of grouped variables</p>
+<p>an summary statistic table of grouped variables</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p>Other tableGen Functions: 
@@ -188,89 +197,28 @@ based on the data file the column came from</p></td>
 <code><a href='app_chg.html'>app_chg</a>()</code>,
 <code><a href='app_freq.html'>app_freq</a>()</code>,
 <code><a href='app_max_freq.html'>app_max_freq</a>()</code>,
-<code><a href='app_mean.ADAE.html'>app_mean.ADAE</a>()</code>,
-<code><a href='app_mean.BDS.html'>app_mean.BDS</a>()</code>,
 <code><a href='app_methods.html'>app_methods</a>()</code>,
 <code><a href='app_nested_freq.html'>app_nested_freq</a>()</code>,
 <code><a href='app_non_missing.html'>app_non_missing</a>()</code>,
-<code><a href='app_y.html'>app_y</a>()</code>,
-<code><a href='convertTGOutput.html'>convertTGOutput</a>()</code>,
-<code><a href='custom_class.html'>custom_class</a>()</code>,
-<code><a href='dropArea.html'>dropArea</a>()</code>,
-<code><a href='mean_summary.html'>mean_summary</a>()</code>,
-<code><a href='mod_tableGen_server.html'>mod_tableGen_server</a>()</code>,
-<code><a href='mod_tableGen_ui.html'>mod_tableGen_ui</a>()</code>,
-<code><a href='rowArea.html'>rowArea</a>()</code>,
-<code><a href='rowBlock.html'>rowBlock</a>()</code>,
-<code><a href='rowPallete.html'>rowPallete</a>()</code>,
-<code><a href='std_err.html'>std_err</a>()</code>,
-<code><a href='tg_guide.html'>tg_guide</a></code></p>
+<code><a href='app_y.html'>app_y</a>()</code></p>
 <p>Other tableGen Functions: 
 <code><a href='app_anova.html'>app_anova</a>()</code>,
 <code><a href='app_chg.html'>app_chg</a>()</code>,
 <code><a href='app_freq.html'>app_freq</a>()</code>,
 <code><a href='app_max_freq.html'>app_max_freq</a>()</code>,
-<code><a href='app_mean.ADAE.html'>app_mean.ADAE</a>()</code>,
-<code><a href='app_mean.BDS.html'>app_mean.BDS</a>()</code>,
 <code><a href='app_methods.html'>app_methods</a>()</code>,
 <code><a href='app_nested_freq.html'>app_nested_freq</a>()</code>,
 <code><a href='app_non_missing.html'>app_non_missing</a>()</code>,
-<code><a href='app_y.html'>app_y</a>()</code>,
-<code><a href='convertTGOutput.html'>convertTGOutput</a>()</code>,
-<code><a href='custom_class.html'>custom_class</a>()</code>,
-<code><a href='dropArea.html'>dropArea</a>()</code>,
-<code><a href='mean_summary.html'>mean_summary</a>()</code>,
-<code><a href='mod_tableGen_server.html'>mod_tableGen_server</a>()</code>,
-<code><a href='mod_tableGen_ui.html'>mod_tableGen_ui</a>()</code>,
-<code><a href='rowArea.html'>rowArea</a>()</code>,
-<code><a href='rowBlock.html'>rowBlock</a>()</code>,
-<code><a href='rowPallete.html'>rowPallete</a>()</code>,
-<code><a href='std_err.html'>std_err</a>()</code>,
-<code><a href='tg_guide.html'>tg_guide</a></code></p>
+<code><a href='app_y.html'>app_y</a>()</code></p>
 <p>Other tableGen Functions: 
 <code><a href='app_anova.html'>app_anova</a>()</code>,
 <code><a href='app_chg.html'>app_chg</a>()</code>,
 <code><a href='app_freq.html'>app_freq</a>()</code>,
 <code><a href='app_max_freq.html'>app_max_freq</a>()</code>,
-<code><a href='app_mean.ADAE.html'>app_mean.ADAE</a>()</code>,
-<code><a href='app_mean.BDS.html'>app_mean.BDS</a>()</code>,
 <code><a href='app_methods.html'>app_methods</a>()</code>,
 <code><a href='app_nested_freq.html'>app_nested_freq</a>()</code>,
 <code><a href='app_non_missing.html'>app_non_missing</a>()</code>,
-<code><a href='app_y.html'>app_y</a>()</code>,
-<code><a href='convertTGOutput.html'>convertTGOutput</a>()</code>,
-<code><a href='custom_class.html'>custom_class</a>()</code>,
-<code><a href='dropArea.html'>dropArea</a>()</code>,
-<code><a href='mean_summary.html'>mean_summary</a>()</code>,
-<code><a href='mod_tableGen_server.html'>mod_tableGen_server</a>()</code>,
-<code><a href='mod_tableGen_ui.html'>mod_tableGen_ui</a>()</code>,
-<code><a href='rowArea.html'>rowArea</a>()</code>,
-<code><a href='rowBlock.html'>rowBlock</a>()</code>,
-<code><a href='rowPallete.html'>rowPallete</a>()</code>,
-<code><a href='std_err.html'>std_err</a>()</code>,
-<code><a href='tg_guide.html'>tg_guide</a></code></p>
-<p>Other tableGen Functions: 
-<code><a href='app_anova.html'>app_anova</a>()</code>,
-<code><a href='app_chg.html'>app_chg</a>()</code>,
-<code><a href='app_freq.html'>app_freq</a>()</code>,
-<code><a href='app_max_freq.html'>app_max_freq</a>()</code>,
-<code><a href='app_mean.ADAE.html'>app_mean.ADAE</a>()</code>,
-<code><a href='app_mean.BDS.html'>app_mean.BDS</a>()</code>,
-<code><a href='app_methods.html'>app_methods</a>()</code>,
-<code><a href='app_nested_freq.html'>app_nested_freq</a>()</code>,
-<code><a href='app_non_missing.html'>app_non_missing</a>()</code>,
-<code><a href='app_y.html'>app_y</a>()</code>,
-<code><a href='convertTGOutput.html'>convertTGOutput</a>()</code>,
-<code><a href='custom_class.html'>custom_class</a>()</code>,
-<code><a href='dropArea.html'>dropArea</a>()</code>,
-<code><a href='mean_summary.html'>mean_summary</a>()</code>,
-<code><a href='mod_tableGen_server.html'>mod_tableGen_server</a>()</code>,
-<code><a href='mod_tableGen_ui.html'>mod_tableGen_ui</a>()</code>,
-<code><a href='rowArea.html'>rowArea</a>()</code>,
-<code><a href='rowBlock.html'>rowBlock</a>()</code>,
-<code><a href='rowPallete.html'>rowPallete</a>()</code>,
-<code><a href='std_err.html'>std_err</a>()</code>,
-<code><a href='tg_guide.html'>tg_guide</a></code></p></div>
+<code><a href='app_y.html'>app_y</a>()</code></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

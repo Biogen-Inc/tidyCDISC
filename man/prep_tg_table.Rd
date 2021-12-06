@@ -33,3 +33,4 @@ number of groups in the 'group by' variable and col99 is the total column}
 \description{
 Organize Table Generator table into a format for comparing
 }
+\keyword{tabGen_compare}
