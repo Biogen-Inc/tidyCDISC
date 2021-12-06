@@ -21,8 +21,23 @@ IDEA is a shiny app to easily create custom tables and figures from ADaM-ish dat
 
 ## Purpose
 
-One of `IDEA`'s goals is to develop clinical tables that abide to Biogen's table standards leveraged for submission filings, officially called "[STAN](https://biib.sharepoint.com/:w:/r/sites/ADSTCS/DS&G/_layouts/15/Doc.aspx?sourcedoc=%7B86cf7567-db46-4983-9a12-fdc63e77cf98%7D&action=view&wdAccPdf=0&wdparaid=688A3ED1&CID=B3A09B8B-6A35-4F43-A484-5E9EF88CD5FA&wdLOR=c8053EEAB-66ED-4CA0-9B71-331B73267CD8)" (short for 'standard analysis'). However, this is only secondary to the app's primary purpose: providing rich exploratory capabilities for clinical studies. High-level features of the app allows users to produce customized tables using a point-and-click interface, examine trends in a patient populations with dynamic figures, and supply  visualizations that narrow in on single patient profile. The beauty of this application is that the user doesn't have to write a lick of code to acquire abundant insights on your study data, so it aims to serve a large population of clinical personnel.
+One of `IDEA`'s goals is to develop clinical tables that abide to Biogen's table standards leveraged for submission filings, officially called "[STAN](https://biib.sharepoint.com/:w:/r/sites/ADSTCS/DS&G/_layouts/15/Doc.aspx?sourcedoc=%7B86cf7567-db46-4983-9a12-fdc63e77cf98%7D&action=view&wdAccPdf=0&wdparaid=688A3ED1&CID=B3A09B8B-6A35-4F43-A484-5E9EF88CD5FA&wdLOR=c8053EEAB-66ED-4CA0-9B71-331B73267CD8)" (short for 'standard analysis'). However, this is only secondary to the app's primary purpose: providing rich exploratory capabilities for clinical studies. High-level features of the app allows users to produce customized tables using a point-and-click interface, examine trends in a patient populations with dynamic figures, and supply  visualizations that narrow in on single patient profile.
 
+The beauty of this application is that the user doesn't have to write a lick of code to acquire abundant insights from the study data, so it aims to serve a large population of clinical personnel with varying levels of programming experience. For example: 
+
+- A **clinical head**, with presumably no programming skills but the most domain expertise, can explore results without asking a statistician or programmer to build tables & figures.
+
+- A **statistician** can use the application to make tables/ figures instantly, cutting down on statistical programming requests for excess tables that aren't required, but nice to see. 
+
+- A **statistical programmer** can use IDEA to do preliminary QC programming before writing the code in a validated process.
+
+For a high-level overview of the app with a 10-minute demo, please review the following conference presentation on `tidyCDISC`, which is the open-sourced version of `IDEA.` Internal to Biogen, the `IDEA` application has all the same features as `tidyCDISC`, plus more!
+
+<center>
+
+[![tidyCDISC @ R/Medicine](man/figures/tidyCDISC_RMedicine_thumbnail.png)](https://youtu.be/QeHSjw-vU3U?t=103)
+
+</center>
 
 ## Scope
 
@@ -38,16 +53,6 @@ IDEA is primarily an application, so no installation is necessary. Simply access
 
 Please review the "[Getting Started](https://biogen-inc.github.io/tidyCDISC/articles/IDEA.html)" guide to to learn how to answer all your analysis questions with `IDEA` . If the application can't solve your question, we want to know about it! Submit all feature requests to `example@email.com` and mention `IDEA`.
 
-Below are visuals of IDEA'S primary features/ tabs mentioned above.
-
-### Table Generator
-[insert gif]
-
-### Population Explorer
-[insert gif]
-
-### Individual Explorer
-[insert gif]
 
 
 ## Install IDEA R package
