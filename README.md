@@ -17,10 +17,35 @@ app’s primary purpose: providing rich exploratory capabilities for
 clinical studies. High-level features of the app allows users to produce
 customized tables using a point-and-click interface, examine trends in a
 patient populations with dynamic figures, and supply visualizations that
-narrow in on single patient profile. The beauty of this application is
-that the user doesn’t have to write a lick of code to acquire abundant
-insights on your study data, so it aims to serve a large population of
-clinical personnel.
+narrow in on single patient profile.
+
+The beauty of this application is that the user doesn’t have to write a
+lick of code to acquire abundant insights from the study data, so it
+aims to serve a large population of clinical personnel with varying
+levels of programming experience. For example:
+
+-   A **clinical head**, with presumably no programming skills but the
+    most domain expertise, can explore results without asking a
+    statistician or programmer to build tables & figures.
+
+-   A **statistician** can use the application to make tables/ figures
+    instantly, cutting down on statistical programming requests for
+    excess tables that aren’t required, but nice to see.
+
+-   A **statistical programmer** can use IDEA to do preliminary QC
+    programming before writing the code in a validated process.
+
+For a high-level overview of the app with a 10-minute demo, please
+review the following conference presentation on `tidyCDISC`, which is
+the open-sourced version of `IDEA.` Internal to Biogen, the `IDEA`
+application has all the same features as `tidyCDISC`, plus more!
+
+<center>
+
+[![tidyCDISC @
+R/Medicine](man/figures/tidyCDISC_RMedicine_thumbnail.png)](https://youtu.be/QeHSjw-vU3U?t=103)
+
+</center>
 
 ## Scope
 
@@ -54,20 +79,6 @@ guide to to learn how to answer all your analysis questions with `IDEA`
 . If the application can’t solve your question, we want to know about
 it! Submit all feature requests to `adshelp@digicomm.jira.com` and
 mention `IDEA`.
-
-Below are visuals of IDEA’S primary features/ tabs mentioned above.
-
-### Table Generator
-
-\[insert gif\]
-
-### Population Explorer
-
-\[insert gif\]
-
-### Individual Explorer
-
-\[insert gif\]
 
 ## Install IDEA R package
 
