@@ -35,3 +35,4 @@ Other popExp functions:
 \code{\link{app_scatterplot}()}
 }
 \concept{popExp functions}
+\keyword{popEx}

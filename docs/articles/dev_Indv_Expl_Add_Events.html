@@ -207,7 +207,7 @@
 <div id="standardize-the-format-of-your-event-data" class="section level2">
 <h2 class="hasAnchor">
 <a href="#standardize-the-format-of-your-event-data" class="anchor"></a>Standardize the format of your Event data</h2>
-<p>Now that the groundwork has been established, it’s time to introduce the function called <code><a href="../reference/org_df_events.html">org_df_events()</a></code> which has various (well documented) arguments in the <code>mod_indvExp_fct_organizeEvent.R</code> file. This function takes a data set and manipulates it into a standard form. After being standardized, the app can (and will) combine it with other standardized event data frames as necessary.</p>
+<p>Now that the groundwork has been established, it’s time to introduce the function called <code>org_df_events()</code> which has various (well documented) arguments in the <code>mod_indvExp_fct_organizeEvent.R</code> file. This function takes a data set and manipulates it into a standard form. After being standardized, the app can (and will) combine it with other standardized event data frames as necessary.</p>
 </div>
 <div id="what-it-does" class="section level2">
 <h2 class="hasAnchor">
@@ -224,9 +224,9 @@
 <div id="an-example" class="section level3">
 <h3 class="hasAnchor">
 <a href="#an-example" class="anchor"></a>An Example</h3>
-<p>In the example below, an Adverse Events (ADAE) is standardized using <code><a href="../reference/org_df_events.html">org_df_events()</a></code>. The arguments that are pre-fixed with mi_ all come from shiny, but below they’ve been populated with examples to show the typical values they accept. That said, when implementing a new events data set, you (the developer) will need to concern yourself with the first 6 arguments, all of which are well documented on the function’s help page.</p>
+<p>In the example below, an Adverse Events (ADAE) is standardized using <code>org_df_events()</code>. The arguments that are pre-fixed with mi_ all come from shiny, but below they’ve been populated with examples to show the typical values they accept. That said, when implementing a new events data set, you (the developer) will need to concern yourself with the first 6 arguments, all of which are well documented on the function’s help page.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R">  <span class="va">ae_dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/org_df_events.html">org_df_events</a></span><span class="op">(</span>
+<code class="sourceCode R">  <span class="va">ae_dat</span> <span class="op">&lt;-</span> <span class="fu">org_df_events</span><span class="op">(</span>
       df_name <span class="op">=</span> <span class="st">"ADAE"</span>
     , df_domain_abbr <span class="op">=</span> <span class="st">"AE"</span>
     , df_desc <span class="op">=</span> <span class="st">"Adverse Events"</span>
@@ -241,7 +241,7 @@
     , mi_filtered_dat <span class="op">=</span> <span class="va">filtered_dat</span>
   <span class="op">)</span></code></pre></div>
 <p>What’s absolutely imperative when calling this function is that the <code>df_domain_abbr</code> matches the values for the named-list of choices passed to the <code>updateCheckGroupInput()</code> function used to update <code>input$checkGroup</code> and <code>input$overlay_events</code> discussed in <code>UI Considerations</code>.</p>
-<p>Running a publicly available ADAE data set (available through <a href="https://github.com/phuse-org/TestDataFactory/tree/master/Updated/TDF_ADaM">PHUSE’s gitHub</a>) through <code><a href="../reference/org_df_events.html">org_df_events()</a></code>, the output <code>ae_dat</code> might look something like the data frame below.</p>
+<p>Running a publicly available ADAE data set (available through <a href="https://github.com/phuse-org/TestDataFactory/tree/master/Updated/TDF_ADaM">PHUSE’s gitHub</a>) through <code>org_df_events()</code>, the output <code>ae_dat</code> might look something like the data frame below.</p>
 <p><img src="figures/IndvExp/org_df_events_output.PNG" width="90%" height="90%"></p>
 <p>It will always contain these variables, but the amount of rows will certainly vary. In the example output below, we see that the column “EVENTTYP” was populated with the <code>df_desc</code> argument. Later, this will be the Event type label in the <code>timevis</code> object displayed on the <code>Events</code> tab.</p>
 <p>The next column is START which used the “ASTDT” column, which makes it evident that the ADAE data frame we provided in <code>mi_datafile</code> (the list of data frames uploaded by the user), didn’t have the preferred “AESTDT”, so the function selected the next best date choice: “ASTDT”. It’s important that no matter how many potential dates you provide in the <code>df_st_date_vars</code> vector, that at least one of them is a required field according to the current ADaMIG.</p>
@@ -253,10 +253,10 @@
 <div id="build-events" class="section level2">
 <h2 class="hasAnchor">
 <a href="#build-events" class="anchor"></a>Build Events</h2>
-<p>Now that we’ve organized our data into a standard format, we need to combine the events the user selects into a singular data frame to be used in the app. This task is performed in the <code>mod_indvExp_fct_buildEvents.R</code> file. By browsing this file, you’ll witness the function just runs <code><a href="../reference/org_df_events.html">org_df_events()</a></code> on all the applicable date-oriented data sets currently supported (ADMH, ADAE, ADCM, ADSL, and ADLB). The only exception to these is the ADSL and ADMH files, which require custom considerations when building the standardized data frame shown above. Therefore, if you (the developer) wish to add another date-oriented data set into the mix, add your new org_df_events() function. Then, include the name of your data frame (let’s say it’s called “md_rec”) when creating this list:</p>
+<p>Now that we’ve organized our data into a standard format, we need to combine the events the user selects into a singular data frame to be used in the app. This task is performed in the <code>mod_indvExp_fct_buildEvents.R</code> file. By browsing this file, you’ll witness the function just runs <code>org_df_events()</code> on all the applicable date-oriented data sets currently supported (ADMH, ADAE, ADCM, ADSL, and ADLB). The only exception to these is the ADSL and ADMH files, which require custom considerations when building the standardized data frame shown above. Therefore, if you (the developer) wish to add another date-oriented data set into the mix, add your new org_df_events() function. Then, include the name of your data frame (let’s say it’s called “md_rec”) when creating this list:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">uni_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">ds_rec</span>, <span class="va">ae_rec</span>, <span class="va">cm_rec</span>, <span class="va">lb_rec</span>, <span class="va">mh_rec</span>, <span class="va">md_rec</span><span class="op">)</span></code></pre></div>
-<p>That’s all it takes! A few lines later, <code>uni_list</code> is rbind-ed into a single data frame (hence the need for uniformity) that <code><a href="../reference/build_events.html">build_events()</a></code> will sort and return in the app. Once that data is in the app, it will automatically flow through to the <code>timevis</code> object on the <code>Events</code> tab or the <code>Visits</code> tab, if you (the developer) allowed it to do so.</p>
+<p>That’s all it takes! A few lines later, <code>uni_list</code> is rbind-ed into a single data frame (hence the need for uniformity) that <code>build_events()</code> will sort and return in the app. Once that data is in the app, it will automatically flow through to the <code>timevis</code> object on the <code>Events</code> tab or the <code>Visits</code> tab, if you (the developer) allowed it to do so.</p>
 </div>
 <div id="color-aesthetics" class="section level2">
 <h2 class="hasAnchor">

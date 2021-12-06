@@ -11,6 +11,8 @@
 #' @return a frequency table of grouped variables
 #'
 #' @family tableGen Functions
+#' @export
+#' @keywords tabGen
 app_max_freq <- function(column, group, data, totals) {
   UseMethod("app_max_freq", column)
 }
@@ -27,6 +29,7 @@ app_max_freq <- function(column, group, data, totals) {
 #' @rdname app_max_freq
 #' 
 #' @family tableGen Functionss
+
 app_max_freq.default <- app_max_freq.OCCDS <- app_max_freq.ADAE <- app_max_freq.ADSL <- 
   function(column, group = NULL, data, totals) {
   # # ########## ######### ######## #########
@@ -128,6 +131,7 @@ app_max_freq.default <- app_max_freq.OCCDS <- app_max_freq.ADAE <- app_max_freq.
 #' @rdname app_max_freq
 #' 
 #' @family tableGen Functions
+
 app_max_freq.BDS <- function(column, group = NULL, data, totals) {
   rlang::abort(glue::glue(
     "Can't calculate Max Frequency for for BDS variables"
@@ -138,6 +142,7 @@ app_max_freq.BDS <- function(column, group = NULL, data, totals) {
 #' @rdname app_max_freq
 #' 
 #' @family tableGen Functions
+
 app_max_freq.custom <- function(column, group, data, totals) {
   rlang::abort(glue::glue(
     "Can't calculate Max Frequency for custom class data set."

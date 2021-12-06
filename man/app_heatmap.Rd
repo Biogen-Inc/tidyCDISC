@@ -28,3 +28,4 @@ Other popExp Functions:
 \code{\link{app_spaghettiplot}()}
 }
 \concept{popExp Functions}
+\keyword{popEx}
