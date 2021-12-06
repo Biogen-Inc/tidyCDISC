@@ -10,6 +10,7 @@
 #' @import dplyr
 #'
 #' @family popExp Functions
+#' @noRd
 #'  
 boxPlot_ui <- function(id, label = "box") {
   ns <- NS(id)
@@ -40,6 +41,7 @@ boxPlot_ui <- function(id, label = "box") {
 #' @return ggplot object
 #'
 #' @family popExp Functions
+#' @noRd
 #' 
 boxPlot_srv <- function(input, output, session, data) {
   ns <- session$ns

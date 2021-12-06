@@ -13,6 +13,7 @@
 #' @importFrom IDEAFilter shiny_data_filter
 #' 
 #' @family popExp Functions
+#' @noRd
 #' 
 mod_popExp_ui <- function(id, label = "Population Explorer"){
   ns <- NS(id)

@@ -10,6 +10,7 @@
 #' @import dplyr
 #'
 #' @family popExp Functions
+#' @noRd
 #'  
 spaghettiPlot_ui <- function(id, label = "spaghetti") {
   ns <- NS(id)
@@ -38,6 +39,7 @@ spaghettiPlot_ui <- function(id, label = "spaghetti") {
 #' @return ggplot object
 #'
 #' @family popExp Functions
+#' @noRd
 #'  
 spaghettiPlot_srv <- function(input, output, session, data) {
   ns <- session$ns

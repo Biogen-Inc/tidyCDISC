@@ -9,6 +9,7 @@
 #' @return An empty shiny tagList
 #' 
 #' @family dataComply Functions
+#' @noRd
 #' 
 mod_dataComply_ui <- function(id){
   # ns <- NS(id)
@@ -43,6 +44,7 @@ mod_dataComply_ui <- function(id){
 #' @return A list of dataframes which are compliant with the rules
 #'
 #' @family dataComply Functions
+#' @noRd
 #'   
 mod_dataComply_server <- function(input, output, session,
                                   datalist = reactive(NULL)
