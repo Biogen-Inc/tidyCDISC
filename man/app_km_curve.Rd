@@ -23,7 +23,7 @@ app_km_curve(
 
 \item{points}{logical, whether to plot + symbols when patients censored}
 
-\item{ci}{logical, whether the curve(s) should be accompanied with a 95% CI}
+\item{ci}{logical, whether the curve(s) should be accompanied with a 95\% CI}
 }
 \description{
 Create scatter plot where if the variables are numeric then they

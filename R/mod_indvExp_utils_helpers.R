@@ -7,6 +7,7 @@
 #' @importFrom cicerone Cicerone
 #' 
 #' @return a cicerone r6 object
+#' @noRd
 #' 
 guide_ind_exp_sel <- 
   cicerone::Cicerone$
@@ -33,6 +34,7 @@ guide_ind_exp_sel <-
 #' @importFrom cicerone Cicerone
 #' 
 #' @return a cicerone r6 object
+#' @noRd
 #' 
 guide_ind_exp_sel_adv <-
   cicerone::Cicerone$
@@ -73,6 +75,7 @@ guide_ind_exp_sel_adv <-
 #' @importFrom cicerone Cicerone
 #' 
 #' @return a cicerone r6 object
+#' @noRd
 #' 
 guide_ind_exp_events_blank <-
   cicerone::Cicerone$
@@ -97,6 +100,7 @@ guide_ind_exp_events_blank <-
 #' @importFrom cicerone Cicerone
 #' 
 #' @return a cicerone r6 object
+#' @noRd
 #' 
 guide_ind_exp_events <-
   cicerone::Cicerone$
@@ -133,6 +137,7 @@ guide_ind_exp_events <-
 #' @importFrom cicerone Cicerone
 #' 
 #' @return a cicerone r6 object
+#' @noRd
 #' 
 guide_ind_exp_events_adv <-
   cicerone::Cicerone$
@@ -175,6 +180,7 @@ guide_ind_exp_events_adv <-
 #' @importFrom cicerone Cicerone
 #' 
 #' @return a cicerone r6 object
+#' @noRd
 #' 
 guide_ind_exp_visits_blank <-
   cicerone::Cicerone$
@@ -199,6 +205,7 @@ guide_ind_exp_visits_blank <-
 #' @importFrom cicerone Cicerone
 #' 
 #' @return a cicerone r6 object
+#' @noRd
 #' 
 guide_ind_exp_visits <-
   cicerone::Cicerone$
@@ -254,6 +261,7 @@ guide_ind_exp_visits <-
 #' @importFrom cicerone Cicerone
 #'
 #' @return a cicerone r6 object
+#' @noRd
 #'   
 guide_ind_exp_visits_adlb <-
   cicerone::Cicerone$
@@ -314,6 +322,7 @@ guide_ind_exp_visits_adlb <-
 #' @importFrom cicerone Cicerone
 #'
 #' @return a cicerone r6 object
+#' @noRd
 #'   
 guide_ind_exp_visits_adlb_olay <-
   cicerone::Cicerone$

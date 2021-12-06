@@ -10,6 +10,7 @@
 #' @param id Internal parameters for {shiny}.
 #'
 #' @import shiny
+#' @noRd
 #' 
 mod_dataUpload_ui <- function(id){
   ns <- shiny::NS(id)
@@ -57,6 +58,8 @@ mod_dataUpload_ui <- function(id){
 #' @importFrom haven zap_formats 
 #' @importFrom haven read_sas
 #' @importFrom stringr str_remove
+#' 
+#' @noRd
 #' 
 mod_dataUpload_server <- function(input, output, session){
   ns <- session$ns

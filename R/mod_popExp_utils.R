@@ -7,6 +7,7 @@
 #' @importFrom cicerone Cicerone
 #' 
 #' @return a cicerone r6 object
+#' @noRd
 #' 
 guide_popex <- 
   cicerone::Cicerone$
@@ -42,6 +43,7 @@ guide_popex <-
 #' @importFrom cicerone Cicerone
 #'
 #' @return a cicerone r6 object
+#' @noRd
 #'   
 guide_popex_sel_adv <-
   cicerone::Cicerone$

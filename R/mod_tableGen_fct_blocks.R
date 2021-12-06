@@ -8,6 +8,7 @@
 #' @import shiny
 #' 
 #' @family tableGen Functions
+#' @noRd
 rowBlock <- function(name, classname) {
   apply(name,
         1,
@@ -31,6 +32,7 @@ rowBlock <- function(name, classname) {
 #' @importFrom purrr map2
 #' 
 #' @family tableGen Functions
+#' @noRd
 rowPallete <- function(data) {
   purrr::map2(names(data), data,
        ~div(class="accordion-container",
@@ -53,6 +55,7 @@ rowPallete <- function(data) {
 #' @param col is the column with to apply
 #' @import shiny
 #' @family tableGen Functions
+#' @noRd
 rowArea <- function(bins, col) {
   column(col, offset = 0, style='padding:0px;',
          rowPallete(bins)
@@ -70,6 +73,7 @@ rowArea <- function(bins, col) {
 #' @param col the width of the drop area
 #' @import shiny
 #' @family tableGen Functions
+#' @noRd
 dropArea <- function(name, id, ulid, class, styles, col) {
   column(col, offset = 0, style=styles,
          h4(name),

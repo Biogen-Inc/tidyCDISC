@@ -13,6 +13,7 @@
 #' @return An shiny tagList
 #'
 #' @family dataComply Functions
+#' @noRd
 #'   
 mod_dataComplyRules_ui <- function(id, showRules = T){
   ns <- NS(id)
@@ -39,6 +40,7 @@ mod_dataComplyRules_ui <- function(id, showRules = T){
 #' @import shiny
 #'   
 #' @family dataComply Functions
+#' @noRd
 #'   
 mod_dataComplyRules_server <- function(input, output, session,
                                        modal_title = "ADaM-ish Upload Rules"){

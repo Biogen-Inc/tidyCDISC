@@ -17,6 +17,7 @@
 #' @importFrom rmarkdown render
 #'
 #' @family indvExp Functions
+#' @noRd
 #'   
 mod_indvExpPatVisits_server <- function(input, output, session, datafile, loaded_adams, usubjid, filtered_dat){
   ns <- session$ns
