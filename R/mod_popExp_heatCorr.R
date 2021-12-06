@@ -10,6 +10,7 @@
 #' @import dplyr
 #'
 #' @family popExp Functions
+#' @noRd
 #'  
 heatmap_ui <- function(id, label = "line") {
   ns <- NS(id)
@@ -62,6 +63,7 @@ heatmap_ui <- function(id, label = "line") {
 #' @return ggplot object
 #'
 #' @family popExp Functions
+#' @noRd
 #'  
 heatmap_srv <- function(input, output, session, data) {
   ns <- session$ns

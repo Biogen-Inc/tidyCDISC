@@ -7,6 +7,7 @@
 #' create the labels for each column using the total function
 #' so the columns are now NAME N= X
 #' @export
+#' @noRd
 # get column names with N
 col_for_list_expr <- function(nm, x) {
   nm = md(glue::glue("**{row_names_n}** <br> N={total}"))
@@ -22,6 +23,7 @@ col_for_list_expr <- function(nm, x) {
 #' @return character vector of hex colors of length n
 #'
 #' @family indvExp Functions
+#' @noRd
 #'   
 my_gg_color_hue <- function(n) {
   hues = seq(15, 375, length = n +1)
@@ -38,12 +40,16 @@ my_gg_color_hue <- function(n) {
 #' @return numeric, representing the standard error
 #'
 #' @family tableGen Functions
+#' @noRd
 #'  
 std_err <- function(x, na.rm=FALSE) {
   if (na.rm) x <- na.omit(x)
   sqrt(var(x)/length(x))
 }
 
+#' Translate the position of into a integer needed for ggplot2
+#' @param dir the strings to capitalize
+#' @noRd
 translate_pos <- function(dir){
   if(dir %in% c("left","bottom")) -1
   else if(dir %in% c("right","top")) 1
@@ -52,6 +58,7 @@ translate_pos <- function(dir){
 
 #' Capitalize the first letter of a string
 #' @param y the strings to capitalize
+#' @noRd
 CapStr <- function(y) {
   c <- strsplit(y, " ")[[1]]
   paste(toupper(substring(c, 1,1)), substring(c, 2),
@@ -64,6 +71,7 @@ CapStr <- function(y) {
 #' the gt tables
 #' @param df the dataframe to transpose
 #' @param num the number of rows to return
+#' @noRd
 transpose_df <- function(df, num) {
   t_df <- data.table::transpose(df)
   colnames(t_df) <- rownames(df)
@@ -123,7 +131,6 @@ common_rownames <- function(data, group) {
 #' @importFrom shiny HTML
 #' 
 #' @return An HTML string
-#' 
 #' @noRd
 #' 
 filters_in_english <- function(filtered_data, filter_header = "Filters Applied:"){
@@ -187,6 +194,7 @@ getLevels <- function(x) {if(is.factor(x)) levels(x) else sort(unique(x), na.las
 #' @param x test if null
 #' @param y return if x is null
 #' @return either y or a string
+#' @noRd
 #'
 `%quote%` <- function(x,y) {
   if (is.null(x)) {
@@ -209,6 +217,7 @@ getLevels <- function(x) {if(is.factor(x)) levels(x) else sort(unique(x), na.las
 #' @importFrom forcats fct_reorder
 #' 
 #' @family popExp Functions
+#' @noRd
 #' 
 refact <- function(data, varc, varn) {
   datac <- deparse(substitute(data))

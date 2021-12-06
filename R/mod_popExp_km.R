@@ -10,8 +10,8 @@
 #' @import dplyr
 #'
 #' @family popExp Functions
+#' @noRd
 #'  
-
 km_ui <- function(id, label = "km") {
   ns <- NS(id)
   tagList(
@@ -51,6 +51,7 @@ km_ui <- function(id, label = "km") {
 #' @return ggplot object
 #'
 #' @family popExp Functions
+#' @noRd
 #'  
 km_srv <- function(input, output, session, data) {
   ns <- session$ns

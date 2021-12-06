@@ -12,6 +12,7 @@
 #' @importFrom purrr map walk2
 #' 
 #' @family popExp Functions
+#' @noRd
 #' 
 mod_popExp_server <- function(input, output, session, datafile) {
   ns <- session$ns

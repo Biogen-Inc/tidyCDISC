@@ -40,14 +40,6 @@ Other tableGen Functions:
 \code{\link{app_non_missing}()},
 \code{\link{app_y}()},
 \code{\link{custom_class}()},
-\code{\link{dropArea}()},
-\code{\link{mean_summary}()},
-\code{\link{mod_tableGen_server}()},
-\code{\link{mod_tableGen_ui}()},
-\code{\link{rowArea}()},
-\code{\link{rowBlock}()},
-\code{\link{rowPallete}()},
-\code{\link{std_err}()},
-\code{\link{tg_guide}}
+\code{\link{mean_summary}()}
 }
 \concept{tableGen Functions}

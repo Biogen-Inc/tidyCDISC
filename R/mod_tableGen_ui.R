@@ -16,7 +16,8 @@
 #' @importFrom gt gt_output
 #' 
 #' @family tableGen Functions
-
+#' @noRd
+#' 
 mod_tableGen_ui <- function(id){
   ns <- NS(id)
   tagList(

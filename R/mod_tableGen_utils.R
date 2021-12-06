@@ -44,6 +44,7 @@ combineBDS <- function(datafile, ADSL) {
 #' Function to clean and combine ADAE dataset with ADSL
 #' 
 #' @param input_recipe The shiny input that keeps track of the recipe selected
+#' @noRd
 #' 
 numeric_stan_table <- function(input_recipe){
   ifelse(is.null(input_recipe) | input_recipe == "NONE", 
@@ -237,7 +238,7 @@ chem <- c(
 )
 
 #' Hematology PARAMCDs used to build STAN Table 41
-# param_vector <-
+#' @noRd
 hema <- c(
   # white blood cells 
   "LYM", "NEUT", "MONO", "EOS", "BASO", #"LYMLE", "NEUTLE", "MONOLE", "EOSLE", "BASOLE",
@@ -245,13 +246,14 @@ hema <- c(
 )
 
 #' Urinalysis PARAMCDs used to build STAN Table 41
-# param_vector <- 
+#' @noRd
 urin <- c(
   "SPGRAV", "PH", "COLOR", "OCCBLD",  "GLUCU",  "KETONES", #"GLUCQU", "KETONESQ",
   "PROTU", "MWBCQU", "MWBCU", "MRBCQU", "MRBCU"
 )
 
 #' A function that checks if certain parameters exist in any dataframe within a list of dataframes
+#' @noRd
 #' 
 #' @param datafile list of ADaM-ish dataframes 
 #' @param param_vector character vector of params to search the list of dataframes for
@@ -312,6 +314,7 @@ check_params <- function(datafile, param_vector) {
 #' @param datafile list of ADaM-ish dataframes 
 #' 
 #' @export
+#' @noRd
 #' 
 data_to_filter <- function(datafile, input_filter_df) {
   select_dfs <- datafile[input_filter_df]
@@ -360,6 +363,7 @@ data_to_use_str <- function(x) {
 #' to add pretty names for each stat block when displayed in the table
 #' 
 #' @importFrom tibble tibble
+#' @export
 #' 
 pretty_blocks <- tibble::tibble(
   Pattern = c("MEAN", "FREQ", "CHG", "Y_FREQ", "MAX_FREQ", "NON_MISSING",
@@ -383,7 +387,8 @@ pretty_blocks <- tibble::tibble(
 #' @importFrom cicerone Cicerone
 #' 
 #' @family tableGen Functions
-
+#' @noRd
+#' 
 tg_guide <- cicerone::Cicerone$
   new()$
   step(
