@@ -1,8 +1,8 @@
 ---
-title: "Creating Tables"
+title: "01 Table Generator"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Creating Tables}
+  %\VignetteIndexEntry{01 Table Generator}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
