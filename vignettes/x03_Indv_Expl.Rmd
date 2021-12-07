@@ -1,8 +1,8 @@
 ---
-title: "Users Guide to the Individual Explorer Tab"
+title: "03 Individual Explorer"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Users Guide to the Individual Explorer Tab}
+  %\VignetteIndexEntry{03 Individual Explorer}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

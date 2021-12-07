@@ -1,0 +1,19 @@
+---
+title: "02 Population Explorer"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{02 Population Explorer}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(IDEA)
+```
