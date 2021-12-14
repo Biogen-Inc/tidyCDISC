@@ -39,6 +39,7 @@
 #'   \code{ggplot} then a ggplot2 object
 #'
 #' @family indvExp Functions
+#' @noRd
 #'   
 fnIndvExplVisits <- function(
   watermark = FALSE,

@@ -45,6 +45,7 @@
 #'   any)
 #'
 #' @family dataComply Functions
+#' @noRd
 #'   
 gather_reqs <- function(input, output, session, 
                         disp_type = c("error","warn"),

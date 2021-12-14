@@ -163,7 +163,10 @@ usethis::use_test( "app" )
 # Documentation
 
 ## Vignette ---- not run
-# usethis::use_vignette("IDEA")
+usethis::use_vignette("IDEA")
+usethis::use_vignette("x00_Data_Upload")
+usethis::use_vignette("x02_Pop_Exp")
+usethis::use_vignette("x04_Filtering")
 # devtools::build_vignettes() # don't use, instead use...
 # devtools::build()
 

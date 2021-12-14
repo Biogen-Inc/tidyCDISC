@@ -1,0 +1,17 @@
+---
+title: "04 Filtering"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{04 Filtering}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+No matter what tab your on, the filtering widget works the exact same way.

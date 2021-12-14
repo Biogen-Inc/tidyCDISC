@@ -17,6 +17,7 @@
 #' @importFrom plotly plotlyOutput
 #' 
 #' @family indvExp Functions
+#' @noRd
 #' 
 mod_indvExp_ui <- function(id){
   ns <- NS(id)

@@ -41,6 +41,7 @@
 #' @return Data frame standardized from various OCCDs class files
 #'
 #' @family indvExp Functions
+#' @noRd
 #'   
 org_df_events <- function(
     df_name
