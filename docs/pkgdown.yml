@@ -2,10 +2,12 @@ pandoc: 2.11.4
 pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
-  Building_TG_Blocks: Building_TG_Blocks.html
-  Create_TG_Table: Create_TG_Table.html
-  dev_Indv_Expl_Add_Events: dev_Indv_Expl_Add_Events.html
-  dev_popExp_add_graph: dev_popExp_add_graph.html
-  User_Guide_Indv_Expl: User_Guide_Indv_Expl.html
-last_built: 2021-12-02T16:15Z
+  developer_guide: developer_guide.html
+  IDEA: IDEA.html
+  x00_Data_Upload: x00_Data_Upload.html
+  x01_Table_Generator: x01_Table_Generator.html
+  x02_Pop_Exp: x02_Pop_Exp.html
+  x03_Indv_Expl: x03_Indv_Expl.html
+  x04_Filtering: x04_Filtering.html
+last_built: 2021-12-14T17:25Z
 

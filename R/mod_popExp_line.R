@@ -10,6 +10,7 @@
 #' @import dplyr
 #'
 #' @family popExp Functions
+#' @noRd
 #'  
 linePlot_ui <- function(id, label = "line") {
   ns <- NS(id)
@@ -91,6 +92,7 @@ linePlot_ui <- function(id, label = "line") {
 #' @return ggplot object
 #'
 #' @family popExp Functions
+#' @noRd
 #'  
 linePlot_srv <- function(input, output, session, data) {
   ns <- session$ns

@@ -24,8 +24,7 @@
 #' @import tidyr
 #'
 #' @family tableGen Functions
-
-
+#' @noRd
 mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL), filePaths = reactive(NULL)) {
   
   observeEvent( input$help, {
@@ -783,7 +782,6 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     # get drop zone area from IDEA
     # and create table using data
     blockData <- {paste0(capture.output(dput(blocks_and_functions())), collapse = '\n')}
-    pretty_blocks <- {paste0(capture.output(dput(pretty_blocks)), collapse = '\n')}
     
     {df_empty_expr()}
     "

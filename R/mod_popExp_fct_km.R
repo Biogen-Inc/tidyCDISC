@@ -15,6 +15,8 @@
 #' @importFrom survival survfit Surv
 #' 
 #' @family popExp functions
+#' @export
+#' @keywords popEx
 #' 
 app_km_curve <- function(data, yvar, resp_var, cnsr_var, group = "NONE", points = TRUE, ci = FALSE) {
     

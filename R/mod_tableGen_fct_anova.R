@@ -9,6 +9,9 @@
 #'
 #' @return an ANOVA table of grouped variables
 #' @family tableGen Functions
+#' @export
+#' @keywords tabGen
+#' 
 app_anova <- function(column, week, group, data) {
   UseMethod("app_anova", column)
 }
@@ -17,6 +20,7 @@ app_anova <- function(column, week, group, data) {
 #' @return NULL
 #' @rdname app_anova
 #' @family tableGen Functions
+
 app_anova.default <- function(column, week, group, data) {
   rlang::abort(glue::glue(
     "Can't calculate mean because data is not classified as ADLB, BDS or OCCDS",
@@ -32,6 +36,7 @@ app_anova.default <- function(column, week, group, data) {
 #' @return an ANOVA table of grouped variables
 #' @rdname app_anova
 #' @family tableGen Functions
+
 app_anova.ADAE <- app_anova.ADSL <- function(column, week, group = NULL, data) {
   
   column <- as.character(column)
@@ -85,6 +90,7 @@ app_anova.ADAE <- app_anova.ADSL <- function(column, week, group = NULL, data) {
 #' @return an ANOVA table of grouped variables
 #' @rdname app_anova
 #' @family tableGen Functions
+
 app_anova.BDS <- function(column, week, group = NULL, data) {
   
   column <- as.character(column)
@@ -131,6 +137,7 @@ app_anova.BDS <- function(column, week, group = NULL, data) {
 #' @return NULL
 #' @rdname app_anova
 #' @family tableGen Functions
+
 app_anova.OCCDS <- function(column, week = NULL, group = NULL, data) {
   rlang::abort(glue::glue(
     "Currently no method to perform ANOVA on OCCDS"
@@ -144,6 +151,7 @@ app_anova.OCCDS <- function(column, week = NULL, group = NULL, data) {
 #' @return NULL
 #' @rdname app_anova
 #' @family tableGen Functions
+
 app_anova.custom <- function(column, week = NULL, group = NULL, data) {
   rlang::abort(glue::glue(
     "Can't calculate ANOVA, data is not classified as ADLB, BDS or OCCDS"

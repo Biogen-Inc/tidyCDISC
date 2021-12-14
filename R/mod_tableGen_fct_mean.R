@@ -11,6 +11,8 @@
 #' @return an summary statistic table of grouped variables
 #' 
 #' @family tableGen Functions
+#' @export
+#' @keywords tabGen
 #' 
 app_mean <- function(column, week, group, data) {
   UseMethod("app_mean", column)
@@ -20,6 +22,7 @@ app_mean <- function(column, week, group, data) {
 #' @return NULL
 #' @rdname app_mean
 #' @family tableGen Functions
+#' @noRd
 app_mean.default <- function(column, week, group, data) {
   rlang::abort(glue::glue(
     "Can't calculate mean because data is not classified as ADLB, BDS or OCCDS",
@@ -42,6 +45,7 @@ app_mean.default <- function(column, week, group, data) {
 #' @param data the data to use 
 #' 
 #' @family tableGen Functions
+#' @rdname app_mean
 app_mean.ADAE <- app_mean.ADSL <- function(column, week, group = NULL, data) {
   
   column <- as.character(column)
@@ -71,7 +75,8 @@ app_mean.ADAE <- app_mean.ADSL <- function(column, week, group = NULL, data) {
 
 #' if BDS filter by paramcd and week
 #' We need to calculate the difference in N for this
-#' and report missing values from the mean if any
+#' and report missing values from the mean, if any
+#' 
 #' @import dplyr
 #' @importFrom rlang sym !!
 #' 
@@ -85,6 +90,8 @@ app_mean.ADAE <- app_mean.ADSL <- function(column, week, group = NULL, data) {
 #' @param data the data to use 
 #' 
 #' @family tableGen Functions
+#' @rdname app_mean
+#' 
 app_mean.BDS <- function(column, week, group = NULL, data) {
   
   ################################
@@ -143,6 +150,7 @@ app_mean.BDS <- function(column, week, group = NULL, data) {
 #' @rdname app_mean
 #' 
 #' @family tableGen Functions
+#' @noRd
 app_mean.OCCDS <- function(column, week = NULL, group, data) {
   rlang::abort(glue::glue(
     "Currently no method to perform summary statistics on OCCDS"
@@ -154,6 +162,7 @@ app_mean.OCCDS <- function(column, week = NULL, group, data) {
 #' @rdname app_mean
 #' 
 #' @family tableGen Functions
+#' @noRd
 app_mean.custom <- function(column, week = NULL, group, data) {
   rlang::abort(glue::glue(
     "Can't calculate mean, data is not classified as ADLB, BDS or OCCDS"

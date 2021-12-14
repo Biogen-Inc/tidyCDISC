@@ -11,7 +11,9 @@
 #' @return an ANOVA table of grouped variables
 #' 
 #' @family tableGen Functions
-
+#' @export
+#' @keywords tabGen
+#' 
 app_chg <- function(column, week, group, data) {
   UseMethod("app_chg", column)
 }
@@ -20,6 +22,7 @@ app_chg <- function(column, week, group, data) {
 #' @rdname app_chg
 #' 
 #' @family tableGen Functions
+
 app_chg.default <- function(column, week, group, data) {
   rlang::abort(glue::glue(
     "Can't calculate mean because data is not classified as ADLB, BDS or OCCDS"
@@ -33,6 +36,7 @@ app_chg.default <- function(column, week, group, data) {
 #' @rdname app_chg
 #' 
 #' @family tableGen Functions
+
 app_chg.ADSL <- function(column, week, group = NULL, data) {
   rlang::abort(glue::glue(
     "Can't calculate change from baseline, {column} from ADSL - please choose a variable from BDS"
@@ -50,6 +54,7 @@ app_chg.ADSL <- function(column, week, group = NULL, data) {
 #' @rdname app_chg
 #' 
 #' @family tableGen Functions
+
 app_chg.BDS <- function(column, week, group = NULL, data) {
   
   column <- as.character(column)
@@ -89,6 +94,7 @@ app_chg.BDS <- function(column, week, group = NULL, data) {
 #' @rdname app_chg
 #' 
 #' @family tableGen Functions
+
 app_chg.OCCDS <- function(column, week = NULL, group = NULL, data) {
   rlang::abort(glue::glue(
     "Can't calculate change from baseline of OCCDS"
@@ -101,6 +107,7 @@ app_chg.OCCDS <- function(column, week = NULL, group = NULL, data) {
 #' @rdname app_chg
 #' 
 #' @family tableGen Functions
+
 app_chg.ADAE <- function(column, week = NULL, group = NULL, data) {
   rlang::abort(glue::glue(
     "Can't calculate change from baseline of ADAE"
@@ -113,6 +120,7 @@ app_chg.ADAE <- function(column, week = NULL, group = NULL, data) {
 #' @rdname app_chg
 #' 
 #' @family tableGen Functions
+
 app_chg.custom <- function(column, week = NULL, group = NULL, data) {
   rlang::abort(glue::glue(
     "Can't calculate change from baseline, data is not classified as ADLB, BDS or OCCDS"

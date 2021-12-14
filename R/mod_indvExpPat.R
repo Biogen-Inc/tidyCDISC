@@ -22,6 +22,7 @@
 #' @return character string containing a USUBJID
 #'
 #' @family indvExp Functions
+#' @noRd
 #'   
 mod_indvExpPat_server <- function(input, output, session, datafile, loaded_adams, filtered_dat){
   ns <- session$ns

@@ -2,19 +2,16 @@
 % Please edit documentation in R/mod_tableGen_fct_mean.R
 \name{app_mean}
 \alias{app_mean}
-\alias{app_mean.default}
-\alias{app_mean.OCCDS}
-\alias{app_mean.custom}
+\alias{app_mean.ADAE}
+\alias{app_mean.BDS}
 \title{Generate summary statistics 
 using table generator blocks}
 \usage{
 app_mean(column, week, group, data)
 
-\method{app_mean}{default}(column, week, group, data)
+\method{app_mean}{ADAE}(column, week, group = NULL, data)
 
-\method{app_mean}{OCCDS}(column, week = NULL, group, data)
-
-\method{app_mean}{custom}(column, week = NULL, group, data)
+\method{app_mean}{BDS}(column, week, group = NULL, data)
 }
 \arguments{
 \item{column}{the variable to perform summary statistics on,
@@ -29,10 +26,21 @@ based on the data file the column came from}
 }
 \value{
 an summary statistic table of grouped variables
+
+an summary statistic table of grouped variables
+
+an summary statistic table of grouped variables
 }
 \description{
 Generate summary statistics 
 using table generator blocks
+
+if ADSL supplied look for the column to take mean of
+and look for a grouping variable to group_by
+
+if BDS filter by paramcd and week
+We need to calculate the difference in N for this
+and report missing values from the mean, if any
 }
 \seealso{
 Other tableGen Functions: 
@@ -40,91 +48,30 @@ Other tableGen Functions:
 \code{\link{app_chg}()},
 \code{\link{app_freq}()},
 \code{\link{app_max_freq}()},
-\code{\link{app_mean.ADAE}()},
-\code{\link{app_mean.BDS}()},
 \code{\link{app_methods}()},
 \code{\link{app_nested_freq}()},
 \code{\link{app_non_missing}()},
-\code{\link{app_y}()},
-\code{\link{convertTGOutput}()},
-\code{\link{custom_class}()},
-\code{\link{dropArea}()},
-\code{\link{mean_summary}()},
-\code{\link{mod_tableGen_server}()},
-\code{\link{mod_tableGen_ui}()},
-\code{\link{rowArea}()},
-\code{\link{rowBlock}()},
-\code{\link{rowPallete}()},
-\code{\link{std_err}()},
-\code{\link{tg_guide}}
+\code{\link{app_y}()}
 
 Other tableGen Functions: 
 \code{\link{app_anova}()},
 \code{\link{app_chg}()},
 \code{\link{app_freq}()},
 \code{\link{app_max_freq}()},
-\code{\link{app_mean.ADAE}()},
-\code{\link{app_mean.BDS}()},
 \code{\link{app_methods}()},
 \code{\link{app_nested_freq}()},
 \code{\link{app_non_missing}()},
-\code{\link{app_y}()},
-\code{\link{convertTGOutput}()},
-\code{\link{custom_class}()},
-\code{\link{dropArea}()},
-\code{\link{mean_summary}()},
-\code{\link{mod_tableGen_server}()},
-\code{\link{mod_tableGen_ui}()},
-\code{\link{rowArea}()},
-\code{\link{rowBlock}()},
-\code{\link{rowPallete}()},
-\code{\link{std_err}()},
-\code{\link{tg_guide}}
+\code{\link{app_y}()}
 
 Other tableGen Functions: 
 \code{\link{app_anova}()},
 \code{\link{app_chg}()},
 \code{\link{app_freq}()},
 \code{\link{app_max_freq}()},
-\code{\link{app_mean.ADAE}()},
-\code{\link{app_mean.BDS}()},
 \code{\link{app_methods}()},
 \code{\link{app_nested_freq}()},
 \code{\link{app_non_missing}()},
-\code{\link{app_y}()},
-\code{\link{convertTGOutput}()},
-\code{\link{custom_class}()},
-\code{\link{dropArea}()},
-\code{\link{mean_summary}()},
-\code{\link{mod_tableGen_server}()},
-\code{\link{mod_tableGen_ui}()},
-\code{\link{rowArea}()},
-\code{\link{rowBlock}()},
-\code{\link{rowPallete}()},
-\code{\link{std_err}()},
-\code{\link{tg_guide}}
-
-Other tableGen Functions: 
-\code{\link{app_anova}()},
-\code{\link{app_chg}()},
-\code{\link{app_freq}()},
-\code{\link{app_max_freq}()},
-\code{\link{app_mean.ADAE}()},
-\code{\link{app_mean.BDS}()},
-\code{\link{app_methods}()},
-\code{\link{app_nested_freq}()},
-\code{\link{app_non_missing}()},
-\code{\link{app_y}()},
-\code{\link{convertTGOutput}()},
-\code{\link{custom_class}()},
-\code{\link{dropArea}()},
-\code{\link{mean_summary}()},
-\code{\link{mod_tableGen_server}()},
-\code{\link{mod_tableGen_ui}()},
-\code{\link{rowArea}()},
-\code{\link{rowBlock}()},
-\code{\link{rowPallete}()},
-\code{\link{std_err}()},
-\code{\link{tg_guide}}
+\code{\link{app_y}()}
 }
 \concept{tableGen Functions}
+\keyword{tabGen}

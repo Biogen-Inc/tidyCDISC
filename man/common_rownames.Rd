@@ -15,3 +15,4 @@ common_rownames(data, group)
 transform the gt rownames from generics to the column name and the total N of
 each column
 }
+\keyword{tabGen_repro}

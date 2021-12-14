@@ -10,6 +10,9 @@
 #' @return a frequency table of grouped variables
 #'
 #' @family tableGen Functions
+#' 
+#' @export
+#' @keywords tabGen
 app_non_missing <- function(column, group, data, totals) {
   UseMethod("app_non_missing", column)
 }

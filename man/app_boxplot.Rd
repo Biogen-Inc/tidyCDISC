@@ -27,21 +27,7 @@ and filter the data by week
 Other popExp Functions: 
 \code{\link{app_heatmap}()},
 \code{\link{app_lineplot}()},
-\code{\link{app_spaghettiplot}()},
-\code{\link{boxPlot_srv}()},
-\code{\link{boxPlot_ui}()},
-\code{\link{heatmap_srv}()},
-\code{\link{heatmap_ui}()},
-\code{\link{km_srv}()},
-\code{\link{km_ui}()},
-\code{\link{linePlot_srv}()},
-\code{\link{linePlot_ui}()},
-\code{\link{mod_popExp_server}()},
-\code{\link{mod_popExp_ui}()},
-\code{\link{refact}()},
-\code{\link{scatterPlot_srv}()},
-\code{\link{scatterPlot_ui}()},
-\code{\link{spaghettiPlot_srv}()},
-\code{\link{spaghettiPlot_ui}()}
+\code{\link{app_spaghettiplot}()}
 }
 \concept{popExp Functions}
+\keyword{popEx}

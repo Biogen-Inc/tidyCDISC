@@ -9,6 +9,7 @@
 #'
 #' @importFrom shiny NS tagList 
 #' @importFrom shinyWidgets pickerInput 
+#' @noRd
 #' 
 mod_selectData_ui <- function(id){
   ns <- NS(id)
@@ -38,6 +39,7 @@ mod_selectData_ui <- function(id){
 #'
 #' @importFrom shiny NS tagList 
 #' @importFrom shinyWidgets updatePickerInput 
+#' @noRd
 #'
 mod_selectData_server <- function(input, output, session, datafile){
   ns <- session$ns

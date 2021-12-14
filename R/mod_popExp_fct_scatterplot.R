@@ -19,6 +19,8 @@
 #' @importFrom stats as.formula
 #' 
 #' @family popExp functions
+#' @export
+#' @keywords popEx
 #' 
 app_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y, separate = "NONE", color = "NONE") {
   # ---------------------------
