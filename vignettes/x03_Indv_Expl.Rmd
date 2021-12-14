@@ -7,11 +7,11 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-This tutorial will walk through how to leverage the IDEA app's Individual Explorer tab to establish powerful patient narratives and explore outlier data from specific patients. The Individual Explorer tab will interface with ADSL, BDS, and OCCDs class data files. This tutorial will use 4 files: An ADSL, two BDS' (ADVS & ADLBC), and 1 OCCD (an ADAE). 
+This tutorial will walk through how to leverage the `IDEA` app's Individual Explorer tab. It exists to establish powerful patient narratives and explore outlier data from specific patients. The Individual Explorer tab will interface with `ADSL`, `BDS`, and `OCCDS` data types. This tutorial will use 4 files: An `ADSL`, two BDS' (`ADVS` & `ADLBC`), and 1 `OCCDS` (an `ADAE`). 
 
 <br>
 
-```{r, out.height="60%", echo=FALSE}
+```{r, echo=FALSE, out.width="40%", fig.align='center'}
 knitr::include_graphics("figures/IndvExp/01_dataUpload.PNG")
 ```
 
@@ -20,12 +20,12 @@ knitr::include_graphics("figures/IndvExp/01_dataUpload.PNG")
 
 ## Patient Oriented from the Start
 
-Upon selecting the `Individual Explorer` tab, you'll be greeted with the following prompt (below) asking to select a patient, by UBSUBJID. All the data presented from here out will be tied directly the patient you select. If you ever need help while navigating the patient selection widget, feel free to click the blue question mark in the upper right hand corner for a step-by-step guide through the widget, or keep reading this tutorial.
+Upon selecting the Individual Explorer tab, you'll be greeted with the following prompt (below) asking to select a patient, by `UBSUBJID.` All the data presented from here out will be tied directly the patient you select. If you ever need help while navigating the patient selection widget, feel free to click the blue question mark in the upper right hand corner for a step-by-step guide through the widget, or keep reading this tutorial.
 
 <br>
 
 
-```{r, out.width="100%", out.height="100%", echo=FALSE}
+```{r,  echo=FALSE, fig.align='center'}
 knitr::include_graphics("figures/IndvExp/02_start.PNG")
 ```
 
@@ -39,7 +39,7 @@ Sometimes you may have a specific patient whose data you wish to explore. Howeve
 <br>
 
 
-```{r, out.height="60%", echo=FALSE}
+```{r, out.width="40%", echo=FALSE, fig.align='center'}
 knitr::include_graphics("figures/IndvExp/03_adv_filt.PNG")
 ```
 
@@ -50,7 +50,7 @@ The first input field accepts the name of the data file that contains the variab
 
 <br>
 
-```{r, out.height="60%", echo=FALSE}
+```{r, out.width="40%", echo=FALSE, fig.align='center'}
 knitr::include_graphics("figures/IndvExp/04_adv_filt_2_dfs.PNG")
 ```
 
@@ -61,7 +61,7 @@ knitr::include_graphics("figures/IndvExp/04_adv_filt_2_dfs.PNG")
 <br>
 
 
-```{r, out.height="60%", echo=FALSE}
+```{r, out.width="40%", echo=FALSE, fig.align='center'}
 knitr::include_graphics("figures/IndvExp/05_adv_filt_2_dfs_abs.PNG")
 ```
 
@@ -73,7 +73,7 @@ There is one exception when a slider will not be displayed for numeric variables
 
 <br>
 
-```{r, out.height="60%", echo=FALSE}
+```{r, out.width="40%", echo=FALSE, fig.align='center'}
 knitr::include_graphics("figures/IndvExp/06_adv_filt_2_dfs_age.PNG")
 ```
 
@@ -89,7 +89,7 @@ We'll select patient `01-718-1371`. Upon doing so, additional info populates the
 
 <br>
 
-```{r, out.width="100%", out.height="100%", echo=FALSE}
+```{r, echo=FALSE}
 knitr::include_graphics("figures/IndvExp/07_selPatNo.PNG")
 ```
 
@@ -105,7 +105,7 @@ The primary objective of the events tab is to take important dates from the `ADS
 
 <br>
 
-```{r, out.width="100%", out.height="100%", echo=FALSE}
+```{r,  echo=FALSE}
 knitr::include_graphics("figures/IndvExp/08_events_sel.PNG")
 ```
 
@@ -120,7 +120,7 @@ When each check box is selected, a new "swim-lane" is added to the plot, populat
 <br>
 
 
-```{r, out.width="100%", out.height="100%", echo=FALSE}
+```{r,  echo=FALSE}
 knitr::include_graphics("figures/IndvExp/09_events_all.PNG")
 ```
 
@@ -132,7 +132,7 @@ However, the date range displayed is subject to where the user wishes to zoom & 
 
 
 
-```{r, out.width="100%", out.height="100%", echo=FALSE}
+```{r,  echo=FALSE}
 knitr::include_graphics("figures/IndvExp/Events_Plot_Interactivity.gif")
 ```
 
@@ -144,7 +144,7 @@ If you noticed, the timeline plot is currently showing all adverse events that t
 <br>
 
 
-```{r, out.width="100%", out.height="100%", echo=FALSE}
+```{r,  echo=FALSE}
 knitr::include_graphics("figures/IndvExp/10_events_applyFilters.PNG")
 ```
 
@@ -157,7 +157,7 @@ Directly beneath the timeline visual is the data table used to plot these events
 <br>
 
 
-```{r, out.width="100%", out.height="100%", echo=FALSE}
+```{r,  echo=FALSE}
 knitr::include_graphics("figures/IndvExp/11_events_datatable.PNG")
 ```
 
@@ -171,7 +171,7 @@ Select the `Visits` tab. Recall, the `Visits` tab plots `PARAM`s by Study Visit 
 <br>
 
 
-```{r, out.width="100%", out.height="100%", echo=FALSE}
+```{r,  echo=FALSE}
 knitr::include_graphics("figures/IndvExp/12_visits_default.PNG")
 ```
 
@@ -186,7 +186,7 @@ The user can interact with the plot by hovering the cursor over plotted points t
 
 
 
-```{r, out.width="100%", out.height="100%", echo=FALSE}
+```{r,  echo=FALSE}
 knitr::include_graphics("figures/IndvExp/Visits_Plot_Interactivity.gif")
 ```
 
@@ -203,7 +203,7 @@ First: the "Select a loaded ADaM with columns 'PARAM' & 'AVAL'" input is hinting
 <br>
 
 
-```{r, out.height="50%", echo=FALSE}
+```{r, out.width="40%", echo=FALSE, fig.align='center'}
 knitr::include_graphics("figures/IndvExp/13_visits_sel_adam.PNG")
 ```
 
@@ -214,7 +214,7 @@ Next, we must select which parameter (or metric) to plot. The drop-down list wil
 <br>
 
 
-```{r, out.height="50%", echo=FALSE}
+```{r, out.width="40%", echo=FALSE, fig.align='center'}
 knitr::include_graphics("figures/IndvExp/14_visits_sel_paramcd.PNG")
 ```
 
@@ -225,7 +225,7 @@ Next, we'll select a numeric visit variable to plot on the x-axis. If available 
 <br>
 
 
-```{r, out.height="50%", echo=FALSE}
+```{r, out.width="40%", echo=FALSE, fig.align='center'}
 knitr::include_graphics("figures/IndvExp/15_visits_sel_visit.PNG")
 ```
 
@@ -236,11 +236,11 @@ You should see the plot start to take shape, and the remaining inputs / options 
 <br>
 
 
-```{r, out.width="15%", out.height="15%", echo=FALSE}
+```{r, out.width="15%", echo=FALSE, fig.align='center'}
 knitr::include_graphics("figures/IndvExp/16_visits_sel_overlay_hor.PNG")
 ```
 
-```{r, out.width="100%", out.height="100%", echo=FALSE}
+```{r,  echo=FALSE}
 knitr::include_graphics("figures/IndvExp/16_visits_sel_overlay_hor_graph.PNG")
 ```
 
@@ -252,12 +252,12 @@ The next set of inputs / options are really useful because they allow the user t
 
 <br>
 
-```{r, out.width="70%", out.height="70%", echo=FALSE}
+```{r, out.width="70%", out.height="70%", echo=FALSE, fig.align='right'}
 knitr::include_graphics("figures/IndvExp/17_visits_sel_overlay_events.PNG")
 ```
 
 
-```{r, out.width="100%", out.height="100%", echo=FALSE}
+```{r,  echo=FALSE}
 knitr::include_graphics("figures/IndvExp/18_visits_sel_overlay_events_graph.PNG")
 ```
 
@@ -269,12 +269,12 @@ When any events are overlain on the plot, more inputs / options appear to the ri
 
 <br>
 
-```{r, out.width="50%", out.height="50%", echo=FALSE}
+```{r, out.width="50%", out.height="50%", echo=FALSE, fig.align='right'}
 knitr::include_graphics("figures/IndvExp/19_visits_sel_overlay_events_prefilters.PNG")
 ```
 
 
-```{r, out.width="100%", out.height="100%", echo=FALSE}
+```{r,  echo=FALSE}
 knitr::include_graphics("figures/IndvExp/20_visits_sel_overlay_events_prefilters_graph.PNG")
 ```
 
@@ -284,7 +284,7 @@ If we'd like to filter the displayed events in a manner that's not consistent wi
 
 <br>
 
-```{r,out.width="50%", out.height="50%", echo=FALSE}
+```{r,out.width="50%", out.height="50%", echo=FALSE, fig.align='right'}
 knitr::include_graphics("figures/IndvExp/21_visits_sel_overlay_events_manfilt.PNG")
 ```
 
@@ -316,7 +316,7 @@ The `Visits` tab allows users to produce a multitude of plots with one click. Yo
 
 <br>
 
-```{r, out.width="60%", out.height="60%", echo=FALSE}
+```{r, out.width="60%", out.height="60%", echo=FALSE, fig.align='center'}
 knitr::include_graphics("figures/IndvExp/24_bd.PNG")
 ```
 

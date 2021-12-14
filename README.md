@@ -40,6 +40,8 @@ review the following conference presentation on `tidyCDISC`, which is
 the open-sourced version of `IDEA.` Internal to Biogen, the `IDEA`
 application has all the same features as `tidyCDISC`, plus more!
 
+<br>
+
 <center>
 
 [![tidyCDISC @
@@ -68,9 +70,9 @@ Biogen SAS programmers capable of producing 50+ STAN outputs.
 
 IDEA is primarily an application, so no installation is necessary.
 Simply access Biogen’s network and start using the app: [IDEA
-application](https://awshpc22133.abc.amazon.biogen.com/IDEA/) However,
-if you choose to export R code from the Table Generatory, you will need
-a the `IDEA` package installed on your machine locally. See installation
+application](https://awshpc22133.abc.amazon.biogen.com/IDEA/). However,
+if you choose to export R code from the Table Generator, you will need a
+the `IDEA` package installed on your machine locally. See installation
 instructions in the next section below.
 
 Please review the “[Getting
