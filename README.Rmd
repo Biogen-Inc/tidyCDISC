@@ -33,6 +33,8 @@ The beauty of this application is that the user doesn't have to write a lick of 
 
 For a high-level overview of the app with a 10-minute demo, please review the following conference presentation on `tidyCDISC`, which is the open-sourced version of `IDEA.` Internal to Biogen, the `IDEA` application has all the same features as `tidyCDISC`, plus more!
 
+<br>
+
 <center>
 
 [![tidyCDISC @ R/Medicine](man/figures/tidyCDISC_RMedicine_thumbnail.png)](https://youtu.be/QeHSjw-vU3U?t=103)
@@ -48,7 +50,7 @@ If you're looking to regularly generate R code for tables, the IDEA app has a bu
 
 ## Usage
 
-IDEA is primarily an application, so no installation is necessary. Simply access Biogen's network and start using the app: [IDEA application](https://bit.ly/tidyCDISC/) However, if you choose to export R code from the Table Generatory, you will need a the `IDEA` package installed on your machine locally. See installation instructions in the next section below.
+IDEA is primarily an application, so no installation is necessary. Simply access Biogen's network and start using the app: [IDEA application](https://bit.ly/tidyCDISC/). However, if you choose to export R code from the Table Generator, you will need a the `IDEA` package installed on your machine locally. See installation instructions in the next section below.
 
 
 Please review the "[Getting Started](https://biogen-inc.github.io/tidyCDISC/articles/IDEA.html)" guide to to learn how to answer all your analysis questions with `IDEA` . If the application can't solve your question, we want to know about it! Submit all feature requests to `example@email.com` and mention `IDEA`.
