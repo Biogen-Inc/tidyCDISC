@@ -15,6 +15,7 @@
 #' @import dplyr
 #' @importFrom stringr str_detect
 #' @importFrom tidyr separate_rows
+#' @noRd
 #' 
 delim_expand_rows <- function(data, sep){
   
@@ -66,6 +67,7 @@ delim_expand_rows <- function(data, sep){
 #'
 #' @import dplyr
 #' @importFrom stringr str_detect
+#' @noRd
 #'  
 make_machine_readable <- function(data, keep_orig_ids = FALSE){
   d <- data %>%
@@ -123,6 +125,7 @@ make_machine_readable <- function(data, keep_orig_ids = FALSE){
 #' Make an "ID vector" that identifies groups of repeated sequences in another vector.
 #'
 #' @param x a numeric vector of repeated sequence
+#' @noRd
 #'
 #' @examples
 #' mk_rep_seq_id(rep(1:5,2))
@@ -153,6 +156,7 @@ mk_rep_seq_id <- function(x){
 #' @importFrom stringr str_detect
 #'
 #' @export
+#' @keywords tabGen_compare
 #' 
 prep_sas_table <- function(
   sas_data,
@@ -301,6 +305,7 @@ prep_sas_table <- function(
 #' Create new Generic Names for Columns with numeric table data
 #'
 #' @param dat a data frame
+#' @noRd
 #' 
 temp_col_rename <- function(dat, sas_generics){
   # dat <- tg00
@@ -327,6 +332,7 @@ temp_col_rename <- function(dat, sas_generics){
 #'
 #' @param dat a data frame
 #' @param orig_grp_names a character vector of original col names
+#' @noRd
 #'
 revert_temp_colnames <- function(dat, orig_grp_names){
   var_ind <- which(names(dat) == "Variable")
@@ -360,6 +366,7 @@ revert_temp_colnames <- function(dat, orig_grp_names){
 #' @importFrom stringr str_detect
 #'
 #' @export
+#' @keywords tabGen_compare
 #' 
 prep_tg_table <- function(data,
                           machine_readable = TRUE,
@@ -404,7 +411,7 @@ prep_tg_table <- function(data,
 #' @param sas_table SAS output 
 #' @param tg_table IDEA output
 #' 
-#' @export
+#' @noRd
 compareTables <- function(sas_table, tg_table) {
   
 }

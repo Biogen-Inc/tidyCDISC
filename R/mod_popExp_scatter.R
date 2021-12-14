@@ -10,8 +10,8 @@
 #' @import dplyr
 #'
 #' @family popExp Functions
-#'  
-
+#' @noRd
+#'
 scatterPlot_ui <- function(id, label = "scatter") {
   ns <- NS(id)
   tagList(
@@ -59,6 +59,7 @@ scatterPlot_ui <- function(id, label = "scatter") {
 #' @return ggplot object
 #'
 #' @family popExp Functions
+#' @noRd
 #'  
 scatterPlot_srv <- function(input, output, session, data) {
   ns <- session$ns

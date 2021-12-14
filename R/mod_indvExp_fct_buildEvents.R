@@ -24,6 +24,7 @@
 #'   files
 #'
 #' @family indvExp Functions
+#' @noRd
 #'   
 build_events <- function(
   input_checkbox

@@ -20,6 +20,7 @@
 #' @return character vector of loaded adams and a filtered dataframe to populate mod_indvExpPat module
 #' 
 #' @family indvExp Functions
+#' @noRd
 #' 
 mod_indvExp_server <- function(input, output, session, datafile){
   ns <- session$ns

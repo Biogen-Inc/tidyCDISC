@@ -1,0 +1,40 @@
+---
+title: "02 Population Explorer"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{02 Population Explorer}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+This tutorial will walk through how to leverage the `IDEA` app's Population Explorer tab. It exists to glean insights about different patient populations participating in the trial. The Population Explorer tab will interface with all data types: `ADSL`, `BDS`, `OCCDS`, and `TTE`. This tutorial will use 5 CDISC Pilot data files: An `ADSL`, `ADVS`, `ADLBC`, `ADAE`, and the `ADTTE`. 
+
+<br>
+
+```{r, echo=FALSE, out.width="40%", fig.align='center'}
+knitr::include_graphics("figures/popExp/tutorial_data.PNG")
+```
+
+<br>
+
+
+## Tab layout
+
+## Scatter Plot
+
+## Spaghetti Plot
+
+## Box Plot
+
+## Line Plot - mean over time
+
+## Heatmap - endpoint correlations
+
+## Kaplan-Meier Curve

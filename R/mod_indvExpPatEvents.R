@@ -16,6 +16,7 @@
 #' @importFrom stringr str_replace_all str_replace
 #'
 #' @family indvExp Functions
+#' @noRd
 #'   
 mod_indvExpPatEvents_server <- function(input, output, session,
                                         datafile, loaded_adams, usubjid, filtered_dat){

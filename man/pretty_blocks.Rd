@@ -14,4 +14,4 @@ pretty_blocks
 This object is used within the table generator module
 to add pretty names for each stat block when displayed in the table
 }
-\keyword{datasets}
+\keyword{tabGen_repro}
