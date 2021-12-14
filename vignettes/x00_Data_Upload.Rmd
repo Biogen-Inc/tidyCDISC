@@ -14,6 +14,115 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
-library(IDEA)
+The Data tab is the landing page for the `IDEA` app. It's a place where you can find, upload, and view your data before proceeding to the analysis tabs, which are disabled until some form of data is uploaded.
+
+```{r, echo=FALSE, out.width="95%", fig.align='center'}
+knitr::include_graphics("figures/upldDat/landing page.PNG")
 ```
+
+## Upload requirements
+
+Inside the window titled "Data Upload", you'll notice the following text: "`ADSL` file is mandatory and BDS/ OCCDS files are optional. Upload sas7bdat files." Since this application was designed for quick analysis of ADaM-ish data, sas7bdat files should be prepared as part of that workflow.
+
+<br>
+
+```{r, echo=FALSE, out.width="55%", fig.align = 'center'}
+knitr::include_graphics("figures/upldDat/browse.PNG")
+```
+
+<br>
+
+With an `ADSL` alone, you can explore all the tabs of this application, although, uploading more data with differing data types is encouraged for heightened exploration. The `IDEA` application was designed to analyze ADaM data of the following types (below). Each type of data has a unique purpose in the application. 
+
+- `ADSL`: demographic and trial info - one row per subject
+- `BDS`: or "basic data structure" contains (among others) variables such as `PARAMCD`, `AVAL`, and `AVISIT` or some other visit variable that reports on metric values over time for each patient.
+- `OCCDS`: Occurrence style data, reporting on such as adverse events, con-meds, or medical history, for example.
+- `TTE`: Time to event data, identified by the presence of the required `CNSR` variable.
+
+Beyond data types, the app includes precise upload rules, accessible via the small button with a question mark:
+
+<br>
+
+```{r, echo=FALSE, fig.align = 'center'}
+knitr::include_graphics("figures/tableGen/TG need help.PNG")
+```
+
+<br>
+
+Upon clicking, what we loosely define as "ADaM-ish" upload rules will pop up in a new window. There are several sets of rules. Some rules are "Required" and others are "Recommended". In general, "required" rules are absolutely foundational to the app's function. Conversely, "recommended" rules exist only to suggest the user include certain variables in order to get the most feature-rich experience in the app. More on this later, but first, and quite plainly, our first and most pervasive rule: all uploaded data must have a `USUBJID` variable. Without this field, data portrayed in one data set couldn't be linked to data in another, so this is a foundational rule and one that CDISC also imposes.
+
+<br>
+
+
+```{r, echo=FALSE, out.width="80%", fig.align = 'center'}
+knitr::include_graphics("figures/upldDat/upload rules.PNG")
+```
+
+<br>
+
+Next, we explore different rule sets for specific data sets. Here, you can interpret the first rule as follows: "If you upload an `ADMH`, it's *required* that it contains a variable called `MHCAT`." This is so that foundational features in the app will work appropriately. Directly beneath, read the next rule as: "if you upload an `ADAE`, it's *recommended* that it have variables called `AESTDT`, `AEDECOD`, `AESEV`, and `AESER`." Even though some of those variables may be required according to CDISC, they are only recommended here in order to dissect that data appropriately. Without them, some features of the app may be voided, but the app will still function without them. 
+
+<br>
+
+The final two sets of upload rules exist to make sure certain that data sets containing certain variables are treated appropriately. First if the data contains `CNSR` (i.e. `TTE` type data), it should also contain `PARAMCD` and `AVAL`. And finally, rules that apply to non-`TTE` type data: if the data contains `PARAMCD` it must also contain `AVISITN`, `AVISIT`, `PARAM`, `AVAL`, `CHG`, and `BASE`.
+
+<br>
+
+If one of these rules is violated, a prompt window will appear after attempting to upload with either an error or warning message. If the uploaded data is missing a required variable (or if the variable exists, but is populated will only missing values), an error will be issued and your data will not upload to the application. If a recommended variable is missing, a warning is issued and the data can still be used within the application. Here is an example of an attempt to upload an erroneous data set, an `ADARR`, with a litany of problems. Notice how the app checks that the variable both exists and is non-missing below. A red X indicates the area(s) that need attention which led to a failed test.
+
+<br>
+
+```{r, echo=FALSE, out.width="80%", fig.align = 'center'}
+knitr::include_graphics("figures/upldDat/error.PNG")
+```
+
+<br>
+
+If you are having trouble uploading your data, and you think you have significant grounds to alter these upload rules, please [contact us](mailto:adshelp@digicomm.jira.com?subject=IDEA App Question/ Request) with your request.
+
+<br>
+
+## Use CDISC Pilot Data
+
+Press this button if you are not interested in using `IDEA` with your study data yet, but  want to explore all the app's features. Upon clicking, you'll see five data sets are loaded: an `ADSL`, `ADVS`, `ADAE`, `ADLBC`, and `ADTTE`. All these data sources came from the PHUSE [Test Data Factory's public GitHub](https://github.com/phuse-org/TestDataFactory/blob/master/Updated/TDF_ADaM/). Note that some adjustments were made to the raw data in order to best suit the needs of the application. That is, in some cases, variables were created and imputed with values that were applicable for the trial. For the sake of data security, we'll use this data thoroughly throughout this guide.
+
+```{r, echo=FALSE, out.width="30%", fig.align = 'center'}
+knitr::include_graphics("figures/upldDat/cdisc pilot button.PNG")
+```
+
+## Browse
+
+When not using the CDISC pilot data, select "Browse" to navigate through your computer's file system and locate your study's data on the J-drive. If you normally do not have permissions to a certain folder, you will still not have permission to that folder while using `IDEA`. You may select one file at a time or multiple files at once. Just note (as mentioned previously) that an `ADSL` is required for analysis, so make sure an `ADSL` is loaded. Since the application is designed for ADaM data, only sas7bdat files are accepted.
+
+<br>
+
+```{r, echo=FALSE, out.width="55%", fig.align = 'center'}
+knitr::include_graphics("figures/upldDat/browse.PNG")
+```
+
+<br>
+
+Once selected, the file names will show up below the browse widget and populate the data preview window.
+
+<br>
+
+
+## Data Preview
+
+The data preview exists just to give users a perfunctory view of their data to make sure it uploaded correctly. Thus, the viewing window was intentionaly designed to be small and hard to navigate! Just make sure your data is there and intact, then head over to one of the other tabs to dissect and analyze it.
+
+<br>
+
+```{r, echo=FALSE}
+knitr::include_graphics("figures/upldDat/use_and_browse_pilot_data.gif")
+```
+
+Specifically, try out the [Table Generator](https://github.biogen.com/pages/biometrics/SEER/articles/x01_Table_Generator.html) to quickly and easily create submission compliant tables and listings. On the [Population Explorer](https://github.biogen.com/pages/biometrics/SEER/articles/x02_Pop_Exp.html), plot trends in your treatment groups over time (among other things), and on the [Individual Explorer](https://github.biogen.com/pages/biometrics/SEER/articles/x03_Indv_Expl.html), learn more about outlier patients or patients with certain adverse events, etc.
+
+<br>
+
+<br>
+
+<br>
+
+<br>
