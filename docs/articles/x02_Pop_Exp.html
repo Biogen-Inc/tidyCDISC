@@ -110,30 +110,111 @@
 <div id="tab-layout" class="section level2">
 <h2 class="hasAnchor">
 <a href="#tab-layout" class="anchor"></a>Tab layout</h2>
+<p>Below is a generic image of the population explorer, where an example box plot is being rendered. There are 4 main components to this tab, the first 3 are located on the side panel:</p>
+<ol style="list-style-type: decimal">
+<li><p>The <strong>filter data</strong> widget</p></li>
+<li><p>The <strong>type of chart</strong> selection</p></li>
+<li><p>The <strong>plot controls</strong></p></li>
+<li><p>The desired <strong>plot</strong></p></li>
+</ol>
+<p><br></p>
+<p><img src="figures/popExp/layout.PNG" width="940" style="display: block; margin: auto;"></p>
+<p><br></p>
+<p>Together, we’ll take a look at each of element of the Population Explorer, including the chart types and their controls, plot options and interactivity. But first, a quick note on filtering!</p>
 </div>
-<div id="scatter-plot" class="section level2">
+<div id="filtering" class="section level2">
 <h2 class="hasAnchor">
-<a href="#scatter-plot" class="anchor"></a>Scatter Plot</h2>
+<a href="#filtering" class="anchor"></a>Filtering</h2>
+<p>Like other <code>IDEA</code> tabs, the “Filter Data” widget manipulates the data before it is processed on the tab, in this case: plotted. Filtering will not be discussed in detail guide so you’re highly encouraged to view the article called <a href="https://github.biogen.com/pages/biometrics/SEER/articles/x04_Filtering.html">04 Filtering</a> for a complete filtering tutorial. However, we will address a few things that are unique about filtering in the Population Explorer. By clicking the drop down arrow, the filtering widget expands to reveal the following controls:</p>
+<p><br></p>
+<p><img src="figures/popExp/filtering%20widget.PNG" width="50%" style="display: block; margin: auto;"></p>
+<p><br></p>
+<p>First, this is the only tab that has an “Apply Filters” toggle that precedes the usual ADaM data selector and “Add Filter” button. This toggle provides unique functionality when plotting, giving the user the following luxuries:</p>
+<ol style="list-style-type: decimal">
+<li><p><strong>Build filters all at once</strong>. If the user has many filters to define on variables from multiple data sources, the chart will continually re-render after each filter is added. With large data sets, this can lead to a user experience that is somewhat slow and sluggish. As such, its advised to define your filters on the front end and then toggle “Apply Filters” to the “on” position to save time and compute power. Below is an example workflow displaying this practice.</p></li>
+<li><p><strong>Switch back and forth</strong> between filtered and un-filtered versions of the plot. This can be useful to verify expected changes in the plot before and after filtering.</p></li>
+</ol>
+<p><br></p>
+<p><img src="figures/popExp/apply%20filters%20toggle.gif" style="display: block; margin: auto;"></p>
+<p><br></p>
+<p>Second, notice that the the text describing the filtering appears below the chart on the left-hand side.</p>
 </div>
-<div id="spaghetti-plot" class="section level2">
+<div id="type-of-chart" class="section level2">
 <h2 class="hasAnchor">
-<a href="#spaghetti-plot" class="anchor"></a>Spaghetti Plot</h2>
+<a href="#type-of-chart" class="anchor"></a>Type of Chart</h2>
+<p>Below are the currently supported chart types, which can be expanded to include any number of charts, just send the <a href="mailto:adshelp@digicomm.jira.com?subject=IDEA%20App%20Pop%20Ex%20Request">developers</a> an email with your request!</p>
+<p><br></p>
+<p><img src="figures/popExp/type%20of%20chart.PNG" width="50%" style="display: block; margin: auto;"></p>
+<p><br></p>
+<p>It’s important to note that the <code>Kaplan-Meier Curve</code> option will not appear unless an ADaM of class <code>TTE</code> (contains the <code>CNSR</code> variable) is uploaded on the Data tab. All other chart types will display by default.</p>
 </div>
-<div id="box-plot" class="section level2">
+<div id="general-plot-controls" class="section level2">
 <h2 class="hasAnchor">
-<a href="#box-plot" class="anchor"></a>Box Plot</h2>
+<a href="#general-plot-controls" class="anchor"></a>General Plot controls</h2>
+<p>The user interface to each plot dynamically updates based on the the chart type selection. In general, you’ll be asked to specify how to set up the axes using either variables or parameters from <code>BDS</code> class data sources, among other options. Consistent with the Table Generator, when a parameter is being plotted, often times you’ll need to select “AVAL”, “CHG”, or “BASE” in addition to a specific visit. The only exception, with the exception of the “spaghetti” and “line plot - mean over time” as the x-axis will always be a time variable by design.</p>
+<p><br></p>
+<p><img src="figures/popExp/general%20param%20setup.PNG" width="50%" style="display: block; margin: auto;"></p>
+<p><br></p>
+<p>If a variable is chosen for plotting, the AVAL/CHG/BASE options &amp; visit selector will disappear:</p>
+<p><br></p>
+<p><img src="figures/popExp/general%20var%20setup.PNG" width="50%" style="display: block; margin: auto;"></p>
+<p><br></p>
+<p>Besides those general axes set up controls, the “scatter” and “line plot - mean over time” have some “Group data” options in common as well. In general, both drop down lists only contain character or factor variables.</p>
+<p><br></p>
+<p><img src="figures/popExp/group%20data.PNG" width="50%" style="display: block; margin: auto;"></p>
+<p><br></p>
+<p>The “Color Plots By” variable helps the user create a different colored line for a variable’s categories. In the example below, here is a plot where “Color Plots By” is <code>NONE</code>:</p>
+<p><br></p>
+<p><img src="figures/popExp/basic%20plot.PNG" width="670" style="display: block; margin: auto;"></p>
+<p><br></p>
+<p>If we switch “Color Plots by” to <code>AGEGR1</code>, the application creates the following line plot of mean over time:</p>
+<p><br></p>
+<p><img src="figures/popExp/color%20by.PNG" width="674" style="display: block; margin: auto;"></p>
+<p><br></p>
+<p>Similarly, if we leave “Color Plots By” as <code>NONE</code> and change “Separate Plots By” to <code>TRT01P</code>, the app creates a separate plot for each planned treatment arm:</p>
+<p><br></p>
+<p><img src="figures/popExp/group%20by.PNG" width="988" style="display: block; margin: auto;"></p>
+<p><br></p>
+<p>Lastly, the user can select a variable for both “Color Plots By” and “Separate Plots By” to view a plotted line for the combination of <code>AGEGR1</code> and <code>SEX</code>.</p>
+<p><br></p>
+<p><img src="figures/popExp/color%20by%20and%20group%20by.PNG" width="980" style="display: block; margin: auto;"></p>
+<p><br></p>
 </div>
-<div id="line-plot---mean-over-time" class="section level2">
+<div id="the-plots" class="section level2">
 <h2 class="hasAnchor">
-<a href="#line-plot---mean-over-time" class="anchor"></a>Line Plot - mean over time</h2>
+<a href="#the-plots" class="anchor"></a>The Plots</h2>
+<p>The plot is displayed prominently on the main panel, and with a host of interactive features when moused over. In the example below, the “line plot - mean over time” contains additional information available at each plotted point like the visit variable and visit value, plus a slurry of statistics for the parameter selected (ALB in this case): mean, standard error, standard deviation, and patient count (N). Also notice the <code>SEX</code> variable is selected for “Color Plot By”. Thus, when we hover, the info boxes are color coordinated and include the line’s <code>SEX</code> value.</p>
+<p><br></p>
+<p><img src="figures/popExp/interactivity.gif" style="display: block; margin: auto;"></p>
+<p><br></p>
+<p>Notice how the user is also allowed to zoom-in / pan-out of any portion of the graph, which retains only the desired points. This can be helpful to filter out outliers without using the “Filter Data” widget or just to zoom in on a cluster of densly populated points.</p>
+<p>Last, click the hover over and select the small camera icon in the top right-hand corner to download a PNG of any plot directly to your browser. This can be handy for sharing findings with colleagues. Or, users are equally welcome to use the snipping tool / snaggit to capture results as well.</p>
+<p>Depending on the plot, the aggregated data used to plot values may be included below the plot for easy download to excel. Right now, that includes the “line plot - mean over time” and “Heatmap - endpoint correlations”. If desired, select how many rows you’d like to view, search through or sort the data and just click the “Excel” button on the top left corner when ready to download.</p>
+<p><br></p>
+<p><img src="figures/popExp/download%20data.PNG" width="456" style="display: block; margin: auto;"></p>
+<p><br></p>
+<div id="scatter-plot" class="section level3">
+<h3 class="hasAnchor">
+<a href="#scatter-plot" class="anchor"></a>Scatter Plot</h3>
 </div>
-<div id="heatmap---endpoint-correlations" class="section level2">
-<h2 class="hasAnchor">
-<a href="#heatmap---endpoint-correlations" class="anchor"></a>Heatmap - endpoint correlations</h2>
+<div id="spaghetti-plot" class="section level3">
+<h3 class="hasAnchor">
+<a href="#spaghetti-plot" class="anchor"></a>Spaghetti Plot</h3>
 </div>
-<div id="kaplan-meier-curve" class="section level2">
-<h2 class="hasAnchor">
-<a href="#kaplan-meier-curve" class="anchor"></a>Kaplan-Meier Curve</h2>
+<div id="box-plot" class="section level3">
+<h3 class="hasAnchor">
+<a href="#box-plot" class="anchor"></a>Box Plot</h3>
+</div>
+<div id="line-plot---mean-over-time" class="section level3">
+<h3 class="hasAnchor">
+<a href="#line-plot---mean-over-time" class="anchor"></a>Line Plot - mean over time</h3>
+<p>plot data included.</p>
+</div>
+<div id="heatmap---endpoint-correlations" class="section level3">
+<h3 class="hasAnchor">
+<a href="#heatmap---endpoint-correlations" class="anchor"></a>Heatmap - endpoint correlations</h3>
+<p>plot data included. ### Kaplan-Meier Curve</p>
+</div>
 </div>
   </div>
 
