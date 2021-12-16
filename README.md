@@ -28,12 +28,21 @@ levels of programming experience. For example:
     most domain expertise, can explore results without asking a
     statistician or programmer to build tables & figures.
 
+<div class="floatting">
+
 -   A **statistician** can use the application to make tables/ figures
     instantly, cutting down on statistical programming requests for
     excess tables that aren’t required, but nice to see.
 
+<img src="man/figures/pct_95_cropped.jpg" width="30%" style="float:right; padding:10px" />
+
+</div>
+
 -   A **statistical programmer** can use IDEA to do preliminary QC
-    programming before writing the code in a validated process.
+    programming before writing the code in a validated process. Users
+    who’ve leverage `IDEA` for routine trial analysis tend to report
+    **significant time savings, about 95%**, when performing programming
+    duties.
 
 For a high-level overview of the app with a 10-minute demo, please
 review the following conference presentation on `tidyCDISC`, which is
@@ -52,9 +61,9 @@ R/Medicine](man/figures/tidyCDISC_RMedicine_thumbnail.png)](https://youtu.be/QeH
 ## Scope
 
 As previously mentioned, IDEA can only accept datasets that conform to
-CDISC ADaM standards with some minor flexibility (see upload
-requirements for more details \[insert link here\]. At this time, the
-app only accepts sas7bdat files.
+CDISC ADaM standards with some minor flexibility (see [upload
+requirements](https://github.biogen.com/pages/biometrics/SEER/articles/x00_Data_Upload.html)
+for more details. At this time, the app only accepts sas7bdat files.
 
 If you’re looking to regularly generate R code for tables, the IDEA app
 has a built-in export feature that downloads an R script that reproduces
@@ -68,19 +77,34 @@ Biogen SAS programmers capable of producing 50+ STAN outputs.
 
 ## Usage
 
-IDEA is primarily an application, so no installation is necessary.
-Simply access Biogen’s network and start using the app: [IDEA
-application](https://awshpc22133.abc.amazon.biogen.com/IDEA/). However,
-if you choose to export R code from the Table Generator, you will need a
+Please review the “[Get
+Started](https://github.biogen.com/pages/biometrics/IDEA/articles/IDEA.html)”
+guide to follow an example use case using the application. However, to
+optimize one’s use of `IDEA`, we highly recommend reading the following
+articles that take a deeper look into the topics presented in the
+getting started guide:
+
+-   [00 Data
+    Upload](https://github.biogen.com/pages/biometrics/SEER/articles/x00_Data_Upload.html)
+
+-   [01 Table
+    Generator](https://github.biogen.com/pages/biometrics/SEER/articles/x01_Table_Generator.html)
+
+-   [02 Population
+    Explorer](https://github.biogen.com/pages/biometrics/SEER/articles/x02_Pop_Exp.html)
+
+-   [03 Individual
+    Explorer](https://github.biogen.com/pages/biometrics/SEER/articles/x03_Indv_Expl.html)
+
+-   [04
+    Filtering](https://github.biogen.com/pages/biometrics/SEER/articles/x04_Filtering.html)
+
+`IDEA` is primarily an application, so no installation is necessary.
+Simply access Biogen’s network and start using the app here:
+[IDEA](https://awshpc22133.abc.amazon.biogen.com/IDEA/). However, if you
+choose to export and run R code from the Table Generator, you will need
 the `IDEA` package installed on your machine locally. See installation
 instructions in the next section below.
-
-Please review the “[Getting
-Started](https://github.biogen.com/pages/biometrics/IDEA/articles/IDEA.html)”
-guide to to learn how to answer all your analysis questions with `IDEA`
-. If the application can’t solve your question, we want to know about
-it! Submit all feature requests to `adshelp@digicomm.jira.com` and
-mention `IDEA`.
 
 ## Install `IDEA` R package
 
