@@ -110,34 +110,17 @@
 <div id="tab-layout" class="section level2">
 <h2 class="hasAnchor">
 <a href="#tab-layout" class="anchor"></a>Tab layout</h2>
-<p>Below is a generic image of the population explorer, where an example box plot is being rendered. There are 4 main components to this tab, the first 3 are located on the side panel:</p>
+<p>Below is a plot built with the population explorer, where an example Kaplan Meier curve is being rendered. There are 4 main components to this tab, the first 3 are located on the side panel:</p>
 <ol style="list-style-type: decimal">
-<li><p>The <strong>filter data</strong> widget</p></li>
+<li><p>The <strong>filter data</strong> widget (we’ll cover this last)</p></li>
 <li><p>The <strong>type of chart</strong> selection</p></li>
 <li><p>The <strong>plot controls</strong></p></li>
 <li><p>The desired <strong>plot</strong></p></li>
 </ol>
 <p><br></p>
-<p><img src="figures/popExp/layout.PNG" width="940" style="display: block; margin: auto;"></p>
+<p><img src="figures/popExp/layout.PNG" width="708" style="display: block; margin: auto;"></p>
 <p><br></p>
 <p>Together, we’ll take a look at each of element of the Population Explorer, including the chart types and their controls, plot options and interactivity. But first, a quick note on filtering!</p>
-</div>
-<div id="filtering" class="section level2">
-<h2 class="hasAnchor">
-<a href="#filtering" class="anchor"></a>Filtering</h2>
-<p>Like other <code>IDEA</code> tabs, the “Filter Data” widget manipulates the data before it is processed on the tab, in this case: plotted. Filtering will not be discussed in detail guide so you’re highly encouraged to view the article called <a href="https://github.biogen.com/pages/biometrics/SEER/articles/x04_Filtering.html">04 Filtering</a> for a complete filtering tutorial. However, we will address a few things that are unique about filtering in the Population Explorer. By clicking the drop down arrow, the filtering widget expands to reveal the following controls:</p>
-<p><br></p>
-<p><img src="figures/popExp/filtering%20widget.PNG" width="50%" style="display: block; margin: auto;"></p>
-<p><br></p>
-<p>First, this is the only tab that has an “Apply Filters” toggle that precedes the usual ADaM data selector and “Add Filter” button. This toggle provides unique functionality when plotting, giving the user the following luxuries:</p>
-<ol style="list-style-type: decimal">
-<li><p><strong>Build filters all at once</strong>. If the user has many filters to define on variables from multiple data sources, the chart will continually re-render after each filter is added. With large data sets, this can lead to a user experience that is somewhat slow and sluggish. As such, its advised to define your filters on the front end and then toggle “Apply Filters” to the “on” position to save time and compute power. Below is an example workflow displaying this practice.</p></li>
-<li><p><strong>Switch back and forth</strong> between filtered and un-filtered versions of the plot. This can be useful to verify expected changes in the plot before and after filtering.</p></li>
-</ol>
-<p><br></p>
-<p><img src="figures/popExp/apply%20filters%20toggle.gif" style="display: block; margin: auto;"></p>
-<p><br></p>
-<p>Second, notice that the the text describing the filtering appears below the chart on the left-hand side.</p>
 </div>
 <div id="type-of-chart" class="section level2">
 <h2 class="hasAnchor">
@@ -150,7 +133,7 @@
 </div>
 <div id="general-plot-controls" class="section level2">
 <h2 class="hasAnchor">
-<a href="#general-plot-controls" class="anchor"></a>General Plot controls</h2>
+<a href="#general-plot-controls" class="anchor"></a>General plot controls</h2>
 <p>The user interface to each plot dynamically updates based on the the chart type selection. In general, you’ll be asked to specify how to set up the axes using either variables or parameters from <code>BDS</code> class data sources, among other options. Consistent with the Table Generator, when a parameter is being plotted, often times you’ll need to select “AVAL”, “CHG”, or “BASE” in addition to a specific visit. The only exception, with the exception of the “spaghetti” and “line plot - mean over time” as the x-axis will always be a time variable by design.</p>
 <p><br></p>
 <p><img src="figures/popExp/general%20param%20setup.PNG" width="50%" style="display: block; margin: auto;"></p>
@@ -182,39 +165,144 @@
 </div>
 <div id="the-plots" class="section level2">
 <h2 class="hasAnchor">
-<a href="#the-plots" class="anchor"></a>The Plots</h2>
+<a href="#the-plots" class="anchor"></a>The plots</h2>
 <p>The plot is displayed prominently on the main panel, and with a host of interactive features when moused over. In the example below, the “line plot - mean over time” contains additional information available at each plotted point like the visit variable and visit value, plus a slurry of statistics for the parameter selected (ALB in this case): mean, standard error, standard deviation, and patient count (N). Also notice the <code>SEX</code> variable is selected for “Color Plot By”. Thus, when we hover, the info boxes are color coordinated and include the line’s <code>SEX</code> value.</p>
 <p><br></p>
 <p><img src="figures/popExp/interactivity.gif" style="display: block; margin: auto;"></p>
 <p><br></p>
-<p>Notice how the user is also allowed to zoom-in / pan-out of any portion of the graph, which retains only the desired points. This can be helpful to filter out outliers without using the “Filter Data” widget or just to zoom in on a cluster of densly populated points.</p>
-<p>Last, click the hover over and select the small camera icon in the top right-hand corner to download a PNG of any plot directly to your browser. This can be handy for sharing findings with colleagues. Or, users are equally welcome to use the snipping tool / snaggit to capture results as well.</p>
-<p>Depending on the plot, the aggregated data used to plot values may be included below the plot for easy download to excel. Right now, that includes the “line plot - mean over time” and “Heatmap - endpoint correlations”. If desired, select how many rows you’d like to view, search through or sort the data and just click the “Excel” button on the top left corner when ready to download.</p>
+<p>Notice how the user is also allowed to zoom-in / pan-out of any portion of the graph, which retains only the desired points. This can be helpful to filter out outliers without using the “Filter Data” widget or just to zoom in on a cluster of densely populated points.</p>
+<p>Last, click the hover over and select the small camera icon in the top right-hand corner to download a PNG of any plot directly to your browser. This can be handy for sharing findings with colleagues. Or, users are equally welcome to use the snipping tool / snagit to capture results as well.</p>
+<p>Depending on the plot, the aggregated data used to plot values may be included below the plot for easy download to excel. Right now, that includes the “line plot - mean over time” and “Heat map - endpoint correlations”. If desired, select how many rows you’d like to view, search through or sort the data and just click the “Excel” button on the top left corner when ready to download.</p>
 <p><br></p>
 <p><img src="figures/popExp/download%20data.PNG" width="456" style="display: block; margin: auto;"></p>
 <p><br></p>
+<p>Now it’s time to dive into each plot and highlight it’s unique output and plot controls.</p>
 <div id="scatter-plot" class="section level3">
 <h3 class="hasAnchor">
-<a href="#scatter-plot" class="anchor"></a>Scatter Plot</h3>
+<a href="#scatter-plot" class="anchor"></a>Scatter plot</h3>
+<p>The scatter plot is one of the most basic plots offered by the population explorer. As you’re likely aware, this chart type plots two quantitative variables against each other in a two dimensional space. The plot controls have already been addressed in great detail above. Though it’s a simple graph, it’s output can be quite helpful, especially at identifying outliers since every subject will be plotted on the graph. Here is an example where we can hover over an outlier for more detail when plotting Glucose at baseline vs age.</p>
+<p><br></p>
+<p><img src="figures/popExp/scatter%20controls.PNG" width="40%" style="display: block; margin: auto;"></p>
+<p><br></p>
+<p><img src="figures/popExp/scatter%20outlier.PNG" width="478" style="display: block; margin: auto;"></p>
+<p><br></p>
 </div>
 <div id="spaghetti-plot" class="section level3">
 <h3 class="hasAnchor">
-<a href="#spaghetti-plot" class="anchor"></a>Spaghetti Plot</h3>
+<a href="#spaghetti-plot" class="anchor"></a>Spaghetti plot</h3>
+<p>Similarly, the spaghetti plot mimics the scatter in that every subject is plotted, except the x-axis must be a time variable and a subject’s values are plotted over time and connected with a line. As one might expect, with many subjects, this would lead to a very messy graph. But again, you can see edge cases very clearly.</p>
+<p><br></p>
+<p><img src="figures/popExp/spaghetti%20controls.PNG" width="40%" style="display: block; margin: auto;"></p>
+<p><br></p>
+<p><img src="figures/popExp/spaghetti%20plot.PNG" width="490" style="display: block; margin: auto;"></p>
+<p><br></p>
 </div>
 <div id="box-plot" class="section level3">
 <h3 class="hasAnchor">
 <a href="#box-plot" class="anchor"></a>Box Plot</h3>
+<p>Population Explorer wouldn’t be a legitimate graph generator without a box plot, offering everyone’s favorite 7-number summary on hover. See example below:</p>
+<p><br></p>
+<p><img src="figures/popExp/box%20controls.PNG" width="40%" style="display: block; margin: auto;"></p>
+<p><br></p>
+<p><img src="figures/popExp/box%20plot.PNG" width="487" style="display: block; margin: auto;"></p>
+<p><br></p>
+<p>Notice there is an additional plot control called “Add Points?”. If this check box is marked, all individual data points are overlain on the existing box plot in a “jittered” fashion to help the user better understand the distribution of the data.</p>
+<p><br></p>
+<p><img src="figures/popExp/box%20add%20points.PNG" width="20%" style="display: block; margin: auto;"></p>
+<p><br></p>
+<p><img src="figures/popExp/box%20plot%20add%20points.PNG" width="482" style="display: block; margin: auto;"></p>
+<p><br></p>
 </div>
 <div id="line-plot---mean-over-time" class="section level3">
 <h3 class="hasAnchor">
 <a href="#line-plot---mean-over-time" class="anchor"></a>Line Plot - mean over time</h3>
-<p>plot data included.</p>
+<p>A line plot of mean variables/ parameter values over time is a highly requested / used feature of the Population Explorer. As such, the a few additional custom plot controls have been built in for this chart type. Here you can see that in addition to a y-axis and time variable selector, we’ve included options to overlay a vertical or horizontal line on the plot’s x or y axis, respectively. When the feature is toggled on, an addition selector will appear to help you set the value. Perhaps in this case, we’ve decided that 10.5 is an important Bilirubin value we want to track and if the average extends above this threshold, we want that to be obvious. So, overlaying a horizontal line at 10.5 is a great option for this plot.</p>
+<p><br></p>
+<p><img src="figures/popExp/line%20plot%20controls.PNG" width="40%" style="display: block; margin: auto;"></p>
+<p><br></p>
+<p>We’ve discussed the Group Data plot controls above, so we’ll choose to bypass those for now. However, we’ve chosen to label our plotted data points. This toggle simply turns the feature on/off and allows us to position the labels in the most visible location. For this example, on top and centered data labels are extremely visible and produces the following output:</p>
+<p><br></p>
+<p><img src="figures/popExp/line%20plot.PNG" width="485" style="display: block; margin: auto;"></p>
+<p><br></p>
+<p>And if we choose to display 95% confidence intervals for each mean, we need only toggle a few options as follows to produce the following output:</p>
+<p><br></p>
+<p><img src="figures/popExp/line%20plot%20option%20chng.PNG" width="40%" style="display: block; margin: auto;"></p>
+<p><br></p>
+<p><img src="figures/popExp/line%20plot%2095%20ci.PNG" width="490" style="display: block; margin: auto;"></p>
+<p><br></p>
+<p>Notice that this chart type offers a view of the aggregated plot data. If you wish to download it from the browser, simply click the “Excel” button.</p>
+<p><br></p>
+<p><img src="figures/popExp/line%20plot%20data.PNG" width="493" style="display: block; margin: auto;"></p>
+<p><br></p>
 </div>
 <div id="heatmap---endpoint-correlations" class="section level3">
 <h3 class="hasAnchor">
 <a href="#heatmap---endpoint-correlations" class="anchor"></a>Heatmap - endpoint correlations</h3>
-<p>plot data included. ### Kaplan-Meier Curve</p>
+<p>A helpful check for many analyses is to check if some parameters / endpoints are highly correlated with each other. This chart helps to do this quickly, and with ease. First, the user can select any number of parameters for the x-axis and y-axis using the “Select axes” drop downs lists. Doing so will calculate a pairwise correlation using the coefficient of your choice: either pearson (the default) or (Spearmans). Here’s we’ve requested to only label significant correlations with alpha = 0.05.</p>
+<p><br></p>
+<p><img src="figures/popExp/heatmap%20controls.PNG" width="45%" style="display: block; margin: auto;"></p>
+<p><br></p>
+<p><img src="figures/popExp/heatmap.PNG" width="483" style="display: block; margin: auto;"></p>
+<p><br></p>
+<p>It’s important to note that the color gradient in the graph is calibrated to the highest correlation coefficient calculated out of the bunch. When hovered over, you can view all the needed details, including exact p-values.</p>
+<p>Furthermore, you may want to check your endpoint correlations from week to week. So with all other options remaining the same, if we choose ‘AVISIT’ as a grouping variable, the following plot is rendered:</p>
+<p><br></p>
+<p><img src="figures/popExp/heatmap%20controls%20grouped.PNG" width="45%" style="display: block; margin: auto;"></p>
+<p><br></p>
+<p><img src="figures/popExp/heatmap%20grouped.PNG" width="673" style="display: block; margin: auto;"></p>
+<p><br></p>
+<p>In addition, that’s a lot of information / data to consume, so an export to Excel is available in the included plot data below the graph:</p>
+<p><br></p>
+<p><img src="figures/popExp/heatmap%20data.PNG" width="686" style="display: block; margin: auto;"></p>
+<p><br></p>
 </div>
+<div id="kaplan-meier-curve" class="section level3">
+<h3 class="hasAnchor">
+<a href="#kaplan-meier-curve" class="anchor"></a>Kaplan-Meier Curve</h3>
+<p>Any time-to-event (<code>TTE</code>) analysis will include an obligatory Kaplan-Meier curve. And rightfully so! So much information can be gleaned from these graphics. The x-axis always contains a measure of time and the y-axis contains the probability of “surviving” up till those times. In the case of the CDISC Pilot data, we’re measuring the probability of a patient having their first dermatological event for each time value, x. So even though the y-axis is labeled, “survival”, don’t think of it in terms of life or death! For any point on the graph, you can interpret plotted values as: “The probability of a patient having their first dermatological event on or past X time units, is Y.”</p>
+<p><code>IDEA</code> knows which data sources contain <code>TTE</code> data based on the presence of the CDISC required <code>CNSR</code> variable. The <code>CNSR</code> variable must be either a 0 or 1. Zero indicates the patient’s survival status is unknown after time period X. That is, we only have <strong>some</strong> information about the patient’s time-to-event survival up to a certain point, X, but after that time, their survival is unknown. Instead of just throwing away that data, it’s valuable to know that the made it to at least time X, so that data is retained and their last known X value is marked with a red “+” in the plot below.</p>
+<p>In the plot control panel, we can toggle the <code>TTE</code> parameter, the response value (like <code>AVAL</code>), and even the censor variable in case your data source has more than one. We’ve chosen to marked our censored observations and show 95% confidence bands below.</p>
+<p><br></p>
+<p><img src="figures/popExp/km%20controls.PNG" width="40%" style="display: block; margin: auto;"></p>
+<p><br></p>
+<p><img src="figures/popExp/km.PNG" width="483" style="display: block; margin: auto;"></p>
+<p><br></p>
+<p>As you might expect, these plots can be extremely handy, and remarkably powerful when comparing time-to-event probability between groups of patients. Making a few adjustments to our plot options, produces the following plot which reveals differences between treatment groups. PRO-TIP: If you’re interested in seeing if the probably of survival is significantly different between groups, you only need to turn on the 95% confidence bands and see if there is anywhere the bands do not intersect.</p>
+<p><br></p>
+<p><img src="figures/popExp/km%20controls%20grouped.PNG" width="40%" style="display: block; margin: auto;"></p>
+<p><br></p>
+<p><img src="figures/popExp/km%20grouped.PNG" width="486" style="display: block; margin: auto;"></p>
+<p><br></p>
+</div>
+</div>
+<div id="filtering" class="section level2">
+<h2 class="hasAnchor">
+<a href="#filtering" class="anchor"></a>Filtering</h2>
+<p>Like other <code>IDEA</code> tabs, the “Filter Data” widget manipulates the data before it is processed on the tab, in this case: plotted. Filtering will not be discussed in detail guide so you’re highly encouraged to view the article called <a href="https://github.biogen.com/pages/biometrics/SEER/articles/x04_Filtering.html">04 Filtering</a> for a complete filtering tutorial. However, we will address a few things that are unique about filtering in the Population Explorer. By clicking the drop down arrow, the filtering widget expands to reveal the following controls:</p>
+<p><br></p>
+<p><img src="figures/popExp/filtering%20widget.PNG" width="50%" style="display: block; margin: auto;"></p>
+<p><br></p>
+<p>First, this is the only tab that has an “Apply Filters” toggle that precedes the usual ADaM data selector and “Add Filter” button. This toggle provides unique functionality when plotting, giving the user the following luxuries:</p>
+<ol style="list-style-type: decimal">
+<li><p><strong>Build filters all at once</strong>. If the user has many filters to define on variables from multiple data sources, the chart will continually re-render after each filter is added. With large data sets, this can lead to a user experience that is somewhat slow and sluggish. As such, its advised to define your filters on the front end and then toggle “Apply Filters” to the “on” position to save time and compute power. Below is an example workflow displaying this practice.</p></li>
+<li><p><strong>Switch back and forth</strong> between filtered and un-filtered versions of the plot. This can be useful to verify expected changes in the plot before and after filtering.</p></li>
+</ol>
+<p><br></p>
+<p><img src="figures/popExp/apply%20filters%20toggle.gif" style="display: block; margin: auto;"></p>
+<p><br></p>
+<p>Second, notice that the the text describing the filtering appears below the chart on the left-hand side.</p>
+</div>
+<div id="need-help" class="section level2">
+<h2 class="hasAnchor">
+<a href="#need-help" class="anchor"></a>Need help?</h2>
+<p>Throughout all the tabs in the application, there are these little buttons (usually in the top right-hand corners) with question marks on them:</p>
+<p><img src="figures/tableGen/TG%20need%20help.PNG" width="47" style="display: block; margin: auto;"></p>
+<p>When clicked, they launch a real-time guide that walks the user through the major components of the currently visible screen/ tab, providing context and suggested workflow. However, if the in-app guide doesn’t address your needs, consult the online documentation (that you’re reading now) for the most thorough user guide. If all else fails, send the <a href="mailto:adshelp@digicomm.jira.com?subject=IDEA%20App%20Question/%20Request">developers</a> an email with your question or request!</p>
+<p><br></p>
+<p><img src="figures/popExp/need%20help.gif"><!-- --></p>
+<p><br></p>
+<p><br></p>
+<p><br></p>
 </div>
   </div>
 
