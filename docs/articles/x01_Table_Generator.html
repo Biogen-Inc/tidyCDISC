@@ -116,22 +116,24 @@
 <h2 class="hasAnchor">
 <a href="#building-an-example-table-from-scratch" class="anchor"></a>Building an example table from scratch</h2>
 <p>This tutorial will walk you through calculating simple statistics for an <code>ADSL</code> variable and the <code>AVAL</code> values for a <code>PARAMCD</code> variable, calculated at a different time points in the <code>ADVS</code>.</p>
-<p>The Table Generator tab is divided in two: the area to the left is the drag-and-drop interface used to build tables, and on the right is the real-time table output. Any uploaded data sets will appear on the left-hand side as “bins”. We call them “bins” because they are just containers, showcasing contents of the data set when expanded. The <code>ADSL</code> &amp; <code>ADAE</code> bins include all the names of all their variables, while any <code>BDS</code> data sets, like the <code>ADVS</code> &amp; <code>ADLBC</code> bins include a list of all the <code>PARAMCD</code> values.</p>
+<p>The Table Generator tab is divided in two: the area to the left is the drag-and-drop interface used to build tables, and on the right is the real-time table output. Any uploaded data sets will appear on the left-hand side as “bins”. We call them “bins” because they are just containers, showcasing contents of the data when expanded. The <code>ADSL</code> &amp; <code>ADAE</code> bins include the names of all their variables, while any <code>BDS</code> data sets, like the <code>ADVS</code> &amp; <code>ADLBC</code> bins include a list of all the <code>PARAMCD</code> values.</p>
+<p>On the right-hand side, there are a list of “Stats”, such as <code>ANOVA</code>, <code>CHG</code>, <code>MEAN</code>, and <code>FREQ</code> to name a few. We call these “STAT Blocks”.</p>
 <p><br></p>
 <p><img src="figures/tableGen/bins.gif"><!-- --></p>
 <p><br></p>
+<p>In order to build a table, we need only drag a variable block to the “Variable” drop zone and match it up with a corresponding stat block in the “Stats” drop zone as we demonstrate in the following example:</p>
 <p><br></p>
 <div id="age-summary-statistics" class="section level3">
 <h3 class="hasAnchor">
 <a href="#age-summary-statistics" class="anchor"></a>Age Summary Statistics</h3>
-<p>We can drag the <code>AGE</code> block from within <code>ADSL</code> and drag in the <code>MEAN</code> block from the statistical blocks to calculate summary statistics for <code>AGE</code> within the trial.</p>
+<p>We can drag the <code>AGE</code> block from within <code>ADSL</code> and drag in the <code>MEAN</code> block from the available Stats to calculate summary statistics for patient <code>AGE</code> within the trial.</p>
 <p><br></p>
 <p><img src="figures/tableGen/03-age_mean.gif"><!-- --></p>
 </div>
 <div id="paramcd-summary-statistics" class="section level3">
 <h3 class="hasAnchor">
 <a href="#paramcd-summary-statistics" class="anchor"></a>PARAMCD Summary Statistics</h3>
-<p>Similarly, we can drag in <code>DIABP</code> from <code>ADVS</code> and use the <code>MEAN</code> block to calculate summary statistics. However, we also need to select the <code>AVISIT</code> from the week dropdown in order to calculate the summary statistics of <code>DIABP</code> at a certain week.</p>
+<p>Similarly, we can drag in <code>DIABP</code> from <code>ADVS</code> and use the <code>MEAN</code> block to calculate summary statistics on parameters. However, we also need to select the desired <code>AVISIT</code> in order to calculate the summary statistics of <code>DIABP</code> at a certain time point.</p>
 <p><br></p>
 <p><img src="figures/tableGen/04-diabp_mean.gif"><!-- --></p>
 <p><br></p>
@@ -153,6 +155,9 @@
 <p><br></p>
 <p><img src="figures/tableGen/grouping.gif"><!-- --></p>
 <p><br></p>
+<p>Here is the resulting table:</p>
+<p><br></p>
+<p><img src="figures/tableGen/grouped.PNG" width="368"></p>
 <p><br></p>
 </div>
 <div id="title-and-download-table-output" class="section level3">
@@ -236,7 +241,7 @@
 <p><br></p>
 <p><img src="figures/tableGen/TG%20STAN%20dropdown.PNG" width="80%" style="display: block; margin: auto;"></p>
 <p><br></p>
-<p>If the data needed to produce a certain table aren’t present, the available tables listed in this dropdown selector will change. For example, if an <code>ADAE</code> is not uploaded, then all the AE tables will disappear from the above list.</p>
+<p>If the data needed to produce a certain table aren’t present, the available tables listed in this drop down selector will change. For example, if an <code>ADAE</code> is not uploaded, then all the AE tables will disappear from the above list.</p>
 <p>When one of these tables is selected, the table generator simply compiles the needed variable and stat blocks in the correct order to generate the desired output. This can be particularly useful for tables like #41 “Blood Chemistry actual values by visit” since it would be cumbersome to manually drag in a <code>MEAN</code> block for each week and each blood chemistry parameter, as can be many. See this automation below:</p>
 <p><br></p>
 <p><img src="figures/tableGen/TG%20STAN%20TAB41%20DD.PNG" width="80%" style="display: block; margin: auto;"></p>
