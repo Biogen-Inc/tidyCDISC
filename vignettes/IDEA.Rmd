@@ -215,11 +215,20 @@ knitr::include_graphics("figures/IndvExp/drill down visits.gif")
 That wraps up our patient profile analysis, but there is more to learn about the Individual Explorer! Read up on all it's hidden features in the [03 Individual Explorer](https://github.biogen.com/pages/biometrics/SEER/articles/x03_Indv_Expl.html) article. 
 
 
-## Recap
+## Recap & what's next?
 
-So far, we've learned how to upload data, drag and drop blocks in the table generator as well as build a bonafide STAN table and export it's reproducible R code. Next we plotted mean diastolic blood pressure over time in the population explorer and define filters on the individual explorer tab to find the patients and analyze patient profiles responsible for elevating one subgroups values.
+So far, we've learned how to upload data, drag and drop blocks in the table generator as well as build a bonafide STAN table and export it's reproducible R code. Next we plotted mean diastolic blood pressure over time in the population explorer and define filters on the individual explorer tab to find the patients and analyze patient profiles responsible for elevating one subgroup's values.
 
 Users who've leverage `IDEA` for routine trial analysis tend to report **significant time savings, about 95%**, when performing programming duties. We're confident the `IDEA` application can save you time too. If there is some use case that `IDEA` can't solve, we want to know about it. Please send the [developers](mailto:adshelp@digicomm.jira.com?subject=IDEA App Question/ Request) an email with your question or request!
 
-Have an IDEA to explore? Open the [IDEA](https://awshpc22133.abc.amazon.biogen.com/IDEA/) app!
+Have an IDEA to explore? Open the [IDEA](https://awshpc22133.abc.amazon.biogen.com/IDEA/) app! Otherwise, we highly recommend reading the following articles that take a deeper look into the topics presented in the getting started guide:
 
+- [00 Data Upload](https://github.biogen.com/pages/biometrics/SEER/articles/x00_Data_Upload.html)
+
+- [01 Table Generator](https://github.biogen.com/pages/biometrics/SEER/articles/x01_Table_Generator.html)
+
+- [02 Population Explorer](https://github.biogen.com/pages/biometrics/SEER/articles/x02_Pop_Exp.html)
+
+- [03 Individual Explorer](https://github.biogen.com/pages/biometrics/SEER/articles/x03_Indv_Expl.html)
+
+- [04 Filtering](https://github.biogen.com/pages/biometrics/SEER/articles/x04_Filtering.html)
