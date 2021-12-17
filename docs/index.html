@@ -105,8 +105,13 @@
 <ul>
 <li><p>A <strong>clinical head</strong>, with presumably no programming skills but the most domain expertise, can explore results without asking a statistician or programmer to build tables &amp; figures.</p></li>
 <li><p>A <strong>statistician</strong> can use the application to make tables/ figures instantly, cutting down on statistical programming requests for excess tables that aren’t required, but nice to see.</p></li>
-<li><p>A <strong>statistical programmer</strong> can use IDEA to do preliminary QC programming before writing the code in a validated process.</p></li>
 </ul>
+<div class="floatting">
+<p><img src="reference/figures/pct_95_cropped.jpg" width="30%" style="float:right; padding:10px"></p>
+<ul>
+<li>A <strong>statistical programmer</strong> can use IDEA to do preliminary QC programming before writing the code in a validated process. Users who’ve leverage <code>IDEA</code> for routine trial analysis tend to report <strong>significant time savings, about 95%</strong>, when performing programming duties.</li>
+</ul>
+</div>
 <p>For a high-level overview of the app with a 10-minute demo, please review the following conference presentation on <code>tidyCDISC</code>, which is the open-sourced version of <code>IDEA.</code> Internal to Biogen, the <code>IDEA</code> application has all the same features as <code>tidyCDISC</code>, plus more!</p>
 <p><br></p>
 <center>
@@ -116,19 +121,26 @@
 <div id="scope" class="section level2">
 <h2 class="hasAnchor">
 <a href="#scope" class="anchor"></a>Scope</h2>
-<p>As previously mentioned, IDEA can only accept datasets that conform to CDISC ADaM standards with some minor flexibility (see upload requirements for more details <span class="math display"><em>i</em><em>n</em><em>s</em><em>e</em><em>r</em><em>t</em><em>l</em><em>i</em><em>n</em><em>k</em><em>h</em><em>e</em><em>r</em><em>e</em></span>. At this time, the app only accepts sas7bdat files.</p>
+<p>As previously mentioned, IDEA can only accept datasets that conform to CDISC ADaM standards with some minor flexibility (see <a href="https://github.biogen.com/pages/biometrics/SEER/articles/x00_Data_Upload.html">upload requirements</a> for more details. At this time, the app only accepts sas7bdat files.</p>
 <p>If you’re looking to regularly generate R code for tables, the IDEA app has a built-in export feature that downloads an R script that reproduces any analysis performed in the app. However, if you already have experience with R programming, we’d highly recommend learning Biogen’s (internal) <a href="https://github.biogen.com/pages/biometrics/stanly/"><code>stanly</code></a> package to expand on the R code that IDEA yields for STAN-complaint tables. To summarize, the <code>stanly</code> package is a suite of functions designed for Biogen SAS programmers capable of producing 50+ STAN outputs.</p>
 </div>
 <div id="usage" class="section level2">
 <h2 class="hasAnchor">
 <a href="#usage" class="anchor"></a>Usage</h2>
-<p>IDEA is primarily an application, so no installation is necessary. Simply access Biogen’s network and start using the app: <a href="https://awshpc22133.abc.amazon.biogen.com/IDEA/">IDEA application</a>. However, if you choose to export R code from the Table Generator, you will need a the <code>IDEA</code> package installed on your machine locally. See installation instructions in the next section below.</p>
-<p>Please review the “<a href="https://github.biogen.com/pages/biometrics/IDEA/articles/IDEA.html">Getting Started</a>” guide to to learn how to answer all your analysis questions with <code>IDEA</code> . If the application can’t solve your question, we want to know about it! Submit all feature requests to <code>adshelp@digicomm.jira.com</code> and mention <code>IDEA</code>.</p>
+<p><code>IDEA</code> is primarily a web application, so no installation is necessary. Simply access Biogen’s network and start using the app here: <a href="https://awshpc22133.abc.amazon.biogen.com/IDEA/">IDEA</a>. Please review the “<a href="https://github.biogen.com/pages/biometrics/IDEA/articles/IDEA.html">Get Started</a>” guide to follow an example use case using the application. However, to optimize one’s use of <code>IDEA</code>, we highly recommend reading the following articles that take a deeper look into the topics presented in the getting started guide:</p>
+<ul>
+<li><p><a href="https://github.biogen.com/pages/biometrics/SEER/articles/x00_Data_Upload.html">00 Data Upload</a></p></li>
+<li><p><a href="https://github.biogen.com/pages/biometrics/SEER/articles/x01_Table_Generator.html">01 Table Generator</a></p></li>
+<li><p><a href="https://github.biogen.com/pages/biometrics/SEER/articles/x02_Pop_Exp.html">02 Population Explorer</a></p></li>
+<li><p><a href="https://github.biogen.com/pages/biometrics/SEER/articles/x03_Indv_Expl.html">03 Individual Explorer</a></p></li>
+<li><p><a href="https://github.biogen.com/pages/biometrics/SEER/articles/x04_Filtering.html">04 Filtering</a></p></li>
+</ul>
+<p>We’re confident the <code>IDEA</code> application can save you time. If there is some use case that <code>IDEA</code> can’t solve, we want to know about it. Please send the <a href="mailto:adshelp@digicomm.jira.com?subject=IDEA%20App%20Question/%20Request">developers</a> an email with your question or request!</p>
 </div>
 <div id="install-idea-r-package" class="section level2">
 <h2 class="hasAnchor">
 <a href="#install-idea-r-package" class="anchor"></a>Install <code>IDEA</code> R package</h2>
-<p>If you’d like to run code generated by <code>IDEA</code> or if you are an R developer looking to contribute to the package, welcome! We’ve provided a slurry of information for on-boarding with IDEA.</p>
+<p><code>IDEA</code> is primarily an application, so no installation is necessary. Simply access Biogen’s network and start using the app here: <a href="https://awshpc22133.abc.amazon.biogen.com/IDEA/">IDEA</a>. However, if you choose to export and run R code from the Table Generator, you will need the <code>IDEA</code> package installed on your machine locally.</p>
 <p>The good news is that you don’t need GitHub access in order to install IDEA. You just need to be an HPC user to access Biogen’s internal <a href="http://cran.rstudio.com/client/#/repos/5/packages/IDEA">Rstudio Package Manager</a> (RSPM) where the package is hosted. If you cannot access RSPM from the above link, then you’ll need to submit a simple BAM request as detailed below. If you can access the RSPM link, you can skip the access request step below.</p>
 <div id="request-access-for-hpc-account" class="section level4">
 <h4 class="hasAnchor">
