@@ -29,7 +29,20 @@ knitr::include_graphics("figures/tableGen/quick_upload_then_tg.gif")
 
 This tutorial will walk you through calculating simple statistics for an `ADSL` variable and the `AVAL` values for a `PARAMCD` variable, calculated at a different time points in the `ADVS`.
 
-The Table Generator tab is divided in two: the area to the left is the drag-and-drop interface used to build tables, and on the right is the real-time table output. Any uploaded data sets will appear on the left-hand side as "bins". We call them "bins" because they are just containers, showcasing contents of the data set when expanded. The `ADSL` & `ADAE` bins include all the names of all their variables, while any `BDS` data sets, like the `ADVS` & `ADLBC` bins include a list of all the `PARAMCD` values.
+The Table Generator tab is divided in two: the area to the left is the drag-and-drop interface used to build tables, and on the right is the real-time table output.
+
+<br>
+
+```{r, echo=FALSE}
+knitr::include_graphics("figures/tableGen/02-TG.png")
+```
+
+<br>
+
+Any uploaded data sets will appear on the left-hand side as "bins". We call them "bins" because they are just containers, showcasing contents of the data when expanded. The `ADSL` & `ADAE` bins include the names of all their variables, while any `BDS` data sets, like the `ADVS` & `ADLBC` bins include a list of all the `PARAMCD` values.
+
+On the right-hand side, there are a list of "Stats", such as `ANOVA`, `CHG`, `MEAN`, and `FREQ` to name a few. We call these "STAT Blocks".
+
 
 <br>
 
@@ -39,11 +52,13 @@ knitr::include_graphics("figures/tableGen/bins.gif")
 
 <br>
 
+In order to build a table, we need only drag a variable block to the "Variable" drop zone and match it up with a corresponding stat block in the "Stats" drop zone as we demonstrate in the following example:
+
 <br>
 
 ### Age Summary Statistics
 
-We can drag the `AGE` block from within `ADSL` and drag in the `MEAN` block from the statistical blocks to calculate summary statistics for `AGE` within the trial.
+We can drag the `AGE` block from within `ADSL` and drag in the `MEAN` block from the available Stats to calculate summary statistics for patient `AGE` within the trial.
 
 <br>
 
@@ -53,7 +68,7 @@ knitr::include_graphics("figures/tableGen/03-age_mean.gif")
 
 ### PARAMCD Summary Statistics
 
-Similarly, we can drag in `DIABP` from `ADVS` and use the `MEAN` block to calculate summary statistics. However, we also need to select the `AVISIT` from the week dropdown in order to calculate the summary statistics of `DIABP` at a certain week.
+Similarly, we can drag in `DIABP` from `ADVS` and use the `MEAN` block to calculate summary statistics on parameters. However, we also need to select the desired `AVISIT` in order to calculate the summary statistics of `DIABP` at a certain time point.
 
 <br>
 
@@ -91,6 +106,14 @@ knitr::include_graphics("figures/tableGen/grouping.gif")
 ```
 
 <br>
+
+Here is the resulting table:
+
+<br>
+
+```{r,  echo=FALSE}
+knitr::include_graphics("figures/tableGen/grouped.png")
+```
 
 <br>
 
@@ -211,7 +234,7 @@ knitr::include_graphics("figures/tableGen/TG STAN dropdown.PNG")
 
 <br> 
 
-If the data needed to produce a certain table aren't present, the available tables listed in this dropdown selector will change. For example, if an `ADAE` is not uploaded, then all the AE tables will disappear from the above list.
+If the data needed to produce a certain table aren't present, the available tables listed in this drop down selector will change. For example, if an `ADAE` is not uploaded, then all the AE tables will disappear from the above list.
 
 When one of these tables is selected, the table generator simply compiles the needed variable and stat blocks in the correct order to generate the desired output. This can be particularly useful for tables like #41 "Blood Chemistry actual values by visit" since it would be cumbersome to manually drag in a `MEAN` block for each week and each blood chemistry parameter, as can be many. See this automation below:
 
