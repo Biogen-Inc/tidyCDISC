@@ -85,7 +85,7 @@ On the right-hand side, there are a list of "Stats", such as `ANOVA`, `CHG`, `ME
 
 <br>
 
-```{r, echo=FALSE}
+```{r, out.width="70%", echo=FALSE, fig.align='center'}
 knitr::include_graphics("figures/tableGen/bins.gif")
 ```
 
