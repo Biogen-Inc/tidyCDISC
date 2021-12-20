@@ -1,4 +1,4 @@
-#' IDEA scatterplot
+#' tidyCDISC scatterplot
 #' 
 #' Create scatter plot where if the variables are numeric then they
 #' are plotted, and if they are PARAMCD's then a week and value 

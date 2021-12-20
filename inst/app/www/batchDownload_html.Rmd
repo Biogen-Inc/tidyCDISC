@@ -1,5 +1,5 @@
 ---
-title: "IDEA Batch Download"
+title: "tidyCDISC Batch Download"
 date:
 output:
   html_document:

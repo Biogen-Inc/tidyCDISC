@@ -139,7 +139,7 @@ mk_rep_seq_id <- function(x){
 #' Organize SAS into a format for comparing
 #'
 #' @param sas_data the sas table dataframe, output from stat programmer
-#' @param tg_data the table generator table dataframe, output from IDEA
+#' @param tg_data the table generator table dataframe, output from tidyCDISC
 #' @param chk_block_names case sensitive
 #' @param chk_stat_names case sensitive
 #' @param machine_readable a logical; should the table be prepared for optimal
@@ -349,7 +349,7 @@ revert_temp_colnames <- function(dat, orig_grp_names){
 
 #' Organize Table Generator table into a format for comparing
 #'
-#' @param data the tg_table dataframe, output from IDEA
+#' @param data the tg_table dataframe, output from tidyCDISC
 #' @param machine_readable a logical; should the table be prepared for optimal
 #'   machine readability; that is, should cells with multiple values be pivoted
 #'   to new rows
@@ -406,10 +406,10 @@ prep_tg_table <- function(data,
 }
 
 
-#' Function to compare the SAS table to the IDEA output table
+#' Function to compare the SAS table to the tidyCDISC output table
 #' 
 #' @param sas_table SAS output 
-#' @param tg_table IDEA output
+#' @param tg_table tidyCDISC output
 #' 
 #' @noRd
 compareTables <- function(sas_table, tg_table) {

@@ -41,14 +41,9 @@ usethis::use_package("rlang")
 usethis::use_package("stringi")
 usethis::use_dev_package("tippy") #remotes::install_github("JohnCoene/tippy")
 
-# options('repos')
-# options(repos = c(
-#   CRAN = "https://cran.rstudio.com/",
-#   ghe = "google.com/latest")
-# )
-# options('repos')
-usethis::use_package("IDEAFilter") # install.packages("IDEAFilter")
-# usethis::use_dev_package("IDEAFilter") # devtools::install_github("MayaGans/IDEAFilter")
+
+# usethis::use_package("IDEAFilter") # install.packages("IDEAFilter")
+usethis::use_dev_package("IDEAFilter") # devtools::install_github("Biogen-Inc/IDEAFilter")
 
 usethis::use_dev_package("rsconnect") 
 usethis::use_package("ggplot2")
@@ -163,7 +158,7 @@ usethis::use_test( "app" )
 # Documentation
 
 ## Vignette ---- not run
-usethis::use_vignette("IDEA")
+usethis::use_vignette("tidyCDISC")
 usethis::use_vignette("x00_Data_Upload")
 usethis::use_vignette("x02_Pop_Exp")
 usethis::use_vignette("x04_Filtering")

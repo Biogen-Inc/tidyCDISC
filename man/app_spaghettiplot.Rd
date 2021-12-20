@@ -2,7 +2,7 @@
 % Please edit documentation in R/mod_popExp_fct_spaghettiplot.R
 \name{app_spaghettiplot}
 \alias{app_spaghettiplot}
-\title{IDEA spaghetti plot}
+\title{tidyCDISC spaghetti plot}
 \usage{
 app_spaghettiplot(data, yvar, time, value = NULL)
 }

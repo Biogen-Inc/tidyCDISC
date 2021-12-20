@@ -2,7 +2,7 @@
 % Please edit documentation in R/mod_popExp_fct_km.R
 \name{app_km_curve}
 \alias{app_km_curve}
-\title{IDEA Kaplan-Meier Curve}
+\title{tidyCDISC Kaplan-Meier Curve}
 \usage{
 app_km_curve(
   data,

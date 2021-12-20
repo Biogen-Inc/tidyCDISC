@@ -229,7 +229,7 @@ The bulk of the server function, `boxPlot_srv` uses `updateSelectInput`s to popu
 Here is the code for `mod_popExp_fct_boxplot.R`
 
 ```{r, eval=FALSE}
-#' IDEA boxplot
+#' tidyCDISC boxplot
 #' 
 #' Create boxplot using either the selected response variable
 #' or if a PARAMCD is selected, then plot the corresponding value

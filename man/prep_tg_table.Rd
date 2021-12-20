@@ -13,7 +13,7 @@ prep_tg_table(
 )
 }
 \arguments{
-\item{data}{the tg_table dataframe, output from IDEA}
+\item{data}{the tg_table dataframe, output from tidyCDISC}
 
 \item{machine_readable}{a logical; should the table be prepared for optimal
 machine readability; that is, should cells with multiple values be pivoted

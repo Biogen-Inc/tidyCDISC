@@ -2,7 +2,7 @@
 % Please edit documentation in R/mod_popExp_fct_boxplot.R
 \name{app_boxplot}
 \alias{app_boxplot}
-\title{IDEA boxplot}
+\title{tidyCDISC boxplot}
 \usage{
 app_boxplot(data, yvar, group, value = NULL, points = FALSE)
 }

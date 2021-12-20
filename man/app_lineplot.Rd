@@ -2,7 +2,7 @@
 % Please edit documentation in R/mod_popExp_fct_line.R
 \name{app_lineplot}
 \alias{app_lineplot}
-\title{IDEA line plot}
+\title{tidyCDISC line plot}
 \usage{
 app_lineplot(
   data,

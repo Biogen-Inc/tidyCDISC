@@ -11,9 +11,10 @@ app_ui <- function(request) {
     golem_add_external_resources(),
     
     # List the first level UI elements here 
-    navbarPage(title = div(id="logo-id","IDEA", img(src="www/app_ICON.png", style="float:left; padding-right:3px; height:25px; width:30px")), 
+    navbarPage(title = div(id="logo-id","tidyCDISC",
+                           img(src="www/app_ICON.png", style="float:left; padding-right:3px; height:25px; width:30px")), 
                id = "navbarID",
-               windowTitle = "IDEA",
+               windowTitle = "tidyCDISC",
                tabPanel(
                  title = "Data",
                  mod_dataUpload_ui("dataUpload_ui_1")
@@ -33,10 +34,19 @@ app_ui <- function(request) {
                  mod_indvExp_ui("indvExp_ui_1")
                )
       ),
-  tags$script(
-    HTML("var header = $('.navbar > .container-fluid');
-                              header.append('<a href=\"mailto:example@email.com?subject=IDEA App Request\"><img src=\"www/email.svg\" style=\"width:2.5%;height:2.5%;float:right;padding-top:5px;\"></a>')")
-  ))
+    tags$script(HTML("function openGithub() { 
+            window.open( 
+              \"https://github.com/biogen-inc/tidyCDISC\", \"_blank\"); 
+        }")),
+    tags$script(
+      HTML("var header = $('.navbar > .container-fluid');
+                              header.append('<div id=\"github\" style=\"float:right; padding-top: 8px\"; onclick=\"openGithub()\"><img src=\"www/github.png\"></div>')"
+           ))
+  # ,tags$script(
+  #   HTML("var header = $('.navbar > .container-fluid');
+  #                             header.append('<a href=\"https://github.com/Biogen-Inc/tidyCDISC/issues/new\"><img src=\"www/email.svg\" style=\"width:2.5%;height:2.5%;float:right;padding-top:5px;\"></a>')")
+  # )
+  )
   }
 
 #' Add external Resources to the Application
@@ -66,7 +76,7 @@ golem_add_external_resources <- function(){
     favicon(),
     bundle_resources(
       path = app_sys('app/www'),
-      app_title = 'IDEA'
+      app_title = 'tidyCDISC'
     ),
     
     tags$script(HTML(htmljs)),
