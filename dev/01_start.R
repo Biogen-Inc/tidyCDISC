@@ -20,7 +20,7 @@ golem::fill_desc(
   author_first_name = "Maya", # Your First Name
   author_last_name = "Gans", # Your Last Name
   author_email = c("maya.gans@biogen.com"), # Your Email
-  repo_url = "https://cloudhub.corp.biogen.com/biometrics/SEER" # The URL of the GitHub Repo (optional) 
+  repo_url = "https://cloudhub.corp.biogen.com/biometrics/IDEA" # The URL of the GitHub Repo (optional) 
 )     
 
 ## Set {golem} options ---- ran
@@ -36,7 +36,7 @@ usethis::use_news_md( open = FALSE )
 
 ## Use git ---- ran
 usethis::use_git("AC Initial Commit")
-# $ git remote add origin https://cloudhub.corp.biogen.com/biometrics/SEER.git
+# $ git remote add origin https://cloudhub.corp.biogen.com/biometrics/IDEA.git
 
 ## Init Testing Infrastructure ---- ran
 ## Create a template for tests
