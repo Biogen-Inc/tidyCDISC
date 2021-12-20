@@ -1,14 +1,14 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# IDEA <a href='https://github.biogen.com/pages/biometrics/SEER/'><img src="man/figures/app_ICON.png" align="right" height="139"/></a>
+# tidyCDISC <a href='https://Biogen-Inc.github.io/tidyCDISC/'><img src="man/figures/hex-tidyCDISC.png" align="right" height="139"/></a>
 
-IDEA is a shiny app to easily create custom tables and figures from
+tidyCDISC is a shiny app to easily create custom tables and figures from
 ADaM-ish datasets.
 
 ## Purpose
 
-One of `IDEA`‘s goals is to develop clinical tables that abide to
+One of `tidyCDISC`‘s goals is to develop clinical tables that abide to
 Biogen’s table standards leveraged for submission filings, officially
 called
 “[STAN](https://biib.sharepoint.com/:w:/r/sites/ADSTCS/DS&G/_layouts/15/Doc.aspx?sourcedoc=%7B86cf7567-db46-4983-9a12-fdc63e77cf98%7D&action=view&wdAccPdf=0&wdparaid=688A3ED1&CID=B3A09B8B-6A35-4F43-A484-5E9EF88CD5FA&wdLOR=c8053EEAB-66ED-4CA0-9B71-331B73267CD8)”
@@ -36,18 +36,19 @@ levels of programming experience. For example:
 
 <img src="man/figures/pct_95_cropped.jpg" width="30%" style="float:right; padding:10px" />
 
--   A **statistical programmer** can use IDEA to do preliminary QC
+-   A **statistical programmer** can use tidyCDISC to do preliminary QC
     programming before writing the code in a validated process. Users
-    who’ve leverage `IDEA` for routine trial analysis tend to report
-    **significant time savings, about 95%**, when performing programming
-    duties.
+    who’ve leverage `tidyCDISC` for routine trial analysis tend to
+    report **significant time savings, about 95%**, when performing
+    programming duties.
 
 </div>
 
 For a high-level overview of the app with a 10-minute demo, please
 review the following conference presentation on `tidyCDISC`, which is
-the open-sourced version of `IDEA.` Internal to Biogen, the `IDEA`
-application has all the same features as `tidyCDISC`, plus more!
+the open-sourced version of `tidyCDISC.` Internal to Biogen, the
+`tidyCDISC` application has all the same features as `tidyCDISC`, plus
+more!
 
 <br>
 
@@ -60,66 +61,67 @@ R/Medicine](man/figures/tidyCDISC_RMedicine_thumbnail.png)](https://youtu.be/QeH
 
 ## Scope
 
-As previously mentioned, IDEA can only accept datasets that conform to
-CDISC ADaM standards with some minor flexibility (see [upload
-requirements](https://github.biogen.com/pages/biometrics/SEER/articles/x00_Data_Upload.html)
+As previously mentioned, tidyCDISC can only accept datasets that conform
+to CDISC ADaM standards with some minor flexibility (see [upload
+requirements](https://Biogen-Inc.github.io/tidyCDISC/articles/x00_Data_Upload.html)
 for more details. At this time, the app only accepts sas7bdat files.
 
-If you’re looking to regularly generate R code for tables, the IDEA app
-has a built-in export feature that downloads an R script that reproduces
-any analysis performed in the app. However, if you already have
-experience with R programming, we’d highly recommend learning Biogen’s
-(internal)
+If you’re looking to regularly generate R code for tables, the tidyCDISC
+app has a built-in export feature that downloads an R script that
+reproduces any analysis performed in the app. However, if you already
+have experience with R programming, we’d highly recommend learning
+Biogen’s (internal)
 [`stanly`](https://github.biogen.com/pages/biometrics/stanly/) package
-to expand on the R code that IDEA yields for STAN-complaint tables. To
-summarize, the `stanly` package is a suite of functions designed for
+to expand on the R code that tidyCDISC yields for STAN-complaint tables.
+To summarize, the `stanly` package is a suite of functions designed for
 Biogen SAS programmers capable of producing 50+ STAN outputs.
 
 ## Usage
 
-`IDEA` is primarily a web application, so no installation is necessary.
-Simply access Biogen’s network and start using the app here:
-[IDEA](https://awshpc22133.abc.amazon.biogen.com/IDEA/). Please review
-the “[Get
-Started](https://github.biogen.com/pages/biometrics/IDEA/articles/IDEA.html)”
+`tidyCDISC` is primarily a web application, so no installation is
+necessary. Simply access Biogen’s network and start using the app here:
+[tidyCDISC](https://awshpc22133.abc.amazon.biogen.com/tidyCDISC/).
+Please review the “[Get
+Started](https://Biogen-Inc.github.io/tidyCDISC/articles/tidyCDISC.html)”
 guide to follow an example use case using the application. However, to
-optimize one’s use of `IDEA`, we highly recommend reading the following
-articles that take a deeper look into the topics presented in the
-getting started guide:
+optimize one’s use of `tidyCDISC`, we highly recommend reading the
+following articles that take a deeper look into the topics presented in
+the getting started guide:
 
 -   [00 Data
-    Upload](https://github.biogen.com/pages/biometrics/SEER/articles/x00_Data_Upload.html)
+    Upload](https://Biogen-Inc.github.io/tidyCDISC/articles/x00_Data_Upload.html)
 
 -   [01 Table
-    Generator](https://github.biogen.com/pages/biometrics/SEER/articles/x01_Table_Generator.html)
+    Generator](https://Biogen-Inc.github.io/tidyCDISC/articles/x01_Table_Generator.html)
 
 -   [02 Population
-    Explorer](https://github.biogen.com/pages/biometrics/SEER/articles/x02_Pop_Exp.html)
+    Explorer](https://Biogen-Inc.github.io/tidyCDISC/articles/x02_Pop_Exp.html)
 
 -   [03 Individual
-    Explorer](https://github.biogen.com/pages/biometrics/SEER/articles/x03_Indv_Expl.html)
+    Explorer](https://Biogen-Inc.github.io/tidyCDISC/articles/x03_Indv_Expl.html)
 
 -   [04
-    Filtering](https://github.biogen.com/pages/biometrics/SEER/articles/x04_Filtering.html)
+    Filtering](https://Biogen-Inc.github.io/tidyCDISC/articles/x04_Filtering.html)
 
-We’re confident the `IDEA` application can save you time. If there is
-some use case that `IDEA` can’t solve, we want to know about it. Please
-send the
-[developers](mailto:adshelp@digicomm.jira.com?subject=IDEA%20App%20Question/%20Request)
-an email with your question or request!
+We’re confident the `tidyCDISC` application can save you time. If there
+is some use case that `tidyCDISC` can’t solve, we want to know about it.
+Please send the
+[developers](https://github.com/Biogen-Inc/tidyCDISC/issues/new) a
+message with your question or request!
 
-## Install `IDEA` R package
+## Install `tidyCDISC` R package
 
-`IDEA` is primarily an application, so no installation is necessary.
-Simply access Biogen’s network and start using the app here:
-[IDEA](https://awshpc22133.abc.amazon.biogen.com/IDEA/). However, if you
-choose to export and run R code from the Table Generator, you will need
-the `IDEA` package installed on your machine locally.
+`tidyCDISC` is primarily an application, so no installation is
+necessary. Simply access Biogen’s network and start using the app here:
+[tidyCDISC](https://awshpc22133.abc.amazon.biogen.com/tidyCDISC/).
+However, if you choose to export and run R code from the Table
+Generator, you will need the `tidyCDISC` package installed on your
+machine locally.
 
 The good news is that you don’t need GitHub access in order to install
-IDEA. You just need to be an HPC user to access Biogen’s internal
+tidyCDISC. You just need to be an HPC user to access Biogen’s internal
 [Rstudio Package
-Manager](http://cran.rstudio.com/client/#/repos/5/packages/IDEA)
+Manager](http://cran.rstudio.com/client/#/repos/5/packages/tidyCDISC)
 (RSPM) where the package is hosted. If you cannot access RSPM from the
 above link, then you’ll need to submit a simple BAM request as detailed
 below. If you can access the RSPM link, you can skip the access request
@@ -140,7 +142,7 @@ department (CompChem, CompBio, SciComp, Proteomics, etc.). You will
 receive an email when your account is provisioned, typically within one
 business day.
 
-#### Install IDEA from RSPM
+#### Install tidyCDISC from RSPM
 
 Once you have confirmed access to RSPM, then execute the following code
 to install the package to your local machine:
@@ -152,12 +154,12 @@ options(repos = c(
   ghe = "https://cran.rstudio.com")
 )
 options('repos') # to confirm "ghe" was added
-install.packages("IDEA")
+install.packages("tidyCDISC")
 ```
 
-Now you can access all the exported function from `IDEA` that help users
-reproduce analysis performed in the app. Using the dev/run\_dev.R file,
-you can even run the application locally:
+Now you can access all the exported function from `tidyCDISC` that help
+users reproduce analysis performed in the app. Using the dev/run\_dev.R
+file, you can even run the application locally:
 
 ``` r
 # Set options here

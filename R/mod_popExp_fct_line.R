@@ -1,4 +1,4 @@
-#' IDEA line plot
+#' tidyCDISC line plot
 #' 
 #' Create a line plot with a time variable as the x-axis
 #' and using either the selected response variable

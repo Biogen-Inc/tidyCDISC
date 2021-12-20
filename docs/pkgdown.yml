@@ -3,7 +3,7 @@ pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
   developer_guide: developer_guide.html
-  IDEA: IDEA.html
+  tidyCDISC: tidyCDISC.html
   x00_Data_Upload: x00_Data_Upload.html
   x01_Table_Generator: x01_Table_Generator.html
   x02_Pop_Exp: x02_Pop_Exp.html

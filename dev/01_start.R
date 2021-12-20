@@ -14,13 +14,13 @@
 ## Fill the DESCRIPTION ---- ran
 ## Add meta data about your application
 golem::fill_desc(
-  pkg_name = "IDEA", # The Name of the package containing the App 
-  pkg_title = "IDEA: Quick Exploratory Data Analyses on ADaM-ish Datasets", # The Title of the package containing the App 
-  pkg_description = "The IDEA application relies on sas7bdat files in the ADaM-ish data structure to provide users a quick exploratory dive into common visualizations without writing a sinlge line of code. Prominent modules/ features of the application are the Table Generator, Population Explorer, and the Individual Explorer. The Table Generator allows users to drag and drop variables and desired statistics (frequencies, means, Anova, t-test, and other summary statistics) into bins that automagically create stunning tables with validated information. The Population Explorer offers various plots to visualize general trends in the population from various vantage points. Plot modules currently include scatter plot, spaghetti plot, box plot, historgram, means plot, and bar plot. Each plot type allows the user to plot uploaded variables against one another, and dissect the population by filtering out certain subjects. Last, the Individual Explorer establishes a cohesive patient narrative, allowing the user to interact with patient metrics (params) by visit or plotting important patient events on a timeline. All modules allow for concise filtering & downloading bulk outputs into html or pdf formats to save for later.", 
+  pkg_name = "tidyCDISC", # The Name of the package containing the App 
+  pkg_title = "tidyCDISC: Quick Exploratory Data Analyses on ADaM-ish Datasets", # The Title of the package containing the App 
+  pkg_description = "The tidyCDISC application relies on sas7bdat files in the ADaM-ish data structure to provide users a quick exploratory dive into common visualizations without writing a sinlge line of code. Prominent modules/ features of the application are the Table Generator, Population Explorer, and the Individual Explorer. The Table Generator allows users to drag and drop variables and desired statistics (frequencies, means, Anova, t-test, and other summary statistics) into bins that automagically create stunning tables with validated information. The Population Explorer offers various plots to visualize general trends in the population from various vantage points. Plot modules currently include scatter plot, spaghetti plot, box plot, historgram, means plot, and bar plot. Each plot type allows the user to plot uploaded variables against one another, and dissect the population by filtering out certain subjects. Last, the Individual Explorer establishes a cohesive patient narrative, allowing the user to interact with patient metrics (params) by visit or plotting important patient events on a timeline. All modules allow for concise filtering & downloading bulk outputs into html or pdf formats to save for later.", 
   author_first_name = "Maya", # Your First Name
   author_last_name = "Gans", # Your Last Name
   author_email = c("maya.gans@biogen.com"), # Your Email
-  repo_url = "https://cloudhub.corp.biogen.com/biometrics/IDEA" # The URL of the GitHub Repo (optional) 
+  repo_url = "https://cloudhub.corp.biogen.com/biometrics/tidyCDISC" # The URL of the GitHub Repo (optional) 
 )     
 
 ## Set {golem} options ---- ran
@@ -36,7 +36,7 @@ usethis::use_news_md( open = FALSE )
 
 ## Use git ---- ran
 usethis::use_git("AC Initial Commit")
-# $ git remote add origin https://cloudhub.corp.biogen.com/biometrics/IDEA.git
+# $ git remote add origin https://cloudhub.corp.biogen.com/biometrics/tidyCDISC.git
 
 ## Init Testing Infrastructure ---- ran
 ## Create a template for tests
@@ -55,8 +55,8 @@ golem::use_favicon("inst/app/www/app_FAVICON.ico") # path = "path/to/ico". Can b
 # Favicon is automatically linked in app_ui via `golem_add_external_resources()`
 
 ## Add helper functions ---- ran. Go checkout new files
-golem::use_utils_ui() # File created at ~IDEA/R/golem_utils_ui.R
-golem::use_utils_server() # IDEA/R/golem_utils_server.R
+golem::use_utils_ui() # File created at ~tidyCDISC/R/golem_utils_ui.R
+golem::use_utils_server() # tidyCDISC/R/golem_utils_server.R
 
 # You're now set! ----
 

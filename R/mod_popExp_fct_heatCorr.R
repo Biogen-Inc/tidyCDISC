@@ -1,4 +1,4 @@
-#' IDEA heatmap plot of endpoint correlations
+#' tidyCDISC heatmap plot of endpoint correlations
 #' 
 #' Create a line plot with a time variable as the x-axis
 #' and using either the selected response variable

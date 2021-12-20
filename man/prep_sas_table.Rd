@@ -19,7 +19,7 @@ prep_sas_table(
 \arguments{
 \item{sas_data}{the sas table dataframe, output from stat programmer}
 
-\item{tg_data}{the table generator table dataframe, output from IDEA}
+\item{tg_data}{the table generator table dataframe, output from tidyCDISC}
 
 \item{machine_readable}{a logical; should the table be prepared for optimal
 machine readability; that is, should cells with multiple values be pivoted

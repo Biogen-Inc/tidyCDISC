@@ -301,7 +301,7 @@ mod_popExp_server <- function(input, output, session, datafile) {
                   , lengthMenu = list(c(20, 50, 100, -1),c('20', '50', '100', "All"))
                   , buttons = list(list(
                     extend = "excel", 
-                    filename = paste("IDEA data for", input$plot_type #p_filename_base()
+                    filename = paste("tidyCDISC data for", input$plot_type #p_filename_base()
                     # ,str_replace_all(str_replace(Sys.time(), " ", "_"),":", "-"), sep = "_")
                     )
                   ))
