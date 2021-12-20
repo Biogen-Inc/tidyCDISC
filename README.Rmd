@@ -15,7 +15,7 @@ knitr::opts_chunk$set(
 # remotes::install_github("IDEA")
 ```
 
-# IDEA <a href='https://github.biogen.com/pages/biometrics/SEER/'><img src="man/figures/app_ICON.png" align="right" height="139"/></a>
+# IDEA <a href='https://github.biogen.com/pages/biometrics/IDEA/'><img src="man/figures/app_ICON.png" align="right" height="139"/></a>
 
 IDEA is a shiny app to easily create custom tables and figures from ADaM-ish datasets.
 
@@ -56,7 +56,7 @@ For a high-level overview of the app with a 10-minute demo, please review the fo
 
 ## Scope
 
-As previously mentioned, IDEA can only accept datasets that conform to CDISC ADaM standards with some minor flexibility (see [upload requirements](https://github.biogen.com/pages/biometrics/SEER/articles/x00_Data_Upload.html) for more details. At this time, the app only accepts sas7bdat files.
+As previously mentioned, IDEA can only accept datasets that conform to CDISC ADaM standards with some minor flexibility (see [upload requirements](https://github.biogen.com/pages/biometrics/IDEA/articles/x00_Data_Upload.html) for more details. At this time, the app only accepts sas7bdat files.
 
 If you're looking to regularly generate R code for tables, the IDEA app has a built-in export feature that downloads an R script that reproduces any analysis performed in the app. However, if you already have experience with R programming, we'd highly recommend learning Biogen's (internal) [`stanly`](https://github.biogen.com/pages/biometrics/stanly/) package to expand on the R code that IDEA yields for STAN-complaint tables. To summarize, the `stanly` package is a suite of functions designed for Biogen SAS programmers capable of producing 50+ STAN outputs.
 
@@ -65,15 +65,15 @@ If you're looking to regularly generate R code for tables, the IDEA app has a bu
 
 `IDEA` is primarily a web application, so no installation is necessary. Simply access Biogen's network and start using the app here: [IDEA](https://awshpc22133.abc.amazon.biogen.com/IDEA/). Please review the "[Get Started](https://github.biogen.com/pages/biometrics/IDEA/articles/IDEA.html)" guide to follow an example use case using the application. However, to optimize one's use of `IDEA`, we highly recommend reading the following articles that take a deeper look into the topics presented in the getting started guide:
 
-- [00 Data Upload](https://github.biogen.com/pages/biometrics/SEER/articles/x00_Data_Upload.html)
+- [00 Data Upload](https://github.biogen.com/pages/biometrics/IDEA/articles/x00_Data_Upload.html)
 
-- [01 Table Generator](https://github.biogen.com/pages/biometrics/SEER/articles/x01_Table_Generator.html)
+- [01 Table Generator](https://github.biogen.com/pages/biometrics/IDEA/articles/x01_Table_Generator.html)
 
-- [02 Population Explorer](https://github.biogen.com/pages/biometrics/SEER/articles/x02_Pop_Exp.html)
+- [02 Population Explorer](https://github.biogen.com/pages/biometrics/IDEA/articles/x02_Pop_Exp.html)
 
-- [03 Individual Explorer](https://github.biogen.com/pages/biometrics/SEER/articles/x03_Indv_Expl.html)
+- [03 Individual Explorer](https://github.biogen.com/pages/biometrics/IDEA/articles/x03_Indv_Expl.html)
 
-- [04 Filtering](https://github.biogen.com/pages/biometrics/SEER/articles/x04_Filtering.html)
+- [04 Filtering](https://github.biogen.com/pages/biometrics/IDEA/articles/x04_Filtering.html)
 
 
 We're confident the `IDEA` application can save you time. If there is some use case that `IDEA` can't solve, we want to know about it. Please send the [developers](mailto:adshelp@digicomm.jira.com?subject=IDEA App Question/ Request) an email with your question or request!
