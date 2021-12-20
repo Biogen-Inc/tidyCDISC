@@ -1,4 +1,4 @@
-#' IDEA spaghetti plot
+#' tidyCDISC spaghetti plot
 #' 
 #' Create a spaghetti plot with a time dependent variable as the x-axis
 #' and using either the selected response variable

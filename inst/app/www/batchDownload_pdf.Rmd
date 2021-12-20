@@ -1,5 +1,5 @@
 ---
-title: "IDEA Batch Download"
+title: "tidyCDISC Batch Download"
 output:
   pdf_document:
     toc: true

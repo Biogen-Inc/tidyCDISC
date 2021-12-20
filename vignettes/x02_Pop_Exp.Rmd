@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-This tutorial will walk through how to leverage the `IDEA` app's Population Explorer tab. This module exists to glean visual insights on patient populations via a diverse mix of chart types, each uniquely designed to drill down deep into the data. The Population Explorer tab will interface with all data types: `ADSL`, `BDS`, `OCCDS`, and `TTE`. This tutorial will use 5 CDISC Pilot data files: An `ADSL`, `ADVS`, `ADLBC`, `ADAE`, and the `ADTTE`. 
+This tutorial will walk through how to leverage the `tidyCDISC` app's Population Explorer tab. This module exists to glean visual insights on patient populations via a diverse mix of chart types, each uniquely designed to drill down deep into the data. The Population Explorer tab will interface with all data types: `ADSL`, `BDS`, `OCCDS`, and `TTE`. This tutorial will use 5 CDISC Pilot data files: An `ADSL`, `ADVS`, `ADLBC`, `ADAE`, and the `ADTTE`. 
 
 <br>
 
@@ -56,7 +56,7 @@ Together, we'll take a look at each of element of the Population Explorer, inclu
 
 <br>
 
-Below are the currently supported chart types, which can be expanded to include any additional charts. If you have an idea for a useful chart typically used for trial analysis, just send the [developers](mailto:example@email.com?subject=IDEA App Pop Ex Request) an email with your request!
+Below are the currently supported chart types, which can be expanded to include any additional charts. If you have an idea for a useful chart typically used for trial analysis, just send the [developers](https://github.com/Biogen-Inc/tidyCDISC/issues/new) a message with your request!
 
 
 <br>
@@ -384,7 +384,7 @@ Any time-to-event (`TTE`) analysis will include an obligatory Kaplan-Meier curve
 
 <br>
 
-`IDEA` knows which data sources contain `TTE` data based on the presence of the CDISC required `CNSR` variable. The `CNSR` variable must be either a 0 or 1. Zero indicates the patient's survival status is unknown after time period X. That is, we only have **some** information about the patient's time-to-event survival up to a certain point, X, but after that time, their survival is unknown. Instead of just throwing away that data, it's valuable to know that they made it to at least time X. That time point data is retained and their last known X value is marked with a red "+" in the plot below.
+`tidyCDISC` knows which data sources contain `TTE` data based on the presence of the CDISC required `CNSR` variable. The `CNSR` variable must be either a 0 or 1. Zero indicates the patient's survival status is unknown after time period X. That is, we only have **some** information about the patient's time-to-event survival up to a certain point, X, but after that time, their survival is unknown. Instead of just throwing away that data, it's valuable to know that they made it to at least time X. That time point data is retained and their last known X value is marked with a red "+" in the plot below.
 
 <br>
 
@@ -426,7 +426,7 @@ knitr::include_graphics("figures/popExp/km grouped.PNG")
 
 <br>
 
-Like other `IDEA` tabs, the "Filter Data" widget manipulates the data before it is processed on the tab, in this case: plotted. Filtering will not be discussed in detail guide so you're highly encouraged to view the article called [04 Filtering](https://biogen-inc.github.io/tidyCDISC/articles/x04_Filtering.html) for a complete filtering tutorial. However, we will address a few things that are unique about filtering in the Population Explorer. By clicking the drop down arrow, the filtering widget expands to reveal the following controls:
+Like other `tidyCDISC` tabs, the "Filter Data" widget manipulates the data before it is processed on the tab, in this case: plotted. Filtering will not be discussed in detail guide so you're highly encouraged to view the article called [04 Filtering](https://Biogen-Inc.github.io/tidyCDISC/articles/x04_Filtering.html) for a complete filtering tutorial. However, we will address a few things that are unique about filtering in the Population Explorer. By clicking the drop down arrow, the filtering widget expands to reveal the following controls:
 
 
 <br>
@@ -470,7 +470,7 @@ knitr::include_graphics("figures/tableGen/TG need help.PNG")
 ```
 
 
-When clicked, they launch a real-time guide that walks the user through the major components of the currently visible screen/ tab, providing context and suggested workflow. However, if the in-app guide doesn't address your needs, consult the online documentation (that you're reading now) for the most thorough user guide. If all else fails, send the [developers](mailto:example@email.com?subject=IDEA App Question/ Request) an email with your question or request!
+When clicked, they launch a real-time guide that walks the user through the major components of the currently visible screen/ tab, providing context and suggested workflow. However, if the in-app guide doesn't address your needs, consult the online documentation (that you're reading now) for the most thorough user guide. If all else fails, send the [developers](https://github.com/Biogen-Inc/tidyCDISC/issues/new) an message with your question or request!
 
 <br> 
 

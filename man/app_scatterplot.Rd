@@ -2,7 +2,7 @@
 % Please edit documentation in R/mod_popExp_fct_scatterplot.R
 \name{app_scatterplot}
 \alias{app_scatterplot}
-\title{IDEA scatterplot}
+\title{tidyCDISC scatterplot}
 \usage{
 app_scatterplot(
   data,

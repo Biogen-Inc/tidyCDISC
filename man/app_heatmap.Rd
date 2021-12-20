@@ -2,7 +2,7 @@
 % Please edit documentation in R/mod_popExp_fct_heatCorr.R
 \name{app_heatmap}
 \alias{app_heatmap}
-\title{IDEA heatmap plot of endpoint correlations}
+\title{tidyCDISC heatmap plot of endpoint correlations}
 \usage{
 app_heatmap(
   data,

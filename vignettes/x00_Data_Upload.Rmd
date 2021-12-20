@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-Rightfully so, the **Data** tab is the initial landing page for the `IDEA` app. It's a place where you can find, upload, and view your data before proceeding to the analysis tabs, which are disabled until a `ADSL` sas7bdat file is uploaded.
+Rightfully so, the **Data** tab is the initial landing page for the `tidyCDISC` app. It's a place where you can find, upload, and view your data before proceeding to the analysis tabs, which are disabled until a `ADSL` sas7bdat file is uploaded.
 
 ```{r, echo=FALSE, out.width="95%", fig.align='center'}
 knitr::include_graphics("figures/upldDat/landing page.PNG")
@@ -26,7 +26,7 @@ knitr::include_graphics("figures/upldDat/landing page.PNG")
 
 <br>
 
-This application was designed for quick analysis of ADaM-ish data, so since preparing sas7bdat files are apart of that process, `IDEA` only accepts SAS data sets for upload. Thus, iInside the window titled "Data Upload", you'll notice the following text: "`ADSL` file is mandatory and BDS/ OCCDS files are optional. Upload sas7bdat files." 
+This application was designed for quick analysis of ADaM-ish data, so since preparing sas7bdat files are apart of that process, `tidyCDISC` only accepts SAS data sets for upload. Thus, iInside the window titled "Data Upload", you'll notice the following text: "`ADSL` file is mandatory and BDS/ OCCDS files are optional. Upload sas7bdat files." 
 
 <br>
 
@@ -36,7 +36,7 @@ knitr::include_graphics("figures/upldDat/browse.PNG")
 
 <br>
 
-With an `ADSL` alone, you can explore all the tabs of this application, although, uploading more data with other data types is encouraged for optimized exploration. The `IDEA` application was designed to analyze ADaM data of the following types, each having a unique purpose in the application:
+With an `ADSL` alone, you can explore all the tabs of this application, although, uploading more data with other data types is encouraged for optimized exploration. The `tidyCDISC` application was designed to analyze ADaM data of the following types, each having a unique purpose in the application:
 
 - `ADSL`: demographic and trial info - one row per subject
 - `BDS`: or "basic data structure" contains variables such as `PARAMCD`, `AVAL`, and `AVISIT` or some other visit variable that reports on metric values over time for each patient.
@@ -82,13 +82,13 @@ knitr::include_graphics("figures/upldDat/error.PNG")
 
 <br>
 
-If you are having trouble uploading your data, and you think you have significant grounds to alter these upload rules, please [contact us](mailto:example@email.com?subject=IDEA App Question/ Request) with your request.
+If you are having trouble uploading your data, and you think you have significant grounds to alter these upload rules, please [contact us](https://github.com/Biogen-Inc/tidyCDISC/issues/new) with your request.
 
 <br>
 
 ## Use CDISC Pilot Data
 
-Press this button if you are not interested in using `IDEA` with your study data yet, but  want to explore all the app's features. Upon clicking, you'll see five data sets are loaded: an `ADSL`, `ADVS`, `ADAE`, `ADLBC`, and `ADTTE`. All these data sources came from the PHUSE [Test Data Factory's public GitHub](https://github.com/phuse-org/TestDataFactory/blob/master/Updated/TDF_ADaM/). Note that some adjustments were made to the raw data in order to best suit the needs of the application. That is, in some cases, variables were created and imputed with values that were applicable for the trial. For the sake of data security, we'll use this data thoroughly throughout this guide.
+Press this button if you are not interested in using `tidyCDISC` with your study data yet, but  want to explore all the app's features. Upon clicking, you'll see five data sets are loaded: an `ADSL`, `ADVS`, `ADAE`, `ADLBC`, and `ADTTE`. All these data sources came from the PHUSE [Test Data Factory's public GitHub](https://github.com/phuse-org/TestDataFactory/blob/master/Updated/TDF_ADaM/). Note that some adjustments were made to the raw data in order to best suit the needs of the application. That is, in some cases, variables were created and imputed with values that were applicable for the trial. For the sake of data security, we'll use this data thoroughly throughout this guide.
 
 <br>
 
@@ -102,7 +102,7 @@ knitr::include_graphics("figures/upldDat/cdisc pilot button.PNG")
 
 <br>
 
-When not using the CDISC pilot data, select "Browse" to navigate through your computer's file system and locate your study's data on the computer. If you normally **do not** have permissions to a certain folder, you will still **not** have permission to that folder while using `IDEA`. You may select one file at a time or multiple files at once. Just note (as mentioned previously) that an `ADSL` is required any analysis, so make sure an one is loaded from your study. Since the application is designed for ADaM-ish data, only sas7bdat files are accepted.
+When not using the CDISC pilot data, select "Browse" to navigate through your computer's file system and locate your study's data on the computer. If you normally **do not** have permissions to a certain folder, you will still **not** have permission to that folder while using `tidyCDISC`. You may select one file at a time or multiple files at once. Just note (as mentioned previously) that an `ADSL` is required any analysis, so make sure an one is loaded from your study. Since the application is designed for ADaM-ish data, only sas7bdat files are accepted.
 
 <br>
 
@@ -133,11 +133,11 @@ knitr::include_graphics("figures/upldDat/use_and_browse_pilot_data.gif")
 
 Specifically, try out the... 
 
-- [Table Generator](https://biogen-inc.github.io/tidyCDISC/articles/x01_Table_Generator.html) to quickly and easily create submission compliant tables and listings
+- [Table Generator](https://Biogen-Inc.github.io/tidyCDISC/articles/x01_Table_Generator.html) to quickly and easily create submission compliant tables and listings
 
-- [Population Explorer](https://biogen-inc.github.io/tidyCDISC/articles/x02_Pop_Exp.html) to plot trends in your treatment groups over time (among other things)
+- [Population Explorer](https://Biogen-Inc.github.io/tidyCDISC/articles/x02_Pop_Exp.html) to plot trends in your treatment groups over time (among other things)
 
-- [Individual Explorer](https://biogen-inc.github.io/tidyCDISC/articles/x03_Indv_Expl.html) to learn more about outlier patients or patients with certain adverse events, etc.
+- [Individual Explorer](https://Biogen-Inc.github.io/tidyCDISC/articles/x03_Indv_Expl.html) to learn more about outlier patients or patients with certain adverse events, etc.
 
 <br>
 
