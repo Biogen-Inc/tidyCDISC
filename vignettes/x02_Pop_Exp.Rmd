@@ -391,7 +391,7 @@ knitr::include_graphics("figures/popExp/km grouped.PNG")
 
 ## Filtering
 
-Like other `IDEA` tabs, the "Filter Data" widget manipulates the data before it is processed on the tab, in this case: plotted. Filtering will not be discussed in detail guide so you're highly encouraged to view the article called [04 Filtering](https://github.biogen.com/pages/biometrics/SEER/articles/x04_Filtering.html) for a complete filtering tutorial. However, we will address a few things that are unique about filtering in the Population Explorer. By clicking the drop down arrow, the filtering widget expands to reveal the following controls:
+Like other `IDEA` tabs, the "Filter Data" widget manipulates the data before it is processed on the tab, in this case: plotted. Filtering will not be discussed in detail guide so you're highly encouraged to view the article called [04 Filtering](https://biogen-inc.github.io/tidyCDISC/articles/x04_Filtering.html) for a complete filtering tutorial. However, we will address a few things that are unique about filtering in the Population Explorer. By clicking the drop down arrow, the filtering widget expands to reveal the following controls:
 
 
 <br>
