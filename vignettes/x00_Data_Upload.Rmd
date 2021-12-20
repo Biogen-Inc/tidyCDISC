@@ -129,6 +129,8 @@ The data preview exists to give users a perfunctory view of their data to make s
 knitr::include_graphics("figures/upldDat/use_and_browse_pilot_data.gif")
 ```
 
+<br>
+
 Specifically, try out the... 
 
 - [Table Generator](https://biogen-inc.github.io/tidyCDISC/articles/x01_Table_Generator.html) to quickly and easily create submission compliant tables and listings

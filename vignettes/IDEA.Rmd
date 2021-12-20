@@ -129,7 +129,7 @@ knitr::include_graphics("figures/tableGen/TG STAN dropdown.PNG")
 
 <br>
 
-When data needed to produce certain outputs aren't present, the list of available tables in this drop down will change. For example, if an `ADAE` is not uploaded, then all the AE tables will disappear from the above list.
+When data needed to produce certain STAN outputs aren't present, the list of available tables in this drop down will change. For example, if an `ADAE` is not uploaded, then all the AE tables will disappear from the above list.
 
 When one of these tables is selected, like disposition (Accounting of Subjects) below, the table generator simply compiles the needed variable and stat blocks in the correct order to generate the desired output, as seen below. Notice how the a population filter was set automatically, in this case to `FASFL` = 'Y' and the grouping variable set to `TRT01P`. Within seconds, the user changed the default table title and downloaded the R script needed to reproduce the table outside the app:
 

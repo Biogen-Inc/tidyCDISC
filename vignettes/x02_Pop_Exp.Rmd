@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-This tutorial will walk through how to leverage the `IDEA` app's Population Explorer tab. It exists to glean insights about different patient populations participating in the trial. The Population Explorer tab will interface with all data types: `ADSL`, `BDS`, `OCCDS`, and `TTE`. This tutorial will use 5 CDISC Pilot data files: An `ADSL`, `ADVS`, `ADLBC`, `ADAE`, and the `ADTTE`. 
+This tutorial will walk through how to leverage the `IDEA` app's Population Explorer tab. This module exists to glean visual insights on patient populations via a diverse mix of chart types, each uniquely designed to drill down deep into the data. The Population Explorer tab will interface with all data types: `ADSL`, `BDS`, `OCCDS`, and `TTE`. This tutorial will use 5 CDISC Pilot data files: An `ADSL`, `ADVS`, `ADLBC`, `ADAE`, and the `ADTTE`. 
 
 <br>
 
