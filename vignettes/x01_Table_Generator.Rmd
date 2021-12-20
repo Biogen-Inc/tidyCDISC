@@ -7,7 +7,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-This tutorial will walk through how to leverage the `IDEA` app's Table Generator tab. Let's walk through creating simple summary statistics, among other things. If you haven't already, import your studies data. For this tutorial, we'll be using the five CDISC Pilot data files: An `ADSL`, `ADVS`, `ADLBC`, `ADAE`, and the `ADTTE`. 
+This tutorial will walk through how to leverage the `tidyCDISC` app's Table Generator tab. Let's walk through creating simple summary statistics, among other things. If you haven't already, import your studies data. For this tutorial, we'll be using the five CDISC Pilot data files: An `ADSL`, `ADVS`, `ADLBC`, `ADAE`, and the `ADTTE`. 
 
 ## Import Data
 
@@ -227,7 +227,7 @@ knitr::include_graphics("figures/tableGen/TG Nested Freq2.PNG")
 
 <br>
 
-There is an entire guide called "[04 Filtering](https://github.biogen.com/pages/biometrics/IDEA/articles/x04_Filtering.html)" dedicated to filtering in the `IDEA` application. Please reference that article as the ultimate filtering resource, but just note that when filtering occurs on the Table Generator tab, those filters permeate **all data sets** on the tab and will be reflected in the table output as seen below. Also note that some mandatory filters will be applied automatically when 'standard analysis' tables are selected so be aware of the filtering caption displayed beneath the table title (red brackets added for attention). Ultimately, it is the users responsibility to make sure the correct data filters are applied for their table output!
+There is an entire guide called "[04 Filtering](https://Biogen-Inc.github.io/tidyCDISC/articles/x04_Filtering.html)" dedicated to filtering in the `tidyCDISC` application. Please reference that article as the ultimate filtering resource, but just note that when filtering occurs on the Table Generator tab, those filters permeate **all data sets** on the tab and will be reflected in the table output as seen below. Also note that some mandatory filters will be applied automatically when 'standard analysis' tables are selected so be aware of the filtering caption displayed beneath the table title (red brackets added for attention). Ultimately, it is the users responsibility to make sure the correct data filters are applied for their table output!
 
 <br> 
 
@@ -275,7 +275,7 @@ knitr::include_graphics("figures/tableGen/TG STAN TAB41.PNG")
 
 <br>
 
-As displayed in an earlier demo, you can export table output to a CSV or HTML file. In a future release of `IDEA`, you'll be able to prepare PDF and RTF versions of your output. In the meantime, you can create a PDF using a temporary work-around: first export as HTML, then download page as a PDF.
+As displayed in an earlier demo, you can export table output to a CSV or HTML file. In a future release of `tidyCDISC`, you'll be able to prepare PDF and RTF versions of your output. In the meantime, you can create a PDF using a temporary work-around: first export as HTML, then download page as a PDF.
 
 <br> 
 
@@ -301,7 +301,7 @@ knitr::include_graphics("figures/tableGen/TG reprpoduce button.PNG")
 
 <br> 
 
-Upon doing so, the R script will download to your browser and when opened in R Studio, should look something like the below image. The R script will help you install any packages needed for the analysis, including the `IDEA` package. If you used the CDISC Pilot data, no code modification is needed to reproduce the output since that data is pre-loaded into the `IDEA` package. However, if you uploaded your data from a different source, you'll need to enter the file path to your study directory's data as a string, as seen on line 21. Note: `'path/to/study/directory/'` is just a placeholder until you enter your own string. In a future release of `IDEA`, we hope to automatically fill this field for you, but security protocols prevent `IDEA` from doing so at this time. 
+Upon doing so, the R script will download to your browser and when opened in R Studio, should look something like the below image. The R script will help you install any packages needed for the analysis, including the `tidyCDISC` package. If you used the CDISC Pilot data, no code modification is needed to reproduce the output since that data is pre-loaded into the `tidyCDISC` package. However, if you uploaded your data from a different source, you'll need to enter the file path to your study directory's data as a string, as seen on line 21. Note: `'path/to/study/directory/'` is just a placeholder until you enter your own string. In a future release of `tidyCDISC`, we hope to automatically fill this field for you, but security protocols prevent `tidyCDISC` from doing so at this time. 
 
 
 <br> 
@@ -324,7 +324,7 @@ knitr::include_graphics("figures/tableGen/TG need help.PNG")
 ```
 
 
-When clicked, they launch a real-time guide that walks the user through the major components of the currently visible screen/ tab, providing context and suggested workflow. However, if the in-app guide doesn't address your needs, consult the online documentation (that you're reading now) for the most thorough user guide. If all else fails, send the [developers](mailto:adshelp@digicomm.jira.com?subject=IDEA App Question/ Request) an email with your question or request!
+When clicked, they launch a real-time guide that walks the user through the major components of the currently visible screen/ tab, providing context and suggested workflow. However, if the in-app guide doesn't address your needs, consult the online documentation (that you're reading now) for the most thorough user guide. If all else fails, send the [developers](https://github.com/Biogen-Inc/tidyCDISC/issues/new) a message with your question or request!
 
 <br> 
 

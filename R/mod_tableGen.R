@@ -647,7 +647,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     if(any("CDISCPILOT01" %in% ADSL()$STUDYID)){
       glue::glue("
         # create list of dataframes from CDISC pilot study
-        datalist <- list(ADSL = IDEA::adsl, ADAE = IDEA::adae, ADVS = IDEA::advs, ADLBC = IDEA::adlbc, ADTTE = IDEA::adtte)
+        datalist <- list(ADSL = tidyCDISC::adsl, ADAE = tidyCDISC::adae, ADVS = tidyCDISC::advs, ADLBC = tidyCDISC::adlbc, ADTTE = tidyCDISC::adtte)
         "
       )
     } else {glue::glue("
@@ -658,7 +658,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
           filenames <- c({filenames()})
           
           # create list of dataframes
-          datalist <- IDEA::readData(study_dir, filenames)
+          datalist <- tidyCDISC::readData(study_dir, filenames)
       ")}
   })
   
@@ -668,7 +668,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       glue::glue("
         # Create AE data set
             pre_adae <- datalist %>%
-                IDEA::prep_adae(pre_adsl$data, '{RECIPE()}')
+                tidyCDISC::prep_adae(pre_adsl$data, '{RECIPE()}')
             ae_data <- pre_adae$data
         "
       )
@@ -688,7 +688,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       # options(useFancyQuotes = TRUE)
       glue::glue("
           # Create small filtered data set
-              dat_to_filt <- IDEA::data_to_filter(datalist, c({filter_dfs}))
+              dat_to_filt <- tidyCDISC::data_to_filter(datalist, c({filter_dfs}))
               filtered_data <- eval(parse(text = '{filter_code}')) %>% varN_fctr_reorder()
           ")
     } else {""}
@@ -717,9 +717,9 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     if(any(regexpr("%>%", filter_code) > 0)){
       glue::glue("
           # Apply small filtered data set to population dataset
-              pop_data <- pre_adsl$data %>% semi_join(filtered_data) %>% IDEA::varN_fctr_reorder()
+              pop_data <- pre_adsl$data %>% semi_join(filtered_data) %>% tidyCDISC::varN_fctr_reorder()
           ")
-    } else {"pop_data <- pre_adsl$data %>% IDEA::varN_fctr_reorder()"}
+    } else {"pop_data <- pre_adsl$data %>% tidyCDISC::varN_fctr_reorder()"}
   })
   # capture output for empty df warning
   df_empty_expr <- reactive({
@@ -752,34 +752,28 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     "
     
     options(digits = 3)
-    
-    # For HPC users, add RSPM's GHE repo:
-    options(repos = c(
-      CRAN = 'https://cran.rstudio.com/',
-      ghe = 'http://10.240.22.159:4242/Git-Biogen/latest')
-    )
 
-    pkgs_req <- c('IDEA', 'purrr', 'haven', 'dplyr', 'stringi', 'stringr', 'tidyr', 'gt', 'diffdf')
+    pkgs_req <- c('tidyCDISC', 'purrr', 'haven', 'dplyr', 'stringi', 'stringr', 'tidyr', 'gt', 'diffdf')
     pkgs_needed <- pkgs_req[!(pkgs_req %in% installed.packages()[,'Package'])]
     if(length(pkgs_needed)) install.packages(pkgs_needed)
     
-    library(IDEA)
+    library(tidyCDISC)
     library(purrr)
     library(haven)
     library(dplyr)
     library(stringi)
         
     {create_script_data()}
-    pre_adsl <- IDEA::prep_adsl(datalist$ADSL, input_recipe = '{RECIPE()}')
+    pre_adsl <- tidyCDISC::prep_adsl(datalist$ADSL, input_recipe = '{RECIPE()}')
     {adae_expr()}
-    bds_data <- datalist %>% IDEA::combineBDS(ADSL = pre_adsl$data)
+    bds_data <- datalist %>% tidyCDISC::combineBDS(ADSL = pre_adsl$data)
         
     {data_to_filter_expr()}
     {filter_pop_expr()}
     {filter_bds_expr()}
     {filter_ae_expr()}
         
-    # get drop zone area from IDEA
+    # get drop zone area from tidyCDISC
     # and create table using data
     blockData <- {paste0(capture.output(dput(blocks_and_functions())), collapse = '\n')}
     
@@ -806,7 +800,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
         summarise(n_tot = n(), .groups='drop_last') %>%
         mutate({input$COLUMN} = 'Total') 
         
-        grp_lvls <- IDEA::getLevels({Rscript_use_preferred_pop_data()}[['{input$COLUMN}']])
+        grp_lvls <- tidyCDISC::getLevels({Rscript_use_preferred_pop_data()}[['{input$COLUMN}']])
         xyz <- data.frame(grp_lvls) %>%
             rename_with(~paste('{input$COLUMN}'), grp_lvls)
 
@@ -842,11 +836,11 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
                   blockData$S3,
                   blockData$dropdown,
                   blockData$dataset), 
-          function(x,y,z,d) IDEA::app_methods(x,y,z,
+          function(x,y,z,d) tidyCDISC::app_methods(x,y,z,
                        group = {column() %quote% 'NULL'}, 
-                       data = IDEA::data_to_use_str(d),
+                       data = tidyCDISC::data_to_use_str(d),
                        totals = total_df)) %>%
-      map(setNames, IDEA::common_rownames({Rscript_use_preferred_pop_data()}, {column() %quote% 'NULL'})) %>%
+      map(setNames, tidyCDISC::common_rownames({Rscript_use_preferred_pop_data()}, {column() %quote% 'NULL'})) %>%
       setNames(paste(blockData$gt_group)) %>%
       bind_rows(.id = 'ID') %>%
       mutate(
@@ -868,7 +862,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
                    stringr::str_detect(Variable,'<b>') |
                    stringr::str_detect(Variable,'</b>')) %>%
           tab_options(table.width = px(700)) %>%
-          cols_label(.list = imap(tg_table[-c(1:2)], ~ IDEA::col_for_list_expr(.y, .x))) %>%
+          cols_label(.list = imap(tg_table[-c(1:2)], ~ tidyCDISC::col_for_list_expr(.y, .x))) %>%
           tab_header(
             title = md('{input$table_title}'),
             subtitle = md(\"{subtitle_html()}\")
@@ -896,11 +890,11 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
               blockData$S3,
               blockData$dropdown,
               blockData$dataset), 
-          function(x,y,z,d) IDEA::app_methods(x,y,z, 
+          function(x,y,z,d) tidyCDISC::app_methods(x,y,z, 
                        group = {column() %quote% 'NULL'}, 
-                       data = IDEA::data_to_use_str(d),
+                       data = tidyCDISC::data_to_use_str(d),
                        totals = total_df)) %>%
-      map(setNames, IDEA::common_rownames({Rscript_use_preferred_pop_data()}, {column() %quote% 'NULL'})) %>%
+      map(setNames, tidyCDISC::common_rownames({Rscript_use_preferred_pop_data()}, {column() %quote% 'NULL'})) %>%
       setNames(paste(blockData$gt_group)) %>%
       bind_rows(.id = 'ID') %>%
       mutate(
@@ -919,7 +913,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       sas_table <- haven::read_sas(file.path(sas_data_dir, sas_filename))
       
       # prepare SAS table for comparison
-      sas_comp_ready <- IDEA::prep_sas_table(sas_data = sas_table,
+      sas_comp_ready <- tidyCDISC::prep_sas_table(sas_data = sas_table,
                      # block_names = 'by1lbl',
                      # block_ord_names = 'cat',
                      # stat_names = 'by2lbl',
@@ -932,7 +926,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
 
       # prepare TG Table for comparison
       colx <- names(sas_table)[stringr::str_detect(names(sas_table), '^col[0-9]')]
-      tg_comp_ready <- IDEA::prep_tg_table(data = tg_table,
+      tg_comp_ready <- tidyCDISC::prep_tg_table(data = tg_table,
                                            machine_readable = TRUE,
                                            keep_orig_ids = FALSE,
                                            rm_desc_col = TRUE,
@@ -945,7 +939,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       # ... by location in the tables
       output_file <- file.path(sas_data_dir,paste0(
         gsub('[^[:alnum:]]','_',gsub(tools::file_ext(sas_filename),'',sas_filename)),
-        'v_IDEA.log')) 
+        'v_tidyCDISC.log')) 
       order_diff <- diffdf(base = sas_comp_ready, 
               compare = tg_comp_ready,
               keys = c('id_block', 'id_rn'),
@@ -973,7 +967,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   
   output$code <- downloadHandler(
       filename = function() {
-        paste0("Compare_IDEA_v_SASTables_Code.R")
+        paste0("Compare_tidyCDISC_v_SASTables_Code.R")
       },
       content = function(file) {
         writeLines(generate_comparison_output(), file)
@@ -982,7 +976,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
 
   output$tblcode <- downloadHandler(
     filename = function() {
-      paste0("Reproduce_IDEA_Table.R")
+      paste0("Reproduce_tidyCDISC_Table.R")
     },
     content = function(file) {
       writeLines(generate_table_output(), file)

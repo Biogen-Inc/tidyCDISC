@@ -133,7 +133,7 @@ mod_tableGen_ui <- function(id){
                       )#,
                # column(3, 
                #        tags$label(class="control-label", `for`="tableGen_ui_1-code", "Compare Outputs"),
-               #        shinyjs::disabled(downloadButton(ns("code"), "IDEA vs SAS"))),
+               #        shinyjs::disabled(downloadButton(ns("code"), "tidyCDISC vs SAS"))),
                # column(6, fileInput(ns("sas"), "Upload SAS Table To Compare", accept = c(".sas7bdat")))
              )
              ))),

@@ -1,4 +1,4 @@
-#' IDEA boxplot
+#' tidyCDISC boxplot
 #' 
 #' Create boxplot using either the selected response variable
 #' or if a PARAMCD is selected, then plot the corresponding value

@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-This tutorial will walk through how to leverage the `IDEA` app's filtering widget we've all come to love and enjoy. It exists to establish thorough and comprehensive data filtering capabilities for any tab, but not across all tabs. That is, filtering performed on the Table Generator tab doesn't not apply to the Population Explorer, or vice-versa. But the filtering widget functions in a very consistent way across all the tabs, with only subtle differences in how the filtering is applied.
+This tutorial will walk through how to leverage the `tidyCDISC` app's filtering widget we've all come to love and enjoy. It exists to establish thorough and comprehensive data filtering capabilities for any tab, but not across all tabs. That is, filtering performed on the Table Generator tab doesn't not apply to the Population Explorer, or vice-versa. But the filtering widget functions in a very consistent way across all the tabs, with only subtle differences in how the filtering is applied.
 
 ## Subtle differences in each tab's filtering widget
 

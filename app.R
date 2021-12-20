@@ -6,11 +6,6 @@
 pkgload::load_all(helpers = FALSE, attach_testthat = FALSE) # export_all = FALSE # ac removed: if false, IDEAFilter fails
 options( "golem.app.prod" = TRUE)
 options(shiny.sanitize.errors = FALSE)
-# options(repos = c(
-#   CRAN = "https://cran.rstudio.com/",
-#   ghe = "http://10.240.22.159:4242/Git-Biogen/latest")
-# )
-# options('repos')
 # rsconnect::writeManifest() # ac added
-IDEA::run_app() # add parameters here (if any)
+tidyCDISC::run_app() # add parameters here (if any)
 

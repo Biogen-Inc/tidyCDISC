@@ -1,8 +1,8 @@
 ---
-title: "IDEA"
+title: "tidyCDISC"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{IDEA}
+  %\VignetteIndexEntry{tidyCDISC}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -15,7 +15,7 @@ knitr::opts_chunk$set(
 ```
 
 
-Greetings! The [IDEA](https://awshpc22133.abc.amazon.biogen.com/IDEA/) app is a robust tool which empowers its users to glean informative knowledge from clinical trial data with little resistance. To prove this, we'll take you on a brisk tour of the app, traversing all of it's wonderful features from each tab of the application. 
+Greetings! The [tidyCDISC](https://nate884.shinyapps.io/tidyCDISC/) app is a robust tool which empowers its users to glean informative knowledge from clinical trial data with little resistance. To prove this, we'll take you on a brisk tour of the app, traversing all of it's wonderful features from each tab of the application. 
 
 ::: {.floatting}
 
@@ -32,7 +32,7 @@ Throughout all the tabs, there are these little buttons (usually in the top righ
 
 :::
 
-Without any further adieu, **welcome to `IDEA`'s landing page**: the *data tab*
+Without any further adieu, **welcome to `tidyCDISC`'s landing page**: the *data tab*
 
 <br>
 
@@ -46,7 +46,7 @@ knitr::include_graphics("figures/upldDat/landing page.PNG")
 
 # Data Upload
 
-The app is useless without some ADaM(-ish) data in hand. At a minimum, you'll need an `ADSL` sas7bdat file to get started, and the more data you bring, the more features and insights you can explore. We can import data by clicking the **'Browse'** button and selecting files for upload from your computer or mapped network drives. In this way, the `IDEA` application is very secure; you must have permissions to certain folders/ study directories to upload said data.
+The app is useless without some ADaM(-ish) data in hand. At a minimum, you'll need an `ADSL` sas7bdat file to get started, and the more data you bring, the more features and insights you can explore. We can import data by clicking the **'Browse'** button and selecting files for upload from your computer or mapped network drives. In this way, the `tidyCDISC` application is very secure; you must have permissions to certain folders/ study directories to upload said data.
 
 This tutorial will upload five files: An `ADSL`, `ADVS`, `ADLBC`, `ADAE`, and an `ADTTE`, all from the CDISC pilot study. You can follow along by clicking the **'Use CDISC Pilot Data'** button above the upload panel, as performed below. After the data is uploaded, two things happen: (1) we can take a peek at our data and (2) all the analysis tabs are unlocked, specifically:
 
@@ -66,7 +66,7 @@ knitr::include_graphics("figures/tableGen/quick_upload_then_tg.gif")
 
 <br>
 
-There is more to be said about importing data, like, "What constitutes ADaM-ish data?" or "What if my data set won't upload?" To learn more on the topic, head over to the article titled [00 Data Upload](https://github.biogen.com/pages/biometrics/IDEA/articles/x00_Data_Upload.html); you'll be glad you did! 
+There is more to be said about importing data, like, "What constitutes ADaM-ish data?" or "What if my data set won't upload?" To learn more on the topic, head over to the article titled [00 Data Upload](https://Biogen-Inc.github.io/tidyCDISC/articles/x00_Data_Upload.html); you'll be glad you did! 
 
 
 
@@ -119,7 +119,7 @@ knitr::include_graphics("figures/tableGen/04-diabp_mean.gif")
 
 <br>
 
-Using this technique, you can drag in an unlimited number of variable and stat blocks to define a custom table. However, if you're looking for something more common, the app can help with that too. You could build STAN tables from scratch by dragging and dropping pertinent variables into the drop zone, but since the standards are well defined and these tables are so common for regulatory submissions, the `IDEA` app has built-in support for constructing STAN 2.0 tables. At the time this guide was authored, the Table Generator contains the following 'recipes' for STAN outputs:
+Using this technique, you can drag in an unlimited number of variable and stat blocks to define a custom table. However, if you're looking for something more common, the app can help with that too. You could build STAN tables from scratch by dragging and dropping pertinent variables into the drop zone, but since the standards are well defined and these tables are so common for regulatory submissions, the `tidyCDISC` app has built-in support for constructing STAN 2.0 tables. At the time this guide was authored, the Table Generator contains the following 'recipes' for STAN outputs:
 
 <br> 
 
@@ -141,7 +141,7 @@ knitr::include_graphics("figures/tableGen/t_disp.gif")
 
 <br>
 
-Even still, there are a plethora of features described on the [01 Table Generator](https://github.biogen.com/pages/biometrics/IDEA/articles/x01_Table_Generator.html) article that showcase how to fully DIY in the Table Generator, such as: add parameter variable and different stat blocks, re-order or delete layers of table output, group by different categorical variables, export the static table for sharing, and exporting the R code used to reproduce the table **in more depth**.
+Even still, there are a plethora of features described on the [01 Table Generator](https://Biogen-Inc.github.io/tidyCDISC/articles/x01_Table_Generator.html) article that showcase how to fully DIY in the Table Generator, such as: add parameter variable and different stat blocks, re-order or delete layers of table output, group by different categorical variables, export the static table for sharing, and exporting the R code used to reproduce the table **in more depth**.
 
 
 <br>
@@ -193,7 +193,7 @@ knitr::include_graphics("figures/IndvExp/filter patients.gif")
 
 <br>
 
-If you were thinking, "Wow, filtering widget was pretty neat!" then you're in for a real treat because you can filter data like that on every tab! But honestly, we much of the specifics in that brisk demo, so read our full tutorial on how to filter like pro: [04 Filtering](https://github.biogen.com/pages/biometrics/IDEA/articles/x04_Filtering.html).
+If you were thinking, "Wow, filtering widget was pretty neat!" then you're in for a real treat because you can filter data like that on every tab! But honestly, we much of the specifics in that brisk demo, so read our full tutorial on how to filter like pro: [04 Filtering](https://Biogen-Inc.github.io/tidyCDISC/articles/x04_Filtering.html).
 
 <br>
 
@@ -221,7 +221,7 @@ knitr::include_graphics("figures/IndvExp/drill down visits.gif")
 
 <br>
 
-Well, that wraps up our patient profile analysis, but there is so much more to learn about the Individual Explorer! Read up on all it's hidden features in the [03 Individual Explorer](https://github.biogen.com/pages/biometrics/IDEA/articles/x03_Indv_Expl.html) article. 
+Well, that wraps up our patient profile analysis, but there is so much more to learn about the Individual Explorer! Read up on all it's hidden features in the [03 Individual Explorer](https://Biogen-Inc.github.io/tidyCDISC/articles/x03_Indv_Expl.html) article. 
 
 <br>
 
@@ -233,19 +233,19 @@ So far, we've learned how to upload data, drag and drop blocks in the table gene
 
 <br>
 
-*Have an idea to explore?* **Open the [IDEA](https://awshpc22133.abc.amazon.biogen.com/IDEA/) app!** Otherwise, we highly recommend reading the following articles that take a deeper look into the topics presented in this 'get started' guide:
+*Have an idea to explore?* **Open the [tidyCDISC](https://nate884.shinyapps.io/tidyCDISC/) app!** Otherwise, we highly recommend reading the following articles that take a deeper look into the topics presented in this 'get started' guide:
 
-- [00 Data Upload](https://github.biogen.com/pages/biometrics/IDEA/articles/x00_Data_Upload.html)
+- [00 Data Upload](https://Biogen-Inc.github.io/tidyCDISC/articles/x00_Data_Upload.html)
 
-- [01 Table Generator](https://github.biogen.com/pages/biometrics/IDEA/articles/x01_Table_Generator.html)
+- [01 Table Generator](https://Biogen-Inc.github.io/tidyCDISC/articles/x01_Table_Generator.html)
 
-- [02 Population Explorer](https://github.biogen.com/pages/biometrics/IDEA/articles/x02_Pop_Exp.html)
+- [02 Population Explorer](https://Biogen-Inc.github.io/tidyCDISC/articles/x02_Pop_Exp.html)
 
-- [03 Individual Explorer](https://github.biogen.com/pages/biometrics/IDEA/articles/x03_Indv_Expl.html)
+- [03 Individual Explorer](https://Biogen-Inc.github.io/tidyCDISC/articles/x03_Indv_Expl.html)
 
-- [04 Filtering](https://github.biogen.com/pages/biometrics/IDEA/articles/x04_Filtering.html)
+- [04 Filtering](https://Biogen-Inc.github.io/tidyCDISC/articles/x04_Filtering.html)
 
-Users who've leverage `IDEA` for routine trial analysis tend to report **significant time savings, about 95%**, when performing programming duties. We're confident the `IDEA` application can save you time too. If there is some use case that `IDEA` can't solve, we want to know about it. Please send the [developers](mailto:adshelp@digicomm.jira.com?subject=IDEA App Question/ Request) an email with your question or request!
+Users who've leverage `tidyCDISC` for routine trial analysis tend to report **significant time savings, about 95%**, when performing programming duties. We're confident the `tidyCDISC` application can save you time too. If there is some use case that `tidyCDISC` can't solve, we want to know about it. Please send the [developers](https://github.com/Biogen-Inc/tidyCDISC/issues/new) a message with your question or request!
 
 <br>
 
