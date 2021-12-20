@@ -39,9 +39,9 @@ knitr::include_graphics("figures/tableGen/02-TG.png")
 
 <br>
 
-Any uploaded data sets will appear on the left-hand side as "bins". We call them "bins" because they are just containers, showcasing contents of the data when expanded. The `ADSL` & `ADAE` bins include the names of all their variables, while any `BDS` data sets, like the `ADVS` & `ADLBC` bins include a list of all the `PARAMCD` values.
+Any uploaded data sets will appear on the left-hand side as "bins". "Bins" are just containers, showcasing the usable contents of the data when expanded. The `ADSL` & `ADAE` bins include the names of all their variables, while any `BDS` data sets, like the `ADVS` & `ADLBC` bins include a list of all the `PARAMCD` values.
 
-On the right-hand side, there are a list of "Stats", such as `ANOVA`, `CHG`, `MEAN`, and `FREQ` to name a few. We call these "STAT Blocks".
+On the right-hand side, there are a list of "Stats", such as `ANOVA`, `CHG`, `MEAN`, and `FREQ` to name a few. We call these "STAT Blocks". And finally, in the middle of it all is the "drop zone".
 
 
 <br>
@@ -210,7 +210,7 @@ knitr::include_graphics("figures/tableGen/TG Nested Freq2.PNG")
 
 ## Filtering data in the table generator
 
-There is an entire guide called [04 Filtering](https://github.biogen.com/pages/biometrics/SEER/articles/x04_Filtering.html) dedicated to filtering in the `IDEA` application. Please reference that article, but just note that when filtering occurs on the Table Generator tab, those filters permeate all the data sets on the Table Generator tab only and will be reflected on the table output as depicted below. Also note that some mandatory filters will be applied automatically when some 'standard analysis' tables are selected so be weary of the filtering caption displayed below the table title (red brackets added for attention). Ultimately, it is the users responsibility to make sure the correct filters are applied for their table output!
+There is an entire guide called [04 Filtering](https://github.biogen.com/pages/biometrics/IDEA/articles/x04_Filtering.html) dedicated to filtering in the `IDEA` application. Please reference that article, but just note that when filtering occurs on the Table Generator tab, those filters permeate all the data sets on the Table Generator tab only and will be reflected on the table output as depicted below. Also note that some mandatory filters will be applied automatically when some 'standard analysis' tables are selected so be weary of the filtering caption displayed below the table title (red brackets added for attention). Ultimately, it is the users responsibility to make sure the correct filters are applied for their table output!
 
 <br> 
 
