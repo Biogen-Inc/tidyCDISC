@@ -57,8 +57,8 @@ Imports:
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1
-URL: https://github.biogen.com/pages/biometrics/SEER/
-BugReports: https://github.biogen.com/biometrics/SEER/issues
+URL: https://github.biogen.com/pages/biometrics/IDEA/
+BugReports: https://github.biogen.com/biometrics/IDEA/issues
 Suggests: 
     testthat,
     lazyeval,

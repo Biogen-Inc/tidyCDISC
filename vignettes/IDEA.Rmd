@@ -15,18 +15,24 @@ knitr::opts_chunk$set(
 ```
 
 
-Greetings! The [IDEA](https://awshpc22133.abc.amazon.biogen.com/IDEA/) app is a robust tool which empowers its users to glean informative knowledge from clinical trial data with little resistance. To prove this, we'll take you on a brisk tour of the app, traversing all of it's wonderful features from each tab of the application. Throughout all the tabs, there are these little buttons (usually in the top right-hand corners) with question marks printed on them:
+Greetings! The [IDEA](https://awshpc22133.abc.amazon.biogen.com/IDEA/) app is a robust tool which empowers its users to glean informative knowledge from clinical trial data with little resistance. To prove this, we'll take you on a brisk tour of the app, traversing all of it's wonderful features from each tab of the application. 
 
-```{r, echo=FALSE, fig.align = 'center'}
+::: {.floatting}
+
+<br>
+
+```{r, echo=FALSE, out.extra='style="float:right; padding:10px"'}
 knitr::include_graphics("figures/tableGen/TG need help.PNG")
 ```
 
 
-When clicked, they launch a real-time guide that walks the user through the major components of the current screen/ tab, providing context and suggested workflow. So if this guide doesn't answer all your questions just click the ` ? ` button for assistance! 
+Throughout all the tabs, there are these little buttons (usually in the top right-hand corners) with question marks printed on them. When clicked, they launch a real-time guide that walks the user through the major components of the current screen/ tab, providing context and suggested workflow. So if this guide doesn't answer all your questions just click the ` ? ` button for assistance! 
 
 <br>
 
-**Without any further adieu, welcome to IDEA's landing page: the data upload tab**
+:::
+
+Without any further adieu, **welcome to `IDEA`'s landing page**: the *data tab*
 
 <br>
 
@@ -38,19 +44,19 @@ knitr::include_graphics("figures/upldDat/landing page.PNG")
 
 <br>
 
-# Upload Data
+# Data Upload
 
-We cannot learn anything without some ADaM(-ish) data in hand. At a minimum, you'll need an `ADSL` sas7bdat file to get started, and the more data you bring, the more features and insights you can explore. We can import data by clicking the **'Browse'** button and selecting the files to upload from your computer or mapped network drives. In this way, the IDEA application is very secure, since you must have permissions to certain folders/ study directories to upload its data.
+The app is useless without some ADaM(-ish) data in hand. At a minimum, you'll need an `ADSL` sas7bdat file to get started, and the more data you bring, the more features and insights you can explore. We can import data by clicking the **'Browse'** button and selecting files for upload from your computer or mapped network drives. In this way, the `IDEA` application is very secure; you must have permissions to certain folders/ study directories to upload said data.
 
-This tutorial will use 4 files: An `ADSL`, `ADVS`, `ADLBC`, `ADAE`, and an `ADTTE`, all from the CDISC pilot study. You can follow along by clicking the 'Use CDISC Pilot Data' button above the upload panel, as seen below. After the data is uploaded, we take a quick peek at our data and all the analysis tabs are unlocked, specifically:
+This tutorial will upload five files: An `ADSL`, `ADVS`, `ADLBC`, `ADAE`, and an `ADTTE`, all from the CDISC pilot study. You can follow along by clicking the **'Use CDISC Pilot Data'** button above the upload panel, as performed below. After the data is uploaded, two things happen: (1) we can take a peek at our data and (2) all the analysis tabs are unlocked, specifically:
 
-- Table Generator
+- Table Generator 
 
 - Population Explorer
 
 - Individual Explorer
 
-Our first stop will be the table generator to build a disposition table that adheres to the STAN 2.0 guidelines.
+Our first stop will be the table generator!
 
 <br>
 
@@ -60,13 +66,15 @@ knitr::include_graphics("figures/tableGen/quick_upload_then_tg.gif")
 
 <br>
 
-There is more to be said about importing data, like, "What constitutes ADaM-ish data?" or "What if my data set won't upload?" To learn more on the topic, head over to the article titled [00 Data Upload](https://github.biogen.com/pages/biometrics/SEER/articles/x00_Data_Upload.html); you'll be glad you did! 
+There is more to be said about importing data, like, "What constitutes ADaM-ish data?" or "What if my data set won't upload?" To learn more on the topic, head over to the article titled [00 Data Upload](https://github.biogen.com/pages/biometrics/IDEA/articles/x00_Data_Upload.html); you'll be glad you did! 
 
 
 
 <br>
 
 # Table Generator
+
+<br>
 
 The Table Generator tab is divided in two: the area to the left is the handy drag-and-drop interface used to define our tables, and on the right is the real-time table output.
 
@@ -78,20 +86,20 @@ knitr::include_graphics("figures/tableGen/02-TG.png")
 
 <br>
 
-Any uploaded data will appear on the left-hand side as "bins". We call them "bins" because they are just containers, showcasing contents of the data when expanded. The `ADSL` & `ADAE` bins include the names of all their variables, while any `BDS` data sets, like the `ADVS` & `ADLBC` bins include a list of all the `PARAMCD` values. We call these variable & parameters "Variable blocks".
+Any uploaded data will appear on the left-hand side as "bins". "Bins" are just containers, showcasing the usable contents of the data when expanded. The `ADSL` & `ADAE` bins include the names of all their variables, while any `BDS` data sets, like the `ADVS` & `ADLBC` bins include a list of all the `PARAMCD` values. For simplicity, both variable & parameters bubbles are called "variable blocks".
 
-On the right-hand side, there are a list of "Stats", such as `ANOVA`, `CHG`, `MEAN`, and `FREQ` to name a few. We call these "STAT Blocks".
+On the right-hand side, there are a list of "Stats", such as `ANOVA`, `CHG`, `MEAN`, and `FREQ` to name a few. We call these "STAT Blocks". And finally, in the middle of it all is the "drop zone".
 
 
 <br>
 
-```{r, echo=FALSE}
+```{r, out.width="70%", echo=FALSE, fig.align='center'}
 knitr::include_graphics("figures/tableGen/bins.gif")
 ```
 
 <br>
 
-In order to build a table, we need only drag a variable block to the "Variable" drop zone and match it up with a corresponding stat block in the "Stats" drop zone. Below, we drag the `AGE` block from within `ADSL` and drag in the `MEAN` block from the list of Stats to calculate summary statistics for patient `AGE` within the trial.
+In order to build a table, we need only drag a variable block to the "Variable" drop zone and match it up with a corresponding stat block in the "Stats" drop zone. Below, we drag the `AGE` block from the `ADSL` and drag the `MEAN` block from the list of Stats to calculate summary statistics on patient `AGE` within the trial.
 
 <br>
 
@@ -101,7 +109,7 @@ knitr::include_graphics("figures/tableGen/03-age_mean.gif")
 
 <br>
 
-Similarly, we can drag in `DIABP` from `ADVS` and use the `MEAN` block to calculate summary statistics on parameters. However, we also need to select the desired `AVISIT` in order to calculate the summary statistics of `DIABP` at a certain time point.
+Similarly, we can drag in `DIABP` from the `ADVS` and use the `MEAN` block to calculate summary statistics on parameters. However, because `DIABP` came from a `BDS` class data source, we need to select the desired `AVISIT` to calculate summary statistics for the desired time point.
 
 <br>
 
@@ -111,11 +119,7 @@ knitr::include_graphics("figures/tableGen/04-diabp_mean.gif")
 
 <br>
 
-Using this technique, you can drag in as many variables and stat blocks to define a custom table. However, this tutorial's goal doesn't include building custom! If you recall, our goal is to build the disposition (Accounting of Subjects) STAN 2.0 table. 
-
-<br>
-
-You could build STAN tables from scratch by dragging and dropping pertinent variables into the drop zone, but since the standards are well defined and these tables are so common for regulatory submissions, the `IDEA` app has built them for you in advance. At the time this guide was authored, the Table Generator contains the following 'recipes' for STAN outputs:
+Using this technique, you can drag in an unlimited number of variable and stat blocks to define a custom table. However, if you're looking for something more common, the app can help with that too. You could build STAN tables from scratch by dragging and dropping pertinent variables into the drop zone, but since the standards are well defined and these tables are so common for regulatory submissions, the `IDEA` app has built-in support for constructing STAN 2.0 tables. At the time this guide was authored, the Table Generator contains the following 'recipes' for STAN outputs:
 
 <br> 
 
@@ -125,9 +129,9 @@ knitr::include_graphics("figures/tableGen/TG STAN dropdown.PNG")
 
 <br>
 
-If the data needed to produce a certain table aren't present, the available tables listed in this drop down selector will change. For example, if an `ADAE` is not uploaded, then all the AE tables will disappear from the above list.
+When data needed to produce certain STAN outputs aren't present, the list of available tables in this drop down will change. For example, if an `ADAE` is not uploaded, then all the AE tables will disappear from the above list.
 
-When one of these tables is selected, the table generator simply compiles the needed variable and stat blocks in the correct order to generate the desired output, as seen below. Notice how the a population filter was set automatically, in this case to `FASFL` = 'Y' and the grouping variable set to `TRT01P`. Notice how the user changed the default table title and downloaded the R script needed to reproduce the table outside the app:
+When one of these tables is selected, like disposition (Accounting of Subjects) below, the table generator simply compiles the needed variable and stat blocks in the correct order to generate the desired output, as seen below. Notice how the a population filter was set automatically, in this case to `FASFL` = 'Y' and the grouping variable set to `TRT01P`. Within seconds, the user changed the default table title and downloaded the R script needed to reproduce the table outside the app:
 
 <br>
 
@@ -137,7 +141,7 @@ knitr::include_graphics("figures/tableGen/t_disp.gif")
 
 <br>
 
-Even still, there are a plethora of features described on the [01 Table Generator](https://github.biogen.com/pages/biometrics/SEER/articles/x01_Table_Generator.html) article that showcase how to DIY in the Table Generator, such as: add parameter variables and different statistical blocks, re-order or delete layers of table output, group the data by different categorical variables, export the static table for sharing, and will cover exporting the R code used to reproduce the table in more depth.
+Even still, there are a plethora of features described on the [01 Table Generator](https://github.biogen.com/pages/biometrics/IDEA/articles/x01_Table_Generator.html) article that showcase how to fully DIY in the Table Generator, such as: add parameter variable and different stat blocks, re-order or delete layers of table output, group by different categorical variables, export the static table for sharing, and exporting the R code used to reproduce the table **in more depth**.
 
 
 <br>
@@ -145,9 +149,11 @@ Even still, there are a plethora of features described on the [01 Table Generato
 
 # Population Explorer
 
-This module exists to visually glean insights about different patient populations via various chart types designed to drill down into the data in different ways. Below we will walk through a the "line plot  - mean over time" which graphs variables/ parameter mean values at each visit (using the visit variable of your choice).
+<br>
 
-Let's assume we want to check on our patients vital signs throughout the trial and look for any sub populations that are having a rough go of things. In the example below, we start checking diastolic blood pressure means at each visit and calculate a 95% confidence interval for each. Someone told us that the drug exposure tends to lower this vital sign over time and the data seems to support that. Let's say we're interested in mean `DIABP` is less than 77 from week to week. Thus, we add a reference line on the y-axis below. It seems that each week (except  baseline) seems to be completely under the threshold. To further dissect the data, we inspect how age impacts diastolic blood pressure and notice the younger (<65 y/o) population seems to remain high throughout the trial and download the data to excel to retain for later.
+This module exists to glean visual insights on patient populations via a diverse mix of chart types, each uniquely designed to drill down deep into the data. Below we will walk through a the **"line plot - mean over time"** which graphs variable/ parameter mean values at each visit (using the visit variable of your choice).
+
+Let's assume a scenario where we want to check on our patients' vital signs throughout the trial and look for any sub-populations that are having a rough go of things. In the example below, we check diastolic blood pressure mean values at each visit and calculate a 95% confidence interval for each. It's rumored that drug exposure tends to lower this vital sign over time and the data seems to support that finding. Let's say we're interested in when mean `DIABP` is less than 77 from week-to-week. Thus, we add a reference line on the y-axis below. It seems that each week (except  baseline) seems to be completely under the threshold. To further understand the data, we inspect how age impacts diastolic blood pressure and notice the younger (<65 y/o) population seems to remain heightened (on average) throughout the trial and download the data to Excel for later.
 
 <br>
 
@@ -157,7 +163,7 @@ knitr::include_graphics("figures/popExp/line plot mean over time.gif")
 
 <br>
 
-Using the "Separate plots by" drop down list, we select `TRT01A` to investigate the effect the drug may have on `DIABP` and age group and it looks like the low dose group in particular is higher than any other group. Just like on any Population Explorer plot, we can hover over to inspect each point and download a PNG of our findings.
+Using the **"Separate plots by"** drop down list, we select `TRT01A` to investigate drug exposure may have on `DIABP` and age and it looks like the low dose group in particular is higher than any other group. Just like on any Population Explorer plot, we can hover over to inspect each point and download a PNG of our findings.
 
 <br>
 
@@ -167,14 +173,17 @@ knitr::include_graphics("figures/popExp/line plot mean over time breakdown.gif")
 
 <br>
 
-On the Individual Explorer tab, we'll narrow in on this subset of patients and discover more findings.
+On the Individual Explorer tab, we'll narrow in on this subset of patients and seeking more findings.
 
+<br>
 
 # Individual Explorer
 
-Use this tab to establish powerful patient narratives and explore outlier data from specific patients. Upon selecting the Individual Explorer tab, you'll be greeted with the following prompt (below) asking to select a patient, by `UBSUBJID.` All the data presented from here out will be tied directly the patient you select.
+<br>
 
-To subset the patients list prior to selecting a USUBJID, we recommend using "Advanced Pre-filtering". When selecting the `Advanced Pre-Filtering` check box, additional fields will appear (see below) to filter the population to the subgroup of interest. From the previous example, we're interested in exploring patient profiles that where the patient is <65 y/o, taking the drug's low dose with high diastolic blood pressure values.
+This analysis tab exists to establish powerful patient narratives and/or explore outlier patient data. Upon arriving to the Individual Explorer tab, you'll be greeted with the following prompt (below) asking to select a patient, by `UBSUBJID.` After selection, all the data presented will be tied directly that patient.
+
+To subset the patients list to a subgroup of interest, we recommend using **"Advanced Pre-filtering"**. When selecting the `Advanced Pre-Filtering` check box, additional fields will appear (below) to filter the population. From the previous example, we were interested in exploring patient profiles where the patient is <65 y/o, taking the low dose treatment with higher than average diastolic blood pressure values.
 
 <br>
 
@@ -184,12 +193,12 @@ knitr::include_graphics("figures/IndvExp/filter patients.gif")
 
 <br>
 
-You just got a brisk live demo of the filtering widget which actually exists on each tab of the application. We didn't touch on the specifics here, but read our full tutorial on how to filter like pro by reading the [04 Filtering](https://github.biogen.com/pages/biometrics/SEER/articles/x04_Filtering.html) article.
+If you were thinking, "Wow, filtering widget was pretty neat!" then you're in for a real treat because you can filter data like that on every tab! But honestly, we much of the specifics in that brisk demo, so read our full tutorial on how to filter like pro: [04 Filtering](https://github.biogen.com/pages/biometrics/IDEA/articles/x04_Filtering.html).
 
 <br>
 
 
-Next, we scroll down to examine that patient's demographic info. Upon doing so, we see the patient is a white male, age 51 and weights 70.8 kg. Scrolling again, the 'Events' tab displays the patient's journey through the trial on an interactive timeline. In review, it seems the patient wasn't in the trial very long, and we don't see any outrageous adverse events, per say.
+After selecting a `USUBJID`, we scroll down the page to examine that patient's demographic info. There, we see the patient is a white male, age 51 and weights 70.8 kg. Scrolling again, the **'Events'** tab displays the patient's journey through the trial on an interactive timeline. After reviewing his timeline, it seems the patient wasn't in the trial very long, but we don't see any outrageous from an adverse events perspective... at least nothing that we'd expect would impact `DIABP`.
 
 
 <br>
@@ -201,7 +210,7 @@ knitr::include_graphics("figures/IndvExp/drill down events.gif")
 <br>
 
 
-Switching to the "Visits" tab, we can see that this patient did indeed have consistently higher than average diastolic blood pressure, and it was always after standing for 1 minute. We hover over the plot to examine some points, download a png and also an html file containing a plot for each vital sign parameter available on this patient.
+Switching to the "Visits" tab, we can see that this patient did indeed have consistently higher than average diastolic blood pressure, which was measured three times at each visit. We see it was always at it's highest after the patient was standing for 1-minute. Next, we hover over the plot to examine some points, download a png and an html file containing a plot for each vital sign parameter available for this patient.
 
 
 <br>
@@ -212,14 +221,34 @@ knitr::include_graphics("figures/IndvExp/drill down visits.gif")
 
 <br>
 
-That wraps up our patient profile analysis, but there is more to learn about the Individual Explorer! Read up on all it's hidden features in the [03 Individual Explorer](https://github.biogen.com/pages/biometrics/SEER/articles/x03_Indv_Expl.html) article. 
+Well, that wraps up our patient profile analysis, but there is so much more to learn about the Individual Explorer! Read up on all it's hidden features in the [03 Individual Explorer](https://github.biogen.com/pages/biometrics/IDEA/articles/x03_Indv_Expl.html) article. 
 
+<br>
 
-## Recap
+## Recap & what's next?
 
-So far, we've learned how to upload data, drag and drop blocks in the table generator as well as build a bonafide STAN table and export it's reproducible R code. Next we plotted mean diastolic blood pressure over time in the population explorer and define filters on the individual explorer tab to find the patients and analyze patient profiles responsible for elevating one subgroups values.
+<br>
+
+So far, we've learned how to upload data, drag and drop blocks in the table generator as well as build a bonafide STAN table and export it's reproducible R code. Next we plotted mean diastolic blood pressure over time in the population explorer and define filters on the individual explorer tab to find the patients and analyze patient profiles responsible for elevating one subgroup's values.
+
+<br>
+
+*Have an idea to explore?* **Open the [IDEA](https://awshpc22133.abc.amazon.biogen.com/IDEA/) app!** Otherwise, we highly recommend reading the following articles that take a deeper look into the topics presented in this 'get started' guide:
+
+- [00 Data Upload](https://github.biogen.com/pages/biometrics/IDEA/articles/x00_Data_Upload.html)
+
+- [01 Table Generator](https://github.biogen.com/pages/biometrics/IDEA/articles/x01_Table_Generator.html)
+
+- [02 Population Explorer](https://github.biogen.com/pages/biometrics/IDEA/articles/x02_Pop_Exp.html)
+
+- [03 Individual Explorer](https://github.biogen.com/pages/biometrics/IDEA/articles/x03_Indv_Expl.html)
+
+- [04 Filtering](https://github.biogen.com/pages/biometrics/IDEA/articles/x04_Filtering.html)
 
 Users who've leverage `IDEA` for routine trial analysis tend to report **significant time savings, about 95%**, when performing programming duties. We're confident the `IDEA` application can save you time too. If there is some use case that `IDEA` can't solve, we want to know about it. Please send the [developers](mailto:adshelp@digicomm.jira.com?subject=IDEA App Question/ Request) an email with your question or request!
 
-Have an IDEA to explore? Open the [IDEA](https://awshpc22133.abc.amazon.biogen.com/IDEA/) app!
+<br>
 
+<br>
+
+<br>
