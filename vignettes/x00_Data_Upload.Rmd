@@ -26,7 +26,7 @@ knitr::include_graphics("figures/upldDat/landing page.PNG")
 
 <br>
 
-This application was designed for quick analysis of ADaM-ish data, so since preparing sas7bdat files are apart of that process, `tidyCDISC` only accepts SAS data sets for upload. Thus, iInside the window titled "Data Upload", you'll notice the following text: "`ADSL` file is mandatory and BDS/ OCCDS files are optional. Upload sas7bdat files." 
+This application was designed for quick analysis of ADaM-ish data, so since preparing sas7bdat files are apart of that process, `tidyCDISC` only accepts SAS data sets for upload. Thus, inside the window titled "Data Upload", you'll notice the following text: "`ADSL` file is mandatory and BDS/ OCCDS files are optional. Upload sas7bdat files." 
 
 <br>
 
@@ -53,7 +53,7 @@ knitr::include_graphics("figures/tableGen/TG need help.PNG")
 
 <br>
 
-Upon clicking, what we define as "ADaM-ish" upload rules will pop up in a new window. There are several sets of rules. Some rules are "Required" and others are "Recommended". In general, "required" rules are absolutely foundational to the app's function. Conversely, "recommended" rules are only suggestions to get the most feature-rich experience in the app. More on this later, but first, and quite plainly, our first and most pervasive rule: all uploaded data must contain a `USUBJID` variable. Without this field, data portrayed in one data set simply cannot be linked to data in another, so this is a foundational rule and one that CDISC also imposes.
+Upon clicking, what we define as "ADaM-ish" upload rules will pop up in a new window. There are several sets of rules. Some rules are *"Required"* and others are *"Recommended"*. In general, "required" rules are absolutely foundational to the app's function. Conversely, "recommended" rules are only suggestions to get the most feature-rich experience in the app. More on this later, but first, and quite plainly, our first and most pervasive rule is that all uploaded data must contain a `USUBJID` variable. Without this field, data portrayed in one data set simply cannot be linked to data in another, so this is a foundational rule and one that CDISC also imposes.
 
 <br>
 
@@ -102,7 +102,7 @@ knitr::include_graphics("figures/upldDat/cdisc pilot button.PNG")
 
 <br>
 
-When not using the CDISC pilot data, select "Browse" to navigate through your computer's file system and locate your study's data on the computer. If you normally **do not** have permissions to a certain folder, you will still **not** have permission to that folder while using `tidyCDISC`. You may select one file at a time or multiple files at once. Just note (as mentioned previously) that an `ADSL` is required any analysis, so make sure an one is loaded from your study. Since the application is designed for ADaM-ish data, only sas7bdat files are accepted.
+When not using the CDISC pilot data, select "Browse" to navigate through your computer's file system and locate your study's data. If you normally **do not** have permissions to a certain folder, you will still **not** have permission to that folder while using `tidyCDISC`. You may select one file at a time or multiple files at once. Just note (as mentioned previously) that an `ADSL` is required for any analysis, so make sure one is loaded from your study. Since the application is designed for ADaM-ish data, only sas7bdat files are accepted.
 
 <br>
 
