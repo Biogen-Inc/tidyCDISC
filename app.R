@@ -9,3 +9,22 @@ options(shiny.sanitize.errors = FALSE)
 # rsconnect::writeManifest() # ac added
 tidyCDISC::run_app() # add parameters here (if any)
 
+# Test IDEAFilter
+
+# # Install internal version from RSPM's GHE repo:
+# options(repos = c(
+#   CRAN = "https://cran.rstudio.com/",
+#   ghe = "google.com/latest")
+# )
+# options('repos') # to confirm "ghe" was added
+# install.packages("IDEAFilter")
+
+# # Install external version from Biogen's external repo:
+# remotes::install_github("Biogen-Inc/IDEAFilter")
+# devtools::install_github("Biogen-Inc/IDEAFilter")
+
+# Try for fun
+# devtools::install_github("MayaGans/IDEAFilter")
+
+# library(shiny)
+# shinyAppFile(system.file("examples", "basic_app", "app.R", package = "IDEAFilter"))

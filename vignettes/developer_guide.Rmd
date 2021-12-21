@@ -21,7 +21,7 @@ This tutorial will walk you through creating a new statistical block for the Tab
 
 Within `R/mod_TableGen_ui` you'll find a list of blocks.
 
-If you are going to create a simple block like in the case of `MEAN`, you'll give the block an id in lowecase, and a label to be displayed in uppercase. You must also give the block `class = agg`
+If you are going to create a simple block like in the case of `MEAN`, you'll give the block an id in lowercase, and a label to be displayed in uppercase. You must also give the block `class = agg`
 
 ```{r, eval=FALSE}
 tags$li(id = "mean","MEAN",class = "agg")
@@ -338,6 +338,8 @@ Note that the plot types are surrounded by back-ticks, not single quotes.  On Am
     ...
   })
 ```
+
+
 ### Testing
 
 A file called `test-popExp_fct_boxplot.R` is created to test that the plot function inside `mod_popExp_fct_boxplot` generates the expected output given various inputs.
@@ -629,3 +631,6 @@ vline_eventtype_cols <- c("#80d1ad", "#f5ae7d", "#a8bde6") # dark version of my_
 
 Congratulations! After completing the above steps, you should now have access to the pertinent event/dates information in the app. With any questions, please feel free to reach out to app authors/ maintainers listed in the package documentation.
 
+<br>
+
+<br>

@@ -119,7 +119,7 @@ knitr::include_graphics("figures/tableGen/04-diabp_mean.gif")
 
 <br>
 
-Using this technique, you can drag in an unlimited number of variable and stat blocks to define a custom table. However, if you're looking for something more common, the app can help with that too. You could build STAN tables from scratch by dragging and dropping pertinent variables into the drop zone, but since the standards are well defined and these tables are so common for regulatory submissions, the `tidyCDISC` app has built-in support for constructing STAN 2.0 tables. At the time this guide was authored, the Table Generator contains the following 'recipes' for STAN outputs:
+Using this technique, you can drag in an unlimited number of variable and stat blocks to define a custom table. However, if you're looking for something more common, the app can help with that too. You could build standard analysis tables from scratch by dragging and dropping pertinent variables into the drop zone, but since the standards are well defined and these tables are so common for regulatory submissions, the `tidyCDISC` app has built-in support for constructing standard analysis tables. At the time this guide was authored, the Table Generator contains the following 'recipes' for standardized outputs:
 
 <br> 
 
@@ -129,7 +129,7 @@ knitr::include_graphics("figures/tableGen/TG STAN dropdown.PNG")
 
 <br>
 
-When data needed to produce certain STAN outputs aren't present, the list of available tables in this drop down will change. For example, if an `ADAE` is not uploaded, then all the AE tables will disappear from the above list.
+When data needed to produce certain outputs aren't present, the list of available tables in this drop down will change. For example, if an `ADAE` is not uploaded, then all the AE tables will disappear from the above list.
 
 When one of these tables is selected, like disposition (Accounting of Subjects) below, the table generator simply compiles the needed variable and stat blocks in the correct order to generate the desired output, as seen below. Notice how the a population filter was set automatically, in this case to `FASFL` = 'Y' and the grouping variable set to `TRT01P`. Within seconds, the user changed the default table title and downloaded the R script needed to reproduce the table outside the app:
 
@@ -229,7 +229,7 @@ Well, that wraps up our patient profile analysis, but there is so much more to l
 
 <br>
 
-So far, we've learned how to upload data, drag and drop blocks in the table generator as well as build a bonafide STAN table and export it's reproducible R code. Next we plotted mean diastolic blood pressure over time in the population explorer and define filters on the individual explorer tab to find the patients and analyze patient profiles responsible for elevating one subgroup's values.
+So far, we've learned how to upload data, drag and drop blocks in the table generator as well as build a bonafide standard analysis table and export it's reproducible R code. Next we plotted mean diastolic blood pressure over time in the population explorer and define filters on the individual explorer tab to find the patients and analyze patient profiles responsible for elevating one subgroup's values.
 
 <br>
 
