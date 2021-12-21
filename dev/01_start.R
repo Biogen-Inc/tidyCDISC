@@ -20,7 +20,7 @@ golem::fill_desc(
   author_first_name = "Maya", # Your First Name
   author_last_name = "Gans", # Your Last Name
   author_email = c("maya.gans@biogen.com"), # Your Email
-  repo_url = "https://cloudhub.corp.biogen.com/biometrics/tidyCDISC" # The URL of the GitHub Repo (optional) 
+  repo_url = "https://github.com/biogen-inc/tidyCDISC/" # The URL of the GitHub Repo (optional) 
 )     
 
 ## Set {golem} options ---- ran
@@ -28,7 +28,9 @@ golem::set_golem_options()
 
 ## Create Common Files ---- ran
 ## See ?usethis for more information
-usethis::use_mit_license( name = "Maya Gans; Aaron Clark; Robert Krajcik; Nate Mockler" )  # You can set another license here
+usethis::use_agpl_license(version = 3, include_future = TRUE)
+
+# usethis::use_mit_license( name = "Maya Gans; Aaron Clark; Robert Krajcik; Nate Mockler" )  # You can set another license here
 usethis::use_readme_rmd( open = FALSE )
 usethis::use_code_of_conduct()
 usethis::use_lifecycle_badge( "Experimental" ) #Experimental, Maturing, Stable, Superseded, Archived, Dormant, Questioning
@@ -36,7 +38,7 @@ usethis::use_news_md( open = FALSE )
 
 ## Use git ---- ran
 usethis::use_git("AC Initial Commit")
-# $ git remote add origin https://cloudhub.corp.biogen.com/biometrics/tidyCDISC.git
+# $ git remote add origin https://github.com/biogen-inc/tidyCDISC.git
 
 ## Init Testing Infrastructure ---- ran
 ## Create a template for tests

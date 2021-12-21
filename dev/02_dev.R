@@ -157,17 +157,27 @@ usethis::use_test( "app" )
 
 # Documentation
 
-## Vignette ---- not run
+## Vignette ---- run
 usethis::use_vignette("tidyCDISC")
 usethis::use_vignette("x00_Data_Upload")
 usethis::use_vignette("x02_Pop_Exp")
 usethis::use_vignette("x04_Filtering")
 # devtools::build_vignettes() # don't use, instead use...
-# devtools::build()
 
+# Before submitting a PR, run this code & update NEWS.md
+usethis::use_version("dev") #choices: "dev", "patch", "minor", "major"
+
+# Build pkg, including vignettes. Do this before updating documentation.
+devtools::build()
+
+# update pkgdown site only if user needs refreshed documentation
 # usethis::use_pkgdown() # Run once to configure your package to use pkgdown
 pkgdown::build_reference_index(pkg = rprojroot::is_r_package$find_file())
 pkgdown::build_site(pkg = rprojroot::is_r_package$find_file()) # Run to build the website
+
+
+
+
 
 ## Code coverage ---- not run
 ## (You'll need GitHub there)
