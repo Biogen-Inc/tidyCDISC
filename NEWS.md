@@ -11,7 +11,7 @@
     - line plot - means over time
     - Heat map - endpoint correlations
     - Kaplan Meier Curve (when `TTE` class data uploaded)
-
+    - started using updated version of IDEAFilter (>= 0.1.0.9000)
 
 # tidyCDISC 0.0.0.9000
 
