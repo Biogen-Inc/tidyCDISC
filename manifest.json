@@ -109,19 +109,19 @@
       "GithubRepo": "IDEAFilter",
       "GithubUsername": "Biogen-Inc",
       "GithubRef": "HEAD",
-      "GithubSha1": "a859dd601404b4ef8b02414bb004ab13ed041d04",
+      "GithubSha1": "9df1e489591019eb504d9340b7cf30d193e98240",
       "description": {
         "Package": "IDEAFilter",
         "Type": "Package",
-        "Version": "0.0.2",
+        "Version": "0.1.0.9000",
         "Title": "agnostic, idiomatic data filter module for shiny",
         "Description": "a small data filter module for shiny.",
-        "Authors@R": "as.person(c(\n    \"Maya Gans <maya.gans@biogen.com> [aut, cre]\", \n    \"Aaron Clark <aaron.clark@biogen.com> [aut]\"\n  ))",
+        "Authors@R": "as.person(c(\n    \"Maya Gans <maya.gans@biogen.com> [aut]\", \n    \"Aaron Clark <aaron.clark@biogen.com> [aut, cre]\"\n  ))",
         "Maintainer": "Aaron Clark <aaron.clark@biogen.com>",
-        "License": "AGPL-3",
+        "License": "AGPL-3 + file LICENSE",
         "Encoding": "UTF-8",
         "RoxygenNote": "7.1.1",
-        "Imports": "shiny, ggplot2, pillar, crayon, RColorBrewer, waiter,\nshinyTime",
+        "Imports": "shiny, ggplot2, pillar (>= 1.5.0), crayon, RColorBrewer,\nshinyTime, purrr",
         "Suggests": "shinytest, testthat, knitr, rmarkdown",
         "VignetteBuilder": "knitr",
         "RemoteType": "github",
@@ -129,15 +129,15 @@
         "RemoteRepo": "IDEAFilter",
         "RemoteUsername": "Biogen-Inc",
         "RemoteRef": "HEAD",
-        "RemoteSha": "a859dd601404b4ef8b02414bb004ab13ed041d04",
+        "RemoteSha": "9df1e489591019eb504d9340b7cf30d193e98240",
         "GithubRepo": "IDEAFilter",
         "GithubUsername": "Biogen-Inc",
         "GithubRef": "HEAD",
-        "GithubSHA1": "a859dd601404b4ef8b02414bb004ab13ed041d04",
+        "GithubSHA1": "9df1e489591019eb504d9340b7cf30d193e98240",
         "NeedsCompilation": "no",
-        "Packaged": "2021-12-21 18:44:44 UTC; aclark5",
-        "Author": "Maya Gans [aut, cre],\n  Aaron Clark [aut]",
-        "Built": "R 4.1.0; ; 2021-12-21 18:44:48 UTC; windows"
+        "Packaged": "2021-12-22 15:34:54 UTC; aclark5",
+        "Author": "Maya Gans [aut],\n  Aaron Clark [aut, cre]",
+        "Built": "R 4.1.0; ; 2021-12-22 15:34:57 UTC; windows"
       }
     },
     "MASS": {
@@ -4603,7 +4603,7 @@
       "checksum": "15156b2e34fd613f1fb819cb2b0950f4"
     },
     "app.R": {
-      "checksum": "c3f83463b837d559dc1c42eac1b94fcd"
+      "checksum": "cc61cef2beaeb9150634566b8001b629"
     },
     "CODE_OF_CONDUCT.md": {
       "checksum": "2e8c60771c15eeca105d658c3523b2af"
@@ -4654,7 +4654,7 @@
       "checksum": "61efa82920fa062e23d6215dfbdb74be"
     },
     "DESCRIPTION": {
-      "checksum": "42e8153e4385f5a9147727fd24e102a8"
+      "checksum": "43521f6f10311377d8e13ffedaf1f7c5"
     },
     "dev/01_start.R": {
       "checksum": "4edfe5d862d2e419a3bdfb9a7885b9b8"
@@ -5650,7 +5650,7 @@
       "checksum": "443564bc3ef43ce6d6c2027836715d58"
     },
     "NEWS.md": {
-      "checksum": "8eea10a839209d2cb0829cab15bc5da9"
+      "checksum": "9828d3e0310ec317d7782baf3d85f246"
     },
     "R/_disable_autoload.R": {
       "checksum": "096340080b9473cac73b1e51e08a0b68"
