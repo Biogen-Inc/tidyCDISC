@@ -61,7 +61,7 @@ Our first stop will be the table generator!
 <br>
 
 ```{r, echo=FALSE}
-knitr::include_graphics("figures/tableGen/quick_upload_then_tg.gif")
+knitr::include_graphics("figures/tableGen/quick_upload_then_tg_tidyCDISC.gif")
 ```
 
 <br>
@@ -158,7 +158,7 @@ Let's assume a scenario where we want to check on our patients' vital signs thro
 <br>
 
 ```{r,  echo=FALSE}
-knitr::include_graphics("figures/popExp/line plot mean over time.gif")
+knitr::include_graphics("figures/popExp/line plot mean over time tidyCDISC.gif")
 ```
 
 <br>
