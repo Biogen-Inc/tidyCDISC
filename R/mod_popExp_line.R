@@ -85,6 +85,7 @@ linePlot_ui <- function(id, label = "line") {
 #'
 #' @param input,output,session Internal parameters for {shiny}.
 #' @param data The combined dataframe from population explorer
+#' @param run logical, TRUE if select code chunks in this module should execute
 #'
 #' @import shiny
 #' @import dplyr
@@ -94,7 +95,7 @@ linePlot_ui <- function(id, label = "line") {
 #' @family popExp Functions
 #' @noRd
 #'  
-linePlot_srv <- function(input, output, session, data) {
+linePlot_srv <- function(input, output, session, data, run) {
   ns <- session$ns
   
   # -------------------------------------------------
@@ -102,7 +103,7 @@ linePlot_srv <- function(input, output, session, data) {
   # -------------------------------------------------
   
   observe({
-    req(data())
+    req(run(), data())
     
     # yvar cannot be from ADAE since that data has no visit var
     d <- data() %>% filter(data_from != "ADAE")
@@ -138,7 +139,7 @@ linePlot_srv <- function(input, output, session, data) {
   })
   
   output$include_var <- renderUI({
-    req(input$yvar %in% data()$PARAMCD)
+    req(run(), input$yvar %in% data()$PARAMCD)
     shinyWidgets::radioGroupButtons(ns("value"), "Value", justified = T,
                                     choices = c("AVAL", "CHG"),
                                     selected = isolate(input$value)
@@ -147,7 +148,7 @@ linePlot_srv <- function(input, output, session, data) {
   
   # if use wants to overlay a horizontal line on the plot
   observe({
-    req(input$add_hor)
+    req(run(), input$add_hor)
     
     # # d <- all_data
     # d <- data()
@@ -218,7 +219,7 @@ linePlot_srv <- function(input, output, session, data) {
   
   # if use wants to overlay a vertical line on the plot
   observe({
-    req(input$add_vert)
+    req(run(), input$add_vert)
     
     # d <- all_data
     d <- data()
@@ -307,7 +308,7 @@ linePlot_srv <- function(input, output, session, data) {
   })
   
   observeEvent(list(input$yvar), {
-    req(input$yvar != "")
+    req(run(), input$yvar != "")
     
     # Update grouping variable based on yvar selection
     if(!(input$yvar %in% colnames(data())) ){ # yvar paramcd #& input$xvar %in% colnames(data())
@@ -358,7 +359,7 @@ linePlot_srv <- function(input, output, session, data) {
   # create plot object using the numeric column on the yaxis
   # or by filtering the data by PARAMCD, then using AVAL or CHG for the yaxis
   p_both <- reactive({
-    req(data(), input$yvar, input$time)
+    req(run(), data(), input$yvar, input$time)
     pp <- app_lineplot(data(), input$yvar, input$time, input$value, input$separate, input$color,
       input$err_bars, input$label_points, input$gtxt_x_pos , input$gtxt_y_pos,
       input$add_vert, input$vert_x_int, input$add_hor, input$hor_y_int)

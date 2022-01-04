@@ -44,6 +44,7 @@ km_ui <- function(id, label = "km") {
 #'
 #' @param input,output,session Internal parameters for {shiny}.
 #' @param data The combined dataframe from population explorer
+#' @param run logical, TRUE if select code chunks in this module should execute
 #'
 #' @import shiny
 #' @import dplyr
@@ -53,11 +54,11 @@ km_ui <- function(id, label = "km") {
 #' @family popExp Functions
 #' @noRd
 #'  
-km_srv <- function(input, output, session, data) {
+km_srv <- function(input, output, session, data, run) {
   ns <- session$ns
   
   observe({
-    req(data())
+    req(run(), data())
     
     # get unique paramcd
     paramcd <- sort(na.omit(unique(data()$PARAMCD)))
@@ -71,7 +72,7 @@ km_srv <- function(input, output, session, data) {
   # update response variable options for user based on data filtered to a
   # certain param
   observeEvent(input$yvar, {
-    req(input$yvar != "")
+    req(run(), input$yvar != "")
     
     d <- data()
     my_vars <- d %>% 
@@ -92,7 +93,7 @@ km_srv <- function(input, output, session, data) {
   # update censor variable options for user based on data filtered to a
   # certain param
   observeEvent(input$yvar, {
-    req(input$yvar != "")
+    req(run(), input$yvar != "")
     
     # col <- c(1:4)
     # col <- c(0, 1, 1, 1)
@@ -117,7 +118,7 @@ km_srv <- function(input, output, session, data) {
   
   
   observeEvent(input$yvar, {
-    req(input$yvar != "")
+    req(run(), input$yvar != "")
     
     # yvar paramcd
     group_dat <- data() %>% 
@@ -149,7 +150,7 @@ km_srv <- function(input, output, session, data) {
   # create plot object using the numeric column on the yaxis
   # or by filtering the data by PARAMCD, then using AVAL or CHG for the yaxis
   p <- reactive({
-    req(data(), input$yvar )
+    req(run(), data(), input$yvar )
     #, input$resp_var,input$group,input$points,input$ci) # can't include these in req
     app_km_curve(data(), 
                  input$yvar, 

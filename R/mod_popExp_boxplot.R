@@ -34,6 +34,7 @@ boxPlot_ui <- function(id, label = "box") {
 #'
 #' @param input,output,session Internal parameters for {shiny}.
 #' @param data The combined dataframe from population explorer
+#' @param run logical, TRUE if select code chunks in this module should execute
 #'
 #' @import shiny
 #' @import dplyr
@@ -43,7 +44,7 @@ boxPlot_ui <- function(id, label = "box") {
 #' @family popExp Functions
 #' @noRd
 #' 
-boxPlot_srv <- function(input, output, session, data) {
+boxPlot_srv <- function(input, output, session, data, run) {
   ns <- session$ns
   
   # -------------------------------------------------
@@ -51,7 +52,7 @@ boxPlot_srv <- function(input, output, session, data) {
   # -------------------------------------------------
   
   observe({
-    req(data())
+    req(run(), data())
     
     # numeric columns, remove aval, chg, base
     num_col <- subset_colclasses(data(), is.numeric)
@@ -81,7 +82,7 @@ boxPlot_srv <- function(input, output, session, data) {
   })
   
   output$include_var <- renderUI({
-    req(input$yvar %in% data()$PARAMCD)
+    req(run(), input$yvar %in% data()$PARAMCD)
     shinyWidgets::radioGroupButtons(ns("value"), "Value",
                                     choices = c("AVAL", "CHG", "BASE"),
                                     selected = isolate(input$value))
@@ -95,7 +96,7 @@ boxPlot_srv <- function(input, output, session, data) {
   # create plot object using the numeric column on the yaxis
   # or by filtering the data by PARAMCD, then using AVAL or CHG for the yaxis
   p <- reactive({
-    req(data(), input$yvar, input$group)
+    req(run(), data(), input$yvar, input$group)
     app_boxplot(data(), input$yvar, input$group, input$value, input$points)
   })
   

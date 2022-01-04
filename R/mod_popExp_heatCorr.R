@@ -56,6 +56,7 @@ heatmap_ui <- function(id, label = "line") {
 #'
 #' @param input,output,session Internal parameters for {shiny}.
 #' @param data The combined dataframe from population explorer
+#' @param run logical, TRUE if select code chunks in this module should execute
 #'
 #' @import shiny
 #' @import dplyr
@@ -65,7 +66,7 @@ heatmap_ui <- function(id, label = "line") {
 #' @family popExp Functions
 #' @noRd
 #'  
-heatmap_srv <- function(input, output, session, data) {
+heatmap_srv <- function(input, output, session, data, run) {
   ns <- session$ns
   
   # -------------------------------------------------
@@ -73,7 +74,7 @@ heatmap_srv <- function(input, output, session, data) {
   # -------------------------------------------------
   
   observe({
-    req(data())
+    req(run(), data())
     
     # yvar cannot be from ADAE since that data has no visit var
     d <- data() %>% filter(data_from != "ADAE")
@@ -121,8 +122,8 @@ heatmap_srv <- function(input, output, session, data) {
   
   # time or by_var
   observeEvent(list(input$yvar_x, input$yvar_y), {
-    # req(input$yvar != "")
-    req(data(), input$yvar_x, input$yvar_y)
+    # req(run(), input$yvar != "")
+    req(run(), data(), input$yvar_x, input$yvar_y)
     
     # yvar cannot be from ADAE since that data has no visit var
     d <- data() %>% filter(data_from != "ADAE")
@@ -172,7 +173,7 @@ heatmap_srv <- function(input, output, session, data) {
     updateSelectInput(session, "time", choices = unique(c("NONE", seltime)), selected = isolate(input$time))
   })
   # output$include_var <- renderUI({
-  #   req(input$yvar %in% data()$PARAMCD)
+  #   req(run(), input$yvar %in% data()$PARAMCD)
   #   shinyWidgets::radioGroupButtons(ns("value"), "Value", justified = T,
   #                                   choices = c("AVAL", "CHG"),
   #                                   selected = isolate(input$value)
@@ -209,7 +210,7 @@ heatmap_srv <- function(input, output, session, data) {
   #   # cor_mthd <- "spearman"
   # )
   p_both <- reactive({
-    req(data(), input$yvar_x, input$yvar_y) #, input$time, input$cor_mthd)
+    req(run(), data(), input$yvar_x, input$yvar_y) #, input$time, input$cor_mthd)
 
     pp <- app_heatmap(data(), input$yvar_x, input$yvar_y, input$time, "AVAL",
                        input$cor_mthd, input$show_sig, input$sig_level)

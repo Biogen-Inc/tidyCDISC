@@ -52,6 +52,7 @@ scatterPlot_ui <- function(id, label = "scatter") {
 #'
 #' @param input,output,session Internal parameters for {shiny}.
 #' @param data The combined dataframe from population explorer
+#' @param run logical, TRUE if select code chunks in this module should execute
 #'
 #' @import shiny
 #' @import dplyr
@@ -61,11 +62,11 @@ scatterPlot_ui <- function(id, label = "scatter") {
 #' @family popExp Functions
 #' @noRd
 #'  
-scatterPlot_srv <- function(input, output, session, data) {
+scatterPlot_srv <- function(input, output, session, data, run) {
   ns <- session$ns
   
   observe({
-    req(data())
+    req(data(), run())
     
     # numeric columns, remove aval, chg, base
     num_col <- subset_colclasses(data(), is.numeric)
@@ -85,7 +86,7 @@ scatterPlot_srv <- function(input, output, session, data) {
   })
   
   observeEvent(list(input$xvar, input$yvar), {
-    req(input$xvar != "" & input$yvar != "")
+    req(input$xvar != "" & input$yvar != "", run())
     
     # Update grouping variable based on xvar & yvar selection
     if(input$yvar %in% colnames(data()) & input$xvar %in% colnames(data())){ # neither paramcd
@@ -129,14 +130,14 @@ scatterPlot_srv <- function(input, output, session, data) {
   })
   
   output$include_yvar <- renderUI({
-    req(input$yvar %in% data()$PARAMCD)
+    req(run(),input$yvar %in% data()$PARAMCD)
     shinyWidgets::radioGroupButtons(ns("value_y"), "Value",
                                     choices = c("AVAL", "CHG", "BASE"),
                                     selected = isolate(input$value_y))
   })
   
   output$include_xvar <- renderUI({
-    req(input$xvar %in% data()$PARAMCD)
+    req(run(),input$xvar %in% data()$PARAMCD)
     shinyWidgets::radioGroupButtons(ns("value_x"), "Value",
                                     choices = c("AVAL", "CHG", "BASE"),
                                     selected = isolate(input$value_y))
@@ -171,7 +172,7 @@ scatterPlot_srv <- function(input, output, session, data) {
   # create plot object using the numeric column on the yaxis
   # or by filtering the data by PARAMCD, then using AVAL or CHG for the yaxis
   p <- reactive({
-    req(data(), input$yvar, input$xvar)
+    req(run(),data(), input$yvar, input$xvar)
     app_scatterplot(data(), 
                  input$yvar, 
                  input$xvar, 
