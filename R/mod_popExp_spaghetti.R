@@ -32,6 +32,7 @@ spaghettiPlot_ui <- function(id, label = "spaghetti") {
 #'
 #' @param input,output,session Internal parameters for {shiny}.
 #' @param data The combined dataframe from population explorer
+#' @param run logical, TRUE if select code chunks in this module should execute
 #'
 #' @import shiny
 #' @import dplyr
@@ -41,7 +42,7 @@ spaghettiPlot_ui <- function(id, label = "spaghetti") {
 #' @family popExp Functions
 #' @noRd
 #'  
-spaghettiPlot_srv <- function(input, output, session, data) {
+spaghettiPlot_srv <- function(input, output, session, data, run) {
   ns <- session$ns
   
   # -------------------------------------------------
@@ -49,7 +50,7 @@ spaghettiPlot_srv <- function(input, output, session, data) {
   # -------------------------------------------------
   
   observe({
-    req(data())
+    req(run(), data())
     
     # get time based column names
     seltime_init <- sort(colnames(dplyr::select(data(), ends_with("DY"), contains("VIS"))))
@@ -81,7 +82,7 @@ spaghettiPlot_srv <- function(input, output, session, data) {
   })
   
   output$include_var <- renderUI({
-    req(input$yvar %in% data()$PARAMCD)
+    req(run(), input$yvar %in% data()$PARAMCD)
     shinyWidgets::radioGroupButtons(ns("value"), "Value",
                                     choices = c("AVAL", "CHG", "BASE"),
                                     selected = isolate(input$value)
@@ -96,7 +97,7 @@ spaghettiPlot_srv <- function(input, output, session, data) {
   # create plot object using the numeric column on the yaxis
   # or by filtering the data by PARAMCD, then using AVAL or CHG for the yaxis
   p <- reactive({
-    req(data(), input$yvar, input$time)
+    req(run(), data(), input$yvar, input$time)
     app_spaghettiplot(data(), input$yvar, input$time, input$value)
   })
   

@@ -225,12 +225,20 @@ mod_popExp_server <- function(input, output, session, datafile) {
       filter(!is.na(CNSR))
   })
   
-  p_scatter <- callModule(scatterPlot_srv, "scatterPlot", data = dataset)
-  p_spaghetti <- callModule(spaghettiPlot_srv, "spaghettiPlot", data = dataset)
-  p_box <- callModule(boxPlot_srv, "boxPlot", data = dataset)
-  p_line <- callModule(linePlot_srv, "linePlot", data = dataset)
-  p_heatmap <- callModule(heatmap_srv, "heatmap", data = dataset)
-  p_km <- callModule(km_srv, "km", data = km_data)
+  run_scat <- reactive(ifelse(input$plot_type == "Scatter Plot", TRUE, FALSE))
+  run_boxp <- reactive(ifelse(input$plot_type == "Box Plot", TRUE, FALSE))
+  run_spag <- reactive(ifelse(input$plot_type == "Spaghetti Plot", TRUE, FALSE))
+  run_line <- reactive(ifelse(input$plot_type == "Line plot - mean over time", TRUE, FALSE))
+  run_heat <- reactive(ifelse(input$plot_type == "Heatmap - endpoint correlations", TRUE, FALSE))
+  run_kapm <- reactive(ifelse(input$plot_type == "Kaplan-Meier Curve", TRUE, FALSE))
+
+  
+  p_scatter <- callModule(scatterPlot_srv, "scatterPlot", data = dataset, run = run_scat)
+  p_spaghetti <- callModule(spaghettiPlot_srv, "spaghettiPlot", data = dataset, run = run_spag)
+  p_box <- callModule(boxPlot_srv, "boxPlot", data = dataset, run = run_boxp)
+  p_line <- callModule(linePlot_srv, "linePlot", data = dataset, run = run_line)
+  p_heatmap <- callModule(heatmap_srv, "heatmap", data = dataset, run = run_heat)
+  p_km <- callModule(km_srv, "km", data = km_data, run = run_kapm)
   
 
   # use plot output of the module to create the plot 
