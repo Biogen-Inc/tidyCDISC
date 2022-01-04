@@ -16,7 +16,7 @@ This tutorial will walk through how to leverage the `tidyCDISC` app's Table Gene
 
 
 ```{r, echo=FALSE}
-knitr::include_graphics("figures/tableGen/quick_upload_then_tg.gif")
+knitr::include_graphics("figures/tableGen/quick_upload_then_tg_tidyCDISC.gif")
 ```
 
 <br>
