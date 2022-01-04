@@ -126,7 +126,7 @@ The data preview exists to give users a perfunctory view of their data to make s
 <br>
 
 ```{r, echo=FALSE}
-knitr::include_graphics("figures/upldDat/use_and_browse_pilot_data.gif")
+knitr::include_graphics("figures/upldDat/use_and_browse_pilot_data_tidyCDISC.gif")
 ```
 
 <br>
