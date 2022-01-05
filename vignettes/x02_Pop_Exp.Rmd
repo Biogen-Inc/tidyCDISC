@@ -41,7 +41,7 @@ Below is a plot built with the population explorer, where an example Kaplan Meie
 <br>
 
 ```{r, echo=FALSE, fig.align='center'}
-knitr::include_graphics("figures/popExp/layout.PNG")
+knitr::include_graphics("figures/popExp/layout tidyCDISC.PNG")
 ```
 
 <br>

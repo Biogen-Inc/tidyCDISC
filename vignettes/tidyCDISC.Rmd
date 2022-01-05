@@ -15,29 +15,27 @@ knitr::opts_chunk$set(
 ```
 
 
-Greetings! The [tidyCDISC](https://nate884.shinyapps.io/tidyCDISC/) app is a robust tool which empowers its users to glean informative knowledge from clinical trial data with little resistance. To prove this, we'll take you on a brisk tour of the app, traversing all of it's wonderful features from each tab of the application. 
-
-::: {.floatting}
+Greetings! The [tidyCDISC app](https://nate884.shinyapps.io/tidyCDISC/) is a robust tool which empowers its users to glean informative knowledge from clinical trial data with little resistance. To prove this, we'll take you on a brisk tour of the app, traversing all of it's wonderful features from each tab of the application. 
 
 <br>
-
-```{r, echo=FALSE, out.extra='style="float:right; padding:10px"'}
-knitr::include_graphics("figures/tableGen/TG need help.PNG")
-```
 
 
 Throughout all the tabs, there are these little buttons (usually in the top right-hand corners) with question marks printed on them. When clicked, they launch a real-time guide that walks the user through the major components of the current screen/ tab, providing context and suggested workflow. So if this guide doesn't answer all your questions just click the ` ? ` button for assistance! 
 
 <br>
 
-:::
+```{r, echo=FALSE, fig.align='center'}
+knitr::include_graphics("figures/tableGen/TG need help.PNG")
+```
+
+<br>
 
 Without any further adieu, **welcome to `tidyCDISC`'s landing page**: the *data tab*
 
 <br>
 
-```{r, out.height="60%", echo=FALSE}
-knitr::include_graphics("figures/upldDat/landing page.PNG")
+```{r, out.width="95%", echo=FALSE}
+knitr::include_graphics("figures/upldDat/landing page tidyCDISC.PNG")
 ```
 
 <br>
@@ -81,7 +79,7 @@ The Table Generator tab is divided in two: the area to the left is the handy dra
 <br>
 
 ```{r, echo=FALSE}
-knitr::include_graphics("figures/tableGen/02-TG.png")
+knitr::include_graphics("figures/tableGen/02-TG_tidyCDISC.PNG")
 ```
 
 <br>
