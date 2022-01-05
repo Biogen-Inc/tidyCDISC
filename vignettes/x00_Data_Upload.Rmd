@@ -16,8 +16,11 @@ knitr::opts_chunk$set(
 
 Rightfully so, the **Data** tab is the initial landing page for the `tidyCDISC` app. It's a place where you can find, upload, and view your data before proceeding to the analysis tabs, which are disabled until a `ADSL` sas7bdat file is uploaded.
 
+<br>
+
+
 ```{r, echo=FALSE, out.width="95%", fig.align='center'}
-knitr::include_graphics("figures/upldDat/landing page.PNG")
+knitr::include_graphics("figures/upldDat/landing page tidyCDISC.PNG")
 ```
 
 <br>

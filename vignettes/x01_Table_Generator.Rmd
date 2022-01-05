@@ -34,7 +34,7 @@ The Table Generator tab is divided in two: the area to the left is the drag-and-
 <br>
 
 ```{r, echo=FALSE}
-knitr::include_graphics("figures/tableGen/02-TG.png")
+knitr::include_graphics("figures/tableGen/02-TG_tidyCDISC.png")
 ```
 
 <br>
