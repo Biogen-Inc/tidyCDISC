@@ -8,16 +8,3 @@ options( "golem.app.prod" = TRUE)
 options(shiny.sanitize.errors = FALSE)
 # rsconnect::writeManifest() # ac added
 tidyCDISC::run_app() # add parameters here (if any)
-
-# Test IDEAFilter
-# # Install external version from Biogen's external repo:
-# remotes::install_github("Biogen-Inc/IDEAFilter")
-# devtools::install_github("Biogen-Inc/IDEAFilter")
-
-
-# devtools::install_github("MayaGans/IDEAFilter") # Try for fun
-# devtools::install_github("dgkf/shinyDataFilter")
-
-# library(shiny)
-# shinyAppFile(system.file("examples", "basic_app", "app.R", package = "IDEAFilter"))
-# shinyAppFile(system.file("examples", "basic_app", "app.R", package = "shinyDataFilter"))
