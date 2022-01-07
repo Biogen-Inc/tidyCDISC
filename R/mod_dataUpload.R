@@ -17,15 +17,16 @@ mod_dataUpload_ui <- function(id){
   tagList(
     h1("Data Upload/Preview", align = "center"),
     br(), br(), br(),
-    actionButton(ns("pilot"), "Use CDISC Pilot Data"),
+    # actionButton(ns("pilot"), "Use CDISC Pilot Data"),
     fluidRow(
       style = "padding: 20px",
       column(3,
              wellPanel(
                div(style="display: inline-block; ",h3("Data upload")),
                div(style="display: inline-block; float:right;",mod_dataComplyRules_ui("dataComplyRules_ui_1")),
-               HTML("<br>ADSL file is mandatory & BDS/ OCCDS files are optional"),
-               fileInput(ns("file"), "Upload sas7bdat files",accept = c(".sas7bdat"), multiple = TRUE),
+               HTML("<br>Demo tidyCDISC using the CDISC Pilot Data"),
+               # HTML("<br>ADSL file is mandatory & BDS/ OCCDS files are optional"),
+               # fileInput(ns("file"), "Upload sas7bdat files",accept = c(".sas7bdat"), multiple = TRUE),
                uiOutput(ns("radio_test"))
              )
       ),
@@ -165,10 +166,8 @@ mod_dataUpload_server <- function(input, output, session){
                   extensions = "Scroller", options = list(scrollY=400, scrollX=TRUE))
   })
   
-  observeEvent( input$pilot, {
-    
-    shinyjs::disable(id = "file")
-    
+  # observeEvent( input$pilot, {
+  #   shinyjs::disable(id = "file")
     dd$data <- list(
       ADSL = tidyCDISC::adsl,
       ADVS = tidyCDISC::advs,
@@ -176,9 +175,8 @@ mod_dataUpload_server <- function(input, output, session){
       ADLBC = tidyCDISC::adlbc,
       ADTTE = tidyCDISC::adtte
     )
-    
-    shinyjs::hide(id = "pilot")
-  })
+    # shinyjs::hide(id = "pilot")
+  # })
   
   ### return all data
   return(reactive(dd$data))
