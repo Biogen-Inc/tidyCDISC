@@ -24,9 +24,9 @@ mod_dataUpload_ui <- function(id){
              wellPanel(
                div(style="display: inline-block; ",h3("Data upload")),
                div(style="display: inline-block; float:right;",mod_dataComplyRules_ui("dataComplyRules_ui_1")),
-               HTML("<br>Demo tidyCDISC using the CDISC Pilot Data"),
-               # HTML("<br>ADSL file is mandatory & BDS/ OCCDS files are optional"),
-               # fileInput(ns("file"), "Upload sas7bdat files",accept = c(".sas7bdat"), multiple = TRUE),
+               HTML("<br>ADSL file is mandatory & BDS/ OCCDS files are optional"),
+               fileInput(ns("file"), "Upload sas7bdat files",accept = c(".sas7bdat"), multiple = TRUE),
+               h5("CDISC Pilot Data has been pre-loaded for Demo", style="color: #2573BA; font-weight: bold;"),
                uiOutput(ns("radio_test"))
              )
       ),
@@ -56,9 +56,9 @@ mod_dataUpload_ui <- function(id){
 #' to be used in other modules
 #' 
 #' @import shiny
-#' @importFrom haven zap_formats 
-#' @importFrom haven read_sas
+#' @importFrom haven zap_formats read_sas
 #' @importFrom stringr str_remove
+#' @importFrom shinyjs runjs enable disable
 #' 
 #' @noRd
 #' 
@@ -167,7 +167,8 @@ mod_dataUpload_server <- function(input, output, session){
   })
   
   # observeEvent( input$pilot, {
-  #   shinyjs::disable(id = "file")
+    shinyjs::runjs(paste0('$("#',ns("file"),'").parents("span").addClass("disabled")'))
+    shinyjs::disable(id = "file")
     dd$data <- list(
       ADSL = tidyCDISC::adsl,
       ADVS = tidyCDISC::advs,
