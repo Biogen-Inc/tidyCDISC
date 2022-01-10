@@ -1,4 +1,4 @@
-# tidyCDISC (development version)
+# tidyCDISC 0.0.1
 
 **Attention**: this new version imposes some breaking changes, i.e. merge conflicts galore. The development time highly recommends cloning the repo from this point forward.
 
