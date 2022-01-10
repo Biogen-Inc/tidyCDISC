@@ -1,0 +1,29 @@
+---
+title: "Blog"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Blog}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/",
+  out.width = "100%"
+)
+```
+
+A place for news, announcements, and training.
+
+
+```{r, echo=FALSE, out.width = "60%", fig.align='center'}
+knitr::include_graphics("figures/blog/important_announcement_cropped.jpg")
+```
+
+
+# Announcing `tidyCDISC 0.0.1`
+
+Start announcement
