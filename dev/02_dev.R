@@ -164,6 +164,9 @@ usethis::use_vignette("x02_Pop_Exp")
 usethis::use_vignette("x04_Filtering")
 usethis::use_vignette("Blog")
 usethis::use_vignette("announcing-tidycdisc-0-0-1-1")
+usethis::use_vignette("dev01_Table_Gen")
+usethis::use_vignette("dev02_Pop_Exp")
+usethis::use_vignette("dev03_Indv_Expl")
 # devtools::build_vignettes() # don't use, instead use...
 
 # Before submitting a PR, run this code & update NEWS.md
@@ -175,6 +178,7 @@ devtools::build()
 # update pkgdown site only if user needs refreshed documentation
 # usethis::use_pkgdown() # Run once to configure your package to use pkgdown
 pkgdown::build_articles(pkg = ".")
+pkgdown::build_articles_index()
 pkgdown::build_reference_index(pkg = rprojroot::is_r_package$find_file())
 pkgdown::build_site(pkg = rprojroot::is_r_package$find_file()) # Run to build the website
 pkgdown::build_news()
