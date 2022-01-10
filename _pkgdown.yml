@@ -1,3 +1,20 @@
+articles:
+- title: Blog Posts
+  navbar: ~
+  desc: New and Announcements
+  contents:
+  - Blog
+- title: Developer Guides
+  desc: Reference material for those who plan to contribute to the code
+  contents:
+  - developer_guide
+- title: User Guides
+  navbar: User Guides
+  desc: Step-by-step tutorials for tab and it's contents
+  contents:
+  - starts_with("x")
+
+
 reference:
 - title: Run app
   desc: Run the application locally

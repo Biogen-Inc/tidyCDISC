@@ -1,6 +1,6 @@
 # tidyCDISC 0.0.1
 
-This release adds meat to the previous skeleton version of `tidyCDISC`. The initial development release was intended to be a "bare bones" platform that could serve as a foundation to build a great clinical data exploratory tool. Version `0.0.1` enriches the user experience by adding useful & commonly needed features for analysis. For more on this release, see [the announcement](file:///C:/Users/aclark5/Documents/GitHub2/tidyCDISC/docs/articles/Blog.html#announcing-tidycdisc-0-0-1-1) on our blog.
+This release adds meat to the previous skeleton version of `tidyCDISC`. The initial development release was intended to be a "bare bones" platform that could serve as a foundation to build a great clinical data exploratory tool. Version `0.0.1` enriches the user experience by adding useful & commonly needed features for analysis. For more on this release, see [the announcement](https://biogen-inc.github.io/tidyCDISC/articles/Blog.html#announcing-tidycdisc-0-0-1-1) on our blog.
 
 
 - Major Features added, by tab:
