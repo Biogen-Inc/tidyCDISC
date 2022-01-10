@@ -4,15 +4,15 @@ articles:
   desc: New and Announcements
   contents:
   - Blog
-- title: Developer Guides
-  desc: Reference material for those who plan to contribute to the code
-  contents:
-  - developer_guide
 - title: User Guides
   navbar: User Guides
   desc: Step-by-step tutorials for tab and it's contents
   contents:
   - starts_with("x")
+- title: Developer Guides
+  desc: Reference material for those who plan to contribute to the code
+  contents:
+  - starts_with("dev")
 
 
 reference:
