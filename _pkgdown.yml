@@ -6,7 +6,7 @@ articles:
   - Blog
 - title: User Guides
   navbar: User Guides
-  desc: Step-by-step tutorials for tab and it's contents
+  desc: Step-by-step tutorials for each module in the application
   contents:
   - starts_with("x")
 - title: Developer Guides
