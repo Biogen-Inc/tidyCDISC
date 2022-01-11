@@ -27,7 +27,7 @@ The beauty of this application is that the user doesn't have to write a lick of 
 
 - A **clinical head**, with presumably no programming skills but the most domain expertise, can explore results without asking a statistician or programmer to build tables & figures.
 
-- A **statistician** can use the application to make tables/ figures instantly, cutting down on statistical programming requests for excess tables that aren't required, but just "nice to see". 
+- A **statistician** can use the application to make tables/figures instantly, cutting down on statistical programming requests for excess tables that aren't required, but just "nice to see". 
 
 ::: {.floatting}
 
