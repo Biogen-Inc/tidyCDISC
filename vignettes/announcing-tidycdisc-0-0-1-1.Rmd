@@ -34,7 +34,7 @@ knitr::include_graphics("figures/tableGen/03-age_mean.gif")
 New "STAT Blocks", such as `Y FREQ`, `MAX FREQ`, `NON-MISSING`, and a pair of `NESTED FREQ` blocks were added to the lineup. Each provides achieve a commonly desired output when paired with the appropriate variable. Let's briefly review each of the new blocks (grouped in red below).
 
 
-```{r, echo=FALSE, fig.align = 'center'}
+```{r, echo=FALSE, out.width="15%", fig.align = 'center'}
 knitr::include_graphics("figures/tableGen/new_release_stat_blocks.PNG")
 ```
 
