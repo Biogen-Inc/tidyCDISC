@@ -227,7 +227,7 @@ Well, that wraps up our patient profile analysis, but there is so much more to l
 
 <br>
 
-So far, we've learned how to upload data, drag and drop blocks in the table generator as well as build a bonafide standard analysis table and export it's reproducible R code. Next we plotted mean diastolic blood pressure over time in the population explorer and define filters on the individual explorer tab to find the patients and analyze patient profiles responsible for elevating one subgroup's values.
+So far, we've learned how to upload data, drag and drop blocks in the table generator as well as build a bonafide standard analysis table and export its reproducible R code. Next we plotted mean diastolic blood pressure over time in the population explorer and define filters on the individual explorer tab to find the patients and analyze patient profiles responsible for elevating one subgroup's values.
 
 <br>
 
