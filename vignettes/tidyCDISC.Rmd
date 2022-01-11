@@ -79,7 +79,7 @@ The Table Generator tab is divided in two: the area to the left is the handy dra
 <br>
 
 ```{r, echo=FALSE}
-knitr::include_graphics("figures/tableGen/02-TG_tidyCDISC.PNG")
+knitr::include_graphics("figures/tableGen/02-TG-tidyCDISC.PNG")
 ```
 
 <br>
