@@ -21,7 +21,7 @@ knitr::opts_chunk$set(
 
 ## Purpose
 
-One of `tidyCDISC`'s goals is to develop clinical tables that meet table standards leveraged for submission filings, called 'standard analyses'. However, this is secondary to the app's primary purpose: providing rich exploratory capabilities for clinical studies. High-level features of the app allows users to produce customized tables using a point-and-click interface, examine trends in a patient populations with dynamic figures, and supply visualizations that narrow in on single patient profile.
+One of `tidyCDISC`'s goals is to develop clinical tables that meet table standards leveraged for submission filings, called 'standard analyses'. However, this is secondary to the app's primary purpose: providing rich exploratory capabilities for clinical studies. High-level features of the app allows users to produce customized tables using a point-and-click interface, examine trends in patient populations with dynamic figures, and supply visualizations that narrow in on single patient profile.
 
 The beauty of this application is that the user doesn't have to write a lick of code to gather abundant insights from the study data, so it aims to serve a large population of clinical personnel with varying levels of programming experience. For example: 
 
