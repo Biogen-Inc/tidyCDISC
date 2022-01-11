@@ -6,7 +6,8 @@ This release adds meat to the previous skeleton version of `tidyCDISC`. The init
 - Major Features added, by tab:
   - **Table Generator**
     - New "STAT Blocks", such as `Y FREQ`, `MAX FREQ`, `NON-MISSING`, and a pair of `NESTED FREQ` blocks
-    - 17 new 'standard analysis' tables for `ADAE`s and `ADLB`s.
+    - Interact with `ADAE`
+    - 17 new 'standard analysis' tables in the `ADAE` and `ADLB` space.
     - An R Script Downloader to reproduce analysis performed in the app
   - **Population Explorer**
     - New Chart types

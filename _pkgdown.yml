@@ -10,7 +10,7 @@ articles:
   contents:
   - starts_with("x")
 - title: Developer Guides
-  desc: Reference material for those who plan to contribute to the code
+  desc: Reference material for those who plan to contribute to the application's code base
   contents:
   - starts_with("dev")
 
