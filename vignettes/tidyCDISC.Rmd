@@ -181,7 +181,7 @@ On the Individual Explorer tab, we'll narrow in on this subset of patients and s
 
 This analysis tab exists to establish powerful patient narratives and/or explore outlier patient data. Upon arriving to the Individual Explorer tab, you'll be greeted with the following prompt (below) asking to select a patient, by `UBSUBJID.` After selection, all the data presented will be tied directly that patient.
 
-To subset the patients list to a subgroup of interest, we recommend using **"Advanced Pre-filtering"**. When selecting the `Advanced Pre-Filtering` check box, additional fields will appear (below) to filter the population. From the previous example, we were interested in exploring patient profiles where the patient is <65 y/o, taking the low dose treatment with higher than average diastolic blood pressure values.
+To subset the patients list to a subgroup of interest, we recommend using **"Advanced Pre-filtering"**. When selecting the `Advanced Pre-Filtering` check box, additional fields will appear (below) to filter the population. From the previous example, we were interested in exploring patient profiles where the patient is <65 y/o, taking the low dose treatment with higher-than-average diastolic blood pressure values.
 
 <br>
 
