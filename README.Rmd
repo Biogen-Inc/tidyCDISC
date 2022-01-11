@@ -21,13 +21,13 @@ knitr::opts_chunk$set(
 
 ## Purpose
 
-One of `tidyCDISC`'s goals is to develop clinical tables that meet table standards leveraged for submission filings, called 'standard analyses'. However, this is secondary to the app's primary purpose: providing rich exploratory capabilities for clinical studies. High-level features of the app allows users to produce customized tables using a point-and-click interface, examine trends in a patient populations with dynamic figures, and supply visualizations that narrow in on single patient profile.
+One of `tidyCDISC`'s goals is to develop clinical tables that meet table standards leveraged for submission filings, called 'standard analyses'. However, this is secondary to the app's primary purpose: providing rich exploratory capabilities for clinical studies. High-level features of the app allow users to produce customized tables using a point-and-click interface, examine trends in patient populations with dynamic figures, and supply visualizations that narrow in on single patient profile.
 
 The beauty of this application is that the user doesn't have to write a lick of code to gather abundant insights from the study data, so it aims to serve a large population of clinical personnel with varying levels of programming experience. For example: 
 
 - A **clinical head**, with presumably no programming skills but the most domain expertise, can explore results without asking a statistician or programmer to build tables & figures.
 
-- A **statistician** can use the application to make tables/ figures instantly, cutting down on statistical programming requests for excess tables that aren't required, but just "nice to see". 
+- A **statistician** can use the application to make tables/figures instantly, cutting down on statistical programming requests for excess tables that aren't required, but just "nice to see". 
 
 ::: {.floatting}
 
@@ -85,7 +85,7 @@ We're confident the `tidyCDISC` application can save you time. If there is some 
 remotes::install_github("Biogen-Inc/tidyCDISC")
 ```
 
-With a simple `library(tidyCDISC)` you can access all the exported function from `tidyCDISC` that help users reproduce analysis performed in the app. Using the dev/run_dev.R file, you can even run the application locally:
+With a simple `library(tidyCDISC)` you can access all the exported functions from `tidyCDISC` that help users reproduce analysis performed in the app. Using the dev/run_dev.R file, you can even run the application locally:
 
 ```{r, eval=FALSE}
 # Set options here
