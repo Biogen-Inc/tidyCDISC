@@ -15,7 +15,7 @@ knitr::opts_chunk$set(
 ```
 
 
-Greetings! The [tidyCDISC app](https://nate884.shinyapps.io/tidyCDISC/) is a robust tool which empowers its users to glean informative knowledge from clinical trial data with little resistance. To prove this, we'll take you on a brisk tour of the app, traversing all of it's wonderful features from each tab of the application. 
+Greetings! The [tidyCDISC app](https://nate884.shinyapps.io/tidyCDISC/) is a robust tool which empowers its users to glean informative knowledge from clinical trial data with little resistance. To prove this, we'll take you on a brisk tour of the app, traversing all of its wonderful features from each tab of the application. 
 
 <br>
 
