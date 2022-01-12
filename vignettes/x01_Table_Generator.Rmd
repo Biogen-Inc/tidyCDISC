@@ -301,7 +301,7 @@ knitr::include_graphics("figures/tableGen/TG reprpoduce button.PNG")
 
 <br> 
 
-Upon doing so, the R script will download to your browser and when opened in R Studio, should look something like the below image. The R script will help you install any packages needed for the analysis, including the `tidyCDISC` package. If you used the CDISC Pilot data, no code modification is needed to reproduce the output since that data is pre-loaded into the `tidyCDISC` package. However, if you uploaded your data from a different source, you'll need to enter the file path to your study directory's data as a string, as seen on line 21. Note: `'path/to/study/directory/'` is just a placeholder until you enter your own string. If you are unsure of how to format your string, just run `choose.dir()` in your R console if running on Windows.
+Upon doing so, the R script will download to your browser and when opened in R Studio, should look something like the below image. The R script will help you install any packages needed for the analysis, including the `tidyCDISC` package. If you used the CDISC Pilot data, no code modification is needed to reproduce the output since that data is pre-loaded into the `tidyCDISC` package. However, if you uploaded your data from a different source, you'll need to enter the file path to your study directory's data as a string, as seen on line 17. Note: `'path/to/study/directory/'` is just a placeholder until you enter your own string. If you are unsure of how to format your string, just run `choose.dir()` in your R console if running on Windows.
 
 
 <br> 
