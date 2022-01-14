@@ -15,10 +15,17 @@ knitr::opts_chunk$set(
 ```
 
 
-Greetings! The [tidyCDISC app](https://nate884.shinyapps.io/tidyCDISC/) is a robust tool which empowers its users to glean informative knowledge from clinical trial data with little resistance. To prove this, we'll take you on a brisk tour of the app, traversing all of its wonderful features from each tab of the application. 
+Greetings! The `tidyCDISC` [application](https://rinpharma.shinyapps.io/tidyCDISC/) is a robust tool set which empowers its users to glean informative knowledge from clinical trial data with little resistance. To prove this, we'll take you on a brisk tour of the app, traversing all of its wonderful features from each tab of the application. Feel free to follow along with this guide using the demo version of `tidyCDISC` hosted on shinyapps.io. Note the demo version disables the **Data Upload** feature and instead uses the CDISC pilot data.
 
 <br>
 
+<center>
+<a href="https://rinpharma.shinyapps.io/tidyCDISC/">
+<img src="figures/demo_tidyCDISC_button_lite2dark.png" alt="Demo full tidyCDISC app" width="30%">
+</a>
+</center>
+
+<br>
 
 Throughout all the tabs, there are these little buttons (usually in the top right-hand corners) with question marks printed on them. When clicked, they launch a real-time guide that walks the user through the major components of the current screen/ tab, providing context and suggested workflow. So if this guide doesn't answer all your questions just click the ` ? ` button for assistance! 
 
