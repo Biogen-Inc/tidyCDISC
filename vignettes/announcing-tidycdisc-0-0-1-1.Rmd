@@ -15,11 +15,21 @@ knitr::opts_chunk$set(
 )
 ```
 
-On the road to generating desirable clinical tables and figures in R, `tidyCDISC` took some pioneering first steps towards that goal by open sourcing an interactive platform in `shiny` for all to use. However, the initial release was a minimum viable product and only promised users a foundation upon which to build. The latest release of `tidyCDISC` starts to build upon that foundation with a myriad of useful features and even lays some more footings for future expansion.
+On the road to generating desirable clinical tables and figures in R, `tidyCDISC` took some pioneering first steps towards that goal by open sourcing an interactive platform in `shiny` for all to use. However, the initial release was a minimum viable product and only promised users a foundation upon which to build. The latest release of `tidyCDISC` starts to build upon that foundation with a myriad of useful features and even lays some more footings for future expansion. Feel free to follow along with these announcement details using the demo version of `tidyCDISC` hosted on shinyapps.io. Note the demo version disables the **Data Upload** feature and instead uses the CDISC pilot data.
+
+<br>
+
+<center>
+<a href="https://rinpharma.shinyapps.io/tidyCDISC/">
+<img src="figures/demo_tidyCDISC_button_lite2dark.png" alt="Demo full tidyCDISC app" width="30%">
+</a>
+</center>
+
+<br>
 
 ##  Big news for the **Table Generator**
 
-Below are a number of improvements that enhance the user's table building experience (in and outside of the app). Checkout each feature and then take it for a spin in our **Table Generator** [test drive](https://biogen-inc.github.io/tidyCDISC/articles/announcing-tidycdisc-0-0-1-1.html#table-generator-test-drive-1) tutorial. But before we get that far, just a quick refresher: if you want to build a table using the `tidyCISC`, all you need to do is drag and drop a variable or endpoint from the uploaded data on the left and pair it with an appropriate stat block on the left. Below, we drag the `AGE` block from the `ADSL` and drag the `MEAN` block from the list of Stats to calculate summary statistics on patient `AGE` within the trial. For more information on how to use the **Table Generator**, visit the respective [user guide](https://biogen-inc.github.io/tidyCDISC/articles/x01_Table_Generator.html).
+Below are a number of improvements that enhance the user's table building experience (in and outside of the app). Checkout each feature and then take it for a spin in our **Table Generator** [test drive](https://biogen-inc.github.io/tidyCDISC/articles/announcing-tidycdisc-0-0-1-1.html#table-generator-test-drive-1). But before we get that far, just a quick refresher: if you want to build a table using the `tidyCISC`, all you need to do is drag and drop a variable or endpoint from the uploaded data on the left and pair it with an appropriate stat block on the left. Below, we drag the `AGE` block from the `ADSL` and drag the `MEAN` block from the list of Stats to calculate summary statistics on patient `AGE` within the trial. For more information on how to use the **Table Generator**, visit the respective [user guide](https://biogen-inc.github.io/tidyCDISC/articles/x01_Table_Generator.html).
 
 <br>
 
@@ -149,7 +159,13 @@ After reading in the data, the R script will recall the variable and stat blocks
 
 ### Table Generator Test drive
 
-Why wait, test out the new additions for yourself using CDISC Pilot data!
+Why wait, test out the new additions for yourself using CDISC Pilot data! Or open the full application for demo here:
+
+<center>
+<a href="https://rinpharma.shinyapps.io/tidyCDISC/">
+<img src="figures/demo_tidyCDISC_button_lite2dark.png" alt="Demo full tidyCDISC app" width="25%">
+</a>
+</center>
 
 <br>
 
@@ -423,7 +439,13 @@ knitr::include_graphics("figures/popExp/km grouped.PNG")
 
 ### Population Explorer test drive
 
-Why wait, test out the new chart types for yourself using CDISC Pilot data!
+Why wait, test out the new chart types for yourself using CDISC Pilot data! Or open the full application for demo here:
+
+<center>
+<a href="https://rinpharma.shinyapps.io/tidyCDISC/">
+<img src="figures/demo_tidyCDISC_button_lite2dark.png" alt="Demo full tidyCDISC app" width="25%">
+</a>
+</center>
 
 <br>
 
