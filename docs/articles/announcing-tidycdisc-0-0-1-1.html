@@ -122,7 +122,7 @@
 <h2 class="hasAnchor">
 <a href="#big-news-for-the-table-generator" class="anchor"></a>Big news for the <strong>Table Generator</strong>
 </h2>
-<p>Below are a number of improvements that enhance the user’s table building experience (in and outside of the app). Checkout each feature and then take it for a spin in our <strong>Table Generator</strong> tutorial. But before we get that far, just a quick refresher: if you want to build a table using the <code>tidyCISC</code>, all you need to do is drag and drop a variable or endpoint from the uploaded data on the left and pair it with an appropriate stat block on the left. Below, we drag the <code>AGE</code> block from the <code>ADSL</code> and drag the <code>MEAN</code> block from the list of Stats to calculate summary statistics on patient <code>AGE</code> within the trial. For more information on how to use the <strong>Table Generator</strong>, visit the respective <a href="https://biogen-inc.github.io/tidyCDISC/articles/x01_Table_Generator.html">user guide</a>.</p>
+<p>Below are a number of improvements that enhance the user’s table building experience (in and outside of the app). Checkout each feature and then take it for a spin in our <strong>Table Generator</strong> <a href="https://biogen-inc.github.io/tidyCDISC/articles/announcing-tidycdisc-0-0-1-1.html#table-generator-test-drive-1">test drive</a> tutorial. But before we get that far, just a quick refresher: if you want to build a table using the <code>tidyCISC</code>, all you need to do is drag and drop a variable or endpoint from the uploaded data on the left and pair it with an appropriate stat block on the left. Below, we drag the <code>AGE</code> block from the <code>ADSL</code> and drag the <code>MEAN</code> block from the list of Stats to calculate summary statistics on patient <code>AGE</code> within the trial. For more information on how to use the <strong>Table Generator</strong>, visit the respective <a href="https://biogen-inc.github.io/tidyCDISC/articles/x01_Table_Generator.html">user guide</a>.</p>
 <p><br></p>
 <p><img src="figures/tableGen/03-age_mean.gif"><!-- --></p>
 <p><br></p>
@@ -190,20 +190,41 @@
 <p><br></p>
 <p>After reading in the data, the R script will recall the variable and stat blocks previously dropped into the “drop zone” to recreate the output using the exact same process as performed in the app. From there, an R data.frame and html rendering of your table is prepared for saving or, if preferred, further analysis.</p>
 </div>
-<div id="test-drive" class="section level3">
+<div id="table-generator-test-drive" class="section level3">
 <h3 class="hasAnchor">
-<a href="#test-drive" class="anchor"></a>Test drive</h3>
-<p>Place holder for table generator tutorial app hosted on shinyapps.io.</p>
+<a href="#table-generator-test-drive" class="anchor"></a>Table Generator Test drive</h3>
+<p>Why wait, test out the new additions for yourself using CDISC Pilot data!</p>
+<p><br></p>
+<style>
+.shiny-app-frame {
+  left: 0;
+  top: 50px;
+  bottom: 0;
+  right: 0;
+}
+.shiny-app-frame iframe {
+  width: 100%;
+  height: 800px;
+  border: none;
+}
+</style>
+<div class="shiny-app-frame">
+<iframe src="https://rinpharma.shinyapps.io/tidyCDISC_Table_Generator/" class="shiny-app">
+</iframe>
+</div>
+<p><br></p>
 </div>
 </div>
 <div id="once-you-pop-the-fun-dont-stop" class="section level2">
 <h2 class="hasAnchor">
 <a href="#once-you-pop-the-fun-dont-stop" class="anchor"></a>Once you <strong>Pop</strong>, the fun don’t stop</h2>
-<p>New Chart types! The initial release of <code>tidyCDISC</code> included some generic charts that <em>could</em> theoretically stretch into something useful. However, the recent release focused on making canned charts that get to the heart of the matter for many pharma use cases. If you have an idea for a useful chart typically used for trial analysis or submission, just send the <a href="https://github.com/Biogen-Inc/tidyCDISC/issues/new">developers</a> a message with your request!</p>
+<p>New Chart types in the <strong>Population Explorer</strong>! The initial release of <code>tidyCDISC</code> included some generic charts that <em>could</em> theoretically stretch into something useful. However, the recent release focused on making canned charts that get to the heart of the matter for many pharma use cases. If you have an idea for a useful chart typically used for trial analysis or submission, just send the <a href="https://github.com/Biogen-Inc/tidyCDISC/issues/new">developers</a> a message with your request!</p>
 <p><br></p>
 <p><img src="figures/popExp/type%20of%20chart.PNG" width="50%" style="display: block; margin: auto;"></p>
 <p><br></p>
 <p>The bottom three are new to the <strong>Population Explorer</strong> in the <code>0.0.1</code> release. It’s important to note that the <code>Kaplan-Meier Curve</code> option will not appear unless an ADaM of class <code>TTE</code> (meaning it contains the <code>CNSR</code> variable) is uploaded on the Data tab. All other chart types will display by default.</p>
+<p><br></p>
+<p>Thorough explanation of each new chart type is presented below followed by a active shiny session to <a href="https://biogen-inc.github.io/tidyCDISC/articles/announcing-tidycdisc-0-0-1-1.html#population-explorer-test-drive-1">test drive</a> the new features. Take her for a spin!</p>
 <p><br></p>
 <div id="line-plot---means-over-time" class="section level3">
 <h3 class="hasAnchor">
@@ -299,6 +320,17 @@
 <p><img src="figures/popExp/km%20controls%20grouped.PNG" width="40%" style="display: block; margin: auto;"></p>
 <p><br></p>
 <p><img src="figures/popExp/km%20grouped.PNG" width="486" style="display: block; margin: auto;"></p>
+<p><br></p>
+</div>
+<div id="population-explorer-test-drive" class="section level3">
+<h3 class="hasAnchor">
+<a href="#population-explorer-test-drive" class="anchor"></a>Population Explorer test drive</h3>
+<p>Why wait, test out the new chart types for yourself using CDISC Pilot data!</p>
+<p><br></p>
+<div class="shiny-app-frame">
+<iframe src="https://rinpharma.shinyapps.io/tidyCDISC_Population_Explorer/" class="shiny-app">
+</iframe>
+</div>
 <p><br></p>
 </div>
 </div>

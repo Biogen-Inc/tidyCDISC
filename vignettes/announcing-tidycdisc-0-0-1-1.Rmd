@@ -19,7 +19,7 @@ On the road to generating desirable clinical tables and figures in R, `tidyCDISC
 
 ##  Big news for the **Table Generator**
 
-Below are a number of improvements that enhance the user's table building experience (in and outside of the app). Checkout each feature and then take it for a spin in our **Table Generator** tutorial. But before we get that far, just a quick refresher: if you want to build a table using the `tidyCISC`, all you need to do is drag and drop a variable or endpoint from the uploaded data on the left and pair it with an appropriate stat block on the left. Below, we drag the `AGE` block from the `ADSL` and drag the `MEAN` block from the list of Stats to calculate summary statistics on patient `AGE` within the trial. For more information on how to use the **Table Generator**, visit the respective [user guide](https://biogen-inc.github.io/tidyCDISC/articles/x01_Table_Generator.html).
+Below are a number of improvements that enhance the user's table building experience (in and outside of the app). Checkout each feature and then take it for a spin in our **Table Generator** [test drive](https://biogen-inc.github.io/tidyCDISC/articles/announcing-tidycdisc-0-0-1-1.html#table-generator-test-drive-1) tutorial. But before we get that far, just a quick refresher: if you want to build a table using the `tidyCISC`, all you need to do is drag and drop a variable or endpoint from the uploaded data on the left and pair it with an appropriate stat block on the left. Below, we drag the `AGE` block from the `ADSL` and drag the `MEAN` block from the list of Stats to calculate summary statistics on patient `AGE` within the trial. For more information on how to use the **Table Generator**, visit the respective [user guide](https://biogen-inc.github.io/tidyCDISC/articles/x01_Table_Generator.html).
 
 <br>
 
@@ -28,6 +28,7 @@ knitr::include_graphics("figures/tableGen/03-age_mean.gif")
 ```
 
 <br>
+
 
 ### New Stat blocks 
 
@@ -146,9 +147,33 @@ After reading in the data, the R script will recall the variable and stat blocks
 
 
 
-### Test drive
+### Table Generator Test drive
 
-Place holder for table generator tutorial app hosted on shinyapps.io.
+Why wait, test out the new additions for yourself using CDISC Pilot data!
+
+<br>
+
+<style>
+.shiny-app-frame {
+  left: 0;
+  top: 50px;
+  bottom: 0;
+  right: 0;
+}
+.shiny-app-frame iframe {
+  width: 100%;
+  height: 800px;
+  border: none;
+}
+</style>
+
+<div class="shiny-app-frame"> 
+<iframe src = "https://rinpharma.shinyapps.io/tidyCDISC_Table_Generator/" class="shiny-app">
+</iframe>
+</div>
+
+<br>
+
 
 ## Once you **Pop**, the fun don't stop
 
@@ -164,6 +189,10 @@ knitr::include_graphics("figures/popExp/type of chart.PNG")
 <br>
 
 The bottom three are new to the **Population Explorer** in the `0.0.1` release. It's important to note that the `Kaplan-Meier Curve` option will not appear unless an ADaM of class `TTE` (meaning it contains the `CNSR` variable) is uploaded on the Data tab. All other chart types will display by default. 
+
+<br>
+
+Thorough explanation of each new chart type is presented below followed by a active shiny session to [test drive](https://biogen-inc.github.io/tidyCDISC/articles/announcing-tidycdisc-0-0-1-1.html#population-explorer-test-drive-1) the new features. Take her for a spin!
 
 <br>
 
@@ -389,6 +418,19 @@ knitr::include_graphics("figures/popExp/km controls grouped.PNG")
 ```{r, echo=FALSE, fig.align='center'}
 knitr::include_graphics("figures/popExp/km grouped.PNG")
 ```
+
+<br>
+
+### Population Explorer test drive
+
+Why wait, test out the new chart types for yourself using CDISC Pilot data!
+
+<br>
+
+<div class="shiny-app-frame"> 
+<iframe src = "https://rinpharma.shinyapps.io/tidyCDISC_Population_Explorer/" class="shiny-app">
+</iframe>
+</div>
 
 <br>
 
