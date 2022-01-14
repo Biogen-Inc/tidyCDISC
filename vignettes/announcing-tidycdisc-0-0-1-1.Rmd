@@ -152,7 +152,7 @@ Place holder for table generator tutorial app hosted on shinyapps.io.
 
 ## Once you **Pop**, the fun don't stop
 
-New Chart types! The initial release of `tidyCDISC` included some generic charts that *could* theoretically stretch into something useful. However, the recent release focused on making canned charts that get to the heart of the matter for many pharma use cases. If you have an idea for a useful chart typically used for trial analysis or submission, just send the [developers](https://github.com/Biogen-Inc/tidyCDISC/issues/new) a message with your request!
+New Chart types in the **Population Explorer**! The initial release of `tidyCDISC` included some generic charts that *could* theoretically stretch into something useful. However, the recent release focused on making canned charts that get to the heart of the matter for many pharma use cases. If you have an idea for a useful chart typically used for trial analysis or submission, just send the [developers](https://github.com/Biogen-Inc/tidyCDISC/issues/new) a message with your request!
 
 
 <br>
