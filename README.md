@@ -80,9 +80,12 @@ to reproduce any analysis performed in the app.
 ## Usage
 
 `tidyCDISC` is primarily a web application, so no installation is
-necessary. Simply access Biogen’s network and start using the app here:
-[tidyCDISC](https://rinpharma.shinyapps.io/tidyCDISC/). Please review
-the “[Get
+necessary. Simply start using the demo version of the app here:
+[tidyCDISC](https://rinpharma.shinyapps.io/tidyCDISC/). Note the demo
+version disables the **Data Upload** feature and instead uses the CDISC
+pilot data. If you’d like to upload your own study data, we recommend
+installing `tidyCDISC` (using the instructions below) to run the app
+locally or deploy in your preferred environment. Please review the “[Get
 Started](https://Biogen-Inc.github.io/tidyCDISC/articles/tidyCDISC.html)”
 guide to follow an example use case with the app. However, to optimize
 one’s use of `tidyCDISC`, we highly recommend reading the following
@@ -115,11 +118,12 @@ message with your question or request!
 ## Install the `tidyCDISC` R package
 
 `tidyCDISC` is primarily an application, so no installation is
-necessary. Simply start using the app here:
-[tidyCDISC](https://nate884.shinyapps.io/tidyCDISC/). However, if you
-choose to export and run R code from the Table Generator, you will need
-the `tidyCDISC` package installed on your machine locally. Execute the
-following code to install the package to your local machine:
+necessary. Simply start using the demo version of the app here:
+[tidyCDISC](https://rinpharma.shinyapps.io/tidyCDISC/). However, if you
+choose to upload your own study data OR export & run R code from the
+Table Generator, you will need the `tidyCDISC` package installed on your
+machine locally. Execute the following code to install the package to
+your local machine:
 
 ``` r
 remotes::install_github("Biogen-Inc/tidyCDISC")
@@ -141,7 +145,7 @@ golem::detach_all_attached()
 golem::document_and_reload()
 
 # Run the application 
-run_app()
+tidyCDISC::run_app()
 ```
 
 <br>

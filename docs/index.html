@@ -146,7 +146,7 @@
 <div id="usage" class="section level2">
 <h2 class="hasAnchor">
 <a href="#usage" class="anchor"></a>Usage</h2>
-<p><code>tidyCDISC</code> is primarily a web application, so no installation is necessary. Simply access Biogen’s network and start using the app here: <a href="https://rinpharma.shinyapps.io/tidyCDISC/">tidyCDISC</a>. Please review the “<a href="https://Biogen-Inc.github.io/tidyCDISC/articles/tidyCDISC.html">Get Started</a>” guide to follow an example use case with the app. However, to optimize one’s use of <code>tidyCDISC</code>, we highly recommend reading the following articles that take a deeper look into the topics presented in the ‘get started’ tutorial:</p>
+<p><code>tidyCDISC</code> is primarily a web application, so no installation is necessary. Simply start using the demo version of the app here: <a href="https://rinpharma.shinyapps.io/tidyCDISC/">tidyCDISC</a>. Note the demo version disables the <strong>Data Upload</strong> feature and instead uses the CDISC pilot data. If you’d like to upload your own study data, we recommend installing <code>tidyCDISC</code> (using the instructions below) to run the app locally or deploy in your preferred environment. Please review the “<a href="https://Biogen-Inc.github.io/tidyCDISC/articles/tidyCDISC.html">Get Started</a>” guide to follow an example use case with the app. However, to optimize one’s use of <code>tidyCDISC</code>, we highly recommend reading the following articles that take a deeper look into the topics presented in the ‘get started’ tutorial:</p>
 <ul>
 <li><p><a href="https://Biogen-Inc.github.io/tidyCDISC/articles/x00_Data_Upload.html">00 Data Upload</a></p></li>
 <li><p><a href="https://Biogen-Inc.github.io/tidyCDISC/articles/x01_Table_Generator.html">01 Table Generator</a></p></li>
@@ -160,7 +160,7 @@
 <div id="install-the-tidycdisc-r-package" class="section level2">
 <h2 class="hasAnchor">
 <a href="#install-the-tidycdisc-r-package" class="anchor"></a>Install the <code>tidyCDISC</code> R package</h2>
-<p><code>tidyCDISC</code> is primarily an application, so no installation is necessary. Simply start using the app here: <a href="https://nate884.shinyapps.io/tidyCDISC/">tidyCDISC</a>. However, if you choose to export and run R code from the Table Generator, you will need the <code>tidyCDISC</code> package installed on your machine locally. Execute the following code to install the package to your local machine:</p>
+<p><code>tidyCDISC</code> is primarily an application, so no installation is necessary. Simply start using the demo version of the app here: <a href="https://rinpharma.shinyapps.io/tidyCDISC/">tidyCDISC</a>. However, if you choose to upload your own study data OR export &amp; run R code from the Table Generator, you will need the <code>tidyCDISC</code> package installed on your machine locally. Execute the following code to install the package to your local machine:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"Biogen-Inc/tidyCDISC"</span><span class="op">)</span></code></pre></div>
 <p>With a simple <code><a href="https://Biogen-Inc.github.io/tidyCDISC/">library(tidyCDISC)</a></code> you can access all the exported functions from <code>tidyCDISC</code> that help users reproduce analysis performed in the app. Using the dev/run_dev.R file, you can even run the application locally:</p>
@@ -175,7 +175,7 @@
 <span class="fu">golem</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/golem/man/document_and_reload.html">document_and_reload</a></span><span class="op">(</span><span class="op">)</span>
 
 <span class="co"># Run the application </span>
-<span class="fu"><a href="reference/run_app.html">run_app</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<span class="fu">tidyCDISC</span><span class="fu">::</span><span class="fu"><a href="reference/run_app.html">run_app</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p><br></p>
 <p><br></p>
 <p>Happy exploring!</p>
