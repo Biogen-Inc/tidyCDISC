@@ -183,7 +183,16 @@ pkgdown::build_reference_index(pkg = rprojroot::is_r_package$find_file())
 pkgdown::build_site(pkg = rprojroot::is_r_package$find_file()) # Run to build the website
 pkgdown::build_news()
 
-
+# # GitHub Actions
+# usethis::use_github_action()
+# 
+# # Chose one of the three
+# # See https://usethis.r-lib.org/reference/use_github_action.html
+# usethis::use_github_action_check_release() 
+usethis::use_github_action_check_standard()
+# usethis::use_github_action_check_full() 
+# # Add action for PR
+# usethis::use_github_action_pr_commands()
 
 
 ## Code coverage ---- not run

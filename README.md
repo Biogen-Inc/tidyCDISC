@@ -3,6 +3,11 @@
 
 # tidyCDISC <a href='https://Biogen-Inc.github.io/tidyCDISC/'><img src="man/figures/hex-tidyCDISC.png" align="right" height="170"/></a>
 
+<!-- badges: start -->
+
+[![R-CMD-check](https://github.com/Biogen-Inc/tidyCDISC/workflows/R-CMD-check/badge.svg)](https://github.com/Biogen-Inc/tidyCDISC/actions)
+<!-- badges: end -->
+
 `tidyCDISC` is a shiny app to easily create custom tables and figures
 from ADaM-ish data sets.
 
