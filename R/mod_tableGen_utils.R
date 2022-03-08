@@ -319,9 +319,9 @@ check_params <- function(datafile, param_vector) {
 #' The smallest possible data set we could filter to semi-join later
 #' 
 #' @param datafile list of ADaM-ish dataframes 
+#' @param input_filter_df The name of a dataset stored in `datafile`
 #' 
 #' @export
-#' @noRd
 #' 
 data_to_filter <- function(datafile, input_filter_df) {
   select_dfs <- datafile[input_filter_df]
