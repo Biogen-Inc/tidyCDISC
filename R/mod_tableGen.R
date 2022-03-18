@@ -537,7 +537,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     for_gt() %>%
       # gt(rowname_col = "Variable", groupname_col = "ID") %>%
       gt(groupname_col = "ID") %>%
-      fmt_markdown(columns = vars(Variable),
+      fmt_markdown(columns = c(Variable),
                    rows = stringr::str_detect(Variable,'&nbsp;') |
                      stringr::str_detect(Variable,'<b>') |
                      stringr::str_detect(Variable,'</b>')) %>%
@@ -859,7 +859,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       library(gt)
       tg_table %>%
           gt(groupname_col = 'ID') %>%
-          fmt_markdown(columns = vars(Variable),
+          fmt_markdown(columns = c(Variable),
                  rows = stringr::str_detect(Variable,'&nbsp;') |
                    stringr::str_detect(Variable,'<b>') |
                    stringr::str_detect(Variable,'</b>')) %>%
