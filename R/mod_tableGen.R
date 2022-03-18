@@ -506,8 +506,6 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
           pattern = '\\b'%s+%pretty_blocks$Pattern%s+%'\\b',
           replacement = pretty_blocks$Replacement,
           vectorize_all = FALSE))
-    print("for_gt():")
-    print(d)
     return(d)
   })
   
@@ -517,19 +515,19 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # these are used for grouping in gt. Make sure Total is at the end
   row_names_n <- reactive({ 
     some_names <- names(for_gt())[-c(1:2)] 
-    print("some_names:")
-    print(some_names)
+    # print("some_names:")
+    # print(some_names)
     
     some_names[grepl("\\.\\.\\.", some_names)] <- "Missing"
-    print("some_names (w/ missing labs):")
-    print(some_names)
+    # print("some_names (w/ missing labs):")
+    # print(some_names)
     
     some_names_no_tot <- some_names[some_names != "Total"]
-    print("some_names_no_tot:")
-    print(some_names_no_tot)
+    # print("some_names_no_tot:")
+    # print(some_names_no_tot)
     
-    print('append(some_names_no_tot, "Total":')
-    print(append(some_names_no_tot, "Total"))
+    # print('append(some_names_no_tot, "Total":')
+    # print(append(some_names_no_tot, "Total"))
     append(some_names_no_tot, "Total")
   })
   
@@ -541,28 +539,6 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     }
     nm = md(glue::glue("**{row_names_n()}** <br> N={total()}"))
   }
-  
-  # ### test
-  # col_for_list2 <- function(nm) {
-  #   nm = md(glue::glue("**{row_names_n2()}** <br> N={total2()}"))
-  # }
-  # row_names_n2 <- function(){
-  #   some_names <- names(dummy)#[-c(1:2)] 
-  #   some_names[grepl("\\.\\.\\.", some_names)] <- "Missing"
-  #   some_names_no_tot <- some_names[some_names != "Total"]
-  #   append(some_names_no_tot, "Total")
-  # }
-  # total2 <- function(){
-  #   dummy[1,]
-  # }
-  # dummy <- tibble::tibble("one" = 1,"two" = 2, "Total" = 3)
-  # purrr::imap(dummy, ~col_for_list2(.y))
-  # 
-  # dummy %>%
-  #   gt::gt() %>%
-  #   gt::cols_label(.list = col_for_list)
-  
-  
   
   # create gt table
   gt_table <- reactive({
@@ -896,7 +872,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
                    stringr::str_detect(Variable,'<b>') |
                    stringr::str_detect(Variable,'</b>')) %>%
           tab_options(table.width = px(700)) %>%
-          cols_label(.list = imap(tg_table[-c(1:2)], ~ tidyCDISC::col_for_list_expr(.y, .x))) %>%
+          cols_label(.list = imap(tg_table[-c(1:2)], ~ tidyCDISC::col_for_list_expr(.x))) %>%
           tab_header(
             title = md('{input$table_title}'),
             subtitle = md(\"{subtitle_html()}\")
