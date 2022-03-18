@@ -204,18 +204,13 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # this allows our dropdown to be in chronological order
   avisit_words <- reactive({ 
     req(datafile())
-    # req(any(purrr::map_lgl(datafile(), ~"AVISIT" %in% colnames(.x))))
     
     if(any(purrr::map_lgl(datafile(), ~"AVISIT" %in% colnames(.x)))){
-      # if("AVISIT" %in% colnames(BDS())){
         purrr::map(BDS(), function(x) x %>% dplyr::select(AVISIT)) %>%
           dplyr::bind_rows() %>%
           dplyr::pull(AVISIT)
-      # }else {
-      #   c("fake_weeky","dummy_weeky")
-      # }
     } else {
-      c("fake_weeky","dummy_weeky")
+      NULL #c("fake_weeky","dummy_weeky") # DON'T use this comment part. It's handled in AVISIT()
     }
     
   })
@@ -225,13 +220,9 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     req(any(purrr::map_lgl(datafile(), ~"AVISIT" %in% colnames(.x))))
     
     if(any(purrr::map_lgl(datafile(), ~"AVISIT" %in% colnames(.x)))){
-      # if("AVISITN" %in% colnames(BDS())){
         purrr::map(BDS(), function(x) x %>% dplyr::select(AVISITN)) %>%
           dplyr::bind_rows() %>%
           dplyr::pull(AVISITN)
-      # } else {
-      #   1:2
-      # }
     } else {
       1:2
     }
@@ -251,7 +242,6 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
         pull(AVISIT) %>%
         unique()
     }
-    # print(avisit_words[avisit_words != ""])
     avisit_words[avisit_words != ""]
   })
   
@@ -515,19 +505,8 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # these are used for grouping in gt. Make sure Total is at the end
   row_names_n <- reactive({ 
     some_names <- names(for_gt())[-c(1:2)] 
-    # print("some_names:")
-    # print(some_names)
-    
     some_names[grepl("\\.\\.\\.", some_names)] <- "Missing"
-    # print("some_names (w/ missing labs):")
-    # print(some_names)
-    
     some_names_no_tot <- some_names[some_names != "Total"]
-    # print("some_names_no_tot:")
-    # print(some_names_no_tot)
-    
-    # print('append(some_names_no_tot, "Total":')
-    # print(append(some_names_no_tot, "Total"))
     append(some_names_no_tot, "Total")
   })
   
