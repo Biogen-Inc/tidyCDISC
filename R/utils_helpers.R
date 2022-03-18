@@ -10,7 +10,7 @@
 #' @keywords tabGen_repro
 #' 
 # get column names with N
-col_for_list_expr <- function(nm, x) {
+col_for_list_expr <- function(nm) {
   nm = md(glue::glue("**{row_names_n}** <br> N={total}"))
 }
 

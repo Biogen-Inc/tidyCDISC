@@ -3,8 +3,21 @@
 
 # tidyCDISC <a href='https://Biogen-Inc.github.io/tidyCDISC/'><img src="man/figures/hex-tidyCDISC.png" align="right" height="170"/></a>
 
-tidyCDISC is a shiny app to easily create custom tables and figures from
-ADaM-ish datasets.
+<!-- badges: start -->
+
+[![R-CMD-check](https://github.com/Biogen-Inc/tidyCDISC/workflows/R-CMD-check/badge.svg)](https://github.com/Biogen-Inc/tidyCDISC/actions)
+<!-- badges: end -->
+
+`tidyCDISC` is a shiny app to easily create custom tables and figures
+from ADaM-ish data sets.
+
+<br>
+
+<center>
+<a href="https://rinpharma.shinyapps.io/tidyCDISC/">
+<img src="man/figures/demo_tidyCDISC_button_lite2dark.png" alt="Demo full tidyCDISC app" width="25%">
+</a>
+</center>
 
 ## Purpose
 
@@ -12,10 +25,9 @@ One of `tidyCDISC`‘s goals is to develop clinical tables that meet table
 standards leveraged for submission filings, called ’standard analyses’.
 However, this is secondary to the app’s primary purpose: providing rich
 exploratory capabilities for clinical studies. High-level features of
-the app allows users to produce customized tables using a
-point-and-click interface, examine trends in a patient populations with
-dynamic figures, and supply visualizations that narrow in on single
-patient profile.
+the app allow users to produce customized tables using a point-and-click
+interface, examine trends in patient populations with dynamic figures,
+and supply visualizations that narrow in on single patient profile.
 
 The beauty of this application is that the user doesn’t have to write a
 lick of code to gather abundant insights from the study data, so it aims
@@ -26,7 +38,7 @@ programming experience. For example:
     most domain expertise, can explore results without asking a
     statistician or programmer to build tables & figures.
 
--   A **statistician** can use the application to make tables/ figures
+-   A **statistician** can use the application to make tables/figures
     instantly, cutting down on statistical programming requests for
     excess tables that aren’t required, but just “nice to see”.
 
@@ -55,6 +67,8 @@ R/Medicine](man/figures/tidyCDISC_RMedicine_thumbnail.png)](https://youtu.be/QeH
 
 </center>
 
+<br>
+
 ## Scope
 
 As previously mentioned, `tidyCDISC` can only accept data sets that
@@ -66,12 +80,17 @@ If you’re looking to regularly generate R code for tables, the
 `tidyCDISC` app has a built-in export feature that downloads an R script
 to reproduce any analysis performed in the app.
 
+<br>
+
 ## Usage
 
 `tidyCDISC` is primarily a web application, so no installation is
-necessary. Simply access Biogen’s network and start using the app here:
-[tidyCDISC](https://nate884.shinyapps.io/tidyCDISC/). Please review the
-“[Get
+necessary. Simply start using the demo version of the app here:
+[tidyCDISC](https://rinpharma.shinyapps.io/tidyCDISC/). Note the demo
+version disables the **Data Upload** feature and instead uses the CDISC
+pilot data. If you’d like to upload your own study data, we recommend
+installing `tidyCDISC` (using the instructions below) to run the app
+locally or deploy in your preferred environment. Please review the “[Get
 Started](https://Biogen-Inc.github.io/tidyCDISC/articles/tidyCDISC.html)”
 guide to follow an example use case with the app. However, to optimize
 one’s use of `tidyCDISC`, we highly recommend reading the following
@@ -99,21 +118,24 @@ Please send the
 [developers](https://github.com/Biogen-Inc/tidyCDISC/issues/new) a
 message with your question or request!
 
-## Install `tidyCDISC` R package
+<br>
+
+## Install the `tidyCDISC` R package
 
 `tidyCDISC` is primarily an application, so no installation is
-necessary. Simply start using the app here:
-[tidyCDISC](https://nate884.shinyapps.io/tidyCDISC/). However, if you
-choose to export and run R code from the Table Generator, you will need
-the `tidyCDISC` package installed on your machine locally. Execute the
-following code to install the package to your local machine:
+necessary. Simply start using the demo version of the app here:
+[tidyCDISC](https://rinpharma.shinyapps.io/tidyCDISC/). However, if you
+choose to upload your own study data OR export & run R code from the
+Table Generator, you will need the `tidyCDISC` package installed on your
+machine locally. Execute the following code to install the package to
+your local machine:
 
 ``` r
 remotes::install_github("Biogen-Inc/tidyCDISC")
 ```
 
 With a simple `library(tidyCDISC)` you can access all the exported
-function from `tidyCDISC` that help users reproduce analysis performed
+functions from `tidyCDISC` that help users reproduce analysis performed
 in the app. Using the dev/run\_dev.R file, you can even run the
 application locally:
 
@@ -128,8 +150,12 @@ golem::detach_all_attached()
 golem::document_and_reload()
 
 # Run the application 
-run_app()
+tidyCDISC::run_app()
 ```
+
+<br>
+
+<br>
 
 Happy exploring!
 
