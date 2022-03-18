@@ -15,10 +15,17 @@ knitr::opts_chunk$set(
 ```
 
 
-Greetings! The [tidyCDISC app](https://nate884.shinyapps.io/tidyCDISC/) is a robust tool which empowers its users to glean informative knowledge from clinical trial data with little resistance. To prove this, we'll take you on a brisk tour of the app, traversing all of it's wonderful features from each tab of the application. 
+Greetings! The `tidyCDISC` [application](https://rinpharma.shinyapps.io/tidyCDISC/) is a robust tool set which empowers its users to glean informative knowledge from clinical trial data with little resistance. To prove this, we'll take you on a brisk tour of the app, traversing all of its wonderful features from each tab of the application. Feel free to follow along with this guide using the demo version of `tidyCDISC` hosted on shinyapps.io. Note the demo version disables the **Data Upload** feature and instead uses the CDISC pilot data.
 
 <br>
 
+<center>
+<a href="https://rinpharma.shinyapps.io/tidyCDISC/">
+<img src="figures/demo_tidyCDISC_button_lite2dark.png" alt="Demo full tidyCDISC app" width="30%">
+</a>
+</center>
+
+<br>
 
 Throughout all the tabs, there are these little buttons (usually in the top right-hand corners) with question marks printed on them. When clicked, they launch a real-time guide that walks the user through the major components of the current screen/ tab, providing context and suggested workflow. So if this guide doesn't answer all your questions just click the ` ? ` button for assistance! 
 
@@ -79,7 +86,7 @@ The Table Generator tab is divided in two: the area to the left is the handy dra
 <br>
 
 ```{r, echo=FALSE}
-knitr::include_graphics("figures/tableGen/02-TG_tidyCDISC.PNG")
+knitr::include_graphics("figures/tableGen/02-TG-tidyCDISC.PNG")
 ```
 
 <br>
@@ -129,7 +136,7 @@ knitr::include_graphics("figures/tableGen/TG STAN dropdown.PNG")
 
 When data needed to produce certain outputs aren't present, the list of available tables in this drop down will change. For example, if an `ADAE` is not uploaded, then all the AE tables will disappear from the above list.
 
-When one of these tables is selected, like disposition (Accounting of Subjects) below, the table generator simply compiles the needed variable and stat blocks in the correct order to generate the desired output, as seen below. Notice how the a population filter was set automatically, in this case to `FASFL` = 'Y' and the grouping variable set to `TRT01P`. Within seconds, the user changed the default table title and downloaded the R script needed to reproduce the table outside the app:
+When one of these tables is selected, like disposition (Accounting of Subjects) below, the table generator simply compiles the needed variable and stat blocks in the correct order to generate the desired output, as seen below. Notice how the population filter was set automatically, in this case to `FASFL` = 'Y' and the grouping variable set to `TRT01P`. Within seconds, the user changed the default table title and downloaded the R script needed to reproduce the table outside the app:
 
 <br>
 
@@ -181,7 +188,7 @@ On the Individual Explorer tab, we'll narrow in on this subset of patients and s
 
 This analysis tab exists to establish powerful patient narratives and/or explore outlier patient data. Upon arriving to the Individual Explorer tab, you'll be greeted with the following prompt (below) asking to select a patient, by `UBSUBJID.` After selection, all the data presented will be tied directly that patient.
 
-To subset the patients list to a subgroup of interest, we recommend using **"Advanced Pre-filtering"**. When selecting the `Advanced Pre-Filtering` check box, additional fields will appear (below) to filter the population. From the previous example, we were interested in exploring patient profiles where the patient is <65 y/o, taking the low dose treatment with higher than average diastolic blood pressure values.
+To subset the patients list to a subgroup of interest, we recommend using **"Advanced Pre-filtering"**. When selecting the `Advanced Pre-Filtering` check box, additional fields will appear (below) to filter the population. From the previous example, we were interested in exploring patient profiles where the patient is <65 y/o, taking the low dose treatment with higher-than-average diastolic blood pressure values.
 
 <br>
 
@@ -227,7 +234,7 @@ Well, that wraps up our patient profile analysis, but there is so much more to l
 
 <br>
 
-So far, we've learned how to upload data, drag and drop blocks in the table generator as well as build a bonafide standard analysis table and export it's reproducible R code. Next we plotted mean diastolic blood pressure over time in the population explorer and define filters on the individual explorer tab to find the patients and analyze patient profiles responsible for elevating one subgroup's values.
+So far, we've learned how to upload data, drag and drop blocks in the table generator as well as build a bonafide standard analysis table and export its reproducible R code. Next we plotted mean diastolic blood pressure over time in the population explorer and define filters on the individual explorer tab to find the patients and analyze patient profiles responsible for elevating one subgroup's values.
 
 <br>
 
