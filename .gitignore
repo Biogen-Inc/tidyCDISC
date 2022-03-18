@@ -3,3 +3,5 @@
 .Rproj.user
 inst/doc
 rsconnect/
+docs/
+vignettes/
