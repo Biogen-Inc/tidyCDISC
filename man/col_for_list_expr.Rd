@@ -4,17 +4,17 @@
 \alias{col_for_list_expr}
 \title{GT Column Names}
 \usage{
-col_for_list_expr(nm, x)
+col_for_list_expr(nm)
 }
 \arguments{
 \item{nm}{name}
+
+\item{dat}{data}
 
 \item{x}{columns
 
 create the labels for each column using the total function
 so the columns are now NAME N= X}
-
-\item{dat}{data}
 }
 \description{
 GT Column Names
