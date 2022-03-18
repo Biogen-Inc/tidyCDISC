@@ -846,8 +846,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
             distinct(USUBJID) %>%
             summarise(n_tot = n(), .groups='drop_last')
           ) %>%
-          mutate({input$COLUMN} = ifelse({input$COLUMN} == '', 'Missing', {input$COLUMN}),
-                n_tot = tidyr::replace_na(n_tot, 0)) 
+          mutate(n_tot = tidyr::replace_na(n_tot, 0)) 
         
         total_df <- bind_rows(groups, all)
         total <- total_df$n_tot

@@ -132,6 +132,7 @@ app_freq.ADAE <- app_freq.ADSL <- function(column, group = NULL, data, totals) {
              prop = ifelse(n_tot == 0, 0, n / n_tot),
              v = paste0(n, ' (', sprintf("%.1f", round(prop*100, 1)), ')')) %>%
       select(-n, -prop) %>%
+      mutate(!!group := ifelse(!!group == '', '_missing_', !!group)) %>%
       tidyr::pivot_wider(!!column, names_from = !!group, values_from = v)
     
     cbind(groups, total$x)
