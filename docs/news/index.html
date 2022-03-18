@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidyCDISC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9001</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1</span>
       </span>
     </div>
 
@@ -97,8 +97,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/developer_guide.html">Developer Guide</a>
+      <a href="../articles/Blog.html">Blog posts</a>
     </li>
+    <li class="divider"></li>
+    <li class="dropdown-header">User Guides</li>
     <li>
       <a href="../articles/x00_Data_Upload.html">00 Data Upload</a>
     </li>
@@ -113,6 +115,10 @@
     </li>
     <li>
       <a href="../articles/x04_Filtering.html">04 Filtering</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="../articles/index.html">More...</a>
     </li>
   </ul>
 </li>
@@ -144,32 +150,40 @@
       <small>Source: <a href='https://github.com/Biogen-Inc/tidyCDISC/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
-    <div id="tidycdisc-development-version" class="section level1">
-<h1 class="page-header" data-toc-text="development version">
-<a href="#tidycdisc-development-version" class="anchor"></a>tidyCDISC (development version)</h1>
-<p><strong>Attention</strong>: this new version imposes some breaking changes, i.e. merge conflicts galore. The development time highly recommends cloning the repo from this point forward.</p>
+    <div id="tidycdisc-001" class="section level1">
+<h1 class="page-header" data-toc-text="0.0.1">
+<a href="#tidycdisc-001" class="anchor"></a>tidyCDISC 0.0.1</h1>
+<p>This release adds meat to the previous skeleton version of <code>tidyCDISC</code>. The initial development release was intended to be a “bare bones” platform that could serve as a foundation to build a great clinical data exploratory tool. Version <code>0.0.1</code> enriches the user experience by adding useful &amp; commonly needed features for analysis. For more on this release, see <a href="https://biogen-inc.github.io/tidyCDISC/articles/Blog.html#announcing-tidycdisc-0-0-1-1">the announcement</a> on our blog.</p>
 <ul>
-<li>Upgraded <code>pkgdown</code> site documentation to be more robust</li>
-<li>Features added, by tab:
+<li>Major Features added, by tab:
 <ul>
 <li>
 <strong>Table Generator</strong>
 <ul>
-<li>R Script Downloader</li>
-<li>17 or 18 new ‘standard analysis’ tables</li>
+<li>New “STAT Blocks”, such as <code>Y FREQ</code>, <code>MAX FREQ</code>, <code>NON-MISSING</code>, and a pair of <code>NESTED FREQ</code> blocks</li>
+<li>Interact with <code>ADAE</code>
+</li>
+<li>17 new ‘standard analysis’ tables in the <code>ADAE</code> and <code>ADLB</code> space.</li>
+<li>An R Script Downloader to reproduce analysis performed in the app</li>
 </ul>
 </li>
 <li>
 <strong>Population Explorer</strong>
 <ul>
+<li>New Chart types
+<ul>
 <li>line plot - means over time</li>
 <li>Heat map - endpoint correlations</li>
 <li>Kaplan Meier Curve (when <code>TTE</code> class data uploaded)</li>
-<li>started using updated version of IDEAFilter (&gt;= 0.1.0.9000)</li>
 </ul>
 </li>
 </ul>
 </li>
+</ul>
+</li>
+<li>Upgraded <code>pkgdown</code> site documentation to be more robust and hassle-free for developers</li>
+<li>Depends on updated version of IDEAFilter (&gt;= 0.1.0.9000)</li>
+<li>Squashed bugs and other minor improvements</li>
 </ul>
 </div>
     <div id="tidycdisc-0009000" class="section level1">

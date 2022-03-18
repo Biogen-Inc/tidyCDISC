@@ -162,21 +162,37 @@ usethis::use_vignette("tidyCDISC")
 usethis::use_vignette("x00_Data_Upload")
 usethis::use_vignette("x02_Pop_Exp")
 usethis::use_vignette("x04_Filtering")
+usethis::use_vignette("Blog")
+usethis::use_vignette("announcing-tidycdisc-0-0-1-1")
+usethis::use_vignette("dev01_Table_Gen")
+usethis::use_vignette("dev02_Pop_Exp")
+usethis::use_vignette("dev03_Indv_Expl")
 # devtools::build_vignettes() # don't use, instead use...
 
 # Before submitting a PR, run this code & update NEWS.md
-usethis::use_version("dev") #choices: "dev", "patch", "minor", "major"
+usethis::use_version("patch") #choices: "dev", "patch", "minor", "major"
 
 # Build pkg, including vignettes. Do this before updating documentation.
 devtools::build()
 
 # update pkgdown site only if user needs refreshed documentation
 # usethis::use_pkgdown() # Run once to configure your package to use pkgdown
+pkgdown::build_articles(pkg = ".")
+pkgdown::build_articles_index()
 pkgdown::build_reference_index(pkg = rprojroot::is_r_package$find_file())
 pkgdown::build_site(pkg = rprojroot::is_r_package$find_file()) # Run to build the website
+pkgdown::build_news()
 
-
-
+# # GitHub Actions
+# usethis::use_github_action()
+# 
+# # Chose one of the three
+# # See https://usethis.r-lib.org/reference/use_github_action.html
+# usethis::use_github_action_check_release() 
+usethis::use_github_action_check_standard()
+# usethis::use_github_action_check_full() 
+# # Add action for PR
+# usethis::use_github_action_pr_commands()
 
 
 ## Code coverage ---- not run

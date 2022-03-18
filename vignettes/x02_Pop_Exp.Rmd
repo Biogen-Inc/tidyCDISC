@@ -329,7 +329,7 @@ knitr::include_graphics("figures/popExp/line plot data.PNG")
 
 <br>
 
-Certain analyses require to check if parameters / endpoints are highly correlated with each other. This heat map chart helps us to do that quickly and with ease. First, the user can select any number of parameters for the x-axis and y-axis using the "Select axes" drop down lists. Doing so will generate a pair-wise grid shaded according to the correlation coefficient of your choice: either pearson (the default) or (Spearmans). Here's we've requested to only label significant correlations with alpha = 0.05.
+Certain analyses require to check if parameters / endpoints are highly correlated with each other. This heat map chart helps us to do that quickly and with ease. First, the user can select any number of parameters for the x-axis and y-axis using the "Select axes" drop down lists. Doing so will generate a pair-wise grid shaded according to the correlation coefficient of your choice: either pearson (the default) or (Spearmans). Here, we've requested to only label significant correlations with alpha = 0.05.
 
 <br>
 
@@ -349,7 +349,7 @@ Again, it's important to note that the color gradient in the graph is calibrated
 
 <br>
 
-Furthermore, you may want to check your endpoint correlations from week to week. So with all other options remaining the same, if we choose 'AVISIT' as a grouping variable, the following plot is rendered:
+Furthermore, you may want to check your endpoint correlations from week-to-week. So with all other options remaining the same, if we choose 'AVISIT' as a grouping variable, the following plot is rendered:
 
 <br>
 
@@ -365,7 +365,7 @@ knitr::include_graphics("figures/popExp/heatmap grouped.PNG")
 
 <br>
 
-In addition, that's a lot of information / data to consume, so an export to Excel is available in the included plot data below the graph:
+That's a lot of information / data to consume visually, so an export to Excel is available below the plot:
 
 <br>
 

@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidyCDISC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9001</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1</span>
       </span>
     </div>
 
@@ -57,8 +57,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/developer_guide.html">Developer Guide</a>
+      <a href="../articles/Blog.html">Blog posts</a>
     </li>
+    <li class="divider">
+    <li class="dropdown-header">User Guides</li>
     <li>
       <a href="../articles/x00_Data_Upload.html">00 Data Upload</a>
     </li>
@@ -73,6 +75,10 @@
     </li>
     <li>
       <a href="../articles/x04_Filtering.html">04 Filtering</a>
+    </li>
+    <li class="divider">
+    <li>
+      <a href="../articles/index.html">More...</a>
     </li>
   </ul>
 </li>
@@ -110,7 +116,11 @@
 
     
     
-<p>Greetings! The <a href="https://nate884.shinyapps.io/tidyCDISC/">tidyCDISC app</a> is a robust tool which empowers its users to glean informative knowledge from clinical trial data with little resistance. To prove this, we’ll take you on a brisk tour of the app, traversing all of it’s wonderful features from each tab of the application.</p>
+<p>Greetings! The <code>tidyCDISC</code> <a href="https://rinpharma.shinyapps.io/tidyCDISC/">application</a> is a robust tool set which empowers its users to glean informative knowledge from clinical trial data with little resistance. To prove this, we’ll take you on a brisk tour of the app, traversing all of its wonderful features from each tab of the application. Feel free to follow along with this guide using the demo version of <code>tidyCDISC</code> hosted on shinyapps.io. Note the demo version disables the <strong>Data Upload</strong> feature and instead uses the CDISC pilot data.</p>
+<p><br></p>
+<center>
+<a href="https://rinpharma.shinyapps.io/tidyCDISC/"> <img src="figures/demo_tidyCDISC_button_lite2dark.png" alt="Demo full tidyCDISC app" width="30%"></a>
+</center>
 <p><br></p>
 <p>Throughout all the tabs, there are these little buttons (usually in the top right-hand corners) with question marks printed on them. When clicked, they launch a real-time guide that walks the user through the major components of the current screen/ tab, providing context and suggested workflow. So if this guide doesn’t answer all your questions just click the <code><a href="https://rdrr.io/r/utils/Question.html">?</a></code> button for assistance!</p>
 <p><br></p>
@@ -144,7 +154,7 @@
 <p><br></p>
 <p>The Table Generator tab is divided in two: the area to the left is the handy drag-and-drop interface used to define our tables, and on the right is the real-time table output.</p>
 <p><br></p>
-<p><img src="figures/tableGen/02-TG_tidyCDISC.PNG" width="810"></p>
+<p><img src="figures/tableGen/02-TG-tidyCDISC.PNG" width="810"></p>
 <p><br></p>
 <p>Any uploaded data will appear on the left-hand side as “bins”. “Bins” are just containers, showcasing the usable contents of the data when expanded. The <code>ADSL</code> &amp; <code>ADAE</code> bins include the names of all their variables, while any <code>BDS</code> data sets, like the <code>ADVS</code> &amp; <code>ADLBC</code> bins include a list of all the <code>PARAMCD</code> values. For simplicity, both variable &amp; parameters bubbles are called “variable blocks”.</p>
 <p>On the right-hand side, there are a list of “Stats”, such as <code>ANOVA</code>, <code>CHG</code>, <code>MEAN</code>, and <code>FREQ</code> to name a few. We call these “STAT Blocks”. And finally, in the middle of it all is the “drop zone”.</p>
@@ -164,7 +174,7 @@
 <p><img src="figures/tableGen/TG%20STAN%20dropdown.PNG" width="80%" style="display: block; margin: auto;"></p>
 <p><br></p>
 <p>When data needed to produce certain outputs aren’t present, the list of available tables in this drop down will change. For example, if an <code>ADAE</code> is not uploaded, then all the AE tables will disappear from the above list.</p>
-<p>When one of these tables is selected, like disposition (Accounting of Subjects) below, the table generator simply compiles the needed variable and stat blocks in the correct order to generate the desired output, as seen below. Notice how the a population filter was set automatically, in this case to <code>FASFL</code> = ‘Y’ and the grouping variable set to <code>TRT01P</code>. Within seconds, the user changed the default table title and downloaded the R script needed to reproduce the table outside the app:</p>
+<p>When one of these tables is selected, like disposition (Accounting of Subjects) below, the table generator simply compiles the needed variable and stat blocks in the correct order to generate the desired output, as seen below. Notice how the population filter was set automatically, in this case to <code>FASFL</code> = ‘Y’ and the grouping variable set to <code>TRT01P</code>. Within seconds, the user changed the default table title and downloaded the R script needed to reproduce the table outside the app:</p>
 <p><br></p>
 <p><img src="figures/tableGen/t_disp.gif"><!-- --></p>
 <p><br></p>
@@ -192,7 +202,7 @@
 <a href="#individual-explorer" class="anchor"></a>Individual Explorer</h1>
 <p><br></p>
 <p>This analysis tab exists to establish powerful patient narratives and/or explore outlier patient data. Upon arriving to the Individual Explorer tab, you’ll be greeted with the following prompt (below) asking to select a patient, by <code>UBSUBJID.</code> After selection, all the data presented will be tied directly that patient.</p>
-<p>To subset the patients list to a subgroup of interest, we recommend using <strong>“Advanced Pre-filtering”</strong>. When selecting the <code>Advanced Pre-Filtering</code> check box, additional fields will appear (below) to filter the population. From the previous example, we were interested in exploring patient profiles where the patient is &lt;65 y/o, taking the low dose treatment with higher than average diastolic blood pressure values.</p>
+<p>To subset the patients list to a subgroup of interest, we recommend using <strong>“Advanced Pre-filtering”</strong>. When selecting the <code>Advanced Pre-Filtering</code> check box, additional fields will appear (below) to filter the population. From the previous example, we were interested in exploring patient profiles where the patient is &lt;65 y/o, taking the low dose treatment with higher-than-average diastolic blood pressure values.</p>
 <p><br></p>
 <p><img src="figures/IndvExp/filter%20patients.gif" width="50%" style="display: block; margin: auto;"></p>
 <p><br></p>
@@ -212,7 +222,7 @@
 <h2 class="hasAnchor">
 <a href="#recap-whats-next" class="anchor"></a>Recap &amp; what’s next?</h2>
 <p><br></p>
-<p>So far, we’ve learned how to upload data, drag and drop blocks in the table generator as well as build a bonafide standard analysis table and export it’s reproducible R code. Next we plotted mean diastolic blood pressure over time in the population explorer and define filters on the individual explorer tab to find the patients and analyze patient profiles responsible for elevating one subgroup’s values.</p>
+<p>So far, we’ve learned how to upload data, drag and drop blocks in the table generator as well as build a bonafide standard analysis table and export its reproducible R code. Next we plotted mean diastolic blood pressure over time in the population explorer and define filters on the individual explorer tab to find the patients and analyze patient profiles responsible for elevating one subgroup’s values.</p>
 <p><br></p>
 <p><em>Have an idea to explore?</em> <strong>Open the <a href="https://nate884.shinyapps.io/tidyCDISC/">tidyCDISC</a> app!</strong> Otherwise, we highly recommend reading the following articles that take a deeper look into the topics presented in this ‘get started’ guide:</p>
 <ul>

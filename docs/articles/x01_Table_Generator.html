@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidyCDISC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9001</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1</span>
       </span>
     </div>
 
@@ -57,8 +57,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/developer_guide.html">Developer Guide</a>
+      <a href="../articles/Blog.html">Blog posts</a>
     </li>
+    <li class="divider">
+    <li class="dropdown-header">User Guides</li>
     <li>
       <a href="../articles/x00_Data_Upload.html">00 Data Upload</a>
     </li>
@@ -73,6 +75,10 @@
     </li>
     <li>
       <a href="../articles/x04_Filtering.html">04 Filtering</a>
+    </li>
+    <li class="divider">
+    <li>
+      <a href="../articles/index.html">More...</a>
     </li>
   </ul>
 </li>
@@ -125,7 +131,7 @@
 <p><br></p>
 <p>The Table Generator tab is divided in two: the area to the left is the drag-and-drop interface used to build tables, and on the right is the real-time table output.</p>
 <p><br></p>
-<p><img src="figures/tableGen/02-TG_tidyCDISC.PNG" width="810"></p>
+<p><img src="figures/tableGen/02-TG-tidyCDISC.PNG" width="810"></p>
 <p><br></p>
 <p>Any uploaded data sets will appear on the left-hand side as “bins”. “Bins” are just containers, showcasing the usable contents from a data source, when expanded. The <code>ADSL</code> &amp; <code>ADAE</code> bins include the names of all their variables, while any <code>BDS</code> data sets, like the <code>ADVS</code> &amp; <code>ADLBC</code> bins include a list of all the <code>PARAMCD</code> values. <code>TTE</code> class data sources are currently not supported in the table generator.</p>
 <p>On the right-hand side, there are a list of “Stats”, such as <code>ANOVA</code>, <code>CHG</code>, <code>MEAN</code>, and <code>FREQ</code> to name a few. We call these “STAT Blocks”. And finally, in the middle of it all is the “drop zone”.</p>
@@ -221,7 +227,7 @@
 <p><br></p>
 <ul>
 <li>
-<code>MAX FREQ:</code> This statistic only applies to variables (VAR) that have a “N” (VARN) counterpart. It’s useful for variables like <code>AESEV</code> when a subjects should only be counted one time at their max VARN value. So, when paired with <code>AESEV</code> or <code>AESEVN</code>, the frequencies will reflect maximum severity of an adverse event during the trial.</li>
+<code>MAX FREQ:</code> This statistic only applies to variables (VAR) that have a “N” (VARN) counterpart. It’s useful for variables like <code>AESEV</code> when subjects should only be counted one time at their max VARN value. So, when paired with <code>AESEV</code> or <code>AESEVN</code>, the frequencies will reflect maximum severity of an adverse event during the trial.</li>
 </ul>
 <p><img src="figures/tableGen/TG%20MAX%20FREQ.PNG" width="80%" style="display: block; margin: auto;"></p>
 <p><br></p>
@@ -287,9 +293,9 @@
 <p><br></p>
 <p><img src="figures/tableGen/TG%20reprpoduce%20button.PNG" width="80%" style="display: block; margin: auto;"></p>
 <p><br></p>
-<p>Upon doing so, the R script will download to your browser and when opened in R Studio, should look something like the below image. The R script will help you install any packages needed for the analysis, including the <code>tidyCDISC</code> package. If you used the CDISC Pilot data, no code modification is needed to reproduce the output since that data is pre-loaded into the <code>tidyCDISC</code> package. However, if you uploaded your data from a different source, you’ll need to enter the file path to your study directory’s data as a string, as seen on line 21. Note: <code>'path/to/study/directory/'</code> is just a placeholder until you enter your own string. If you are unsure of how to format your string, just run <code><a href="https://rdrr.io/r/utils/choose.dir.html">choose.dir()</a></code> in your R console if running on Windows.</p>
+<p>Upon doing so, the R script will download to your browser and when opened in R Studio, should look something like the below image. The R script will help you install any packages needed for the analysis, including the <code>tidyCDISC</code> package. If you used the CDISC Pilot data, no code modification is needed to reproduce the output since that data is pre-loaded into the <code>tidyCDISC</code> package. However, if you uploaded your data from a different source, you’ll need to enter the file path to your study directory’s data as a string, as seen on line 17. Note: <code>'path/to/study/directory/'</code> is just a placeholder until you enter your own string. If you are unsure of how to format your string, just run <code><a href="https://rdrr.io/r/utils/choose.dir.html">choose.dir()</a></code> in your R console if running on Windows.</p>
 <p><br></p>
-<p><img src="figures/tableGen/TG%20reproduce%20code%20tidyCDISC.PNG" width="570" style="display: block; margin: auto;"></p>
+<p><img src="figures/tableGen/TG%20reproduce%20code%20tidyCDISC.PNG" width="604" style="display: block; margin: auto;"></p>
 <p><br></p>
 <p>After reading in the data, the R script will recall the variable and stat blocks previously dropped into the “drop zone” to recreate the output using the exact same process as performed in the app. From there, an R data.frame and html rendering of your table is prepared for saving or further analysis.</p>
 </div>

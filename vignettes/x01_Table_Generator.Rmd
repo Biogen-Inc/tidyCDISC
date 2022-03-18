@@ -34,7 +34,7 @@ The Table Generator tab is divided in two: the area to the left is the drag-and-
 <br>
 
 ```{r, echo=FALSE}
-knitr::include_graphics("figures/tableGen/02-TG_tidyCDISC.png")
+knitr::include_graphics("figures/tableGen/02-TG-tidyCDISC.PNG")
 ```
 
 <br>
@@ -188,7 +188,7 @@ knitr::include_graphics("figures/tableGen/TG Y FREQ.PNG")
 
 <br> 
 
-- `MAX FREQ:` This statistic only applies to variables (VAR) that have a "N" (VARN) counterpart. It's useful for variables like `AESEV` when a subjects should only be counted one time at their max VARN value. So, when paired with `AESEV` or `AESEVN`, the frequencies will reflect maximum severity of an adverse event during the trial.
+- `MAX FREQ:` This statistic only applies to variables (VAR) that have a "N" (VARN) counterpart. It's useful for variables like `AESEV` when subjects should only be counted one time at their max VARN value. So, when paired with `AESEV` or `AESEVN`, the frequencies will reflect maximum severity of an adverse event during the trial.
 
 ```{r, echo=FALSE, out.width="80%", fig.align = 'center'}
 knitr::include_graphics("figures/tableGen/TG MAX FREQ.PNG")
@@ -301,7 +301,7 @@ knitr::include_graphics("figures/tableGen/TG reprpoduce button.PNG")
 
 <br> 
 
-Upon doing so, the R script will download to your browser and when opened in R Studio, should look something like the below image. The R script will help you install any packages needed for the analysis, including the `tidyCDISC` package. If you used the CDISC Pilot data, no code modification is needed to reproduce the output since that data is pre-loaded into the `tidyCDISC` package. However, if you uploaded your data from a different source, you'll need to enter the file path to your study directory's data as a string, as seen on line 21. Note: `'path/to/study/directory/'` is just a placeholder until you enter your own string. If you are unsure of how to format your string, just run `choose.dir()` in your R console if running on Windows.
+Upon doing so, the R script will download to your browser and when opened in R Studio, should look something like the below image. The R script will help you install any packages needed for the analysis, including the `tidyCDISC` package. If you used the CDISC Pilot data, no code modification is needed to reproduce the output since that data is pre-loaded into the `tidyCDISC` package. However, if you uploaded your data from a different source, you'll need to enter the file path to your study directory's data as a string, as seen on line 17. Note: `'path/to/study/directory/'` is just a placeholder until you enter your own string. If you are unsure of how to format your string, just run `choose.dir()` in your R console if running on Windows.
 
 
 <br> 

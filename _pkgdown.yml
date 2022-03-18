@@ -1,3 +1,20 @@
+articles:
+- title: Blog Posts
+  navbar: ~
+  desc: New and Announcements
+  contents:
+  - Blog
+- title: User Guides
+  navbar: User Guides
+  desc: Step-by-step tutorials for each module in the application
+  contents:
+  - starts_with("x")
+- title: Developer Guides
+  desc: Reference material for those who plan to contribute to the application's code base
+  contents:
+  - starts_with("dev")
+
+
 reference:
 - title: Run app
   desc: Run the application locally
