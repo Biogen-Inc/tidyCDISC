@@ -488,7 +488,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
                       ,gsub("<br/>", "\n        ", pre_filter_msgs())))
     }
 
-    purrr::pmap(list(blocks_and_functions()$agg, 
+    d <- purrr::pmap(list(blocks_and_functions()$agg, 
                       blocks_and_functions()$S3, 
                       blocks_and_functions()$dropdown,
                       blocks_and_functions()$dataset), 
@@ -506,6 +506,9 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
           pattern = '\\b'%s+%pretty_blocks$Pattern%s+%'\\b',
           replacement = pretty_blocks$Replacement,
           vectorize_all = FALSE))
+    print("for_gt():")
+    print(d)
+    return(d)
   })
   
   output$for_gt_table <- renderTable({ for_gt() })
@@ -513,22 +516,51 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # remove the first two columns from the row names to use since 
   # these are used for grouping in gt. Make sure Total is at the end
   row_names_n <- reactive({ 
-    test <- names(for_gt())[-c(1:2)] 
-    test[grepl("\\.\\.\\.", test)] <- "Missing"
-    test <- test[test != "Total"]
-    append(test, "Total")
+    some_names <- names(for_gt())[-c(1:2)] 
+    print("some_names:")
+    print(some_names)
+    
+    some_names[grepl("\\.\\.\\.", some_names)] <- "Missing"
+    print("some_names (w/ missing labs):")
+    print(some_names)
+    
+    some_names_no_tot <- some_names[some_names != "Total"]
+    print("some_names_no_tot:")
+    print(some_names_no_tot)
+    
+    print('append(some_names_no_tot, "Total":')
+    print(append(some_names_no_tot, "Total"))
+    append(some_names_no_tot, "Total")
   })
   
   # create the labels for each column using the total function
   # so the columns are now NAME N= X
-  col_for_list <- function(nm, x) {
+  col_for_list <- function(nm) {
     if (is.numeric(use_data_reactive()[[input$COLUMN]])) {
       stop("Need categorical column for grouping")
     }
     nm = md(glue::glue("**{row_names_n()}** <br> N={total()}"))
   }
   
-  
+  # ### test
+  # col_for_list2 <- function(nm) {
+  #   nm = md(glue::glue("**{row_names_n2()}** <br> N={total2()}"))
+  # }
+  # row_names_n2 <- function(){
+  #   some_names <- names(dummy)#[-c(1:2)] 
+  #   some_names[grepl("\\.\\.\\.", some_names)] <- "Missing"
+  #   some_names_no_tot <- some_names[some_names != "Total"]
+  #   append(some_names_no_tot, "Total")
+  # }
+  # total2 <- function(){
+  #   dummy[1,]
+  # }
+  # dummy <- tibble::tibble("one" = 1,"two" = 2, "Total" = 3)
+  # purrr::imap(dummy, ~col_for_list2(.y))
+  # 
+  # dummy %>%
+  #   gt::gt() %>%
+  #   gt::cols_label(.list = col_for_list)
   
   
   
@@ -542,7 +574,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
                      stringr::str_detect(Variable,'<b>') |
                      stringr::str_detect(Variable,'</b>')) %>%
       tab_options(table.width = px(700)) %>%
-      cols_label(.list = imap(for_gt()[-c(1:2)], ~col_for_list(.y, .x))) %>%
+      cols_label(.list = purrr::imap(for_gt()[-c(1:2)], ~col_for_list(.x))) %>%
       tab_header(
         title = md(input$table_title),
         subtitle = md(subtitle_html())
@@ -814,7 +846,8 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
             distinct(USUBJID) %>%
             summarise(n_tot = n(), .groups='drop_last')
           ) %>%
-          mutate(n_tot = tidyr::replace_na(n_tot, 0)) 
+          mutate({input$COLUMN} = ifelse({input$COLUMN} == '', 'Missing', {input$COLUMN}),
+                n_tot = tidyr::replace_na(n_tot, 0)) 
         
         total_df <- bind_rows(groups, all)
         total <- total_df$n_tot
