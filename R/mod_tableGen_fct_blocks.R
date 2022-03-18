@@ -38,7 +38,7 @@ rowPallete <- function(data) {
        ~div(class="accordion-container",
             div(class="accordion",
                 h6(.x, style="display:inline-block;"),
-                tags$button(icon("chevron-down w3-tiny", class="rotate"))),
+                tags$button(icon("chevron-down w3-tiny", verify_fa = FALSE, class="rotate"))),
             div(class="accordion-panel",
                 div(
                   tags$ul(rowBlock(.y,.x), class = 'all_blocks', class = .x)
