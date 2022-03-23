@@ -1,3 +1,5 @@
+# tidyCDISC 0.0.3
+
 # tidyCDISC 0.0.2
 
 This release (PR #65) performs a lot of functions, testing on many non-pilot ADSL files to ensure app's robustness beyond just the CDISC pilot data:
