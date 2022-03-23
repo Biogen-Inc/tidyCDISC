@@ -1,4 +1,6 @@
 
+
+
 #' Create a single draggable block for each column
 #' @param name the column name
 #' @param classname the dataset of the column
@@ -15,13 +17,17 @@ rowBlock <- function(name, classname) {
         function(x){
           tags$li(
             class = paste("block ", classname), id = paste(x[1]),
-            tippy(paste(x[1]), tooltip = div(paste(x[2]), style = "max-width:60px;"))
+            tippy(paste(x[1]),
+                  paste("<span style='font-size:10px;'>", x[2], "<span>"),
+                  allowHTML = TRUE,
+                  maxWidth = 80,
+                  placement = 'left')
           )
-          
-          
         }) %>%
     purrr::map(., ~ .x)
 }
+
+
 
 
 #' Create an accordion dropdown for each file 
