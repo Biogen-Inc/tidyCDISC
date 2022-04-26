@@ -15,7 +15,7 @@ knitr::opts_chunk$set(
 # remotes::install_github("tidyCDISC")
 ```
 
-# tidyCDISC <a href='https://Biogen-Inc.github.io/tidyCDISC/'><img src="man/figures/hex-tidyCDISC.png" align="right" height="170"/></a>
+# tidyCDISC <a href='https://Biogen-Inc.github.io/tidyCDISC/'><img src="man/figures/hex-tidyCDISC-170h.png" align="right"/></a>
 
 <!-- badges: start -->
   [![R-CMD-check](https://github.com/Biogen-Inc/tidyCDISC/workflows/R-CMD-check/badge.svg)](https://github.com/Biogen-Inc/tidyCDISC/actions)
