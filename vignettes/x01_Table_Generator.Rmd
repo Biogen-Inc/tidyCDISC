@@ -122,7 +122,7 @@ Here is the resulting table:
 <br>
 
 ```{r,  echo=FALSE}
-knitr::include_graphics("figures/tableGen/grouped.png")
+knitr::include_graphics("figures/tableGen/grouped_by.PNG")
 ```
 
 <br>
