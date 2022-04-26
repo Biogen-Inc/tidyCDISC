@@ -31,6 +31,8 @@ app_methods <- function(agg, column, week, group, data, totals) {
       ){
     stop(glue::glue("{column} variable doesn't exist in data, please remove or replace that variable from drop zone."))
   }
+  
+  
   if (agg == "MEAN") {
     app_mean(column, week, group, data)
   } else if (agg == "FREQ") {

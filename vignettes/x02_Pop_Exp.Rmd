@@ -41,7 +41,7 @@ Below is a plot built with the population explorer, where an example Kaplan Meie
 <br>
 
 ```{r, echo=FALSE, fig.align='center'}
-knitr::include_graphics("figures/popExp/layout tidyCDISC.PNG")
+knitr::include_graphics("figures/popExp/layout_tidyCDISC.PNG")
 ```
 
 <br>
@@ -62,7 +62,7 @@ Below are the currently supported chart types, which can be expanded to include 
 <br>
 
 ```{r, echo=FALSE, out.width="50%", fig.align='center'}
-knitr::include_graphics("figures/popExp/type of chart.PNG")
+knitr::include_graphics("figures/popExp/type_of_chart.PNG")
 ```
 
 <br>
@@ -81,7 +81,7 @@ The user interface to each plot dynamically updates based on the chart type sele
 <br>
 
 ```{r, echo=FALSE, out.width="50%", fig.align='center'}
-knitr::include_graphics("figures/popExp/general param setup.PNG")
+knitr::include_graphics("figures/popExp/general_param_setup.PNG")
 ```
 
 <br>
@@ -92,7 +92,7 @@ If a variable is chosen for plotting, the 'AVAL'/'CHG'/'BASE' options & visit se
 <br>
 
 ```{r, echo=FALSE, out.width="50%", fig.align='center'}
-knitr::include_graphics("figures/popExp/general var setup.PNG")
+knitr::include_graphics("figures/popExp/general_var_setup.PNG")
 ```
 
 <br>
@@ -102,7 +102,7 @@ Besides those general axes set up controls, the "scatter" and "line plot - mean 
 <br>
 
 ```{r, echo=FALSE, out.width="50%", fig.align='center'}
-knitr::include_graphics("figures/popExp/group data.PNG")
+knitr::include_graphics("figures/popExp/group_data.PNG")
 ```
 
 <br>
@@ -112,7 +112,7 @@ The **"Color Plots By"** variable helps the user create a different colored line
 <br>
 
 ```{r, echo=FALSE, fig.align='center'}
-knitr::include_graphics("figures/popExp/basic plot.PNG")
+knitr::include_graphics("figures/popExp/basic_plot.PNG")
 ```
 
 <br>
@@ -123,7 +123,7 @@ If we switch **"Color Plots by"** to from `NONE` to `AGEGR1`, the application cr
 <br>
 
 ```{r, echo=FALSE, fig.align='center'}
-knitr::include_graphics("figures/popExp/color by.PNG")
+knitr::include_graphics("figures/popExp/color_by.PNG")
 ```
 
 <br>
@@ -133,7 +133,7 @@ Similarly, if we leave **"Color Plots By"** as `NONE` and change **"Separate Plo
 <br>
 
 ```{r, echo=FALSE, fig.align='center'}
-knitr::include_graphics("figures/popExp/group by.PNG")
+knitr::include_graphics("figures/popExp/group_by.PNG")
 ```
 
 <br>
@@ -144,7 +144,7 @@ Lastly, the user can select a variable for both **"Color Plots By"** and **"Sepa
 <br>
 
 ```{r, echo=FALSE, fig.align='center'}
-knitr::include_graphics("figures/popExp/color by and group by.PNG")
+knitr::include_graphics("figures/popExp/color_by_and_group_by.PNG")
 ```
 
 <br>
@@ -180,7 +180,7 @@ Depending on the chart type, the aggregated data used to build the plot may be i
 <br>
 
 ```{r, echo=FALSE, fig.align='center'}
-knitr::include_graphics("figures/popExp/download data.PNG")
+knitr::include_graphics("figures/popExp/download_data.PNG")
 ```
 
 <br>
@@ -198,13 +198,13 @@ The scatter plot is one of the most basic plots offered by the population explor
 <br>
 
 ```{r, echo=FALSE, out.width="40%", fig.align='center'}
-knitr::include_graphics("figures/popExp/scatter controls.PNG")
+knitr::include_graphics("figures/popExp/scatter_controls.PNG")
 ```
 
 <br>
 
 ```{r, echo=FALSE, fig.align='center'}
-knitr::include_graphics("figures/popExp/scatter outlier.PNG")
+knitr::include_graphics("figures/popExp/scatter_outlier.PNG")
 ```
 
 <br>
@@ -219,13 +219,13 @@ Similarly, the spaghetti plot mimics the scatter in that every subject is plotte
 <br>
 
 ```{r, echo=FALSE, out.width="40%", fig.align='center'}
-knitr::include_graphics("figures/popExp/spaghetti controls.PNG")
+knitr::include_graphics("figures/popExp/spaghetti_controls.PNG")
 ```
 
 <br>
 
 ```{r, echo=FALSE, fig.align='center'}
-knitr::include_graphics("figures/popExp/spaghetti plot.PNG")
+knitr::include_graphics("figures/popExp/spaghetti_plot.PNG")
 ```
 
 <br>
@@ -240,13 +240,13 @@ Population Explorer wouldn't be a legitimate graph generator without a box plot,
 <br>
 
 ```{r, echo=FALSE, out.width="40%", fig.align='center'}
-knitr::include_graphics("figures/popExp/box controls.PNG")
+knitr::include_graphics("figures/popExp/box_controls.PNG")
 ```
 
 <br>
 
 ```{r, echo=FALSE, fig.align='center'}
-knitr::include_graphics("figures/popExp/box plot.PNG")
+knitr::include_graphics("figures/popExp/box_plot.PNG")
 ```
 
 <br>
@@ -257,13 +257,13 @@ Notice there is an additional plot control called "Add Points?". If this check b
 <br>
 
 ```{r, echo=FALSE, out.width="20%", fig.align='center'}
-knitr::include_graphics("figures/popExp/box add points.PNG")
+knitr::include_graphics("figures/popExp/box_add_points.PNG")
 ```
 
 <br>
 
 ```{r, echo=FALSE, fig.align='center'}
-knitr::include_graphics("figures/popExp/box plot add points.PNG")
+knitr::include_graphics("figures/popExp/box_plot_add_points.PNG")
 ```
 
 <br>
@@ -280,7 +280,7 @@ A line plot of mean variables/ parameters over time is a highly leveraged featur
 <br>
 
 ```{r, echo=FALSE, out.width="40%", fig.align='center'}
-knitr::include_graphics("figures/popExp/line plot controls.PNG")
+knitr::include_graphics("figures/popExp/line_plot_controls.PNG")
 ```
 
 <br>
@@ -290,7 +290,7 @@ We've discussed the **"Group Data"** plot controls above, so we'll choose to byp
 <br>
 
 ```{r, echo=FALSE, fig.align='center'}
-knitr::include_graphics("figures/popExp/line plot.PNG")
+knitr::include_graphics("figures/popExp/line_plot.PNG")
 ```
 
 <br>
@@ -301,13 +301,13 @@ And if we choose to display 95% confidence intervals for each mean, we need only
 <br>
 
 ```{r, echo=FALSE, out.width="40%", fig.align='center'}
-knitr::include_graphics("figures/popExp/line plot option chng.PNG")
+knitr::include_graphics("figures/popExp/line_plot_option_chng.PNG")
 ```
 
 <br>
 
 ```{r, echo=FALSE, fig.align='center'}
-knitr::include_graphics("figures/popExp/line plot 95 ci.PNG")
+knitr::include_graphics("figures/popExp/line_plot_95_ci.PNG")
 ```
 
 <br>
@@ -319,7 +319,7 @@ Notice that this chart type offers a view of the aggregated plot data. If you wi
 <br>
 
 ```{r, echo=FALSE, fig.align='center'}
-knitr::include_graphics("figures/popExp/line plot data.PNG")
+knitr::include_graphics("figures/popExp/line_plot_data.PNG")
 ```
 
 <br>
@@ -334,7 +334,7 @@ Certain analyses require to check if parameters / endpoints are highly correlate
 <br>
 
 ```{r, echo=FALSE, out.width="45%", fig.align='center'}
-knitr::include_graphics("figures/popExp/heatmap controls.PNG")
+knitr::include_graphics("figures/popExp/heatmap_controls.PNG")
 ```
 
 <br>
@@ -354,13 +354,13 @@ Furthermore, you may want to check your endpoint correlations from week-to-week.
 <br>
 
 ```{r, echo=FALSE, out.width="45%", fig.align='center'}
-knitr::include_graphics("figures/popExp/heatmap controls grouped.PNG")
+knitr::include_graphics("figures/popExp/heatmap_controls_grouped.PNG")
 ```
 
 <br>
 
 ```{r, echo=FALSE, fig.align='center'}
-knitr::include_graphics("figures/popExp/heatmap grouped.PNG")
+knitr::include_graphics("figures/popExp/heatmap_grouped.PNG")
 ```
 
 <br>
@@ -370,7 +370,7 @@ That's a lot of information / data to consume visually, so an export to Excel is
 <br>
 
 ```{r, echo=FALSE, fig.align='center'}
-knitr::include_graphics("figures/popExp/heatmap data.PNG")
+knitr::include_graphics("figures/popExp/heatmap_data.PNG")
 ```
 
 <br>
@@ -393,7 +393,7 @@ In the plot control panel, we can toggle the `TTE` parameter, the response value
 <br>
 
 ```{r, echo=FALSE, out.width="40%", fig.align='center'}
-knitr::include_graphics("figures/popExp/km controls.PNG")
+knitr::include_graphics("figures/popExp/km_controls.PNG")
 ```
 
 <br>
@@ -410,13 +410,13 @@ As you might expect, these plots can be extremely handy, and remarkably powerful
 <br>
 
 ```{r, echo=FALSE, out.width="40%", fig.align='center'}
-knitr::include_graphics("figures/popExp/km controls grouped.PNG")
+knitr::include_graphics("figures/popExp/km_controls_grouped.PNG")
 ```
 
 <br>
 
 ```{r, echo=FALSE, fig.align='center'}
-knitr::include_graphics("figures/popExp/km grouped.PNG")
+knitr::include_graphics("figures/popExp/km_grouped.PNG")
 ```
 
 <br>
@@ -432,7 +432,7 @@ Like other `tidyCDISC` tabs, the "Filter Data" widget manipulates the data befor
 <br>
 
 ```{r, echo=FALSE, out.width="50%", fig.align='center'}
-knitr::include_graphics("figures/popExp/filtering widget.PNG")
+knitr::include_graphics("figures/popExp/filtering_widget.PNG")
 ```
 
 <br>
@@ -448,7 +448,7 @@ First, this is the only tab that has an "Apply Filters" toggle that precedes the
 <br> 
 
 ```{r, echo=FALSE, fig.align='center'}
-knitr::include_graphics("figures/popExp/apply filters toggle.gif")
+knitr::include_graphics("figures/popExp/apply_filters_toggle.gif")
 ```
 
 <br> 
@@ -466,7 +466,7 @@ Second, notice that the the text describing the filtering appears below the char
 Throughout all the tabs in the application, there are these little buttons (usually in the top right-hand corners) with question marks on them:
 
 ```{r, echo=FALSE, fig.align = 'center'}
-knitr::include_graphics("figures/tableGen/TG need help.PNG")
+knitr::include_graphics("figures/tableGen/TG_need_help.PNG")
 ```
 
 
@@ -475,7 +475,7 @@ When clicked, they launch a real-time guide that walks the user through the majo
 <br> 
 
 ```{r, echo=FALSE}
-knitr::include_graphics("figures/popExp/need help.gif")
+knitr::include_graphics("figures/popExp/need_help.gif")
 ```
 
 

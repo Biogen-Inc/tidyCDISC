@@ -36,7 +36,7 @@ This tutorial will walk you through adding a graph module and a graph function, 
 This is what the population explorer looked like when it first launched.  Note we are using a small (N=15) test ADSL dataset here:
 
 ```{r, out.width="90%", out.height="90%", echo=FALSE}
-knitr::include_graphics("figures/popExp/boxplot tidyCDISC.PNG")
+knitr::include_graphics("figures/popExp/boxplot_tidyCDISC.PNG")
 ```
 
 ### Create the Plotting Widgets ("ui")

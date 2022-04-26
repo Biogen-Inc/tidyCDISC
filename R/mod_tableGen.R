@@ -204,18 +204,13 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # this allows our dropdown to be in chronological order
   avisit_words <- reactive({ 
     req(datafile())
-    # req(any(purrr::map_lgl(datafile(), ~"AVISIT" %in% colnames(.x))))
     
     if(any(purrr::map_lgl(datafile(), ~"AVISIT" %in% colnames(.x)))){
-      # if("AVISIT" %in% colnames(BDS())){
         purrr::map(BDS(), function(x) x %>% dplyr::select(AVISIT)) %>%
           dplyr::bind_rows() %>%
           dplyr::pull(AVISIT)
-      # }else {
-      #   c("fake_weeky","dummy_weeky")
-      # }
     } else {
-      c("fake_weeky","dummy_weeky")
+      NULL #c("fake_weeky","dummy_weeky") # DON'T use this comment part. It's handled in AVISIT()
     }
     
   })
@@ -225,13 +220,9 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     req(any(purrr::map_lgl(datafile(), ~"AVISIT" %in% colnames(.x))))
     
     if(any(purrr::map_lgl(datafile(), ~"AVISIT" %in% colnames(.x)))){
-      # if("AVISITN" %in% colnames(BDS())){
         purrr::map(BDS(), function(x) x %>% dplyr::select(AVISITN)) %>%
           dplyr::bind_rows() %>%
           dplyr::pull(AVISITN)
-      # } else {
-      #   1:2
-      # }
     } else {
       1:2
     }
@@ -251,7 +242,6 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
         pull(AVISIT) %>%
         unique()
     }
-    # print(avisit_words[avisit_words != ""])
     avisit_words[avisit_words != ""]
   })
   
@@ -359,7 +349,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       purrr::map2(blockData$block, blockData$dataset, function(var, dat) {
         if(!is.null(attr(data_to_use_str(dat)[[var]], 'label'))){
           attr(data_to_use_str(dat)[[var]], 'label')
-        } else if("PARAMCD" %in% colnames(data_to_use_str(dat))){
+        } else if(all(c("PARAM","PARAMCD") %in% colnames(data_to_use_str(dat)))){
           data_to_use_str(dat) %>%
             filter(PARAMCD == var) %>%
             distinct(PARAM) %>%
@@ -488,7 +478,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
                       ,gsub("<br/>", "\n        ", pre_filter_msgs())))
     }
 
-    purrr::pmap(list(blocks_and_functions()$agg, 
+    d <- purrr::pmap(list(blocks_and_functions()$agg, 
                       blocks_and_functions()$S3, 
                       blocks_and_functions()$dropdown,
                       blocks_and_functions()$dataset), 
@@ -506,6 +496,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
           pattern = '\\b'%s+%pretty_blocks$Pattern%s+%'\\b',
           replacement = pretty_blocks$Replacement,
           vectorize_all = FALSE))
+    return(d)
   })
   
   output$for_gt_table <- renderTable({ for_gt() })
@@ -513,36 +504,32 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # remove the first two columns from the row names to use since 
   # these are used for grouping in gt. Make sure Total is at the end
   row_names_n <- reactive({ 
-    test <- names(for_gt())[-c(1:2)] 
-    test[grepl("\\.\\.\\.", test)] <- "Missing"
-    test <- test[test != "Total"]
-    append(test, "Total")
+    some_names <- names(for_gt())[-c(1:2)] 
+    some_names[grepl("\\.\\.\\.", some_names)] <- "Missing"
+    some_names_no_tot <- some_names[some_names != "Total"]
+    append(some_names_no_tot, "Total")
   })
   
   # create the labels for each column using the total function
   # so the columns are now NAME N= X
-  col_for_list <- function(nm, x) {
+  col_for_list <- function(nm) {
     if (is.numeric(use_data_reactive()[[input$COLUMN]])) {
       stop("Need categorical column for grouping")
     }
     nm = md(glue::glue("**{row_names_n()}** <br> N={total()}"))
   }
   
-  
-  
-  
-  
   # create gt table
   gt_table <- reactive({
     for_gt() %>%
       # gt(rowname_col = "Variable", groupname_col = "ID") %>%
       gt(groupname_col = "ID") %>%
-      fmt_markdown(columns = vars(Variable),
+      fmt_markdown(columns = c(Variable),
                    rows = stringr::str_detect(Variable,'&nbsp;') |
                      stringr::str_detect(Variable,'<b>') |
                      stringr::str_detect(Variable,'</b>')) %>%
       tab_options(table.width = px(700)) %>%
-      cols_label(.list = imap(for_gt()[-c(1:2)], ~col_for_list(.y, .x))) %>%
+      cols_label(.list = purrr::imap(for_gt()[-c(1:2)], ~col_for_list(.x))) %>%
       tab_header(
         title = md(input$table_title),
         subtitle = md(subtitle_html())
@@ -859,12 +846,12 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       library(gt)
       tg_table %>%
           gt(groupname_col = 'ID') %>%
-          fmt_markdown(columns = vars(Variable),
+          fmt_markdown(columns = c(Variable),
                  rows = stringr::str_detect(Variable,'&nbsp;') |
                    stringr::str_detect(Variable,'<b>') |
                    stringr::str_detect(Variable,'</b>')) %>%
           tab_options(table.width = px(700)) %>%
-          cols_label(.list = imap(tg_table[-c(1:2)], ~ tidyCDISC::col_for_list_expr(.y, .x))) %>%
+          cols_label(.list = imap(tg_table[-c(1:2)], ~ tidyCDISC::col_for_list_expr(.x))) %>%
           tab_header(
             title = md('{input$table_title}'),
             subtitle = md(\"{subtitle_html()}\")

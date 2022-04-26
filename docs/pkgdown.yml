@@ -1,4 +1,4 @@
-pandoc: 2.11.4
+pandoc: 2.17.1.1
 pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
@@ -13,5 +13,5 @@ articles:
   x02_Pop_Exp: x02_Pop_Exp.html
   x03_Indv_Expl: x03_Indv_Expl.html
   x04_Filtering: x04_Filtering.html
-last_built: 2022-01-17T13:32Z
+last_built: 2022-04-26T13:04Z
 

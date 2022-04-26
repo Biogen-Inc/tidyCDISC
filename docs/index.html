@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">tidyCDISC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.3.9000</span>
       </span>
     </div>
 
@@ -50,7 +50,7 @@
   <a href="reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -107,29 +107,56 @@
   <div class="contents col-md-9">
 <div id="tidycdisc-" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
-<a href="#tidycdisc-" class="anchor"></a>tidyCDISC <a href="https://Biogen-Inc.github.io/tidyCDISC/"><img src="reference/figures/hex-tidyCDISC.png" align="right" height="170"></a>
+<a href="#tidycdisc-" class="anchor"></a>tidyCDISC
+<a href="https://Biogen-Inc.github.io/tidyCDISC/"><img src="reference/figures/hex-tidyCDISC.png" align="right" height="170"></a>
 </h1></div>
-<p><code>tidyCDISC</code> is a shiny app to easily create custom tables and figures from ADaM-ish data sets.</p>
+<!-- badges: start -->
+
+<p><code>tidyCDISC</code> is a shiny app to easily create custom tables
+and figures from ADaM-ish data sets.</p>
 <p><br></p>
 <center>
-<a href="https://rinpharma.shinyapps.io/tidyCDISC/"> <img src="reference/figures/demo_tidyCDISC_button_lite2dark.png" alt="Demo full tidyCDISC app" width="25%"></a>
+<a href="https://rinpharma.shinyapps.io/tidyCDISC/">
+<img src="reference/figures/demo_tidyCDISC_button_lite2dark.png" alt="Demo full tidyCDISC app" width="25%"></a>
 </center>
 <div id="purpose" class="section level2">
 <h2 class="hasAnchor">
 <a href="#purpose" class="anchor"></a>Purpose</h2>
-<p>One of <code>tidyCDISC</code>‘s goals is to develop clinical tables that meet table standards leveraged for submission filings, called ’standard analyses’. However, this is secondary to the app’s primary purpose: providing rich exploratory capabilities for clinical studies. High-level features of the app allow users to produce customized tables using a point-and-click interface, examine trends in patient populations with dynamic figures, and supply visualizations that narrow in on single patient profile.</p>
-<p>The beauty of this application is that the user doesn’t have to write a lick of code to gather abundant insights from the study data, so it aims to serve a large population of clinical personnel with varying levels of programming experience. For example:</p>
+<p>One of <code>tidyCDISC</code>‘s goals is to develop clinical tables
+that meet table standards leveraged for submission filings, called
+’standard analyses’. However, this is secondary to the app’s primary
+purpose: providing rich exploratory capabilities for clinical studies.
+High-level features of the app allow users to produce customized tables
+using a point-and-click interface, examine trends in patient populations
+with dynamic figures, and supply visualizations that narrow in on single
+patient profile.</p>
+<p>The beauty of this application is that the user doesn’t have to write
+a lick of code to gather abundant insights from the study data, so it
+aims to serve a large population of clinical personnel with varying
+levels of programming experience. For example:</p>
 <ul>
-<li><p>A <strong>clinical head</strong>, with presumably no programming skills but the most domain expertise, can explore results without asking a statistician or programmer to build tables &amp; figures.</p></li>
-<li><p>A <strong>statistician</strong> can use the application to make tables/figures instantly, cutting down on statistical programming requests for excess tables that aren’t required, but just “nice to see”.</p></li>
+<li><p>A <strong>clinical head</strong>, with presumably no programming
+skills but the most domain expertise, can explore results without asking
+a statistician or programmer to build tables &amp; figures.</p></li>
+<li><p>A <strong>statistician</strong> can use the application to make
+tables/figures instantly, cutting down on statistical programming
+requests for excess tables that aren’t required, but just “nice to
+see”.</p></li>
 </ul>
 <div class="floatting">
 <p><img src="reference/figures/pct_95_cropped.jpg" width="25%" style="float:right; padding:10px"></p>
 <ul>
-<li>A <strong>statistical programmer</strong> can use <code>tidyCDISC</code> to perform preliminary QC programming prior to writing code in a validated process. Users who’ve leverage <code>tidyCDISC</code> for routine trial analysis tend to report <strong>significant time savings, about 95%</strong>, when performing programming duties.</li>
+<li>A <strong>statistical programmer</strong> can use
+<code>tidyCDISC</code> to perform preliminary QC programming prior to
+writing code in a validated process. Users who’ve leverage
+<code>tidyCDISC</code> for routine trial analysis tend to report
+<strong>significant time savings, about 95%</strong>, when performing
+programming duties.</li>
 </ul>
 </div>
-<p>For a high-level overview of the app with 10-minute demo, please review the following conference presentation on <code>tidyCDISC</code>at <strong>R/Medicine 2020</strong>:</p>
+<p>For a high-level overview of the app with 10-minute demo, please
+review the following conference presentation on <code>tidyCDISC</code>at
+<strong>R/Medicine 2020</strong>:</p>
 <p><br></p>
 <center>
 <p><a href="https://youtu.be/QeHSjw-vU3U?t=103"><img src="reference/figures/tidyCDISC_RMedicine_thumbnail.png" alt="tidyCDISC @ R/Medicine"></a></p>
@@ -139,31 +166,65 @@
 <div id="scope" class="section level2">
 <h2 class="hasAnchor">
 <a href="#scope" class="anchor"></a>Scope</h2>
-<p>As previously mentioned, <code>tidyCDISC</code> can only accept data sets that conform to CDISC ADaM standards with some minor flexibility (see <a href="https://Biogen-Inc.github.io/tidyCDISC/articles/x00_Data_Upload.html">upload requirements</a> for more details). At this time, the app only accepts sas7bdat files.</p>
-<p>If you’re looking to regularly generate R code for tables, the <code>tidyCDISC</code> app has a built-in export feature that downloads an R script to reproduce any analysis performed in the app.</p>
+<p>As previously mentioned, <code>tidyCDISC</code> can only accept data
+sets that conform to CDISC ADaM standards with some minor flexibility
+(see <a href="https://Biogen-Inc.github.io/tidyCDISC/articles/x00_Data_Upload.html">upload
+requirements</a> for more details). At this time, the app only accepts
+sas7bdat files.</p>
+<p>If you’re looking to regularly generate R code for tables, the
+<code>tidyCDISC</code> app has a built-in export feature that downloads
+an R script to reproduce any analysis performed in the app.</p>
 <p><br></p>
 </div>
 <div id="usage" class="section level2">
 <h2 class="hasAnchor">
 <a href="#usage" class="anchor"></a>Usage</h2>
-<p><code>tidyCDISC</code> is primarily a web application, so no installation is necessary. Simply start using the demo version of the app here: <a href="https://rinpharma.shinyapps.io/tidyCDISC/">tidyCDISC</a>. Note the demo version disables the <strong>Data Upload</strong> feature and instead uses the CDISC pilot data. If you’d like to upload your own study data, we recommend installing <code>tidyCDISC</code> (using the instructions below) to run the app locally or deploy in your preferred environment. Please review the “<a href="https://Biogen-Inc.github.io/tidyCDISC/articles/tidyCDISC.html">Get Started</a>” guide to follow an example use case with the app. However, to optimize one’s use of <code>tidyCDISC</code>, we highly recommend reading the following articles that take a deeper look into the topics presented in the ‘get started’ tutorial:</p>
+<p><code>tidyCDISC</code> is primarily a web application, so no
+installation is necessary. Simply start using the demo version of the
+app here: <a href="https://rinpharma.shinyapps.io/tidyCDISC/">tidyCDISC</a>. Note the
+demo version disables the <strong>Data Upload</strong> feature and
+instead uses the CDISC pilot data. If you’d like to upload your own
+study data, we recommend installing <code>tidyCDISC</code> (using the
+instructions below) to run the app locally or deploy in your preferred
+environment. Please review the “<a href="https://Biogen-Inc.github.io/tidyCDISC/articles/tidyCDISC.html">Get
+Started</a>” guide to follow an example use case with the app. However,
+to optimize one’s use of <code>tidyCDISC</code>, we highly recommend
+reading the following articles that take a deeper look into the topics
+presented in the ‘get started’ tutorial:</p>
 <ul>
-<li><p><a href="https://Biogen-Inc.github.io/tidyCDISC/articles/x00_Data_Upload.html">00 Data Upload</a></p></li>
-<li><p><a href="https://Biogen-Inc.github.io/tidyCDISC/articles/x01_Table_Generator.html">01 Table Generator</a></p></li>
-<li><p><a href="https://Biogen-Inc.github.io/tidyCDISC/articles/x02_Pop_Exp.html">02 Population Explorer</a></p></li>
-<li><p><a href="https://Biogen-Inc.github.io/tidyCDISC/articles/x03_Indv_Expl.html">03 Individual Explorer</a></p></li>
-<li><p><a href="https://Biogen-Inc.github.io/tidyCDISC/articles/x04_Filtering.html">04 Filtering</a></p></li>
+<li><p><a href="https://Biogen-Inc.github.io/tidyCDISC/articles/x00_Data_Upload.html">00
+Data Upload</a></p></li>
+<li><p><a href="https://Biogen-Inc.github.io/tidyCDISC/articles/x01_Table_Generator.html">01
+Table Generator</a></p></li>
+<li><p><a href="https://Biogen-Inc.github.io/tidyCDISC/articles/x02_Pop_Exp.html">02
+Population Explorer</a></p></li>
+<li><p><a href="https://Biogen-Inc.github.io/tidyCDISC/articles/x03_Indv_Expl.html">03
+Individual Explorer</a></p></li>
+<li><p><a href="https://Biogen-Inc.github.io/tidyCDISC/articles/x04_Filtering.html">04
+Filtering</a></p></li>
 </ul>
-<p>We’re confident the <code>tidyCDISC</code> application can save you time. If there is some use case that <code>tidyCDISC</code> can’t solve, we want to know about it. Please send the <a href="https://github.com/Biogen-Inc/tidyCDISC/issues/new">developers</a> a message with your question or request!</p>
+<p>We’re confident the <code>tidyCDISC</code> application can save you
+time. If there is some use case that <code>tidyCDISC</code> can’t solve,
+we want to know about it. Please send the <a href="https://github.com/Biogen-Inc/tidyCDISC/issues/new">developers</a>
+a message with your question or request!</p>
 <p><br></p>
 </div>
 <div id="install-the-tidycdisc-r-package" class="section level2">
 <h2 class="hasAnchor">
 <a href="#install-the-tidycdisc-r-package" class="anchor"></a>Install the <code>tidyCDISC</code> R package</h2>
-<p><code>tidyCDISC</code> is primarily an application, so no installation is necessary. Simply start using the demo version of the app here: <a href="https://rinpharma.shinyapps.io/tidyCDISC/">tidyCDISC</a>. However, if you choose to upload your own study data OR export &amp; run R code from the Table Generator, you will need the <code>tidyCDISC</code> package installed on your machine locally. Execute the following code to install the package to your local machine:</p>
+<p><code>tidyCDISC</code> is primarily an application, so no
+installation is necessary. Simply start using the demo version of the
+app here: <a href="https://rinpharma.shinyapps.io/tidyCDISC/">tidyCDISC</a>. However,
+if you choose to upload your own study data OR export &amp; run R code
+from the Table Generator, you will need the <code>tidyCDISC</code>
+package installed on your machine locally. Execute the following code to
+install the package to your local machine:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"Biogen-Inc/tidyCDISC"</span><span class="op">)</span></code></pre></div>
-<p>With a simple <code><a href="https://Biogen-Inc.github.io/tidyCDISC/">library(tidyCDISC)</a></code> you can access all the exported functions from <code>tidyCDISC</code> that help users reproduce analysis performed in the app. Using the dev/run_dev.R file, you can even run the application locally:</p>
+<p>With a simple <code><a href="https://Biogen-Inc.github.io/tidyCDISC/">library(tidyCDISC)</a></code> you can access all the
+exported functions from <code>tidyCDISC</code> that help users reproduce
+analysis performed in the app. Using the dev/run_dev.R file, you can
+even run the application locally:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Set options here</span>
 <span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span><span class="op">(</span>golem.app.prod <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="co"># TRUE = production mode, FALSE = development mode</span>
@@ -218,7 +279,13 @@
 </ul>
 </div>
 
-  </div>
+  <div class="dev-status">
+<h2>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://github.com/Biogen-Inc/tidyCDISC/actions"><img src="https://github.com/Biogen-Inc/tidyCDISC/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a></li>
+</ul>
+</div>
+</div>
 </div>
 
 

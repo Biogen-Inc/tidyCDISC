@@ -273,8 +273,8 @@ gather_reqs <- function(input, output, session,
       gt(rowname_col = "type_col" , groupname_col = "df") %>%
       cols_label(not_exist_disp = "Doesn't Exist", missing_disp = "Missing Data") %>%
       text_transform(
-        locations = list(cells_body(columns = vars(not_exist_disp), rows = not_exist_disp == "X"),
-                         cells_body(columns = vars(missing_disp), rows = missing_disp == "X")),
+        locations = list(cells_body(columns = c(not_exist_disp), rows = not_exist_disp == "X"),
+                         cells_body(columns = c(missing_disp), rows = missing_disp == "X")),
         fn = function(X) local_image(filename = "inst/app/www/red_x.png", height = 15)
       ) %>%
       tab_header(

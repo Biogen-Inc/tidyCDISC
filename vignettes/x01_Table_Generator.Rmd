@@ -163,11 +163,11 @@ The other statistical blocks not showcased in the demo are:
 - `ANOVA:` this block can be used in conjunction with the grouping variable drop down selection to determine if means differ across groups.
 
 ```{r, echo=FALSE, out.width="80%", fig.align = 'center'}
-knitr::include_graphics("figures/tableGen/TG Anova dd.PNG")
+knitr::include_graphics("figures/tableGen/TG_Anova_dd.PNG")
 ```
 
 ```{r, echo=FALSE, out.width="80%", fig.align = 'center'}
-knitr::include_graphics("figures/tableGen/TG Anova.PNG")
+knitr::include_graphics("figures/tableGen/TG_Anova.PNG")
 ```
 
 <br> 
@@ -175,7 +175,7 @@ knitr::include_graphics("figures/tableGen/TG Anova.PNG")
 - `CHG:` like the mean block, this also calculates basic summary statistics but uses the change from baseline value rather than `AVAL`
 
 ```{r, echo=FALSE, out.width="80%", fig.align = 'center'}
-knitr::include_graphics("figures/tableGen/TG CHG.PNG")
+knitr::include_graphics("figures/tableGen/TG_CHG.PNG")
 ```
 
 <br> 
@@ -183,7 +183,7 @@ knitr::include_graphics("figures/tableGen/TG CHG.PNG")
 - `Y FREQ:` Only applies to flag variables (ending in 'FL', like `DTHFL`) that contain 'Y' values. The output will include a subject count and percentage for **only** the 'Y' values.
 
 ```{r, echo=FALSE, out.width="80%", fig.align = 'center'}
-knitr::include_graphics("figures/tableGen/TG Y FREQ.PNG")
+knitr::include_graphics("figures/tableGen/TG_Y_FREQ.PNG")
 ```
 
 <br> 
@@ -191,7 +191,7 @@ knitr::include_graphics("figures/tableGen/TG Y FREQ.PNG")
 - `MAX FREQ:` This statistic only applies to variables (VAR) that have a "N" (VARN) counterpart. It's useful for variables like `AESEV` when subjects should only be counted one time at their max VARN value. So, when paired with `AESEV` or `AESEVN`, the frequencies will reflect maximum severity of an adverse event during the trial.
 
 ```{r, echo=FALSE, out.width="80%", fig.align = 'center'}
-knitr::include_graphics("figures/tableGen/TG MAX FREQ.PNG")
+knitr::include_graphics("figures/tableGen/TG_MAX_FREQ.PNG")
 ```
 
 <br> 
@@ -199,7 +199,7 @@ knitr::include_graphics("figures/tableGen/TG MAX FREQ.PNG")
 - `NON MISSING:` A handy statistic that counts subjects who have non-missing values for a given variable. As such, it can help provide a high level measure of how many subjects had some value, as seen below with `AEDECOD`
 
 ```{r, echo=FALSE, out.width="80%", fig.align = 'center'}
-knitr::include_graphics("figures/tableGen/TG NON MISSING.PNG")
+knitr::include_graphics("figures/tableGen/TG_NON_MISSING.PNG")
 ```
 
 <br> 
@@ -207,12 +207,12 @@ knitr::include_graphics("figures/tableGen/TG NON MISSING.PNG")
 - `NESTED FREQ DSC:` Notice when using this stat block, you'll need to choose a variable to "nest" inside the values / levels of another. Without the nested variable selected (ie `NONE` is selected), the subject counts and percentages are displayed in descending order. Place the high level variable (like `AEBODSYS`) on the left hand side and select the more granular variable to be "nested" inside of it, like `AEDECOD`. Then the output will show all the `AEDECOD` values that exist within each `AEBODSYS`, all sorted descending. 
 
 ```{r, echo=FALSE, out.width="60%", fig.align = 'center'}
-knitr::include_graphics("figures/tableGen/TG Nested Freq.PNG")
+knitr::include_graphics("figures/tableGen/TG_Nested_Freq.PNG")
 ```
 
 
 ```{r, echo=FALSE, out.width="80%", fig.align = 'center'}
-knitr::include_graphics("figures/tableGen/TG Nested Freq2.PNG")
+knitr::include_graphics("figures/tableGen/TG_Nested_Freq2.PNG")
 ```
 
 
@@ -232,7 +232,7 @@ There is an entire guide called "[04 Filtering](https://Biogen-Inc.github.io/tid
 <br> 
 
 ```{r, echo=FALSE, out.width="80%", fig.align = 'center'}
-knitr::include_graphics("figures/tableGen/TG filtering.PNG")
+knitr::include_graphics("figures/tableGen/TG_filtering.PNG")
 ```
 
 <br>
@@ -246,7 +246,7 @@ There are a set of tables / listings that users need to build frequently, due to
 <br> 
 
 ```{r, echo=FALSE, out.width="80%", fig.align = 'center'}
-knitr::include_graphics("figures/tableGen/TG STAN dropdown.PNG")
+knitr::include_graphics("figures/tableGen/TG_STAN_dropdown.PNG")
 ```
 
 <br> 
@@ -260,12 +260,12 @@ When one of these tables is selected, the table generator simply compiles the ne
 <br> 
 
 ```{r, echo=FALSE, out.width="80%", fig.align = 'center'}
-knitr::include_graphics("figures/tableGen/TG STAN TAB41 DD.PNG")
+knitr::include_graphics("figures/tableGen/TG_STAN_TAB41_DD.PNG")
 ```
 
 
 ```{r, echo=FALSE, out.width="80%", fig.align = 'center'}
-knitr::include_graphics("figures/tableGen/TG STAN TAB41.PNG")
+knitr::include_graphics("figures/tableGen/TG_STAN_TAB41.PNG")
 ```
 
 <br>
@@ -280,7 +280,7 @@ As displayed in an earlier demo, you can export table output to a CSV or HTML fi
 <br> 
 
 ```{r, echo=FALSE, out.width="80%", fig.align = 'center'}
-knitr::include_graphics("figures/tableGen/TG export table.PNG")
+knitr::include_graphics("figures/tableGen/TG_export_table.PNG")
 ```
 
 <br>
@@ -296,7 +296,7 @@ As previously mentioned, one can reproduce any table created inside the app in a
 <br> 
 
 ```{r, echo=FALSE, out.width="80%", fig.align = 'center'}
-knitr::include_graphics("figures/tableGen/TG reprpoduce button.PNG")
+knitr::include_graphics("figures/tableGen/TG_reprpoduce_button.PNG")
 ```
 
 <br> 
@@ -307,7 +307,7 @@ Upon doing so, the R script will download to your browser and when opened in R S
 <br> 
 
 ```{r, echo=FALSE, fig.align = 'center'}
-knitr::include_graphics("figures/tableGen/TG reproduce code tidyCDISC.PNG")
+knitr::include_graphics("figures/tableGen/TG_reproduce_code_tidyCDISC.PNG")
 ```
 
 <br>
@@ -320,7 +320,7 @@ After reading in the data, the R script will recall the variable and stat blocks
 Throughout all the tabs in the application, there are these little buttons (usually in the top right-hand corners) with question marks on them:
 
 ```{r, echo=FALSE, fig.align = 'center'}
-knitr::include_graphics("figures/tableGen/TG need help.PNG")
+knitr::include_graphics("figures/tableGen/TG_need_help.PNG")
 ```
 
 
@@ -329,7 +329,7 @@ When clicked, they launch a real-time guide that walks the user through the majo
 <br> 
 
 ```{r, echo=FALSE}
-knitr::include_graphics("figures/tableGen/TG need help guide demo.gif")
+knitr::include_graphics("figures/tableGen/TG_need_help_guide_demo.gif")
 ```
 
 
