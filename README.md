@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# tidyCDISC <a href='https://Biogen-Inc.github.io/tidyCDISC/'><img src="man/figures/hex-tidyCDISC.png" align="right" height="170"/></a>
+# tidyCDISC <a href='https://Biogen-Inc.github.io/tidyCDISC/'><img src="man/figures/hex-tidyCDISC-170h.png" align="right"/></a>
 
 <!-- badges: start -->
 
@@ -136,7 +136,7 @@ remotes::install_github("Biogen-Inc/tidyCDISC")
 
 With a simple `library(tidyCDISC)` you can access all the exported
 functions from `tidyCDISC` that help users reproduce analysis performed
-in the app. Using the dev/run\_dev.R file, you can even run the
+in the app. Using the dev/run_dev.R file, you can even run the
 application locally:
 
 ``` r
