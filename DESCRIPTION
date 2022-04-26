@@ -1,6 +1,6 @@
 Package: tidyCDISC
 Title: tidyCDISC: Quick Exploratory Data Analyses on ADaM-ish Datasets
-Version: 0.0.3
+Version: 0.0.3.9000
 Authors@R: as.person(c( 
     "Aaron Clark <aaron.clark@biogen.com> [aut, cre]",
     "Maya Gans <maya.gans@biogen.com> [aut]",
