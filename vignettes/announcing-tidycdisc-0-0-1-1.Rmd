@@ -57,7 +57,7 @@ knitr::include_graphics("figures/tableGen/new_release_stat_blocks.PNG")
 <br> 
 
 ```{r, echo=FALSE, out.width="80%", fig.align = 'center'}
-knitr::include_graphics("figures/tableGen/TG Y FREQ.PNG")
+knitr::include_graphics("figures/tableGen/TG_Y_FREQ.PNG")
 ```
 
 <br> 
@@ -65,7 +65,7 @@ knitr::include_graphics("figures/tableGen/TG Y FREQ.PNG")
 - `MAX FREQ`: This stat block can only be paired to variables (VAR) that have a "N" (VARN) counterpart. For example, it's useful for variables like `AESEV`, when subjects should only be counted once at their maximum `AESEVN` (VARN) value. So, when `MAX FREQ` is paired with `AESEV` or `AESEVN`, the frequencies will reflect maximum severity of an adverse event during the trial.
 
 ```{r, echo=FALSE, out.width="80%", fig.align = 'center'}
-knitr::include_graphics("figures/tableGen/TG MAX FREQ.PNG")
+knitr::include_graphics("figures/tableGen/TG_MAX_FREQ.PNG")
 ```
 
 <br> 
@@ -75,7 +75,7 @@ knitr::include_graphics("figures/tableGen/TG MAX FREQ.PNG")
 <br> 
 
 ```{r, echo=FALSE, out.width="80%", fig.align = 'center'}
-knitr::include_graphics("figures/tableGen/TG NON MISSING.PNG")
+knitr::include_graphics("figures/tableGen/TG_NON_MISSING.PNG")
 ```
 
 <br> 
@@ -85,12 +85,12 @@ knitr::include_graphics("figures/tableGen/TG NON MISSING.PNG")
 <br> 
 
 ```{r, echo=FALSE, out.width="60%", fig.align = 'center'}
-knitr::include_graphics("figures/tableGen/TG Nested Freq.PNG")
+knitr::include_graphics("figures/tableGen/TG_Nested_Freq.PNG")
 ```
 
 
 ```{r, echo=FALSE, out.width="80%", fig.align = 'center'}
-knitr::include_graphics("figures/tableGen/TG Nested Freq2.PNG")
+knitr::include_graphics("figures/tableGen/TG_Nested_Freq2.PNG")
 ```
 
 
@@ -104,7 +104,7 @@ There are a set of tables / listings that users need to build frequently, due to
 <br> 
 
 ```{r, echo=FALSE, out.width="90%", fig.align = 'center'}
-knitr::include_graphics("figures/tableGen/TG STAN dropdown.PNG")
+knitr::include_graphics("figures/tableGen/TG_STAN_dropdown.PNG")
 ```
 
 <br> 
@@ -118,12 +118,12 @@ When one of these tables is selected, the table generator simply compiles the ne
 <br> 
 
 ```{r, echo=FALSE, out.width="80%", fig.align = 'center'}
-knitr::include_graphics("figures/tableGen/TG STAN TAB41 DD.PNG")
+knitr::include_graphics("figures/tableGen/TG_STAN_TAB41_DD.PNG")
 ```
 
 
 ```{r, echo=FALSE, out.width="80%", fig.align = 'center'}
-knitr::include_graphics("figures/tableGen/TG STAN TAB41.PNG")
+knitr::include_graphics("figures/tableGen/TG_STAN_TAB41.PNG")
 ```
 
 <br>
@@ -137,7 +137,7 @@ Finally, reproducing analyses performed in the app from your local RStudio sessi
 <br> 
 
 ```{r, echo=FALSE, out.width="80%", fig.align = 'center'}
-knitr::include_graphics("figures/tableGen/TG reprpoduce button.PNG")
+knitr::include_graphics("figures/tableGen/TG_reprpoduce_button.PNG")
 ```
 
 <br> 
@@ -148,7 +148,7 @@ Upon clicking, an R script will download to your browser and when opened, should
 <br> 
 
 ```{r, echo=FALSE, fig.align = 'center'}
-knitr::include_graphics("figures/tableGen/TG reproduce code tidyCDISC.PNG")
+knitr::include_graphics("figures/tableGen/TG_reproduce_code_tidyCDISC.PNG")
 ```
 
 <br>
@@ -199,7 +199,7 @@ New Chart types in the **Population Explorer**! The initial release of `tidyCDIS
 <br>
 
 ```{r, echo=FALSE, out.width="50%", fig.align='center'}
-knitr::include_graphics("figures/popExp/type of chart.PNG")
+knitr::include_graphics("figures/popExp/type_of_chart.PNG")
 ```
 
 <br>
@@ -224,7 +224,7 @@ Since being added, the line plot of mean variable/ param values over time has be
 <br>
 
 ```{r, echo=FALSE, out.width="40%", fig.align='center'}
-knitr::include_graphics("figures/popExp/line plot controls.PNG")
+knitr::include_graphics("figures/popExp/line_plot_controls.PNG")
 ```
 
 <br>
@@ -234,7 +234,7 @@ We *have* chosen to label our plotted data points below. This toggle simply turn
 <br>
 
 ```{r, echo=FALSE, fig.align='center'}
-knitr::include_graphics("figures/popExp/line plot.PNG")
+knitr::include_graphics("figures/popExp/line_plot.PNG")
 ```
 
 <br>
@@ -245,13 +245,13 @@ If we choose to display 95% confidence intervals for each mean, we need only tog
 <br>
 
 ```{r, echo=FALSE, out.width="40%", fig.align='center'}
-knitr::include_graphics("figures/popExp/line plot option chng.PNG")
+knitr::include_graphics("figures/popExp/line_plot_option_chng.PNG")
 ```
 
 <br>
 
 ```{r, echo=FALSE, fig.align='center'}
-knitr::include_graphics("figures/popExp/line plot 95 ci.PNG")
+knitr::include_graphics("figures/popExp/line_plot_95_ci.PNG")
 ```
 
 <br>
@@ -262,7 +262,7 @@ Besides those new controls, the "line plot - mean over time" have some of the sa
 <br>
 
 ```{r, echo=FALSE, out.width="50%", fig.align='center'}
-knitr::include_graphics("figures/popExp/group data.PNG")
+knitr::include_graphics("figures/popExp/group_data.PNG")
 ```
 
 <br>
@@ -272,7 +272,7 @@ The **"Color Plots By"** variable helps the user create a different colored line
 <br>
 
 ```{r, echo=FALSE, fig.align='center'}
-knitr::include_graphics("figures/popExp/basic plot.PNG")
+knitr::include_graphics("figures/popExp/basic_plot.PNG")
 ```
 
 <br>
@@ -283,7 +283,7 @@ If we switch **"Color Plots by"** to from `NONE` to `AGEGR1`, the application cr
 <br>
 
 ```{r, echo=FALSE, fig.align='center'}
-knitr::include_graphics("figures/popExp/color by.PNG")
+knitr::include_graphics("figures/popExp/color_by.PNG")
 ```
 
 <br>
@@ -293,7 +293,7 @@ Similarly, if we leave **"Color Plots By"** as `NONE` and change **"Separate Plo
 <br>
 
 ```{r, echo=FALSE, fig.align='center'}
-knitr::include_graphics("figures/popExp/group by.PNG")
+knitr::include_graphics("figures/popExp/group_by.PNG")
 ```
 
 <br>
@@ -304,7 +304,7 @@ Lastly, the user can select a variable for both **"Color Plots By"** and **"Sepa
 <br>
 
 ```{r, echo=FALSE, fig.align='center'}
-knitr::include_graphics("figures/popExp/color by and group by.PNG")
+knitr::include_graphics("figures/popExp/color_by_and_group_by.PNG")
 ```
 
 <br>
@@ -336,7 +336,7 @@ The aggregated data used to build the plot is included beneath the plot for easy
 <br>
 
 ```{r, echo=FALSE, fig.align='center'}
-knitr::include_graphics("figures/popExp/download data.PNG")
+knitr::include_graphics("figures/popExp/download_data.PNG")
 ```
 
 <br>
@@ -350,7 +350,7 @@ Certain analyses require to check if parameters / endpoints are highly correlate
 <br>
 
 ```{r, echo=FALSE, out.width="45%", fig.align='center'}
-knitr::include_graphics("figures/popExp/heatmap controls.PNG")
+knitr::include_graphics("figures/popExp/heatmap_controls.PNG")
 ```
 
 <br>
@@ -370,13 +370,13 @@ Furthermore, you may want to check your endpoint correlations from week-to-week.
 <br>
 
 ```{r, echo=FALSE, out.width="45%", fig.align='center'}
-knitr::include_graphics("figures/popExp/heatmap controls grouped.PNG")
+knitr::include_graphics("figures/popExp/heatmap_controls_grouped.PNG")
 ```
 
 <br>
 
 ```{r, echo=FALSE, fig.align='center'}
-knitr::include_graphics("figures/popExp/heatmap grouped.PNG")
+knitr::include_graphics("figures/popExp/heatmap_grouped.PNG")
 ```
 
 <br>
@@ -386,7 +386,7 @@ That's a lot of information / data to consume visually, so an export to Excel is
 <br>
 
 ```{r, echo=FALSE, fig.align='center'}
-knitr::include_graphics("figures/popExp/heatmap data.PNG")
+knitr::include_graphics("figures/popExp/heatmap_data.PNG")
 ```
 
 <br>
@@ -409,7 +409,7 @@ In the plot control panel, we can toggle the `TTE` parameter (if more than one e
 <br>
 
 ```{r, echo=FALSE, out.width="40%", fig.align='center'}
-knitr::include_graphics("figures/popExp/km controls.PNG")
+knitr::include_graphics("figures/popExp/km_controls.PNG")
 ```
 
 <br>
@@ -426,13 +426,13 @@ As you might expect, these plots can be extremely handy, and remarkably powerful
 <br>
 
 ```{r, echo=FALSE, out.width="40%", fig.align='center'}
-knitr::include_graphics("figures/popExp/km controls grouped.PNG")
+knitr::include_graphics("figures/popExp/km_controls_grouped.PNG")
 ```
 
 <br>
 
 ```{r, echo=FALSE, fig.align='center'}
-knitr::include_graphics("figures/popExp/km grouped.PNG")
+knitr::include_graphics("figures/popExp/km_grouped.PNG")
 ```
 
 <br>

@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidyCDISC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.3.9000</span>
       </span>
     </div>
 
@@ -90,7 +90,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -150,21 +150,64 @@
       <small>Source: <a href='https://github.com/Biogen-Inc/tidyCDISC/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="tidycdisc-development-version" class="section level1">
+<h1 class="page-header" data-toc-text="development version">
+<a href="#tidycdisc-development-version" class="anchor"></a>tidyCDISC (development version)</h1>
+</div>
+    <div id="tidycdisc-003" class="section level1">
+<h1 class="page-header" data-toc-text="0.0.3">
+<a href="#tidycdisc-003" class="anchor"></a>tidyCDISC 0.0.3</h1>
+<ul>
+<li>For <code>tippy</code> package, added lower bound on to version
+<code>1.0.0</code> since it includes more user friendly options.</li>
+</ul>
+</div>
+    <div id="tidycdisc-002" class="section level1">
+<h1 class="page-header" data-toc-text="0.0.2">
+<a href="#tidycdisc-002" class="anchor"></a>tidyCDISC 0.0.2</h1>
+<p>This release (PR <a href='https://github.com/Biogen-Inc/tidyCDISC/issues/65'>#65</a>) performs a lot of functions, testing on many
+non-pilot ADSL files to ensure app’s robustness beyond just the CDISC
+pilot data:</p>
+<ul>
+<li>closes <a href='https://github.com/Biogen-Inc/tidyCDISC/issues/64'>#64</a>: Agg class objects lost droppability when only ADSL
+uploaded</li>
+<li>get’s rid of annoying font awesome message about verifying an icon
+exists</li>
+<li>updates gt code that was deprecated</li>
+<li>Made sure ‘PARAM’ exists in the data when trying to label a
+block</li>
+<li>got rid of unnecessary argument in col_for_list() and
+col_for_list_expr()</li>
+<li>added some code that helped the FREQ block produce the correct
+results when ran locally (via a reproducibility script)</li>
+<li>a little code clean up for readability</li>
+</ul>
+</div>
     <div id="tidycdisc-001" class="section level1">
 <h1 class="page-header" data-toc-text="0.0.1">
 <a href="#tidycdisc-001" class="anchor"></a>tidyCDISC 0.0.1</h1>
-<p>This release adds meat to the previous skeleton version of <code>tidyCDISC</code>. The initial development release was intended to be a “bare bones” platform that could serve as a foundation to build a great clinical data exploratory tool. Version <code>0.0.1</code> enriches the user experience by adding useful &amp; commonly needed features for analysis. For more on this release, see <a href="https://biogen-inc.github.io/tidyCDISC/articles/Blog.html#announcing-tidycdisc-0-0-1-1">the announcement</a> on our blog.</p>
+<p>This release adds meat to the previous skeleton version of
+<code>tidyCDISC</code>. The initial development release was intended to
+be a “bare bones” platform that could serve as a foundation to build a
+great clinical data exploratory tool. Version <code>0.0.1</code>
+enriches the user experience by adding useful &amp; commonly needed
+features for analysis. For more on this release, see <a href="https://biogen-inc.github.io/tidyCDISC/articles/Blog.html#announcing-tidycdisc-0-0-1-1">the
+announcement</a> on our blog.</p>
 <ul>
 <li>Major Features added, by tab:
 <ul>
 <li>
 <strong>Table Generator</strong>
 <ul>
-<li>New “STAT Blocks”, such as <code>Y FREQ</code>, <code>MAX FREQ</code>, <code>NON-MISSING</code>, and a pair of <code>NESTED FREQ</code> blocks</li>
+<li>New “STAT Blocks”, such as <code>Y FREQ</code>,
+<code>MAX FREQ</code>, <code>NON-MISSING</code>, and a pair of
+<code>NESTED FREQ</code> blocks</li>
 <li>Interact with <code>ADAE</code>
 </li>
-<li>17 new ‘standard analysis’ tables in the <code>ADAE</code> and <code>ADLB</code> space.</li>
-<li>An R Script Downloader to reproduce analysis performed in the app</li>
+<li>17 new ‘standard analysis’ tables in the <code>ADAE</code> and
+<code>ADLB</code> space.</li>
+<li>An R Script Downloader to reproduce analysis performed in the
+app</li>
 </ul>
 </li>
 <li>
@@ -181,7 +224,8 @@
 </li>
 </ul>
 </li>
-<li>Upgraded <code>pkgdown</code> site documentation to be more robust and hassle-free for developers</li>
+<li>Upgraded <code>pkgdown</code> site documentation to be more robust
+and hassle-free for developers</li>
 <li>Depends on updated version of IDEAFilter (&gt;= 0.1.0.9000)</li>
 <li>Squashed bugs and other minor improvements</li>
 </ul>
@@ -190,7 +234,8 @@
 <h1 class="page-header" data-toc-text="0.0.0.9000">
 <a href="#tidycdisc-0009000" class="anchor"></a>tidyCDISC 0.0.0.9000</h1>
 <ul>
-<li>Added a <code>NEWS.md</code> file to track changes to the package.</li>
+<li>Added a <code>NEWS.md</code> file to track changes to the
+package.</li>
 </ul>
 </div>
   </div>

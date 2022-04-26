@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidyCDISC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.3.9000</span>
       </span>
     </div>
 
@@ -50,7 +50,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -103,7 +103,7 @@
 
       
 
-      </header><script src="x04_Filtering_files/header-attrs-2.9/header-attrs.js"></script><div class="row">
+      </header><script src="x04_Filtering_files/header-attrs-2.13/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>04 Filtering</h1>
@@ -116,103 +116,208 @@
 
     
     
-<p>This tutorial will walk through how to leverage the <code>tidyCDISC</code> app’s filtering widget we’ve all come to love and enjoy. It exists to establish thorough and comprehensive data filtering capabilities for any tab, but not across all tabs. That is, filtering performed on the Table Generator tab doesn’t not apply to the Population Explorer, or vice-versa. But the filtering widget functions in a very consistent way across all the tabs, with only subtle differences in how the filtering is applied.</p>
+<p>This tutorial will walk through how to leverage the
+<code>tidyCDISC</code> app’s filtering widget we’ve all come to love and
+enjoy. It exists to establish thorough and comprehensive data filtering
+capabilities for any tab, but not across all tabs. That is, filtering
+performed on the Table Generator tab doesn’t not apply to the Population
+Explorer, or vice-versa. But the filtering widget functions in a very
+consistent way across all the tabs, with only subtle differences in how
+the filtering is applied.</p>
 <div id="subtle-differences-in-each-tabs-filtering-widget" class="section level2">
 <h2 class="hasAnchor">
 <a href="#subtle-differences-in-each-tabs-filtering-widget" class="anchor"></a>Subtle differences in each tab’s filtering widget</h2>
-<p>The filtering widgets appearance is identical from tab-to-tab, but it’s location and when the desired filtering is applied may vary. The filtering button always looks like this:</p>
+<p>The filtering widgets appearance is identical from tab-to-tab, but
+it’s location and when the desired filtering is applied may vary. The
+filtering button always looks like this:</p>
 <p><br></p>
-<p><img src="figures/filter/filter%20button.PNG" width="40%" style="display: block; margin: auto;"></p>
+<p><img src="figures/filter/filter_button.PNG" width="40%" style="display: block; margin: auto;"></p>
 <p><br></p>
 <div id="table-generator" class="section level3">
 <h3 class="hasAnchor">
 <a href="#table-generator" class="anchor"></a>Table Generator</h3>
-<p>Here, you only need to locate the large blue “Filter Data” button on the left-hand side above the drag &amp; drop zone. Upon clicking, you’ll see it reveals a data selector and the grey “Add Filter” button. More on the data selector later.</p>
+<p>Here, you only need to locate the large blue “Filter Data” button on
+the left-hand side above the drag &amp; drop zone. Upon clicking, you’ll
+see it reveals a data selector and the grey “Add Filter” button. More on
+the data selector later.</p>
 <p><br></p>
 <p><img src="figures/filter/find_button_tg.gif" width="60%" style="display: block; margin: auto;"></p>
 <p><br></p>
-<p>More on the data selector later, but it’s important to note that as soon as a filter is defined for a certain variable, it effects the output immediately and displays a message that reflects the new data constraints below the table’s title, as seen here (red brackets drawn for emphasis):</p>
+<p>More on the data selector later, but it’s important to note that as
+soon as a filter is defined for a certain variable, it effects the
+output immediately and displays a message that reflects the new data
+constraints below the table’s title, as seen here (red brackets drawn
+for emphasis):</p>
 <p><br></p>
-<p><img src="figures/tableGen/TG%20filtering.PNG" width="80%" style="display: block; margin: auto;"></p>
+<p><img src="figures/tableGen/TG_filtering.PNG" width="80%" style="display: block; margin: auto;"></p>
 <p><br></p>
 </div>
 <div id="population-explorer" class="section level3">
 <h3 class="hasAnchor">
 <a href="#population-explorer" class="anchor"></a>Population Explorer</h3>
-<p>Locate the smaller blue “Filter Data” button on the left-hand side above “Type of Chart” radio buttons. Upon clicking, you’ll see it reveals the same data selector and the grey “Add Filter” button. However, notice how the user can turn the filters on and off usin the “Apply Filters” toggle. This can come in handy if you desire to flip back and forth between two populations.</p>
+<p>Locate the smaller blue “Filter Data” button on the left-hand side
+above “Type of Chart” radio buttons. Upon clicking, you’ll see it
+reveals the same data selector and the grey “Add Filter” button.
+However, notice how the user can turn the filters on and off usin the
+“Apply Filters” toggle. This can come in handy if you desire to flip
+back and forth between two populations.</p>
 <p><br></p>
 <p><img src="figures/filter/find_button_popex_OG.gif" width="50%" style="display: block; margin: auto;"></p>
 <p><br></p>
-<p>Once the filters are applied, you’ll see blue text appear below the plot’s x-axis you’ve engineered. Red arrow and bracket drawn for emphasis below:</p>
+<p>Once the filters are applied, you’ll see blue text appear below the
+plot’s x-axis you’ve engineered. Red arrow and bracket drawn for
+emphasis below:</p>
 <p><br></p>
-<p><img src="figures/filter/popEx%20Filtering%20text.PNG" width="90%" style="display: block; margin: auto;"></p>
+<p><img src="figures/filter/popEx_Filtering_text.PNG" width="90%" style="display: block; margin: auto;"></p>
 <p><br></p>
 </div>
 <div id="individual-explorer" class="section level3">
 <h3 class="hasAnchor">
 <a href="#individual-explorer" class="anchor"></a>Individual Explorer</h3>
-<p>On this tab, there is no blue “Filter Data” button. On this tab, the filtering widget only exists to pre-filter the list of patients available in the USUBJID dropdown list. So, on the left, there is a checkbox labeled “Advanced Pre-Filtering?”. Upon selecting, you’ll see it reveals the standard data selector and the grey “Add Filter” button where you can begin filtering.</p>
+<p>On this tab, there is no blue “Filter Data” button. On this tab, the
+filtering widget only exists to pre-filter the list of patients
+available in the USUBJID dropdown list. So, on the left, there is a
+checkbox labeled “Advanced Pre-Filtering?”. Upon selecting, you’ll see
+it reveals the standard data selector and the grey “Add Filter” button
+where you can begin filtering.</p>
 <p><br></p>
 <p><img src="figures/filter/find_button_indvExp.gif" width="60%" style="display: block; margin: auto;"></p>
 <p><br></p>
-<p>After you’ve defined your filters, you’ll see the the list of patients will be shorter than when you started (depending on the filters applied).</p>
+<p>After you’ve defined your filters, you’ll see the the list of
+patients will be shorter than when you started (depending on the filters
+applied).</p>
 </div>
 </div>
 <div id="how-does-the-filtering-widget-work-anyway" class="section level2">
 <h2 class="hasAnchor">
 <a href="#how-does-the-filtering-widget-work-anyway" class="anchor"></a>How does the filtering widget work, anyway?</h2>
-<p>In a nutshell, the filtering widget will look up and present all variables and variable values from the data sources specified, allowing the user to find and include/ exclude certain data points on that tab.</p>
+<p>In a nutshell, the filtering widget will look up and present all
+variables and variable values from the data sources specified, allowing
+the user to find and include/ exclude certain data points on that
+tab.</p>
 <div id="selecting-an-adam-variable" class="section level3">
 <h3 class="hasAnchor">
 <a href="#selecting-an-adam-variable" class="anchor"></a>Selecting an ADaM &amp; variable</h3>
-<p>Think about the variable by which you wish to filter the output, and recall which of the uploaded ADaMs it exists within. If you can’t remember the data source, you can select more than one ADaM and then click “Add Filter”. This will merge the data together and give you access to all the variables in both selected data set(s). Note, if you uploaded several large ADaMs on the data tab, it’s best not to select them all when filtering, if possible, as the app will become sluggish.</p>
+<p>Think about the variable by which you wish to filter the output, and
+recall which of the uploaded ADaMs it exists within. If you can’t
+remember the data source, you can select more than one ADaM and then
+click “Add Filter”. This will merge the data together and give you
+access to all the variables in both selected data set(s). Note, if you
+uploaded several large ADaMs on the data tab, it’s best not to select
+them all when filtering, if possible, as the app will become
+sluggish.</p>
 <p><br></p>
-<p><img src="figures/filter/select%20multi%20data.PNG" width="50%" style="display: block; margin: auto;"></p>
+<p><img src="figures/filter/select_multi_data.PNG" width="50%" style="display: block; margin: auto;"></p>
 <p><br></p>
-<p>Notice above that you can preview not only the variable names, but the variable labels and data types, which can be so very helpful. To make selecting your variables even more effortless, you can start typing the variable name to pull up variables that contain certain strings. In the example below, we search for all the date variables using the key letters “DT”.</p>
+<p>Notice above that you can preview not only the variable names, but
+the variable labels and data types, which can be so very helpful. To
+make selecting your variables even more effortless, you can start typing
+the variable name to pull up variables that contain certain strings. In
+the example below, we search for all the date variables using the key
+letters “DT”.</p>
 <p><br></p>
-<p><img src="figures/filter/filter%20search.PNG" width="50%" style="display: block; margin: auto;"></p>
+<p><img src="figures/filter/filter_search.PNG" width="50%" style="display: block; margin: auto;"></p>
 <p><br></p>
 </div>
 <div id="filtering-variable-values" class="section level3">
 <h3 class="hasAnchor">
 <a href="#filtering-variable-values" class="anchor"></a>Filtering variable values</h3>
-<p>The filtering widget is smart enough to identify the data that exists in each variable, and yields a user interface to compliment said data. For example, if you are filtering on a date field, a date range will appear that spans from the min to max date found in the data. Plus, you don’t need to manually enter a date which could lead to errors if the “YYYY-MM-DD” format isn’t followed. Instead, when you click on one of the date values, a handy calendar will pop up to help you select the date of interest, with invalid dates grayed out and non-selectable.</p>
+<p>The filtering widget is smart enough to identify the data that exists
+in each variable, and yields a user interface to compliment said data.
+For example, if you are filtering on a date field, a date range will
+appear that spans from the min to max date found in the data. Plus, you
+don’t need to manually enter a date which could lead to errors if the
+“YYYY-MM-DD” format isn’t followed. Instead, when you click on one of
+the date values, a handy calendar will pop up to help you select the
+date of interest, with invalid dates grayed out and non-selectable.</p>
 <p><br></p>
-<p><img src="figures/filter/filtering%20date.PNG" width="50%" style="display: block; margin: auto;"></p>
+<p><img src="figures/filter/filtering_date.PNG" width="50%" style="display: block; margin: auto;"></p>
 <p><br></p>
-<p>Notice in the above image, there is 1,445 rows of of merged data between the selected <code>ADSL</code> and <code>ADAE</code> that the widget is parsing through, and it found 1,431 <code>NA</code> values for this variable. If you want to remove those <code>NA</code> values from this count, you need only click on the gray “NA”, as seen below, revealing there are 14 non-<code>NA</code> rows. The recording below also shows how this number is reduced when we change our date range. It’s important to note this is counting rows of data between the merged <code>ADSL</code> and <code>ADAE</code>, not unique subjects. If you want the row count to reflect unique subjects, you should only select the <code>ADSL</code> ADaM for filtering.</p>
+<p>Notice in the above image, there is 1,445 rows of of merged data
+between the selected <code>ADSL</code> and <code>ADAE</code> that the
+widget is parsing through, and it found 1,431 <code>NA</code> values for
+this variable. If you want to remove those <code>NA</code> values from
+this count, you need only click on the gray “NA”, as seen below,
+revealing there are 14 non-<code>NA</code> rows. The recording below
+also shows how this number is reduced when we change our date range.
+It’s important to note this is counting rows of data between the merged
+<code>ADSL</code> and <code>ADAE</code>, not unique subjects. If you
+want the row count to reflect unique subjects, you should only select
+the <code>ADSL</code> ADaM for filtering.</p>
 <p><br></p>
-<p><img src="figures/filter/filter%20no%20NAs%20change%20date.gif" width="50%" style="display: block; margin: auto;"></p>
+<p><img src="figures/filter/filter_no_NAs_change_date.gif" width="50%" style="display: block; margin: auto;"></p>
 <p><br></p>
-<p>Furthermore, notice how we can continue to add additional filters using the “Add Filter” button. Doing so further reduces the number of rows in the merged data, as seen below. The beauty of this widget is you can filter as many variables as you want (well, as along as their are available rows remaining)!</p>
-<p>Other data types and their unique interface are as follows: <code>chr</code>, <code>fctr</code>, <code>dbl</code>, and (not pictured) <code>dttm</code>. Character data allow you to select string values present in the data, while factor values are represented in check boxes. For either, more than one value can be selected at a time. Double data acts more like the date variables, by allowing you to select a range of desired values.</p>
+<p>Furthermore, notice how we can continue to add additional filters
+using the “Add Filter” button. Doing so further reduces the number of
+rows in the merged data, as seen below. The beauty of this widget is you
+can filter as many variables as you want (well, as along as their are
+available rows remaining)!</p>
+<p>Other data types and their unique interface are as follows:
+<code>chr</code>, <code>fctr</code>, <code>dbl</code>, and (not
+pictured) <code>dttm</code>. Character data allow you to select string
+values present in the data, while factor values are represented in check
+boxes. For either, more than one value can be selected at a time. Double
+data acts more like the date variables, by allowing you to select a
+range of desired values.</p>
 <p><br></p>
-<p><img src="figures/filter/filter%20dbl%20chr%20fct.PNG" width="50%" style="display: block; margin: auto;"></p>
+<p><img src="figures/filter/filter_dbl_chr_fct.PNG" width="50%" style="display: block; margin: auto;"></p>
 <p><br></p>
 </div>
 <div id="stack-re-order-and-canceling-filters" class="section level3">
 <h3 class="hasAnchor">
 <a href="#stack-re-order-and-canceling-filters" class="anchor"></a>Stack, re-order, and canceling filters</h3>
-<p>Notice in the image above that we were able to add an unlimited amount of filters to our data (as long as their are rows left to analyze) and that the order of the filters is important. First, <code>ETHNIC</code> = “NOT HISPANIC OR LATINO” retained 1,371 rows that were available for the next filter where we selected only “BLACK OR AFRICAN AMERICAN” patients, leaving us with only 113 rows. Finally, after we filtered patients by weight, we were only left with 11 rows.</p>
-<p>If you wish to apply these filters in a different order, you can simply drag and drop them into the desired location and the data available &amp; number of rows that exist after each filter will update. Why is order important? Well as you can see below, if we filter by weight first instead of last, we’ll notice:</p>
+<p>Notice in the image above that we were able to add an unlimited
+amount of filters to our data (as long as their are rows left to
+analyze) and that the order of the filters is important. First,
+<code>ETHNIC</code> = “NOT HISPANIC OR LATINO” retained 1,371 rows that
+were available for the next filter where we selected only “BLACK OR
+AFRICAN AMERICAN” patients, leaving us with only 113 rows. Finally,
+after we filtered patients by weight, we were only left with 11
+rows.</p>
+<p>If you wish to apply these filters in a different order, you can
+simply drag and drop them into the desired location and the data
+available &amp; number of rows that exist after each filter will update.
+Why is order important? Well as you can see below, if we filter by
+weight first instead of last, we’ll notice:</p>
 <ol style="list-style-type: decimal">
-<li><p>one of our <code>RACE</code> categories will disappear because those patients do not exist for the given weight range and</p></li>
-<li><p>the allowed max weight to filter on increases as more data becomes available</p></li>
+<li><p>one of our <code>RACE</code> categories will disappear because
+those patients do not exist for the given weight range and</p></li>
+<li><p>the allowed max weight to filter on increases as more data
+becomes available</p></li>
 </ol>
-<p>If you want to cancel or remove any filter, simply select the “X” in the upper right-hand corner of the variable’s filter panel. See recording below for guidance:</p>
+<p>If you want to cancel or remove any filter, simply select the “X” in
+the upper right-hand corner of the variable’s filter panel. See
+recording below for guidance:</p>
 <p><br></p>
-<p><img src="figures/filter/filter%20reorder%20and%20del.gif" width="50%" style="display: block; margin: auto;"></p>
+<p><img src="figures/filter/filter_reorder_and_del.gif" width="50%" style="display: block; margin: auto;"></p>
 <p><br></p>
-<p>This was mentioned earlier, but for clarification, notice how the above recording has the loaded <code>ADSL</code> and <code>ADAE</code> selected, yet all the filtered variables were from the <code>ADSL</code> only. This is great example of when you may only want to include the data sets you absolutely need for filtering. If I would have selected only the <code>ADSL</code>, the row counts would be reflective of only unique patients counts (since <code>ADSL</code>s only have one row per patient) as seen below. However, since <code>ADAE</code> was also selected, it displayed the row count for the merged data, allowing us to view the count of adverse events as we filtered. Depending on your priorities, you may want to adjust the selected ADaMs accordingly!</p>
+<p>This was mentioned earlier, but for clarification, notice how the
+above recording has the loaded <code>ADSL</code> and <code>ADAE</code>
+selected, yet all the filtered variables were from the <code>ADSL</code>
+only. This is great example of when you may only want to include the
+data sets you absolutely need for filtering. If I would have selected
+only the <code>ADSL</code>, the row counts would be reflective of only
+unique patients counts (since <code>ADSL</code>s only have one row per
+patient) as seen below. However, since <code>ADAE</code> was also
+selected, it displayed the row count for the merged data, allowing us to
+view the count of adverse events as we filtered. Depending on your
+priorities, you may want to adjust the selected ADaMs accordingly!</p>
 <p><br></p>
-<p><img src="figures/filter/filter%20adsl%20dbl%20chr%20fct.PNG" width="50%" style="display: block; margin: auto;"></p>
+<p><img src="figures/filter/filter_adsl_dbl_chr_fct.PNG" width="50%" style="display: block; margin: auto;"></p>
 <p><br></p>
 </div>
 <div id="filter-impact" class="section level3">
 <h3 class="hasAnchor">
 <a href="#filter-impact" class="anchor"></a>Filter impact</h3>
-<p>It’s important to note, that after a filter is applied to a variable from a specific data set, all the subject level data is linked via <code>USUBJID</code>, and will apply those filters to <strong>all data sources</strong> on a given tab. For example, if you filter a variable from an <code>ADAE</code> like <code>AEACN</code> to the “DOSE REDUCED”, not only will the <code>ADAE</code> be filtered, but all uploaded data that contains those “DOSE REDUCED” patients. Exciting, right? However, remember if you venture over to a different tab, those filters aren’t carried with you!</p>
+<p>It’s important to note, that after a filter is applied to a variable
+from a specific data set, all the subject level data is linked via
+<code>USUBJID</code>, and will apply those filters to <strong>all data
+sources</strong> on a given tab. For example, if you filter a variable
+from an <code>ADAE</code> like <code>AEACN</code> to the “DOSE REDUCED”,
+not only will the <code>ADAE</code> be filtered, but all uploaded data
+that contains those “DOSE REDUCED” patients. Exciting, right? However,
+remember if you venture over to a different tab, those filters aren’t
+carried with you!</p>
 <p>Happy filtering!</p>
 <p><br></p>
 <p><br></p>

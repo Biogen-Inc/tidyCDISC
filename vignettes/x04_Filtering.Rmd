@@ -23,7 +23,7 @@ The filtering widgets appearance is identical from tab-to-tab, but it's location
 <br>
 
 ```{r, echo=FALSE, out.width="40%", fig.align='center'}
-knitr::include_graphics("figures/filter/filter button.PNG")
+knitr::include_graphics("figures/filter/filter_button.PNG")
 ```
 
 <br>
@@ -46,7 +46,7 @@ More on the data selector later, but it's important to note that as soon as a fi
 <br>
 
 ```{r, echo=FALSE, out.width="80%", fig.align = 'center'}
-knitr::include_graphics("figures/tableGen/TG filtering.PNG")
+knitr::include_graphics("figures/tableGen/TG_filtering.PNG")
 ```
 
 <br>
@@ -70,7 +70,7 @@ Once the filters are applied, you'll see blue text appear below the plot's x-axi
 
 
 ```{r, echo=FALSE, out.width="90%", fig.align='center'}
-knitr::include_graphics("figures/filter/popEx Filtering text.PNG")
+knitr::include_graphics("figures/filter/popEx_Filtering_text.PNG")
 ```
 
 <br>
@@ -102,7 +102,7 @@ Think about the variable by which you wish to filter the output, and recall whic
 <br>
 
 ```{r, echo=FALSE, out.width="50%", fig.align='center'}
-knitr::include_graphics("figures/filter/select multi data.PNG")
+knitr::include_graphics("figures/filter/select_multi_data.PNG")
 ```
 
 <br>
@@ -113,7 +113,7 @@ Notice above that you can preview not only the variable names, but the variable 
 
 
 ```{r, echo=FALSE, out.width="50%", fig.align='center'}
-knitr::include_graphics("figures/filter/filter search.PNG")
+knitr::include_graphics("figures/filter/filter_search.PNG")
 ```
 
 <br>
@@ -127,7 +127,7 @@ The filtering widget is smart enough to identify the data that exists in each va
 
 
 ```{r, echo=FALSE, out.width="50%", fig.align='center'}
-knitr::include_graphics("figures/filter/filtering date.PNG")
+knitr::include_graphics("figures/filter/filtering_date.PNG")
 ```
 
 <br>
@@ -137,7 +137,7 @@ Notice in the above image, there is 1,445 rows of of merged data between the sel
 <br>
 
 ```{r, echo=FALSE, out.width="50%", fig.align='center'}
-knitr::include_graphics("figures/filter/filter no NAs change date.gif")
+knitr::include_graphics("figures/filter/filter_no_NAs_change_date.gif")
 ```
 
 <br>
@@ -151,7 +151,7 @@ Other data types and their unique interface are as follows: `chr`, `fctr`, `dbl`
 <br>
 
 ```{r, echo=FALSE, out.width="50%", fig.align='center'}
-knitr::include_graphics("figures/filter/filter dbl chr fct.PNG")
+knitr::include_graphics("figures/filter/filter_dbl_chr_fct.PNG")
 ```
 
 <br>
@@ -175,7 +175,7 @@ If you want to cancel or remove any filter, simply select the "X" in the upper r
 <br>
 
 ```{r, echo=FALSE, out.width="50%", fig.align='center'}
-knitr::include_graphics("figures/filter/filter reorder and del.gif")
+knitr::include_graphics("figures/filter/filter_reorder_and_del.gif")
 ```
 
 <br>
@@ -186,7 +186,7 @@ This was mentioned earlier, but for clarification, notice how the above recordin
 <br>
 
 ```{r, echo=FALSE, out.width="50%", fig.align='center'}
-knitr::include_graphics("figures/filter/filter adsl dbl chr fct.PNG")
+knitr::include_graphics("figures/filter/filter_adsl_dbl_chr_fct.PNG")
 ```
 
 <br>

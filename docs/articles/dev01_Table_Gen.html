@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidyCDISC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.3.9000</span>
       </span>
     </div>
 
@@ -50,7 +50,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -103,7 +103,7 @@
 
       
 
-      </header><script src="dev01_Table_Gen_files/header-attrs-2.9/header-attrs.js"></script><div class="row">
+      </header><script src="dev01_Table_Gen_files/header-attrs-2.13/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Table Generator</h1>
@@ -116,47 +116,75 @@
 
     
     
-<p>Learn how to contribute useful code to the table generator tab, by topic.</p>
+<p>Learn how to contribute useful code to the table generator tab, by
+topic.</p>
 <div id="create-a-statistical-block" class="section level2">
 <h2 class="hasAnchor">
 <a href="#create-a-statistical-block" class="anchor"></a>Create A Statistical Block</h2>
-<p>This tutorial will walk you through creating a new statistical block for the Table Generator using JavaScript and R, then writing an R function to use the block within the <code>gt</code> table.</p>
+<p>This tutorial will walk you through creating a new statistical block
+for the Table Generator using JavaScript and R, then writing an R
+function to use the block within the <code>gt</code> table.</p>
 <div id="create-the-drag-zone-block" class="section level3">
 <h3 class="hasAnchor">
 <a href="#create-the-drag-zone-block" class="anchor"></a>Create the Drag Zone Block</h3>
-<p>Within <code>R/mod_TableGen_ui</code> you’ll find a list of blocks.</p>
-<p>If you are going to create a simple block like in the case of <code>MEAN</code>, you’ll give the block an id in lowercase, and a label to be displayed in uppercase. You must also give the block <code>class = agg</code></p>
+<p>Within <code>R/mod_TableGen_ui</code> you’ll find a list of
+blocks.</p>
+<p>If you are going to create a simple block like in the case of
+<code>MEAN</code>, you’ll give the block an id in lowercase, and a label
+to be displayed in uppercase. You must also give the block
+<code>class = agg</code></p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">tags</span><span class="op">$</span><span class="fu">li</span><span class="op">(</span>id <span class="op">=</span> <span class="st">"mean"</span>,<span class="st">"MEAN"</span>,class <span class="op">=</span> <span class="st">"agg"</span><span class="op">)</span></code></pre></div>
-<p>If you want to create a more complicated block that changes within the drop zone, or has hover text there are a couple more arguments you must add:</p>
+<p>If you want to create a more complicated block that changes within
+the drop zone, or has hover text there are a couple more arguments you
+must add:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">tags</span><span class="op">$</span><span class="fu">li</span><span class="op">(</span>class <span class="op">=</span> <span class="st">"ui-state-default agg"</span>, id <span class="op">=</span> <span class="st">"chg"</span>,
         <span class="fu">div</span><span class="op">(</span><span class="fu">tippy</span><span class="op">(</span><span class="fu">div</span><span class="op">(</span><span class="st">"CHG"</span><span class="op">)</span>, <span class="st">"Change from Baseline"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <ul>
 <li>an additional <code>ui-state-default</code> class</li>
-<li>another div using the package <code>tippy</code> to create the text to display <code>CHG</code> and the hover text</li>
+<li>another div using the package <code>tippy</code> to create the text
+to display <code>CHG</code> and the hover text</li>
 </ul>
 </div>
 <div id="create-the-drop-zone-block" class="section level3">
 <h3 class="hasAnchor">
 <a href="#create-the-drop-zone-block" class="anchor"></a>Create the Drop Zone Block</h3>
-<p>Under <code>www/inst</code> you will find the <code>script.js</code> file which describes the HTML for a block within the drag zone.</p>
-<p>Currently there are two JavaScript functions to create HTML blocks</p>
+<p>Under <code>www/inst</code> you will find the <code>script.js</code>
+file which describes the HTML for a block within the drag zone.</p>
+<p>Currently there are two JavaScript functions to create HTML
+blocks</p>
 <ul>
-<li><p><code>simpleBlock</code> which creates a block like the <code>FREQ</code> block which says “FREQ” when dragged and has a delete button</p></li>
-<li><p><code>selectWeekBlock</code> which creates a dropdown when the block is dragged into the drop zone, determined by the unique values in the <code>AVISIT</code> column</p></li>
+<li><p><code>simpleBlock</code> which creates a block like the
+<code>FREQ</code> block which says “FREQ” when dragged and has a delete
+button</p></li>
+<li><p><code>selectWeekBlock</code> which creates a dropdown when the
+block is dragged into the drop zone, determined by the unique values in
+the <code>AVISIT</code> column</p></li>
 </ul>
-<p>You can add your block to the function <code>$("#droppable_agg").droppable(...</code> like so:</p>
+<p>You can add your block to the function
+<code>$("#droppable_agg").droppable(...</code> like so:</p>
 <pre><code>} else if (draggableId.includes("mean")) {
     $(this).append(selectWeekBlock(newid, "MEAN", select));
 }</code></pre>
-<p>Where the lowecase <code>mean</code> corresponds to the ID of the block, and <code>new_id</code> is a JavaScript function that appends a number to your block ID in case there are multiple <code>mean</code> blocks inside the dropzone. The uppercase <code>MEAN</code> is what you want your block to display. Similarly you can change this code from <code>selectWeekBlock</code> to a simple block if you don’t need the week dropdown.</p>
+<p>Where the lowecase <code>mean</code> corresponds to the ID of the
+block, and <code>new_id</code> is a JavaScript function that appends a
+number to your block ID in case there are multiple <code>mean</code>
+blocks inside the dropzone. The uppercase <code>MEAN</code> is what you
+want your block to display. Similarly you can change this code from
+<code>selectWeekBlock</code> to a simple block if you don’t need the
+week dropdown.</p>
 </div>
 <div id="writing-the-function" class="section level3">
 <h3 class="hasAnchor">
 <a href="#writing-the-function" class="anchor"></a>Writing the function</h3>
-<p>When you drag a column block, the shiny input returns the name of the column and the data file it came from. Using the <code>custom_class</code> function, the column name is given a class of <code>BDS</code>, <code>ADSL</code>, or <code>OCCDS</code></p>
-<p>We can leverage these classes when creating a new statistical function because we may want to perform slightly different calculations on an ADSL or BDS, for instance.</p>
+<p>When you drag a column block, the shiny input returns the name of the
+column and the data file it came from. Using the
+<code>custom_class</code> function, the column name is given a class of
+<code>BDS</code>, <code>ADSL</code>, or <code>OCCDS</code></p>
+<p>We can leverage these classes when creating a new statistical
+function because we may want to perform slightly different calculations
+on an ADSL or BDS, for instance.</p>
 <p>Let’s look at <code>mod_tableGen_fct_freq</code> as an example:</p>
 </div>
 <div id="create-a-function" class="section level3">
@@ -177,7 +205,9 @@
 <div id="create-a-method-for-adsl" class="section level3">
 <h3 class="hasAnchor">
 <a href="#create-a-method-for-adsl" class="anchor"></a>Create a method for ADSL</h3>
-<p>In the case of ADSL we need to calculate the frequency for the entire table, or if groups are selected and return a table of values to be used in gt.</p>
+<p>In the case of ADSL we need to calculate the frequency for the entire
+table, or if groups are selected and return a table of values to be used
+in gt.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">app_freq.ADSL</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">column</span>, <span class="va">week</span>, <span class="va">group</span> <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">data</span><span class="op">)</span> <span class="op">{</span>
   
@@ -218,20 +248,26 @@
 <div id="create-a-method-for-bds" class="section level3">
 <h3 class="hasAnchor">
 <a href="#create-a-method-for-bds" class="anchor"></a>Create a method for BDS</h3>
-<p>We don’t need a method for BDS because we currently only import PARAMCD blocks and since AVAL and CHG are numeric we can’t calculate frequency:</p>
+<p>We don’t need a method for BDS because we currently only import
+PARAMCD blocks and since AVAL and CHG are numeric we can’t calculate
+frequency:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">app_freq.BDS</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">column</span>, <span class="va">week</span>, <span class="va">group</span> <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">data</span><span class="op">)</span> <span class="op">{</span>
   <span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/abort.html">abort</a></span><span class="op">(</span><span class="fu">glue</span><span class="fu">::</span><span class="fu"><a href="https://glue.tidyverse.org/reference/glue.html">glue</a></span><span class="op">(</span>
     <span class="st">"Can't calculate frequency for BDS - {column} is numeric"</span>
   <span class="op">)</span><span class="op">)</span>
 <span class="op">}</span></code></pre></div>
-<p>Feel free to explore the mean, ANOVA, and chg files for other statistical examples. For instance, blocks with BDS methods use the <code>week</code> argument which is supplied from the block’s dropdown.</p>
+<p>Feel free to explore the mean, ANOVA, and chg files for other
+statistical examples. For instance, blocks with BDS methods use the
+<code>week</code> argument which is supplied from the block’s
+dropdown.</p>
 </div>
 </div>
 <div id="putting-it-all-together" class="section level2">
 <h2 class="hasAnchor">
 <a href="#putting-it-all-together" class="anchor"></a>Putting it all together</h2>
-<p>Once you have your statistical function, you need to add it to the <code>app_methods</code> function:</p>
+<p>Once you have your statistical function, you need to add it to the
+<code>app_methods</code> function:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">app_methods</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">agg</span>, <span class="va">column</span>, <span class="va">week</span>, <span class="va">group</span>, <span class="va">data</span><span class="op">)</span> <span class="op">{</span>
   <span class="kw">if</span> <span class="op">(</span><span class="va">agg</span> <span class="op">==</span> <span class="st">"MEAN"</span><span class="op">)</span> <span class="op">{</span>
@@ -244,8 +280,14 @@
     <span class="fu"><a href="../reference/app_chg.html">app_chg</a></span><span class="op">(</span><span class="va">column</span>, <span class="va">week</span>, <span class="va">group</span>, <span class="va">data</span><span class="op">)</span>
   <span class="op">}</span>
 <span class="op">}</span></code></pre></div>
-<p>This function will look for the name of the dragged in statistical block and apply the correct statistical function based on the block’s name. Since the first argument of the function is the column to apply the statistical block on, it will look for the data file the column came from and choose the correct method.</p>
-<p>Finally this function is used within a <code>map</code> in <code>mod_tableGen</code> so each statistical block is applied to each column in the drop zone iteratively.</p>
+<p>This function will look for the name of the dragged in statistical
+block and apply the correct statistical function based on the block’s
+name. Since the first argument of the function is the column to apply
+the statistical block on, it will look for the data file the column came
+from and choose the correct method.</p>
+<p>Finally this function is used within a <code>map</code> in
+<code>mod_tableGen</code> so each statistical block is applied to each
+column in the drop zone iteratively.</p>
 <p><br><br><br><br></p>
 </div>
   </div>
