@@ -212,7 +212,7 @@ Here is what the population explorer looks like after adding a Histogram to it.
 This is using the same small ADSL dataset as above.
 
 ```{r, out.width="90%", out.height="90%", echo=FALSE}
-knitr::include_graphics("figures/popExp/histogram.png")
+knitr::include_graphics("figures/popExp/geom_histogram.png")
 ```
 
 
