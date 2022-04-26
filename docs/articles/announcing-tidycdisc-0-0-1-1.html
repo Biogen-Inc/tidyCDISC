@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidyCDISC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.3.9000</span>
       </span>
     </div>
 
@@ -50,7 +50,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -103,7 +103,7 @@
 
       
 
-      </header><script src="announcing-tidycdisc-0-0-1-1_files/header-attrs-2.9/header-attrs.js"></script><div class="row">
+      </header><script src="announcing-tidycdisc-0-0-1-1_files/header-attrs-2.13/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Announcing <code>tidyCDISC 0.0.1</code>
@@ -117,90 +117,175 @@
 
     
     
-<p>On the road to generating desirable clinical tables and figures in R, <code>tidyCDISC</code> took some pioneering first steps towards that goal by open sourcing an interactive platform in <code>shiny</code> for all to use. However, the initial release was a minimum viable product and only promised users a foundation upon which to build. The latest release of <code>tidyCDISC</code> starts to build upon that foundation with a myriad of useful features and even lays some more footings for future expansion. Feel free to follow along with these announcement details using the demo version of <code>tidyCDISC</code> hosted on shinyapps.io. Note the demo version disables the <strong>Data Upload</strong> feature and instead uses the CDISC pilot data.</p>
+<p>On the road to generating desirable clinical tables and figures in R,
+<code>tidyCDISC</code> took some pioneering first steps towards that
+goal by open sourcing an interactive platform in <code>shiny</code> for
+all to use. However, the initial release was a minimum viable product
+and only promised users a foundation upon which to build. The latest
+release of <code>tidyCDISC</code> starts to build upon that foundation
+with a myriad of useful features and even lays some more footings for
+future expansion. Feel free to follow along with these announcement
+details using the demo version of <code>tidyCDISC</code> hosted on
+shinyapps.io. Note the demo version disables the <strong>Data
+Upload</strong> feature and instead uses the CDISC pilot data.</p>
 <p><br></p>
 <center>
-<a href="https://rinpharma.shinyapps.io/tidyCDISC/"> <img src="figures/demo_tidyCDISC_button_lite2dark.png" alt="Demo full tidyCDISC app" width="30%"></a>
+<a href="https://rinpharma.shinyapps.io/tidyCDISC/">
+<img src="figures/demo_tidyCDISC_button_lite2dark.png" alt="Demo full tidyCDISC app" width="30%"></a>
 </center>
 <p><br></p>
 <div id="big-news-for-the-table-generator" class="section level2">
 <h2 class="hasAnchor">
 <a href="#big-news-for-the-table-generator" class="anchor"></a>Big news for the <strong>Table Generator</strong>
 </h2>
-<p>Below are a number of improvements that enhance the user’s table building experience (in and outside of the app). Checkout each feature and then take it for a spin in our <strong>Table Generator</strong> <a href="https://biogen-inc.github.io/tidyCDISC/articles/announcing-tidycdisc-0-0-1-1.html#table-generator-test-drive-1">test drive</a>. But before we get that far, just a quick refresher: if you want to build a table using the <code>tidyCISC</code>, all you need to do is drag and drop a variable or endpoint from the uploaded data on the left and pair it with an appropriate stat block on the left. Below, we drag the <code>AGE</code> block from the <code>ADSL</code> and drag the <code>MEAN</code> block from the list of Stats to calculate summary statistics on patient <code>AGE</code> within the trial. For more information on how to use the <strong>Table Generator</strong>, visit the respective <a href="https://biogen-inc.github.io/tidyCDISC/articles/x01_Table_Generator.html">user guide</a>.</p>
+<p>Below are a number of improvements that enhance the user’s table
+building experience (in and outside of the app). Checkout each feature
+and then take it for a spin in our <strong>Table Generator</strong> <a href="https://biogen-inc.github.io/tidyCDISC/articles/announcing-tidycdisc-0-0-1-1.html#table-generator-test-drive-1">test
+drive</a>. But before we get that far, just a quick refresher: if you
+want to build a table using the <code>tidyCISC</code>, all you need to
+do is drag and drop a variable or endpoint from the uploaded data on the
+left and pair it with an appropriate stat block on the left. Below, we
+drag the <code>AGE</code> block from the <code>ADSL</code> and drag the
+<code>MEAN</code> block from the list of Stats to calculate summary
+statistics on patient <code>AGE</code> within the trial. For more
+information on how to use the <strong>Table Generator</strong>, visit
+the respective <a href="https://biogen-inc.github.io/tidyCDISC/articles/x01_Table_Generator.html">user
+guide</a>.</p>
 <p><br></p>
 <p><img src="figures/tableGen/03-age_mean.gif"><!-- --></p>
 <p><br></p>
 <div id="new-stat-blocks" class="section level3">
 <h3 class="hasAnchor">
 <a href="#new-stat-blocks" class="anchor"></a>New Stat blocks</h3>
-<p>New “STAT Blocks”, such as <code>Y FREQ</code>, <code>MAX FREQ</code>, <code>NON-MISSING</code>, and a pair of <code>NESTED FREQ</code> blocks were added to the lineup. Each provides achieve a commonly desired output when paired with the appropriate variable. Let’s briefly review each of the new blocks (grouped in red below).</p>
+<p>New “STAT Blocks”, such as <code>Y FREQ</code>,
+<code>MAX FREQ</code>, <code>NON-MISSING</code>, and a pair of
+<code>NESTED FREQ</code> blocks were added to the lineup. Each provides
+achieve a commonly desired output when paired with the appropriate
+variable. Let’s briefly review each of the new blocks (grouped in red
+below).</p>
 <p><img src="figures/tableGen/new_release_stat_blocks.PNG" width="15%" style="display: block; margin: auto;"></p>
 <p><br></p>
 <ul>
 <li>
-<code>Y FREQ</code>: Pair this STAT block with any flag variables (usually ending in ‘FL’, like <code>DTHFL</code>) that contain ‘Y’ values. The output will include a count and percentage for <strong>only</strong> the patients with ‘Y’ values.</li>
+<code>Y FREQ</code>: Pair this STAT block with any flag variables
+(usually ending in ‘FL’, like <code>DTHFL</code>) that contain ‘Y’
+values. The output will include a count and percentage for
+<strong>only</strong> the patients with ‘Y’ values.</li>
 </ul>
 <p><br></p>
-<p><img src="figures/tableGen/TG%20Y%20FREQ.PNG" width="80%" style="display: block; margin: auto;"></p>
+<p><img src="figures/tableGen/TG_Y_FREQ.PNG" width="80%" style="display: block; margin: auto;"></p>
 <p><br></p>
 <ul>
 <li>
-<code>MAX FREQ</code>: This stat block can only be paired to variables (VAR) that have a “N” (VARN) counterpart. For example, it’s useful for variables like <code>AESEV</code>, when subjects should only be counted once at their maximum <code>AESEVN</code> (VARN) value. So, when <code>MAX FREQ</code> is paired with <code>AESEV</code> or <code>AESEVN</code>, the frequencies will reflect maximum severity of an adverse event during the trial.</li>
+<code>MAX FREQ</code>: This stat block can only be paired to
+variables (VAR) that have a “N” (VARN) counterpart. For example, it’s
+useful for variables like <code>AESEV</code>, when subjects should only
+be counted once at their maximum <code>AESEVN</code> (VARN) value. So,
+when <code>MAX FREQ</code> is paired with <code>AESEV</code> or
+<code>AESEVN</code>, the frequencies will reflect maximum severity of an
+adverse event during the trial.</li>
 </ul>
-<p><img src="figures/tableGen/TG%20MAX%20FREQ.PNG" width="80%" style="display: block; margin: auto;"></p>
+<p><img src="figures/tableGen/TG_MAX_FREQ.PNG" width="80%" style="display: block; margin: auto;"></p>
 <p><br></p>
 <ul>
 <li>
-<code>NON MISSING</code>: A handy stat that counts subjects who have non-missing values for any given variable. As such, it can help provide a high level measure of how many subjects had some value, as seen below with <code>AEDECOD</code>
+<code>NON MISSING</code>: A handy stat that counts subjects who have
+non-missing values for any given variable. As such, it can help provide
+a high level measure of how many subjects had some value, as seen below
+with <code>AEDECOD</code>
 </li>
 </ul>
 <p><br></p>
-<p><img src="figures/tableGen/TG%20NON%20MISSING.PNG" width="80%" style="display: block; margin: auto;"></p>
+<p><img src="figures/tableGen/TG_NON_MISSING.PNG" width="80%" style="display: block; margin: auto;"></p>
 <p><br></p>
 <ul>
 <li>
-<code>NESTED FREQ DSC</code>: Notice when using this stat block, you’ll need to choose a variable to “nest” inside the values / levels of another. Without the nested variable selected (ie <code>NONE</code> is selected), the subject counts and percentages are displayed in descending order. Place the high level variable (like <code>AEBODSYS</code>) on the left hand side and select the more granular variable to be “nested” inside of it, like <code>AEDECOD</code>. Then the output will show all the <code>AEDECOD</code> values that exist within each <code>AEBODSYS</code>, all sorted descending. <code>NESTED FREQ ABC</code> provides the same functionality as <code>NESTED FREQ DSC</code>, but organizes the variables and it’s values in alphabetical order!</li>
+<code>NESTED FREQ DSC</code>: Notice when using this stat block,
+you’ll need to choose a variable to “nest” inside the values / levels of
+another. Without the nested variable selected (ie <code>NONE</code> is
+selected), the subject counts and percentages are displayed in
+descending order. Place the high level variable (like
+<code>AEBODSYS</code>) on the left hand side and select the more
+granular variable to be “nested” inside of it, like
+<code>AEDECOD</code>. Then the output will show all the
+<code>AEDECOD</code> values that exist within each
+<code>AEBODSYS</code>, all sorted descending.
+<code>NESTED FREQ ABC</code> provides the same functionality as
+<code>NESTED FREQ DSC</code>, but organizes the variables and it’s
+values in alphabetical order!</li>
 </ul>
 <p><br></p>
-<p><img src="figures/tableGen/TG%20Nested%20Freq.PNG" width="60%" style="display: block; margin: auto;"></p>
-<p><img src="figures/tableGen/TG%20Nested%20Freq2.PNG" width="80%" style="display: block; margin: auto;"></p>
+<p><img src="figures/tableGen/TG_Nested_Freq.PNG" width="60%" style="display: block; margin: auto;"></p>
+<p><img src="figures/tableGen/TG_Nested_Freq2.PNG" width="80%" style="display: block; margin: auto;"></p>
 <p><br></p>
 </div>
 <div id="all-new-standard-analysis-tables" class="section level3">
 <h3 class="hasAnchor">
 <a href="#all-new-standard-analysis-tables" class="anchor"></a>All new ‘standard analysis’ tables</h3>
-<p>There are a set of tables / listings that users need to build frequently, due to their common inclusion in submission filings to regulatory authorities. With the new STAT blocks mentioned above, <code>tidyCDISC</code> could now achieve dozens of standard analysis tables by just plugging in the correct variables from your ADaM data. As such, the Table Generator contains the following ‘recipes’ for commonly used tables:</p>
+<p>There are a set of tables / listings that users need to build
+frequently, due to their common inclusion in submission filings to
+regulatory authorities. With the new STAT blocks mentioned above,
+<code>tidyCDISC</code> could now achieve dozens of standard analysis
+tables by just plugging in the correct variables from your ADaM data. As
+such, the Table Generator contains the following ‘recipes’ for commonly
+used tables:</p>
 <p><br></p>
-<p><img src="figures/tableGen/TG%20STAN%20dropdown.PNG" width="90%" style="display: block; margin: auto;"></p>
+<p><img src="figures/tableGen/TG_STAN_dropdown.PNG" width="90%" style="display: block; margin: auto;"></p>
 <p><br></p>
-<p>When data needed to produce certain outputs aren’t present, the list of available tables in this drop down will change. For example, if an <code>ADAE</code> is not uploaded, then all the AE tables will disappear from the above list.</p>
+<p>When data needed to produce certain outputs aren’t present, the list
+of available tables in this drop down will change. For example, if an
+<code>ADAE</code> is not uploaded, then all the AE tables will disappear
+from the above list.</p>
 <p><br></p>
-<p>When one of these tables is selected, the table generator simply compiles the needed variable and stat blocks in the correct order to generate the desired output. This can be particularly useful for tables like #41 “Blood Chemistry actual values by visit” since it would be cumbersome to manually drag in a <code>MEAN</code> block for each week and each blood chemistry parameter, as there can be many. See snapshot of this automation below:</p>
+<p>When one of these tables is selected, the table generator simply
+compiles the needed variable and stat blocks in the correct order to
+generate the desired output. This can be particularly useful for tables
+like #41 “Blood Chemistry actual values by visit” since it would be
+cumbersome to manually drag in a <code>MEAN</code> block for each week
+and each blood chemistry parameter, as there can be many. See snapshot
+of this automation below:</p>
 <p><br></p>
-<p><img src="figures/tableGen/TG%20STAN%20TAB41%20DD.PNG" width="80%" style="display: block; margin: auto;"></p>
-<p><img src="figures/tableGen/TG%20STAN%20TAB41.PNG" width="80%" style="display: block; margin: auto;"></p>
+<p><img src="figures/tableGen/TG_STAN_TAB41_DD.PNG" width="80%" style="display: block; margin: auto;"></p>
+<p><img src="figures/tableGen/TG_STAN_TAB41.PNG" width="80%" style="display: block; margin: auto;"></p>
 <p><br></p>
 </div>
 <div id="an-r-script-downloader" class="section level3">
 <h3 class="hasAnchor">
 <a href="#an-r-script-downloader" class="anchor"></a>An R Script Downloader</h3>
-<p>Finally, reproducing analyses performed in the app from your local RStudio session is a single click away using this button:</p>
+<p>Finally, reproducing analyses performed in the app from your local
+RStudio session is a single click away using this button:</p>
 <p><br></p>
-<p><img src="figures/tableGen/TG%20reprpoduce%20button.PNG" width="80%" style="display: block; margin: auto;"></p>
+<p><img src="figures/tableGen/TG_reprpoduce_button.PNG" width="80%" style="display: block; margin: auto;"></p>
 <p><br></p>
-<p>Upon clicking, an R script will download to your browser and when opened, should look something like the below snapshot The R script will first help you install any packages needed for analysis, including the <code>tidyCDISC</code> package. If you used the CDISC Pilot data, no code modification is needed to reproduce the output since that data is pre-loaded into the <code>tidyCDISC</code> package. However, if you uploaded your data from some other source, you’ll need to enter the file path to your study’s data (as a string), as seen on line 17. Note: <code>'path/to/study/directory/'</code> is just a placeholder until you replace with your own string. If you are unsure of how to format your string, just run <code><a href="https://rdrr.io/r/utils/choose.dir.html">choose.dir()</a></code> in your R console (on Windows operating systems).</p>
+<p>Upon clicking, an R script will download to your browser and when
+opened, should look something like the below snapshot The R script will
+first help you install any packages needed for analysis, including the
+<code>tidyCDISC</code> package. If you used the CDISC Pilot data, no
+code modification is needed to reproduce the output since that data is
+pre-loaded into the <code>tidyCDISC</code> package. However, if you
+uploaded your data from some other source, you’ll need to enter the file
+path to your study’s data (as a string), as seen on line 17. Note:
+<code>'path/to/study/directory/'</code> is just a placeholder until you
+replace with your own string. If you are unsure of how to format your
+string, just run <code><a href="https://rdrr.io/r/utils/choose.dir.html">choose.dir()</a></code> in your R console (on Windows
+operating systems).</p>
 <p><br></p>
-<p><img src="figures/tableGen/TG%20reproduce%20code%20tidyCDISC.PNG" width="604" style="display: block; margin: auto;"></p>
+<p><img src="figures/tableGen/TG_reproduce_code_tidyCDISC.PNG" width="604" style="display: block; margin: auto;"></p>
 <p><br></p>
-<p>After reading in the data, the R script will recall the variable and stat blocks previously dropped into the “drop zone” to recreate the output using the exact same process as performed in the app. From there, an R data.frame and html rendering of your table is prepared for saving or, if preferred, further analysis.</p>
+<p>After reading in the data, the R script will recall the variable and
+stat blocks previously dropped into the “drop zone” to recreate the
+output using the exact same process as performed in the app. From there,
+an R data.frame and html rendering of your table is prepared for saving
+or, if preferred, further analysis.</p>
 </div>
 <div id="table-generator-test-drive" class="section level3">
 <h3 class="hasAnchor">
 <a href="#table-generator-test-drive" class="anchor"></a>Table Generator Test drive</h3>
-<p>Why wait, test out the new additions for yourself using CDISC Pilot data! Or open the full application for demo here:</p>
+<p>Why wait, test out the new additions for yourself using CDISC Pilot
+data! Or open the full application for demo here:</p>
 <center>
-<a href="https://rinpharma.shinyapps.io/tidyCDISC/"> <img src="figures/demo_tidyCDISC_button_lite2dark.png" alt="Demo full tidyCDISC app" width="25%"></a>
+<a href="https://rinpharma.shinyapps.io/tidyCDISC/">
+<img src="figures/demo_tidyCDISC_button_lite2dark.png" alt="Demo full tidyCDISC app" width="25%"></a>
 </center>
 <p><br></p>
 <style>
@@ -226,116 +311,228 @@
 <div id="once-you-pop-the-fun-dont-stop" class="section level2">
 <h2 class="hasAnchor">
 <a href="#once-you-pop-the-fun-dont-stop" class="anchor"></a>Once you <strong>Pop</strong>, the fun don’t stop</h2>
-<p>New Chart types in the <strong>Population Explorer</strong>! The initial release of <code>tidyCDISC</code> included some generic charts that <em>could</em> theoretically stretch into something useful. However, the recent release focused on making canned charts that get to the heart of the matter for many pharma use cases. If you have an idea for a useful chart typically used for trial analysis or submission, just send the <a href="https://github.com/Biogen-Inc/tidyCDISC/issues/new">developers</a> a message with your request!</p>
+<p>New Chart types in the <strong>Population Explorer</strong>! The
+initial release of <code>tidyCDISC</code> included some generic charts
+that <em>could</em> theoretically stretch into something useful.
+However, the recent release focused on making canned charts that get to
+the heart of the matter for many pharma use cases. If you have an idea
+for a useful chart typically used for trial analysis or submission, just
+send the <a href="https://github.com/Biogen-Inc/tidyCDISC/issues/new">developers</a>
+a message with your request!</p>
 <p><br></p>
-<p><img src="figures/popExp/type%20of%20chart.PNG" width="50%" style="display: block; margin: auto;"></p>
+<p><img src="figures/popExp/type_of_chart.PNG" width="50%" style="display: block; margin: auto;"></p>
 <p><br></p>
-<p>The bottom three are new to the <strong>Population Explorer</strong> in the <code>0.0.1</code> release. It’s important to note that the <code>Kaplan-Meier Curve</code> option will not appear unless an ADaM of class <code>TTE</code> (meaning it contains the <code>CNSR</code> variable) is uploaded on the Data tab. All other chart types will display by default.</p>
+<p>The bottom three are new to the <strong>Population Explorer</strong>
+in the <code>0.0.1</code> release. It’s important to note that the
+<code>Kaplan-Meier Curve</code> option will not appear unless an ADaM of
+class <code>TTE</code> (meaning it contains the <code>CNSR</code>
+variable) is uploaded on the Data tab. All other chart types will
+display by default.</p>
 <p><br></p>
-<p>Thorough explanation of each new chart type is presented below followed by a active shiny session to <a href="https://biogen-inc.github.io/tidyCDISC/articles/announcing-tidycdisc-0-0-1-1.html#population-explorer-test-drive-1">test drive</a> the new features. Take her for a spin!</p>
+<p>Thorough explanation of each new chart type is presented below
+followed by a active shiny session to <a href="https://biogen-inc.github.io/tidyCDISC/articles/announcing-tidycdisc-0-0-1-1.html#population-explorer-test-drive-1">test
+drive</a> the new features. Take her for a spin!</p>
 <p><br></p>
 <div id="line-plot---means-over-time" class="section level3">
 <h3 class="hasAnchor">
 <a href="#line-plot---means-over-time" class="anchor"></a>Line plot - means over time</h3>
 <p><br></p>
-<p>Since being added, the line plot of mean variable/ param values over time has been a highly leveraged feature of the <strong>Population Explorer</strong>. As such, there are a few additional custom plot controls that have been engineered for this particular chart type. Here you can see that in addition to a y-axis and time variable selector, there exist options to overlay a vertical and horizontal line on the plot’s x- or y-axis, respectively. When the feature is toggled on, an addition selector appears to help you set the value. As an example, let’s say we’ve decided that 10.5 is an important bilirubin value we want to compare against and if the average extends above this threshold, we want that to be visually obvious. So, overlaying a horizontal line at 10.5 is a great value add for this plot.</p>
+<p>Since being added, the line plot of mean variable/ param values over
+time has been a highly leveraged feature of the <strong>Population
+Explorer</strong>. As such, there are a few additional custom plot
+controls that have been engineered for this particular chart type. Here
+you can see that in addition to a y-axis and time variable selector,
+there exist options to overlay a vertical and horizontal line on the
+plot’s x- or y-axis, respectively. When the feature is toggled on, an
+addition selector appears to help you set the value. As an example,
+let’s say we’ve decided that 10.5 is an important bilirubin value we
+want to compare against and if the average extends above this threshold,
+we want that to be visually obvious. So, overlaying a horizontal line at
+10.5 is a great value add for this plot.</p>
 <p><br></p>
-<p><img src="figures/popExp/line%20plot%20controls.PNG" width="40%" style="display: block; margin: auto;"></p>
+<p><img src="figures/popExp/line_plot_controls.PNG" width="40%" style="display: block; margin: auto;"></p>
 <p><br></p>
-<p>We <em>have</em> chosen to label our plotted data points below. This toggle simply turns labels on/off plus allows us to position the labels in the most visible location. For this example, on top &amp; centered data labels are extremely visible and produces the following output:</p>
+<p>We <em>have</em> chosen to label our plotted data points below. This
+toggle simply turns labels on/off plus allows us to position the labels
+in the most visible location. For this example, on top &amp; centered
+data labels are extremely visible and produces the following output:</p>
 <p><br></p>
-<p><img src="figures/popExp/line%20plot.PNG" width="485" style="display: block; margin: auto;"></p>
+<p><img src="figures/popExp/line_plot.PNG" width="485" style="display: block; margin: auto;"></p>
 <p><br></p>
-<p>If we choose to display 95% confidence intervals for each mean, we need only toggle a few options (as follows) to produce the following output:</p>
+<p>If we choose to display 95% confidence intervals for each mean, we
+need only toggle a few options (as follows) to produce the following
+output:</p>
 <p><br></p>
-<p><img src="figures/popExp/line%20plot%20option%20chng.PNG" width="40%" style="display: block; margin: auto;"></p>
+<p><img src="figures/popExp/line_plot_option_chng.PNG" width="40%" style="display: block; margin: auto;"></p>
 <p><br></p>
-<p><img src="figures/popExp/line%20plot%2095%20ci.PNG" width="490" style="display: block; margin: auto;"></p>
+<p><img src="figures/popExp/line_plot_95_ci.PNG" width="490" style="display: block; margin: auto;"></p>
 <p><br></p>
-<p>Besides those new controls, the “line plot - mean over time” have some of the same excellent “Group data” options as previously offered for the “scatterplot” char type. In general, both drop down lists only contain character or factor variables.</p>
+<p>Besides those new controls, the “line plot - mean over time” have
+some of the same excellent “Group data” options as previously offered
+for the “scatterplot” char type. In general, both drop down lists only
+contain character or factor variables.</p>
 <p><br></p>
-<p><img src="figures/popExp/group%20data.PNG" width="50%" style="display: block; margin: auto;"></p>
+<p><img src="figures/popExp/group_data.PNG" width="50%" style="display: block; margin: auto;"></p>
 <p><br></p>
-<p>The <strong>“Color Plots By”</strong> variable helps the user create a different colored line for a variable’s categories. In the example below, here is a plot where <strong>“Color Plots By”</strong> is <code>NONE</code>:</p>
+<p>The <strong>“Color Plots By”</strong> variable helps the user create
+a different colored line for a variable’s categories. In the example
+below, here is a plot where <strong>“Color Plots By”</strong> is
+<code>NONE</code>:</p>
 <p><br></p>
-<p><img src="figures/popExp/basic%20plot.PNG" width="670" style="display: block; margin: auto;"></p>
+<p><img src="figures/popExp/basic_plot.PNG" width="670" style="display: block; margin: auto;"></p>
 <p><br></p>
-<p>If we switch <strong>“Color Plots by”</strong> to from <code>NONE</code> to <code>AGEGR1</code>, the application creates the following line plot of means at each visit:</p>
+<p>If we switch <strong>“Color Plots by”</strong> to from
+<code>NONE</code> to <code>AGEGR1</code>, the application creates the
+following line plot of means at each visit:</p>
 <p><br></p>
-<p><img src="figures/popExp/color%20by.PNG" width="674" style="display: block; margin: auto;"></p>
+<p><img src="figures/popExp/color_by.PNG" width="674" style="display: block; margin: auto;"></p>
 <p><br></p>
-<p>Similarly, if we leave <strong>“Color Plots By”</strong> as <code>NONE</code> and change <strong>“Separate Plots By”</strong> to <code>TRT01P</code>, the app creates a separate plot for each planned treatment arm:</p>
+<p>Similarly, if we leave <strong>“Color Plots By”</strong> as
+<code>NONE</code> and change <strong>“Separate Plots By”</strong> to
+<code>TRT01P</code>, the app creates a separate plot for each planned
+treatment arm:</p>
 <p><br></p>
-<p><img src="figures/popExp/group%20by.PNG" width="988" style="display: block; margin: auto;"></p>
+<p><img src="figures/popExp/group_by.PNG" width="988" style="display: block; margin: auto;"></p>
 <p><br></p>
-<p>Lastly, the user can select a variable for both <strong>“Color Plots By”</strong> and <strong>“Separate Plots By”</strong> to view a plotted line for the combination of the selections’ levels: in this case <code>AGEGR1</code> has three levels and <code>SEX</code> has two, so the end result is 2 x 3 = 6 plotted lines.</p>
+<p>Lastly, the user can select a variable for both <strong>“Color Plots
+By”</strong> and <strong>“Separate Plots By”</strong> to view a plotted
+line for the combination of the selections’ levels: in this case
+<code>AGEGR1</code> has three levels and <code>SEX</code> has two, so
+the end result is 2 x 3 = 6 plotted lines.</p>
 <p><br></p>
-<p><img src="figures/popExp/color%20by%20and%20group%20by.PNG" width="980" style="display: block; margin: auto;"></p>
+<p><img src="figures/popExp/color_by_and_group_by.PNG" width="980" style="display: block; margin: auto;"></p>
 <p><br></p>
 <p><br></p>
-<p>The plot is displayed prominently on the main panel, and embedded with a host of interactive features when moused over. In the example below, the “line plot - mean over time” contains additional information available at each plotted point like the visit variable and visit value, plus a slurry of statistics for the parameter selected (<code>ALB</code> in this case): mean, standard error, standard deviation, and patient count (N). Also notice the <code>SEX</code> variable is selected for <strong>“Color Plot By”</strong>. Thus, when we hover, the info boxes are color coordinated and include the chosen line’s <code>SEX</code> value.</p>
+<p>The plot is displayed prominently on the main panel, and embedded
+with a host of interactive features when moused over. In the example
+below, the “line plot - mean over time” contains additional information
+available at each plotted point like the visit variable and visit value,
+plus a slurry of statistics for the parameter selected (<code>ALB</code>
+in this case): mean, standard error, standard deviation, and patient
+count (N). Also notice the <code>SEX</code> variable is selected for
+<strong>“Color Plot By”</strong>. Thus, when we hover, the info boxes
+are color coordinated and include the chosen line’s <code>SEX</code>
+value.</p>
 <p><br></p>
 <p><img src="figures/popExp/interactivity.gif" style="display: block; margin: auto;"></p>
 <p><br></p>
-<p>Notice how the user can zoom-in / pan-out of any portion of the graph, retaining only the desired points. This can be helpful to filter out outliers and avoid using the “Filter Data” widget. Or perhaps its best use is to just zoom in on a cluster of densely populated area of points.</p>
+<p>Notice how the user can zoom-in / pan-out of any portion of the
+graph, retaining only the desired points. This can be helpful to filter
+out outliers and avoid using the “Filter Data” widget. Or perhaps its
+best use is to just zoom in on a cluster of densely populated area of
+points.</p>
 <p><br></p>
-<p>Last, hover over and click the small camera icon in the top right-hand corner of the chart area to download a PNG of a plot directly to your browser. This can be handy for sharing findings with colleagues. Or, users are equally welcome to use their favorite screenshot capturing software tools such as the snipping tool / snagit to capture results as well.</p>
+<p>Last, hover over and click the small camera icon in the top
+right-hand corner of the chart area to download a PNG of a plot directly
+to your browser. This can be handy for sharing findings with colleagues.
+Or, users are equally welcome to use their favorite screenshot capturing
+software tools such as the snipping tool / snagit to capture results as
+well.</p>
 <p><br></p>
-<p>The aggregated data used to build the plot is included beneath the plot for easy download to Excel. If desired, select how many rows you’d like to view, search or sort the data, and click the <strong>“Excel”</strong> button on the top left corner when ready to download.</p>
+<p>The aggregated data used to build the plot is included beneath the
+plot for easy download to Excel. If desired, select how many rows you’d
+like to view, search or sort the data, and click the
+<strong>“Excel”</strong> button on the top left corner when ready to
+download.</p>
 <p><br></p>
-<p><img src="figures/popExp/download%20data.PNG" width="456" style="display: block; margin: auto;"></p>
+<p><img src="figures/popExp/download_data.PNG" width="456" style="display: block; margin: auto;"></p>
 <p><br></p>
 </div>
 <div id="heat-map---endpoint-correlations" class="section level3">
 <h3 class="hasAnchor">
 <a href="#heat-map---endpoint-correlations" class="anchor"></a>Heat map - endpoint correlations</h3>
 <p><br></p>
-<p>Certain analyses require to check if parameters / endpoints are highly correlated with each other. This heat map chart type helps us to do that quickly and with ease. First, the user can select any number of parameters for the x-axis and y-axis using the “Select axes” drop down lists. Doing so will generate a pair-wise grid shaded according to the correlation coefficient of your choice: either pearson (the default) or (Spearmans). Here, we’ve requested to only label significant correlations with alpha = 0.05.</p>
+<p>Certain analyses require to check if parameters / endpoints are
+highly correlated with each other. This heat map chart type helps us to
+do that quickly and with ease. First, the user can select any number of
+parameters for the x-axis and y-axis using the “Select axes” drop down
+lists. Doing so will generate a pair-wise grid shaded according to the
+correlation coefficient of your choice: either pearson (the default) or
+(Spearmans). Here, we’ve requested to only label significant
+correlations with alpha = 0.05.</p>
 <p><br></p>
-<p><img src="figures/popExp/heatmap%20controls.PNG" width="45%" style="display: block; margin: auto;"></p>
+<p><img src="figures/popExp/heatmap_controls.PNG" width="45%" style="display: block; margin: auto;"></p>
 <p><br></p>
 <p><img src="figures/popExp/heatmap.PNG" width="483" style="display: block; margin: auto;"></p>
 <p><br></p>
-<p>It’s important to note that the color gradient in the graph is calibrated to the highest correlation coefficient calculated out of the bunch. When hovered over, you can view all the needed details, including exact p-values.</p>
+<p>It’s important to note that the color gradient in the graph is
+calibrated to the highest correlation coefficient calculated out of the
+bunch. When hovered over, you can view all the needed details, including
+exact p-values.</p>
 <p><br></p>
-<p>Furthermore, you may want to check your endpoint correlations from week-to-week. So with all other options remaining constant, if we choose ‘AVISIT’ as a grouping variable, the following plot is rendered:</p>
+<p>Furthermore, you may want to check your endpoint correlations from
+week-to-week. So with all other options remaining constant, if we choose
+‘AVISIT’ as a grouping variable, the following plot is rendered:</p>
 <p><br></p>
-<p><img src="figures/popExp/heatmap%20controls%20grouped.PNG" width="45%" style="display: block; margin: auto;"></p>
+<p><img src="figures/popExp/heatmap_controls_grouped.PNG" width="45%" style="display: block; margin: auto;"></p>
 <p><br></p>
-<p><img src="figures/popExp/heatmap%20grouped.PNG" width="673" style="display: block; margin: auto;"></p>
+<p><img src="figures/popExp/heatmap_grouped.PNG" width="673" style="display: block; margin: auto;"></p>
 <p><br></p>
-<p>That’s a lot of information / data to consume visually, so an export to Excel is available below the plot:</p>
+<p>That’s a lot of information / data to consume visually, so an export
+to Excel is available below the plot:</p>
 <p><br></p>
-<p><img src="figures/popExp/heatmap%20data.PNG" width="686" style="display: block; margin: auto;"></p>
+<p><img src="figures/popExp/heatmap_data.PNG" width="686" style="display: block; margin: auto;"></p>
 <p><br></p>
 </div>
 <div id="kaplan-meier-curve" class="section level3">
 <h3 class="hasAnchor">
 <a href="#kaplan-meier-curve" class="anchor"></a>Kaplan Meier Curve</h3>
 <p><br></p>
-<p>Any time-to-event (<code>TTE</code>) analysis will include an obligatory Kaplan-Meier curve. And rightfully so! Much information can be gleaned from these graphics. The x-axis always contains a measure of time and the y-axis contains the probability of “surviving” up till or past those times. In the case of the CDISC Pilot data, we’re measuring the probability of a patient having their first dermatological event for each time value, x. So even though the y-axis is labeled, “survival”, don’t think of it in terms of life or death! For any point on the graph, you can interpret plotted values as: “The probability of a patient having their first dermatological event on or past X time units is Y.”</p>
+<p>Any time-to-event (<code>TTE</code>) analysis will include an
+obligatory Kaplan-Meier curve. And rightfully so! Much information can
+be gleaned from these graphics. The x-axis always contains a measure of
+time and the y-axis contains the probability of “surviving” up till or
+past those times. In the case of the CDISC Pilot data, we’re measuring
+the probability of a patient having their first dermatological event for
+each time value, x. So even though the y-axis is labeled, “survival”,
+don’t think of it in terms of life or death! For any point on the graph,
+you can interpret plotted values as: “The probability of a patient
+having their first dermatological event on or past X time units is
+Y.”</p>
 <p><br></p>
-<p><code>tidyCDISC</code> knows which data sources contain <code>TTE</code> data based on the presence of the CDISC required <code>CNSR</code> variable. The <code>CNSR</code> variable must be either a 0 or 1. Zero indicates the patient’s survival status is unknown after time period X. That is, we only have <strong>some</strong> information about the patient’s event status up to a certain point, X, but after that time, their event status is unknown. Instead of just throwing away that data, it’s valuable to know that they made it to at least time X. That time point data is retained and their last known X value is marked with a red “+” in the plot below.</p>
+<p><code>tidyCDISC</code> knows which data sources contain
+<code>TTE</code> data based on the presence of the CDISC required
+<code>CNSR</code> variable. The <code>CNSR</code> variable must be
+either a 0 or 1. Zero indicates the patient’s survival status is unknown
+after time period X. That is, we only have <strong>some</strong>
+information about the patient’s event status up to a certain point, X,
+but after that time, their event status is unknown. Instead of just
+throwing away that data, it’s valuable to know that they made it to at
+least time X. That time point data is retained and their last known X
+value is marked with a red “+” in the plot below.</p>
 <p><br></p>
-<p>In the plot control panel, we can toggle the <code>TTE</code> parameter (if more than one exists), the response value (usually <code>AVAL</code> is appropriate), and even the censor variable if case your data source has more than one. We’ve chosen to mark our censored observations and show 95% confidence bands in the below graphic:</p>
+<p>In the plot control panel, we can toggle the <code>TTE</code>
+parameter (if more than one exists), the response value (usually
+<code>AVAL</code> is appropriate), and even the censor variable if case
+your data source has more than one. We’ve chosen to mark our censored
+observations and show 95% confidence bands in the below graphic:</p>
 <p><br></p>
-<p><img src="figures/popExp/km%20controls.PNG" width="40%" style="display: block; margin: auto;"></p>
+<p><img src="figures/popExp/km_controls.PNG" width="40%" style="display: block; margin: auto;"></p>
 <p><br></p>
 <p><img src="figures/popExp/km.PNG" width="483" style="display: block; margin: auto;"></p>
 <p><br></p>
-<p>As you might expect, these plots can be extremely handy, and remarkably powerful when comparing time-to-event probability between groups of patients. Making a few adjustments to our options produces the following plot, which reveals differences between treatment groups. Remember: If you’re interested in seeing if the probably of survival is significantly different between groups, you need only turn on the 95% confidence bands and look for any instance where the bands do not intersect between groups.</p>
+<p>As you might expect, these plots can be extremely handy, and
+remarkably powerful when comparing time-to-event probability between
+groups of patients. Making a few adjustments to our options produces the
+following plot, which reveals differences between treatment groups.
+Remember: If you’re interested in seeing if the probably of survival is
+significantly different between groups, you need only turn on the 95%
+confidence bands and look for any instance where the bands do not
+intersect between groups.</p>
 <p><br></p>
-<p><img src="figures/popExp/km%20controls%20grouped.PNG" width="40%" style="display: block; margin: auto;"></p>
+<p><img src="figures/popExp/km_controls_grouped.PNG" width="40%" style="display: block; margin: auto;"></p>
 <p><br></p>
-<p><img src="figures/popExp/km%20grouped.PNG" width="486" style="display: block; margin: auto;"></p>
+<p><img src="figures/popExp/km_grouped.PNG" width="486" style="display: block; margin: auto;"></p>
 <p><br></p>
 </div>
 <div id="population-explorer-test-drive" class="section level3">
 <h3 class="hasAnchor">
 <a href="#population-explorer-test-drive" class="anchor"></a>Population Explorer test drive</h3>
-<p>Why wait, test out the new chart types for yourself using CDISC Pilot data! Or open the full application for demo here:</p>
+<p>Why wait, test out the new chart types for yourself using CDISC Pilot
+data! Or open the full application for demo here:</p>
 <center>
-<a href="https://rinpharma.shinyapps.io/tidyCDISC/"> <img src="figures/demo_tidyCDISC_button_lite2dark.png" alt="Demo full tidyCDISC app" width="25%"></a>
+<a href="https://rinpharma.shinyapps.io/tidyCDISC/">
+<img src="figures/demo_tidyCDISC_button_lite2dark.png" alt="Demo full tidyCDISC app" width="25%"></a>
 </center>
 <p><br></p>
 <div class="shiny-app-frame">
@@ -348,23 +545,58 @@
 <div id="misc-upgrades" class="section level2">
 <h2 class="hasAnchor">
 <a href="#misc-upgrades" class="anchor"></a>Misc upgrades</h2>
-<p>In addition to the major features above, this release also upgraded the <code>pkgdown</code> site documentation to be more robust and hassle-free for developers. Secondly, <code>tidyCDISC</code> now depends on updated version of IDEAFilter (&gt;= 0.1.0.9000), and squashed bugs and other minor improvements.</p>
+<p>In addition to the major features above, this release also upgraded
+the <code>pkgdown</code> site documentation to be more robust and
+hassle-free for developers. Secondly, <code>tidyCDISC</code> now depends
+on updated version of IDEAFilter (&gt;= 0.1.0.9000), and squashed bugs
+and other minor improvements.</p>
 </div>
 <div id="contributions-on-the-horizon" class="section level2">
 <h2 class="hasAnchor">
 <a href="#contributions-on-the-horizon" class="anchor"></a>Contributions On the horizon</h2>
-<p>There’s still a long list of improvements we can make to <code>tidyCDISC</code> to help users incorporate into existing workflows within their respective companies. The end goal is to continue to develop <code>tidyCDISC</code> until it’s users can’t help but “fall into a pit of success”. To start, we have our sights on the table generator:</p>
+<p>There’s still a long list of improvements we can make to
+<code>tidyCDISC</code> to help users incorporate into existing workflows
+within their respective companies. The end goal is to continue to
+develop <code>tidyCDISC</code> until it’s users can’t help but “fall
+into a pit of success”. To start, we have our sights on the table
+generator:</p>
 <ul>
-<li><p><strong>An improved UI for the Table Generator</strong>. There are a number of standard analysis tables that are low hanging fruit and could likely be added right now. However, the current user interface poses a slight barrier to some more complex tables typically prepared for submissions. As such, we feel there needs to be a little more space to add options to each layer (or row in the drop zone) of a table.</p></li>
-<li><p><strong>Compare app output with SAS output</strong>. If your goal is to use <code>tidyCDISC</code> for visual QC in parallel to your SAS programming efforts, it would be really convenient to compare the app’s results to your own without having to sift with your own eye balls. <code>tidyCDISC</code> need only allow users to upload SAS results as <code>sas7bdat</code> file to generate R’s version of a PROC COMPARE.</p></li>
-<li><p><strong>Support additional outputs, such as RTF</strong>. This could be accomplished by various routes, but one thing to keep in mind is the <code>gt</code> helper package likely called <code>tgen</code> is under early development and promises to do this for us. This information was <a href="https://github.com/rich-iannone/presentations/tree/main/2021-11-02-rpharma_keynote">disseminated</a> at 2021’s R in Pharma conference.</p></li>
+<li><p><strong>An improved UI for the Table Generator</strong>. There
+are a number of standard analysis tables that are low hanging fruit and
+could likely be added right now. However, the current user interface
+poses a slight barrier to some more complex tables typically prepared
+for submissions. As such, we feel there needs to be a little more space
+to add options to each layer (or row in the drop zone) of a
+table.</p></li>
+<li><p><strong>Compare app output with SAS output</strong>. If your goal
+is to use <code>tidyCDISC</code> for visual QC in parallel to your SAS
+programming efforts, it would be really convenient to compare the app’s
+results to your own without having to sift with your own eye balls.
+<code>tidyCDISC</code> need only allow users to upload SAS results as
+<code>sas7bdat</code> file to generate R’s version of a PROC
+COMPARE.</p></li>
+<li><p><strong>Support additional outputs, such as RTF</strong>. This
+could be accomplished by various routes, but one thing to keep in mind
+is the <code>gt</code> helper package likely called <code>tgen</code> is
+under early development and promises to do this for us. This information
+was <a href="https://github.com/rich-iannone/presentations/tree/main/2021-11-02-rpharma_keynote">disseminated</a>
+at 2021’s R in Pharma conference.</p></li>
 </ul>
 </div>
 <div id="we-need-your-help" class="section level2">
 <h2 class="hasAnchor">
 <a href="#we-need-your-help" class="anchor"></a>We need your help</h2>
-<p>Does <code>tidyCDISC</code> not work for you? <a href="https://github.com/Biogen-Inc/tidyCDISC/issues">Tell us why.</a> Is there something different about the way you (or your company) handles certain tables / analyses? We want to know about it. Do you have a passion to see clinical trials analysis in R come to fruition in the next few years? Help us shape the process. Do you want to advance the industry forward by contributing to an open source project? Become a <code>tidyCDISC</code> developer!</p>
-<p>whether you have time to contribute code to the project or not, we appreciate your feedback. We’d love to hear about any issues or improvements you’d like to see in the app by opening an <a href="https://github.com/Biogen-Inc/tidyCDISC/issues">issue</a> in GitHub!</p>
+<p>Does <code>tidyCDISC</code> not work for you? <a href="https://github.com/Biogen-Inc/tidyCDISC/issues">Tell us why.</a>
+Is there something different about the way you (or your company) handles
+certain tables / analyses? We want to know about it. Do you have a
+passion to see clinical trials analysis in R come to fruition in the
+next few years? Help us shape the process. Do you want to advance the
+industry forward by contributing to an open source project? Become a
+<code>tidyCDISC</code> developer!</p>
+<p>whether you have time to contribute code to the project or not, we
+appreciate your feedback. We’d love to hear about any issues or
+improvements you’d like to see in the app by opening an <a href="https://github.com/Biogen-Inc/tidyCDISC/issues">issue</a> in
+GitHub!</p>
 <p><br><br><br></p>
 <p>Enjoy the new release!</p>
 <p><br><br><br></p>

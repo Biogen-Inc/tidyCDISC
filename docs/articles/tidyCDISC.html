@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidyCDISC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.3.9000</span>
       </span>
     </div>
 
@@ -50,7 +50,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -103,7 +103,7 @@
 
       
 
-      </header><script src="tidyCDISC_files/header-attrs-2.9/header-attrs.js"></script><div class="row">
+      </header><script src="tidyCDISC_files/header-attrs-2.13/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>tidyCDISC</h1>
@@ -116,26 +116,54 @@
 
     
     
-<p>Greetings! The <code>tidyCDISC</code> <a href="https://rinpharma.shinyapps.io/tidyCDISC/">application</a> is a robust tool set which empowers its users to glean informative knowledge from clinical trial data with little resistance. To prove this, we’ll take you on a brisk tour of the app, traversing all of its wonderful features from each tab of the application. Feel free to follow along with this guide using the demo version of <code>tidyCDISC</code> hosted on shinyapps.io. Note the demo version disables the <strong>Data Upload</strong> feature and instead uses the CDISC pilot data.</p>
+<p>Greetings! The <code>tidyCDISC</code> <a href="https://rinpharma.shinyapps.io/tidyCDISC/">application</a> is a
+robust tool set which empowers its users to glean informative knowledge
+from clinical trial data with little resistance. To prove this, we’ll
+take you on a brisk tour of the app, traversing all of its wonderful
+features from each tab of the application. Feel free to follow along
+with this guide using the demo version of <code>tidyCDISC</code> hosted
+on shinyapps.io. Note the demo version disables the <strong>Data
+Upload</strong> feature and instead uses the CDISC pilot data.</p>
 <p><br></p>
 <center>
-<a href="https://rinpharma.shinyapps.io/tidyCDISC/"> <img src="figures/demo_tidyCDISC_button_lite2dark.png" alt="Demo full tidyCDISC app" width="30%"></a>
+<a href="https://rinpharma.shinyapps.io/tidyCDISC/">
+<img src="figures/demo_tidyCDISC_button_lite2dark.png" alt="Demo full tidyCDISC app" width="30%"></a>
 </center>
 <p><br></p>
-<p>Throughout all the tabs, there are these little buttons (usually in the top right-hand corners) with question marks printed on them. When clicked, they launch a real-time guide that walks the user through the major components of the current screen/ tab, providing context and suggested workflow. So if this guide doesn’t answer all your questions just click the <code><a href="https://rdrr.io/r/utils/Question.html">?</a></code> button for assistance!</p>
+<p>Throughout all the tabs, there are these little buttons (usually in
+the top right-hand corners) with question marks printed on them. When
+clicked, they launch a real-time guide that walks the user through the
+major components of the current screen/ tab, providing context and
+suggested workflow. So if this guide doesn’t answer all your questions
+just click the <code><a href="https://rdrr.io/r/utils/Question.html">?</a></code> button for assistance!</p>
 <p><br></p>
-<p><img src="figures/tableGen/TG%20need%20help.PNG" width="47" style="display: block; margin: auto;"></p>
+<p><img src="figures/tableGen/TG_need_help.PNG" width="47" style="display: block; margin: auto;"></p>
 <p><br></p>
-<p>Without any further adieu, <strong>welcome to <code>tidyCDISC</code>’s landing page</strong>: the <em>data tab</em></p>
+<p>Without any further adieu, <strong>welcome to
+<code>tidyCDISC</code>’s landing page</strong>: the <em>data
+tab</em></p>
 <p><br></p>
-<p><img src="figures/upldDat/landing%20page%20tidyCDISC.PNG" width="95%"></p>
+<p><img src="figures/upldDat/landing_page_tidyCDISC.PNG" width="95%"></p>
 <p><br></p>
 <p><br></p>
 <div id="data-upload" class="section level1">
 <h1 class="hasAnchor">
 <a href="#data-upload" class="anchor"></a>Data Upload</h1>
-<p>The app is useless without some ADaM(-ish) data in hand. At a minimum, you’ll need an <code>ADSL</code> sas7bdat file to get started, and the more data you bring, the more features and insights you can explore. We can import data by clicking the <strong>‘Browse’</strong> button and selecting files for upload from your computer or mapped network drives. In this way, the <code>tidyCDISC</code> application is very secure; you must have permissions to certain folders/ study directories to upload said data.</p>
-<p>This tutorial will upload five files: An <code>ADSL</code>, <code>ADVS</code>, <code>ADLBC</code>, <code>ADAE</code>, and an <code>ADTTE</code>, all from the CDISC pilot study. You can follow along by clicking the <strong>‘Use CDISC Pilot Data’</strong> button above the upload panel, as performed below. After the data is uploaded, two things happen: (1) we can take a peek at our data and (2) all the analysis tabs are unlocked, specifically:</p>
+<p>The app is useless without some ADaM(-ish) data in hand. At a
+minimum, you’ll need an <code>ADSL</code> sas7bdat file to get started,
+and the more data you bring, the more features and insights you can
+explore. We can import data by clicking the <strong>‘Browse’</strong>
+button and selecting files for upload from your computer or mapped
+network drives. In this way, the <code>tidyCDISC</code> application is
+very secure; you must have permissions to certain folders/ study
+directories to upload said data.</p>
+<p>This tutorial will upload five files: An <code>ADSL</code>,
+<code>ADVS</code>, <code>ADLBC</code>, <code>ADAE</code>, and an
+<code>ADTTE</code>, all from the CDISC pilot study. You can follow along
+by clicking the <strong>‘Use CDISC Pilot Data’</strong> button above the
+upload panel, as performed below. After the data is uploaded, two things
+happen: (1) we can take a peek at our data and (2) all the analysis tabs
+are unlocked, specifically:</p>
 <ul>
 <li><p>Table Generator</p></li>
 <li><p>Population Explorer</p></li>
@@ -145,94 +173,213 @@
 <p><br></p>
 <p><img src="figures/tableGen/quick_upload_then_tg_tidyCDISC.gif"><!-- --></p>
 <p><br></p>
-<p>There is more to be said about importing data, like, “What constitutes ADaM-ish data?” or “What if my data set won’t upload?” To learn more on the topic, head over to the article titled <a href="https://Biogen-Inc.github.io/tidyCDISC/articles/x00_Data_Upload.html">00 Data Upload</a>; you’ll be glad you did!</p>
+<p>There is more to be said about importing data, like, “What
+constitutes ADaM-ish data?” or “What if my data set won’t upload?” To
+learn more on the topic, head over to the article titled <a href="https://Biogen-Inc.github.io/tidyCDISC/articles/x00_Data_Upload.html">00
+Data Upload</a>; you’ll be glad you did!</p>
 <p><br></p>
 </div>
 <div id="table-generator" class="section level1">
 <h1 class="hasAnchor">
 <a href="#table-generator" class="anchor"></a>Table Generator</h1>
 <p><br></p>
-<p>The Table Generator tab is divided in two: the area to the left is the handy drag-and-drop interface used to define our tables, and on the right is the real-time table output.</p>
+<p>The Table Generator tab is divided in two: the area to the left is
+the handy drag-and-drop interface used to define our tables, and on the
+right is the real-time table output.</p>
 <p><br></p>
 <p><img src="figures/tableGen/02-TG-tidyCDISC.PNG" width="810"></p>
 <p><br></p>
-<p>Any uploaded data will appear on the left-hand side as “bins”. “Bins” are just containers, showcasing the usable contents of the data when expanded. The <code>ADSL</code> &amp; <code>ADAE</code> bins include the names of all their variables, while any <code>BDS</code> data sets, like the <code>ADVS</code> &amp; <code>ADLBC</code> bins include a list of all the <code>PARAMCD</code> values. For simplicity, both variable &amp; parameters bubbles are called “variable blocks”.</p>
-<p>On the right-hand side, there are a list of “Stats”, such as <code>ANOVA</code>, <code>CHG</code>, <code>MEAN</code>, and <code>FREQ</code> to name a few. We call these “STAT Blocks”. And finally, in the middle of it all is the “drop zone”.</p>
+<p>Any uploaded data will appear on the left-hand side as “bins”. “Bins”
+are just containers, showcasing the usable contents of the data when
+expanded. The <code>ADSL</code> &amp; <code>ADAE</code> bins include the
+names of all their variables, while any <code>BDS</code> data sets, like
+the <code>ADVS</code> &amp; <code>ADLBC</code> bins include a list of
+all the <code>PARAMCD</code> values. For simplicity, both variable &amp;
+parameters bubbles are called “variable blocks”.</p>
+<p>On the right-hand side, there are a list of “Stats”, such as
+<code>ANOVA</code>, <code>CHG</code>, <code>MEAN</code>, and
+<code>FREQ</code> to name a few. We call these “STAT Blocks”. And
+finally, in the middle of it all is the “drop zone”.</p>
 <p><br></p>
 <p><img src="figures/tableGen/bins.gif" width="70%" style="display: block; margin: auto;"></p>
 <p><br></p>
-<p>In order to build a table, we need only drag a variable block to the “Variable” drop zone and match it up with a corresponding stat block in the “Stats” drop zone. Below, we drag the <code>AGE</code> block from the <code>ADSL</code> and drag the <code>MEAN</code> block from the list of Stats to calculate summary statistics on patient <code>AGE</code> within the trial.</p>
+<p>In order to build a table, we need only drag a variable block to the
+“Variable” drop zone and match it up with a corresponding stat block in
+the “Stats” drop zone. Below, we drag the <code>AGE</code> block from
+the <code>ADSL</code> and drag the <code>MEAN</code> block from the list
+of Stats to calculate summary statistics on patient <code>AGE</code>
+within the trial.</p>
 <p><br></p>
 <p><img src="figures/tableGen/03-age_mean.gif"><!-- --></p>
 <p><br></p>
-<p>Similarly, we can drag in <code>DIABP</code> from the <code>ADVS</code> and use the <code>MEAN</code> block to calculate summary statistics on parameters. However, because <code>DIABP</code> came from a <code>BDS</code> class data source, we need to select the desired <code>AVISIT</code> to calculate summary statistics for the desired time point.</p>
+<p>Similarly, we can drag in <code>DIABP</code> from the
+<code>ADVS</code> and use the <code>MEAN</code> block to calculate
+summary statistics on parameters. However, because <code>DIABP</code>
+came from a <code>BDS</code> class data source, we need to select the
+desired <code>AVISIT</code> to calculate summary statistics for the
+desired time point.</p>
 <p><br></p>
 <p><img src="figures/tableGen/04-diabp_mean.gif"><!-- --></p>
 <p><br></p>
-<p>Using this technique, you can drag in an unlimited number of variable and stat blocks to define a custom table. However, if you’re looking for something more common, the app can help with that too. You could build standard analysis tables from scratch by dragging and dropping pertinent variables into the drop zone, but since the standards are well defined and these tables are so common for regulatory submissions, the <code>tidyCDISC</code> app has built-in support for constructing standard analysis tables. At the time this guide was authored, the Table Generator contains the following ‘recipes’ for standardized outputs:</p>
+<p>Using this technique, you can drag in an unlimited number of variable
+and stat blocks to define a custom table. However, if you’re looking for
+something more common, the app can help with that too. You could build
+standard analysis tables from scratch by dragging and dropping pertinent
+variables into the drop zone, but since the standards are well defined
+and these tables are so common for regulatory submissions, the
+<code>tidyCDISC</code> app has built-in support for constructing
+standard analysis tables. At the time this guide was authored, the Table
+Generator contains the following ‘recipes’ for standardized outputs:</p>
 <p><br></p>
-<p><img src="figures/tableGen/TG%20STAN%20dropdown.PNG" width="80%" style="display: block; margin: auto;"></p>
+<p><img src="figures/tableGen/TG_STAN_dropdown.PNG" width="80%" style="display: block; margin: auto;"></p>
 <p><br></p>
-<p>When data needed to produce certain outputs aren’t present, the list of available tables in this drop down will change. For example, if an <code>ADAE</code> is not uploaded, then all the AE tables will disappear from the above list.</p>
-<p>When one of these tables is selected, like disposition (Accounting of Subjects) below, the table generator simply compiles the needed variable and stat blocks in the correct order to generate the desired output, as seen below. Notice how the population filter was set automatically, in this case to <code>FASFL</code> = ‘Y’ and the grouping variable set to <code>TRT01P</code>. Within seconds, the user changed the default table title and downloaded the R script needed to reproduce the table outside the app:</p>
+<p>When data needed to produce certain outputs aren’t present, the list
+of available tables in this drop down will change. For example, if an
+<code>ADAE</code> is not uploaded, then all the AE tables will disappear
+from the above list.</p>
+<p>When one of these tables is selected, like disposition (Accounting of
+Subjects) below, the table generator simply compiles the needed variable
+and stat blocks in the correct order to generate the desired output, as
+seen below. Notice how the population filter was set automatically, in
+this case to <code>FASFL</code> = ‘Y’ and the grouping variable set to
+<code>TRT01P</code>. Within seconds, the user changed the default table
+title and downloaded the R script needed to reproduce the table outside
+the app:</p>
 <p><br></p>
 <p><img src="figures/tableGen/t_disp.gif"><!-- --></p>
 <p><br></p>
-<p>Even still, there are a plethora of features described on the <a href="https://Biogen-Inc.github.io/tidyCDISC/articles/x01_Table_Generator.html">01 Table Generator</a> article that showcase how to fully DIY in the Table Generator, such as: add parameter variable and different stat blocks, re-order or delete layers of table output, group by different categorical variables, export the static table for sharing, and exporting the R code used to reproduce the table <strong>in more depth</strong>.</p>
+<p>Even still, there are a plethora of features described on the <a href="https://Biogen-Inc.github.io/tidyCDISC/articles/x01_Table_Generator.html">01
+Table Generator</a> article that showcase how to fully DIY in the Table
+Generator, such as: add parameter variable and different stat blocks,
+re-order or delete layers of table output, group by different
+categorical variables, export the static table for sharing, and
+exporting the R code used to reproduce the table <strong>in more
+depth</strong>.</p>
 <p><br></p>
 </div>
 <div id="population-explorer" class="section level1">
 <h1 class="hasAnchor">
 <a href="#population-explorer" class="anchor"></a>Population Explorer</h1>
 <p><br></p>
-<p>This module exists to glean visual insights on patient populations via a diverse mix of chart types, each uniquely designed to drill down deep into the data. Below we will walk through a the <strong>“line plot - mean over time”</strong> which graphs variable/ parameter mean values at each visit (using the visit variable of your choice).</p>
-<p>Let’s assume a scenario where we want to check on our patients’ vital signs throughout the trial and look for any sub-populations that are having a rough go of things. In the example below, we check diastolic blood pressure mean values at each visit and calculate a 95% confidence interval for each. It’s rumored that drug exposure tends to lower this vital sign over time and the data seems to support that finding. Let’s say we’re interested in when mean <code>DIABP</code> is less than 77 from week-to-week. Thus, we add a reference line on the y-axis below. It seems that each week (except baseline) seems to be completely under the threshold. To further understand the data, we inspect how age impacts diastolic blood pressure and notice the younger (&lt;65 y/o) population seems to remain heightened (on average) throughout the trial and download the data to Excel for later.</p>
+<p>This module exists to glean visual insights on patient populations
+via a diverse mix of chart types, each uniquely designed to drill down
+deep into the data. Below we will walk through a the <strong>“line plot
+- mean over time”</strong> which graphs variable/ parameter mean values
+at each visit (using the visit variable of your choice).</p>
+<p>Let’s assume a scenario where we want to check on our patients’ vital
+signs throughout the trial and look for any sub-populations that are
+having a rough go of things. In the example below, we check diastolic
+blood pressure mean values at each visit and calculate a 95% confidence
+interval for each. It’s rumored that drug exposure tends to lower this
+vital sign over time and the data seems to support that finding. Let’s
+say we’re interested in when mean <code>DIABP</code> is less than 77
+from week-to-week. Thus, we add a reference line on the y-axis below. It
+seems that each week (except baseline) seems to be completely under the
+threshold. To further understand the data, we inspect how age impacts
+diastolic blood pressure and notice the younger (&lt;65 y/o) population
+seems to remain heightened (on average) throughout the trial and
+download the data to Excel for later.</p>
 <p><br></p>
-<p><img src="figures/popExp/line%20plot%20mean%20over%20time%20tidyCDISC.gif"><!-- --></p>
+<p><img src="figures/popExp/line_plot_mean_over_time_tidyCDISC.gif"><!-- --></p>
 <p><br></p>
-<p>Using the <strong>“Separate plots by”</strong> drop down list, we select <code>TRT01A</code> to investigate drug exposure may have on <code>DIABP</code> and age and it looks like the low dose group in particular is higher than any other group. Just like on any Population Explorer plot, we can hover over to inspect each point and download a PNG of our findings.</p>
+<p>Using the <strong>“Separate plots by”</strong> drop down list, we
+select <code>TRT01A</code> to investigate drug exposure may have on
+<code>DIABP</code> and age and it looks like the low dose group in
+particular is higher than any other group. Just like on any Population
+Explorer plot, we can hover over to inspect each point and download a
+PNG of our findings.</p>
 <p><br></p>
-<p><img src="figures/popExp/line%20plot%20mean%20over%20time%20breakdown.gif"><!-- --></p>
+<p><img src="figures/popExp/line_plot_mean_over_time_breakdown.gif"><!-- --></p>
 <p><br></p>
-<p>On the Individual Explorer tab, we’ll narrow in on this subset of patients and seeking more findings.</p>
+<p>On the Individual Explorer tab, we’ll narrow in on this subset of
+patients and seeking more findings.</p>
 <p><br></p>
 </div>
 <div id="individual-explorer" class="section level1">
 <h1 class="hasAnchor">
 <a href="#individual-explorer" class="anchor"></a>Individual Explorer</h1>
 <p><br></p>
-<p>This analysis tab exists to establish powerful patient narratives and/or explore outlier patient data. Upon arriving to the Individual Explorer tab, you’ll be greeted with the following prompt (below) asking to select a patient, by <code>UBSUBJID.</code> After selection, all the data presented will be tied directly that patient.</p>
-<p>To subset the patients list to a subgroup of interest, we recommend using <strong>“Advanced Pre-filtering”</strong>. When selecting the <code>Advanced Pre-Filtering</code> check box, additional fields will appear (below) to filter the population. From the previous example, we were interested in exploring patient profiles where the patient is &lt;65 y/o, taking the low dose treatment with higher-than-average diastolic blood pressure values.</p>
+<p>This analysis tab exists to establish powerful patient narratives
+and/or explore outlier patient data. Upon arriving to the Individual
+Explorer tab, you’ll be greeted with the following prompt (below) asking
+to select a patient, by <code>UBSUBJID.</code> After selection, all the
+data presented will be tied directly that patient.</p>
+<p>To subset the patients list to a subgroup of interest, we recommend
+using <strong>“Advanced Pre-filtering”</strong>. When selecting the
+<code>Advanced Pre-Filtering</code> check box, additional fields will
+appear (below) to filter the population. From the previous example, we
+were interested in exploring patient profiles where the patient is
+&lt;65 y/o, taking the low dose treatment with higher-than-average
+diastolic blood pressure values.</p>
 <p><br></p>
-<p><img src="figures/IndvExp/filter%20patients.gif" width="50%" style="display: block; margin: auto;"></p>
+<p><img src="figures/IndvExp/filter_patients.gif" width="50%" style="display: block; margin: auto;"></p>
 <p><br></p>
-<p>If you were thinking, “Wow, filtering widget was pretty neat!” then you’re in for a real treat because you can filter data like that on every tab! But honestly, we much of the specifics in that brisk demo, so read our full tutorial on how to filter like pro: <a href="https://Biogen-Inc.github.io/tidyCDISC/articles/x04_Filtering.html">04 Filtering</a>.</p>
+<p>If you were thinking, “Wow, filtering widget was pretty neat!” then
+you’re in for a real treat because you can filter data like that on
+every tab! But honestly, we much of the specifics in that brisk demo, so
+read our full tutorial on how to filter like pro: <a href="https://Biogen-Inc.github.io/tidyCDISC/articles/x04_Filtering.html">04
+Filtering</a>.</p>
 <p><br></p>
-<p>After selecting a <code>USUBJID</code>, we scroll down the page to examine that patient’s demographic info. There, we see the patient is a white male, age 51 and weights 70.8 kg. Scrolling again, the <strong>‘Events’</strong> tab displays the patient’s journey through the trial on an interactive timeline. After reviewing his timeline, it seems the patient wasn’t in the trial very long, but we don’t see any outrageous from an adverse events perspective… at least nothing that we’d expect would impact <code>DIABP</code>.</p>
+<p>After selecting a <code>USUBJID</code>, we scroll down the page to
+examine that patient’s demographic info. There, we see the patient is a
+white male, age 51 and weights 70.8 kg. Scrolling again, the
+<strong>‘Events’</strong> tab displays the patient’s journey through the
+trial on an interactive timeline. After reviewing his timeline, it seems
+the patient wasn’t in the trial very long, but we don’t see any
+outrageous from an adverse events perspective… at least nothing that
+we’d expect would impact <code>DIABP</code>.</p>
 <p><br></p>
-<p><img src="figures/IndvExp/drill%20down%20events.gif"><!-- --></p>
+<p><img src="figures/IndvExp/drill_down_events.gif"><!-- --></p>
 <p><br></p>
-<p>Switching to the “Visits” tab, we can see that this patient did indeed have consistently higher than average diastolic blood pressure, which was measured three times at each visit. We see it was always at it’s highest after the patient was standing for 1-minute. Next, we hover over the plot to examine some points, download a png and an html file containing a plot for each vital sign parameter available for this patient.</p>
+<p>Switching to the “Visits” tab, we can see that this patient did
+indeed have consistently higher than average diastolic blood pressure,
+which was measured three times at each visit. We see it was always at
+it’s highest after the patient was standing for 1-minute. Next, we hover
+over the plot to examine some points, download a png and an html file
+containing a plot for each vital sign parameter available for this
+patient.</p>
 <p><br></p>
-<p><img src="figures/IndvExp/drill%20down%20visits.gif"><!-- --></p>
+<p><img src="figures/IndvExp/drill_down_visits.gif"><!-- --></p>
 <p><br></p>
-<p>Well, that wraps up our patient profile analysis, but there is so much more to learn about the Individual Explorer! Read up on all it’s hidden features in the <a href="https://Biogen-Inc.github.io/tidyCDISC/articles/x03_Indv_Expl.html">03 Individual Explorer</a> article.</p>
+<p>Well, that wraps up our patient profile analysis, but there is so
+much more to learn about the Individual Explorer! Read up on all it’s
+hidden features in the <a href="https://Biogen-Inc.github.io/tidyCDISC/articles/x03_Indv_Expl.html">03
+Individual Explorer</a> article.</p>
 <p><br></p>
 <div id="recap-whats-next" class="section level2">
 <h2 class="hasAnchor">
 <a href="#recap-whats-next" class="anchor"></a>Recap &amp; what’s next?</h2>
 <p><br></p>
-<p>So far, we’ve learned how to upload data, drag and drop blocks in the table generator as well as build a bonafide standard analysis table and export its reproducible R code. Next we plotted mean diastolic blood pressure over time in the population explorer and define filters on the individual explorer tab to find the patients and analyze patient profiles responsible for elevating one subgroup’s values.</p>
+<p>So far, we’ve learned how to upload data, drag and drop blocks in the
+table generator as well as build a bonafide standard analysis table and
+export its reproducible R code. Next we plotted mean diastolic blood
+pressure over time in the population explorer and define filters on the
+individual explorer tab to find the patients and analyze patient
+profiles responsible for elevating one subgroup’s values.</p>
 <p><br></p>
-<p><em>Have an idea to explore?</em> <strong>Open the <a href="https://nate884.shinyapps.io/tidyCDISC/">tidyCDISC</a> app!</strong> Otherwise, we highly recommend reading the following articles that take a deeper look into the topics presented in this ‘get started’ guide:</p>
+<p><em>Have an idea to explore?</em> <strong>Open the <a href="https://nate884.shinyapps.io/tidyCDISC/">tidyCDISC</a>
+app!</strong> Otherwise, we highly recommend reading the following
+articles that take a deeper look into the topics presented in this ‘get
+started’ guide:</p>
 <ul>
-<li><p><a href="https://Biogen-Inc.github.io/tidyCDISC/articles/x00_Data_Upload.html">00 Data Upload</a></p></li>
-<li><p><a href="https://Biogen-Inc.github.io/tidyCDISC/articles/x01_Table_Generator.html">01 Table Generator</a></p></li>
-<li><p><a href="https://Biogen-Inc.github.io/tidyCDISC/articles/x02_Pop_Exp.html">02 Population Explorer</a></p></li>
-<li><p><a href="https://Biogen-Inc.github.io/tidyCDISC/articles/x03_Indv_Expl.html">03 Individual Explorer</a></p></li>
-<li><p><a href="https://Biogen-Inc.github.io/tidyCDISC/articles/x04_Filtering.html">04 Filtering</a></p></li>
+<li><p><a href="https://Biogen-Inc.github.io/tidyCDISC/articles/x00_Data_Upload.html">00
+Data Upload</a></p></li>
+<li><p><a href="https://Biogen-Inc.github.io/tidyCDISC/articles/x01_Table_Generator.html">01
+Table Generator</a></p></li>
+<li><p><a href="https://Biogen-Inc.github.io/tidyCDISC/articles/x02_Pop_Exp.html">02
+Population Explorer</a></p></li>
+<li><p><a href="https://Biogen-Inc.github.io/tidyCDISC/articles/x03_Indv_Expl.html">03
+Individual Explorer</a></p></li>
+<li><p><a href="https://Biogen-Inc.github.io/tidyCDISC/articles/x04_Filtering.html">04
+Filtering</a></p></li>
 </ul>
-<p>Users who’ve leverage <code>tidyCDISC</code> for routine trial analysis tend to report <strong>significant time savings, about 95%</strong>, when performing programming duties. We’re confident the <code>tidyCDISC</code> application can save you time too. If there is some use case that <code>tidyCDISC</code> can’t solve, we want to know about it. Please send the <a href="https://github.com/Biogen-Inc/tidyCDISC/issues/new">developers</a> a message with your question or request!</p>
+<p>Users who’ve leverage <code>tidyCDISC</code> for routine trial
+analysis tend to report <strong>significant time savings, about
+95%</strong>, when performing programming duties. We’re confident the
+<code>tidyCDISC</code> application can save you time too. If there is
+some use case that <code>tidyCDISC</code> can’t solve, we want to know
+about it. Please send the <a href="https://github.com/Biogen-Inc/tidyCDISC/issues/new">developers</a>
+a message with your question or request!</p>
 <p><br></p>
 <p><br></p>
 <p><br></p>

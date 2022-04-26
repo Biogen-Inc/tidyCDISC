@@ -6,8 +6,14 @@
 pkgload::load_all(helpers = FALSE, attach_testthat = FALSE) # export_all = FALSE # ac removed: if false, IDEAFilter fails
 options( "golem.app.prod" = TRUE)
 options(shiny.sanitize.errors = FALSE)
+# options(shiny.autoload.r=FALSE) # needed if remove R/_disable_autoload.R
 # rsconnect::writeManifest() # Needed for continuous deployment
+
+# Launch the app
 tidyCDISC::run_app() # add parameters here (if any)
+
+# turn off any options
+# options(shiny.autoload.r=NULL) # needed if remove R/_disable_autoload.R
 
 # Need help Installing IDEAFilter?
 # # Install external version from Biogen's external repo:

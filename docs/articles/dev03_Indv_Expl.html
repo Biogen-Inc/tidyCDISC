@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidyCDISC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.3.9000</span>
       </span>
     </div>
 
@@ -50,7 +50,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -103,7 +103,7 @@
 
       
 
-      </header><script src="dev03_Indv_Expl_files/header-attrs-2.9/header-attrs.js"></script><div class="row">
+      </header><script src="dev03_Indv_Expl_files/header-attrs-2.13/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Individual Explorer</h1>
@@ -116,16 +116,28 @@
 
     
     
-<p>Learn how to contribute useful code to the individual explorer tab, by topic.</p>
+<p>Learn how to contribute useful code to the individual explorer tab,
+by topic.</p>
 <div id="integrate-new-events-in-individual-explorer" class="section level2">
 <h2 class="hasAnchor">
 <a href="#integrate-new-events-in-individual-explorer" class="anchor"></a>Integrate New Events in Individual Explorer</h2>
-<p>This tutorial will walk you through how to add / display additional events on the Individual Explorer Tab. Currently, the app supports events from ADMH, ADAE, ADCM, ADSL, ADLB, and ADLBC. You’ll note that most are occurrence (OCCD) class data sets which are designed to be date-oriented with the exception of ADSL, ADLB, &amp; ADLBC. Regardless of data set class, the events tab’s module extracts important dates that you (the developer) chooses from any data set for display.</p>
-<p>When incorporating a new date / data set into the events module you’ll not only need to consider additional UI elements, but there are two R functions to become familiar with which are introduced below.</p>
+<p>This tutorial will walk you through how to add / display additional
+events on the Individual Explorer Tab. Currently, the app supports
+events from ADMH, ADAE, ADCM, ADSL, ADLB, and ADLBC. You’ll note that
+most are occurrence (OCCD) class data sets which are designed to be
+date-oriented with the exception of ADSL, ADLB, &amp; ADLBC. Regardless
+of data set class, the events tab’s module extracts important dates that
+you (the developer) chooses from any data set for display.</p>
+<p>When incorporating a new date / data set into the events module
+you’ll not only need to consider additional UI elements, but there are
+two R functions to become familiar with which are introduced below.</p>
 <div id="ui-considerations" class="section level3">
 <h3 class="hasAnchor">
 <a href="#ui-considerations" class="anchor"></a>UI considerations</h3>
-<p>In <code>mod_indvExp_ui.R</code>, the input called “checkGroup” &amp; “overlay_events” are introduced to the app’s user interface. The former is for the <code>Events</code> tab and the latter is for the <code>Visits</code> tab.</p>
+<p>In <code>mod_indvExp_ui.R</code>, the input called “checkGroup” &amp;
+“overlay_events” are introduced to the app’s user interface. The former
+is for the <code>Events</code> tab and the latter is for the
+<code>Visits</code> tab.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Events Tab</span>
 <span class="fu">checkboxGroupInput</span><span class="op">(</span>
@@ -142,7 +154,16 @@
   label <span class="op">=</span> <span class="fu">HTML</span><span class="op">(</span><span class="st">"&lt;br/&gt;Overlay Events:"</span><span class="op">)</span>,
   choices <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">" "</span><span class="op">)</span>
 <span class="op">)</span></code></pre></div>
-<p>Later, these values will get populated with server side logic that depends on what the ADaMs the user uploads &amp; the USUBJID selected. That logic can be found in <code>mod_indvExpPat.R</code> and a snapshot is shown below. To summarize, the code checks if a supported ADaM exists, and if it does, that ADaM is assigned an domain abbreviation to be fed to the <code>choices</code> argument for our two inputs: checkGroup and overlay_events. Notice how overlay_events only receives a subset of these choices, because Labs and Medical History aren’t terribly valuable vertical lines to overlay on the <code>Visits</code> tab.</p>
+<p>Later, these values will get populated with server side logic that
+depends on what the ADaMs the user uploads &amp; the USUBJID selected.
+That logic can be found in <code>mod_indvExpPat.R</code> and a snapshot
+is shown below. To summarize, the code checks if a supported ADaM
+exists, and if it does, that ADaM is assigned an domain abbreviation to
+be fed to the <code>choices</code> argument for our two inputs:
+checkGroup and overlay_events. Notice how overlay_events only receives a
+subset of these choices, because Labs and Medical History aren’t
+terribly valuable vertical lines to overlay on the <code>Visits</code>
+tab.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># update checkboxes on both Events and Visits Tabs</span>
 <span class="co"># Initialize</span>
@@ -209,7 +230,12 @@
   inputId <span class="op">=</span> <span class="st">"overlay_events"</span>,
   choices <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="va">choices2</span><span class="op">)</span>, <span class="co"># optionally convert list to array</span>
   selected <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></code></pre></div>
-<p>Notably, to add another date-oriented data frame into the mix, you (the developer) will need to add an additional <code>checkedx</code> where <code>x</code> is the next sequential number of “checked” objects. For example, if your data set is called “ADMD” where “MD” is the abbreviation for “My Data”, then you’d need to add these chunks of code into their respective positions above:</p>
+<p>Notably, to add another date-oriented data frame into the mix, you
+(the developer) will need to add an additional <code>checkedx</code>
+where <code>x</code> is the next sequential number of “checked” objects.
+For example, if your data set is called “ADMD” where “MD” is the
+abbreviation for “My Data”, then you’d need to add these chunks of code
+into their respective positions above:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">checked6</span> <span class="op">&lt;-</span> <span class="cn">NA</span>
 
@@ -225,29 +251,48 @@
 
 <span class="va">choices2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">as.list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">checked1</span>,<span class="va">checked2</span>,<span class="va">checked3</span>,<span class="va">checked6</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
 <span class="va">names2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">names</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span>,<span class="st">"My Data"</span><span class="op">)</span></code></pre></div>
-<p>Note that adjusting the objects <code>choices2</code> &amp; <code>names2</code> are optional; only adjust if you (the developer) or subject matter experts (SMEs) deem it’s appropriate to overlay these types of events on the plot in the <code>Visits</code> tab.</p>
+<p>Note that adjusting the objects <code>choices2</code> &amp;
+<code>names2</code> are optional; only adjust if you (the developer) or
+subject matter experts (SMEs) deem it’s appropriate to overlay these
+types of events on the plot in the <code>Visits</code> tab.</p>
 </div>
 <div id="standardize-the-format-of-your-event-data" class="section level3">
 <h3 class="hasAnchor">
 <a href="#standardize-the-format-of-your-event-data" class="anchor"></a>Standardize the format of your Event data</h3>
-<p>Now that the groundwork has been established, it’s time to introduce the function called <code>org_df_events()</code> which has various (well documented) arguments in the <code>mod_indvExp_fct_organizeEvent.R</code> file. This function takes a data set and manipulates it into a standard form. After being standardized, the app can (and will) combine it with other standardized event data frames as necessary.</p>
+<p>Now that the groundwork has been established, it’s time to introduce
+the function called <code>org_df_events()</code> which has various (well
+documented) arguments in the
+<code>mod_indvExp_fct_organizeEvent.R</code> file. This function takes a
+data set and manipulates it into a standard form. After being
+standardized, the app can (and will) combine it with other standardized
+event data frames as necessary.</p>
 </div>
 <div id="what-it-does" class="section level3">
 <h3 class="hasAnchor">
 <a href="#what-it-does" class="anchor"></a>What It Does</h3>
-<p>Essentially, this function uses lots of shiny inputs to execute the following (among other things):</p>
+<p>Essentially, this function uses lots of shiny inputs to execute the
+following (among other things):</p>
 <ul>
-<li>Validate that the date variable(s)-of-interest exist in the data set provided</li>
-<li>Selects the preferred date variable, allowing for back-ups in case the user uploads a data set where that date variable doesn’t exist</li>
+<li>Validate that the date variable(s)-of-interest exist in the data set
+provided</li>
+<li>Selects the preferred date variable, allowing for back-ups in case
+the user uploads a data set where that date variable doesn’t exist</li>
 <li>Toggles the data source if advanced pre-filters exist</li>
 <li>Filters to a specific USUBJID and non-missing date variable</li>
-<li>Evaluates an expression to display a custom event Description based on other columns in the data set</li>
+<li>Evaluates an expression to display a custom event Description based
+on other columns in the data set</li>
 <li>Produces a tidy tibble, in a standard format</li>
 </ul>
 <div id="an-example" class="section level4">
 <h4 class="hasAnchor">
 <a href="#an-example" class="anchor"></a>An Example</h4>
-<p>In the example below, an Adverse Events (ADAE) is standardized using <code>org_df_events()</code>. The arguments that are pre-fixed with mi_ all come from shiny, but below they’ve been populated with examples to show the typical values they accept. That said, when implementing a new events data set, you (the developer) will need to concern yourself with the first 6 arguments, all of which are well documented on the function’s help page.</p>
+<p>In the example below, an Adverse Events (ADAE) is standardized using
+<code>org_df_events()</code>. The arguments that are pre-fixed with mi_
+all come from shiny, but below they’ve been populated with examples to
+show the typical values they accept. That said, when implementing a new
+events data set, you (the developer) will need to concern yourself with
+the first 6 arguments, all of which are well documented on the
+function’s help page.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
   <span class="va">ae_dat</span> <span class="op">&lt;-</span> <span class="fu">org_df_events</span><span class="op">(</span>
@@ -264,29 +309,91 @@
     , mi_datafile <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>ADSL <span class="op">=</span> <span class="va">adsl</span>, ADAE <span class="op">=</span> <span class="va">adae</span><span class="op">)</span>
     , mi_filtered_dat <span class="op">=</span> <span class="va">filtered_dat</span>
   <span class="op">)</span></code></pre></div>
-<p>What’s absolutely imperative when calling this function is that the <code>df_domain_abbr</code> matches the values for the named-list of choices passed to the <code>updateCheckGroupInput()</code> function used to update <code>input$checkGroup</code> and <code>input$overlay_events</code> discussed in <code>UI Considerations</code>.</p>
-<p>Running a publicly available ADAE data set (available through <a href="https://github.com/phuse-org/TestDataFactory/tree/master/Updated/TDF_ADaM">PHUSE’s gitHub</a>) through <code>org_df_events()</code>, the output <code>ae_dat</code> might look something like the data frame below.</p>
+<p>What’s absolutely imperative when calling this function is that the
+<code>df_domain_abbr</code> matches the values for the named-list of
+choices passed to the <code>updateCheckGroupInput()</code> function used
+to update <code>input$checkGroup</code> and
+<code>input$overlay_events</code> discussed in
+<code>UI Considerations</code>.</p>
+<p>Running a publicly available ADAE data set (available through <a href="https://github.com/phuse-org/TestDataFactory/tree/master/Updated/TDF_ADaM">PHUSE’s
+gitHub</a>) through <code>org_df_events()</code>, the output
+<code>ae_dat</code> might look something like the data frame below.</p>
 <p><img src="figures/IndvExp/org_df_events_output.PNG" width="90%" height="90%"></p>
-<p>It will always contain these variables, but the amount of rows will certainly vary. In the example output below, we see that the column “EVENTTYP” was populated with the <code>df_desc</code> argument. Later, this will be the Event type label in the <code>timevis</code> object displayed on the <code>Events</code> tab.</p>
-<p>The next column is START which used the “ASTDT” column, which makes it evident that the ADAE data frame we provided in <code>mi_datafile</code> (the list of data frames uploaded by the user), didn’t have the preferred “AESTDT”, so the function selected the next best date choice: “ASTDT”. It’s important that no matter how many potential dates you provide in the <code>df_st_date_vars</code> vector, that at least one of them is a required field according to the current ADaMIG.</p>
-<p>Continuing on, the END variable exists only for date-oriented data sets that would benefit from seeing a visual start and end of an event. Typically, “events” happen in one day/ instant. However, an exception to this would be medical history data where events could include medical conditions that last several days, months, or years. As such, if you (the developer) wish to implement new event data that requires showing the start AND the end of an event, follow the precedent the Medical History code establishes in the next section called <code>Build Events</code>. At the end of the day, you just want to ensure the final output mimics the output above, for reasons that will also become obvious in the next section.</p>
-<p>tab_st and tab_en are just character versions of START and END which play better with DT output tables in the app.</p>
-<p>Last, DECODE contains the event description (<code>event_desc</code>) you want attached to those dates. So, in this instance, the app will actually display lots of information. Above, the function weaves together content from 3 different variables using the paste function: the adverse event itself, it’s severity and seriousness. However, a single column that summarizes the event would be sufficient. If you (the developer) want to supply your own static description for an event, you should include single quotes within your double quotes. For example: <code>event_desc = "'Headache'"</code>. Doing so, will make all your adverse events take the string ‘Headache’.</p>
+<p>It will always contain these variables, but the amount of rows will
+certainly vary. In the example output below, we see that the column
+“EVENTTYP” was populated with the <code>df_desc</code> argument. Later,
+this will be the Event type label in the <code>timevis</code> object
+displayed on the <code>Events</code> tab.</p>
+<p>The next column is START which used the “ASTDT” column, which makes
+it evident that the ADAE data frame we provided in
+<code>mi_datafile</code> (the list of data frames uploaded by the user),
+didn’t have the preferred “AESTDT”, so the function selected the next
+best date choice: “ASTDT”. It’s important that no matter how many
+potential dates you provide in the <code>df_st_date_vars</code> vector,
+that at least one of them is a required field according to the current
+ADaMIG.</p>
+<p>Continuing on, the END variable exists only for date-oriented data
+sets that would benefit from seeing a visual start and end of an event.
+Typically, “events” happen in one day/ instant. However, an exception to
+this would be medical history data where events could include medical
+conditions that last several days, months, or years. As such, if you
+(the developer) wish to implement new event data that requires showing
+the start AND the end of an event, follow the precedent the Medical
+History code establishes in the next section called
+<code>Build Events</code>. At the end of the day, you just want to
+ensure the final output mimics the output above, for reasons that will
+also become obvious in the next section.</p>
+<p>tab_st and tab_en are just character versions of START and END which
+play better with DT output tables in the app.</p>
+<p>Last, DECODE contains the event description (<code>event_desc</code>)
+you want attached to those dates. So, in this instance, the app will
+actually display lots of information. Above, the function weaves
+together content from 3 different variables using the paste function:
+the adverse event itself, it’s severity and seriousness. However, a
+single column that summarizes the event would be sufficient. If you (the
+developer) want to supply your own static description for an event, you
+should include single quotes within your double quotes. For example:
+<code>event_desc = "'Headache'"</code>. Doing so, will make all your
+adverse events take the string ‘Headache’.</p>
 </div>
 </div>
 <div id="build-events" class="section level3">
 <h3 class="hasAnchor">
 <a href="#build-events" class="anchor"></a>Build Events</h3>
-<p>Now that we’ve organized our data into a standard format, we need to combine the events the user selects into a singular data frame to be used in the app. This task is performed in the <code>mod_indvExp_fct_buildEvents.R</code> file. By browsing this file, you’ll witness the function just runs <code>org_df_events()</code> on all the applicable date-oriented data sets currently supported (ADMH, ADAE, ADCM, ADSL, and ADLB). The only exception to these is the ADSL and ADMH files, which require custom considerations when building the standardized data frame shown above. Therefore, if you (the developer) wish to add another date-oriented data set into the mix, add your new org_df_events() function. Then, include the name of your data frame (let’s say it’s called “md_rec”) when creating this list:</p>
+<p>Now that we’ve organized our data into a standard format, we need to
+combine the events the user selects into a singular data frame to be
+used in the app. This task is performed in the
+<code>mod_indvExp_fct_buildEvents.R</code> file. By browsing this file,
+you’ll witness the function just runs <code>org_df_events()</code> on
+all the applicable date-oriented data sets currently supported (ADMH,
+ADAE, ADCM, ADSL, and ADLB). The only exception to these is the ADSL and
+ADMH files, which require custom considerations when building the
+standardized data frame shown above. Therefore, if you (the developer)
+wish to add another date-oriented data set into the mix, add your new
+org_df_events() function. Then, include the name of your data frame
+(let’s say it’s called “md_rec”) when creating this list:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">uni_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">ds_rec</span>, <span class="va">ae_rec</span>, <span class="va">cm_rec</span>, <span class="va">lb_rec</span>, <span class="va">mh_rec</span>, <span class="va">md_rec</span><span class="op">)</span></code></pre></div>
-<p>That’s all it takes! A few lines later, <code>uni_list</code> is rbind-ed into a single data frame (hence the need for uniformity) that <code>build_events()</code> will sort and return in the app. Once that data is in the app, it will automatically flow through to the <code>timevis</code> object on the <code>Events</code> tab or the <code>Visits</code> tab, if you (the developer) allowed it to do so.</p>
+<p>That’s all it takes! A few lines later, <code>uni_list</code> is
+rbind-ed into a single data frame (hence the need for uniformity) that
+<code>build_events()</code> will sort and return in the app. Once that
+data is in the app, it will automatically flow through to the
+<code>timevis</code> object on the <code>Events</code> tab or the
+<code>Visits</code> tab, if you (the developer) allowed it to do so.</p>
 </div>
 <div id="color-aesthetics" class="section level3">
 <h3 class="hasAnchor">
 <a href="#color-aesthetics" class="anchor"></a>Color Aesthetics</h3>
-<p>The absolutely last steps is going to be just adjust a few colors schemes on both the <code>timeviz</code> object on the <code>Events</code> tab and the plot on the <code>Visits</code> tab. Why? Because consistency between the tabs will help the users quickly recognize what type of data they’re observing when the color is always consistent.</p>
-<p>First, to update the colors on the <code>timeviz</code> object on the <code>Events</code> tab, find the file called <code>utils_strObjs.R</code> in the R directory. It’s there you’ll find the following code:</p>
+<p>The absolutely last steps is going to be just adjust a few colors
+schemes on both the <code>timeviz</code> object on the
+<code>Events</code> tab and the plot on the <code>Visits</code> tab.
+Why? Because consistency between the tabs will help the users quickly
+recognize what type of data they’re observing when the color is always
+consistent.</p>
+<p>First, to update the colors on the <code>timeviz</code> object on the
+<code>Events</code> tab, find the file called
+<code>utils_strObjs.R</code> in the R directory. It’s there you’ll find
+the following code:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">my_cols</span> <span class="op">&lt;-</span> <span class="fu">RColorBrewer</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/RColorBrewer/man/ColorBrewer.html">brewer.pal</a></span><span class="op">(</span><span class="fl">7</span>,<span class="st">"Pastel2"</span><span class="op">)</span>
 
@@ -306,14 +413,30 @@
               .vis-item.MH_FDH { background-color: "</span>,<span class="va">my_cols</span><span class="op">[</span><span class="fl">6</span><span class="op">]</span>,<span class="st">"; }
               .vis-item.MH_DH { background-color: "</span>,<span class="va">my_cols</span><span class="op">[</span><span class="fl">7</span><span class="op">]</span>,<span class="st">"; }
               "</span><span class="op">)</span></code></pre></div>
-<p>If you are adding another date-oriented data set, you’ll manually add a new color by increasing brewer.pal’s first argument by 1 (from 7 to 8 in this case). Then, you’ll add another row at the bottom. Continuing with our example, an ADMD would add a row that looks like this:</p>
+<p>If you are adding another date-oriented data set, you’ll manually add
+a new color by increasing brewer.pal’s first argument by 1 (from 7 to 8
+in this case). Then, you’ll add another row at the bottom. Continuing
+with our example, an ADMD would add a row that looks like this:</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="st">".vis-item.MH_DH { background-color: "</span>,my_cols[<span class="dv">8</span>],<span class="st">"; }"</span></span></code></pre></div>
-<p>Similarly, for the <code>Visits</code> tab, you’ll need to add the name of the new event description to an object called <code>names2</code>, found in <code>R/mod_indvExpPatVisits_fct_plot.R</code>, assuming this type of event is appropriate to overlay on such a plot. Here, we’ve actually taken the same colors as found in the <code>my_cols</code> vector above, but tinted them slightly darker so that they are more visible on the default grey ggplot2 background. Use your discretion whether you should tint or not. When ready, add the hex digit color to the vector below called vline_eventtype_cols, in the same element position as in <code>names2</code>.</p>
+<p>Similarly, for the <code>Visits</code> tab, you’ll need to add the
+name of the new event description to an object called
+<code>names2</code>, found in
+<code>R/mod_indvExpPatVisits_fct_plot.R</code>, assuming this type of
+event is appropriate to overlay on such a plot. Here, we’ve actually
+taken the same colors as found in the <code>my_cols</code> vector above,
+but tinted them slightly darker so that they are more visible on the
+default grey ggplot2 background. Use your discretion whether you should
+tint or not. When ready, add the hex digit color to the vector below
+called vline_eventtype_cols, in the same element position as in
+<code>names2</code>.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># mod_indvExpPatVisits_fct_plot</span>
 <span class="va">names2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Milestones"</span>,<span class="st">"Concomitant Meds"</span>,<span class="st">"Adverse Events"</span><span class="op">)</span>
 <span class="va">vline_eventtype_cols</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"#80d1ad"</span>, <span class="st">"#f5ae7d"</span>, <span class="st">"#a8bde6"</span><span class="op">)</span> <span class="co"># dark version of my_cols</span></code></pre></div>
-<p>Congratulations! After completing the above steps, you should now have access to the pertinent event/dates information in the app. With any questions, please feel free to reach out to app authors/ maintainers listed in the package documentation.</p>
+<p>Congratulations! After completing the above steps, you should now
+have access to the pertinent event/dates information in the app. With
+any questions, please feel free to reach out to app authors/ maintainers
+listed in the package documentation.</p>
 <p><br></p>
 <p><br></p>
 </div>

@@ -20,7 +20,7 @@ Rightfully so, the **Data** tab is the initial landing page for the `tidyCDISC` 
 
 
 ```{r, echo=FALSE, out.width="95%", fig.align='center'}
-knitr::include_graphics("figures/upldDat/landing page tidyCDISC.PNG")
+knitr::include_graphics("figures/upldDat/landing_page_tidyCDISC.PNG")
 ```
 
 <br>
@@ -51,7 +51,7 @@ Identifying these data types, the app includes precise upload rules for each, ac
 <br>
 
 ```{r, echo=FALSE, fig.align = 'center'}
-knitr::include_graphics("figures/tableGen/TG need help.PNG")
+knitr::include_graphics("figures/tableGen/TG_need_help.PNG")
 ```
 
 <br>
@@ -62,7 +62,7 @@ Upon clicking, what we define as "ADaM-ish" upload rules will pop up in a new wi
 
 
 ```{r, echo=FALSE, out.width="80%", fig.align = 'center'}
-knitr::include_graphics("figures/upldDat/upload rules.PNG")
+knitr::include_graphics("figures/upldDat/upload_rules.PNG")
 ```
 
 <br>
@@ -96,7 +96,7 @@ Press this button if you are not interested in using `tidyCDISC` with your study
 <br>
 
 ```{r, echo=FALSE, out.width="30%", fig.align = 'center'}
-knitr::include_graphics("figures/upldDat/cdisc pilot button.PNG")
+knitr::include_graphics("figures/upldDat/cdisc_pilot_button.PNG")
 ```
 
 <br>
