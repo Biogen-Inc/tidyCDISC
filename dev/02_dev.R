@@ -185,6 +185,9 @@ pkgdown::build_news()
 
 # # GitHub Actions
 # usethis::use_github_action()
+#
+usethis::use_github_pages() # failed. Instead run this: https://gist.github.com/ramnathv/2227408
+usethis::use_github_action("pkgdown")
 # 
 # # Chose one of the three
 # # See https://usethis.r-lib.org/reference/use_github_action.html
