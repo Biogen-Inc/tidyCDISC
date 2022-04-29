@@ -4,6 +4,7 @@
 #' Internal parameters for {shiny}
 #' @param datafile all uploaded data files 
 #' from the dataImport module
+#' @param filePaths NULL
 #' 
 #' @import IDEAFilter
 #' @importFrom rlang sym
@@ -333,11 +334,8 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # ----------------------------------------------------------------------
   
   
-  # tell Shiny which dataframe to use when mapping through list of tables
-  # to render
   data_to_use_str <- function(x) {
-    if (x == "ADAE") { ae_data() }
-    else all_data()
+    if (x == "ADAE") ae_data() else all_data()
   }
   
   # convert the custom shiny input to a table output

@@ -15,11 +15,27 @@ app_heatmap(
   sig_level = 0.05
 )
 }
+\arguments{
+\item{data}{Merged data to be used in plot}
+
+\item{yvar_x}{character string of variable or paramcd names for x-axis}
+
+\item{yvar_y}{character string of variable or paramcd names for y-axis}
+
+\item{value}{character value: permitted values include "AVAL", "CHG", or
+"BASE"}
+
+\item{cor_mthd}{character string. Defaults to 'pearson' for calculating
+correlation co-efficients. See `?cor` for more supported test stats.}
+
+\item{show_sig}{logical, whether or not to display p-values for significant
+tests statistics}
+
+\item{sig_level}{dbl, defaulting to .05. Used to determine significance level
+for correlation tests performed}
+}
 \description{
-Create a line plot with a time variable as the x-axis
-and using either the selected response variable
-or if a PARAMCD is selected, then plot the corresponding value
-to calculate the means. Lines are plotted by patient
+Create a heatmap comparing param/endpoints variable on both axis
 }
 \seealso{
 Other popExp Functions: 

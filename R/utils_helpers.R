@@ -113,6 +113,29 @@ common_rownames <- function(data, group) {
   return(vars)
 }
 
+# #' Figure out which reactive data.frame to use
+# #'
+# #' @param d a string, naming a data.frame
+# #' @param ae an AE reactive data frame
+# #' @param alt an alternative reactive data frame
+# #' @noRd
+# #'
+# data_to_use_str <- function(d, ae, alt) {
+#   if (dat == "ADAE") { ae }
+#   else alt
+# }
+
+#' Figure out which reactive data.frame to use
+#'
+#' @param x a string, naming a data.frame. Either
+#' @importFrom rlang expr
+#' @noRd
+data_to_use_str
+# data_to_use_str <- function(x) {
+#   {if (x == "ADAE") rlang::expr(ae_data()) else rlang::expr(all_data())}
+# }
+
+
 
 #' Convert actions performed on from an IDEAFilter output dataframe into text
 #'

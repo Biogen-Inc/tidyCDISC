@@ -7,11 +7,7 @@
 col_for_list_expr(nm)
 }
 \arguments{
-\item{nm}{name}
-
-\item{dat}{data}
-
-\item{x}{columns
+\item{nm}{name
 
 create the labels for each column using the total function
 so the columns are now NAME N= X}
