@@ -1,8 +1,6 @@
 #' GT Column Names
 #' 
-#' @param dat data
 #' @param nm name
-#' @param x columns
 #' 
 #' create the labels for each column using the total function
 #' so the columns are now NAME N= X
