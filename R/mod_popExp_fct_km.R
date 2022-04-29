@@ -6,7 +6,9 @@
 #' 
 #' @param data Merged data to be used in plot
 #' @param yvar Selected xy-axis 
-#' @param group namne of grouping variable (categorical or factor)
+#' @param resp_var character, the response variable (paramcd)
+#' @param cnsr_var character, the censor variable. Usually CNSR
+#' @param group character, variable namne of grouping variable (categorical or factor)
 #' @param points logical, whether to plot + symbols when patients censored
 #' @param ci logical, whether the curve(s) should be accompanied with a 95\% CI
 #' 
