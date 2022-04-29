@@ -13,8 +13,8 @@
 #' @param week_y Selected y-axis week if \code{yvar} is a PARAMCD
 #' @param value_y Selected y-axis value if \code{yvar} is a PARAMCD: 
 #' either AVAL, CHG, or BASE
-#' @param separate whether to facet plots by categorical or factor
-#' @param color whether to color plots by categorical or factor
+#' @param separate character, categorical or factor variable to facet plots by. Default is 'NONE'.
+#' @param color character, categorical or factor variable to COLOR points by. Default is 'NONE'.
 #' 
 #' @importFrom stats as.formula
 #' 
