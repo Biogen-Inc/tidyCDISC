@@ -28,14 +28,45 @@ app_lineplot(
 
 \item{time}{Selected x-axis constained to time dependent columns}
 
-\item{value}{If yvar is a PARAMCD then the user must select 
-AVAL, CHG, or BASE to be plotted on the y-axis}
+\item{value}{If yvar is a PARAMCD then the user must select AVAL, CHG, or
+BASE to be plotted on the y-axis}
+
+\item{separate}{character, categorical or factor variable to facet plots by.
+Default is 'NONE'.}
+
+\item{color}{character, categorical or factor variable to COLOR points by.
+Default is 'NONE'.}
+
+\item{err_bars}{logical, defaults to FALSE. Whether or not to include error
+bars.}
+
+\item{label_points}{logical, defaults to FALSE. Whether or not to include
+labels on data points.}
+
+\item{gtxt_x_pos}{if `label_points` == TRUE, then supply a character string
+of ("left", "middle", "right") that determines where to place the data
+labels relative to the data point}
+
+\item{gtxt_y_pos}{if `label_points` == TRUE, then supply a character string
+of ("bottom", "middle", "top") that determines where to place the data
+labels relative to the data point}
+
+\item{add_vert}{logical, with no default, determines if a vertical reference
+line should be added}
+
+\item{vert_x_int}{if `add_vert` == TRUE, then supply an dbl that exists on
+the plot's x-axis to plot the vertical line}
+
+\item{add_hor}{logical, with no default, determines if a horizontal reference
+line should be added}
+
+\item{hor_y_intif}{`add_hor` == TRUE, then supply an dbl that exists on the
+plot's y-axis to plot the vertical reference line}
 }
 \description{
-Create a line plot with a time variable as the x-axis
-and using either the selected response variable
-or if a PARAMCD is selected, then plot the corresponding value
-to calculate the means. Lines are plotted by patient
+Create a line plot with a time variable as the x-axis and using either the
+selected response variable or if a PARAMCD is selected, then plot the
+corresponding value to calculate the means. Lines are plotted by patient
 }
 \seealso{
 Other popExp Functions: 
