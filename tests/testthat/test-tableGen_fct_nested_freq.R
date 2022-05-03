@@ -26,20 +26,20 @@ grp_it <- function(df, var){
   bind_rows(groups, df)
 }
 
-# country_grp_tots <- grp_it(df, var = "COUNTRY")
-# avisit_grp_tots <- grp_it(df, var = "AVISIT")
+country_grp_tots <- grp_it(df, var = "COUNTRY")
+avisit_grp_tots <- grp_it(df, var = "AVISIT")
 sex_grp_tots <- grp_it(df, var = "SEX")
 
-# test_that("NESTED FREQ block on ADSL", {
-#   app_nested_freq.ADSL("SEX", "COUNTRY", NULL, tg_data, no_grp_tots)
-#   app_nested_freq.ADSL("SEX", "NONE", NULL, tg_data, no_grp_tots)
-#   app_nested_freq.ADSL("SEX", "COUNTRY", "AVISIT", tg_data, avisit_grp_tots)
-#   app_nested_freq.ADSL("SEX", "NONE", "AVISIT", tg_data, avisit_grp_tots)
-# })
-# 
-# test_that("NESTED FREQ block ADSL group", {
-#   app_nested_freq.ADSL("ITTFL", "NONE", "COUNTRY", tg_data, country_grp_tots)
-# })
+test_that("NESTED FREQ block on ADSL", {
+  app_nested_freq.ADSL("SEX", "COUNTRY", NULL, tg_data, no_grp_tots)
+  app_nested_freq.ADSL("SEX", "NONE", NULL, tg_data, no_grp_tots)
+  app_nested_freq.ADSL("SEX", "COUNTRY", "AVISIT", tg_data, avisit_grp_tots)
+  app_nested_freq.ADSL("SEX", "NONE", "AVISIT", tg_data, avisit_grp_tots)
+})
+
+test_that("NESTED FREQ block ADSL group", {
+  app_nested_freq.ADSL("ITTFL", "NONE", "COUNTRY", tg_data, country_grp_tots)
+})
 
 # -------------------------------------------
 # Expected Test Failures
