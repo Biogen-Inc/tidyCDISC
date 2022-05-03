@@ -131,8 +131,9 @@ common_rownames <- function(data, group) {
 #' @importFrom rlang expr
 #' @noRd
 data_to_use_str
+# function included in mod_tableGen... not here.
 # data_to_use_str <- function(x) {
-#   {if (x == "ADAE") rlang::expr(ae_data()) else rlang::expr(all_data())}
+#   if (x == "ADAE") ae_data() else all_data()
 # }
 
 
