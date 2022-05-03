@@ -8,13 +8,41 @@
 \title{Generate frequency where each subject is only counted once for the maximum
 VAR}
 \usage{
-app_nested_freq(column, nested_var = "NONE", group, data, totals, sort)
+app_nested_freq(
+  column,
+  nested_var = "NONE",
+  group,
+  data,
+  totals,
+  sort = "desc_tot"
+)
 
-\method{app_nested_freq}{default}(column, nested_var = "NONE", group = NULL, data, totals, sort)
+\method{app_nested_freq}{default}(
+  column,
+  nested_var = "NONE",
+  group = NULL,
+  data,
+  totals,
+  sort = "desc_tot"
+)
 
-\method{app_nested_freq}{BDS}(column, nested_var = "NONE", group = NULL, data, totals, sort)
+\method{app_nested_freq}{BDS}(
+  column,
+  nested_var = "NONE",
+  group = NULL,
+  data,
+  totals,
+  sort = "desc_tot"
+)
 
-\method{app_nested_freq}{custom}(column, nested_var = "NONE", group, data, totals, sort)
+\method{app_nested_freq}{custom}(
+  column,
+  nested_var = "NONE",
+  group,
+  data,
+  totals,
+  sort = "desc_tot"
+)
 }
 \arguments{
 \item{column}{the variable to perform  stats on, this also contains the class

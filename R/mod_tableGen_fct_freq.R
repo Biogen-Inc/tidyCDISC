@@ -44,10 +44,10 @@ app_freq.default <- function(column, group, data, totals) {
 
 app_freq.ADAE <- app_freq.ADSL <- function(column, group = NULL, data, totals) {
   # ########## ######### ######## #########
-  # column <- "SAFFL"
+  # column <- "SEX"
   # group = "TRT01P"
-  # # # group <- "NONE"
-  # data = bds_data #%>% filter(SAFFL == 'Y')
+  # group <- NULL
+  # data = tg_data #bds_data #%>% filter(SAFFL == 'Y')
   # totals <- total_df
   # ########## ######### ######## #########
   
@@ -71,13 +71,13 @@ app_freq.ADAE <- app_freq.ADSL <- function(column, group = NULL, data, totals) {
   } else {
     total0 <- total00
   }
-  
+
   total <- total0 %>%
     group_by(!!column) %>%
     summarise(n = sum(n)) %>%
     ungroup() %>%
     mutate(n = tidyr::replace_na(n, 0),
-      prop = ifelse(n == 0, 0, n/totals[nrow(totals),"n_tot"])) %>%
+      prop = if_else(n == 0, 0, n/as.integer(totals[nrow(totals),"n_tot"]))) %>%
     mutate(x = paste0(n, " (", sprintf("%.1f", round(prop*100, 1)), ")")) %>%
     select(!!column, x)
   

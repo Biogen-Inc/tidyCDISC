@@ -21,7 +21,7 @@ test_that("gather_reqs Return Classes", {
                    expl_rules = list( list(error = c(""), warn = c("")) ),
                    df_incl_rules = list( list(error = c(""), warn = c(""))) )
     ),
-    3
+    4
   )
 })
 
