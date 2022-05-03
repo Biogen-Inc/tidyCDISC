@@ -80,7 +80,7 @@ df_incl_rules <-
 #'
 #' @family dataComply Functions
 #' @noRd
-#'   
+#' @export
 gather_rules <- function(input, output, session,
                          all_df_rules = list(error = c(""), warn = c("") ),
                          expl_rules = list( list(error = c(""), warn = c("")) ),
@@ -214,18 +214,18 @@ gather_rules <- function(input, output, session,
     
     # If they exist, format Rules for All Data Sets into a collapsed HTML string
     tagList(
-      if(!is_empty(err) | !is_empty(wrn)){
+      if(!rlang::is_empty(err) | !rlang::is_empty(wrn)){
         tagList(
           br(),
           h5(strong("Rules for All Data Sets")),
           div(style = "font-size: 12px;", tagList(
-            if(!is_empty(err)){
+            if(!rlang::is_empty(err)){
               tagList(
                 HTML(paste0("&nbsp;&nbsp;&nbsp;Required: ",paste(err, collapse = ", "))),
                 br(),br(),
               )
             } else {""},
-            if(!is_empty(wrn)){
+            if(!rlang::is_empty(wrn)){
               tagList(
                 HTML(paste0("&nbsp;&nbsp;&nbsp;Recommended: ",paste(wrn, collapse = ", "))),
                 br(),br(),
@@ -238,19 +238,19 @@ gather_rules <- function(input, output, session,
     # If they exist, format Specific Rules for Specific Data Sets into a
     # collapsed HTML string
     tagList(
-      if(!is_empty(hdf_err) | !is_empty(hdf_wrn)){
+      if(!rlang::is_empty(hdf_err) | !rlang::is_empty(hdf_wrn)){
         tagList(
           br(),
           h5(strong("Specific Rules for Specific Data Sets")),
           div(style = "font-size: 12px;", tagList(
-            if(!is_empty(hdf_err)){
+            if(!rlang::is_empty(hdf_err)){
               tagList(
                 HTML(paste0("&nbsp;&nbsp;&nbsp;Required:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;",
                             paste(hdf_err, collapse = "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"))),
                 br(),br(),
               )
             } else {""},
-            if(!is_empty(hdf_wrn)){
+            if(!rlang::is_empty(hdf_wrn)){
               tagList(
                 HTML(paste0("&nbsp;&nbsp;&nbsp;Recommended:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;",
                             paste(hdf_wrn, collapse = "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"))),
@@ -264,19 +264,19 @@ gather_rules <- function(input, output, session,
     # If they exist, format Rules for Data Sets That Contain Certain Variables
     # into a collapsed HTML string
     tagList(
-      if(!is_empty(dfw_err) | !is_empty(dfw_wrn)){
+      if(!rlang::is_empty(dfw_err) | !rlang::is_empty(dfw_wrn)){
         tagList(
           br(),
           h5(strong("Rules for Data Sets That Contain Certain Variables")),
           div(style = "font-size: 12px;", tagList(
-            if(!is_empty(dfw_err)){
+            if(!rlang::is_empty(dfw_err)){
               tagList(
                 HTML(paste0("&nbsp;&nbsp;&nbsp;Required:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;",
                             paste(dfw_err, collapse = "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"))),
                 br(),br(),
               )
             } else {""},
-            if(!is_empty(dfw_wrn)){
+            if(!rlang::is_empty(dfw_wrn)){
               tagList(
                 HTML(paste0("&nbsp;&nbsp;&nbsp;Recommended:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;",
                             paste(dfw_wrn, collapse = "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"))),
@@ -290,19 +290,19 @@ gather_rules <- function(input, output, session,
     # If they exist, format Rules for Data Sets That Contain Certain Variables
     # into a collapsed HTML string
     tagList(
-      if(!is_empty(dfw_ette_err) | !is_empty(dfw_ette_wrn)){
+      if(!rlang::is_empty(dfw_ette_err) | !rlang::is_empty(dfw_ette_wrn)){
         tagList(
           br(),
           h5(strong("Rules for all Data Sets That Contain Certain Variables, except 'Time to Event'")),
           div(style = "font-size: 12px;", tagList(
-            if(!is_empty(dfw_ette_err)){
+            if(!rlang::is_empty(dfw_ette_err)){
               tagList(
                 HTML(paste0("&nbsp;&nbsp;&nbsp;Required:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;",
                             paste(dfw_ette_err, collapse = "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"))),
                 br(),br(),
               )
             } else {""},
-            if(!is_empty(dfw_ette_wrn)){
+            if(!rlang::is_empty(dfw_ette_wrn)){
               tagList(
                 HTML(paste0("&nbsp;&nbsp;&nbsp;Recommended:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;",
                             paste(dfw_ette_wrn, collapse = "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"))),
