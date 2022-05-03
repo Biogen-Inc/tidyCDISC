@@ -59,7 +59,7 @@ numeric_stan_table <- function(input_recipe){
 
 #' Function to pre-filter the ADSL depending on the stan table selected
 #' 
-#' @param data an ADSL
+#' @param ADSL an ADSL data.frame
 #' @param input_recipe The shiny input that keeps track of the recipe selected
 #' 
 #' @export
