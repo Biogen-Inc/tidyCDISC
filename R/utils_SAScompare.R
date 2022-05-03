@@ -138,10 +138,16 @@ mk_rep_seq_id <- function(x){
 #'
 #' Organize SAS into a format for comparing
 #'
-#' @param sas_data the sas table dataframe, output from stat programmer
+#' @param sas_data the SAS table data.frame, output from stat programmer
+#' @param block_names default names to check in each table that represent a
+#'   'var block', case sensitive
+#' @param block_ord_names default names to check in each table that represent 
+#'   'the order of a var block', case sensitive
+#' @param stat_names default names to check in each table that represent a
+#'   'stat block', case sensitive
+#' @param stat_ord_names default names to check in each table that represent 
+#'   'the order of a stat block', case sensitive
 #' @param tg_data the table generator table dataframe, output from tidyCDISC
-#' @param chk_block_names case sensitive
-#' @param chk_stat_names case sensitive
 #' @param machine_readable a logical; should the table be prepared for optimal
 #'   machine readability; that is, should cells with multiple values be pivoted
 #'   to new rows
@@ -157,7 +163,7 @@ mk_rep_seq_id <- function(x){
 #'
 #' @export
 #' @keywords tabGen_compare
-#' 
+#'   
 prep_sas_table <- function(
   sas_data,
   block_names = c("by1lbl","vis"),
