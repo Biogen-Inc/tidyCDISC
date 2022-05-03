@@ -7,9 +7,9 @@
 prep_adsl(ADSL, input_recipe)
 }
 \arguments{
-\item{input_recipe}{The shiny input that keeps track of the recipe selected}
+\item{ADSL}{an ADSL data.frame}
 
-\item{data}{an ADSL}
+\item{input_recipe}{The shiny input that keeps track of the recipe selected}
 }
 \description{
 Function to pre-filter the ADSL depending on the stan table selected
