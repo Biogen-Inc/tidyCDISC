@@ -10,10 +10,14 @@
 #' @noRd
 #' 
 mean_summary <- function(.data, to_count) {
+  # FOR TESTING
+  # .data = all
+  # to_count = "CHG"
   
   to_count <- sym(to_count)
   
-  .data %>%
+  suppressWarnings(
+    .data %>%
     summarise(
       n = paste(n_distinct(USUBJID)),
       `Mean (SD)` = paste0(sprintf("%.1f", round(mean(na.omit(!!to_count)), 1)),
@@ -24,4 +28,5 @@ mean_summary <- function(.data, to_count) {
       `Min | Max` = paste0(round(min(na.omit(!!to_count)), 2), " | ", 
                            round(max(na.omit(!!to_count)), 2))
     )
+  )
 }
