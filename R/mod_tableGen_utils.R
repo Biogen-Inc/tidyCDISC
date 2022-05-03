@@ -131,7 +131,7 @@ cleanADAE <- function(datafile, ADSL) {
 #' Function to pre-filter the ADAE depending on the stan table selected
 #' 
 #' @param datafile list of ADaM-ish dataframes 
-#' @param data an ADSL
+#' @param ADSL an ADSL data.frame
 #' @param input_recipe The shiny input that keeps track of the recipe selected
 #' 
 #' @export
