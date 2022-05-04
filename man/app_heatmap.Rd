@@ -22,6 +22,8 @@ app_heatmap(
 
 \item{yvar_y}{character string of variable or paramcd names for y-axis}
 
+\item{time}{character string of time variable}
+
 \item{value}{character value: permitted values include "AVAL", "CHG", or
 "BASE"}
 

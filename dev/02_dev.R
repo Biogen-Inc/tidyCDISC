@@ -170,7 +170,7 @@ usethis::use_vignette("dev03_Indv_Expl")
 # devtools::build_vignettes() # don't use, instead use...
 
 # Before submitting a PR, run this code & update NEWS.md
-usethis::use_version("dev") #choices: "dev", "patch", "minor", "major"
+usethis::use_version("patch") #choices: "dev", "patch", "minor", "major"
 
 # Build pkg, including vignettes. Do this before updating documentation.
 devtools::build()

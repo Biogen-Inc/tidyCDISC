@@ -1,4 +1,5 @@
 # tidyCDISC 0.0.4
+* cleaning up devtools::check()
 
 # tidyCDISC 0.0.3
 
