@@ -8,6 +8,10 @@ data_to_use_str(x, ae_data, bds_data)
 }
 \arguments{
 \item{x}{string, naming a data.frame.}
+
+\item{ae_data}{data.frame, of the AE variety}
+
+\item{bds_data}{data.frame, of the BDS variety}
 }
 \description{
 Function to clean and combine ADAE dataset with ADSL
