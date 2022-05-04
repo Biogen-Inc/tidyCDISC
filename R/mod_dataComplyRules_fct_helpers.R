@@ -79,8 +79,6 @@ df_incl_rules <-
 #' @return An shiny tagList
 #'
 #' @family dataComply Functions
-#' @export
-#' @noRd
 #' 
 gather_rules <- function(input, output, session,
                          all_df_rules = list(error = c(""), warn = c("") ),
