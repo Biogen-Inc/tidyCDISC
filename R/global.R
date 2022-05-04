@@ -123,6 +123,6 @@ utils::globalVariables(c(
   "id_stat", "inner_sort",
   "lab", "n_subgroups", "n_tot", "orig_id_rn", "orig_var_rn", "param_x",
   "param_y", "pt", "pval",
-  "pval_hover", "sort_n", "v", "var", "var_rn", "where", "y",
-  "<<-"
+  "pval_hover", "sort_n", "v", "var", "var_rn", "where", "y"
+  # ,"<<-"
 ))
