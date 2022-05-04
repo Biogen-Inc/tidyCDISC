@@ -358,6 +358,8 @@ data_to_filter <- function(datafile, input_filter_df) {
 #' Function to clean and combine ADAE dataset with ADSL
 #' 
 #' @param x string, naming a data.frame.
+#' @param ae_data data.frame, of the AE variety
+#' @param bds_data data.frame, of the BDS variety
 #' 
 #' @export
 #' @keywords tabGen_repro
