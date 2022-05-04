@@ -29,7 +29,7 @@
 #'   the plot's x-axis to plot the vertical line
 #' @param add_hor logical, with no default, determines if a horizontal reference
 #'   line should be added
-#' @param hor_y_intif `add_hor` == TRUE, then supply an dbl that exists on the
+#' @param hor_y_int if `add_hor` == TRUE, then supply an dbl that exists on the
 #'   plot's y-axis to plot the vertical reference line
 #'
 #' @family popExp Functions
