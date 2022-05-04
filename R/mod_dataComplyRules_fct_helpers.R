@@ -79,8 +79,9 @@ df_incl_rules <-
 #' @return An shiny tagList
 #'
 #' @family dataComply Functions
-#' @noRd
 #' @export
+#' @noRd
+#' 
 gather_rules <- function(input, output, session,
                          all_df_rules = list(error = c(""), warn = c("") ),
                          expl_rules = list( list(error = c(""), warn = c("")) ),
@@ -320,11 +321,11 @@ gather_rules <- function(input, output, session,
   
 }
 
-###############################################################
-#
-# Run gather_rules help module UI once, before loading the app
-#
-###############################################################
+
+#' Rules UI
+#' 
+#' Run gather_rules() to create the rules UI one time, before loading the app
+#' @noRd
 rulesUI <- gather_rules(all_df_rules = all_df_rules,
                         expl_rules = expl_rules,
                         df_incl_rules = df_incl_rules,

@@ -5,6 +5,7 @@
 #' @param data Merged data to be used in plot
 #' @param yvar_x character string of variable or paramcd names for x-axis
 #' @param yvar_y character string of variable or paramcd names for y-axis
+#' @param time character string of time variable
 #' @param value character value: permitted values include "AVAL", "CHG", or
 #'   "BASE"
 #' @param cor_mthd character string. Defaults to 'pearson' for calculating

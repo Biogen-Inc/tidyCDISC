@@ -130,7 +130,7 @@ common_rownames <- function(data, group) {
 #' @param x a string, naming a data.frame. Either
 #' @importFrom rlang expr
 #' @noRd
-data_to_use_str
+"data_to_use_str"
 # function included in mod_tableGen... not here.
 # data_to_use_str <- function(x) {
 #   if (x == "ADAE") ae_data() else all_data()
