@@ -56,7 +56,6 @@ Suggests:
     scales
 Remotes: 
     JohnCoene/tippy,
-    rstudio/rsconnect,
     Biogen-Inc/IDEAFilter
 Depends: 
     R (>= 2.10)
