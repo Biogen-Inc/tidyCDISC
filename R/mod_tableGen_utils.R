@@ -357,12 +357,12 @@ data_to_filter <- function(datafile, input_filter_df) {
 
 #' Function to clean and combine ADAE dataset with ADSL
 #' 
-#' @param datafile list of ADaM-ish dataframes 
+#' @param x string, naming a data.frame.
 #' 
 #' @export
 #' @keywords tabGen_repro
 #' 
-data_to_use_str <- function(x) {
+data_to_use_str <- function(x, ae_data, bds_data) {
   if (x == "ADAE") { ae_data }
   else bds_data
 }

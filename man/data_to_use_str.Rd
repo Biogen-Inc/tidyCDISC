@@ -4,10 +4,10 @@
 \alias{data_to_use_str}
 \title{Function to clean and combine ADAE dataset with ADSL}
 \usage{
-data_to_use_str(x)
+data_to_use_str(x, ae_data, bds_data)
 }
 \arguments{
-\item{datafile}{list of ADaM-ish dataframes}
+\item{x}{string, naming a data.frame.}
 }
 \description{
 Function to clean and combine ADAE dataset with ADSL
