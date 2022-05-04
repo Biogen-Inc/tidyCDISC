@@ -2,7 +2,7 @@
 #' 
 #' Used to generate output for unit tests and compared to sas outputs
 #' @export
-#' @noRd
+#' 
 tg_data <- tidyr::tibble(
   USUBJID = 1:10,
   AGE = c(20,30,40,30,40,60,20,30,50,40),
