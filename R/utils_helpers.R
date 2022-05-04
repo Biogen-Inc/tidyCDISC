@@ -125,16 +125,15 @@ common_rownames <- function(data, group) {
 #   else alt
 # }
 
-#' Figure out which reactive data.frame to use
-#'
-#' @param x a string, naming a data.frame. Either
-#' @importFrom rlang expr
-#' @noRd
-"data_to_use_str"
-# function included in mod_tableGen... not here.
-# data_to_use_str <- function(x) {
-#   if (x == "ADAE") ae_data() else all_data()
-# }
+# #' Figure out which reactive data.frame to use
+# #'
+# #' @param x a string, naming a data.frame. Either
+# #' @noRd
+# "data_to_use_str"
+# # function included in mod_tableGen... not here.
+# # data_to_use_str <- function(x) {
+# #   if (x == "ADAE") ae_data() else all_data()
+# # }
 
 
 
