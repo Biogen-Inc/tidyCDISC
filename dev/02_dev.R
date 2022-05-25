@@ -198,6 +198,12 @@ usethis::use_github_action_check_standard()
 # # Add action for PR
 # usethis::use_github_action_pr_commands()
 
+# run R CMD check on CRAN’s servers
+# ?devtools::check_win_release
+devtools::check_win_release() #ran
+devtools::check_win_oldrelease()
+devtools::check_win_devel()
+
 
 ## Code coverage ---- not run
 ## (You'll need GitHub there)
