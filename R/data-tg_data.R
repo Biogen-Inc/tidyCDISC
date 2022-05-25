@@ -1,7 +1,6 @@
 #' Table Generator testing dataset
 #' 
 #' Used to generate output for unit tests and compared to sas outputs
-#' @export
 #' 
 tg_data <- tidyr::tibble(
   USUBJID = 1:10,
