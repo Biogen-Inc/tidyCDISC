@@ -23,6 +23,7 @@ app_non_missing <- function(column, group, data, totals) {
 #' if data is grouped add total column to the grouped data
 #' 
 #' @importFrom rlang sym !!
+#' @importFrom tidyr pivot_wider
 #' @import dplyr
 #' 
 #' @return frequency table of ADSL column
@@ -46,7 +47,7 @@ app_non_missing.default <- app_non_missing.BDS <- app_non_missing.OCCDS <- app_n
     distinct(USUBJID, !!column) %>%
     filter(!is.na(!!column)) %>%
     summarize(n = n_distinct(USUBJID)) %>%
-    mutate(n_tot = totals[nrow(totals),"n_tot"],
+    mutate(n_tot = as.integer(totals[nrow(totals),"n_tot"]),
            prop = n / n_tot,
            x = paste0(n, ' (', sprintf("%.1f", round(prop*100, 1)), ')'),
            temp_col = "Non Missing"
@@ -94,7 +95,7 @@ app_non_missing.default <- app_non_missing.BDS <- app_non_missing.OCCDS <- app_n
       ) %>%
       rename_with(~as.character(column), "temp_col") %>%
       select(-n, -prop, -n_tot) %>%
-      pivot_wider(!!column, names_from = !!group, values_from = v)
+      tidyr::pivot_wider(!!column, names_from = !!group, values_from = v)
 
     
     cbind(groups, total$x)

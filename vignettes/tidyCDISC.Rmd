@@ -4,6 +4,7 @@ output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{tidyCDISC}
   %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteDepends{knitr}
   %\VignetteEncoding{UTF-8}
 ---
 

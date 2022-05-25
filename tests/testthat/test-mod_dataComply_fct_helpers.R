@@ -3,7 +3,7 @@
 context("Module: dataComply function helpers")
 
 
-library(shiny)
+suppressWarnings(library(shiny))
 
 # Reactive console simulation  -------------------------------------------------
 # See discussion at https://github.com/rstudio/shiny/issues/2518

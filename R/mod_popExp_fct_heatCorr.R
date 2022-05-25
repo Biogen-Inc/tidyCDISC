@@ -1,16 +1,26 @@
 #' tidyCDISC heatmap plot of endpoint correlations
-#' 
-#' Create a line plot with a time variable as the x-axis
-#' and using either the selected response variable
-#' or if a PARAMCD is selected, then plot the corresponding value
-#' to calculate the means. Lines are plotted by patient
-#' 
+#'
+#' Create a heatmap comparing param/endpoints variable on both axis
+#'
+#' @param data Merged data to be used in plot
+#' @param yvar_x character string of variable or paramcd names for x-axis
+#' @param yvar_y character string of variable or paramcd names for y-axis
+#' @param time character string of time variable
+#' @param value character value: permitted values include "AVAL", "CHG", or
+#'   "BASE"
+#' @param cor_mthd character string. Defaults to 'pearson' for calculating
+#'   correlation co-efficients. See `?cor` for more supported test stats.
+#' @param show_sig logical, whether or not to display p-values for significant
+#'   tests statistics
+#' @param sig_level dbl, defaulting to .05. Used to determine significance level
+#'   for correlation tests performed
+#'
 #' @importFrom ggcorrplot cor_pmat
-#' 
+#'
 #' @family popExp Functions
 #' @export
 #' @keywords popEx
-#' 
+#'   
 app_heatmap <- function(data, yvar_x, yvar_y, time, value = "AVAL",
                          cor_mthd = "pearson", show_sig = F, sig_level = .05) {
   

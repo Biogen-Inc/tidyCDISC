@@ -17,7 +17,7 @@
 #' @export
 #' @keywords tabGen
 #' 
-app_nested_freq <- function(column, nested_var = "NONE", group, data, totals, sort) {
+app_nested_freq <- function(column, nested_var = "NONE", group, data, totals, sort = "desc_tot") {
   UseMethod("app_nested_freq", column)
 }
 
@@ -35,7 +35,7 @@ app_nested_freq <- function(column, nested_var = "NONE", group, data, totals, so
 #' @family tableGen Functions
 
 app_nested_freq.default <- app_nested_freq.OCCDS <- app_nested_freq.ADAE <- app_nested_freq.ADSL <- 
-  function(column, nested_var = "NONE", group = NULL, data, totals, sort) {
+  function(column, nested_var = "NONE", group = NULL, data, totals, sort = "desc_tot") {
     
   # # ########## ######### ######## #########
   # column <- "EOSSTT"
@@ -99,7 +99,7 @@ app_nested_freq.default <- app_nested_freq.OCCDS <- app_nested_freq.ADAE <- app_
   
   total0 <- 
     sort_cnts %>%
-    mutate(n_tot = totals[nrow(totals),"n_tot"],
+    mutate(n_tot = as.integer(totals[nrow(totals),"n_tot"]),
            prop = n / n_tot,
            x = paste0(n, ' (', sprintf("%.1f", round(prop*100, 1)), ')')
     )  %>%
@@ -123,7 +123,7 @@ app_nested_freq.default <- app_nested_freq.OCCDS <- app_nested_freq.ADAE <- app_
           group_by(!!column, !!nst_var) %>%
           summarize(n = n_distinct(USUBJID)) %>%
           ungroup() %>%
-          mutate(n_tot = totals[nrow(totals),"n_tot"], # do we want to keep zeros?
+          mutate(n_tot = as.integer(totals[nrow(totals),"n_tot"]), # do we want to keep zeros?
                  prop = n / n_tot,
                  x = paste0(n, ' (', sprintf("%.1f", round(prop*100, 1)), ')')
           ) %>%
@@ -287,7 +287,7 @@ app_nested_freq.default <- app_nested_freq.OCCDS <- app_nested_freq.ADAE <- app_
 #' 
 #' @family tableGen Functions
 
-app_nested_freq.BDS <- function(column, nested_var = "NONE", group = NULL, data, totals, sort) {
+app_nested_freq.BDS <- function(column, nested_var = "NONE", group = NULL, data, totals, sort = "desc_tot") {
   rlang::abort(glue::glue(
     "Can't calculate Distinct Frequency for for BDS variables"
   ))
@@ -298,7 +298,7 @@ app_nested_freq.BDS <- function(column, nested_var = "NONE", group = NULL, data,
 #' 
 #' @family tableGen Functions
 
-app_nested_freq.custom <- function(column, nested_var = "NONE", group, data, totals, sort) {
+app_nested_freq.custom <- function(column, nested_var = "NONE", group, data, totals, sort = "desc_tot") {
   rlang::abort(glue::glue(
     "Can't calculate Distinct Frequency for custom class data set."
   ))

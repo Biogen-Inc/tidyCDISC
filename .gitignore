@@ -1,5 +1,6 @@
 .Rhistory
 .RData
 .Rproj.user
+.Renviron
 inst/doc
 rsconnect/
