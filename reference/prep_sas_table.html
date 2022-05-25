@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidyCDISC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.3.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.4</span>
       </span>
     </div>
 
@@ -103,7 +103,19 @@
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>sas_data</dt>
-<dd><p>the sas table dataframe, output from stat programmer</p></dd>
+<dd><p>the SAS table data.frame, output from stat programmer</p></dd>
+<dt>block_names</dt>
+<dd><p>default names to check in each table that represent a
+'var block', case sensitive</p></dd>
+<dt>block_ord_names</dt>
+<dd><p>default names to check in each table that represent 
+'the order of a var block', case sensitive</p></dd>
+<dt>stat_names</dt>
+<dd><p>default names to check in each table that represent a
+'stat block', case sensitive</p></dd>
+<dt>stat_ord_names</dt>
+<dd><p>default names to check in each table that represent 
+'the order of a stat block', case sensitive</p></dd>
 <dt>tg_data</dt>
 <dd><p>the table generator table dataframe, output from tidyCDISC</p></dd>
 <dt>machine_readable</dt>
@@ -117,10 +129,6 @@ the table</p></dd>
 <dt>rm_desc_col</dt>
 <dd><p>a logical; should the description column be removed from
 the table (since they never match between base and compare)</p></dd>
-<dt>chk_block_names</dt>
-<dd><p>case sensitive</p></dd>
-<dt>chk_stat_names</dt>
-<dd><p>case sensitive</p></dd>
 </dl></div>
 
   </div>

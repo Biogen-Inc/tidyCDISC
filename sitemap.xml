@@ -130,7 +130,13 @@
     <loc>/reference/common_rownames.html</loc>
   </url>
   <url>
+    <loc>/reference/data_to_filter.html</loc>
+  </url>
+  <url>
     <loc>/reference/data_to_use_str.html</loc>
+  </url>
+  <url>
+    <loc>/reference/gather_rules.html</loc>
   </url>
   <url>
     <loc>/reference/getLevels.html</loc>
@@ -161,6 +167,9 @@
   </url>
   <url>
     <loc>/reference/run_app.html</loc>
+  </url>
+  <url>
+    <loc>/reference/tg_data.html</loc>
   </url>
   <url>
     <loc>/reference/varN_fctr_reorder.html</loc>

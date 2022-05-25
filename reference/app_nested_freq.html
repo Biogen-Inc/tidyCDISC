@@ -23,7 +23,7 @@ if data is grouped add total column to the grouped data"><!-- mathjax --><script
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidyCDISC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.3.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.4</span>
       </span>
     </div>
 
@@ -98,16 +98,44 @@ if data is grouped add total column to the grouped data</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">app_nested_freq</span><span class="op">(</span><span class="va">column</span>, nested_var <span class="op">=</span> <span class="st">"NONE"</span>, <span class="va">group</span>, <span class="va">data</span>, <span class="va">totals</span>, <span class="va">sort</span><span class="op">)</span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">app_nested_freq</span><span class="op">(</span>
+  <span class="va">column</span>,
+  nested_var <span class="op">=</span> <span class="st">"NONE"</span>,
+  <span class="va">group</span>,
+  <span class="va">data</span>,
+  <span class="va">totals</span>,
+  sort <span class="op">=</span> <span class="st">"desc_tot"</span>
+<span class="op">)</span>
 
 <span class="co"># S3 method for default</span>
-<span class="fu">app_nested_freq</span><span class="op">(</span><span class="va">column</span>, nested_var <span class="op">=</span> <span class="st">"NONE"</span>, group <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">data</span>, <span class="va">totals</span>, <span class="va">sort</span><span class="op">)</span>
+<span class="fu">app_nested_freq</span><span class="op">(</span>
+  <span class="va">column</span>,
+  nested_var <span class="op">=</span> <span class="st">"NONE"</span>,
+  group <span class="op">=</span> <span class="cn">NULL</span>,
+  <span class="va">data</span>,
+  <span class="va">totals</span>,
+  sort <span class="op">=</span> <span class="st">"desc_tot"</span>
+<span class="op">)</span>
 
 <span class="co"># S3 method for BDS</span>
-<span class="fu">app_nested_freq</span><span class="op">(</span><span class="va">column</span>, nested_var <span class="op">=</span> <span class="st">"NONE"</span>, group <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">data</span>, <span class="va">totals</span>, <span class="va">sort</span><span class="op">)</span>
+<span class="fu">app_nested_freq</span><span class="op">(</span>
+  <span class="va">column</span>,
+  nested_var <span class="op">=</span> <span class="st">"NONE"</span>,
+  group <span class="op">=</span> <span class="cn">NULL</span>,
+  <span class="va">data</span>,
+  <span class="va">totals</span>,
+  sort <span class="op">=</span> <span class="st">"desc_tot"</span>
+<span class="op">)</span>
 
 <span class="co"># S3 method for custom</span>
-<span class="fu">app_nested_freq</span><span class="op">(</span><span class="va">column</span>, nested_var <span class="op">=</span> <span class="st">"NONE"</span>, <span class="va">group</span>, <span class="va">data</span>, <span class="va">totals</span>, <span class="va">sort</span><span class="op">)</span></code></pre></div>
+<span class="fu">app_nested_freq</span><span class="op">(</span>
+  <span class="va">column</span>,
+  nested_var <span class="op">=</span> <span class="st">"NONE"</span>,
+  <span class="va">group</span>,
+  <span class="va">data</span>,
+  <span class="va">totals</span>,
+  sort <span class="op">=</span> <span class="st">"desc_tot"</span>
+<span class="op">)</span></code></pre></div>
     </div>
 
     <div id="arguments">
