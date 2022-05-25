@@ -1,6 +1,6 @@
 Package: tidyCDISC
 Title: tidyCDISC: Quick Exploratory Data Analyses on ADaM-ish Datasets
-Version: 0.0.3.9000
+Version: 0.0.4
 Authors@R: as.person(c( 
     "Aaron Clark <aaron.clark@biogen.com> [aut, cre]",
     "Maya Gans <maya.gans@biogen.com> [aut]",
@@ -13,29 +13,20 @@ Imports:
     config,
     golem,
     shiny,
-    processx,
     DT,
     glue,
     htmltools,
     shinyjs,
     tippy (>= 1.0.0),
-    rvest,
     haven,
     shinyWidgets,
     plotly,
     RColorBrewer,
-    gridExtra,
-    grid,
-    janitor,
-    shinythemes,
     rmarkdown,
-    waiter,
     timevis,
     sjlabelled,
     data.table,
     gt,
-    shinyBS,
-    knitr,
     rlang,
     stringi,
     ggplot2,
@@ -49,12 +40,11 @@ Imports:
     cicerone,
     tidyselect,
     broom,
-    pkgload,
     GGally,
     survival,
-    rsconnect (>= 0.8.16.9001),
     ggcorrplot,
-    IDEAFilter (>= 0.1.0.9000)
+    IDEAFilter (>= 0.1.0.9000),
+    knitr
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.2
@@ -66,7 +56,6 @@ Suggests:
     scales
 Remotes: 
     JohnCoene/tippy,
-    rstudio/rsconnect,
     Biogen-Inc/IDEAFilter
 Depends: 
     R (>= 2.10)

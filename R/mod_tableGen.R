@@ -4,6 +4,7 @@
 #' Internal parameters for {shiny}
 #' @param datafile all uploaded data files 
 #' from the dataImport module
+#' @param filePaths NULL
 #' 
 #' @import IDEAFilter
 #' @importFrom rlang sym
@@ -333,13 +334,6 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # ----------------------------------------------------------------------
   
   
-  # tell Shiny which dataframe to use when mapping through list of tables
-  # to render
-  data_to_use_str <- function(x) {
-    if (x == "ADAE") { ae_data() }
-    else all_data()
-  }
-  
   # convert the custom shiny input to a table output
   blocks_and_functions <- reactive({
     # create initial dataset
@@ -347,10 +341,10 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     
     blockData$label <- 
       purrr::map2(blockData$block, blockData$dataset, function(var, dat) {
-        if(!is.null(attr(data_to_use_str(dat)[[var]], 'label'))){
-          attr(data_to_use_str(dat)[[var]], 'label')
-        } else if(all(c("PARAM","PARAMCD") %in% colnames(data_to_use_str(dat)))){
-          data_to_use_str(dat) %>%
+        if(!is.null(attr(data_to_use_str(dat, ae_data(), all_data())[[var]], 'label'))){
+          attr(data_to_use_str(dat, ae_data(), all_data())[[var]], 'label')
+        } else if(all(c("PARAM","PARAMCD") %in% colnames(data_to_use_str(dat, ae_data(), all_data())))){
+          data_to_use_str(dat, ae_data(), all_data()) %>%
             filter(PARAMCD == var) %>%
             distinct(PARAM) %>%
             pull() %>% as.character()
@@ -361,9 +355,9 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     
     blockData$label_source <- 
       purrr::map2(blockData$block, blockData$dataset, function(var, dat) {
-        if(!is.null(attr(data_to_use_str(dat)[[var]], 'label'))){
+        if(!is.null(attr(data_to_use_str(dat, ae_data(), all_data())[[var]], 'label'))){
           'SAS "label" attribute'
-        } else if("PARAMCD" %in% colnames(data_to_use_str(dat))){
+        } else if("PARAMCD" %in% colnames(data_to_use_str(dat, ae_data(), all_data()))){
           'PARAM'
         } else {
           'No Label'
@@ -485,7 +479,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
                  function(x,y,z,d) 
                    app_methods(x,y,z, 
                                 group = column(), 
-                                data  = data_to_use_str(d),
+                                data  = data_to_use_str(d, ae_data(), all_data()),
                                 totals = total_df())) %>%
     purrr::map(setNames, common_rownames(use_preferred_pop_data(), column())) %>%
     setNames(paste(blocks_and_functions()$gt_group)) %>%
@@ -827,7 +821,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
                   blockData$dataset), 
           function(x,y,z,d) tidyCDISC::app_methods(x,y,z,
                        group = {column() %quote% 'NULL'}, 
-                       data = tidyCDISC::data_to_use_str(d),
+                       data = tidyCDISC::data_to_use_str(d, ae_data, bds_data),
                        totals = total_df)) %>%
       map(setNames, tidyCDISC::common_rownames({Rscript_use_preferred_pop_data()}, {column() %quote% 'NULL'})) %>%
       setNames(paste(blockData$gt_group)) %>%
@@ -881,7 +875,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
               blockData$dataset), 
           function(x,y,z,d) tidyCDISC::app_methods(x,y,z, 
                        group = {column() %quote% 'NULL'}, 
-                       data = tidyCDISC::data_to_use_str(d),
+                       data = tidyCDISC::data_to_use_str(d, ae_data, bds_data),
                        totals = total_df)) %>%
       map(setNames, tidyCDISC::common_rownames({Rscript_use_preferred_pop_data()}, {column() %quote% 'NULL'})) %>%
       setNames(paste(blockData$gt_group)) %>%

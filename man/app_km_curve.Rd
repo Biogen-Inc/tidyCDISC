@@ -19,7 +19,11 @@ app_km_curve(
 
 \item{yvar}{Selected xy-axis}
 
-\item{group}{namne of grouping variable (categorical or factor)}
+\item{resp_var}{character, the response variable (paramcd)}
+
+\item{cnsr_var}{character, the censor variable. Usually CNSR}
+
+\item{group}{character, variable namne of grouping variable (categorical or factor)}
 
 \item{points}{logical, whether to plot + symbols when patients censored}
 

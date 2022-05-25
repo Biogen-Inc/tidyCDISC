@@ -19,33 +19,34 @@
 # usethis::use_package("DT") # already added as a recommended package
 # usethis::use_package("glue") # already added as a recommended package
 usethis::use_package("shinyjs")
-usethis::use_package("rvest")
+# usethis::use_package("rvest")
 usethis::use_package("haven")
 usethis::use_package("shinyWidgets")
 usethis::use_package("plotly") 
 usethis::use_package("RColorBrewer")
-usethis::use_package("gridExtra")
-usethis::use_package("grid")
-usethis::use_package("janitor")
-usethis::use_package("shinythemes")
+# usethis::use_package("gridExtra")
+# usethis::use_package("grid")
+# usethis::use_package("janitor")
+# usethis::use_package("shinythemes")
 usethis::use_package("rmarkdown")
 # usethis::use_package("shinytest")
-usethis::use_package("waiter")
+# usethis::use_package("waiter")
 usethis::use_package("timevis")
 usethis::use_package("sjlabelled") 
 usethis::use_package("data.table")
 usethis::use_package("gt")
-usethis::use_package("shinyBS")
+# usethis::use_package("shinyBS")
 usethis::use_package("knitr")
 usethis::use_package("rlang")
 usethis::use_package("stringi")
-usethis::use_dev_package("tippy") #remotes::install_github("JohnCoene/tippy")
+
+usethis::use_dev_package("tippy") #remotes::install_github("JohnCoene/tippy") #‘1.0.0’
 
 
-# usethis::use_package("IDEAFilter") # install.packages("IDEAFilter")
+# usethis::use_package("IDEAFilter") # install.packages("IDEAFilter") #‘0.1.0.9000’
 usethis::use_dev_package("IDEAFilter") # devtools::install_github("Biogen-Inc/IDEAFilter")
 
-usethis::use_dev_package("rsconnect") 
+# usethis::use_dev_package("rsconnect") 
 usethis::use_package("ggplot2")
 usethis::use_package("dplyr")
 usethis::use_package("stringr")
@@ -170,7 +171,7 @@ usethis::use_vignette("dev03_Indv_Expl")
 # devtools::build_vignettes() # don't use, instead use...
 
 # Before submitting a PR, run this code & update NEWS.md
-usethis::use_version("dev") #choices: "dev", "patch", "minor", "major"
+usethis::use_version("patch") #choices: "dev", "patch", "minor", "major"
 
 # Build pkg, including vignettes. Do this before updating documentation.
 devtools::build()
