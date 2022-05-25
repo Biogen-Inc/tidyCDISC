@@ -17,7 +17,19 @@ prep_sas_table(
 )
 }
 \arguments{
-\item{sas_data}{the sas table dataframe, output from stat programmer}
+\item{sas_data}{the SAS table data.frame, output from stat programmer}
+
+\item{block_names}{default names to check in each table that represent a
+'var block', case sensitive}
+
+\item{block_ord_names}{default names to check in each table that represent 
+'the order of a var block', case sensitive}
+
+\item{stat_names}{default names to check in each table that represent a
+'stat block', case sensitive}
+
+\item{stat_ord_names}{default names to check in each table that represent 
+'the order of a stat block', case sensitive}
 
 \item{tg_data}{the table generator table dataframe, output from tidyCDISC}
 
@@ -31,10 +43,6 @@ the table}
 
 \item{rm_desc_col}{a logical; should the description column be removed from
 the table (since they never match between base and compare)}
-
-\item{chk_block_names}{case sensitive}
-
-\item{chk_stat_names}{case sensitive}
 }
 \description{
 Organize SAS into a format for comparing

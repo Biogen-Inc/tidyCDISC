@@ -1,10 +1,12 @@
 #' Function to read the SAS list of user supplied data frames
-#' 
-#' @param datalist list of CDISC dataframes 
-#' 
+#'
+#' @param study_directory character, containing file path to CDISC data.frames
+#'   of interest
+#' @param file_names list of CDISC data.frames
+#'
 #' @export
 #' @keywords tabGen_repro
-#' 
+#'   
 readData <- function(study_directory, file_names) {
   purrr::map(file_names, ~haven::read_sas(file.path(study_directory,.x))) %>%
     setNames(toupper(stringr::str_remove(file_names, ".sas7bdat")))
@@ -59,7 +61,7 @@ numeric_stan_table <- function(input_recipe){
 
 #' Function to pre-filter the ADSL depending on the stan table selected
 #' 
-#' @param data an ADSL
+#' @param ADSL an ADSL data.frame
 #' @param input_recipe The shiny input that keeps track of the recipe selected
 #' 
 #' @export
@@ -131,7 +133,7 @@ cleanADAE <- function(datafile, ADSL) {
 #' Function to pre-filter the ADAE depending on the stan table selected
 #' 
 #' @param datafile list of ADaM-ish dataframes 
-#' @param data an ADSL
+#' @param ADSL an ADSL data.frame
 #' @param input_recipe The shiny input that keeps track of the recipe selected
 #' 
 #' @export
@@ -319,9 +321,10 @@ check_params <- function(datafile, param_vector) {
 #' The smallest possible data set we could filter to semi-join later
 #' 
 #' @param datafile list of ADaM-ish dataframes 
+#' @param input_filter_df The name of a dataset stored in `datafile`
 #' 
 #' @export
-#' @noRd
+#' @keywords tabGen_repro
 #' 
 data_to_filter <- function(datafile, input_filter_df) {
   select_dfs <- datafile[input_filter_df]
@@ -354,12 +357,14 @@ data_to_filter <- function(datafile, input_filter_df) {
 
 #' Function to clean and combine ADAE dataset with ADSL
 #' 
-#' @param datafile list of ADaM-ish dataframes 
+#' @param x string, naming a data.frame.
+#' @param ae_data data.frame, of the AE variety
+#' @param bds_data data.frame, of the BDS variety
 #' 
 #' @export
 #' @keywords tabGen_repro
 #' 
-data_to_use_str <- function(x) {
+data_to_use_str <- function(x, ae_data, bds_data) {
   if (x == "ADAE") { ae_data }
   else bds_data
 }

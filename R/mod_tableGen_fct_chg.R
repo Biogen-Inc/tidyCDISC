@@ -56,6 +56,10 @@ app_chg.ADSL <- function(column, week, group = NULL, data) {
 #' @family tableGen Functions
 
 app_chg.BDS <- function(column, week, group = NULL, data) {
+  # column = "DIABP"
+  # week = "NONE"
+  # group = "SEX"
+  # data = tg_data
   
   column <- as.character(column)
   

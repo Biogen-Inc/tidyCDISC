@@ -25,6 +25,7 @@ app_y <- function(column, group, data, totals) {
 #' if data is grouped add total column to the grouped data
 #' 
 #' @importFrom rlang sym !!
+#' @importFrom tidyr pivot_wider
 #' @import dplyr
 #' 
 #' @return frequency table of ADSL column
@@ -62,7 +63,7 @@ app_y.default <- app_y.OCCDS <- app_y.ADAE <- app_y.ADSL <- function(column, gro
       summarize(n = n_distinct(USUBJID)) 
     ) %>%
     mutate(n = tidyr::replace_na(n, 0),
-           n_tot = totals[nrow(totals),"n_tot"],
+           n_tot = as.integer(totals[nrow(totals),"n_tot"]),
            prop = n / n_tot,
            x = paste0(n, ' (', sprintf("%.1f", round(prop*100, 1)), ')')
     )  %>%
@@ -112,7 +113,7 @@ app_y.default <- app_y.OCCDS <- app_y.ADAE <- app_y.ADSL <- function(column, gro
              v = paste0(n, ' (', sprintf("%.1f", round(prop*100, 1)), ')')
       ) %>%
       select(-n, -prop, -n_tot) %>%
-      pivot_wider(!!column, names_from = !!group, values_from = v)
+      tidyr::pivot_wider(!!column, names_from = !!group, values_from = v)
     
     cbind(groups, total$x) # combine w/ Total
   }

@@ -1,8 +1,6 @@
 #' GT Column Names
 #' 
-#' @param dat data
 #' @param nm name
-#' @param x columns
 #' 
 #' create the labels for each column using the total function
 #' so the columns are now NAME N= X
@@ -114,6 +112,29 @@ common_rownames <- function(data, group) {
   }
   return(vars)
 }
+
+# #' Figure out which reactive data.frame to use
+# #'
+# #' @param d a string, naming a data.frame
+# #' @param ae an AE reactive data frame
+# #' @param alt an alternative reactive data frame
+# #' @noRd
+# #'
+# data_to_use_str <- function(d, ae, alt) {
+#   if (dat == "ADAE") { ae }
+#   else alt
+# }
+
+# #' Figure out which reactive data.frame to use
+# #'
+# #' @param x a string, naming a data.frame. Either
+# #' @noRd
+# "data_to_use_str"
+# # function included in mod_tableGen... not here.
+# # data_to_use_str <- function(x) {
+# #   if (x == "ADAE") ae_data() else all_data()
+# # }
+
 
 
 #' Convert actions performed on from an IDEAFilter output dataframe into text
