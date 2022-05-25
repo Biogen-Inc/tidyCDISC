@@ -39,10 +39,11 @@ usethis::use_package("gt")
 usethis::use_package("knitr")
 usethis::use_package("rlang")
 usethis::use_package("stringi")
-usethis::use_dev_package("tippy") #remotes::install_github("JohnCoene/tippy")
+
+usethis::use_dev_package("tippy") #remotes::install_github("JohnCoene/tippy") #‘1.0.0’
 
 
-# usethis::use_package("IDEAFilter") # install.packages("IDEAFilter")
+# usethis::use_package("IDEAFilter") # install.packages("IDEAFilter") #‘0.1.0.9000’
 usethis::use_dev_package("IDEAFilter") # devtools::install_github("Biogen-Inc/IDEAFilter")
 
 # usethis::use_dev_package("rsconnect") 
