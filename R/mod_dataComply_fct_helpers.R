@@ -289,7 +289,7 @@ gather_reqs <- function(input, output, session,
 
     
     if(disp_type == "warn") {
-      tab <- tab %>% cols_hide(vars(not_exist_disp))
+      tab <- tab %>% cols_hide(columns = c(not_exist_disp))
     }
   }
   

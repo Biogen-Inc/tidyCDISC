@@ -7,7 +7,10 @@
 readData(study_directory, file_names)
 }
 \arguments{
-\item{datalist}{list of CDISC dataframes}
+\item{study_directory}{character, containing file path to CDISC data.frames
+of interest}
+
+\item{file_names}{list of CDISC data.frames}
 }
 \description{
 Function to read the SAS list of user supplied data frames

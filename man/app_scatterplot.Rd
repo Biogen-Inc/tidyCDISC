@@ -33,9 +33,9 @@ either AVAL, CHG, or BASE}
 \item{value_y}{Selected y-axis value if \code{yvar} is a PARAMCD: 
 either AVAL, CHG, or BASE}
 
-\item{separate}{whether to facet plots by categorical or factor}
+\item{separate}{character, categorical or factor variable to facet plots by. Default is 'NONE'.}
 
-\item{color}{whether to color plots by categorical or factor}
+\item{color}{character, categorical or factor variable to COLOR points by. Default is 'NONE'.}
 }
 \description{
 Create scatter plot where if the variables are numeric then they

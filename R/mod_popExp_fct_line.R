@@ -1,20 +1,41 @@
 #' tidyCDISC line plot
-#' 
-#' Create a line plot with a time variable as the x-axis
-#' and using either the selected response variable
-#' or if a PARAMCD is selected, then plot the corresponding value
-#' to calculate the means. Lines are plotted by patient
-#' 
+#'
+#' Create a line plot with a time variable as the x-axis and using either the
+#' selected response variable or if a PARAMCD is selected, then plot the
+#' corresponding value to calculate the means. Lines are plotted by patient
+#'
 #' @param data Merged data to be used in plot
-#' @param yvar Selected y-axis 
+#' @param yvar Selected y-axis
 #' @param time Selected x-axis constained to time dependent columns
-#' @param value If yvar is a PARAMCD then the user must select 
-#' AVAL, CHG, or BASE to be plotted on the y-axis
-#' 
+#' @param value If yvar is a PARAMCD then the user must select AVAL, CHG, or
+#'   BASE to be plotted on the y-axis
+#' @param separate character, categorical or factor variable to facet plots by.
+#'   Default is 'NONE'.
+#' @param color character, categorical or factor variable to COLOR points by.
+#'   Default is 'NONE'.
+#' @param err_bars logical, defaults to FALSE. Whether or not to include error
+#'   bars.
+#' @param label_points logical, defaults to FALSE. Whether or not to include
+#'   labels on data points.
+#' @param gtxt_x_pos if `label_points` == TRUE, then supply a character string
+#'   of ("left", "middle", "right") that determines where to place the data
+#'   labels relative to the data point
+#' @param gtxt_y_pos if `label_points` == TRUE, then supply a character string
+#'   of ("bottom", "middle", "top") that determines where to place the data
+#'   labels relative to the data point
+#' @param add_vert logical, with no default, determines if a vertical reference
+#'   line should be added
+#' @param vert_x_int if `add_vert` == TRUE, then supply an dbl that exists on
+#'   the plot's x-axis to plot the vertical line
+#' @param add_hor logical, with no default, determines if a horizontal reference
+#'   line should be added
+#' @param hor_y_int if `add_hor` == TRUE, then supply an dbl that exists on the
+#'   plot's y-axis to plot the vertical reference line
+#'
 #' @family popExp Functions
 #' @export
 #' @keywords popEx
-#' 
+#'   
 app_lineplot <- function(data, yvar, time, value = NULL, separate = "NONE", color = "NONE",
    err_bars = FALSE, label_points = FALSE, gtxt_x_pos = "middle", gtxt_y_pos = "top",
    add_vert, vert_x_int, add_hor, hor_y_int) {
