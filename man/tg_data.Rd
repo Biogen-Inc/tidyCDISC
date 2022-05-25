@@ -13,4 +13,4 @@ tg_data
 \description{
 Used to generate output for unit tests and compared to sas outputs
 }
-\keyword{datasets}
+\keyword{internal}
