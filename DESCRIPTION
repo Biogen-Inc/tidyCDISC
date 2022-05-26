@@ -2,7 +2,7 @@ Package: tidyCDISC
 Title: tidyCDISC: Quick Exploratory Data Analyses on ADaM-ish Datasets
 Version: 0.0.4
 Authors@R: as.person(c( 
-    "Aaron Clark <aaron.clark@biogen.com> [aut, cre]",
+    "Aaron Clark <clark.aaronchris@gmail.com> [aut, cre]",
     "Maya Gans <maya.gans@biogen.com> [aut]",
     "Robert Krajcik <robert.krajcik@biogen.com> [aut]",
     "Marly Gotti <marly.cormar@biogen.com> [aut]"
