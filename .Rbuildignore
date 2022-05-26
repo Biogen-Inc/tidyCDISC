@@ -13,3 +13,4 @@ $run_dev.*
 ^docs$
 ^pkgdown$
 ^\.github$
+cran-comments.md
