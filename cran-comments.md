@@ -1,4 +1,6 @@
 ## R CMD check results
+This is the first submission of {tidyCDISC}.
+
 There were no ERRORs or WARNINGs, passing on macOS-latest (release), windows-latest (release), ubuntu-latest (devel / release / oldrel-1) using GitHub Actions [here](https://github.com/Biogen-Inc/tidyCDISC/pull/78).
 
 There were 4 NOTEs:
