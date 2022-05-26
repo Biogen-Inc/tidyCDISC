@@ -1,3 +1,5 @@
+^renv$
+^renv\.lock$
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^data-raw$
@@ -13,3 +15,7 @@ $run_dev.*
 ^docs$
 ^pkgdown$
 ^\.github$
+^\.Rprofile$
+^\.lintr$
+^public$
+^recording\.log$

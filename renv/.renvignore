@@ -1,0 +1,11 @@
+.Rhistory
+.RData
+.Rproj.user
+.Renviron
+inst/doc
+rsconnect/
+docs/
+man/
+data/
+.github/
+dev/

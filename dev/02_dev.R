@@ -205,11 +205,40 @@ devtools::check_win_oldrelease()
 devtools::check_win_devel()
 
 
-## Code coverage ---- not run
-## (You'll need GitHub there)
-# usethis::use_github() # don't need to do this. AC manually created a remote origin in terminal and pushed to github.
-usethis::use_travis()
-usethis::use_appveyor()
+###########
+# start using {renv} as a pre-cursor to using shinyValidator
+###########
+# DaVinci renv
+# install.packages("renv")
+library(renv)
+
+# SCAN the project and look for dependencies
+renv::init()
+
+# install missing packages
+# renv::install("<package name>")
+
+# Capture new dependencies after package installation
+renv::snapshot()
+
+###########
+# shinyValidator setup
+###########
+devtools::install_github("Novartis/shinyValidator")
+library(shinyValidator)
+## At the root of your R package
+use_validator("github")
+devtools::document() # update help
+renv::snapshot()
+
+
+
+############
+# ## Code coverage ---- not run
+# ## (You'll need GitHub there)
+# # usethis::use_github() # don't need to do this. AC manually created a remote origin in terminal and pushed to github.
+# usethis::use_travis()
+# usethis::use_appveyor()
 
 # You're now set! ---- not run
 # go to dev/03_deploy.R

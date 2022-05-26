@@ -47,13 +47,18 @@ Imports:
     knitr
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.0
 URL: https://Biogen-Inc.github.io/tidyCDISC/
 BugReports: https://github.com/Biogen-Inc/tidyCDISC/issues
 Suggests: 
     testthat,
     lazyeval,
-    scales
+    scales,
+    shinyValidator,
+    pkgload,
+    lubridate,
+    vdiffr,
+    withr
 Remotes: 
     JohnCoene/tippy,
     Biogen-Inc/IDEAFilter
