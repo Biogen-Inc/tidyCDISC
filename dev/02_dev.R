@@ -204,6 +204,10 @@ devtools::check_win_release() #ran
 devtools::check_win_oldrelease()
 devtools::check_win_devel()
 
+# check for downstream dependencies
+devtools::revdep_check()
+# install.packages("revdepcheck")
+
 
 ## Code coverage ---- not run
 ## (You'll need GitHub there)
