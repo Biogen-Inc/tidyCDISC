@@ -205,8 +205,10 @@ devtools::check_win_oldrelease()
 devtools::check_win_devel()
 
 # check for downstream dependencies
-devtools::revdep_check()
-# install.packages("revdepcheck")
+usethis::use_revdep()
+# devtools::revdep_check() # doesn't exist anymore?
+# install.packages("revdepcheck") # doesn't exist for my version of R
+revdepcheck::revdep_check(num_workers = 4)
 
 
 ## Code coverage ---- not run
