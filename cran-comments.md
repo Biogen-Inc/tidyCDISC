@@ -1,7 +1,7 @@
 ## R CMD check results
-There were no ERRORs or WARNINGs, passing on macOS-latest (release), windows-latest (release), ubuntu-latest (devel / release / oldrel-1).
+There were no ERRORs or WARNINGs, passing on macOS-latest (release), windows-latest (release), ubuntu-latest (devel / release / oldrel-1) using GitHub Actions [here](https://github.com/Biogen-Inc/tidyCDISC/pull/78).
 
-There was 4 NOTEs:
+There were 4 NOTEs:
 
 * checking package dependencies ... NOTE
 
@@ -27,7 +27,13 @@ There was 4 NOTEs:
   
 * checking R code for possible problems ... NOTE
   
-  fnIndvExplVisits: no visible binding for '<<-' assignment to ‘avals_by’
+  fnIndvExplVisits: no visible binding for '<<-' assignment to 'avals_by'
+  
+  (D:/a/tidyCDISC/tidyCDISC/check/tidyCDISC.Rcheck/00_pkg_src/tidyCDISC/R/mod_indvExpPatVisits_fct_plot.R:113)
+  
+  fnIndvExplVisits: no visible binding for '<<-' assignment to 'avals_by'
+  
+  (D:/a/tidyCDISC/tidyCDISC/check/tidyCDISC.Rcheck/00_pkg_src/tidyCDISC/R/mod_indvExpPatVisits_fct_plot.R:153)
     
 ## Downstream dependencies
 There are currently no downstream dependencies for this package
