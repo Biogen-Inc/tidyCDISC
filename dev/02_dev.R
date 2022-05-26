@@ -208,8 +208,12 @@ devtools::check_win_devel()
 usethis::use_revdep()
 # devtools::revdep_check() # doesn't exist anymore?
 # install.packages("revdepcheck") # doesn't exist for my version of R
-revdepcheck::revdep_check(num_workers = 4)
+# revdepcheck::revdep_check(num_workers = 4)
 
+# When ready, submit to CRAN for the first time
+devtools::release()
+# Re-submit:
+# devtools::submit_cran()
 
 ## Code coverage ---- not run
 ## (You'll need GitHub there)
