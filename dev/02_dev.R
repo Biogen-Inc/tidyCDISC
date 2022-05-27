@@ -168,15 +168,17 @@ usethis::use_vignette("announcing-tidycdisc-0-0-1-1")
 usethis::use_vignette("dev01_Table_Gen")
 usethis::use_vignette("dev02_Pop_Exp")
 usethis::use_vignette("dev03_Indv_Expl")
-# devtools::build_vignettes() # don't use, instead use...
+
 
 # Before submitting a PR, run this code & update NEWS.md
 usethis::use_version("patch") #choices: "dev", "patch", "minor", "major"
 
 # Build pkg, including vignettes. Do this before updating documentation.
-devtools::build()
-pkgbuild::build()
-pkgbuild::build(vignettes = FALSE) # don't build vignettes
+devtools::build() # calls pkgbuld::build()
+# devtools::build(args = "--no-build-vignettes") # test arg
+# pkgbuild::build() 
+# pkgbuild::build(vignettes = FALSE) # don't build vignettes to save time on buil
+
 
 # update pkgdown site only if user needs refreshed documentation
 # usethis::use_pkgdown() # Run once to configure your package to use pkgdown
@@ -214,16 +216,28 @@ usethis::use_revdep()
 # install.packages("revdepcheck") # doesn't exist for my version of R
 # revdepcheck::revdep_check(num_workers = 4)
 
+
+# Since this package has a ton of large vignettes, we're use the below function
+# to build the vignettes in the doc/ (not docs/) folder. plus a vignette index
+# is created in Meta/vignette.rds. Both doc/ and Meta/ are added to the
+# .rbuildignore. These files can be checked into version control, so they can be
+# viewed with browseVignettes() and vignette() if the package has been loaded
+# with load_all() without needing to re-build them locally. Then, below in
+# release(), we can pass an argument "--no-vignettes" to not build the vignettes,
+# saving the CRAN machines processing time.
+# devtools::build_vignettes() # naw, don't use, instead just give them the pkgdown site
+
+
 # When ready, submit to CRAN for the first time
-devtools::release()
+devtools::release(args = "--no-build-vignettes")
 # Re-submit:
 # devtools::submit_cran()
 
-## Code coverage ---- not run
-## (You'll need GitHub there)
-# usethis::use_github() # don't need to do this. AC manually created a remote origin in terminal and pushed to github.
-usethis::use_travis()
-usethis::use_appveyor()
+# ## Code coverage ---- not run
+# ## (You'll need GitHub there)
+# # usethis::use_github() # don't need to do this. AC manually created a remote origin in terminal and pushed to github.
+# usethis::use_travis()
+# usethis::use_appveyor()
 
 # You're now set! ---- not run
 # go to dev/03_deploy.R
