@@ -1,5 +1,5 @@
 ## Submission
-This is the first ever CRAN submission of `tidyCDISC`.
+This is the first ever CRAN submission of `tidyCDISC`: a large, multifaceted application designed to perform many pharma-industry tasks. Many tasks require much documentation (vignettes). As such, the 11 developer and user vignettes takes up ~3 minutes of compute time during the build.
 
 ## R CMD check results
 There were no ERRORs or WARNINGs, passing on macOS-latest (release), windows-latest (release), ubuntu-latest (devel / release / oldrel-1) using GitHub Actions [here](https://github.com/Biogen-Inc/tidyCDISC/pull/78).

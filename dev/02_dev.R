@@ -36,7 +36,7 @@ usethis::use_package("sjlabelled")
 usethis::use_package("data.table")
 usethis::use_package("gt")
 # usethis::use_package("shinyBS")
-usethis::use_package("knitr")
+usethis::use_package("knitr", type = "Suggests")
 usethis::use_package("rlang")
 usethis::use_package("stringi")
 
@@ -175,11 +175,14 @@ usethis::use_version("patch") #choices: "dev", "patch", "minor", "major"
 
 # Build pkg, including vignettes. Do this before updating documentation.
 devtools::build()
+pkgbuild::build()
+pkgbuild::build(vignettes = FALSE) # don't build vignettes
 
 # update pkgdown site only if user needs refreshed documentation
 # usethis::use_pkgdown() # Run once to configure your package to use pkgdown
 pkgdown::build_articles(pkg = ".")
 pkgdown::build_articles_index()
+pkgdown::build_home()
 pkgdown::build_reference_index(pkg = rprojroot::is_r_package$find_file())
 pkgdown::build_site(pkg = rprojroot::is_r_package$find_file()) # Run to build the website
 pkgdown::build_news()
@@ -202,7 +205,8 @@ usethis::use_github_action_check_standard()
 # ?devtools::check_win_release
 devtools::check_win_release() #ran
 devtools::check_win_oldrelease()
-devtools::check_win_devel()
+devtools::check_win_devel() #ran but errored before sending:
+  # Error in curl::curl_fetch_memory(url, handle = h) : Access denied: 403
 
 # check for downstream dependencies
 usethis::use_revdep()
