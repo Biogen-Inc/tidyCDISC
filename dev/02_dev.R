@@ -203,21 +203,83 @@ usethis::use_github_action_check_standard()
 # # Add action for PR
 # usethis::use_github_action_pr_commands()
 
-# run R CMD check on CRAN’s servers
-# ?devtools::check_win_release
-devtools::check_win_release() #ran
-devtools::check_win_oldrelease()
-devtools::check_win_devel() #ran but errored before sending:
-  # Error in curl::curl_fetch_memory(url, handle = h) : Access denied: 403
+# # run R CMD check on CRAN’s servers
+# # ?devtools::check_win_release
+# devtools::check_win_release() #ran
+# devtools::check_win_oldrelease()
+# devtools::check_win_devel() #ran but errored before sending:
+#   # Error in curl::curl_fetch_memory(url, handle = h) : Access denied: 403
 
 # check for downstream dependencies
 usethis::use_revdep()
 # devtools::revdep_check() # doesn't exist anymore?
 # install.packages("revdepcheck") # doesn't exist for my version of R
 # revdepcheck::revdep_check(num_workers = 4)
+# Prepare for CRAN ----
 
-# usethis::use_spell_check() # run once to initiate wordlist file
-devtools::spell_check()
+############### Thinkr's Prepare for Cran checklist ###################
+# https://github.com/ThinkR-open/prepare-for-cran
+
+# Update dependencies in DESCRIPTION
+# install.packages("attachment")
+attachment::att_amend_desc()
+
+# # Run tests and examples (usually done with check)
+# devtools::test()
+# devtools::run_examples()
+# # autotest::autotest_package(test = TRUE)
+
+# Check package as CRAN
+rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran"))
+
+# Check content
+# remotes::install_github("ThinkR-open/checkhelper")
+checkhelper::find_missing_tags()
+
+# Check spelling
+# usethis::use_spell_check()
+spelling::spell_check_package()
+
+# Check URL are correct
+# remotes::install_github("r-lib/urlchecker")
+urlchecker::url_check()
+urlchecker::url_update()
+
+# check on other distributions
+# _rhub
+devtools::check_rhub()
+rhub::check_on_windows(check_args = "--force-multiarch")
+rhub::check_on_solaris()
+# _win devel
+devtools::check_win_devel()
+
+# Check reverse dependencies
+# remotes::install_github("r-lib/revdepcheck")
+usethis::use_git_ignore("revdep/")
+usethis::use_build_ignore("revdep/")
+
+devtools::revdep()
+library(revdepcheck)
+# In another session
+id <- rstudioapi::terminalExecute("Rscript -e 'revdepcheck::revdep_check(num_workers = 4)'")
+rstudioapi::terminalKill(id)
+# See outputs
+revdep_details(revdep = "pkg")
+revdep_summary()                 # table of results by package
+revdep_report() # in revdep/
+# Clean up when on CRAN
+revdep_reset()
+
+# Update NEWS
+# Bump version manually and add list of changes
+
+# Add comments for CRAN
+usethis::use_cran_comments(open = rlang::is_interactive())
+
+# Upgrade version number
+usethis::use_version(which = c("patch", "minor", "major", "dev")[1])
+
+########## end thinkr's checklist #########
 
 # Since this package has a ton of large vignettes, we're use the below function
 # to build the vignettes in the doc/ (not docs/) folder. plus a vignette index
