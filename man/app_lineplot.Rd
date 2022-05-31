@@ -26,7 +26,7 @@ app_lineplot(
 
 \item{yvar}{Selected y-axis}
 
-\item{time}{Selected x-axis constained to time dependent columns}
+\item{time}{Selected x-axis constrained to time dependent columns}
 
 \item{value}{If yvar is a PARAMCD then the user must select AVAL, CHG, or
 BASE to be plotted on the y-axis}

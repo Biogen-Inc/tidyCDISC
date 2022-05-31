@@ -28,7 +28,7 @@ app_max_freq <- function(column, group, data, totals) {
 #' @return frequency table of ADSL column
 #' @rdname app_max_freq
 #' 
-#' @family tableGen Functionss
+#' @family tableGen Functions
 
 app_max_freq.default <- app_max_freq.OCCDS <- app_max_freq.ADAE <- app_max_freq.ADSL <- 
   function(column, group = NULL, data, totals) {

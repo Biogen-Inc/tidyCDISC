@@ -28,7 +28,7 @@ app_heatmap(
 "BASE"}
 
 \item{cor_mthd}{character string. Defaults to 'pearson' for calculating
-correlation co-efficients. See `?cor` for more supported test stats.}
+correlation coefficients. See `?cor` for more supported test stats.}
 
 \item{show_sig}{logical, whether or not to display p-values for significant
 tests statistics}

@@ -14,6 +14,6 @@ Data frame with 254 features and 51 fields
 adsl
 }
 \description{
-Subject Level Analysis Dataset from Phuse Test Data Fractory Project's github.
+Subject Level Analysis Data from PHUSE Test Data Factory Project's GitHub.
 }
 \keyword{datasets}

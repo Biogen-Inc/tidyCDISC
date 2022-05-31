@@ -29,7 +29,7 @@ app_non_missing <- function(column, group, data, totals) {
 #' @return frequency table of ADSL column
 #' @rdname app_non_missing
 #' 
-#' @family tableGen Functionss
+#' @family tableGen Functions
 app_non_missing.default <- app_non_missing.BDS <- app_non_missing.OCCDS <- app_non_missing.ADAE <- app_non_missing.ADSL <- 
   function(column, group = NULL, data, totals) {
   # # ########## ######### ######## #########

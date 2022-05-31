@@ -229,13 +229,13 @@ usethis::use_revdep()
 
 
 # When ready, submit to CRAN for the first time
-devtools::release(args = "--no-build-vignettes")
+devtools::release(check = FALSE, args = "--no-build-vignettes")
 # Re-submit:
 # devtools::submit_cran()
 
 # ## Code coverage ---- not run
 # ## (You'll need GitHub there)
-# # usethis::use_github() # don't need to do this. AC manually created a remote origin in terminal and pushed to github.
+# # usethis::use_github() # don't need to do this. AC manually created a remote origin in terminal and pushed to GitHub.
 # usethis::use_travis()
 # usethis::use_appveyor()
 

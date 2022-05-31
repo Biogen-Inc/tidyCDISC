@@ -23,7 +23,7 @@ app_km_curve(
 
 \item{cnsr_var}{character, the censor variable. Usually CNSR}
 
-\item{group}{character, variable namne of grouping variable (categorical or factor)}
+\item{group}{character, variable name of grouping variable (categorical or factor)}
 
 \item{points}{logical, whether to plot + symbols when patients censored}
 

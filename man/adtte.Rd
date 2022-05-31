@@ -14,6 +14,6 @@ Data frame with 32,740 features and 58 fields
 adtte
 }
 \description{
-Time to Event Analysis Dataset from Phuse Test Data Fractory Project's github.
+Time to Event Analysis Data from PHUSE Test Data Factory Project's GitHub.
 }
 \keyword{datasets}

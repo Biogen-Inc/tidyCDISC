@@ -1,7 +1,7 @@
 
 #' ADSL
 #'
-#' Subject Level Analysis Dataset from Phuse Test Data Fractory Project's github.
+#' Subject Level Analysis Data from PHUSE Test Data Factory Project's GitHub.
 #'
 #' @source <https://github.com/phuse-org/TestDataFactory/blob/master/Updated/TDF_ADaM/adsl.xpt>, downloaded 2020-06-17
 #' @format Data frame with 254 features and 51 fields
@@ -11,7 +11,7 @@
 
 #' ADLBC
 #'
-#' Laboratory Results Chemistry Analysis Dataset from Phuse Test Data Fractory Project's github.
+#' Laboratory Results Chemistry Analysis Data from PHUSE Test Data Factory Project's GitHub.
 #'
 #' @source <https://github.com/phuse-org/TestDataFactory/blob/master/Updated/TDF_ADaM/adlbc.xpt>, downloaded 2020-06-17
 #'
@@ -22,7 +22,7 @@
 
 #' ADVS
 #'
-#' Vital Signs Analysis Dataset from Phuse Test Data Fractory Project's github.
+#' Vital Signs Analysis Data from PHUSE Test Data Factory Project's GitHub.
 #'
 #' @source <https://github.com/phuse-org/TestDataFactory/blob/master/Updated/TDF_ADaM/advs.xpt>, downloaded 2020-06-17
 #'
@@ -33,7 +33,7 @@
 
 #' ADAE
 #'
-#' Adverse Events Analysis Dataset from Phuse Test Data Fractory Project's github.
+#' Adverse Events Analysis Data from PHUSE Test Data Factory Project's GitHub.
 #'
 #' @source <https://github.com/phuse-org/TestDataFactory/blob/master/Updated/TDF_ADaM/adae.xpt>, downloaded 2020-06-17
 #'
@@ -44,7 +44,7 @@
 
 #' ADTTE
 #'
-#' Time to Event Analysis Dataset from Phuse Test Data Fractory Project's github.
+#' Time to Event Analysis Data from PHUSE Test Data Factory Project's GitHub.
 #'
 #' @source <https://github.com/phuse-org/TestDataFactory/blob/master/Updated/TDF_ADaM/adtte.xpt>, downloaded 2021-01-26
 #'
