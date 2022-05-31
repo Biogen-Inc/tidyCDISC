@@ -216,6 +216,8 @@ usethis::use_revdep()
 # install.packages("revdepcheck") # doesn't exist for my version of R
 # revdepcheck::revdep_check(num_workers = 4)
 
+# usethis::use_spell_check() # run once to initiate wordlist file
+devtools::spell_check()
 
 # Since this package has a ton of large vignettes, we're use the below function
 # to build the vignettes in the doc/ (not docs/) folder. plus a vignette index

@@ -54,10 +54,12 @@ Suggests:
     testthat,
     lazyeval,
     scales,
-    knitr
+    knitr,
+    spelling
 Remotes: 
     JohnCoene/tippy,
     Biogen-Inc/IDEAFilter
 Depends: 
     R (>= 2.10)
 VignetteBuilder: knitr
+Language: en-US

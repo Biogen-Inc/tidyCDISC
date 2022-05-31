@@ -94,8 +94,8 @@ locally or deploy in your preferred environment. Please review the “[Get
 Started](https://Biogen-Inc.github.io/tidyCDISC/articles/tidyCDISC.html)”
 guide to follow an example use case with the app. However, to optimize
 one’s use of `tidyCDISC`, we highly recommend reading the following
-articles that take a deeper look into the topics presented in the ‘get
-started’ tutorial:
+articles that take a deeper look into the topics presented in the “Get
+Started” tutorial:
 
 -   [00 Data
     Upload](https://Biogen-Inc.github.io/tidyCDISC/articles/x00_Data_Upload.html)
