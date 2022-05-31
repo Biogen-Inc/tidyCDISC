@@ -9,7 +9,7 @@
 #' @param value character value: permitted values include "AVAL", "CHG", or
 #'   "BASE"
 #' @param cor_mthd character string. Defaults to 'pearson' for calculating
-#'   correlation co-efficients. See `?cor` for more supported test stats.
+#'   correlation coefficients. See `?cor` for more supported test stats.
 #' @param show_sig logical, whether or not to display p-values for significant
 #'   tests statistics
 #' @param sig_level dbl, defaulting to .05. Used to determine significance level

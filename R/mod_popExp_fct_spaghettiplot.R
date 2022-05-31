@@ -7,7 +7,7 @@
 #' 
 #' @param data Merged data to be used in plot
 #' @param yvar Selected y-axis 
-#' @param time Selected x-axis constained to time dependent columns
+#' @param time Selected x-axis constrained to time dependent columns
 #' @param value If yvar is a PARAMCD then the user must select 
 #' AVAL, CHG, or BASE to be plotted on the y-axis
 #' 

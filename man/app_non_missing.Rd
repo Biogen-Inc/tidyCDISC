@@ -49,8 +49,14 @@ Other tableGen Functions:
 \code{\link{app_nested_freq}()},
 \code{\link{app_y}()}
 
-Other tableGen Functionss: 
+Other tableGen Functions: 
+\code{\link{app_anova}()},
+\code{\link{app_chg}()},
+\code{\link{app_freq}()},
 \code{\link{app_max_freq}()},
+\code{\link{app_mean}()},
+\code{\link{app_methods}()},
+\code{\link{app_nested_freq}()},
 \code{\link{app_y}()}
 
 Other tableGen Functions: 
@@ -74,5 +80,4 @@ Other tableGen Functions:
 \code{\link{app_y}()}
 }
 \concept{tableGen Functions}
-\concept{tableGen Functionss}
 \keyword{tabGen}

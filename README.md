@@ -21,8 +21,8 @@ from ADaM-ish data sets.
 
 ## Purpose
 
-One of `tidyCDISC`‘s goals is to develop clinical tables that meet table
-standards leveraged for submission filings, called ’standard analyses’.
+One of `tidyCDISC`’s goals is to develop clinical tables that meet table
+standards leveraged for submission filings, called “standard analyses”.
 However, this is secondary to the app’s primary purpose: providing rich
 exploratory capabilities for clinical studies. High-level features of
 the app allow users to produce customized tables using a point-and-click
@@ -42,7 +42,7 @@ programming experience. For example:
     instantly, cutting down on statistical programming requests for
     excess tables that aren’t required, but just “nice to see”.
 
-<div class="floatting">
+<div class="floating">
 
 <img src="man/figures/pct_95_cropped.jpg" width="25%" style="float:right; padding:10px" />
 

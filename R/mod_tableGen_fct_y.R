@@ -31,7 +31,7 @@ app_y <- function(column, group, data, totals) {
 #' @return frequency table of ADSL column
 #' @rdname app_y
 #' 
-#' @family tableGen Functionss
+#' @family tableGen Functions
 app_y.default <- app_y.OCCDS <- app_y.ADAE <- app_y.ADSL <- function(column, group = NULL, data, totals) {
   # ########## ######### ######## #########
   # column <- "AOCCFL"

@@ -14,6 +14,6 @@ Data frame with 32,139 features and 34 fields
 adae
 }
 \description{
-Adverse Events Analysis Dataset from Phuse Test Data Fractory Project's github.
+Adverse Events Analysis Data from PHUSE Test Data Factory Project's GitHub.
 }
 \keyword{datasets}
