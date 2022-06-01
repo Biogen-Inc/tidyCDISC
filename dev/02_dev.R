@@ -230,7 +230,7 @@ attachment::att_amend_desc()
 # # autotest::autotest_package(test = TRUE)
 
 # Check package as CRAN
-rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran"))
+rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran", "--no-build-vignettes"))
 
 # Check content
 # remotes::install_github("ThinkR-open/checkhelper")

@@ -109,8 +109,11 @@ fnIndvExplVisits <- function(
     #    AND ADTM or ATPT exists... THEN plot those values on the graph as well
     extra_aval_vars <- c("ATM","ATPT")
     if(most_avals_per_visit > 1 & any(extra_aval_vars %in% colnames(plot_dat))){
+      print("avals_by used!")
       # Grab first available variable that exists and could explain why their are extra avals
-      avals_by <<- sym(extra_aval_vars[extra_aval_vars %in% colnames(plot_dat)][1])
+      # avals_by <<- sym(extra_aval_vars[extra_aval_vars %in% colnames(plot_dat)][1])
+      assign("avals_by", sym(extra_aval_vars[extra_aval_vars %in% colnames(plot_dat)][1]),
+             envir = .GlobalEnv)
       if(avals_by == "ATM") {
         plot_dat <- plot_dat %>% mutate(ATM = as.POSIXct(paste("1970-01-01",ATM)))
       }
@@ -150,7 +153,8 @@ fnIndvExplVisits <- function(
       }
       
     } else { # no color by variable in legend or hover text
-      avals_by <<- ""
+      # avals_by <<- ""
+      assign("avals_by", "", envir = .GlobalEnv)
       lb_plot <- lb_plot + 
         suppressWarnings(geom_point(na.rm = TRUE, 
           aes(text = paste0(AVISIT,
