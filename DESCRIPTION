@@ -2,15 +2,17 @@ Package: tidyCDISC
 Title: tidyCDISC: Quick Exploratory Data Analyses on ADaM-Ish Datasets
 Version: 0.0.4
 Authors@R: c(
-    person("Aaron", "Clark", , "clark.aaronchris@gmail.com", role = c("aut", "cre")),
+    person("Aaron", "Clark", , "clark.aaronchris@gmail.com",
+      role = c("aut", "cre"), comment = c(ORCID = "0000-0002-0123-0970")),
+    person("Nate", "Mockler", , "nate.mockler@biogen.com", role = c("ccp", "led")),
     person("Maya", "Gans", , "maya.gans@biogen.com", role = "aut"),
-    person("Robert", "Krajcik", , "robert.krajcik@biogen.com", role = "aut"),
-    person("Marly", "Gotti", , "marly.cormar@biogen.com", role = "aut"),
+    person("Robert", "Krajcik", , "robert.krajcik@biogen.com", role = "ctb"),
+    person("Marly", "Gotti", , "marly.cormar@biogen.com", role = "ctb"),
     person("Biogen", "Inc", role = "cph")
   )
-Description: The tidyCDISC application relies on sas7bdat files in the
-    ADaM-ish data structure to provide users a quick exploratory dive into
-    common visualizations without writing a sinlge line of code. Prominent
+Description: Relying on sas7bdat files in the ADaM-ish data structure,
+    tidyCDISC provides users a quick exploratory dive into common
+    visualizations without writing a sinlge line of code. Prominent
     modules/ features of the application are the Table Generator,
     Population Explorer, and the Individual Explorer. The Table Generator
     allows users to drag and drop variables and desired statistics
