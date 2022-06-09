@@ -10,9 +10,9 @@ Authors@R: c(
     person("Marly", "Gotti", , "marly.cormar@biogen.com", role = "ctb"),
     person("Biogen", "Inc", role = "cph")
   )
-Description: Relying on sas7bdat files in the ADaM-ish data structure,
-    tidyCDISC provides users a quick exploratory dive into common
-    visualizations without writing a sinlge line of code. Prominent
+Description: Provides users a quick exploratory dive into common
+    visualizations without writing a sinlge line of code providing the users
+    data follows ADaM-ish data standards put forth by CDISC. Prominent
     modules/ features of the application are the Table Generator,
     Population Explorer, and the Individual Explorer. The Table Generator
     allows users to drag and drop variables and desired statistics
