@@ -11,8 +11,8 @@ Authors@R: c(
     person("Biogen", "Inc", role = "cph")
   )
 Description: Provides users a quick exploratory dive into common
-    visualizations without writing a sinlge line of code providing the users
-    data follows ADaM-ish data standards put forth by CDISC. Prominent
+    visualizations without writing a sinlge line of code given the users
+    data follows the ADaM data standards put forth by CDISC. Prominent
     modules/ features of the application are the Table Generator,
     Population Explorer, and the Individual Explorer. The Table Generator
     allows users to drag and drop variables and desired statistics
