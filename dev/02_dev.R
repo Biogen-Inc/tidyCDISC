@@ -222,7 +222,7 @@ usethis::use_revdep()
 
 # Update dependencies in DESCRIPTION
 # install.packages("attachment")
-attachment::att_amend_desc()
+attachment::att_amend_desc() 
 
 # # Run tests and examples (usually done with check)
 # devtools::test()
@@ -234,7 +234,8 @@ rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran", "--no-build-vignettes"
 
 # Check content
 # remotes::install_github("ThinkR-open/checkhelper")
-checkhelper::find_missing_tags()
+tags <- checkhelper::find_missing_tags()
+View(tags)
 
 # Check spelling
 # usethis::use_spell_check()
@@ -253,6 +254,7 @@ rhub::check_on_solaris()
 # _win devel
 devtools::check_win_devel()
 
+# Doesn't really apply to tidyCDISC since it's never been published to CRAN
 # Check reverse dependencies
 # remotes::install_github("r-lib/revdepcheck")
 usethis::use_git_ignore("revdep/")
