@@ -174,10 +174,10 @@ usethis::use_vignette("dev03_Indv_Expl")
 usethis::use_version("patch") #choices: "dev", "patch", "minor", "major"
 
 # Build pkg, including vignettes. Do this before updating documentation.
-devtools::build() # calls pkgbuld::build()
+# devtools::build() # calls pkgbuld::build()
 # devtools::build(args = "--no-build-vignettes") # test arg
 # pkgbuild::build() 
-# pkgbuild::build(vignettes = FALSE) # don't build vignettes to save time on buil
+pkgbuild::build(vignettes = FALSE) # don't build vignettes to save time on build
 
 
 # update pkgdown site only if user needs refreshed documentation
@@ -230,6 +230,7 @@ attachment::att_amend_desc()
 # # autotest::autotest_package(test = TRUE)
 
 # Check package as CRAN
+pkgbuild::build(vignettes = FALSE) # check build size quickly
 rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran", "--no-build-vignettes"))
 
 # Check content
