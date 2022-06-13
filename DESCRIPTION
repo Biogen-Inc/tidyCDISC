@@ -29,7 +29,7 @@ Description: Provides users a quick exploratory dive into common
     important patient events on a timeline. All modules allow for concise
     filtering & downloading bulk outputs into html or pdf formats to save
     for later.
-License: AGPL (>= 3) + file LICENSE
+License: AGPL (>= 3)
 URL: https://Biogen-Inc.github.io/tidyCDISC/
 BugReports: https://github.com/Biogen-Inc/tidyCDISC/issues
 Depends: 
