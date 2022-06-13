@@ -1,5 +1,5 @@
 Package: tidyCDISC
-Title: tidyCDISC: Quick Exploratory Data Analyses on ADaM-Ish Datasets
+Title: Quick Table Generation & Exploratory Analyses on ADaM-Ish Datasets
 Version: 0.0.4
 Authors@R: c(
     person("Aaron", "Clark", , "clark.aaronchris@gmail.com",
