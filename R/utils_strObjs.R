@@ -3,8 +3,6 @@
 #' my_cols
 #'
 #' Grab a quick color pallette
-#'
-#' @importFrom RColorBrewer brewer.pal
 #' 
 #' @noRd
 my_cols <- c("#B3E2CD", "#FDCDAC", "#CBD5E8", "#F4CAE4", "#E6F5C9",

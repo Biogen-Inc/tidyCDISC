@@ -21,7 +21,7 @@
 #' @importFrom stringi stri_replace_all_regex
 #' @importFrom stringi %s+%
 #' @importFrom glue glue
-#' @importFrom forcats fct_reorder
+#' @importFrom tibble tibble
 #' @import tidyr
 #'
 #' @family tableGen Functions
@@ -236,10 +236,14 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     if (is.null(avisit_words())) {
       avisit_words <- c("fake_weeky","dummy_weeky")
     } else {
+      awd <- data.frame(AVISIT = avisit_words(), AVISITN = avisit_fctr())
       avisit_words <-
-        tibble(AVISIT = avisit_words(), AVISITN = avisit_fctr()) %>%
-        mutate(AVISIT = as.factor(AVISIT)) %>%
-        mutate(AVISIT = forcats::fct_reorder(AVISIT, AVISITN)) %>%
+        awd %>%
+        mutate(AVISIT = factor(AVISIT,
+            levels = unique(awd[order(awd$AVISITN), "AVISIT"]))) %>%
+        # remove forcats dependency
+        # mutate(AVISIT = as.factor(AVISIT)) %>%
+        # mutate(AVISIT = forcats::fct_reorder(AVISIT, AVISITN)) %>%
         pull(AVISIT) %>%
         unique()
     }
