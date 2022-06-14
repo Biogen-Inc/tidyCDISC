@@ -54,7 +54,6 @@ Imports:
     magrittr,
     plotly,
     purrr,
-    RColorBrewer,
     rlang,
     rmarkdown,
     shiny,
