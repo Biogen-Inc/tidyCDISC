@@ -332,17 +332,3 @@ varN_fctr_reorder2 <- function(data) {
 }
 
 
-
-#' Deliver 'avals_by' value to the parent frame/ env
-#' 
-#' @param x a value to assign to `avals_by` in the parent env
-#' 
-#' @export
-#' @keywords internal
-#' 
-deliver_avals_by <- function(x) {
-  with(parent.frame(), {avals_by <- x })
-}
-
-
-
