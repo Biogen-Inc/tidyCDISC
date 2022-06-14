@@ -103,7 +103,9 @@ mod_popExp_server <- function(input, output, session, datafile) {
       if("AVISIT" %in% colnames(all_data)) all_data <- all_data %>% mutate(AVISIT = stringr::str_wrap(AVISIT, width = 9))
       if("VISIT" %in% colnames(all_data)) all_data <- all_data %>% mutate(VISIT = stringr::str_wrap(VISIT, width = 9))
         
-      all_data <- all_data %>% varN_fctr_reorder() #%>% varN_fctr_reorder2() 
+      all_data <- all_data %>% 
+        # varN_fctr_reorder() 
+        varN_fctr_reorder2() 
 
     }
     return(list(all_data = all_data, adsl_cols = my_adsl_cols))
