@@ -174,10 +174,11 @@ usethis::use_vignette("dev03_Indv_Expl")
 usethis::use_version("patch") #choices: "dev", "patch", "minor", "major"
 
 # Build pkg, including vignettes. Do this before updating documentation.
-# devtools::build() # calls pkgbuld::build()
-# devtools::build(args = "--no-build-vignettes") # test arg
+devtools::build() # calls pkgbuld::build()     # X.X MB
+devtools::build(args = "--no-build-vignettes") # X.X MB
 # pkgbuild::build() 
-pkgbuild::build(vignettes = FALSE) # don't build vignettes to save time on build
+# pkgbuild::build()
+pkgbuild::build(vignettes = FALSE) # 1.2 MB don't build vignettes to save time on build
 
 
 # update pkgdown site only if user needs refreshed documentation
@@ -249,7 +250,9 @@ urlchecker::url_update()
 
 # check on other distributions
 # _rhub
-devtools::check_rhub()
+first_chk <- devtools::check_rhub()
+cran_chk <- rhub::check_for_cran(check_args = c("--as-cran", "--no-build-vignettes"))
+
 rhub::check_on_windows(check_args = "--force-multiarch")
 rhub::check_on_solaris()
 # _win devel
