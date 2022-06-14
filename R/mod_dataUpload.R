@@ -170,11 +170,11 @@ mod_dataUpload_server <- function(input, output, session){
     shinyjs::disable(id = "file")
     
     dd$data <- list(
-      ADSL = tidyCDISC::adsl,
-      ADVS = tidyCDISC::advs,
-      ADAE = tidyCDISC::adae,
-      ADLBC = tidyCDISC::adlbc,
-      ADTTE = tidyCDISC::adtte
+      ADSL = adsl,
+      ADVS = advs,
+      ADAE = adae,
+      ADLBC = adlbc,
+      ADTTE = adtte
     )
     
     shinyjs::hide(id = "pilot")
