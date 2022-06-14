@@ -68,7 +68,7 @@ Imports:
     tidyr,
     tidyselect,
     timevis,
-    tippy (>= 1.0.0)
+    tippy (== 0.1.0)
 Suggests: 
     knitr,
     spelling,
@@ -76,8 +76,7 @@ Suggests:
 VignetteBuilder: 
     knitr
 Remotes: 
-    Biogen-Inc/IDEAFilter,
-    JohnCoene/tippy
+    Biogen-Inc/IDEAFilter
 Encoding: UTF-8
 Language: en-US
 LazyData: true
