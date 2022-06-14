@@ -41,7 +41,6 @@ Imports:
     data.table,
     dplyr,
     DT,
-    forcats,
     GGally,
     ggcorrplot,
     ggplot2,
