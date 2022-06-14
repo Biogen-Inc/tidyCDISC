@@ -242,7 +242,6 @@ getLevels <- function(x) {if(is.factor(x)) levels(x) else sort(unique(x), na.las
 #' 
 #' @import dplyr
 #' @importFrom data.table := 
-#' @importFrom forcats fct_reorder
 #' 
 #' @family popExp Functions
 #' @noRd
@@ -252,10 +251,12 @@ refact <- function(data, varc, varn) {
   if (varc %in% colnames(data) && varn %in% colnames(data)) {
     # if not a factor yet, make it a factor, then re-order
     if(!is.factor(data[,(varc)])) { data[, (varc) := as.factor(get(varc))] }
+    
     # If a level was dropped, then don't reorder the factor
     if(length(levels(data[[varc]])) == length(unique(data[[varc]]))){
       # message(paste("A factor was created for", varc, "based on", varn, "levels"))
-      data[, (varc) := forcats::fct_reorder(get(varc), get(varn))] 
+      data[, (varc) := forcats::fct_reorder(get(varc), get(varn))]
+
     }
   }
 }
