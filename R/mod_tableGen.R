@@ -21,7 +21,7 @@
 #' @importFrom stringi stri_replace_all_regex
 #' @importFrom stringi %s+%
 #' @importFrom glue glue
-#' @importFrom forcats fct_reorder
+#' @importFrom tibble tibble
 #' @import tidyr
 #'
 #' @family tableGen Functions
@@ -182,13 +182,13 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   filtered_data <- callModule(shiny_data_filter, "data_filter", data = processed_data, verbose = FALSE)
   
   # apply filters from selected dfs to tg data to create all data
-  all_data <- reactive({suppressMessages(bds_data() %>% semi_join(filtered_data()) %>% varN_fctr_reorder())})
-  ae_data <- reactive({suppressMessages(ADAE() %>% semi_join(filtered_data()) %>% varN_fctr_reorder())})
+  all_data <- reactive({suppressMessages(bds_data() %>% semi_join(filtered_data()) %>% varN_fctr_reorder2())})
+  ae_data <- reactive({suppressMessages(ADAE() %>% semi_join(filtered_data()) %>% varN_fctr_reorder2())})
   pop_data <- reactive({
     suppressMessages(
       pre_ADSL()$data %>% # Cannot be ADSL() because that has potentially been filtered to ADAE subj's
       semi_join(filtered_data()) %>%
-      varN_fctr_reorder()
+      varN_fctr_reorder2()
     )
   })
   
@@ -236,10 +236,11 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     if (is.null(avisit_words())) {
       avisit_words <- c("fake_weeky","dummy_weeky")
     } else {
+      awd <- data.frame(AVISIT = avisit_words(), AVISITN = avisit_fctr())
       avisit_words <-
-        tibble(AVISIT = avisit_words(), AVISITN = avisit_fctr()) %>%
-        mutate(AVISIT = as.factor(AVISIT)) %>%
-        mutate(AVISIT = forcats::fct_reorder(AVISIT, AVISITN)) %>%
+        awd %>%
+        mutate(AVISIT = factor(AVISIT,
+            levels = unique(awd[order(awd$AVISITN), "AVISIT"]))) %>%
         pull(AVISIT) %>%
         unique()
     }
@@ -670,7 +671,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       glue::glue("
           # Create small filtered data set
               dat_to_filt <- tidyCDISC::data_to_filter(datalist, c({filter_dfs}))
-              filtered_data <- eval(parse(text = '{filter_code}')) %>% varN_fctr_reorder()
+              filtered_data <- eval(parse(text = '{filter_code}')) %>% tidyCDISC::varN_fctr_reorder2()
           ")
     } else {""}
   })
@@ -698,9 +699,9 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     if(any(regexpr("%>%", filter_code) > 0)){
       glue::glue("
           # Apply small filtered data set to population dataset
-              pop_data <- pre_adsl$data %>% semi_join(filtered_data) %>% tidyCDISC::varN_fctr_reorder()
+              pop_data <- pre_adsl$data %>% semi_join(filtered_data) %>% tidyCDISC::varN_fctr_reorder2()
           ")
-    } else {"pop_data <- pre_adsl$data %>% tidyCDISC::varN_fctr_reorder()"}
+    } else {"pop_data <- pre_adsl$data %>% tidyCDISC::varN_fctr_reorder2()"}
   })
   # capture output for empty df warning
   df_empty_expr <- reactive({

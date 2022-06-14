@@ -23,7 +23,7 @@ usethis::use_package("shinyjs")
 usethis::use_package("haven")
 usethis::use_package("shinyWidgets")
 usethis::use_package("plotly") 
-usethis::use_package("RColorBrewer")
+# usethis::use_package("RColorBrewer")
 # usethis::use_package("gridExtra")
 # usethis::use_package("grid")
 # usethis::use_package("janitor")
@@ -39,9 +39,11 @@ usethis::use_package("gt")
 usethis::use_package("knitr", type = "Suggests")
 usethis::use_package("rlang")
 usethis::use_package("stringi")
+# usethis::use_package("forcats")
 
-usethis::use_dev_package("tippy") #remotes::install_github("JohnCoene/tippy") #‘1.0.0’
-
+# cannot use dev!
+# usethis::use_dev_package("tippy") #remotes::install_github("JohnCoene/tippy") #‘1.0.0’
+usethis::use_package("tippy")
 
 # usethis::use_package("IDEAFilter") # install.packages("IDEAFilter") #‘0.1.0.9000’
 usethis::use_dev_package("IDEAFilter") # devtools::install_github("Biogen-Inc/IDEAFilter")
@@ -51,18 +53,15 @@ usethis::use_package("ggplot2")
 usethis::use_package("dplyr")
 usethis::use_package("stringr")
 usethis::use_package("purrr")
-usethis::use_package("forcats")
 usethis::use_package("tidyr")
 usethis::use_package("tibble")
 usethis::use_package("magrittr")
 usethis::use_package("cicerone")
 usethis::use_package("glue")
-usethis::use_package("remotes")
 usethis::use_package("lazyeval",type="Suggests")
 usethis::use_package("scales",type = "Suggests")
 usethis::use_package("GGally")
 usethis::use_package("survival")
-usethis::use_package("remotes")
 usethis::use_package("ggcorrplot")
 usethis::use_pipe()
 
