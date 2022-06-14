@@ -1,6 +1,8 @@
 # tidyCDISC 0.0.4 (CRAN Release)
 * cleaning up `devtools::check()` & preparing for CRAN release.
 
+* unfortunately, had to revert back to importing `tippy 0.1.0` since it is the latest available version on CRAN and CRAN pkgs cannot depend on package versions under development.
+
 
 
 # tidyCDISC 0.0.3
