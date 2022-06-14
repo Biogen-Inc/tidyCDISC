@@ -110,7 +110,7 @@ fnIndvExplVisits <- function(
     extra_aval_vars <- c("ATM","ATPT")
     if(most_avals_per_visit > 1 & any(extra_aval_vars %in% colnames(plot_dat))){
       # Grab first available variable that exists and could explain why their are extra avals
-      avals_by <<- sym(extra_aval_vars[extra_aval_vars %in% colnames(plot_dat)][1])
+      avals_by <- sym(extra_aval_vars[extra_aval_vars %in% colnames(plot_dat)][1])
       # assign("avals_by", sym(extra_aval_vars[extra_aval_vars %in% colnames(plot_dat)][1]),
       #        envir = parent.frame())
       # avals_by <- sym(extra_aval_vars[extra_aval_vars %in% colnames(plot_dat)][1])
@@ -155,7 +155,7 @@ fnIndvExplVisits <- function(
       }
       
     } else { # no color by variable in legend or hover text
-      avals_by <<- ""
+      avals_by <- ""
       # assign("avals_by", "", envir = parent.frame())
       # with(parent.frame(), { avals_by <- "" })
       # avals_by <- ""
