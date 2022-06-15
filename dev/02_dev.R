@@ -37,6 +37,7 @@ usethis::use_package("data.table")
 usethis::use_package("gt")
 # usethis::use_package("shinyBS")
 usethis::use_package("knitr", type = "Suggests")
+usethis::use_package("pkgdown", type = "Suggests", min_version = "1.6.1")
 usethis::use_package("rlang")
 usethis::use_package("stringi")
 # usethis::use_package("forcats")
@@ -182,12 +183,12 @@ pkgbuild::build(vignettes = FALSE) # 1.2 MB don't build vignettes to save time o
 
 # update pkgdown site only if user needs refreshed documentation
 # usethis::use_pkgdown() # Run once to configure your package to use pkgdown
-pkgdown::build_articles(pkg = ".")
-pkgdown::build_articles_index()
+pkgdown::build_articles() #
+pkgdown::build_articles_index() #
 pkgdown::build_home()
-pkgdown::build_reference_index(pkg = rprojroot::is_r_package$find_file())
-pkgdown::build_site(pkg = rprojroot::is_r_package$find_file()) # Run to build the website
+pkgdown::build_reference_index() #
 pkgdown::build_news()
+pkgdown::build_site() # Run to build entire website
 
 # # GitHub Actions
 # usethis::use_github_action()
