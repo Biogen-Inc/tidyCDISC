@@ -35,9 +35,11 @@
 #'
 #' @import shiny
 #' @import dplyr
-#' @import gt
 #' @importFrom purrr map map2 pmap
 #' @importFrom data.table rbindlist
+#' @importFrom gt gt cols_label text_transform cells_body local_image tab_header
+#'   tab_stubhead tab_style  cells_stubhead cols_align cells_row_groups
+#'   cols_hide cell_text
 #'
 #'
 #' @return A list of dataframes that are compliant with the rules in addition to
@@ -46,7 +48,7 @@
 #'
 #' @family dataComply Functions
 #' @noRd
-#'   
+#' 
 gather_reqs <- function(input, output, session, 
                         disp_type = c("error","warn"),
                         datalist = reactive(NULL),
@@ -270,28 +272,28 @@ gather_reqs <- function(input, output, session,
     
     # modify the table displayed using gt, remove a column if just exporting warnings
     tab <- pf %>%
-      gt(rowname_col = "type_col" , groupname_col = "df") %>%
-      cols_label(not_exist_disp = "Doesn't Exist", missing_disp = "Missing Data") %>%
-      text_transform(
-        locations = list(cells_body(columns = c(not_exist_disp), rows = not_exist_disp == "X"),
-                         cells_body(columns = c(missing_disp), rows = missing_disp == "X")),
-        fn = function(X) local_image(filename = "inst/app/www/red_x.png", height = 15)
+      gt::gt(rowname_col = "type_col" , groupname_col = "df") %>%
+      gt::cols_label(not_exist_disp = "Doesn't Exist", missing_disp = "Missing Data") %>%
+      gt::text_transform(
+        locations = list(gt::cells_body(columns = c(not_exist_disp), rows = not_exist_disp == "X"),
+                         gt::cells_body(columns = c(missing_disp), rows = missing_disp == "X")),
+        fn = function(X) gt::local_image(filename = "inst/app/www/red_x.png", height = 15)
       ) %>%
-      tab_header(
+      gt::tab_header(
         title = paste(ifelse(disp_type == "error", "Required:", "Optional:"),"reconcile variables below"),
         subtitle = ifelse(disp_type == "error", "and re-upload data",
                           "to experience the app's full functionality")
       ) %>%
-      tab_stubhead(label = "Data") %>%
-      tab_style(style = cell_text(weight = "bold"), locations = cells_stubhead()) %>%
-      cols_align("center") %>%
-      tab_style(style = cell_text(weight = "bold"), locations = cells_row_groups())
+      gt::tab_stubhead(label = "Data") %>%
+      gt::tab_style(style = gt::cell_text(weight = "bold"), locations = gt::cells_stubhead()) %>%
+      gt::cols_align("center") %>%
+      gt::tab_style(style = gt::cell_text(weight = "bold"), locations = gt::cells_row_groups())
 
     
     if(disp_type == "warn") {
-      tab <- tab %>% cols_hide(columns = c(not_exist_disp))
+      tab <- tab %>% gt::cols_hide(columns = c(not_exist_disp))
     }
-  }
+  } 
   
   
   return(list(

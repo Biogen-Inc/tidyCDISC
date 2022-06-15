@@ -24,13 +24,14 @@
 #' @param input_plot_adam A character string containing the ADaM dataset name
 #' @param input_overlay_events A character vector containing the names of
 #'   patient events to plot
-#' @param vline_dat The vline data frame that contains x-intercept values for the
-#'   corrresponding events selected to be overlain on the plot
+#' @param vline_dat The vline data frame that contains x-intercept values for
+#'   the corrresponding events selected to be overlain on the plot
 #' @param vv_dy_name TA character vector containing the name of the visit
 #'   variable(s)
 #'
 #' @import dplyr
-#' @import ggplot2
+#' @importFrom ggplot2 ggplot aes geom_line scale_x_continuous labs geom_point
+#'   annotate geom_vline geom_hline scale_color_manual
 #' @importFrom dplyr %>%
 #' @importFrom rlang sym
 #' @importFrom plotly ggplotly layout config add_annotations
@@ -40,7 +41,7 @@
 #'
 #' @family indvExp Functions
 #' @noRd
-#'   
+#' 
 fnIndvExplVisits <- function(
   watermark = FALSE,
   graph_output = "plotly",
@@ -91,10 +92,10 @@ fnIndvExplVisits <- function(
     
     # GGPLOT2 OBJECT
     lb_plot <- 
-      ggplot(plot_dat, aes(x = !!INPUT_visit_var, y = AVAL)) + 
-      geom_line() +
-      scale_x_continuous(breaks = seq(min(plot_dat[,input_visit_var]), max(plot_dat[,input_visit_var]), 30)) +
-      labs(x = paste0("Study Visit (",input_visit_var,")"),
+      ggplot2::ggplot(plot_dat, ggplot2::aes(x = !!INPUT_visit_var, y = AVAL)) + 
+      ggplot2::geom_line() +
+      ggplot2::scale_x_continuous(breaks = seq(min(plot_dat[,input_visit_var]), max(plot_dat[,input_visit_var]), 30)) +
+      ggplot2::labs(x = paste0("Study Visit (",input_visit_var,")"),
            y = prm,
            title = paste(prm,"by Relative Study Day"),
            subtitle = paste0(
@@ -123,8 +124,8 @@ fnIndvExplVisits <- function(
       if(avals_by == "ATPT"){
         lb_plot <- lb_plot + 
           suppressWarnings(
-            geom_point(data = plot_dat, na.rm = TRUE, 
-              aes(x = !!INPUT_visit_var, y = AVAL, 
+            ggplot2::geom_point(data = plot_dat, na.rm = TRUE, 
+              ggplot2::aes(x = !!INPUT_visit_var, y = AVAL, 
                   colour = !!avals_by, # colour aesthetic for for discrete
                   text = paste0(AVISIT,
                                 "<br>",input_visit_var, ": ",!!INPUT_visit_var,
@@ -142,8 +143,8 @@ fnIndvExplVisits <- function(
       else { # if continuous posixct object (like ATM) then use fill aesthetic for color gradient
         lb_plot <- lb_plot + 
           suppressWarnings(
-            geom_point(data = plot_dat, na.rm = TRUE, 
-              aes(x = !!INPUT_visit_var, y = AVAL, 
+            ggplot2::geom_point(data = plot_dat, na.rm = TRUE, 
+               ggplot2::aes(x = !!INPUT_visit_var, y = AVAL, 
                   fill = !!avals_by, # fill aesthetic for for continuous will make gradient legend
                   text = paste0(AVISIT,
                                 "<br>",input_visit_var, ": ",!!INPUT_visit_var,
@@ -162,8 +163,8 @@ fnIndvExplVisits <- function(
       # deliver_avals_by(x = avals_by)
       
       lb_plot <- lb_plot + 
-        suppressWarnings(geom_point(na.rm = TRUE, 
-          aes(text = paste0(AVISIT,
+        suppressWarnings(ggplot2::geom_point(na.rm = TRUE, 
+            ggplot2::aes(text = paste0(AVISIT,
                             "<br>",input_visit_var, ": ",!!INPUT_visit_var,
                             "<br>",input_plot_param ,": ",AVAL
               )
@@ -186,7 +187,7 @@ fnIndvExplVisits <- function(
         #                   grob(lab="tidyCDISC: PROOF ONLY", cl="watermark"))
         
         # Smaller watermark
-        annotate("text", x = Inf, y = -Inf, label = proof_lab,
+        ggplot2::annotate("text", x = Inf, y = -Inf, label = proof_lab,
                  hjust=1.1, vjust=-3.3, col="white", fontface = "bold", alpha = 0.8,
                  cex = ifelse(substr(proof_lab,1,4) == 'tidyCDISC',
                               ifelse(avals_by == "" | rlang::is_empty(avals_by),19,14),
@@ -204,9 +205,9 @@ fnIndvExplVisits <- function(
         if(nrow(vline_dat) > 0){
           
           lb_plot <- lb_plot + 
-            geom_vline(
+            ggplot2::geom_vline(
                data = vline_dat, 
-               aes(xintercept = !!INPUT_visit_var,
+               ggplot2::aes(xintercept = !!INPUT_visit_var,
                    colour = Event,
                    text = paste0(input_visit_var, ": ",floor(!!INPUT_visit_var),"<br>", DECODE)
                 ), size = .35
@@ -223,18 +224,18 @@ fnIndvExplVisits <- function(
     if(input_plot_adam %in% c("ADLB","ADLBC") &
        all(c("LBSTNRLO","LBSTNRHI") %in% colnames(plot_dat))){
       lb_plot <- lb_plot + 
-        geom_hline(aes(yintercept = mean(LBSTNRLO)), color = "blue") +
-        geom_hline(aes(yintercept = mean(LBSTNRHI)), color = "blue") +
+        ggplot2::geom_hline(ggplot2::aes(yintercept = mean(LBSTNRLO)), color = "blue") +
+        ggplot2::geom_hline(ggplot2::aes(yintercept = mean(LBSTNRHI)), color = "blue") +
         theme(
           plot.margin = margin(b = 1.2, unit = "cm")
         ) 
-    }
+    } 
     
     # Plotting hortizontal line
     if("Screening" %in% input_plot_hor){
       if(nrow(plot_scr) > 0){
         lb_plot <- lb_plot +
-          geom_hline(plot_scr, mapping = aes(yintercept = AVAL, colour = Visit))
+          ggplot2::geom_hline(plot_scr, mapping = ggplot2::aes(yintercept = AVAL, colour = Visit))
         
         man_cols <- c(man_cols, setNames(my_gg_color_hue(2)[2],"Screening"))
       }
@@ -242,7 +243,7 @@ fnIndvExplVisits <- function(
     if("Baseline" %in% input_plot_hor){
       if(nrow(plot_base) > 0){
         lb_plot <- lb_plot +
-          geom_hline(plot_base, mapping = aes(yintercept = AVAL, colour = Visit))
+          ggplot2::geom_hline(plot_base, mapping = ggplot2::aes(yintercept = AVAL, colour = Visit))
         
         man_cols <- c(man_cols, setNames(my_gg_color_hue(2)[1],"Baseline"))
       }
@@ -254,7 +255,7 @@ fnIndvExplVisits <- function(
        (length(input_overlay_events) > 0 & input_visit_var %in% vv_dy_name)){
 
       lb_plot <- lb_plot +
-        scale_color_manual(values= man_cols)
+        ggplot2::scale_color_manual(values= man_cols)
     }
     # End: ggplot2 object
     
