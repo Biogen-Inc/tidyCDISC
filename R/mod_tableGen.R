@@ -1,11 +1,9 @@
 #' tableGen Server Function
 #'
-#' @param input,output,session 
-#' Internal parameters for {shiny}
-#' @param datafile all uploaded data files 
-#' from the dataImport module
+#' @param input,output,session Internal parameters for {shiny}
+#' @param datafile all uploaded data files from the dataImport module
 #' @param filePaths NULL
-#' 
+#'
 #' @import IDEAFilter
 #' @importFrom rlang sym
 #' @importFrom rlang !!
@@ -17,12 +15,13 @@
 #' @importFrom purrr map
 #' @importFrom purrr map2
 #' @importFrom purrr imap
-#' @import gt
+#' @importFrom gt gt fmt_markdown tab_options cols_label tab_header md tab_style
+#'   cell_text cells_row_groups cells_stub render_gt
 #' @importFrom stringi stri_replace_all_regex
 #' @importFrom stringi %s+%
 #' @importFrom glue glue
 #' @importFrom tibble tibble
-#' @import tidyr
+#' @importFrom tidyr replace_na
 #'
 #' @family tableGen Functions
 #' @noRd
@@ -517,32 +516,32 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # create gt table
   gt_table <- reactive({
     for_gt() %>%
-      # gt(rowname_col = "Variable", groupname_col = "ID") %>%
-      gt(groupname_col = "ID") %>%
-      fmt_markdown(columns = c(Variable),
+      # cols_labelgt(rowname_col = "Variable", groupname_col = "ID") %>%
+      gt::gt(groupname_col = "ID") %>%
+      gt::fmt_markdown(columns = c(Variable),
                    rows = stringr::str_detect(Variable,'&nbsp;') |
                      stringr::str_detect(Variable,'<b>') |
                      stringr::str_detect(Variable,'</b>')) %>%
-      tab_options(table.width = px(700)) %>%
-      cols_label(.list = purrr::imap(for_gt()[-c(1:2)], ~col_for_list(.x))) %>%
-      tab_header(
-        title = md(input$table_title),
-        subtitle = md(subtitle_html())
+      gt::tab_options(table.width = gt::px(700)) %>%
+      gt::cols_label(.list = purrr::imap(for_gt()[-c(1:2)], ~col_for_list(.x))) %>%
+      gt::tab_header(
+        title = gt::md(input$table_title),
+        subtitle = gt::md(subtitle_html())
       ) %>%
-      tab_style(
-        style = cell_text(weight = "bold"),
-        locations = cells_row_groups()
+      gt::tab_style(
+        style = gt::cell_text(weight = "bold"),
+        locations = gt::cells_row_groups()
       ) %>%
-      tab_style(
+      gt::tab_style(
         style = list(
-          cell_text(align = "right")
+          gt::cell_text(align = "right")
         ),
-        locations = cells_stub(rows = TRUE)
+        locations = gt::cells_stub(rows = TRUE)
       )%>%
-      cols_label(Variable = "")
-  })
+      gt::cols_label(Variable = "")
+  }) 
   
-  output$all <- render_gt({  gt_table() })
+  output$all <- gt::render_gt({  gt_table() })
   
   
   # ----------------------------------------------------------------------

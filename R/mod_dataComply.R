@@ -40,6 +40,7 @@ mod_dataComply_ui <- function(id){
 #'
 #' @import shiny
 #' @import dplyr
+#' @importFrom gt render_gt gt_output
 #'
 #' @return A list of dataframes which are compliant with the rules
 #'
@@ -82,8 +83,8 @@ mod_dataComply_server <- function(input, output, session,
       rv$return_dl <- err_tab$df_list
       
       # render error & warning gt objects for modal
-      output$err_gt <- render_gt({ err_tab$gt })
-      output$wrn_gt <- if(nrow(wrn_tab$df) > 0) render_gt({ wrn_tab$gt })
+      output$err_gt <- gt::render_gt({ err_tab$gt })
+      output$wrn_gt <- if(nrow(wrn_tab$df) > 0) gt::render_gt({ wrn_tab$gt })
       
       # Create modal pop-up UI
       showModal( modalDialog(
@@ -108,9 +109,9 @@ mod_dataComply_server <- function(input, output, session,
         # Content of the Modal Body
         tagList(
           br(),
-          gt_output(ns("err_gt")), # gt table of error vars
+          gt::gt_output(ns("err_gt")), # gt table of error vars
           br(),br(),
-          gt_output(ns("wrn_gt")), # gt table of warning vars
+          gt::gt_output(ns("wrn_gt")), # gt table of warning vars
           br()
         )
       ))
@@ -121,7 +122,7 @@ mod_dataComply_server <- function(input, output, session,
       if(nrow(wrn_tab$df) > 0){
         
         # render gt output for modal
-        output$wrn_gt <- render_gt({ wrn_tab$gt })
+        output$wrn_gt <- gt::render_gt({ wrn_tab$gt })
         
         # Only show modal for most recently uploaded data file, avoiding the
         # modal popping up for with every change in datalist() --> we only want
@@ -143,7 +144,7 @@ mod_dataComply_server <- function(input, output, session,
             # Content of the modal body
             tagList(
               br(),
-              gt_output(ns("wrn_gt")),
+              gt::gt_output(ns("wrn_gt")),
               br(),br()
               
             )
