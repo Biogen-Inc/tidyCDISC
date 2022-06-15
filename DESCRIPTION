@@ -72,8 +72,6 @@ Suggests:
     pkgdown,
     spelling,
     testthat
-VignetteBuilder: 
-    knitr
 Remotes: 
     Biogen-Inc/IDEAFilter
 Encoding: UTF-8
