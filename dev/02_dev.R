@@ -182,13 +182,14 @@ pkgbuild::build(vignettes = FALSE) # 1.2 MB don't build vignettes to save time o
 
 
 # update pkgdown site only if user needs refreshed documentation
-devtools::install_version("pkgdown", version = "1.6.1",
+devtools::install_version("pkgdown", version = "2.0.3",
                           repos = "http://cran.us.r-project.org")
 # usethis::use_pkgdown() # Run once to configure your package to use pkgdown
 pkgdown::build_articles() #
-pkgdown::build_articles_index() #
+pkgdown::build_articles_index() #TRUE
 pkgdown::build_home()
-pkgdown::build_reference_index() #
+pkgdown::build_reference_index() # WAS missing topics
+pkgdown::build_reference(preview = TRUE)
 pkgdown::build_news()
 pkgdown::build_site() # Run to build entire website
 
