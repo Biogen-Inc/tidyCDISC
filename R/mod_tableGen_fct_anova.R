@@ -30,7 +30,6 @@ app_anova.default <- function(column, week, group, data) {
 #' if ADSL supplied look for the column to take mean of
 #' and look for a grouping variable to group_by
 #' 
-#' @importFrom broom tidy
 #' @importFrom rlang sym !! 
 #' @import dplyr
 #' @return an ANOVA table of grouped variables
@@ -55,7 +54,8 @@ app_anova.ADAE <- app_anova.ADSL <- function(column, week, group = NULL, data) {
     
     all_dat <- data %>% dplyr::distinct(!!column, !!group, USUBJID)
     
-    ttest <- broom::tidy(aov(all_dat[[paste(column)]] ~ all_dat[[paste(group)]], data=all_dat))
+    ttest <- summary(aov(all_dat[[paste(column)]] ~ all_dat[[paste(group)]], data=all_dat))[[1]] %>%
+      tidyr::as_tibble()
     
     group_n <- length(unique(all_dat[[paste(group)]])) + 2
     
@@ -65,10 +65,10 @@ app_anova.ADAE <- app_anova.ADSL <- function(column, week, group = NULL, data) {
     anova_df[2,1] <- "Test Statistic"
     anova_df[3,1] <- "Mean Sum of Squares"
     anova_df[4,1] <- "Sum of Squares"
-    anova_df[1, group_n] <- round(ttest$p.value[1], 3)
-    anova_df[2, group_n] <- round(ttest$statistic[1], 2)
-    anova_df[3, group_n] <- round(ttest$meansq[1], 2)
-    anova_df[4, group_n] <- round(ttest$sumsq[1], 2)
+    anova_df[1, group_n] <- round(ttest$`Pr(>F)`[1], 3)
+    anova_df[2, group_n] <- round(ttest$`F value`[1], 2)
+    anova_df[3, group_n] <- round(ttest$`Mean Sq`[1], 2)
+    anova_df[4, group_n] <- round(ttest$`Sum Sq`[1], 2)
     
     anova_df <- dplyr::mutate_all(anova_df, as.character) %>%
       dplyr::mutate_all(dplyr::coalesce, "")
@@ -84,7 +84,6 @@ app_anova.ADAE <- app_anova.ADSL <- function(column, week, group = NULL, data) {
 #' We need to calculate the difference in N for this
 #' and report missing values from the mean if any
 #' 
-#' @importFrom broom tidy
 #' @importFrom rlang sym !!
 #' @import dplyr
 #' @return an ANOVA table of grouped variables
@@ -113,8 +112,9 @@ app_anova.BDS <- function(column, week, group = NULL, data) {
     
     if (length(unique(all_dat[[paste(group)]])) == 1) stop(glue::glue("Only one {group} in data selected, choose another week for ANOVA"))
     
-    ttest <- broom::tidy(aov(all_dat$AVAL ~ all_dat[[paste(group)]], data=all_dat))
-    
+    ttest <- summary(aov(all_dat$AVAL ~ all_dat[[paste(group)]], data=all_dat))[[1]] %>%
+      tidyr::as_tibble()
+
     group_n <- length(unique(all_dat[[paste(group)]])) + 2
     
     anova_df <- data.frame(matrix(NA, ncol=group_n, nrow=4))
@@ -122,10 +122,10 @@ app_anova.BDS <- function(column, week, group = NULL, data) {
     anova_df[2,1] <- "Test Statistic"
     anova_df[3,1] <- "Mean Sum of Squares"
     anova_df[4,1] <- "Sum of Squares"
-    anova_df[1, group_n] <- round(ttest$p.value[1], 3)
-    anova_df[2, group_n] <- round(ttest$statistic[1], 2)
-    anova_df[3, group_n] <- round(ttest$meansq[1], 2)
-    anova_df[4, group_n] <- round(ttest$sumsq[1], 2)
+    anova_df[1, group_n] <- round(ttest$`Pr(>F)`[1], 3)
+    anova_df[2, group_n] <- round(ttest$`F value`[1], 2)
+    anova_df[3, group_n] <- round(ttest$`Mean Sq`[1], 2)
+    anova_df[4, group_n] <- round(ttest$`Sum Sq`[1], 2)
     
     anova_df <- dplyr::mutate_all(anova_df, as.character) %>%
       dplyr::mutate_all(dplyr::coalesce, "")
