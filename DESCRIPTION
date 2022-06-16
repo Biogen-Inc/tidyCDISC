@@ -47,7 +47,6 @@ Imports:
     golem,
     gt,
     haven,
-    htmltools,
     IDEAFilter (>= 0.1.0.9000),
     magrittr,
     plotly,

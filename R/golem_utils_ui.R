@@ -9,7 +9,6 @@
 #' @examples
 #' list_to_li(c("a","b"))
 #'
-#' @importFrom htmltools tags tagAppendAttributes tagList
 list_to_li <- function(list, class = NULL){
   if (is.null(class)){
     tagList(
@@ -37,7 +36,6 @@ list_to_li <- function(list, class = NULL){
   
 }
 
-#' @importFrom htmltools tags tagAppendAttributes tagList
 list_to_p <- function(list, class = NULL){
   if (is.null(class)){
     tagList(
@@ -65,7 +63,6 @@ list_to_p <- function(list, class = NULL){
   
 }
 
-#' @importFrom htmltools tags tagAppendAttributes tagList
 named_to_li <- function(list, class = NULL){
   if(is.null(class)){
     res <- mapply(
@@ -140,7 +137,6 @@ tagRemoveAttributes <- function(tag, ...) {
 #' b <- shiny::actionButton("go_filter", "go")
 #' undisplay(b)
 #' 
-#' @importFrom htmltools tagList
 undisplay <- function(tag) {
   # if not already hidden
   if (
@@ -157,7 +153,6 @@ undisplay <- function(tag) {
   tag
 }
 
-#' @importFrom htmltools tagList
 display <- function(tag) {
   if (
     !is.null(tag$attribs$style) && 
@@ -178,7 +173,6 @@ display <- function(tag) {
 #' 
 #' @noRd
 #' 
-#' @importFrom htmltools tags
 jq_hide <- function(id) {
   tags$script(sprintf("$('#%s').hide()", id))
 }
@@ -196,13 +190,12 @@ jq_hide <- function(id) {
 #' @examples
 #' with_red_star("Enter your name here")
 #' 
-#' @importFrom htmltools tags HTML
 with_red_star <- function(text) {
-  htmltools::tags$span(
+  shiny::tags$span(
     HTML(
       paste0(
         text,
-        htmltools::tags$span(
+        shiny::tags$span(
           style = "color:red", "*"
         )
       )
@@ -222,7 +215,6 @@ with_red_star <- function(text) {
 #' @examples
 #' rep_br(5)
 #' 
-#' @importFrom htmltools HTML
 rep_br <- function(times = 1) {
   HTML(rep("<br/>", times = times))
 }
@@ -238,7 +230,6 @@ rep_br <- function(times = 1) {
 #' @examples
 #' enurl("https://www.thinkr.fr", "ThinkR")
 #' 
-#' @importFrom htmltools tags
 enurl <- function(url, text){
   tags$a(href = url, text)
 }
@@ -310,7 +301,6 @@ col_1 <- function(...){
 #' #' 
 #' #' @importFrom rmarkdown render
 #' #' @importFrom markdown markdownToHTML
-#' #' @importFrom htmltools HTML
 #' includeRMarkdown <- function(path){
 #'   
 #'   md <- tempfile(fileext = '.md')
