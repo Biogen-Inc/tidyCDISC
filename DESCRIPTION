@@ -37,7 +37,6 @@ BugReports: https://github.com/Biogen-Inc/tidyCDISC/issues
 Depends: 
     R (>= 2.10)
 Imports: 
-    broom,
     cicerone,
     config,
     data.table,
@@ -63,7 +62,6 @@ Imports:
     stringi,
     stringr,
     survival,
-    tibble,
     tidyr,
     timevis,
     tippy (== 0.1.0)

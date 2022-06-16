@@ -20,7 +20,6 @@
 #' @importFrom stringi stri_replace_all_regex
 #' @importFrom stringi %s+%
 #' @importFrom glue glue
-#' @importFrom tibble tibble
 #' @importFrom tidyr replace_na
 #'
 #' @family tableGen Functions
