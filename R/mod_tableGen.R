@@ -21,7 +21,6 @@
 #' @importFrom stringi stri_replace_all_regex
 #' @importFrom stringi %s+%
 #' @importFrom glue glue
-#' @importFrom tibble tibble
 #' @import tidyr
 #'
 #' @family tableGen Functions

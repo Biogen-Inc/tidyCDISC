@@ -111,7 +111,7 @@ convertTGOutput <- function(agg, blocks) {
     stop("Need additional statistics block")
   } else {
     
-    tibble(
+    tidyr::tibble(
       agg = purrr::map_chr(agg, "txt") %>% unname() %>% str_trim(),
       block = purrr::map_chr(blocks, "txt") %>% unname() %>% str_trim(),
       dataset = purrr::map_chr(blocks, "df") %>% unname() %>% str_trim(),
