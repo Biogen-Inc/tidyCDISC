@@ -70,6 +70,7 @@ CapStr <- function(y) {
 #' transpose dataframes so they can all 
 #' be used with rbind to generate
 #' the gt tables
+#' 
 #' @param df the dataframe to transpose
 #' @param num the number of rows to return
 #' @noRd
@@ -79,8 +80,8 @@ transpose_df <- function(df, num) {
   colnames(t_df) <- rownames(df)
   rownames(t_df) <- colnames(df)
   t_df <- t_df %>%
-    tibble::rownames_to_column(.data = .) %>%
-    tibble::as_tibble(.)
+    dplyr::mutate(rownames = rownames(.), .before = 1) %>%
+    tidyr::as_tibble(.)
   return(t_df[-num,])
 }
 
@@ -152,7 +153,7 @@ common_rownames <- function(data, group) {
 #' @importFrom purrr map2
 #' @importFrom stringr str_locate_all
 #' @importFrom utils capture.output
-#' @importFrom tibble as_tibble
+#' @importFrom tidyr as_tibble
 #' @importFrom shiny HTML
 #' 
 #' @return An HTML string
@@ -171,12 +172,12 @@ filters_in_english <- function(filtered_data, filter_header = "Filters Applied:"
   
   # find the start of the variable expressions using position of "filter"
   f_loc <- str_locate_all(code_text,"filter\\(")
-  filter_loc <- as_tibble(f_loc[[1]])
+  filter_loc <- tidyr::as_tibble(f_loc[[1]])
   var_st <- filter_loc$end + 1
   
   # find the end of variable expression susing position of "%>%"
   p_loc <- str_locate_all(code_text,"\\%\\>\\%") # have to use this
-  pipe_loc <- as_tibble(p_loc[[1]])
+  pipe_loc <- tidyr::as_tibble(p_loc[[1]])
   num_pipes <- nrow(pipe_loc)
   var_end <- c(pipe_loc$start[ifelse(num_pipes == 1, 1, 2):num_pipes] - 3, len - 1) # ifelse(num_pipes == 1, 1, 2)
   

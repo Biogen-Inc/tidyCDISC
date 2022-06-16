@@ -15,4 +15,4 @@ $run_dev.*
 ^\.github$
 cran-comments.md
 ^revdep$
-vignettes/
+^vignettes/*
