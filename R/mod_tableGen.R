@@ -207,9 +207,11 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     if(any(purrr::map_lgl(datafile(), ~"AVISIT" %in% colnames(.x)))){
         purrr::map(BDS(), function(x) x %>% dplyr::select(AVISIT)) %>%
           dplyr::bind_rows() %>%
-          dplyr::pull(AVISIT)
+          dplyr::distinct(AVISIT) %>%
+          dplyr::pull()
     } else {
-      NULL #c("fake_weeky","dummy_weeky") # DON'T use this comment part. It's handled in AVISIT()
+      NULL #c("fake_weeky","dummy_weeky") # DON'T use this comment part.
+                                          # It's handled in AVISIT()
     }
     
   })
@@ -221,7 +223,8 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     if(any(purrr::map_lgl(datafile(), ~"AVISIT" %in% colnames(.x)))){
         purrr::map(BDS(), function(x) x %>% dplyr::select(AVISITN)) %>%
           dplyr::bind_rows() %>%
-          dplyr::pull(AVISITN)
+          dplyr::distinct(AVISITN) %>%
+          dplyr::pull()
     } else {
       1:2
     }
@@ -234,12 +237,21 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     if (is.null(avisit_words())) {
       avisit_words <- c("fake_weeky","dummy_weeky")
     } else {
-      awd <- data.frame(AVISIT = avisit_words(), AVISITN = avisit_fctr())
+      # for testing
+      # nums <- c(2,4,6,8,12,16,20,24,26)
+      # avisit_words <- function() c("", "Baseline",paste("Week", nums), "End of Treatment")
+      # avisit_fctr <- function()c(NA, 0, nums, 99)
+      # rm(nums, avisit_words, avisit_fctr)
+      
+      awd <- tidyr::tibble(AVISIT = avisit_words(), AVISITN = avisit_fctr())
       avisit_words <-
+        # tidyr::tibble(AVISIT = avisit_words(), AVISITN = avisit_fctr()) %>%
+        # dplyr::mutate(AVISIT = as.factor(AVISIT)) %>%
+        # dplyr::mutate(AVISIT = forcats::fct_reorder(AVISIT, AVISITN)) %>%
         awd %>%
-        mutate(AVISIT = factor(AVISIT,
-            levels = unique(awd[order(awd$AVISITN), "AVISIT"]))) %>%
-        pull(AVISIT) %>%
+        dplyr::mutate(AVISIT = factor(AVISIT,
+            levels = awd[order(awd$AVISITN), "AVISIT"][[1]] %>% unique() )) %>%
+        dplyr::pull(AVISIT) %>%
         unique()
     }
     avisit_words[avisit_words != ""]
