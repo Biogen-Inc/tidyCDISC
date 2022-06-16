@@ -20,7 +20,7 @@ checking package dependencies ... NOTE
   use conditionally.
 ```
 
-To address `NOTE` #2: `tidyCDISC` is (nearly) a "one stop shop" application for clinical reporting in the pharmaceutical space. As such, it leverages many modules to perform many tasks. Many tasks require many packages. I've surgically paired the application down to only packages that are absolutely necessary prior to submission.
+To address `NOTE` #2: `tidyCDISC` is (nearly) a "one stop shop" application for clinical reporting in the pharmaceutical space. As such, it leverages many modules to perform many tasks. Many tasks require many packages. I've surgically paired down the dependency list from 44 to the current number of packages that (I feel) are absolutely necessary prior to submission. And those that remain are primarily "mainstream", maintained by reputable & well known authors in the R community.
 
 
     
