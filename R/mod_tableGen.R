@@ -16,7 +16,7 @@
 #' @importFrom purrr map2
 #' @importFrom purrr imap
 #' @importFrom gt gt fmt_markdown tab_options cols_label tab_header md tab_style
-#'   cell_text cells_row_groups cells_stub render_gt
+#'   cell_text cells_row_groups cells_stub render_gt gtsave
 #' @importFrom stringi stri_replace_all_regex
 #' @importFrom stringi %s+%
 #' @importFrom glue glue
@@ -610,7 +610,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
         write.csv(for_gt(), file, row.names = FALSE)
       } else if(input$download_type == ".html") {
         exportHTML <- gt_table()
-        gtsave(exportHTML, file)
+        gt::gtsave(exportHTML, file)
       }
     }
   ) 

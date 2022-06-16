@@ -289,7 +289,7 @@ fnIndvExplVisits <- function(
       if(input_plot_adam %in% c("ADLB","ADLBC") &
          all(c("LBSTNRLO","LBSTNRHI") %in% colnames(plot_dat))){
         ly <- ly %>%
-          plotly::add_annotations(x = ggplot_build(lb_plot)$layout$panel_params[[1]]$x.range[1],
+          plotly::add_annotations(x = ggplot2::ggplot_build(lb_plot)$layout$panel_params[[1]]$x.range[1],
                           y = -.15, # 15% below graph
                           yref = "paper",
                           text = paste0("<br>Note: Study's average ",input_plot_param," range shown in ",'<em style="color:blue">',"blue",'</em> ',lohi),
