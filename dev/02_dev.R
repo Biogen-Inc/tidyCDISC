@@ -38,7 +38,7 @@ usethis::use_package("gt")
 # usethis::use_package("shinyBS")
 usethis::use_package("knitr", type = "Suggests")
 usethis::use_package("rlang")
-usethis::use_package("stringi")
+# usethis::use_package("stringi")
 # usethis::use_package("forcats")
 
 # cannot use dev!
