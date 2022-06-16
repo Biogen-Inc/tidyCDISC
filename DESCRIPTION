@@ -58,7 +58,6 @@ Imports:
     shinyjs,
     shinyWidgets,
     sjlabelled,
-    stringi,
     stringr,
     survival,
     tidyr,
