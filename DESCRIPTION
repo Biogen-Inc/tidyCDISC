@@ -35,7 +35,6 @@ BugReports: https://github.com/Biogen-Inc/tidyCDISC/issues
 Depends: 
     R (>= 2.10)
 Imports: 
-    broom,
     cicerone,
     config,
     data.table,
