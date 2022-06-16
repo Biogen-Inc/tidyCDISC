@@ -375,11 +375,10 @@ data_to_use_str <- function(x, ae_data, bds_data) {
 #' This object is used within the table generator module
 #' to add pretty names for each stat block when displayed in the table
 #' 
-#' @importFrom tibble tibble
 #' @export
 #' @keywords tabGen_repro
 #' 
-pretty_blocks <- tibble::tibble(
+pretty_blocks <- tidyr::tibble(
   Pattern = c("MEAN", "FREQ", "CHG", "Y_FREQ", "MAX_FREQ", "NON_MISSING",
               "NESTED_FREQ_DSC", "NESTED_FREQ_ABC"),
   Replacement = c("Descriptive Statistics", 

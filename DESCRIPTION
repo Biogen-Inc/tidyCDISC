@@ -62,7 +62,6 @@ Imports:
     stringi,
     stringr,
     survival,
-    tibble,
     tidyr,
     tidyselect,
     timevis,
