@@ -136,19 +136,10 @@ remotes::install_github("Biogen-Inc/tidyCDISC")
 
 With a simple `library(tidyCDISC)` you can access all the exported
 functions from `tidyCDISC` that help users reproduce analysis performed
-in the app. Using the dev/run_dev.R file, you can even run the
-application locally:
+in the app. Or, you can run the application locally (or deploy it in an
+`app.R` file) using:
 
 ``` r
-# Set options here
-options(golem.app.prod = FALSE) # TRUE = production mode, FALSE = development mode
-
-# Detach all loaded packages and clean your environment
-golem::detach_all_attached()
-
-# Document and reload your package, which runs these three functions...
-golem::document_and_reload()
-
 # Run the application 
 tidyCDISC::run_app()
 ```

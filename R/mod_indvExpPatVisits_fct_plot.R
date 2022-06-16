@@ -226,8 +226,8 @@ fnIndvExplVisits <- function(
       lb_plot <- lb_plot + 
         ggplot2::geom_hline(ggplot2::aes(yintercept = mean(LBSTNRLO)), color = "blue") +
         ggplot2::geom_hline(ggplot2::aes(yintercept = mean(LBSTNRHI)), color = "blue") +
-        theme(
-          plot.margin = margin(b = 1.2, unit = "cm")
+        ggplot2::theme(
+          plot.margin = ggplot2::margin(b = 1.2, unit = "cm")
         ) 
     } 
     

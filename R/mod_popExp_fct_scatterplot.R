@@ -179,10 +179,10 @@ app_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y, 
   # Add plot layers common to all graphs
   p <- p + 
     ggplot2::theme_bw() +
-    theme(
-      text = element_text(size = 12),
-      axis.text = element_text(size = 12),
-      plot.title = element_text(size = 16)
+    ggplot2::theme(
+      text = ggplot2::element_text(size = 12),
+      axis.text = ggplot2::element_text(size = 12),
+      plot.title = ggplot2::element_text(size = 16)
     ) +
     ggplot2::ggtitle(paste(var_title, by_title)
                      # ,subtitle = paste(by_title) # plotly won't automatically accept this
@@ -191,7 +191,7 @@ app_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y, 
   # Add in plot layers conditional upon user selection
   if (separate != "NONE") { p <- p + ggplot2::facet_wrap(stats::as.formula(paste(".~", separate))) }
   if (color != "NONE") { p <- p + ggplot2::aes_string(color = color)}
-  if (by_title != "") {p <- p + theme(plot.margin = margin(t = 1.2, unit = "cm"))}
+  if (by_title != "") {p <- p + ggplot2::theme(plot.margin = ggplot2::margin(t = 1.2, unit = "cm"))}
   
   return(p)
 }
