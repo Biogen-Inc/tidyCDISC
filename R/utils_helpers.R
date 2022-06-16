@@ -81,7 +81,7 @@ transpose_df <- function(df, num) {
   rownames(t_df) <- colnames(df)
   t_df <- t_df %>%
     dplyr::mutate(rownames = rownames(.), .before = 1) %>%
-    tidry::as_tibble(.)
+    tidyr::as_tibble(.)
   return(t_df[-num,])
 }
 
