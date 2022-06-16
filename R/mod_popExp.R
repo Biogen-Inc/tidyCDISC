@@ -7,7 +7,7 @@
 #' 
 #' @import shiny
 #' @import dplyr
-#' @import IDEAFilter
+#' @importFrom IDEAFilter shiny_data_filter
 #' @importFrom haven zap_label zap_formats
 #' @importFrom purrr map walk2
 #' 
@@ -175,7 +175,7 @@ mod_popExp_server <- function(input, output, session, datafile) {
   
   # Call IDEAFilter Module
   filtered_data <- callModule(
-    shiny_data_filter,
+    IDEAFilter::shiny_data_filter,
     "data_filter",         # whatever you named the widget
     data = feed_filter,    # the name of your pre-processed data
     verbose = FALSE)

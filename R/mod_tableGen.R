@@ -4,7 +4,7 @@
 #' @param datafile all uploaded data files from the dataImport module
 #' @param filePaths NULL
 #'
-#' @import IDEAFilter
+#' @importFrom IDEAFilter shiny_data_filter
 #' @importFrom rlang sym
 #' @importFrom rlang !!
 #' @importFrom rlang call2
@@ -178,7 +178,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   })
   
   # create a reactive for the data with filters applied
-  filtered_data <- callModule(shiny_data_filter, "data_filter", data = processed_data, verbose = FALSE)
+  filtered_data <- callModule(IDEAFilter::shiny_data_filter, "data_filter", data = processed_data, verbose = FALSE)
   
   # apply filters from selected dfs to tg data to create all data
   all_data <- reactive({suppressMessages(bds_data() %>% semi_join(filtered_data()) %>% varN_fctr_reorder2())})

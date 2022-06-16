@@ -49,9 +49,9 @@ app_boxplot <- function(data, yvar, group, value = NULL, points = FALSE) {
     ggplot2::geom_boxplot() +
     ggplot2::xlab("") +
     ggplot2::theme_bw() +
-    ggplot2::theme(text = element_text(size = 12),
-                   axis.text = element_text(size = 12),
-                   plot.title = element_text(size = 16)) +
+    ggplot2::theme(text = ggplot2::element_text(size = 12),
+                   axis.text = ggplot2::element_text(size = 12),
+                   plot.title = ggplot2::element_text(size = 16)) +
     ggplot2::ggtitle(var_title)
   
   # Conditionally add jittered points to plot

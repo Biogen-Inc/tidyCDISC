@@ -10,7 +10,7 @@
 #'
 #' @import shiny
 #' @importFrom plotly plotlyOutput
-#' @importFrom IDEAFilter shiny_data_filter
+#' @importFrom IDEAFilter shiny_data_filter_ui
 #' 
 #' @family popExp Functions
 #' @noRd

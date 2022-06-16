@@ -215,7 +215,7 @@ app_heatmap <- function(data, yvar_x, yvar_y, time, value = "AVAL",
   time_lab <- ifelse(rlang::is_empty(attr(data[["time"]], "label")), time, attr(data[[time]], "label"))
   
   # library(ggplot2)
-  p <- ggplot(tile_data, aes(param_x, param_y, fill=corr, label = corr_lab,
+  p <- ggplot2::ggplot(tile_data, aes(param_x, param_y, fill=corr, label = corr_lab,
          text = paste0(
            "<b>Param X: ", param_x,
            "<br>Param Y: ", param_y,
@@ -225,19 +225,19 @@ app_heatmap <- function(data, yvar_x, yvar_y, time, value = "AVAL",
            ifelse(rep(time == "NONE", nrow(tile_data)), "", paste0("<br>",time,": ", !!time_sym)),
            "</b>")
   ))  +
-    geom_tile(height=0.8, width=0.8) +
-    geom_text(cex = 4.5) +
-    scale_fill_gradient2(low = "#3B9AB2", mid = "#EEEEEE", high = "#F21A00") +
-    theme_minimal() +
+    ggplot2::geom_tile(height=0.8, width=0.8) +
+    ggplot2::geom_text(cex = 4.5) +
+    ggplot2::scale_fill_gradient2(low = "#3B9AB2", mid = "#EEEEEE", high = "#F21A00") +
+    ggplot2::theme_minimal() +
     # coord_equal() +
-    labs(title = paste("Endpoint Corrlation Matrix", ifelse(time == "NONE", "", paste("by", time_lab))),
+    ggplot2::labs(title = paste("Endpoint Corrlation Matrix", ifelse(time == "NONE", "", paste("by", time_lab))),
       x ="X Parameter(s)",y = "Y Parameter(s)", fill = "Corr") +
-    theme(axis.title=element_text(colour="gray20"),
-          axis.text.x=element_text(size=13, angle=0, vjust=1, hjust=1, 
-                                   margin=margin(-3,0,10,0)),
-          axis.text.y=element_text(size=13, margin=margin(0,-3,0,10)),
-          panel.grid.major=element_blank(),
-          plot.title = element_text(size = 16))
+    ggplot2::theme(axis.title=ggplot2::element_text(colour="gray20"),
+          axis.text.x=ggplot2::element_text(size=13, angle=0, vjust=1, hjust=1, 
+                                   margin = ggplot2::margin(-3,0,10,0)),
+          axis.text.y=ggplot2::element_text(size=13, margin = ggplot2::margin(0,-3,0,10)),
+          panel.grid.major=ggplot2::element_blank(),
+          plot.title = ggplot2::element_text(size = 16))
   if (time != "NONE") { 
     p <- p + ggplot2::facet_wrap(stats::as.formula(paste(".~", time)), scales = "free")
   }

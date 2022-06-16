@@ -11,7 +11,7 @@
 
 #' @import shiny
 #' @import dplyr
-#' @import IDEAFilter
+#' @importFrom IDEAFilter shiny_data_filter
 #' @importFrom stringr str_detect 
 #' @importFrom purrr map update_list reduce
 #' @importFrom shinyjs show hide
@@ -108,7 +108,7 @@ mod_indvExp_server <- function(input, output, session, datafile){
   
   # Feed IDEAFilter! Returns data frame to use down stream... May be filtered or not
   filtered_data <- callModule(
-    shiny_data_filter,     # Module name
+    IDEAFilter::shiny_data_filter,     # Module name
     "data_filter",         # whatever you named the widget
     data = feed_filter,    # the name of your pre-processed data
     verbose = FALSE)
