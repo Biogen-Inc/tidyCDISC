@@ -8,6 +8,8 @@ Authors@R: c(
     person("Maya", "Gans", , "maya.gans@biogen.com", role = "aut"),
     person("Robert", "Krajcik", , "robert.krajcik@biogen.com", role = "ctb"),
     person("Marly", "Gotti", , "marly.cormar@biogen.com", role = "ctb"),
+    person(given = "Jeff", family = "Thompson", 
+        email = "jeff.thompson51317@gmail.com", role = "ctb"),
     person("Biogen", "Inc", role = "cph")
   )
 Description: Provides users a quick exploratory dive into common
