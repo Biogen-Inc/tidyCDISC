@@ -16,7 +16,6 @@
 #' @importFrom shinyjs show hide
 #' @importFrom timevis renderTimevis
 #' @importFrom plotly renderPlotly
-#' @importFrom tidyselect any_of
 #' @importFrom stringr str_to_title
 #'
 #' @return character string containing a USUBJID
@@ -73,14 +72,14 @@ mod_indvExpPat_server <- function(input, output, session, datafile, loaded_adams
       adsl <- datafile()[["ADSL"]]
       adsl_rec <- datafile()[["ADSL"]] %>%
         filter(USUBJID == input$selPatNo) %>%
-        select(any_of("RGNGR1")
-               , any_of(ifelse("COUNTRYC" %in% colnames(adsl),"COUNTRYC","COUNTRY"))
-               , any_of("RACE") 
-               , any_of("SEX")
-               , any_of("AGE"), any_of(ifelse("AGEGR" %in% colnames(adsl),"AGEGR","AGEGR1"))
-               , any_of("HEIGHTBL"), any_of("HEIGHTU")
-               , any_of("WEIGHTBL"), any_of("WEIGHTU")
-               , any_of("SITEID"), any_of("TRTP"), any_of("TRT01P")) 
+        select(dplyr::any_of("RGNGR1")
+               , dplyr::any_of(ifelse("COUNTRYC" %in% colnames(adsl),"COUNTRYC","COUNTRY"))
+               , dplyr::any_of("RACE") 
+               , dplyr::any_of("SEX")
+               , dplyr::any_of("AGE"), dplyr::any_of(ifelse("AGEGR" %in% colnames(adsl),"AGEGR","AGEGR1"))
+               , dplyr::any_of("HEIGHTBL"), dplyr::any_of("HEIGHTU")
+               , dplyr::any_of("WEIGHTBL"), dplyr::any_of("WEIGHTU")
+               , dplyr::any_of("SITEID"), dplyr::any_of("TRTP"), dplyr::any_of("TRT01P")) 
       
       adsl_rec <- as.data.frame((adsl_rec)) # 'data' must be 2-dimensional (e.g. data frame or matrix)
       

@@ -57,7 +57,7 @@ mod_popExp_server <- function(input, output, session, datafile) {
       
       # Bind all the BDS (PARAMCD) files and filter them & remove any "ADSL" variables lurking
       all_BDSDATA <- bind_rows(NOTADSL, .id = "data_from")  %>%
-        select(-tidyselect::any_of(c("AGEGR","AGEGRN","RACE","RACEN","SEX","SEXN")))
+        select(-dplyr::any_of(c("AGEGR","AGEGRN","RACE","RACEN","SEX","SEXN")))
       
       # Manipulate ADSL to contain USUBJID plus all the names that are unique to ADSL
       ADSL.1 <- select(ADSL, USUBJID, dplyr::setdiff(names(ADSL), names(all_BDSDATA)))
