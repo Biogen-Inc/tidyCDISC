@@ -830,7 +830,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       mutate(
         ID = purrr::reduce(
           list(
-            pattern = stringr::str_c('\\b', pretty_blocks$Pattern, '\\b', sep = ''),
+            pattern = stringr::str_c('\\\\b', pretty_blocks$Pattern, '\\\\b', sep = ''),
             replacement = pretty_blocks$Replacement
           ) %>% purrr::transpose(),
           ~ stringr::str_replace_all(.x, .y$pattern, .y$replacement),
