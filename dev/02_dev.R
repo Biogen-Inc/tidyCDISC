@@ -39,7 +39,7 @@ usethis::use_package("gt")
 usethis::use_package("knitr", type = "Suggests")
 usethis::use_package("pkgdown", type = "Suggests")#, min_version = "1.6.1")
 usethis::use_package("rlang")
-usethis::use_package("stringi")
+# usethis::use_package("stringi")
 # usethis::use_package("forcats")
 
 # cannot use dev!

@@ -17,8 +17,7 @@
 #' @importFrom purrr imap
 #' @importFrom gt gt fmt_markdown tab_options cols_label tab_header md tab_style
 #'   cell_text cells_row_groups cells_stub render_gt gtsave
-#' @importFrom stringi stri_replace_all_regex
-#' @importFrom stringi %s+%
+#' @importFrom purrr transpose
 #' @importFrom glue glue
 #' @importFrom tidyr replace_na
 #'
@@ -496,11 +495,14 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     setNames(paste(blocks_and_functions()$gt_group)) %>%
     bind_rows(.id = "ID")  %>%
       mutate(
-        ID = stringi::stri_replace_all_regex(
-          ID, 
-          pattern = '\\b'%s+%pretty_blocks$Pattern%s+%'\\b',
-          replacement = pretty_blocks$Replacement,
-          vectorize_all = FALSE))
+        ID = purrr::reduce(
+          list(
+            pattern = stringr::str_c('\\b', pretty_blocks$Pattern, '\\b', sep = ''),
+            replacement = pretty_blocks$Replacement
+          ) %>% purrr::transpose(),
+          ~ stringr::str_replace_all(.x, .y$pattern, .y$replacement),
+          .init = ID
+        ))
     return(d)
   })
   
@@ -745,7 +747,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     
     options(digits = 3)
 
-    pkgs_req <- c('tidyCDISC', 'purrr', 'haven', 'dplyr', 'stringi', 'stringr', 'tidyr', 'gt', 'diffdf')
+    pkgs_req <- c('tidyCDISC', 'purrr', 'haven', 'dplyr', 'stringr', 'tidyr', 'gt', 'diffdf')
     pkgs_needed <- pkgs_req[!(pkgs_req %in% installed.packages()[,'Package'])]
     if('tidyCDISC' %in% pkgs_needed) remotes::install_github('Biogen-Inc/tidyCDISC')
     pkgs_needed <- pkgs_needed[pkgs_needed != 'tidyCDISC']
@@ -755,8 +757,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     library(purrr)
     library(haven)
     library(dplyr)
-    library(stringi)
-        
+
     {create_script_data()}
     pre_adsl <- tidyCDISC::prep_adsl(datalist$ADSL, input_recipe = '{RECIPE()}')
     {adae_expr()}
@@ -838,11 +839,14 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       setNames(paste(blockData$gt_group)) %>%
       bind_rows(.id = 'ID') %>%
       mutate(
-        ID = stringi::stri_replace_all_regex(
-          ID, 
-          pattern = '\\\\b'%s+%pretty_blocks$Pattern%s+%'\\\\b',
-          replacement = pretty_blocks$Replacement,
-          vectorize_all = FALSE))
+        ID = purrr::reduce(
+          list(
+            pattern = stringr::str_c('\\\\b', pretty_blocks$Pattern, '\\\\b', sep = ''),
+            replacement = pretty_blocks$Replacement
+          ) %>% purrr::transpose(),
+          ~ stringr::str_replace_all(.x, .y$pattern, .y$replacement),
+          .init = ID
+        ))
       
       # get the rownames for the table
       row_names_n <- names(tg_table)[-c(1:2)]

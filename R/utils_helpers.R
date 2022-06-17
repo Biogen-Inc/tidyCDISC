@@ -73,6 +73,7 @@ CapStr <- function(y) {
 #' 
 #' @param df the dataframe to transpose
 #' @param num the number of rows to return
+#' @importFrom data.table transpose
 #' @noRd
 #' 
 transpose_df <- function(df, num) {
@@ -242,7 +243,6 @@ getLevels <- function(x) {if(is.factor(x)) levels(x) else sort(unique(x), na.las
 #' @param data a dataframe, including one enriched with SAS labels attributes
 #' 
 #' @importFrom sjlabelled get_label set_label
-#' @importFrom data.table setDT 
 #' @importFrom purrr walk2 
 #' 
 #' @export
