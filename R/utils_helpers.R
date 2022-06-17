@@ -79,10 +79,10 @@ CapStr <- function(y) {
 #' 
 transpose_df <- function(df, num) {
   t_df <- df %>%
-    dplyr::mutate(rowname = rownames(.), .before = 1) %>%
-    tidyr::pivot_longer(-rowname) %>%
-    tidyr::pivot_wider(names_from = rowname) %>%
-    dplyr::rename(rowname = name)
+    dplyr::mutate("rowname" = rownames(.), .before = 1) %>%
+    tidyr::pivot_longer(-"rowname") %>%
+    tidyr::pivot_wider(names_from = "rowname") %>%
+    dplyr::rename("rowname" = "name")
   return(t_df[-num,])
 }
 
