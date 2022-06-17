@@ -73,16 +73,16 @@ CapStr <- function(y) {
 #' 
 #' @param df the dataframe to transpose
 #' @param num the number of rows to return
-#' @importFrom data.table transpose
+#' @importFrom dplyr mutate rename
+#' @importFrom tidyr pivot_longer pivot_wider
 #' @noRd
 #' 
 transpose_df <- function(df, num) {
-  t_df <- data.table::transpose(df)
-  colnames(t_df) <- rownames(df)
-  rownames(t_df) <- colnames(df)
-  t_df <- t_df %>%
-    dplyr::mutate(rownames = rownames(.), .before = 1) %>%
-    tidyr::as_tibble(.)
+  t_df <- df %>%
+    dplyr::mutate(rowname = rownames(.), .before = 1) %>%
+    tidyr::pivot_longer(-rowname) %>%
+    tidyr::pivot_wider(names_from = rowname) %>%
+    dplyr::rename(rowname = name)
   return(t_df[-num,])
 }
 
