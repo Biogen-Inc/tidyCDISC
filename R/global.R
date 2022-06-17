@@ -84,7 +84,6 @@ utils::globalVariables(c(
   "tab_en",
   "tab_st",
   "type_col",
-  "%s+%",
   ".",
   "CHG",
   "ID",
