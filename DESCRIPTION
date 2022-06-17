@@ -39,7 +39,6 @@ Depends:
 Imports: 
     cicerone,
     config,
-    data.table,
     dplyr,
     DT,
     GGally,

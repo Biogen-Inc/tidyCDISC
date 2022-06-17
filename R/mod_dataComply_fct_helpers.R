@@ -36,7 +36,6 @@
 #' @import shiny
 #' @import dplyr
 #' @importFrom purrr map map2 pmap
-#' @importFrom data.table rbindlist
 #' @importFrom gt gt cols_label text_transform cells_body local_image tab_header
 #'   tab_stubhead tab_style  cells_stubhead cols_align cells_row_groups
 #'   cols_hide cell_text
@@ -96,7 +95,7 @@ gather_reqs <- function(input, output, session,
     alldf <- purrr::map(.x = names(datalist()), function(x) alldf[[x]] <- all_df_rules) %>%
       setNames(names(datalist()))%>%
       lapply(data.frame, stringsAsFactors = FALSE) %>%
-      data.table::rbindlist(fill=TRUE, idcol = "df") %>%
+      bind_rows(.id = "df") %>%
       subset(df %in% names(datalist())) %>% 
       mutate(type_col = if(disp_type == "error") error else warn) %>% 
       subset(type_col != "") %>% 
@@ -120,7 +119,7 @@ gather_reqs <- function(input, output, session,
     if(!expl_sl_nms_correct) stop("Sublist Names must be 'error' and 'warn' for each element of 'expl_rules'")
     
     hdf <- lapply(expl_rules, data.frame, stringsAsFactors = FALSE) %>%
-      data.table::rbindlist(fill=TRUE, idcol = "df") %>%
+      bind_rows(.id = "df") %>%
       subset(df %in% names(datalist())) %>% 
       mutate(type_col = if(disp_type == "error") error else warn) %>% 
       subset(type_col != "") %>% 
@@ -145,7 +144,7 @@ gather_reqs <- function(input, output, session,
     # Organize Rules into a dataframe & get concise initial reqs
     dfw_type <-
       lapply(df_incl_rules, data.frame, stringsAsFactors = FALSE) %>%
-      data.table::rbindlist(fill=TRUE, idcol = "df_var") %>%
+      bind_rows(.id = "df_var") %>%
       mutate(type_col = if(disp_type == "error") error else warn) %>%
       subset(type_col != "") %>% 
       distinct(df_var, type_col) 
@@ -158,7 +157,7 @@ gather_reqs <- function(input, output, session,
         map(.x = names(datalist()), ~df_vars[df_vars %in% colnames(datalist()[[.x]])]) %>%
         setNames(names(datalist())) %>%
         lapply(data.frame, stringsAsFactors = FALSE) %>%
-        data.table::rbindlist(fill=TRUE, idcol = "df") %>%
+        bind_rows(.id = "df") %>%
         rename("df_var" = "X..i..") %>%
         inner_join(dfw_type, by = c("df_var")) %>%
         distinct(df, df_var, type_col) %>%
@@ -186,7 +185,7 @@ gather_reqs <- function(input, output, session,
     # Organize Rules into a dataframe & get concise initial reqs
     dfw_ette_type <-
       lapply(df_incl_rules_except_tte, data.frame, stringsAsFactors = FALSE) %>%
-      data.table::rbindlist(fill=TRUE, idcol = "df_var") %>%
+      bind_rows(.id = "df_var") %>%
       mutate(type_col = if(disp_type == "error") error else warn) %>%
       subset(type_col != "") %>% 
       distinct(df_var, type_col) 
@@ -199,7 +198,7 @@ gather_reqs <- function(input, output, session,
         map(.x = names(datalist()), ~df_ette_var[df_ette_var %in% colnames(datalist()[[.x]]) & !("CNSR" %in% colnames(datalist()[[.x]]))]) %>%
         setNames(names(datalist())) %>%
         lapply(data.frame, stringsAsFactors = FALSE) %>%
-        data.table::rbindlist(fill=TRUE, idcol = "df") %>%
+        bind_rows(.id = "df") %>%
         rename("df_var" = "X..i..") %>%
         inner_join(dfw_ette_type, by = c("df_var")) %>%
         distinct(df, df_var, type_col) %>%

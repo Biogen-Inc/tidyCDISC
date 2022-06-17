@@ -73,7 +73,6 @@ df_incl_rules <-
 #' @import dplyr
 #' @importFrom dplyr %>%
 #' @importFrom rlang is_empty
-#' @importFrom data.table rbindlist
 #' @importFrom purrr map2 pmap
 #'
 #' @return An shiny tagList
@@ -115,7 +114,7 @@ gather_rules <- function(input, output, session,
   if(!is.null(expl_rules) & !is.null(names(expl_rules))) {
     hdf <- 
       lapply(expl_rules, data.frame, stringsAsFactors = FALSE) %>%
-      data.table::rbindlist(fill=TRUE, idcol = "df")
+      bind_rows(.id = "df")
     
     hdf_err <- 
       hdf %>%
@@ -148,7 +147,7 @@ gather_rules <- function(input, output, session,
   if(!is.null(df_incl_rules) & !is.null(names(df_incl_rules))) {
     dfw <-
       lapply(df_incl_rules, data.frame, stringsAsFactors = FALSE) %>%
-      data.table::rbindlist(fill=TRUE, idcol = "df_var")
+      bind_rows(.id = "df_var")
     
     dfw_err <-
       dfw %>%
@@ -181,7 +180,7 @@ gather_rules <- function(input, output, session,
   if(!is.null(df_incl_rules_except_tte) & !is.null(names(df_incl_rules_except_tte))) {
     dfw_ette <-
       lapply(df_incl_rules_except_tte, data.frame, stringsAsFactors = FALSE) %>%
-      data.table::rbindlist(fill=TRUE, idcol = "df_var")
+      bind_rows(.id = "df_var")
     
     dfw_ette_err <-
       dfw_ette %>%
