@@ -83,13 +83,7 @@ mod_dataUpload_server <- function(input, output, session){
   # standard to imitate output of detectStandard.R
   dd <- reactiveValues()
   
-  # observe({
-  #   # print(input$pilot_selections)
-  #   # input <- list(pilot_selections = c(rlang::sym("adsl"), rlang::sym("adae"), rlang::sym("adlbc")))
-  # 
-  # })
-  
-  
+
   # modify reactive values when data is uploaded
   observeEvent(input$file, {
     
