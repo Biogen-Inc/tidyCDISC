@@ -48,7 +48,7 @@ Imports:
     golem,
     gt,
     haven,
-    IDEAFilter (>= 0.1.0.9000),
+    IDEAFilter,
     plotly,
     purrr,
     rlang,
@@ -67,8 +67,6 @@ Suggests:
     pkgdown,
     spelling,
     testthat
-Remotes: 
-    Biogen-Inc/IDEAFilter
 Encoding: UTF-8
 Language: en-US
 LazyData: true
