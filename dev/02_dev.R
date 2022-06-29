@@ -46,8 +46,10 @@ usethis::use_package("rlang")
 # usethis::use_dev_package("tippy") #remotes::install_github("JohnCoene/tippy") #‘1.0.0’
 usethis::use_package("tippy")
 
-# usethis::use_package("IDEAFilter") # install.packages("IDEAFilter") #‘0.1.0.9000’
-usethis::use_dev_package("IDEAFilter") # devtools::install_github("Biogen-Inc/IDEAFilter")
+# install.packages('IDEAFilter', repos='http://cran.us.r-project.org')
+usethis::use_package("IDEAFilter") # install.packages("IDEAFilter") 
+# old...
+# usethis::use_dev_package("IDEAFilter") # devtools::install_github("Biogen-Inc/IDEAFilter")
 
 # usethis::use_dev_package("rsconnect") 
 usethis::use_package("ggplot2")
