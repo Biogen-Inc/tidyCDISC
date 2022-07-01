@@ -2,7 +2,7 @@
 % Please edit documentation in R/mod_popExp_fct_scatterplot.R
 \name{app_scatterplot}
 \alias{app_scatterplot}
-\title{tidyCDISC scatterplot}
+\title{Scatterplot}
 \usage{
 app_scatterplot(
   data,
@@ -36,6 +36,9 @@ either AVAL, CHG, or BASE}
 \item{separate}{character, categorical or factor variable to facet plots by. Default is 'NONE'.}
 
 \item{color}{character, categorical or factor variable to COLOR points by. Default is 'NONE'.}
+}
+\value{
+A ggplot object containing the scatterplot
 }
 \description{
 Create scatter plot where if the variables are numeric then they

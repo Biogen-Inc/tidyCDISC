@@ -1,3 +1,5 @@
+#' Read SAS Data Files
+#' 
 #' Function to read the SAS list of user supplied data frames
 #'
 #' @param study_directory character, containing file path to CDISC data.frames
@@ -6,6 +8,8 @@
 #'
 #' @export
 #' @keywords tabGen_repro
+#'
+#' @return A list of data frames containing the data from the SAS data files
 #'   
 readData <- function(study_directory, file_names) {
   purrr::map(file_names, ~haven::read_sas(file.path(study_directory,.x))) %>%
@@ -13,14 +17,17 @@ readData <- function(study_directory, file_names) {
 }
 
 
-#' Function to bind data rows from the list of user supplied data frames
+#' Combine BDS Data Frames
 #' 
-#' @param datafile list of ADaM-ish dataframes 
-#' @param ADSL A dataframe which contains the ADSL data
+#' @description A function to combine all BDS data frames into one large data set.
+#' 
+#' @param datafile list of ADaM-ish data frames 
+#' @param ADSL A data frame which contains the ADSL data
 #' 
 #' @export
 #' @keywords tabGen_repro
 #' 
+#' @return A data frame containing the BDS data bound by rows.
 combineBDS <- function(datafile, ADSL) {
   init <- sapply(datafile, function(x) "PARAMCD" %in% colnames(x) & !("CNSR" %in% colnames(x)))
   BDS <- datafile[init[substr(names(init),1,4) != "ADTT"]] # remove TTE class df's because `AVISIT` col doesn't exist in that class of df
@@ -102,11 +109,15 @@ prep_adsl <- function(ADSL, input_recipe) { #, stan_table_num
 
 #' Function to clean and combine ADAE dataset with ADSL
 #' 
-#' @param datafile list of ADaM-ish dataframes 
-#' @param ADSL A dataframe which contains the ADSL data
+#' @param datafile list of ADaM-ish data frames 
+#' @param ADSL A data frame which contains the ADSL data
 #' 
 #' @export
 #' @keywords tabGen_repro
+#' 
+#' @return A cleaned ADAE data frame
+#' 
+#' @details Finds the columns in the ADAE data frame, if it exists, in common with ADSL (besides USUBJID) and removes them from the ADAE so that the ADSL columns are used instead, then joins on USUBJID and re-orders the column names to match ADAE.
 #' 
 cleanADAE <- function(datafile, ADSL) {
   if("ADAE" %in% names(datafile)){

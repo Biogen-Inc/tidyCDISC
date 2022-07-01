@@ -7,11 +7,17 @@
 cleanADAE(datafile, ADSL)
 }
 \arguments{
-\item{datafile}{list of ADaM-ish dataframes}
+\item{datafile}{list of ADaM-ish data frames}
 
-\item{ADSL}{A dataframe which contains the ADSL data}
+\item{ADSL}{A data frame which contains the ADSL data}
+}
+\value{
+A cleaned ADAE data frame
 }
 \description{
 Function to clean and combine ADAE dataset with ADSL
+}
+\details{
+Finds the columns in the ADAE data frame, if it exists, in common with ADSL (besides USUBJID) and removes them from the ADAE so that the ADSL columns are used instead, then joins on USUBJID and re-orders the column names to match ADAE.
 }
 \keyword{tabGen_repro}

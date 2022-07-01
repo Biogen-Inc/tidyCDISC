@@ -1,4 +1,4 @@
-#' tidyCDISC Kaplan-Meier Curve
+#' Kaplan-Meier Curve
 #' 
 #' Create scatter plot where if the variables are numeric then they
 #' are plotted, and if they are PARAMCD's then a week and value 
@@ -19,6 +19,8 @@
 #' @family popExp functions
 #' @export
 #' @keywords popEx
+#' 
+#' @return A ggplot object containing the KM curve plot
 #' 
 app_km_curve <- function(data, yvar, resp_var, cnsr_var, group = "NONE", points = TRUE, ci = FALSE) {
     
