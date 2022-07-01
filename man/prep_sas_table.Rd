@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils_SAScompare.R
 \name{prep_sas_table}
 \alias{prep_sas_table}
-\title{Organize SAS into a format for comparing}
+\title{Create Comparison Table for SAS Table}
 \usage{
 prep_sas_table(
   sas_data,
@@ -44,7 +44,10 @@ the table}
 \item{rm_desc_col}{a logical; should the description column be removed from
 the table (since they never match between base and compare)}
 }
+\value{
+A data frame processed for comparison purposes
+}
 \description{
-Organize SAS into a format for comparing
+Organize SAS table into a format for comparing with Table Generator table
 }
 \keyword{tabGen_compare}

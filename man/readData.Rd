@@ -2,7 +2,7 @@
 % Please edit documentation in R/mod_tableGen_utils.R
 \name{readData}
 \alias{readData}
-\title{Function to read the SAS list of user supplied data frames}
+\title{Read SAS Data Files}
 \usage{
 readData(study_directory, file_names)
 }
@@ -11,6 +11,9 @@ readData(study_directory, file_names)
 of interest}
 
 \item{file_names}{list of CDISC data.frames}
+}
+\value{
+A list of data frames containing the data from the SAS data files
 }
 \description{
 Function to read the SAS list of user supplied data frames

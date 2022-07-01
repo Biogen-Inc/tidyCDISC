@@ -1,4 +1,4 @@
-#' tidyCDISC line plot
+#' Line Plot
 #'
 #' Create a line plot with a time variable as the x-axis and using either the
 #' selected response variable or if a PARAMCD is selected, then plot the
@@ -35,6 +35,8 @@
 #' @family popExp Functions
 #' @export
 #' @keywords popEx
+#' 
+#' @return A list object containing a ggplot object and a data frame containing the upper and lower bounds
 #'   
 app_lineplot <- function(data, yvar, time, value = NULL, separate = "NONE", color = "NONE",
    err_bars = FALSE, label_points = FALSE, gtxt_x_pos = "middle", gtxt_y_pos = "top",

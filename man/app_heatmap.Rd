@@ -36,6 +36,9 @@ tests statistics}
 \item{sig_level}{dbl, defaulting to .05. Used to determine significance level
 for correlation tests performed}
 }
+\value{
+A list object containing a ggplot object and a data frame with the corresponding correlations
+}
 \description{
 Create a heatmap comparing param/endpoints variable on both axis
 }

@@ -135,8 +135,10 @@ mk_rep_seq_id <- function(x){
 }
 
 
-#'
-#' Organize SAS into a format for comparing
+
+#' Create Comparison Table for SAS Table
+#' 
+#' Organize SAS table into a format for comparing with Table Generator table
 #'
 #' @param sas_data the SAS table data.frame, output from stat programmer
 #' @param block_names default names to check in each table that represent a
@@ -163,7 +165,9 @@ mk_rep_seq_id <- function(x){
 #'
 #' @export
 #' @keywords tabGen_compare
-#'   
+#' 
+#' @return A data frame processed for comparison purposes
+#' 
 prep_sas_table <- function(
   sas_data,
   block_names = c("by1lbl","vis"),
@@ -353,7 +357,9 @@ revert_temp_colnames <- function(dat, orig_grp_names){
 }
 
 
-#' Organize Table Generator table into a format for comparing
+#' Create Comparison Table for Table Generator Table
+#' 
+#' Organize Table Generator table into a format for comparing to SAS table
 #'
 #' @param data the tg_table dataframe, output from tidyCDISC
 #' @param machine_readable a logical; should the table be prepared for optimal
@@ -373,6 +379,8 @@ revert_temp_colnames <- function(dat, orig_grp_names){
 #'
 #' @export
 #' @keywords tabGen_compare
+#' 
+#' @return A data frame processed for comparison purposes
 #' 
 prep_tg_table <- function(data,
                           machine_readable = TRUE,
