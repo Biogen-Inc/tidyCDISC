@@ -248,7 +248,7 @@ getLevels <- function(x) {if(is.factor(x)) levels(x) else sort(unique(x), na.las
 #' @export
 #' @keywords helpers
 #' 
-varN_fctr_reorder2 <- function(data) {
+varN_fctr_reorder <- function(data) {
   # rm(data)
   # data <- all_data
   # Now to refactor levels in VARN order, if they exist:

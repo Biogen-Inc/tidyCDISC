@@ -43,7 +43,7 @@ app_heatmap <- function(data, yvar_x, yvar_y, time, value = "AVAL",
   data0 <- data %>%
     select(USUBJID, AVISIT, one_of("PARAMCD", "AVAL"), one_of(time, paste0(time,"N")),
            yvar_x_norm, yvar_y_norm)  %>%
-    varN_fctr_reorder2()
+    varN_fctr_reorder()
   
   # Start of function
   time_sym <- rlang::sym(time)
