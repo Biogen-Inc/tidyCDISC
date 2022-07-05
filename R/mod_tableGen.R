@@ -159,7 +159,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
  
   # combine all BDS data files into one large data set
   bds_data <- reactive({ 
-    combineBDS(datafile = datafile(), ADSL = ADSL())
+    prep_bds(datafile = datafile(), ADSL = ADSL())
     # OLD code removed 2/17/2021
   })
   
@@ -763,7 +763,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     {create_script_data()}
     pre_adsl <- tidyCDISC::prep_adsl(datalist$ADSL, input_recipe = '{RECIPE()}')
     {adae_expr()}
-    bds_data <- datalist %>% tidyCDISC::combineBDS(ADSL = pre_adsl$data)
+    bds_data <- datalist %>% tidyCDISC::prep_bds(ADSL = pre_adsl$data)
         
     {data_to_filter_expr()}
     {filter_pop_expr()}

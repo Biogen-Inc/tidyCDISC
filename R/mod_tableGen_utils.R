@@ -6,7 +6,7 @@
 #' @export
 #' @keywords tabGen_repro
 #' 
-combineBDS <- function(datafile, ADSL) {
+prep_bds <- function(datafile, ADSL) {
   init <- sapply(datafile, function(x) "PARAMCD" %in% colnames(x) & !("CNSR" %in% colnames(x)))
   BDS <- datafile[init[substr(names(init),1,4) != "ADTT"]] # remove TTE class df's because `AVISIT` col doesn't exist in that class of df
   
