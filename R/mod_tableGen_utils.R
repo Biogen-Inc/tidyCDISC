@@ -90,10 +90,10 @@ prep_adsl <- function(ADSL, input_recipe) { #, stan_table_num
 #' @param datafile list of ADaM-ish dataframes 
 #' @param ADSL A dataframe which contains the ADSL data
 #' 
-#' @export
+#' @noRd
 #' @keywords tabGen_repro
 #' 
-cleanADAE <- function(datafile, ADSL) {
+clean_ADAE <- function(datafile, ADSL) {
   if("ADAE" %in% names(datafile)){
     # find columns the ADAE & ADSL have in common (besides Usubjid), remove
     # them from the ADAE, so that the ADSL cols are used instead. Then join
@@ -126,7 +126,7 @@ cleanADAE <- function(datafile, ADSL) {
 #' 
 prep_adae <- function(datafile, ADSL, input_recipe) { #, stan_table_num
   stan_table_num <- numeric_stan_table(input_recipe)
-  dat <- cleanADAE(datafile = datafile, ADSL = ADSL)
+  dat <- clean_ADAE(datafile = datafile, ADSL = ADSL)
   msg <- ""
   if(!is.null(input_recipe) & "ADAE" %in% names(datafile)){ # if recipe has initialized...
     

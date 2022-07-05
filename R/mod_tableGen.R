@@ -126,7 +126,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     prep_adsl(ADSL = datafile()$ADSL,input_recipe = RECIPE())
   })
   
-  # cleanADAE() now happens inside this reactive!
+  # clean_ADAE() now happens inside this reactive!
   # use potentially pre-filtered ADSL when building/ joining w/ ADAE
   # Then filter ADAE based on STAN table selected.
   pre_ADAE <- reactive({
