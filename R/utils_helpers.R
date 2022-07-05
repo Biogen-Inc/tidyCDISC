@@ -203,7 +203,7 @@ filters_in_english <- function(filtered_data, filter_header = "Filters Applied:"
                      ,paste(disp_msg, collapse = "<br/>&nbsp;&nbsp;&nbsp;&nbsp;"))))
 }
 
-#' getLevels function
+#' Get Factor Levels
 #'
 #' Return levels of a factor/vector
 #'
@@ -214,7 +214,7 @@ filters_in_english <- function(filtered_data, filter_header = "Filters Applied:"
 #' @export
 #' @keywords helpers
 #' 
-getLevels <- function(x) {if(is.factor(x)) levels(x) else sort(unique(x), na.last = T) } 
+get_levels <- function(x) {if(is.factor(x)) levels(x) else sort(unique(x), na.last = T) } 
 
 
 

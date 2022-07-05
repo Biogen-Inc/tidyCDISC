@@ -417,7 +417,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
         mutate(temp = 'Total') %>%
         rename_with(~paste(input$COLUMN), "temp")
       
-      grp_lvls <- getLevels(use_preferred_pop_data()[[input$COLUMN]])  # PUT ADAE() somehow?
+      grp_lvls <- get_levels(use_preferred_pop_data()[[input$COLUMN]])  # PUT ADAE() somehow?
       xyz <- data.frame(grp_lvls) %>%
         rename_with(~paste(input$COLUMN), grp_lvls)
       
@@ -797,7 +797,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
         summarise(n_tot = n(), .groups='drop_last') %>%
         mutate({input$COLUMN} = 'Total') 
         
-        grp_lvls <- tidyCDISC::getLevels({Rscript_use_preferred_pop_data()}[['{input$COLUMN}']])
+        grp_lvls <- tidyCDISC::get_levels({Rscript_use_preferred_pop_data()}[['{input$COLUMN}']])
         xyz <- data.frame(grp_lvls) %>%
             rename_with(~paste('{input$COLUMN}'), grp_lvls)
 

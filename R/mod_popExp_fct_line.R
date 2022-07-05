@@ -187,7 +187,7 @@ app_lineplot <- function(data, yvar, time, value = NULL, separate = "NONE", colo
   }
   if(add_vert){
     if(is.character(vert_x_int)){
-      time_lvls <- getLevels(d[[time]])
+      time_lvls <- get_levels(d[[time]])
       p <- p + ggplot2::geom_vline(xintercept = which(time_lvls == vert_x_int), color = "darkred")
     } else { # numeric
       p <- p + ggplot2::geom_vline(xintercept = as.numeric(vert_x_int), color = "darkred")

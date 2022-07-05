@@ -49,7 +49,7 @@ app_heatmap <- function(data, yvar_x, yvar_y, time, value = "AVAL",
   time_sym <- rlang::sym(time)
   if(time != "NONE"){ # results need to be grouped by time var
     
-    time_vals0 <- getLevels(data0[[time]])
+    time_vals0 <- get_levels(data0[[time]])
     # print(time_vals0)
     time_vals <- time_vals0[time_vals0 != "" & !is.na(time_vals0)]
     
@@ -207,7 +207,7 @@ app_heatmap <- function(data, yvar_x, yvar_y, time, value = "AVAL",
   }
   # make sure the factor levels of tile_data match those of data0
   if (time != "NONE") {
-    lvls <- getLevels(data0[[time]])
+    lvls <- get_levels(data0[[time]])
     tile_data <- tile_data %>%
       mutate(!!time_sym := factor(!!time_sym, levels = lvls))
   }
