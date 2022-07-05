@@ -357,24 +357,31 @@ data_to_use_str <- function(x, ae_data, bds_data) {
 
 #' Table Generator Pretty Block lookup table
 #' 
-#' This object is used within the table generator module
+#' A dataset used within the table generator module
 #' to add pretty names for each stat block when displayed in the table
 #' 
-#' @export
+#' @format A data farm with 8 rows and 2 variables:
+#' \describe{
+#'   \item{Pattern}{standard statistical name}
+#'   \item{Replacement}{"pretty" name for table output}
+#' }
+#' 
 #' @keywords tabGen_repro
 #' 
-pretty_blocks <- tidyr::tibble(
-  Pattern = c("MEAN", "FREQ", "CHG", "Y_FREQ", "MAX_FREQ", "NON_MISSING",
-              "NESTED_FREQ_DSC", "NESTED_FREQ_ABC"),
-  Replacement = c("Descriptive Statistics", 
-                  "Summary Counts", 
-                  "Descriptive Statistics of Change from Baseline",
-                  "Subject Count for those with 'Y' values",
-                  "Subject Count for maximum",
-                  "Subject Count for those with Non Missing values",
-                  "Subject Count at each variable level, sorted descending by total counts",
-                  "Subject Count at each variable level, sorted alphabetically by name")
-)
+# pretty_blocks <- tidyr::tibble(
+#   Pattern = c("MEAN", "FREQ", "CHG", "Y_FREQ", "MAX_FREQ", "NON_MISSING",
+#               "NESTED_FREQ_DSC", "NESTED_FREQ_ABC"),
+#   Replacement = c("Descriptive Statistics", 
+#                   "Summary Counts", 
+#                   "Descriptive Statistics of Change from Baseline",
+#                   "Subject Count for those with 'Y' values",
+#                   "Subject Count for maximum",
+#                   "Subject Count for those with Non Missing values",
+#                   "Subject Count at each variable level, sorted descending by total counts",
+#                   "Subject Count at each variable level, sorted alphabetically by name")
+# )
+# usethis::use_data(pretty_blocks)
+"pretty_blocks"
 
 #' Table Generator Cicerone R6 Object 
 #' 

@@ -5,13 +5,17 @@
 \alias{pretty_blocks}
 \title{Table Generator Pretty Block lookup table}
 \format{
-An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 8 rows and 2 columns.
+A data farm with 8 rows and 2 variables:
+\describe{
+  \item{Pattern}{standard statistical name}
+  \item{Replacement}{"pretty" name for table output}
+}
 }
 \usage{
 pretty_blocks
 }
 \description{
-This object is used within the table generator module
+A dataset used within the table generator module
 to add pretty names for each stat block when displayed in the table
 }
 \keyword{tabGen_repro}
