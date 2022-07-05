@@ -652,7 +652,9 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
           filenames <- c({filenames()})
           
           # create list of dataframes
-          datalist <- tidyCDISC::readData(study_dir, filenames)
+          datalist <- 
+            purrr::map(file_names, ~ haven::read_sas(file.path(study_directory,.x))) %>%
+            setNames(toupper(stringr::str_remove(file_names, '.sas7bdat')))
       ")}
   })
   

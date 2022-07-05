@@ -1,18 +1,3 @@
-#' Function to read the SAS list of user supplied data frames
-#'
-#' @param study_directory character, containing file path to CDISC data.frames
-#'   of interest
-#' @param file_names list of CDISC data.frames
-#'
-#' @export
-#' @keywords tabGen_repro
-#'   
-readData <- function(study_directory, file_names) {
-  purrr::map(file_names, ~haven::read_sas(file.path(study_directory,.x))) %>%
-    setNames(toupper(stringr::str_remove(file_names, ".sas7bdat")))
-}
-
-
 #' Function to bind data rows from the list of user supplied data frames
 #' 
 #' @param datafile list of ADaM-ish dataframes 
