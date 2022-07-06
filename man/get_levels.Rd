@@ -13,6 +13,9 @@ get_levels(x)
 x vector
 }
 \description{
-Return levels of a factor/vector
+Extracts the factor levels of a vector or returns the unique values if the vector is not a factor.
+}
+\references{
+A character vector containing the levels of the factor/vector
 }
 \keyword{helpers}

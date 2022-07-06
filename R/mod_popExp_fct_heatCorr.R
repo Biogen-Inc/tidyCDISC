@@ -20,6 +20,8 @@
 #' @family popExp Functions
 #' @export
 #' @keywords popEx
+#' 
+#' @return A list object containing a ggplot object and a data frame with the corresponding correlations
 #'   
 app_heatmap <- function(data, yvar_x, yvar_y, time, value = "AVAL",
                          cor_mthd = "pearson", show_sig = F, sig_level = .05) {

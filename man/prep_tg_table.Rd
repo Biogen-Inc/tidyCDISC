@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils_SAScompare.R
 \name{prep_tg_table}
 \alias{prep_tg_table}
-\title{Organize Table Generator table into a format for comparing}
+\title{Create Comparison Table for Table Generator Table}
 \usage{
 prep_tg_table(
   data,
@@ -30,7 +30,10 @@ the table (since they never match between base and compare)}
 generator output be generalized to be col0 - colX col99, where x is the
 number of groups in the 'group by' variable and col99 is the total column}
 }
+\value{
+A data frame processed for comparison purposes
+}
 \description{
-Organize Table Generator table into a format for comparing
+Organize Table Generator table into a format for comparing to SAS table
 }
 \keyword{tabGen_compare}

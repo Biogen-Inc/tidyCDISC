@@ -2,16 +2,19 @@
 % Please edit documentation in R/mod_tableGen_utils.R
 \name{prep_bds}
 \alias{prep_bds}
-\title{Function to bind data rows from the list of user supplied data frames}
+\title{Combine BDS Data Frames}
 \usage{
 prep_bds(datafile, ADSL)
 }
 \arguments{
-\item{datafile}{list of ADaM-ish dataframes}
+\item{datafile}{list of ADaM-ish data frames}
 
-\item{ADSL}{A dataframe which contains the ADSL data}
+\item{ADSL}{A data frame which contains the ADSL data}
+}
+\value{
+A data frame containing the BDS data bound by rows.
 }
 \description{
-Function to bind data rows from the list of user supplied data frames
+A function to combine all BDS data frames into one large data set.
 }
 \keyword{tabGen_repro}

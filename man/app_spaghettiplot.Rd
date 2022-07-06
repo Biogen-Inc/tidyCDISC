@@ -2,7 +2,7 @@
 % Please edit documentation in R/mod_popExp_fct_spaghettiplot.R
 \name{app_spaghettiplot}
 \alias{app_spaghettiplot}
-\title{tidyCDISC spaghetti plot}
+\title{Spaghetti Plot}
 \usage{
 app_spaghettiplot(data, yvar, time, value = NULL)
 }
@@ -15,6 +15,9 @@ app_spaghettiplot(data, yvar, time, value = NULL)
 
 \item{value}{If yvar is a PARAMCD then the user must select 
 AVAL, CHG, or BASE to be plotted on the y-axis}
+}
+\value{
+A ggplot object representing the spaghetti plot
 }
 \description{
 Create a spaghetti plot with a time dependent variable as the x-axis

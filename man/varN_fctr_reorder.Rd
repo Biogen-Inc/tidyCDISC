@@ -9,6 +9,9 @@ varN_fctr_reorder(data)
 \arguments{
 \item{data}{a dataframe, including one enriched with SAS labels attributes}
 }
+\value{
+The data frame after having factor levels re-ordered by VARN
+}
 \description{
 Function to that looks for VARN counterparts to any character or factor VAR
 variables in any dataframe and re-orders there factor levels, taking the lead
