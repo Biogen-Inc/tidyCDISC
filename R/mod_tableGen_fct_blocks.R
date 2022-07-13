@@ -18,10 +18,14 @@ rowBlock <- function(name, classname) {
           tags$li(
             class = paste("block ", classname), id = paste(x[1]),
             tippy(paste(x[1]),
-                  paste("<span style='font-size:10px;'>", x[2], "<span>"),
-                  allowHTML = TRUE,
-                  maxWidth = 80,
-                  placement = 'left')
+                  div(paste(x[2]), style = "max-width:60px;")
+                  # Below is for tippy 1.0.0 when on CRAN
+                  # paste(x[1]),
+                  # paste("<span style='font-size:10px;'>", x[2], "<span>"),
+                  # allowHTML = TRUE,
+                  # maxWidth = 80,
+                  # placement = 'left'
+            )
           )
         }) %>%
     purrr::map(., ~ .x)
