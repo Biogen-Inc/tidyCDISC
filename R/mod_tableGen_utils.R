@@ -362,33 +362,25 @@ data_to_use_str <- function(x, ae_data, bds_data) {
 }
 
 
-#' Table Generator Pretty Block lookup table
+#' Create Pretty IDs for TG Table
 #' 
-#' A dataset used within the table generator module
-#' to add pretty names for each stat block when displayed in the table
+#' Replaces ugly ID patterns of a stat block with pretty replacements for display purposes (e.g. NON_MISSING becomes Subject Count for those with Non Missing values)
 #' 
-#' @format A data farm with 8 rows and 2 variables:
-#' \describe{
-#'   \item{Pattern}{standard statistical name}
-#'   \item{Replacement}{"pretty" name for table output}
-#' }
+#' @param ID The ID vector of a TG table
+#' 
+#' @export
 #' 
 #' @keywords tabGen_repro
-#' 
-# pretty_blocks <- tidyr::tibble(
-#   Pattern = c("MEAN", "FREQ", "CHG", "Y_FREQ", "MAX_FREQ", "NON_MISSING",
-#               "NESTED_FREQ_DSC", "NESTED_FREQ_ABC"),
-#   Replacement = c("Descriptive Statistics", 
-#                   "Summary Counts", 
-#                   "Descriptive Statistics of Change from Baseline",
-#                   "Subject Count for those with 'Y' values",
-#                   "Subject Count for maximum",
-#                   "Subject Count for those with Non Missing values",
-#                   "Subject Count at each variable level, sorted descending by total counts",
-#                   "Subject Count at each variable level, sorted alphabetically by name")
-# )
-# usethis::use_data(pretty_blocks)
-"pretty_blocks"
+pretty_IDs <- function(ID) {
+  purrr::reduce(
+    list(
+      pattern = stringr::str_c('\\b', pretty_blocks$Pattern, '\\b', sep = ''),
+      replacement = pretty_blocks$Replacement
+    ) %>% purrr::transpose(),
+    ~ stringr::str_replace_all(.x, .y$pattern, .y$replacement),
+    .init = ID
+  )
+}
 
 #' Table Generator Cicerone R6 Object 
 #' 

@@ -494,15 +494,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     purrr::map(setNames, common_rownames(use_preferred_pop_data(), column())) %>%
     setNames(paste(blocks_and_functions()$gt_group)) %>%
     bind_rows(.id = "ID")  %>%
-      mutate(
-        ID = purrr::reduce(
-          list(
-            pattern = stringr::str_c('\\b', tidyCDISC::pretty_blocks$Pattern, '\\b', sep = ''),
-            replacement = tidyCDISC::pretty_blocks$Replacement
-          ) %>% purrr::transpose(),
-          ~ stringr::str_replace_all(.x, .y$pattern, .y$replacement),
-          .init = ID
-        ))
+      mutate(ID = pretty_IDs(ID))
     return(d)
   })
   
@@ -840,15 +832,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       map(setNames, tidyCDISC::common_rownames({Rscript_use_preferred_pop_data()}, {column() %quote% 'NULL'})) %>%
       setNames(paste(blockData$gt_group)) %>%
       bind_rows(.id = 'ID') %>%
-      mutate(
-        ID = purrr::reduce(
-          list(
-            pattern = stringr::str_c('\\\\b', tidyCDISC::pretty_blocks$Pattern, '\\\\b', sep = ''),
-            replacement = tidyCDISC::pretty_blocks$Replacement
-          ) %>% purrr::transpose(),
-          ~ stringr::str_replace_all(.x, .y$pattern, .y$replacement),
-          .init = ID
-        ))
+      mutate(ID = tidyCDISC::pretty_IDs(ID))
       
       # get the rownames for the table
       row_names_n <- names(tg_table)[-c(1:2)]
