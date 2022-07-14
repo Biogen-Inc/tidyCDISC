@@ -17,8 +17,9 @@ $run_dev.*
 ^\.github$
 ^cran-comments\.md$
 ^revdep$
-^vignettes/\_*
-^vignettes/Blog\.Rmd*
-^vignettes/figures*
-^vignettes/tidyCDISC\.Rmd$
-^vignettes/x0*
+vignettes/_announcing-tidycdisc-0-0-1-1.Rmd
+vignettes/Blog.Rmd
+vignettes/figures$
+vignettes/tidyCDISC.Rmd
+vignettes/dev0*
+vignettes/x0*

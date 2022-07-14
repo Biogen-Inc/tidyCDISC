@@ -237,8 +237,10 @@ attachment::att_amend_desc()
 # # autotest::autotest_package(test = TRUE)
 
 # Check package as CRAN
+pkgbuild::build()
 pkgbuild::build(vignettes = FALSE) # check build size quickly
-rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran", "--no-build-vignettes"))
+devtools::check()
+rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran")) # , "--no-build-vignettes"
 
 # Check content
 # remotes::install_github("ThinkR-open/checkhelper")

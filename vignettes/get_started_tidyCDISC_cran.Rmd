@@ -1,8 +1,8 @@
 ---
-title: "Get Started with tidyCDISC"
+title: "Get Started with {tidyCDISC}"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Get Started with tidyCDISC}
+  %\VignetteIndexEntry{Get Started with {tidyCDISC}}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteDepends{knitr}
   %\VignetteEncoding{UTF-8}
@@ -22,7 +22,7 @@ Greetings! The `tidyCDISC` [application](https://rinpharma.shinyapps.io/tidyCDIS
 
 <center>
 <a href="https://rinpharma.shinyapps.io/tidyCDISC/">
-<img src="figures/demo_tidyCDISC_button_lite2dark.png" alt="Demo full tidyCDISC app" width="30%">
+<img src="cran_figures/demo_tidyCDISC_button_lite2dark.png" alt="Demo full tidyCDISC app" width="30%">
 </a>
 </center>
 
@@ -33,7 +33,7 @@ Throughout all the tabs, there are these little buttons (usually in the top righ
 <br>
 
 ```{r, echo=FALSE, fig.align='center'}
-knitr::include_graphics("figures/tableGen/TG_need_help.PNG")
+knitr::include_graphics("cran_figures/tableGen/TG_need_help.PNG")
 ```
 
 <br>
@@ -43,7 +43,7 @@ Without any further adieu, **welcome to `tidyCDISC`'s landing page**: the *data 
 <br>
 
 ```{r, out.width="95%", echo=FALSE}
-knitr::include_graphics("figures/upldDat/landing_page_tidyCDISC.PNG")
+knitr::include_graphics("cran_figures/upldDat/landing_page_tidyCDISC.PNG")
 ```
 
 <br>
@@ -54,25 +54,26 @@ knitr::include_graphics("figures/upldDat/landing_page_tidyCDISC.PNG")
 
 The app is useless without some ADaM(-ish) data in hand. At a minimum, you'll need an `ADSL` sas7bdat file to get started, and the more data you bring, the more features and insights you can explore. We can import data by clicking the **'Browse'** button and selecting files for upload from your computer or mapped network drives. In this way, the `tidyCDISC` application is very secure; you must have permissions to certain folders/ study directories to upload said data.
 
-This tutorial will upload five files: An `ADSL`, `ADVS`, `ADLBC`, `ADAE`, and an `ADTTE`, all from the CDISC pilot study. You can follow along by clicking the **'Use CDISC Pilot Data'** button above the upload panel, as performed below. After the data is uploaded, two things happen: (1) we can take a peek at our data and (2) all the analysis tabs are unlocked, specifically:
+This tutorial will upload five files: An `ADSL`, `ADVS`, `ADLBC`, `ADAE`, and an `ADTTE`, all from the CDISC pilot study. You can follow along by clicking the **'Use CDISC Pilot Data'** button above the upload panel, as was performed below. After the data is uploaded, two things happen: (1) we can take a peek at our data and (2) all the analysis tabs are unlocked, specifically:
 
-- Table Generator 
 
-- Population Explorer
+- [Table Generator](https://Biogen-Inc.github.io/tidyCDISC/articles/x01_Table_Generator.html)
 
-- Individual Explorer
+- [Population Explorer](https://Biogen-Inc.github.io/tidyCDISC/articles/x02_Pop_Exp.html)
+
+- [Individual Explorer](https://Biogen-Inc.github.io/tidyCDISC/articles/x03_Indv_Expl.html)
 
 Our first stop will be the table generator!
 
 <br>
 
 ```{r, echo=FALSE}
-knitr::include_graphics("figures/tableGen/quick_upload_then_tg_tidyCDISC.gif")
+knitr::include_graphics("cran_figures/tableGen/quick_upload_then_tg_tidyCDISC_red.PNG")
 ```
 
 <br>
 
-There is more to be said about importing data, like, "What constitutes ADaM-ish data?" or "What if my data set won't upload?" To learn more on the topic, head over to the article titled [00 Data Upload](https://Biogen-Inc.github.io/tidyCDISC/articles/x00_Data_Upload.html); you'll be glad you did! 
+There is more to be said about importing data, like, "What constitutes ADaM-ish data?" or "What if my data set won't upload?" To learn more on the topic, head over to the article titled [Data Upload](https://Biogen-Inc.github.io/tidyCDISC/articles/x00_Data_Upload.html); you'll be glad you did! 
 
 
 
@@ -87,7 +88,7 @@ The Table Generator tab is divided in two: the area to the left is the handy dra
 <br>
 
 ```{r, echo=FALSE}
-knitr::include_graphics("figures/tableGen/02-TG-tidyCDISC.PNG")
+knitr::include_graphics("cran_figures/tableGen/02-TG-tidyCDISC.PNG")
 ```
 
 <br>
@@ -100,7 +101,7 @@ On the right-hand side, there are a list of "Stats", such as `ANOVA`, `CHG`, `ME
 <br>
 
 ```{r, out.width="70%", echo=FALSE, fig.align='center'}
-knitr::include_graphics("figures/tableGen/bins.gif")
+knitr::include_graphics("cran_figures/tableGen/bins.PNG")
 ```
 
 <br>
@@ -110,7 +111,7 @@ In order to build a table, we need only drag a variable block to the "Variable" 
 <br>
 
 ```{r, echo=FALSE}
-knitr::include_graphics("figures/tableGen/03-age_mean.gif")
+knitr::include_graphics("cran_figures/tableGen/03-age_mean.PNG")
 ```
 
 <br>
@@ -120,7 +121,7 @@ Similarly, we can drag in `DIABP` from the `ADVS` and use the `MEAN` block to ca
 <br>
 
 ```{r, echo=FALSE}
-knitr::include_graphics("figures/tableGen/04-diabp_mean.gif")
+knitr::include_graphics("cran_figures/tableGen/04-diabp_mean.PNG")
 ```
 
 <br>
@@ -130,7 +131,7 @@ Using this technique, you can drag in an unlimited number of variable and stat b
 <br> 
 
 ```{r, echo=FALSE, out.width="80%", fig.align = 'center'}
-knitr::include_graphics("figures/tableGen/TG_STAN_dropdown.PNG")
+knitr::include_graphics("cran_figures/tableGen/TG_STAN_dropdown.PNG")
 ```
 
 <br>
@@ -142,7 +143,7 @@ When one of these tables is selected, like disposition (Accounting of Subjects) 
 <br>
 
 ```{r,  echo=FALSE}
-knitr::include_graphics("figures/tableGen/t_disp.gif")
+knitr::include_graphics("cran_figures/tableGen/t_disp_red.PNG")
 ```
 
 <br>
@@ -164,7 +165,7 @@ Let's assume a scenario where we want to check on our patients' vital signs thro
 <br>
 
 ```{r,  echo=FALSE}
-knitr::include_graphics("figures/popExp/line_plot_mean_over_time_tidyCDISC.gif")
+knitr::include_graphics("cran_figures/popExp/line_plot_mean_over_time_tidyCDISC.PNG")
 ```
 
 <br>
@@ -174,7 +175,7 @@ Using the **"Separate plots by"** drop down list, we select `TRT01A` to investig
 <br>
 
 ```{r,  echo=FALSE}
-knitr::include_graphics("figures/popExp/line_plot_mean_over_time_breakdown.gif")
+knitr::include_graphics("cran_figures/popExp/line_plot_mean_over_time_breakdown.PNG")
 ```
 
 <br>
@@ -194,7 +195,7 @@ To subset the patients list to a subgroup of interest, we recommend using **"Adv
 <br>
 
 ```{r,  echo=FALSE, out.width="50%", fig.align = 'center'}
-knitr::include_graphics("figures/IndvExp/filter_patients.gif")
+knitr::include_graphics("cran_figures/IndvExp/filter_patients.PNG")
 ```
 
 <br>
@@ -204,13 +205,13 @@ If you were thinking, "Wow, filtering widget was pretty neat!" then you're in fo
 <br>
 
 
-After selecting a `USUBJID`, we scroll down the page to examine that patient's demographic info. There, we see the patient is a white male, age 51 and weights 70.8 kg. Scrolling again, the **'Events'** tab displays the patient's journey through the trial on an interactive timeline. After reviewing his timeline, it seems the patient wasn't in the trial very long, but we don't see any outrageous from an adverse events perspective... at least nothing that we'd expect would impact `DIABP`.
+After selecting a `USUBJID`, we scroll down the page to examine that patient's demographic info. There, we see the patient is a white male, age 51 and weights 70.8 kg. Scrolling again, the **'Events'** tab displays the patient's journey through the trial on an interactive timeline. After reviewing his timeline, it seems the patient wasn't in the trial very long, but we don't see anything outrageous from an adverse events perspective... at least nothing that we'd expect would impact `DIABP`.
 
 
 <br>
 
 ```{r,  echo=FALSE}
-knitr::include_graphics("figures/IndvExp/drill_down_events.gif")
+knitr::include_graphics("cran_figures/IndvExp/drill_down_events.PNG")
 ```
 
 <br>
@@ -222,7 +223,7 @@ Switching to the "Visits" tab, we can see that this patient did indeed have cons
 <br>
 
 ```{r,  echo=FALSE}
-knitr::include_graphics("figures/IndvExp/drill_down_visits.gif")
+knitr::include_graphics("cran_figures/IndvExp/drill_down_visits.PNG")
 ```
 
 <br>
@@ -239,7 +240,7 @@ So far, we've learned how to upload data, drag and drop blocks in the table gene
 
 <br>
 
-*Have an idea to explore?* **Open the [tidyCDISC](https://nate884.shinyapps.io/tidyCDISC/) app!** Otherwise, we highly recommend reading the following articles that take a deeper look into the topics presented in this 'get started' guide:
+*Have an idea to explore?* **Open the [tidyCDISC](https://rinpharma.shinyapps.io/tidyCDISC/) app!** Otherwise, we highly recommend reading the following articles that take a deeper look into the topics presented in this 'get started' guide:
 
 - [00 Data Upload](https://Biogen-Inc.github.io/tidyCDISC/articles/x00_Data_Upload.html)
 

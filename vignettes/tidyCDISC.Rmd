@@ -204,7 +204,7 @@ If you were thinking, "Wow, filtering widget was pretty neat!" then you're in fo
 <br>
 
 
-After selecting a `USUBJID`, we scroll down the page to examine that patient's demographic info. There, we see the patient is a white male, age 51 and weights 70.8 kg. Scrolling again, the **'Events'** tab displays the patient's journey through the trial on an interactive timeline. After reviewing his timeline, it seems the patient wasn't in the trial very long, but we don't see any outrageous from an adverse events perspective... at least nothing that we'd expect would impact `DIABP`.
+After selecting a `USUBJID`, we scroll down the page to examine that patient's demographic info. There, we see the patient is a white male, age 51 and weights 70.8 kg. Scrolling again, the **'Events'** tab displays the patient's journey through the trial on an interactive timeline. After reviewing his timeline, it seems the patient wasn't in the trial very long, but we don't see anything outrageous from an adverse events perspective... at least nothing that we'd expect would impact `DIABP`.
 
 
 <br>
@@ -239,7 +239,7 @@ So far, we've learned how to upload data, drag and drop blocks in the table gene
 
 <br>
 
-*Have an idea to explore?* **Open the [tidyCDISC](https://nate884.shinyapps.io/tidyCDISC/) app!** Otherwise, we highly recommend reading the following articles that take a deeper look into the topics presented in this 'get started' guide:
+*Have an idea to explore?* **Open the [tidyCDISC](https://rinpharma.shinyapps.io/tidyCDISC/) app!** Otherwise, we highly recommend reading the following articles that take a deeper look into the topics presented in this 'get started' guide:
 
 - [00 Data Upload](https://Biogen-Inc.github.io/tidyCDISC/articles/x00_Data_Upload.html)
 
