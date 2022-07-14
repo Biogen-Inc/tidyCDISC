@@ -161,6 +161,7 @@ usethis::use_test( "app" )
 # Documentation
 
 ## Vignette ---- run
+# usethis::use_vignette("test") # ran just to add VignetteBuilder to DESCRIPTION
 usethis::use_vignette("tidyCDISC")
 usethis::use_vignette("x00_Data_Upload")
 usethis::use_vignette("x02_Pop_Exp")

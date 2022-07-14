@@ -15,6 +15,10 @@ $run_dev.*
 ^docs$
 ^pkgdown$
 ^\.github$
-cran-comments.md
+^cran-comments\.md$
 ^revdep$
-^vignettes/*
+^vignettes/\_*
+^vignettes/Blog\.Rmd*
+^vignettes/figures*
+^vignettes/tidyCDISC\.Rmd$
+^vignettes/x0*
