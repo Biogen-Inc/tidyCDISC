@@ -228,6 +228,12 @@ knitr::include_graphics("cran_figures/IndvExp/drill_down_visits.PNG")
 
 <br>
 
+```{r,  echo=FALSE}
+knitr::include_graphics("cran_figures/IndvExp/download_report.PNG")
+```
+
+<br>
+
 Well, that wraps up our patient profile analysis, but there is so much more to learn about the Individual Explorer! Read up on all it's hidden features in the [03 Individual Explorer](https://Biogen-Inc.github.io/tidyCDISC/articles/x03_Indv_Expl.html) article. 
 
 <br>
