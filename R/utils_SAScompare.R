@@ -163,11 +163,11 @@ mk_rep_seq_id <- function(x){
 #' @importFrom rlang sym !!
 #' @importFrom stringr str_detect
 #'
-#' @export
 #' @keywords tabGen_compare
 #' 
 #' @return A data frame processed for comparison purposes
 #' 
+#' @noRd
 prep_sas_table <- function(
   sas_data,
   block_names = c("by1lbl","vis"),
@@ -377,11 +377,11 @@ revert_temp_colnames <- function(dat, orig_grp_names){
 #' @import dplyr
 #' @importFrom stringr str_detect
 #'
-#' @export
 #' @keywords tabGen_compare
 #' 
 #' @return A data frame processed for comparison purposes
 #' 
+#' @noRd
 prep_tg_table <- function(data,
                           machine_readable = TRUE,
                           keep_orig_ids = FALSE,
