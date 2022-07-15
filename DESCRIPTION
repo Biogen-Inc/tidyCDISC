@@ -57,7 +57,11 @@ Imports:
     IDEAFilter (>= 0.1.0.9000)
 Encoding: UTF-8
 LazyData: true
+<<<<<<< HEAD
 RoxygenNote: 7.1.2
+=======
+RoxygenNote: 7.1.1
+>>>>>>> 4a7b866af9c3bb4374226049c63257b899b72437
 URL: https://Biogen-Inc.github.io/tidyCDISC/
 BugReports: https://github.com/Biogen-Inc/tidyCDISC/issues
 Suggests: 
