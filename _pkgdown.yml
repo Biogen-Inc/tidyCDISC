@@ -3,6 +3,7 @@ articles:
 - title: Getting Started
   contents:
   - tidyCDISC
+  - get_started_tidyCDISC_cran
 - title: Blog Posts
   navbar: ~
   desc: New and Announcements
