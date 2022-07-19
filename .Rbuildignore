@@ -23,3 +23,5 @@ vignettes/figures$
 vignettes/tidyCDISC.Rmd
 vignettes/dev0*
 vignettes/x0*
+^doc$
+^Meta$
