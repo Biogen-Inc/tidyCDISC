@@ -198,7 +198,9 @@ mod_dataUpload_server <- function(input, output, session){
     # )
     
     # load specific pilot data
-    pilot_dat_ls <- purrr::map(input$pilot_selections, ~ eval(parse(text = .x)))
+    e <- new.env()
+    data(list = input$pilot_selections, package = "tidyCDISC", envir = e)
+    pilot_dat_ls <- as.list(e)
     names(pilot_dat_ls) <- toupper(input$pilot_selections)
     dd$data <- pilot_dat_ls
       
