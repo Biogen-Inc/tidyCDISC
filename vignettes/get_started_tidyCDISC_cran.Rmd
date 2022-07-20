@@ -11,7 +11,6 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  fig.path = "vignettes/cran_figures/",
   comment = "#>"
 )
 ```
@@ -34,7 +33,7 @@ Throughout all the tabs, there are these little buttons (usually in the top righ
 <br>
 
 ```{r, echo=FALSE, fig.align='center'}
-knitr::include_graphics("cran_figures/tableGen/TG_need_help.PNG")
+knitr::include_graphics("cran_figures/TG_need_help.PNG")
 ```
 
 <br>
@@ -44,7 +43,7 @@ Without any further adieu, **welcome to `tidyCDISC`'s landing page**: the *data 
 <br>
 
 ```{r, out.width="95%", echo=FALSE}
-knitr::include_graphics("cran_figures/upldDat/landing_page_tidyCDISC.PNG")
+knitr::include_graphics("cran_figures/landing_page_tidyCDISC.PNG")
 ```
 
 <br>
@@ -69,7 +68,7 @@ Our first stop will be the table generator!
 <br>
 
 ```{r, echo=FALSE}
-knitr::include_graphics("cran_figures/tableGen/quick_upload_then_tg_tidyCDISC_red.PNG")
+knitr::include_graphics("cran_figures/quick_upload_then_tg_tidyCDISC_red.PNG")
 ```
 
 <br>
@@ -89,7 +88,7 @@ The Table Generator tab is divided in two: the area to the left is the handy dra
 <br>
 
 ```{r, echo=FALSE}
-knitr::include_graphics("cran_figures/tableGen/02-TG-tidyCDISC.PNG")
+knitr::include_graphics("cran_figures/02-TG-tidyCDISC.PNG")
 ```
 
 <br>
@@ -102,7 +101,7 @@ On the right-hand side, there are a list of "Stats", such as `ANOVA`, `CHG`, `ME
 <br>
 
 ```{r, out.width="70%", echo=FALSE, fig.align='center'}
-knitr::include_graphics("cran_figures/tableGen/bins.PNG")
+knitr::include_graphics("cran_figures/bins.PNG")
 ```
 
 <br>
@@ -112,7 +111,7 @@ In order to build a table, we need only drag a variable block to the "Variable" 
 <br>
 
 ```{r, echo=FALSE}
-knitr::include_graphics("cran_figures/tableGen/03-age_mean.PNG")
+knitr::include_graphics("cran_figures/03-age_mean.PNG")
 ```
 
 <br>
@@ -122,7 +121,7 @@ Similarly, we can drag in `DIABP` from the `ADVS` and use the `MEAN` block to ca
 <br>
 
 ```{r, echo=FALSE}
-knitr::include_graphics("cran_figures/tableGen/04-diabp_mean.PNG")
+knitr::include_graphics("cran_figures/04-diabp_mean.PNG")
 ```
 
 <br>
@@ -132,7 +131,7 @@ Using this technique, you can drag in an unlimited number of variable and stat b
 <br> 
 
 ```{r, echo=FALSE, out.width="80%", fig.align = 'center'}
-knitr::include_graphics("cran_figures/tableGen/TG_STAN_dropdown.PNG")
+knitr::include_graphics("cran_figures/TG_STAN_dropdown.PNG")
 ```
 
 <br>
@@ -144,7 +143,7 @@ When one of these tables is selected, like disposition (Accounting of Subjects) 
 <br>
 
 ```{r,  echo=FALSE}
-knitr::include_graphics("cran_figures/tableGen/t_disp_red.PNG")
+knitr::include_graphics("cran_figures/t_disp_red.PNG")
 ```
 
 <br>
@@ -166,7 +165,7 @@ Let's assume a scenario where we want to check on our patients' vital signs thro
 <br>
 
 ```{r,  echo=FALSE}
-knitr::include_graphics("cran_figures/popExp/line_plot_mean_over_time_tidyCDISC.PNG")
+knitr::include_graphics("cran_figures/line_plot_mean_over_time_tidyCDISC.PNG")
 ```
 
 <br>
@@ -176,7 +175,7 @@ Using the **"Separate plots by"** drop down list, we select `TRT01A` to investig
 <br>
 
 ```{r,  echo=FALSE}
-knitr::include_graphics("cran_figures/popExp/line_plot_mean_over_time_breakdown.PNG")
+knitr::include_graphics("cran_figures/line_plot_mean_over_time_breakdown.PNG")
 ```
 
 <br>
@@ -196,7 +195,7 @@ To subset the patients list to a subgroup of interest, we recommend using **"Adv
 <br>
 
 ```{r,  echo=FALSE, out.width="50%", fig.align = 'center'}
-knitr::include_graphics("cran_figures/IndvExp/filter_patients.PNG")
+knitr::include_graphics("cran_figures/filter_patients.PNG")
 ```
 
 <br>
@@ -212,7 +211,7 @@ After selecting a `USUBJID`, we scroll down the page to examine that patient's d
 <br>
 
 ```{r,  echo=FALSE}
-knitr::include_graphics("cran_figures/IndvExp/drill_down_events.PNG")
+knitr::include_graphics("cran_figures/drill_down_events.PNG")
 ```
 
 <br>
@@ -224,13 +223,13 @@ Switching to the "Visits" tab, we can see that this patient did indeed have cons
 <br>
 
 ```{r,  echo=FALSE}
-knitr::include_graphics("cran_figures/IndvExp/drill_down_visits.PNG")
+knitr::include_graphics("cran_figures/drill_down_visits.PNG")
 ```
 
 <br>
 
 ```{r,  echo=FALSE}
-knitr::include_graphics("cran_figures/IndvExp/download_report.PNG")
+knitr::include_graphics("cran_figures/download_report.PNG")
 ```
 
 <br>
