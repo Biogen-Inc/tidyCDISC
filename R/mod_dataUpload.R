@@ -183,6 +183,9 @@ mod_dataUpload_server <- function(input, output, session){
   
   observeEvent( input$pilot, {
     
+    validate(need(all(input$pilot_selections %in% data(package = "tidyCDISC")[["results"]][,3]), 
+                  "Something went wrong with pilot data selections"))
+    
     shinyjs::disable(id = "file")
     
     # load all pilot data
