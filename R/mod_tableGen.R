@@ -749,8 +749,6 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
 
     pkgs_req <- c('tidyCDISC', 'purrr', 'haven', 'dplyr', 'stringr', 'tidyr', 'gt', 'diffdf')
     pkgs_needed <- pkgs_req[!(pkgs_req %in% installed.packages()[,'Package'])]
-    if('tidyCDISC' %in% pkgs_needed) remotes::install_github('Biogen-Inc/tidyCDISC')
-    pkgs_needed <- pkgs_needed[pkgs_needed != 'tidyCDISC']
     if(length(pkgs_needed)) install.packages(pkgs_needed)
     
     library(tidyCDISC)
