@@ -1,4 +1,4 @@
-#' tidyCDISC heatmap plot of endpoint correlations
+#' Heatmap Plot
 #'
 #' Create a heatmap comparing param/endpoints variable on both axis
 #'
