@@ -189,7 +189,7 @@ mod_dataUpload_server <- function(input, output, session){
     shinyjs::disable(id = "file")
     
     # load specific pilot data
-    pilot_dat_ls <- purrr::map(input$pilot_selections, ~ switch(.x, adae = adae, adlbc = adlbc, adsl = adsl, adtte = adtte, advs = advs, TRUE ~ NULL))
+    pilot_dat_ls <- purrr::map(input$pilot_selections, ~ switch(.x, adae = tidyCDISC::adae, adlbc = tidyCDISC::adlbc, adsl = tidyCDISC::adsl, adtte = tidyCDISC::adtte, advs = tidyCDISC::advs))
     names(pilot_dat_ls) <- toupper(input$pilot_selections)
     dd$data <- pilot_dat_ls
       
