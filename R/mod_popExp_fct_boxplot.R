@@ -1,4 +1,4 @@
-#' tidyCDISC boxplot
+#' Boxplot
 #' 
 #' Create boxplot using either the selected response variable
 #' or if a PARAMCD is selected, then plot the corresponding value
@@ -14,6 +14,8 @@
 #' @family popExp Functions
 #' @export
 #' @keywords popEx
+#' 
+#' @return A ggplot object representing the boxplot
 #' 
 app_boxplot <- function(data, yvar, group, value = NULL, points = FALSE) {
   

@@ -2,7 +2,7 @@
 % Please edit documentation in R/mod_popExp_fct_km.R
 \name{app_km_curve}
 \alias{app_km_curve}
-\title{tidyCDISC Kaplan-Meier Curve}
+\title{Kaplan-Meier Curve}
 \usage{
 app_km_curve(
   data,
@@ -28,6 +28,9 @@ app_km_curve(
 \item{points}{logical, whether to plot + symbols when patients censored}
 
 \item{ci}{logical, whether the curve(s) should be accompanied with a 95\% CI}
+}
+\value{
+A ggplot object containing the KM curve plot
 }
 \description{
 Create scatter plot where if the variables are numeric then they

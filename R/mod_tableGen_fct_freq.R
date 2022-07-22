@@ -92,7 +92,7 @@ app_freq.ADAE <- app_freq.ADSL <- function(column, group = NULL, data, totals) {
     
     group <- rlang::sym(group)
     
-    grp_lvls <- getLevels(data[[group]])
+    grp_lvls <- get_levels(data[[group]])
     xyz <- data.frame(grp_lvls) %>%
       rename_with(~paste(group), grp_lvls)
     

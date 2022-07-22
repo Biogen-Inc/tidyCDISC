@@ -126,7 +126,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     prep_adsl(ADSL = datafile()$ADSL,input_recipe = RECIPE())
   })
   
-  # cleanADAE() now happens inside this reactive!
+  # clean_ADAE() now happens inside this reactive!
   # use potentially pre-filtered ADSL when building/ joining w/ ADAE
   # Then filter ADAE based on STAN table selected.
   pre_ADAE <- reactive({
@@ -159,7 +159,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
  
   # combine all BDS data files into one large data set
   bds_data <- reactive({ 
-    combineBDS(datafile = datafile(), ADSL = ADSL())
+    prep_bds(datafile = datafile(), ADSL = ADSL())
     # OLD code removed 2/17/2021
   })
   
@@ -179,13 +179,13 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   filtered_data <- callModule(IDEAFilter::shiny_data_filter, "data_filter", data = processed_data, verbose = FALSE)
   
   # apply filters from selected dfs to tg data to create all data
-  all_data <- reactive({suppressMessages(bds_data() %>% semi_join(filtered_data()) %>% varN_fctr_reorder2())})
-  ae_data <- reactive({suppressMessages(ADAE() %>% semi_join(filtered_data()) %>% varN_fctr_reorder2())})
+  all_data <- reactive({suppressMessages(bds_data() %>% semi_join(filtered_data()) %>% varN_fctr_reorder())})
+  ae_data <- reactive({suppressMessages(ADAE() %>% semi_join(filtered_data()) %>% varN_fctr_reorder())})
   pop_data <- reactive({
     suppressMessages(
       pre_ADSL()$data %>% # Cannot be ADSL() because that has potentially been filtered to ADAE subj's
       semi_join(filtered_data()) %>%
-      varN_fctr_reorder2()
+      varN_fctr_reorder()
     )
   })
   
@@ -417,7 +417,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
         mutate(temp = 'Total') %>%
         rename_with(~paste(input$COLUMN), "temp")
       
-      grp_lvls <- getLevels(use_preferred_pop_data()[[input$COLUMN]])  # PUT ADAE() somehow?
+      grp_lvls <- get_levels(use_preferred_pop_data()[[input$COLUMN]])  # PUT ADAE() somehow?
       xyz <- data.frame(grp_lvls) %>%
         rename_with(~paste(input$COLUMN), grp_lvls)
       
@@ -494,15 +494,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     purrr::map(setNames, common_rownames(use_preferred_pop_data(), column())) %>%
     setNames(paste(blocks_and_functions()$gt_group)) %>%
     bind_rows(.id = "ID")  %>%
-      mutate(
-        ID = purrr::reduce(
-          list(
-            pattern = stringr::str_c('\\b', pretty_blocks$Pattern, '\\b', sep = ''),
-            replacement = pretty_blocks$Replacement
-          ) %>% purrr::transpose(),
-          ~ stringr::str_replace_all(.x, .y$pattern, .y$replacement),
-          .init = ID
-        ))
+      mutate(ID = pretty_IDs(ID))
     return(d)
   })
   
@@ -652,7 +644,9 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
           filenames <- c({filenames()})
           
           # create list of dataframes
-          datalist <- tidyCDISC::readData(study_dir, filenames)
+          datalist <- 
+            purrr::map(file_names, ~ haven::read_sas(file.path(study_directory,.x))) %>%
+            setNames(toupper(stringr::str_remove(file_names, '.sas7bdat')))
       ")}
   })
   
@@ -711,9 +705,9 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     if(any(regexpr("%>%", filter_code) > 0)){
       glue::glue("
           # Apply small filtered data set to population dataset
-              pop_data <- pre_adsl$data %>% semi_join(filtered_data) %>% tidyCDISC::varN_fctr_reorder2()
+              pop_data <- pre_adsl$data %>% semi_join(filtered_data) %>% tidyCDISC::varN_fctr_reorder()
           ")
-    } else {"pop_data <- pre_adsl$data %>% tidyCDISC::varN_fctr_reorder2()"}
+    } else {"pop_data <- pre_adsl$data %>% tidyCDISC::varN_fctr_reorder()"}
   })
   # capture output for empty df warning
   df_empty_expr <- reactive({
@@ -761,7 +755,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     {create_script_data()}
     pre_adsl <- tidyCDISC::prep_adsl(datalist$ADSL, input_recipe = '{RECIPE()}')
     {adae_expr()}
-    bds_data <- datalist %>% tidyCDISC::combineBDS(ADSL = pre_adsl$data)
+    bds_data <- datalist %>% tidyCDISC::prep_bds(ADSL = pre_adsl$data)
         
     {data_to_filter_expr()}
     {filter_pop_expr()}
@@ -795,7 +789,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
         summarise(n_tot = n(), .groups='drop_last') %>%
         mutate({input$COLUMN} = 'Total') 
         
-        grp_lvls <- tidyCDISC::getLevels({Rscript_use_preferred_pop_data()}[['{input$COLUMN}']])
+        grp_lvls <- tidyCDISC::get_levels({Rscript_use_preferred_pop_data()}[['{input$COLUMN}']])
         xyz <- data.frame(grp_lvls) %>%
             rename_with(~paste('{input$COLUMN}'), grp_lvls)
 
@@ -838,15 +832,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       map(setNames, tidyCDISC::common_rownames({Rscript_use_preferred_pop_data()}, {column() %quote% 'NULL'})) %>%
       setNames(paste(blockData$gt_group)) %>%
       bind_rows(.id = 'ID') %>%
-      mutate(
-        ID = purrr::reduce(
-          list(
-            pattern = stringr::str_c('\\\\b', pretty_blocks$Pattern, '\\\\b', sep = ''),
-            replacement = pretty_blocks$Replacement
-          ) %>% purrr::transpose(),
-          ~ stringr::str_replace_all(.x, .y$pattern, .y$replacement),
-          .init = ID
-        ))
+      mutate(ID = tidyCDISC::pretty_IDs(ID))
       
       # get the rownames for the table
       row_names_n <- names(tg_table)[-c(1:2)]

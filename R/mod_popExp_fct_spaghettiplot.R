@@ -1,4 +1,4 @@
-#' tidyCDISC spaghetti plot
+#' Spaghetti Plot
 #' 
 #' Create a spaghetti plot with a time dependent variable as the x-axis
 #' and using either the selected response variable
@@ -14,6 +14,8 @@
 #' @family popExp Functions
 #' @export
 #' @keywords popEx
+#' 
+#' @return A ggplot object representing the spaghetti plot
 #' 
 app_spaghettiplot <- function(data, yvar, time, value = NULL) {
   if (yvar %in% colnames(data)) {

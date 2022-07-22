@@ -83,7 +83,7 @@ app_max_freq.default <- app_max_freq.OCCDS <- app_max_freq.ADAE <- app_max_freq.
     
     group <- rlang::sym(group)
     
-    grp_lvls <- getLevels(data[[group]])
+    grp_lvls <- get_levels(data[[group]])
     xyz <- data.frame(grp_lvls) %>%
       rename_with(~paste(group), grp_lvls)
     

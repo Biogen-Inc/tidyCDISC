@@ -1,12 +1,12 @@
 #' GT Column Names
 #' 
-#' @param nm name
+#' @param nm A vector of column names
 #' 
-#' create the labels for each column using the total function
-#' so the columns are now NAME N= X
+#' @description The function creates the labels for each column using the total function so the columns are now NAME N= X
 #' @export
 #' @keywords tabGen_repro
 #' 
+#' @return A character object of class \code{from_markdown}.
 # get column names with N
 col_for_list_expr <- function(nm) {
   nm = md(glue::glue("**{row_names_n}** <br> N={total}"))
@@ -88,7 +88,7 @@ transpose_df <- function(df, num) {
 
 #' Identify Names of Columns
 #' 
-#' transform the gt rownames from generics to the column name and the total N of
+#' @description A function to transform the \code{gt} row names from generics to the column name and the total N of
 #' each column
 #'
 #' @param data the data to create columns with
@@ -97,6 +97,7 @@ transpose_df <- function(df, num) {
 #' @export
 #' @keywords tabGen_repro
 #' 
+#' @return A character vector
 common_rownames <- function(data, group) { 
   if (is.null(group) ) { #| group == "NONE"
     vars <- c("Variable", "Total")
@@ -203,9 +204,9 @@ filters_in_english <- function(filtered_data, filter_header = "Filters Applied:"
                      ,paste(disp_msg, collapse = "<br/>&nbsp;&nbsp;&nbsp;&nbsp;"))))
 }
 
-#' getLevels function
+#' Get Factor Levels
 #'
-#' Return levels of a factor/vector
+#' Extracts the factor levels of a vector or returns the unique values if the vector is not a factor.
 #'
 #' @param x a vector
 #'   
@@ -214,7 +215,9 @@ filters_in_english <- function(filtered_data, filter_header = "Filters Applied:"
 #' @export
 #' @keywords helpers
 #' 
-getLevels <- function(x) {if(is.factor(x)) levels(x) else sort(unique(x), na.last = T) } 
+#' @references A character vector containing the levels of the factor/vector
+#' 
+get_levels <- function(x) {if(is.factor(x)) levels(x) else sort(unique(x), na.last = T) } 
 
 
 
@@ -248,7 +251,9 @@ getLevels <- function(x) {if(is.factor(x)) levels(x) else sort(unique(x), na.las
 #' @export
 #' @keywords helpers
 #' 
-varN_fctr_reorder2 <- function(data) {
+#' @return The data frame after having factor levels re-ordered by VARN
+#' 
+varN_fctr_reorder <- function(data) {
   # rm(data)
   # data <- all_data
   # Now to refactor levels in VARN order, if they exist:

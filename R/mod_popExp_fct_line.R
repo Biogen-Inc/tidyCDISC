@@ -1,4 +1,4 @@
-#' tidyCDISC line plot
+#' Line Plot
 #'
 #' Create a line plot with a time variable as the x-axis and using either the
 #' selected response variable or if a PARAMCD is selected, then plot the
@@ -35,6 +35,8 @@
 #' @family popExp Functions
 #' @export
 #' @keywords popEx
+#' 
+#' @return A list object containing a ggplot object and a data frame containing the upper and lower bounds
 #'   
 app_lineplot <- function(data, yvar, time, value = NULL, separate = "NONE", color = "NONE",
    err_bars = FALSE, label_points = FALSE, gtxt_x_pos = "middle", gtxt_y_pos = "top",
@@ -76,7 +78,7 @@ app_lineplot <- function(data, yvar, time, value = NULL, separate = "NONE", colo
   # Group data as needed to calc means
   suppressWarnings(
     d <-
-      d0 %>% varN_fctr_reorder2() %>%
+      d0 %>% varN_fctr_reorder() %>%
       group_by_at(vars(time, one_of(color, separate))) %>%
       summarize(MEAN = round(mean(!!val_sym, na.rm = T), 2),
                 # SEM = round(std_err(!!val_sym, na.rm = T),2), # NOT accurate?
@@ -187,7 +189,7 @@ app_lineplot <- function(data, yvar, time, value = NULL, separate = "NONE", colo
   }
   if(add_vert){
     if(is.character(vert_x_int)){
-      time_lvls <- getLevels(d[[time]])
+      time_lvls <- get_levels(d[[time]])
       p <- p + ggplot2::geom_vline(xintercept = which(time_lvls == vert_x_int), color = "darkred")
     } else { # numeric
       p <- p + ggplot2::geom_vline(xintercept = as.numeric(vert_x_int), color = "darkred")
