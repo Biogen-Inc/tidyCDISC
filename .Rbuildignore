@@ -13,11 +13,12 @@ $run_dev.*
 ^rsconnect$
 ^_pkgdown\.yml$
 ^docs$
+^doc$
 ^pkgdown$
 ^\.github$
 ^cran-comments\.md$
 ^revdep$
-vignettes/_announcing-tidycdisc-0-0-1-1.Rmd
+vignettes/announcing-tidycdisc-0-0-1-1.Rmd
 vignettes/Blog.Rmd
 vignettes/figures$
 vignettes/tidyCDISC.Rmd

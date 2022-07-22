@@ -2,10 +2,9 @@ articles:
 - title: Getting Started
   contents:
   - tidyCDISC
-  - get_started_tidyCDISC_cran
 - title: Blog Posts
   navbar: ~
-  desc: New and Announcements
+  desc: News and Announcements
   contents:
   - Blog
 - title: User Guides
@@ -48,4 +47,3 @@ reference:
 - title: Population Explorer Figures
   contents:
   - has_keyword("popEx")
-  
