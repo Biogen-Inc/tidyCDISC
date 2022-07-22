@@ -677,7 +677,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       glue::glue("
           # Create small filtered data set
               dat_to_filt <- tidyCDISC::data_to_filter(datalist, c({filter_dfs}))
-              filtered_data <- eval(parse(text = '{filter_code}')) %>% tidyCDISC::varN_fctr_reorder()
+              filtered_data <- {filter_code} %>% tidyCDISC::varN_fctr_reorder()
           ")
     } else {""}
   })
