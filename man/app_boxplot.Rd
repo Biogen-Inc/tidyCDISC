@@ -2,7 +2,7 @@
 % Please edit documentation in R/mod_popExp_fct_boxplot.R
 \name{app_boxplot}
 \alias{app_boxplot}
-\title{tidyCDISC boxplot}
+\title{Boxplot}
 \usage{
 app_boxplot(data, yvar, group, value = NULL, points = FALSE)
 }
@@ -17,6 +17,9 @@ app_boxplot(data, yvar, group, value = NULL, points = FALSE)
 AVAL, CHG, or BASE to be plotted on the y-axis}
 
 \item{points}{\code{logical} whether to add a jitter to the plot}
+}
+\value{
+A ggplot object representing the boxplot
 }
 \description{
 Create boxplot using either the selected response variable

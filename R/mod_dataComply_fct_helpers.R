@@ -61,7 +61,8 @@ gather_reqs <- function(input, output, session,
   # study_dir <- 'C:/Users/aclark5/Documents/small_adam/CDISC Pilot Data/'
   # study_dir <- 'C:/Users/aclark5/Documents/small_adam/isis396443_cs3b_csr_data_crt/'
   # filenames <- c('adsl.sas7bdat', 'adtte.sas7bdat', 'advs.sas7bdat')
-  # datalist <- tidyCDISC::readData(study_dir, filenames)
+  # datalist <- purrr::map(file_names, ~ haven::read_sas(file.path(study_directory,.x))) %>%
+  #   setNames(toupper(stringr::str_remove(file_names, ".sas7bdat")))
   # adtte <- datalist$ADTTE
   # adtte %>% distinct(PARAMCD)
   

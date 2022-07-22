@@ -7,12 +7,12 @@
 col_for_list_expr(nm)
 }
 \arguments{
-\item{nm}{name
-
-create the labels for each column using the total function
-so the columns are now NAME N= X}
+\item{nm}{A vector of column names}
+}
+\value{
+A character object of class \code{from_markdown}.
 }
 \description{
-GT Column Names
+The function creates the labels for each column using the total function so the columns are now NAME N= X
 }
 \keyword{tabGen_repro}

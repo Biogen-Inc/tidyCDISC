@@ -1,27 +1,15 @@
-#' Function to read the SAS list of user supplied data frames
-#'
-#' @param study_directory character, containing file path to CDISC data.frames
-#'   of interest
-#' @param file_names list of CDISC data.frames
-#'
-#' @export
-#' @keywords tabGen_repro
-#'   
-readData <- function(study_directory, file_names) {
-  purrr::map(file_names, ~haven::read_sas(file.path(study_directory,.x))) %>%
-    setNames(toupper(stringr::str_remove(file_names, ".sas7bdat")))
-}
-
-
-#' Function to bind data rows from the list of user supplied data frames
+#' Combine BDS Data Frames
 #' 
-#' @param datafile list of ADaM-ish dataframes 
-#' @param ADSL A dataframe which contains the ADSL data
+#' @description A function to combine all BDS data frames into one large data set.
+#' 
+#' @param datafile list of ADaM-ish data frames 
+#' @param ADSL A data frame which contains the ADSL data
 #' 
 #' @export
 #' @keywords tabGen_repro
 #' 
-combineBDS <- function(datafile, ADSL) {
+#' @return A data frame containing the BDS data bound by rows.
+prep_bds <- function(datafile, ADSL) {
   init <- sapply(datafile, function(x) "PARAMCD" %in% colnames(x) & !("CNSR" %in% colnames(x)))
   BDS <- datafile[init[substr(names(init),1,4) != "ADTT"]] # remove TTE class df's because `AVISIT` col doesn't exist in that class of df
   
@@ -39,7 +27,7 @@ combineBDS <- function(datafile, ADSL) {
       mutate(data_from = "ADSL", PARAMCD = NA, AVAL = NA, CHG = NA)
   }
   
-  combined_data <- varN_fctr_reorder2(combined_data) # add this after filter?
+  combined_data <- varN_fctr_reorder(combined_data) # add this after filter?
   
   return(combined_data)
 }
@@ -102,13 +90,17 @@ prep_adsl <- function(ADSL, input_recipe) { #, stan_table_num
 
 #' Function to clean and combine ADAE dataset with ADSL
 #' 
-#' @param datafile list of ADaM-ish dataframes 
-#' @param ADSL A dataframe which contains the ADSL data
+#' @param datafile list of ADaM-ish data frames 
+#' @param ADSL A data frame which contains the ADSL data
 #' 
-#' @export
+#' @noRd
 #' @keywords tabGen_repro
 #' 
-cleanADAE <- function(datafile, ADSL) {
+#' @return A cleaned ADAE data frame
+#' 
+#' @details Finds the columns in the ADAE data frame, if it exists, in common with ADSL (besides USUBJID) and removes them from the ADAE so that the ADSL columns are used instead, then joins on USUBJID and re-orders the column names to match ADAE.
+#' 
+clean_ADAE <- function(datafile, ADSL) {
   if("ADAE" %in% names(datafile)){
     # find columns the ADAE & ADSL have in common (besides Usubjid), remove
     # them from the ADAE, so that the ADSL cols are used instead. Then join
@@ -121,12 +113,12 @@ cleanADAE <- function(datafile, ADSL) {
       inner_join(ADSL, by = "USUBJID")
     preferred_col_order <- c(adae_cols, dplyr::setdiff(colnames(ADSL), adae_cols))
     if(all(sort(colnames(adae_adsl)) == sort(preferred_col_order))){
-      varN_fctr_reorder2(adae_adsl[,preferred_col_order]) # add this after filter?
+      varN_fctr_reorder(adae_adsl[,preferred_col_order]) # add this after filter?
     } else {
-      varN_fctr_reorder2(adae_adsl)
+      varN_fctr_reorder(adae_adsl)
     }
   } else {
-    varN_fctr_reorder2(ADSL)
+    varN_fctr_reorder(ADSL)
   }
 }
 
@@ -141,7 +133,7 @@ cleanADAE <- function(datafile, ADSL) {
 #' 
 prep_adae <- function(datafile, ADSL, input_recipe) { #, stan_table_num
   stan_table_num <- numeric_stan_table(input_recipe)
-  dat <- cleanADAE(datafile = datafile, ADSL = ADSL)
+  dat <- clean_ADAE(datafile = datafile, ADSL = ADSL)
   msg <- ""
   if(!is.null(input_recipe) & "ADAE" %in% names(datafile)){ # if recipe has initialized...
     
@@ -285,7 +277,7 @@ check_params <- function(datafile, param_vector) {
                                      # stringr::str_detect(toupper(AVISIT),"EARLY TERMINATION",negate = TRUE)
                                      ) %>%
                               distinct(PARAMCD, AVISIT, AVISITN) %>%
-                              varN_fctr_reorder2() %>%
+                              varN_fctr_reorder() %>%
                               mutate(PARAMCD = factor(PARAMCD, levels = param_vector)) %>%
                               arrange(PARAMCD, AVISIT)
     )
@@ -370,26 +362,25 @@ data_to_use_str <- function(x, ae_data, bds_data) {
 }
 
 
-#' Table Generator Pretty Block lookup table
+#' Create Pretty IDs for TG Table
 #' 
-#' This object is used within the table generator module
-#' to add pretty names for each stat block when displayed in the table
+#' Replaces ugly ID patterns of a stat block with pretty replacements for display purposes (e.g. NON_MISSING becomes Subject Count for those with Non Missing values)
+#' 
+#' @param ID The ID vector of a TG table
 #' 
 #' @export
-#' @keywords tabGen_repro
 #' 
-pretty_blocks <- tidyr::tibble(
-  Pattern = c("MEAN", "FREQ", "CHG", "Y_FREQ", "MAX_FREQ", "NON_MISSING",
-              "NESTED_FREQ_DSC", "NESTED_FREQ_ABC"),
-  Replacement = c("Descriptive Statistics", 
-                  "Summary Counts", 
-                  "Descriptive Statistics of Change from Baseline",
-                  "Subject Count for those with 'Y' values",
-                  "Subject Count for maximum",
-                  "Subject Count for those with Non Missing values",
-                  "Subject Count at each variable level, sorted descending by total counts",
-                  "Subject Count at each variable level, sorted alphabetically by name")
-)
+#' @keywords tabGen_repro
+pretty_IDs <- function(ID) {
+  purrr::reduce(
+    list(
+      pattern = stringr::str_c('\\b', pretty_blocks$Pattern, '\\b', sep = ''),
+      replacement = pretty_blocks$Replacement
+    ) %>% purrr::transpose(),
+    ~ stringr::str_replace_all(.x, .y$pattern, .y$replacement),
+    .init = ID
+  )
+}
 
 #' Table Generator Cicerone R6 Object 
 #' 

@@ -191,7 +191,7 @@ linePlot_srv <- function(input, output, session, data, run) {
     # Group data as needed to calc means
     suppressWarnings(
       d <-
-        d0 %>% varN_fctr_reorder2() %>%
+        d0 %>% varN_fctr_reorder() %>%
         group_by_at(vars(time, one_of(color, separate))) %>%
         summarize(MEAN = round(mean(!!val_sym, na.rm = T), 2),
                   # SEM = round(std_err(!!val_sym, na.rm = T),2), # NOT accurate?
@@ -235,7 +235,7 @@ linePlot_srv <- function(input, output, session, data, run) {
       sel_time_vals0 <- sel_d %>%
         select(input$time, one_of(varN)) %>%
         distinct() %>%
-        varN_fctr_reorder2()
+        varN_fctr_reorder()
     )
     
     if(is.factor(sel_time_vals0[[1]])) {

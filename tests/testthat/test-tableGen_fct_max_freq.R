@@ -11,7 +11,7 @@ df <- df %>%
   mutate(temp = 'Total') %>%
   rename_with(~paste("SEX"), "temp")
 
-grp_lvls <- getLevels(tg_data[["SEX"]])  # PUT ADAE() somehow?
+grp_lvls <- get_levels(tg_data[["SEX"]])  # PUT ADAE() somehow?
 xyz <- data.frame(grp_lvls) %>%
   rename_with(~paste("SEX"), grp_lvls)
 

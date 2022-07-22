@@ -1,4 +1,4 @@
-#' tidyCDISC scatterplot
+#' Scatterplot
 #' 
 #' Create scatter plot where if the variables are numeric then they
 #' are plotted, and if they are PARAMCD's then a week and value 
@@ -21,6 +21,8 @@
 #' @family popExp functions
 #' @export
 #' @keywords popEx
+#' 
+#' @return A ggplot object containing the scatterplot
 #' 
 app_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y, separate = "NONE", color = "NONE") {
   # ---------------------------

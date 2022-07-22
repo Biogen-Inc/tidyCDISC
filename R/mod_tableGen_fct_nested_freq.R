@@ -57,7 +57,7 @@ app_nested_freq.default <- app_nested_freq.OCCDS <- app_nested_freq.ADAE <- app_
   }
   
   # First, get the desired order our by_var
-  column_lvls <- getLevels(data[[column]])
+  column_lvls <- get_levels(data[[column]])
   abc <- data.frame(column_lvls) %>%
     rename_with(~paste(column), column_lvls)
   
@@ -65,7 +65,7 @@ app_nested_freq.default <- app_nested_freq.OCCDS <- app_nested_freq.ADAE <- app_
     if(sort == "desc_tot"){
       init_dat <- data # do nothing
     } else { # sort == "desc_right"
-      grp_lvls <- getLevels(data[[grp]])
+      grp_lvls <- get_levels(data[[grp]])
       rightmost <- grp_lvls[length(grp_lvls)]
       init_dat <- data %>%
         filter(!!sym(grp) == rightmost)
@@ -148,7 +148,7 @@ app_nested_freq.default <- app_nested_freq.OCCDS <- app_nested_freq.ADAE <- app_
       
     } else { # alpha
       
-      inner_column_lvls <- rev(sort(as.character(getLevels(data[[nst_var]]))))
+      inner_column_lvls <- rev(sort(as.character(get_levels(data[[nst_var]]))))
       inner_abc <- data.frame(inner_column_lvls) %>%
         rename_with(~paste(nst_var), inner_column_lvls) %>%
         mutate(inner_sort = 1:length(inner_column_lvls))
@@ -192,7 +192,7 @@ app_nested_freq.default <- app_nested_freq.OCCDS <- app_nested_freq.ADAE <- app_
     
     # Need this in case dataset rows get filtered to a really small set, and
     # "lose" some levels
-    grp_lvls <- getLevels(data[[group]])
+    grp_lvls <- get_levels(data[[group]])
     xyz <- data.frame(grp_lvls) %>%
       rename_with(~paste(group), grp_lvls)
     

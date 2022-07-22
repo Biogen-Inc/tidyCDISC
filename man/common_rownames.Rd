@@ -11,8 +11,11 @@ common_rownames(data, group)
 
 \item{group}{whether to group the data to calculate Ns}
 }
+\value{
+A character vector
+}
 \description{
-transform the gt rownames from generics to the column name and the total N of
+A function to transform the \code{gt} row names from generics to the column name and the total N of
 each column
 }
 \keyword{tabGen_repro}
