@@ -16,6 +16,10 @@ articles:
   desc: Reference material for those who plan to contribute to the application's code base
   contents:
   - starts_with("dev")
+- title: Other Articles
+  contents:
+  - getting_started
+  - announcing-tidycdisc-0-0-1-1
 
 reference:
 - title: Run app
