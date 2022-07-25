@@ -57,11 +57,11 @@ The app is useless without some ADaM(-ish) data in hand. At a minimum, you'll ne
 This tutorial will upload five files: An `ADSL`, `ADVS`, `ADLBC`, `ADAE`, and an `ADTTE`, all from the CDISC pilot study. You can follow along by clicking the **'Use CDISC Pilot Data'** button above the upload panel, as was performed below. After the data is uploaded, two things happen: (1) we can take a peek at our data and (2) all the analysis tabs are unlocked, specifically:
 
 
-- [Table Generator](https://Biogen-Inc.github.io/tidyCDISC/articles/x01_Table_Generator.html)
+- [Table Generator<img src="cran_figures/external-link-alt.PNG" style="border:none; margin:0">](https://Biogen-Inc.github.io/tidyCDISC/articles/x01_Table_Generator.html)
 
-- [Population Explorer](https://Biogen-Inc.github.io/tidyCDISC/articles/x02_Pop_Exp.html)
+- [Population Explorer<img src="cran_figures/external-link-alt.PNG" style="border:none; margin:0">](https://Biogen-Inc.github.io/tidyCDISC/articles/x02_Pop_Exp.html)
 
-- [Individual Explorer](https://Biogen-Inc.github.io/tidyCDISC/articles/x03_Indv_Expl.html)
+- [Individual Explorer<img src="cran_figures/external-link-alt.PNG" style="border:none; margin:0">](https://Biogen-Inc.github.io/tidyCDISC/articles/x03_Indv_Expl.html)
 
 Our first stop will be the table generator!
 
@@ -73,7 +73,7 @@ knitr::include_graphics("cran_figures/quick_upload_then_tg_tidyCDISC_red.PNG")
 
 <br>
 
-There is more to be said about importing data, like, "What constitutes ADaM-ish data?" or "What if my data set won't upload?" To learn more on the topic, head over to the article titled [Data Upload](https://Biogen-Inc.github.io/tidyCDISC/articles/x00_Data_Upload.html); you'll be glad you did! 
+There is more to be said about importing data, like, "What constitutes ADaM-ish data?" or "What if my data set won't upload?" To learn more on the topic, head over to the article titled [Data Upload<img src="cran_figures/external-link-alt.PNG" style="border:none; margin:0">](https://Biogen-Inc.github.io/tidyCDISC/articles/x00_Data_Upload.html); you'll be glad you did! 
 
 
 
@@ -138,7 +138,7 @@ knitr::include_graphics("cran_figures/TG_STAN_dropdown.PNG")
 
 When data needed to produce certain outputs aren't present, the list of available tables in this drop down will change. For example, if an `ADAE` is not uploaded, then all the AE tables will disappear from the above list.
 
-When one of these tables is selected, like disposition (Accounting of Subjects) below, the table generator simply compiles the needed variable and stat blocks in the correct order to generate the desired output, as seen below. Notice how the population filter was set automatically, in this case to `FASFL` = 'Y' and the grouping variable set to `TRT01P`. Within seconds, the user changed the default table title and downloaded the R script needed to reproduce the table outside the app:
+When one of these tables is selected, like disposition (Accounting of Subjects)^1^, the table generator simply compiles the needed variable and stat blocks in the correct order to generate the desired output^2^. Notice how the population filter was set automatically, in this case to `FASFL` = 'Y' and the grouping variable set to `TRT01P`^3^. Within seconds, the user changed the default table title and downloaded the R script^4^ needed to reproduce the table outside the app:
 
 <br>
 
@@ -148,7 +148,7 @@ knitr::include_graphics("cran_figures/t_disp_red.PNG")
 
 <br>
 
-Even still, there are a plethora of features described on the [01 Table Generator](https://Biogen-Inc.github.io/tidyCDISC/articles/x01_Table_Generator.html) article that showcase how to fully DIY in the Table Generator, such as: add parameter variable and different stat blocks, re-order or delete layers of table output, group by different categorical variables, export the static table for sharing, and exporting the R code used to reproduce the table **in more depth**.
+Even still, there are a plethora of features described on the [01 Table Generator<img src="cran_figures/external-link-alt.PNG" style="border:none; margin:0">](https://Biogen-Inc.github.io/tidyCDISC/articles/x01_Table_Generator.html) article that showcase how to fully DIY in the Table Generator, such as: add parameter variable and different stat blocks, re-order or delete layers of table output, group by different categorical variables, export the static table for sharing, and exporting the R code used to reproduce the table **in more depth**.
 
 
 <br>
@@ -200,7 +200,7 @@ knitr::include_graphics("cran_figures/filter_patients.PNG")
 
 <br>
 
-If you were thinking, "Wow, filtering widget was pretty neat!" then you're in for a real treat because you can filter data like that on every tab! But honestly, we much of the specifics in that brisk demo, so read our full tutorial on how to filter like pro: [04 Filtering](https://Biogen-Inc.github.io/tidyCDISC/articles/x04_Filtering.html).
+If you were thinking, "Wow, filtering widget was pretty neat!" then you're in for a real treat because you can filter data like that on every tab! But honestly, we much of the specifics in that brisk demo, so read our full tutorial on how to filter like pro: [04 Filtering<img src="cran_figures/external-link-alt.PNG" style="border:none; margin:0">](https://Biogen-Inc.github.io/tidyCDISC/articles/x04_Filtering.html).
 
 <br>
 
@@ -234,7 +234,7 @@ knitr::include_graphics("cran_figures/download_report.PNG")
 
 <br>
 
-Well, that wraps up our patient profile analysis, but there is so much more to learn about the Individual Explorer! Read up on all it's hidden features in the [03 Individual Explorer](https://Biogen-Inc.github.io/tidyCDISC/articles/x03_Indv_Expl.html) article. 
+Well, that wraps up our patient profile analysis, but there is so much more to learn about the Individual Explorer! Read up on all it's hidden features in the [03 Individual Explorer<img src="cran_figures/external-link-alt.PNG" style="border:none; margin:0">](https://Biogen-Inc.github.io/tidyCDISC/articles/x03_Indv_Expl.html) article. 
 
 <br>
 
@@ -248,15 +248,15 @@ So far, we've learned how to upload data, drag and drop blocks in the table gene
 
 *Have an idea to explore?* **Open the [tidyCDISC](https://rinpharma.shinyapps.io/tidyCDISC/) app!** Otherwise, we highly recommend reading the following articles that take a deeper look into the topics presented in this 'get started' guide:
 
-- [00 Data Upload](https://Biogen-Inc.github.io/tidyCDISC/articles/x00_Data_Upload.html)
+- [00 Data Upload<img src="cran_figures/external-link-alt.PNG" style="border:none; margin:0">](https://Biogen-Inc.github.io/tidyCDISC/articles/x00_Data_Upload.html)
 
-- [01 Table Generator](https://Biogen-Inc.github.io/tidyCDISC/articles/x01_Table_Generator.html)
+- [01 Table Generator<img src="cran_figures/external-link-alt.PNG" style="border:none; margin:0">](https://Biogen-Inc.github.io/tidyCDISC/articles/x01_Table_Generator.html)
 
-- [02 Population Explorer](https://Biogen-Inc.github.io/tidyCDISC/articles/x02_Pop_Exp.html)
+- [02 Population Explorer<img src="cran_figures/external-link-alt.PNG" style="border:none; margin:0">](https://Biogen-Inc.github.io/tidyCDISC/articles/x02_Pop_Exp.html)
 
-- [03 Individual Explorer](https://Biogen-Inc.github.io/tidyCDISC/articles/x03_Indv_Expl.html)
+- [03 Individual Explorer<img src="cran_figures/external-link-alt.PNG" style="border:none; margin:0">](https://Biogen-Inc.github.io/tidyCDISC/articles/x03_Indv_Expl.html)
 
-- [04 Filtering](https://Biogen-Inc.github.io/tidyCDISC/articles/x04_Filtering.html)
+- [04 Filtering<img src="cran_figures/external-link-alt.PNG" style="border:none; margin:0">](https://Biogen-Inc.github.io/tidyCDISC/articles/x04_Filtering.html)
 
 Users who've leverage `tidyCDISC` for routine trial analysis tend to report **significant time savings, about 95%**, when performing programming duties. We're confident the `tidyCDISC` application can save you time too. If there is some use case that `tidyCDISC` can't solve, we want to know about it. Please send the [developers](https://github.com/Biogen-Inc/tidyCDISC/issues/new) a message with your question or request!
 
