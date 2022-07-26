@@ -1,3 +1,5 @@
+# tidyCDISC 0.1.0
+
 # tidyCDISC 0.0.4 (CRAN Release)
 * cleaning up `devtools::check()` & preparing for CRAN release.
 
