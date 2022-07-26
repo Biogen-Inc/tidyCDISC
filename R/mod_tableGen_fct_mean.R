@@ -119,7 +119,7 @@ app_mean.BDS <- function(column, week, group = NULL, data) {
     }
     
     group <- sym(group)
-    grp_lvls <- getLevels(data[[group]])
+    grp_lvls <- get_levels(data[[group]])
     xyz <- data.frame(grp_lvls) %>%
       rename_with(~paste(group), grp_lvls)
     

@@ -2,7 +2,7 @@
 % Please edit documentation in R/mod_popExp_fct_line.R
 \name{app_lineplot}
 \alias{app_lineplot}
-\title{tidyCDISC line plot}
+\title{Line Plot}
 \usage{
 app_lineplot(
   data,
@@ -62,6 +62,9 @@ line should be added}
 
 \item{hor_y_int}{if `add_hor` == TRUE, then supply an dbl that exists on the
 plot's y-axis to plot the vertical reference line}
+}
+\value{
+A list object containing a ggplot object and a data frame containing the upper and lower bounds
 }
 \description{
 Create a line plot with a time variable as the x-axis and using either the

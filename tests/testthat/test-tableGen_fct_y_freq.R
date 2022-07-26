@@ -9,7 +9,7 @@ df <- df %>%
   mutate(temp = 'Total') %>%
   rename_with(~paste("COUNTRY"), "temp")
 
-grp_lvls <- getLevels(tg_data[["COUNTRY"]])  # PUT ADAE() somehow?
+grp_lvls <- get_levels(tg_data[["COUNTRY"]])  # PUT ADAE() somehow?
 xyz <- data.frame(grp_lvls) %>%
   rename_with(~paste("COUNTRY"), grp_lvls)
 

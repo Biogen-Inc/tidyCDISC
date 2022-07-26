@@ -9,7 +9,7 @@ grp_it <- function(df, var){
     mutate(temp = 'Total') %>%
     rename_with(~paste(var), "temp")
   
-  grp_lvls <- getLevels(tg_data[[var]])  # PUT ADAE() somehow?
+  grp_lvls <- get_levels(tg_data[[var]])  # PUT ADAE() somehow?
   xyz <- data.frame(grp_lvls) %>%
     rename_with(~paste(var), grp_lvls)
   

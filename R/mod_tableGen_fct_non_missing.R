@@ -66,7 +66,7 @@ app_non_missing.default <- app_non_missing.BDS <- app_non_missing.OCCDS <- app_n
     
     group <- rlang::sym(group)
     
-    grp_lvls <- getLevels(data[[group]])
+    grp_lvls <- get_levels(data[[group]])
     xyz <- data.frame(grp_lvls) %>%
       rename_with(~paste(group), grp_lvls)
     

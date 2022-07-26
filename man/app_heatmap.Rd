@@ -2,7 +2,7 @@
 % Please edit documentation in R/mod_popExp_fct_heatCorr.R
 \name{app_heatmap}
 \alias{app_heatmap}
-\title{tidyCDISC heatmap plot of endpoint correlations}
+\title{Heatmap Plot}
 \usage{
 app_heatmap(
   data,
@@ -35,6 +35,9 @@ tests statistics}
 
 \item{sig_level}{dbl, defaulting to .05. Used to determine significance level
 for correlation tests performed}
+}
+\value{
+A list object containing a ggplot object and a data frame with the corresponding correlations
 }
 \description{
 Create a heatmap comparing param/endpoints variable on both axis

@@ -183,19 +183,13 @@ mod_dataUpload_server <- function(input, output, session){
   
   observeEvent( input$pilot, {
     
+    validate(need(all(input$pilot_selections %in% c("adae", "adlbc", "adsl", "adtte", "advs")), 
+                  "Something went wrong with pilot data selections"))
+    
     shinyjs::disable(id = "file")
     
-    # load all pilot data
-    # dd$data <- list(
-    #   ADSL = adsl,
-    #   ADVS = advs,
-    #   ADAE = adae,
-    #   ADLBC = adlbc,
-    #   ADTTE = adtte
-    # )
-    
     # load specific pilot data
-    pilot_dat_ls <- purrr::map(input$pilot_selections, ~ eval(parse(text = .x)))
+    pilot_dat_ls <- purrr::map(input$pilot_selections, ~ switch(.x, adae = tidyCDISC::adae, adlbc = tidyCDISC::adlbc, adsl = tidyCDISC::adsl, adtte = tidyCDISC::adtte, advs = tidyCDISC::advs))
     names(pilot_dat_ls) <- toupper(input$pilot_selections)
     dd$data <- pilot_dat_ls
       
