@@ -1,11 +1,12 @@
-# tidyCDISC 0.1.0
-
-# tidyCDISC 0.0.4 (CRAN Release)
+# tidyCDISC 0.1.0 (CRAN Release)
 * cleaning up `devtools::check()` & preparing for CRAN release.
 
 * unfortunately, had to revert back to importing `tippy 0.1.0` since it is the latest available version on CRAN and CRAN pkgs cannot depend on package versions under development.
 
 * created a new toggle on the `Data` tab that allows users to select which CDISC pilot study data sources they wish to use in the app.
+
+# tidyCDISC 0.0.4 
+* cleaning up `devtools::check()` & preparing for CRAN release.
 
 # tidyCDISC 0.0.3
 
