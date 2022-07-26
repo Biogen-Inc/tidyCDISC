@@ -1039,7 +1039,7 @@
     },
     "pkgdown": {
       "Package": "pkgdown",
-      "Version": "2.0.5",
+      "Version": "2.0.3",
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "584e7c13c2cb3a1d4b32166dc411f3bb",
