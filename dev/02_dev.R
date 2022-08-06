@@ -307,7 +307,7 @@ usethis::use_version(which = c("patch", "minor", "major", "dev")[1])
 
 
 # When ready, submit to CRAN for the first time
-devtools::release(check = FALSE, args = "--no-build-vignettes")
+devtools::release(check = FALSE)
 # Re-submit:
 # devtools::submit_cran()
 
