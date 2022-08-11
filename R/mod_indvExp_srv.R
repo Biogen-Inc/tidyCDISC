@@ -50,7 +50,7 @@ mod_indvExp_server <- function(input, output, session, datafile){
   
   # If User wants to perform advance filtering, update drop down of data frames they can filter on
   observe({
-    req(input$adv_filtering == T)
+    req(input$adv_filtering == TRUE)
     updateSelectInput("filter_df", session = session, choices = as.list(my_loaded_adams()), selected = "ADSL") #
   })
   
@@ -58,7 +58,7 @@ mod_indvExp_server <- function(input, output, session, datafile){
   # upon selection of data set(s) to filter above, combine to feed
   # shiny_data_filter module. If nothing is selected, use ADSL by default
   pre_processed_data <- eventReactive(input$filter_df, {
-    req(input$adv_filtering == T)
+    req(input$adv_filtering == TRUE)
     
     # grab only df's included in the filter
     select_dfs <- datafile()[input$filter_df]
@@ -74,7 +74,7 @@ mod_indvExp_server <- function(input, output, session, datafile){
     
     # Combine selected data into a 1 usable data frame
     if (!rlang::is_empty(PARAMCD_dat)) {
-      all_PARAMCD <- bind_rows(PARAMCD_dat, .id = "data_from") %>% distinct(.keep_all = T)
+      all_PARAMCD <- bind_rows(PARAMCD_dat, .id = "data_from") %>% distinct(.keep_all = TRUE)
       
       if (!rlang::is_empty(non_bds)){
         combined_data <- inner_join(non_bds %>% purrr::reduce(inner_join), all_PARAMCD)

@@ -217,7 +217,7 @@ filters_in_english <- function(filtered_data, filter_header = "Filters Applied:"
 #' 
 #' @references A character vector containing the levels of the factor/vector
 #' 
-get_levels <- function(x) {if(is.factor(x)) levels(x) else sort(unique(x), na.last = T) } 
+get_levels <- function(x) {if(is.factor(x)) levels(x) else sort(unique(x), na.last = TRUE) } 
 
 
 

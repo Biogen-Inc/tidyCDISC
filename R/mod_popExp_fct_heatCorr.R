@@ -24,7 +24,7 @@
 #' @return A list object containing a ggplot object and a data frame with the corresponding correlations
 #'   
 app_heatmap <- function(data, yvar_x, yvar_y, time, value = "AVAL",
-                         cor_mthd = "pearson", show_sig = F, sig_level = .05) {
+                         cor_mthd = "pearson", show_sig = FALSE, sig_level = .05) {
   
   
   
@@ -96,7 +96,7 @@ app_heatmap <- function(data, yvar_x, yvar_y, time, value = "AVAL",
       
       # Calculate p-value matrix
       p.mat <- wide_dat %>% dplyr::select_if(is.numeric) %>% ggcorrplot::cor_pmat()
-      p.vals <- t(p.mat[yvar_y, yvar_x, drop = F]) %>%
+      p.vals <- t(p.mat[yvar_y, yvar_x, drop = FALSE]) %>%
         as.data.frame.table(responseName = "pval") %>%
         rename_with(~"param_x", "Var1") %>%
         rename_with(~"param_y", "Var2")
@@ -130,7 +130,7 @@ app_heatmap <- function(data, yvar_x, yvar_y, time, value = "AVAL",
       mutate(
         pval_hover = sprintf("%.4f", pval),
         corr_lab_hover = sprintf("%.3f", corr),
-        corr_lab = case_when(show_sig == F ~ sprintf("%.2f", corr),
+        corr_lab = case_when(show_sig == FALSE ~ sprintf("%.2f", corr),
                              pval <= sig_level ~ sprintf("%.2f", corr),
                              TRUE ~ ""),
         param_y = factor(param_y, levels = rev(yvar_y))
@@ -190,7 +190,7 @@ app_heatmap <- function(data, yvar_x, yvar_y, time, value = "AVAL",
     tile_data <- t(m) %>%
       as.data.frame.table(responseName = "corr") %>%
       left_join(
-        t(p.mat[yvar_y, yvar_x, drop = F]) %>%
+        t(p.mat[yvar_y, yvar_x, drop = FALSE]) %>%
           as.data.frame.table(responseName = "pval")
       ) %>%
       rename_with(~"param_x", "Var1") %>%
@@ -198,7 +198,7 @@ app_heatmap <- function(data, yvar_x, yvar_y, time, value = "AVAL",
       mutate(
         pval_hover = sprintf("%.4f", pval),
         corr_lab_hover = sprintf("%.3f", corr),
-        corr_lab = case_when(show_sig == F ~ sprintf("%.2f", corr),
+        corr_lab = case_when(show_sig == FALSE ~ sprintf("%.2f", corr),
                              pval <= sig_level ~ sprintf("%.2f", corr),
                              TRUE ~ ""),
         param_y = factor(param_y, levels = rev(yvar_y))

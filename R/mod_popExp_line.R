@@ -27,13 +27,13 @@ linePlot_ui <- function(id, label = "line") {
       ,
       conditionalPanel("input.yvar && input.time", ns = ns,
          fluidRow(
-           column(5, shinyWidgets::materialSwitch(ns("add_vert"), h6("Overlay vertical line"), status = "primary", value = F)),
+           column(5, shinyWidgets::materialSwitch(ns("add_vert"), h6("Overlay vertical line"), status = "primary", value = FALSE)),
            conditionalPanel("input.add_vert", ns = ns,
              column(7, uiOutput(ns("add_vert_ui")))
            )
          ),
          fluidRow(
-           column(5, shinyWidgets::materialSwitch(ns("add_hor"), h6("Overlay horizontal line"), status = "primary", value = F)),
+           column(5, shinyWidgets::materialSwitch(ns("add_hor"), h6("Overlay horizontal line"), status = "primary", value = FALSE)),
            conditionalPanel("input.add_hor", ns = ns,
              column(7, 
                 # numericInput()
@@ -62,10 +62,10 @@ linePlot_ui <- function(id, label = "line") {
     , h4("Options:"),
     wellPanel(
       shinyWidgets::materialSwitch(ns("err_bars"), h6("Display 95% CI"),
-                                                       status = "primary", value = F),
+                                                       status = "primary", value = FALSE),
       fixedRow(
         column(4, shinyWidgets::materialSwitch(ns("label_points"), 
-           h6("Label points:"),status = "primary", value =  F)),
+           h6("Label points:"),status = "primary", value =  FALSE)),
         conditionalPanel("input.label_points", ns = ns,
            column(4, selectInput(ns("gtxt_x_pos"), "Label x position:",
              choices = c("left", "middle", "right"), selected = "middle")),
@@ -140,7 +140,7 @@ linePlot_srv <- function(input, output, session, data, run) {
   
   output$include_var <- renderUI({
     req(run(), input$yvar %in% data()$PARAMCD)
-    shinyWidgets::radioGroupButtons(ns("value"), "Value", justified = T,
+    shinyWidgets::radioGroupButtons(ns("value"), "Value", justified = TRUE,
                                     choices = c("AVAL", "CHG"),
                                     selected = isolate(input$value)
                                     )
@@ -193,11 +193,11 @@ linePlot_srv <- function(input, output, session, data, run) {
       d <-
         d0 %>% varN_fctr_reorder() %>%
         group_by_at(vars(time, one_of(color, separate))) %>%
-        summarize(MEAN = round(mean(!!val_sym, na.rm = T), 2),
-                  # SEM = round(std_err(!!val_sym, na.rm = T),2), # NOT accurate?
-                  N = n_distinct(USUBJID, na.rm = T),
+        summarize(MEAN = round(mean(!!val_sym, na.rm = TRUE), 2),
+                  # SEM = round(std_err(!!val_sym, na.rm = TRUE),2), # NOT accurate?
+                  N = n_distinct(USUBJID, na.rm = TRUE),
                   n = n(),
-                  STD = round(sd(!!val_sym, na.rm = T), 2),
+                  STD = round(sd(!!val_sym, na.rm = TRUE), 2),
                   SEM = round(STD/ sqrt(n), 2),
                   .groups = "keep") %>%
         ungroup() %>%
@@ -206,8 +206,8 @@ linePlot_srv <- function(input, output, session, data, run) {
     )
     
     sel_y <- na.omit(d$MEAN)
-    sel_y_low <- floor(min(d[[ifelse(input$err_bars, "Lower", "MEAN")]], na.rm = T))
-    sel_y_up <- ceiling(max(d[[ifelse(input$err_bars, "Upper", "MEAN")]], na.rm = T))
+    sel_y_low <- floor(min(d[[ifelse(input$err_bars, "Lower", "MEAN")]], na.rm = TRUE))
+    sel_y_up <- ceiling(max(d[[ifelse(input$err_bars, "Upper", "MEAN")]], na.rm = TRUE))
     updateSliderInput(session, "hor_y_int", min = sel_y_low, max = sel_y_up, step = .1,
       value = ifelse(between(isolate(input$hor_y_int), sel_y_low, sel_y_up),
                         isolate(input$hor_y_int), floor(median(sel_y))))
@@ -348,9 +348,9 @@ linePlot_srv <- function(input, output, session, data, run) {
   #   ,
   #   color = "NONE"
   #   ,
-  #   err_bars = F
+  #   err_bars = FALSE
   #   ,
-  #   label_points = F
+  #   label_points = FALSE
   #   ,
   #   gtxt_x_pos = NULL
   #   ,
