@@ -239,7 +239,7 @@ linePlot_srv <- function(input, output, session, data, run) {
     )
     
     if(is.factor(sel_time_vals0[[1]])) {
-      print("is.factor")
+      # print("is.factor")
       sel_time_vals <- sel_time_vals0 %>%
         arrange(across(vars(one_of(varN), input$time))) %>%
         pull(input$time) %>%
@@ -255,7 +255,7 @@ linePlot_srv <- function(input, output, session, data, run) {
       })
       
     } else if(toupper(substr(input$time, nchar(input$time) - 1, nchar(input$time))) == "DT") {
-      print("is.DT")
+      # print("is.DT")
       sel_time_vals <- sel_time_vals0 %>%
         select(input$time) %>%
         mutate_all(as.character) %>%
@@ -276,7 +276,7 @@ linePlot_srv <- function(input, output, session, data, run) {
       })
       
     } else if(typeof(sel_time_vals0[[1]]) %in% c("integer", "double")){
-      print("is.double | is.integer")
+      # print("is.double | is.integer")
       sel_time_vals <- sel_time_vals0 %>% pull(input$time) %>% sort()
       sel_time <- na.omit(sel_time_vals)
       # print(sel_time)C
@@ -290,7 +290,7 @@ linePlot_srv <- function(input, output, session, data, run) {
       })
       
     } else {
-      print("else")
+      # print("else")
       sel_time_vals <- sel_time_vals0 %>% arrange(across(vars(input$time))) %>%
         pull() %>% as.character()
       # print(sel_time_vals)
