@@ -9,6 +9,9 @@ pretty_IDs(ID)
 \arguments{
 \item{ID}{The ID vector of a TG table}
 }
+\value{
+A character vector of pretty IDs.
+}
 \description{
 Replaces ugly ID patterns of a stat block with pretty replacements for display purposes (e.g. NON_MISSING becomes Subject Count for those with Non Missing values)
 }

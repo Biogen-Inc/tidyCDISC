@@ -52,6 +52,8 @@ numeric_stan_table <- function(input_recipe){
 #' @param ADSL an ADSL data.frame
 #' @param input_recipe The shiny input that keeps track of the recipe selected
 #' 
+#' @return A `list` containing a `data.frame` object and character vector specifying the pre-filter applied.
+#' 
 #' @export
 #' @keywords tabGen_repro
 #' 
@@ -127,6 +129,8 @@ clean_ADAE <- function(datafile, ADSL) {
 #' @param datafile list of ADaM-ish dataframes 
 #' @param ADSL an ADSL data.frame
 #' @param input_recipe The shiny input that keeps track of the recipe selected
+#' 
+#' @return A `list` containing a `data.frame` object and character vector specifying the pre-filter applied.
 #' 
 #' @export
 #' @keywords tabGen_repro
@@ -315,6 +319,8 @@ check_params <- function(datafile, param_vector) {
 #' @param datafile list of ADaM-ish dataframes 
 #' @param input_filter_df The name of a dataset stored in `datafile`
 #' 
+#' @return A `data.frame` object based on the reduction of `datafile` from `input_filter_df`.
+#' 
 #' @export
 #' @keywords tabGen_repro
 #' 
@@ -353,6 +359,8 @@ data_to_filter <- function(datafile, input_filter_df) {
 #' @param ae_data data.frame, of the AE variety
 #' @param bds_data data.frame, of the BDS variety
 #' 
+#' @return A `data.frame` object containing data of the AE variety if `x == "ADAE"` or one of the BDS variety if not.
+#' 
 #' @export
 #' @keywords tabGen_repro
 #' 
@@ -367,6 +375,8 @@ data_to_use_str <- function(x, ae_data, bds_data) {
 #' Replaces ugly ID patterns of a stat block with pretty replacements for display purposes (e.g. NON_MISSING becomes Subject Count for those with Non Missing values)
 #' 
 #' @param ID The ID vector of a TG table
+#' 
+#' @return A character vector of pretty IDs.
 #' 
 #' @export
 #' 

@@ -11,6 +11,9 @@ data_to_filter(datafile, input_filter_df)
 
 \item{input_filter_df}{The name of a dataset stored in `datafile`}
 }
+\value{
+A `data.frame` object based on the reduction of `datafile` from `input_filter_df`.
+}
 \description{
 The smallest possible data set we could filter to semi-join later
 }

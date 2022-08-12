@@ -13,6 +13,9 @@ data_to_use_str(x, ae_data, bds_data)
 
 \item{bds_data}{data.frame, of the BDS variety}
 }
+\value{
+A `data.frame` object containing data of the AE variety if `x == "ADAE"` or one of the BDS variety if not.
+}
 \description{
 Function to clean and combine ADAE dataset with ADSL
 }

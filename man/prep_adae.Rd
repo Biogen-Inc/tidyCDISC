@@ -13,6 +13,9 @@ prep_adae(datafile, ADSL, input_recipe)
 
 \item{input_recipe}{The shiny input that keeps track of the recipe selected}
 }
+\value{
+A `list` containing a `data.frame` object and character vector specifying the pre-filter applied.
+}
 \description{
 Function to pre-filter the ADAE depending on the stan table selected
 }
