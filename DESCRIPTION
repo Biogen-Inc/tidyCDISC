@@ -15,8 +15,8 @@ Authors@R: c(
 Description: Provides users a quick exploratory dive into common
     visualizations without writing a sinlge line of code given the users
     data follows the Analysis Data Model (ADaM) standards put forth by 
-    the https://www.cdisc.org<Clinical Data Interchange Standards Consortium 
-    (CDISC)>. Prominent modules/ features of the application are the Table 
+    the Clinical Data Interchange Standards Consortium 
+    (CDISC) <https://www.cdisc.org>. Prominent modules/ features of the application are the Table 
     Generator, Population Explorer, and the Individual Explorer. The Table 
     Generator allows users to drag and drop variables and desired statistics
     (frequencies, means, ANOVA, t-test, and other summary statistics) into
