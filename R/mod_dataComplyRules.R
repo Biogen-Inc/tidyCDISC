@@ -15,10 +15,10 @@
 #' @family dataComply Functions
 #' @noRd
 #'   
-mod_dataComplyRules_ui <- function(id, showRules = T){
+mod_dataComplyRules_ui <- function(id, showRules = TRUE){
   ns <- NS(id)
   tagList(
-    if(showRules == T){
+    if(showRules == TRUE){
         actionButton(ns("clickRules") 
                    , label = NULL
                    , icon = icon("question-circle")

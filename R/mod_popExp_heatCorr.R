@@ -18,8 +18,8 @@ heatmap_ui <- function(id, label = "line") {
     h4("Select axes:"),
     wellPanel(
       fluidRow(
-        column(6, selectInput(ns("yvar_x"), "Select Parameter X", choices = NULL, multiple = T)),
-        column(6, selectInput(ns("yvar_y"), "Select Parameter Y", choices = NULL, multiple = T))
+        column(6, selectInput(ns("yvar_x"), "Select Parameter X", choices = NULL, multiple = TRUE)),
+        column(6, selectInput(ns("yvar_y"), "Select Parameter Y", choices = NULL, multiple = TRUE))
         
       ),
       # fluidRow(
@@ -37,7 +37,7 @@ heatmap_ui <- function(id, label = "line") {
       ),
       fixedRow(
         column(6, shinyWidgets::materialSwitch(ns("show_sig"), 
-           h6("Only label significant:"),status = "primary", value =  F)),
+           h6("Only label significant:"),status = "primary", value =  FALSE)),
         conditionalPanel("input.show_sig", ns = ns,
              column(6, numericInput(ns("sig_level"), "Set significance level:",
                 value = .05, min = 0, max = .1, step = .01))
@@ -174,7 +174,7 @@ heatmap_srv <- function(input, output, session, data, run) {
   })
   # output$include_var <- renderUI({
   #   req(run(), input$yvar %in% data()$PARAMCD)
-  #   shinyWidgets::radioGroupButtons(ns("value"), "Value", justified = T,
+  #   shinyWidgets::radioGroupButtons(ns("value"), "Value", justified = TRUE,
   #                                   choices = c("AVAL", "CHG"),
   #                                   selected = isolate(input$value)
   #                                   )
@@ -195,7 +195,7 @@ heatmap_srv <- function(input, output, session, data, run) {
   #   ,
   #   yvar_y = c("ALB","ALT", "BILI")
   #   ,
-  #   show_sig = T
+  #   show_sig = TRUE
   #   ,
   #   sig_level = .05
   #   ,

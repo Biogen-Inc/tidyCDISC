@@ -25,6 +25,9 @@
 #' @noRd
 mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL), filePaths = reactive(NULL)) {
   
+  old <- options()
+  on.exit(options(old))
+  
   observeEvent( input$help, {
     tg_guide$init()$start()
   })

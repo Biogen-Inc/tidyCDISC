@@ -27,7 +27,7 @@ delim_expand_rows <- function(data, sep){
       )) %>%
       mutate(Variable = ifelse(Variable == "", id_desc, Variable)) %>%
       tidyr::separate_rows(
-        starts_with("col"), sep = sep, convert = T)# convert works for sas
+        starts_with("col"), sep = sep, convert = TRUE)# convert works for sas
   } else {
     if(any((stringr::str_detect(tolower(unique(data$Variable)), "mean") &
            stringr::str_detect(tolower(unique(data$Variable)), "sd")) |
@@ -40,11 +40,11 @@ delim_expand_rows <- function(data, sep){
         mutate(across(starts_with("col"), 
           function(col) ifelse(!stringr::str_detect(col, sep), 
                                paste(col, gsub("\\\\","", sep)), col))) %>%
-        tidyr::separate_rows(c(Variable, starts_with("col")), sep = sep, convert = T)
+        tidyr::separate_rows(c(Variable, starts_with("col")), sep = sep, convert = TRUE)
     } else {
       d <- data %>%
         filter(if_any(starts_with("col"), function(col) stringr::str_detect(col, sep))) %>%
-        tidyr::separate_rows(starts_with("col"), sep = sep, convert = T)
+        tidyr::separate_rows(starts_with("col"), sep = sep, convert = TRUE)
     }
     
   }

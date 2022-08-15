@@ -331,7 +331,7 @@ data_to_filter <- function(datafile, input_filter_df) {
   
   # Combine selected data into a 1 usable data frame
   if (!rlang::is_empty(PARAMCD_dat)) {
-    all_PARAMCD <- bind_rows(PARAMCD_dat, .id = "data_from") %>% distinct(.keep_all = T)
+    all_PARAMCD <- bind_rows(PARAMCD_dat, .id = "data_from") %>% distinct(.keep_all = TRUE)
     
     if (!rlang::is_empty(non_bds)){
       combined_data <- inner_join(non_bds %>% purrr::reduce(inner_join), all_PARAMCD)

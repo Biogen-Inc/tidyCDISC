@@ -11,7 +11,7 @@ app_heatmap(
   time,
   value = "AVAL",
   cor_mthd = "pearson",
-  show_sig = F,
+  show_sig = FALSE,
   sig_level = 0.05
 )
 }

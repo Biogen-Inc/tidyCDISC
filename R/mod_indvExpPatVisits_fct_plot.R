@@ -67,7 +67,7 @@ fnIndvExplVisits <- function(
     group_by(!!INPUT_visit_var) %>%
     summarize(n = n()) %>%
     ungroup() %>%
-    summarize(max_avals = max(n, na.rm = T)) %>%
+    summarize(max_avals = max(n, na.rm = TRUE)) %>%
     pull(max_avals)
     
   # initialize man_cols for manual color control
@@ -294,7 +294,7 @@ fnIndvExplVisits <- function(
                           yref = "paper",
                           text = paste0("<br>Note: Study's average ",input_plot_param," range shown in ",'<em style="color:blue">',"blue",'</em> ',lohi),
                           xanchor = 'left',
-                          showarrow = F)
+                          showarrow = FALSE)
       }
       
       # if watermark is desired, it can be added here
@@ -305,7 +305,7 @@ fnIndvExplVisits <- function(
                                 xref = "paper",
                                 yref = "paper",
                                 opacity = 0.1,
-                                showarrow = F,
+                                showarrow = FALSE,
                                 font=list(size = 40),
                                 textangle=-35)
           )

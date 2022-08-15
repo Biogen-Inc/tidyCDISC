@@ -257,8 +257,8 @@ gather_reqs <- function(input, output, session,
         missing = ifelse(not_exist == TRUE,
                          ifelse(disp_type == "error", FALSE,TRUE),
                          unlist(purrr::map2(.x = df, .y = type_col, function(x, y)
-                           all(as.character(datalist()[[x]][,type_col[df == x & type_col == y & not_exist == F]]) == "") |
-                             all(is.na(datalist()[[x]][,type_col[df == x & type_col == y & not_exist == F]]))
+                           all(as.character(datalist()[[x]][,type_col[df == x & type_col == y & not_exist == FALSE]]) == "") |
+                             all(is.na(datalist()[[x]][,type_col[df == x & type_col == y & not_exist == FALSE]]))
                          )) )
         
       ) %>%

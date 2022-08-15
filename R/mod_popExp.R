@@ -155,7 +155,7 @@ mod_popExp_server <- function(input, output, session, datafile) {
   
   # Data to provide IDEAFilter
   feed_filter <- reactive({
-    if(input$apply_filters == T){
+    if(input$apply_filters == TRUE){
       req(input$filter_df)
       all_data() %>% subset(data_from %in% input$filter_df)
     } else {
@@ -269,7 +269,7 @@ mod_popExp_server <- function(input, output, session, datafile) {
   output$applied_filters <- renderUI({
     req(
       any(regexpr("%>%",capture.output(attr(filtered_data(), "code"))) > 0)
-      & input$apply_filters == T
+      & input$apply_filters == TRUE
     )
     filters_in_english(filtered_data())
   })

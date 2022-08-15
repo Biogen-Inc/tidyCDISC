@@ -80,11 +80,11 @@ app_lineplot <- function(data, yvar, time, value = NULL, separate = "NONE", colo
     d <-
       d0 %>% varN_fctr_reorder() %>%
       group_by_at(vars(time, one_of(color, separate))) %>%
-      summarize(MEAN = round(mean(!!val_sym, na.rm = T), 2),
-                # SEM = round(std_err(!!val_sym, na.rm = T),2), # NOT accurate?
-                N = n_distinct(USUBJID, na.rm = T),
+      summarize(MEAN = round(mean(!!val_sym, na.rm = TRUE), 2),
+                # SEM = round(std_err(!!val_sym, na.rm = TRUE),2), # NOT accurate?
+                N = n_distinct(USUBJID, na.rm = TRUE),
                 n = n(),
-                STD = round(sd(!!val_sym, na.rm = T), 2),
+                STD = round(sd(!!val_sym, na.rm = TRUE), 2),
                 SEM = round(STD/ sqrt(n), 2),
                 .groups = "keep") %>%
       ungroup() %>%
@@ -179,7 +179,7 @@ app_lineplot <- function(data, yvar, time, value = NULL, separate = "NONE", colo
              , colour2 = ifelse(id == PANEL, colour, NA_character_)
       ) %>% pull(colour2) %>% as.character()
     
-    p <- p + ggplot2::geom_text(data = gglook, inherit.aes = FALSE, show.legend = F,
+    p <- p + ggplot2::geom_text(data = gglook, inherit.aes = FALSE, show.legend = FALSE,
                                 ggplot2::aes(x = x, y = y, label = lab, group = colour, text = "")
                      , color = colour_vector
                      # , hjust = .5, vjust = -1 # position = dodge, # these all don't work with plotly

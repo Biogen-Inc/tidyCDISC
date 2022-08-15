@@ -62,7 +62,7 @@ mod_indvExpPatEvents_server <- function(input, output, session,
       usubjid() != ""
       & any(regexpr("%>%",capture.output(attr(filtered_dat(), "code"))) > 0)
       & !is.null(input$checkGroup)
-      & input$events_apply_filter == T
+      & input$events_apply_filter == TRUE
     )
     filters_in_english(filtered_dat())
   })
