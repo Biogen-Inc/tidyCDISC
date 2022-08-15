@@ -17,7 +17,7 @@ Description: Provides users a quick exploratory dive into common
     data follows the Analysis Data Model (ADaM) data standards put forth by 
     the https://www.cdisc.org<Clinical Data Interchange Standards Consortium 
     (CDISC)>. Prominent modules/ features of the application are the Table 
-    Generator,Population Explorer, and the Individual Explorer. The Table 
+    Generator, Population Explorer, and the Individual Explorer. The Table 
     Generator allows users to drag and drop variables and desired statistics
     (frequencies, means, ANOVA, t-test, and other summary statistics) into
     bins that automagically create stunning tables with validated
