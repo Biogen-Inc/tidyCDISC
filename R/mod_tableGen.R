@@ -636,9 +636,11 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     if(any("CDISCPILOT01" %in% ADSL()$STUDYID)){
       glue::glue("
         # create list of dataframes from CDISC pilot study
-        datalist <- list(ADSL = tidyCDISC::adsl, ADAE = tidyCDISC::adae, ADVS = tidyCDISC::advs, ADLBC = tidyCDISC::adlbc, ADTTE = tidyCDISC::adtte)
+        datalist <- list({paste(purrr::map_chr(names(datafile()), ~ paste0(.x, ' = tidyCDISC::', tolower(.x))), collapse = ', ')})
         "
       )
+      # names_datafile <- function() c("ADSL", "ADAE")
+      # paste(purrr::map_chr(names_datafile(), ~ paste0(.x, " = tidyCDISC::", tolower(.x))), collapse = ", ")
     } else {glue::glue("
       # User must manually set file paths for study
           study_dir <- 'path/to/study/directory/'
