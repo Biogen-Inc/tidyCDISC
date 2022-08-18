@@ -40,7 +40,10 @@ usethis::use_package("knitr", type = "Suggests")
 usethis::use_package("pkgdown", type = "Suggests")#, min_version = "1.6.1")
 usethis::use_package("rlang")
 # usethis::use_package("stringi")
-# usethis::use_package("forcats")
+
+# temp
+usethis::use_package("forcats")
+usethis::use_package("data.table")
 
 # cannot use dev!
 # usethis::use_dev_package("tippy") #remotes::install_github("JohnCoene/tippy") #‘1.0.0’
