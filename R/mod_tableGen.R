@@ -134,7 +134,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # Then filter ADAE based on STAN table selected.
   pre_ADAE <- reactive({
     req(RECIPE())
-    prep_adae(datafile = datafile(),ADSL = pre_ADSL()$data,input_recipe = RECIPE())
+    prep_adae(datafile = datafile(),ADSL = pre_ADSL()$data, input_recipe = RECIPE())
   })
   
   # Create cleaned up versions of raw data
@@ -182,8 +182,8 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   filtered_data <- callModule(IDEAFilter::shiny_data_filter, "data_filter", data = processed_data, verbose = FALSE)
   
   # apply filters from selected dfs to tg data to create all data
-  all_data <- reactive({suppressMessages(bds_data() %>% semi_join(filtered_data()) %>% varN_fctr_reorder())})
-  ae_data <- reactive({suppressMessages(ADAE() %>% semi_join(filtered_data()) %>% varN_fctr_reorder())})
+  all_data <- reactive({suppressMessages(bds_data() %>% semi_join(filtered_data()))})
+  ae_data <- reactive({suppressMessages(ADAE() %>% semi_join(filtered_data()))})
   pop_data <- reactive({
     suppressMessages(
       pre_ADSL()$data %>% # Cannot be ADSL() because that has potentially been filtered to ADAE subj's
@@ -636,9 +636,11 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     if(any("CDISCPILOT01" %in% ADSL()$STUDYID)){
       glue::glue("
         # create list of dataframes from CDISC pilot study
-        datalist <- list(ADSL = tidyCDISC::adsl, ADAE = tidyCDISC::adae, ADVS = tidyCDISC::advs, ADLBC = tidyCDISC::adlbc, ADTTE = tidyCDISC::adtte)
+        datalist <- list({paste(purrr::map_chr(names(datafile()), ~ paste0(.x, ' = tidyCDISC::', tolower(.x))), collapse = ', ')})
         "
       )
+      # names_datafile <- function() c("ADSL", "ADAE")
+      # paste(purrr::map_chr(names_datafile(), ~ paste0(.x, " = tidyCDISC::", tolower(.x))), collapse = ", ")
     } else {glue::glue("
       # User must manually set file paths for study
           study_dir <- 'path/to/study/directory/'
