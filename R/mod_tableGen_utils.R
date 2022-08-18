@@ -27,7 +27,7 @@ prep_bds <- function(datafile, ADSL) {
       mutate(data_from = "ADSL", PARAMCD = NA, AVAL = NA, CHG = NA)
   }
   
-  combined_data <- varN_fctr_reorder_og(combined_data) # add this after filter?
+  combined_data <- varN_fctr_reorder(combined_data) # add this after filter?
   
   return(combined_data)
 }
@@ -113,12 +113,12 @@ clean_ADAE <- function(datafile, ADSL) {
       inner_join(ADSL, by = "USUBJID")
     preferred_col_order <- c(adae_cols, dplyr::setdiff(colnames(ADSL), adae_cols))
     if(all(sort(colnames(adae_adsl)) == sort(preferred_col_order))){
-      varN_fctr_reorder_og(adae_adsl[,preferred_col_order]) # add this after filter?
+      varN_fctr_reorder(adae_adsl[,preferred_col_order]) # add this after filter?
     } else {
-      varN_fctr_reorder_og(adae_adsl)
+      varN_fctr_reorder(adae_adsl)
     }
   } else {
-    varN_fctr_reorder_og(ADSL)
+    varN_fctr_reorder(ADSL)
   }
 }
 
@@ -277,7 +277,7 @@ check_params <- function(datafile, param_vector) {
                                      # stringr::str_detect(toupper(AVISIT),"EARLY TERMINATION",negate = TRUE)
                                      ) %>%
                               distinct(PARAMCD, AVISIT, AVISITN) %>%
-                              varN_fctr_reorder_og() %>%
+                              varN_fctr_reorder() %>%
                               mutate(PARAMCD = factor(PARAMCD, levels = param_vector)) %>%
                               arrange(PARAMCD, AVISIT)
     )

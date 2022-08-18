@@ -134,7 +134,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # Then filter ADAE based on STAN table selected.
   pre_ADAE <- reactive({
     req(RECIPE())
-    prep_adae(datafile = datafile(),ADSL = pre_ADSL()$data,input_recipe = RECIPE())
+    prep_adae(datafile = datafile(),ADSL = pre_ADSL()$data, input_recipe = RECIPE())
   })
   
   # Create cleaned up versions of raw data
@@ -182,13 +182,13 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   filtered_data <- callModule(IDEAFilter::shiny_data_filter, "data_filter", data = processed_data, verbose = FALSE)
   
   # apply filters from selected dfs to tg data to create all data
-  all_data <- reactive({suppressMessages(bds_data() %>% semi_join(filtered_data()) %>% varN_fctr_reorder_og())})
-  ae_data <- reactive({suppressMessages(ADAE() %>% semi_join(filtered_data()) %>% varN_fctr_reorder_og())})
+  all_data <- reactive({suppressMessages(bds_data() %>% semi_join(filtered_data()))})
+  ae_data <- reactive({suppressMessages(ADAE() %>% semi_join(filtered_data()))})
   pop_data <- reactive({
     suppressMessages(
       pre_ADSL()$data %>% # Cannot be ADSL() because that has potentially been filtered to ADAE subj's
       semi_join(filtered_data()) %>%
-      varN_fctr_reorder_og()
+      varN_fctr_reorder()
     )
   })
   
@@ -680,7 +680,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       glue::glue("
           # Create small filtered data set
               dat_to_filt <- tidyCDISC::data_to_filter(datalist, c({filter_dfs}))
-              filtered_data <- {filter_code} %>% tidyCDISC::varN_fctr_reorder_og()
+              filtered_data <- {filter_code} %>% tidyCDISC::varN_fctr_reorder()
           ")
     } else {""}
   })
@@ -708,9 +708,9 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     if(any(regexpr("%>%", filter_code) > 0)){
       glue::glue("
           # Apply small filtered data set to population dataset
-              pop_data <- pre_adsl$data %>% semi_join(filtered_data) %>% tidyCDISC::varN_fctr_reorder_og()
+              pop_data <- pre_adsl$data %>% semi_join(filtered_data) %>% tidyCDISC::varN_fctr_reorder()
           ")
-    } else {"pop_data <- pre_adsl$data %>% tidyCDISC::varN_fctr_reorder_og()"}
+    } else {"pop_data <- pre_adsl$data %>% tidyCDISC::varN_fctr_reorder()"}
   })
   # capture output for empty df warning
   df_empty_expr <- reactive({
