@@ -12,9 +12,9 @@
 #' @return a frequency table of grouped variables
 #' 
 #' @family tableGen Functions
-#' @export
 #' @keywords tabGen
 #' 
+#' @noRd
 app_freq <- function(column, group, data, totals) {
   UseMethod("app_freq", column)
 }
@@ -23,6 +23,8 @@ app_freq <- function(column, group, data, totals) {
 #' @rdname app_freq
 #' 
 #' @family tableGen Functions
+#' 
+#' @noRd
 
 app_freq.default <- function(column, group, data, totals) {
   rlang::abort(glue::glue(
@@ -41,6 +43,8 @@ app_freq.default <- function(column, group, data, totals) {
 #' @rdname app_freq
 #' 
 #' @family tableGen Functions
+#' 
+#' @noRd
 
 app_freq.ADAE <- app_freq.ADSL <- function(column, group = NULL, data, totals) {
   # ########## ######### ######## #########
@@ -144,6 +148,8 @@ app_freq.ADAE <- app_freq.ADSL <- function(column, group = NULL, data, totals) {
 #' @rdname app_freq
 #' 
 #' @family tableGen Functions
+#' 
+#' @noRd
 
 app_freq.BDS <- function(column, group = NULL, data, totals) {
   rlang::abort(glue::glue(
@@ -155,6 +161,8 @@ app_freq.BDS <- function(column, group = NULL, data, totals) {
 #' @rdname app_freq
 #' 
 #' @family tableGen Functions
+#' 
+#' @noRd
 app_freq.OCCDS <- function(column, group, data, totals) {
   rlang::abort(glue::glue(
     "Currently no method to perform frequency statistics on OCCDS"
@@ -166,6 +174,8 @@ app_freq.OCCDS <- function(column, group, data, totals) {
 #' @rdname app_freq
 #' 
 #' @family tableGen Functions
+#' 
+#' @noRd
 
 app_freq.custom <- function(column, group, data, totals) {
   rlang::abort(glue::glue(

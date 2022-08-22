@@ -18,11 +18,11 @@
 #' @importFrom ggcorrplot cor_pmat
 #'
 #' @family popExp Functions
-#' @export
 #' @keywords popEx
 #' 
 #' @return A list object containing a ggplot object and a data frame with the corresponding correlations
 #'   
+#' @noRd
 app_heatmap <- function(data, yvar_x, yvar_y, time, value = "AVAL",
                          cor_mthd = "pearson", show_sig = FALSE, sig_level = .05) {
   
