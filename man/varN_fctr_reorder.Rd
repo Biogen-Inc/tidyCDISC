@@ -17,4 +17,17 @@ Function to that looks for VARN counterparts to any character or factor VAR
 variables in any dataframe and re-orders there factor levels, taking the lead
 from VARN's numeric guide.
 }
+\examples{
+data(adae, package = "tidyCDISC")
+
+varN_fctr_adae <- varN_fctr_reorder(adae)
+
+unique(adae[,c("AGEGR1", "AGEGR1N")])
+levels(adae$AGEGR1)
+levels(varN_fctr_adae$AGEGR1)
+
+unique(adae[,c("RACE", "RACEN")])
+levels(adae$RACE)
+levels(varN_fctr_adae$RACE)
+}
 \keyword{helpers}

@@ -17,4 +17,15 @@ A data frame containing the BDS data bound by rows.
 \description{
 A function to combine all BDS data frames into one large data set.
 }
+\examples{
+datalist <- list(ADSL = tidyCDISC::adsl, ADVS = tidyCDISC::advs, 
+                 ADAE = tidyCDISC::adae, ADLBC = tidyCDISC::adlbc)
+                 
+pre_adsl <- prep_adsl(datalist$ADSL, input_recipe = 'NONE')
+# Create AE data set
+pre_adae <- prep_adae(datalist, pre_adsl$data, 'NONE')
+ae_data <- pre_adae$data
+
+prep_bds(datalist, ADSL = pre_adsl$data)
+}
 \keyword{tabGen_repro}

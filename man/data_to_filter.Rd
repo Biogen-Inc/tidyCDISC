@@ -17,4 +17,12 @@ A `data.frame` object based on the reduction of `datafile` from `input_filter_df
 \description{
 The smallest possible data set we could filter to semi-join later
 }
+\examples{
+datalist <- list(ADSL = tidyCDISC::adsl, ADAE = tidyCDISC::adae, 
+                 ADVS = tidyCDISC::advs, ADLBC = tidyCDISC::adlbc, 
+                 ADTTE = tidyCDISC::adtte)
+
+# Returns combined dataset
+data_to_filter(datalist, c("ADSL", "ADAE"))
+}
 \keyword{tabGen_repro}

@@ -98,6 +98,15 @@ transpose_df <- function(df, num) {
 #' @keywords tabGen_repro
 #' 
 #' @return A character vector
+#' 
+#' @examples 
+#' data(adsl, package = "tidyCDISC")
+#' 
+#' # Values of TRT01P
+#' unique(adsl$TRT01P)
+#' 
+#' # Common row names based on TRT01P
+#' common_rownames(adsl, "TRT01P")
 common_rownames <- function(data, group) { 
   if (is.null(group) ) { #| group == "NONE"
     vars <- c("Variable", "Total")
@@ -217,6 +226,19 @@ filters_in_english <- function(filtered_data, filter_header = "Filters Applied:"
 #' 
 #' @references A character vector containing the levels of the factor/vector
 #' 
+#' @examples 
+#' data(adae, package = "tidyCDISC")
+#' 
+#' # Create levels based on VARN
+#' varN_fctr_adae <- varN_fctr_reorder(adae)
+#' 
+#' # `adae` does not have factor but `varN_fctr_adae` does
+#' levels(adae$RACE)
+#' levels(varN_fctr_adae$RACE)
+#' 
+#' # `get_levels()` either creates the factor or retrieves it
+#' get_levels(adae$RACE)
+#' get_levels(varN_fctr_adae$RACE)
 get_levels <- function(x) {if(is.factor(x)) levels(x) else sort(unique(x), na.last = TRUE) } 
 
 
@@ -253,6 +275,18 @@ get_levels <- function(x) {if(is.factor(x)) levels(x) else sort(unique(x), na.la
 #' 
 #' @return The data frame after having factor levels re-ordered by VARN
 #' 
+#' @examples 
+#' data(adae, package = "tidyCDISC")
+#' 
+#' varN_fctr_adae <- varN_fctr_reorder(adae)
+#' 
+#' unique(adae[,c("AGEGR1", "AGEGR1N")])
+#' levels(adae$AGEGR1)
+#' levels(varN_fctr_adae$AGEGR1)
+#' 
+#' unique(adae[,c("RACE", "RACEN")])
+#' levels(adae$RACE)
+#' levels(varN_fctr_adae$RACE)
 varN_fctr_reorder <- function(data) {
   # rm(data)
   # data <- all_data

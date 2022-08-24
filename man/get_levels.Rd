@@ -15,6 +15,20 @@ x vector
 \description{
 Extracts the factor levels of a vector or returns the unique values if the vector is not a factor.
 }
+\examples{
+data(adae, package = "tidyCDISC")
+
+# Create levels based on VARN
+varN_fctr_adae <- varN_fctr_reorder(adae)
+
+# `adae` does not have factor but `varN_fctr_adae` does
+levels(adae$RACE)
+levels(varN_fctr_adae$RACE)
+
+# `get_levels()` either creates the factor or retrieves it
+get_levels(adae$RACE)
+get_levels(varN_fctr_adae$RACE)
+}
 \references{
 A character vector containing the levels of the factor/vector
 }

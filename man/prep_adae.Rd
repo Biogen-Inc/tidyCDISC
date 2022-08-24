@@ -19,4 +19,13 @@ A `list` containing a `data.frame` object and character vector specifying the pr
 \description{
 Function to pre-filter the ADAE depending on the stan table selected
 }
+\examples{
+datalist <- list(ADSL = tidyCDISC::adsl, ADVS = tidyCDISC::advs, 
+                 ADAE = tidyCDISC::adae, ADLBC = tidyCDISC::adlbc)
+                 
+pre_adsl <- prep_adsl(datalist$ADSL, input_recipe = 'NONE')
+
+# Create AE data set
+prep_adae(datalist, pre_adsl$data, input_recipe = 'NONE')
+}
 \keyword{tabGen_repro}

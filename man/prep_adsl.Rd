@@ -17,4 +17,17 @@ A `list` containing a `data.frame` object and character vector specifying the pr
 \description{
 Function to pre-filter the ADSL depending on the stan table selected
 }
+\examples{
+data(adsl, package = "tidyCDISC")
+
+# Process ADSL data for STAN table
+
+prep_adsl(adsl, 
+          input_recipe = 'Table 33: Related serious adverse events by 
+                          system organ class and preferred term')
+
+# Return ADSL data if no STAN table selected
+
+prep_adsl(adsl, input_recipe = "NONE")
+}
 \keyword{tabGen_repro}

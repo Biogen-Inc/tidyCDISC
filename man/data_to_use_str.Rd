@@ -19,4 +19,16 @@ A `data.frame` object containing data of the AE variety if `x == "ADAE"` or one 
 \description{
 Function to clean and combine ADAE dataset with ADSL
 }
+\examples{
+datalist <- list(ADSL = tidyCDISC::adsl, ADVS = tidyCDISC::advs, 
+                 ADAE = tidyCDISC::adae, ADLBC = tidyCDISC::adlbc)
+                 
+pre_adsl <- prep_adsl(datalist$ADSL, input_recipe = 'NONE')
+pre_adae <- prep_adae(datalist, pre_adsl$data, 'NONE')
+ae_data <- pre_adae$data
+bds_data <- prep_bds(datalist, ADSL = pre_adsl$data)
+
+all.equal(data_to_use_str("ADAE", ae_data, bds_data), ae_data)
+all.equal(data_to_use_str("BDS", ae_data, bds_data), bds_data)
+}
 \keyword{tabGen_repro}
