@@ -22,9 +22,7 @@ data(adsl, package = "tidyCDISC")
 
 # Process ADSL data for STAN table
 
-prep_adsl(adsl, 
-          input_recipe = 'Table 33: Related serious adverse events by 
-                          system organ class and preferred term')
+prep_adsl(adsl, input_recipe = 'Table 3: Accounting of Subjects')
 
 # Return ADSL data if no STAN table selected
 

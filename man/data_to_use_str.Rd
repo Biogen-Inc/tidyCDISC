@@ -29,6 +29,6 @@ ae_data <- pre_adae$data
 bds_data <- prep_bds(datalist, ADSL = pre_adsl$data)
 
 all.equal(data_to_use_str("ADAE", ae_data, bds_data), ae_data)
-all.equal(data_to_use_str("BDS", ae_data, bds_data), bds_data)
+all.equal(data_to_use_str("ADSL", ae_data, bds_data), bds_data)
 }
 \keyword{tabGen_repro}

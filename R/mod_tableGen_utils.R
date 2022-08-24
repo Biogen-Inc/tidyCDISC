@@ -15,9 +15,6 @@
 #'                  ADAE = tidyCDISC::adae, ADLBC = tidyCDISC::adlbc)
 #'                  
 #' pre_adsl <- prep_adsl(datalist$ADSL, input_recipe = 'NONE')
-#' # Create AE data set
-#' pre_adae <- prep_adae(datalist, pre_adsl$data, 'NONE')
-#' ae_data <- pre_adae$data
 #' 
 #' prep_bds(datalist, ADSL = pre_adsl$data)
 prep_bds <- function(datafile, ADSL) {
@@ -73,9 +70,7 @@ numeric_stan_table <- function(input_recipe){
 #' 
 #' # Process ADSL data for STAN table
 #' 
-#' prep_adsl(adsl, 
-#'           input_recipe = 'Table 33: Related serious adverse events by 
-#'                           system organ class and preferred term')
+#' prep_adsl(adsl, input_recipe = 'Table 3: Accounting of Subjects')
 #' 
 #' # Return ADSL data if no STAN table selected
 #' 
@@ -412,7 +407,7 @@ data_to_filter <- function(datafile, input_filter_df) {
 #' bds_data <- prep_bds(datalist, ADSL = pre_adsl$data)
 #' 
 #' all.equal(data_to_use_str("ADAE", ae_data, bds_data), ae_data)
-#' all.equal(data_to_use_str("BDS", ae_data, bds_data), bds_data)
+#' all.equal(data_to_use_str("ADSL", ae_data, bds_data), bds_data)
 data_to_use_str <- function(x, ae_data, bds_data) {
   if (x == "ADAE") { ae_data }
   else bds_data
