@@ -635,38 +635,38 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   create_script_data <- reactive({
     if(any("CDISCPILOT01" %in% ADSL()$STUDYID)){
       glue::glue("
-        # create list of dataframes from CDISC pilot study
-        datalist <- list({paste(purrr::map_chr(names(datafile()), ~ paste0(.x, ' = tidyCDISC::', tolower(.x))), collapse = ', ')})
-        "
+# create list of dataframes from CDISC pilot study
+datalist <- list({paste(purrr::map_chr(names(datafile()), ~ paste0(.x, ' = tidyCDISC::', tolower(.x))), collapse = ', ')})
+"
       )
       # names_datafile <- function() c("ADSL", "ADAE")
       # paste(purrr::map_chr(names_datafile(), ~ paste0(.x, " = tidyCDISC::", tolower(.x))), collapse = ", ")
     } else {glue::glue("
-      # User must manually set file paths for study
-          study_dir <- 'path/to/study/directory/'
-          
-          # use HAVEN to extract data, then merge
-          filenames <- c({filenames()})
-          
-          # create list of dataframes
-          datalist <- 
-            purrr::map(file_names, ~ haven::read_sas(file.path(study_directory,.x))) %>%
-            setNames(toupper(stringr::str_remove(file_names, '.sas7bdat')))
-      ")}
+# User must manually set file paths for study
+study_dir <- 'path/to/study/directory/'
+
+# use HAVEN to extract data, then merge
+filenames <- c({filenames()})
+
+# create list of dataframes
+datalist <- 
+  purrr::map(file_names, ~ haven::read_sas(file.path(study_directory,.x))) %>%
+  setNames(toupper(stringr::str_remove(file_names, '.sas7bdat')))
+")}
   })
   
   # If ADAE exists, then prep that data too
   adae_expr <- reactive({
     if("ADAE" %in% names(datafile())){
       glue::glue("
-        # Create AE data set
-            pre_adae <- datalist %>%
-                tidyCDISC::prep_adae(pre_adsl$data, '{RECIPE()}')
-            ae_data <- pre_adae$data
-        "
+# Create AE data set
+pre_adae <- datalist %>%
+  tidyCDISC::prep_adae(pre_adsl$data, '{RECIPE()}')
+ae_data <- pre_adae$data
+"
       )
     } else {"
-      "}
+"}
   })
   # capture output of filtering expression
   # input_filter_df <- c("one","mild","Moderate")
@@ -680,19 +680,19 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       filter_dfs <- paste(sQuote(input$filter_df), collapse = ",")
       # options(useFancyQuotes = TRUE)
       glue::glue("
-          # Create small filtered data set
-              dat_to_filt <- tidyCDISC::data_to_filter(datalist, c({filter_dfs}))
-              filtered_data <- {filter_code} %>% tidyCDISC::varN_fctr_reorder()
-          ")
+# Create small filtered data set
+dat_to_filt <- tidyCDISC::data_to_filter(datalist, c({filter_dfs}))
+filtered_data <- {filter_code} %>% tidyCDISC::varN_fctr_reorder()
+")
     } else {""}
   })
   filter_bds_expr <- reactive({
     filter_code <- gsub("processed_data","bds_data",capture.output(attr(filtered_data(), "code")))
     if(any(regexpr("%>%", filter_code) > 0)){
       glue::glue("
-          # Apply small filtered data set to BDS data
-              bds_data <- bds_data %>% semi_join(filtered_data) 
-          ")
+# Apply small filtered data set to BDS data
+bds_data <- bds_data %>% semi_join(filtered_data) 
+")
     } else {""}
   })
   # capture output of filtering expression
@@ -700,27 +700,27 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     filter_code <- gsub("processed_data","ae_data",capture.output(attr(filtered_data(), "code")))
     if(any(regexpr("%>%", filter_code) > 0) & "ADAE" %in% names(datafile())){
       glue::glue("
-          # Apply small filtered data set to ADAE data
-              ae_data <- ae_data %>% semi_join(filtered_data) 
-          ")
+# Apply small filtered data set to ADAE data
+ae_data <- ae_data %>% semi_join(filtered_data) 
+")
     } else {""}
   })
   filter_pop_expr <- reactive({
     filter_code <- gsub("processed_data","bds_data",capture.output(attr(filtered_data(), "code")))
     if(any(regexpr("%>%", filter_code) > 0)){
       glue::glue("
-          # Apply small filtered data set to population dataset
-              pop_data <- pre_adsl$data %>% semi_join(filtered_data) %>% tidyCDISC::varN_fctr_reorder()
-          ")
+# Apply small filtered data set to population dataset
+pop_data <- pre_adsl$data %>% semi_join(filtered_data) %>% tidyCDISC::varN_fctr_reorder()
+")
     } else {"pop_data <- pre_adsl$data %>% tidyCDISC::varN_fctr_reorder()"}
   })
   # capture output for empty df warning
   df_empty_expr <- reactive({
     if(nrow(use_data_reactive()) == 0) {
       glue::glue("
-          # Check if No subject's remain
-              if(nrow({Rscript_use_data()}) == 0) stop(\"{paste0('No subjects remain when the following filters are applied. \n        ',gsub('<br/>', '\n        ', pre_filter_msgs()))}\")
-          ")
+# Check if No subject's remain
+if(nrow({Rscript_use_data()}) == 0) stop(\"{paste0('No subjects remain when the following filters are applied. \n        ',gsub('<br/>', '\n        ', pre_filter_msgs()))}\")
+")
     } else {""}
   })
   
@@ -743,8 +743,8 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   text_code <- reactive({
     glue::glue(
     "
-    
-    options(digits = 3)
+# Set global options
+options(digits = 3)
 
 require(tidyCDISC)
 require(purrr)
@@ -753,22 +753,22 @@ require(stringr)
 require(tidyr)
 require(gt)
 
-    {create_script_data()}
-    pre_adsl <- tidyCDISC::prep_adsl(datalist$ADSL, input_recipe = '{RECIPE()}')
-    {adae_expr()}
-    bds_data <- datalist %>% tidyCDISC::prep_bds(ADSL = pre_adsl$data)
-        
-    {data_to_filter_expr()}
-    {filter_pop_expr()}
-    {filter_bds_expr()}
-    {filter_ae_expr()}
-        
-    # get drop zone area from tidyCDISC
-    # and create table using data
-    blockData <- {paste0(capture.output(dput(blocks_and_functions())), collapse = '\n')}
-    
-    {df_empty_expr()}
-    "
+{create_script_data()}
+pre_adsl <- tidyCDISC::prep_adsl(datalist$ADSL, input_recipe = '{RECIPE()}')
+{adae_expr()}
+bds_data <- datalist %>% tidyCDISC::prep_bds(ADSL = pre_adsl$data)
+
+{data_to_filter_expr()}
+{filter_pop_expr()}
+{filter_bds_expr()}
+{filter_ae_expr()}
+
+# get drop zone area from tidyCDISC
+# and create table using data
+blockData <- {paste0(capture.output(dput(blocks_and_functions())), collapse = '\n')}
+
+{df_empty_expr()}
+"
     )
   })
   
@@ -776,37 +776,37 @@ require(gt)
   total_for_code <- reactive({
     if (!!input$COLUMN == 'NONE') {
       glue::glue("
-        total_df <- {Rscript_use_preferred_pop_data()} %>% 
-        distinct(USUBJID) %>% 
-        summarise(n_tot = n(), .groups='drop_last')
-        
-        total <- total_df$n_tot
-        ")
+total_df <- {Rscript_use_preferred_pop_data()} %>% 
+distinct(USUBJID) %>% 
+summarise(n_tot = n(), .groups='drop_last')
+
+total <- total_df$n_tot
+")
     } else {
       glue::glue(
         "
-        all <- {Rscript_use_preferred_pop_data()} %>% 
-        distinct(USUBJID) %>% 
-        summarise(n_tot = n(), .groups='drop_last') %>%
-        mutate({input$COLUMN} = 'Total') 
-        
-        grp_lvls <- tidyCDISC::get_levels({Rscript_use_preferred_pop_data()}[['{input$COLUMN}']])
-        xyz <- data.frame(grp_lvls) %>%
-            rename_with(~paste('{input$COLUMN}'), grp_lvls)
+all <- {Rscript_use_preferred_pop_data()} %>% 
+  distinct(USUBJID) %>% 
+  summarise(n_tot = n(), .groups='drop_last') %>%
+  mutate({input$COLUMN} = 'Total') 
 
-        groups <- 
-          xyz %>%
-          left_join(
-            {Rscript_use_preferred_pop_data()} %>%
-            group_by({input$COLUMN}) %>%
-            distinct(USUBJID) %>%
-            summarise(n_tot = n(), .groups='drop_last')
-          ) %>%
-          mutate(n_tot = tidyr::replace_na(n_tot, 0)) 
+grp_lvls <- tidyCDISC::get_levels({Rscript_use_preferred_pop_data()}[['{input$COLUMN}']])
+xyz <- data.frame(grp_lvls) %>%
+  rename_with(~paste('{input$COLUMN}'), grp_lvls)
+
+groups <- 
+  xyz %>%
+  left_join(
+    {Rscript_use_preferred_pop_data()} %>%
+    group_by({input$COLUMN}) %>%
+    distinct(USUBJID) %>%
+    summarise(n_tot = n(), .groups='drop_last')
+    ) %>%
+  mutate(n_tot = tidyr::replace_na(n_tot, 0)) 
         
-        total_df <- bind_rows(groups, all)
-        total <- total_df$n_tot
-        "
+total_df <- bind_rows(groups, all)
+total <- total_df$n_tot
+"
       )
     }
   })
@@ -815,48 +815,44 @@ require(gt)
     
     glue::glue(
       "
-      {text_code()}
+{text_code()}
       
-      # Calculate totals for population set
-      {total_for_code()}
+# Calculate totals for population set
+{total_for_code()}
       
+tg_table <- 
+  purrr::pmap(list(blockData$agg,
+                   blockData$S3,
+                   blockData$dropdown,
+                   blockData$dataset), 
+              function(x,y,z,d) tidyCDISC::app_methods(x,y,z,
+                                                       group = {column() %quote% 'NULL'}, 
+                                                       data = tidyCDISC::data_to_use_str(d, ae_data, bds_data),
+                                                       totals = total_df)
+  ) %>%
+  map(setNames, tidyCDISC::common_rownames({Rscript_use_preferred_pop_data()}, {column() %quote% 'NULL'})) %>%
+  setNames(paste(blockData$gt_group)) %>%
+  bind_rows(.id = 'ID') %>%
+  mutate(ID = tidyCDISC::pretty_IDs(ID))
       
-      tg_table <- purrr::pmap(list(
-                  blockData$agg,
-                  blockData$S3,
-                  blockData$dropdown,
-                  blockData$dataset), 
-          function(x,y,z,d) tidyCDISC::app_methods(x,y,z,
-                       group = {column() %quote% 'NULL'}, 
-                       data = tidyCDISC::data_to_use_str(d, ae_data, bds_data),
-                       totals = total_df)) %>%
-      map(setNames, tidyCDISC::common_rownames({Rscript_use_preferred_pop_data()}, {column() %quote% 'NULL'})) %>%
-      setNames(paste(blockData$gt_group)) %>%
-      bind_rows(.id = 'ID') %>%
-      mutate(ID = tidyCDISC::pretty_IDs(ID))
-      
-      # get the rownames for the table
-      row_names_n <- names(tg_table)[-c(1:2)]
+# get the rownames for the table
+row_names_n <- names(tg_table)[-c(1:2)]
     
-      # create the gt output
-      tg_table %>%
-          gt(groupname_col = 'ID') %>%
-          fmt_markdown(columns = c(Variable),
-                 rows = stringr::str_detect(Variable,'&nbsp;') |
-                   stringr::str_detect(Variable,'<b>') |
-                   stringr::str_detect(Variable,'</b>')) %>%
-          tab_options(table.width = px(700)) %>%
-          cols_label(.list = imap(tg_table[-c(1:2)], ~ tidyCDISC::col_for_list_expr(.x))) %>%
-          tab_header(
-            title = md('{input$table_title}'),
-            subtitle = md(\"{subtitle_html()}\")
-          ) %>%
-          tab_style(
-          style = cell_text(weight = 'bold'),
-          locations = cells_row_groups()
-          ) %>%
-          cols_label(Variable = '')
-      "
+# create the gt output
+tg_table %>%
+  gt(groupname_col = 'ID') %>%
+  fmt_markdown(columns = c(Variable),
+               rows = stringr::str_detect(Variable,'&nbsp;') |
+                      stringr::str_detect(Variable,'<b>') |
+                      stringr::str_detect(Variable,'</b>')) %>%
+  tab_options(table.width = px(700)) %>%
+  cols_label(.list = imap(tg_table[-c(1:2)], ~ tidyCDISC::col_for_list_expr(.x))) %>%
+  tab_header(title = md('{input$table_title}'),
+             subtitle = md(\"{subtitle_html()}\")) %>%
+  tab_style(style = cell_text(weight = 'bold'),
+            locations = cells_row_groups()) %>%
+  cols_label(Variable = '')
+"
     )
   })
   
@@ -864,84 +860,75 @@ require(gt)
   generate_comparison_output <- reactive({
     glue::glue(
       "
-      {text_code()}
+{text_code()}
       
-      # Calculate totals for population set
-      {total_for_code()}
+# Calculate totals for population set
+{total_for_code()}
       
-      tg_table <- purrr::pmap(list(
-              blockData$agg,
-              blockData$S3,
-              blockData$dropdown,
-              blockData$dataset), 
-          function(x,y,z,d) tidyCDISC::app_methods(x,y,z, 
-                       group = {column() %quote% 'NULL'}, 
-                       data = tidyCDISC::data_to_use_str(d, ae_data, bds_data),
-                       totals = total_df)) %>%
-      map(setNames, tidyCDISC::common_rownames({Rscript_use_preferred_pop_data()}, {column() %quote% 'NULL'})) %>%
-      setNames(paste(blockData$gt_group)) %>%
-      bind_rows(.id = 'ID') %>%
-      mutate(
-        # remove html
-        Variable = gsub('<b>','', gsub('</b>','', gsub('&nbsp;',' ', Variable)))
-      ) %>%
-      left_join(
-        blockData %>% 
-          select(ID = gt_group, block, label, label_source, dropdown) %>%
-          distinct()
-      )
-    
-      # read in SAS table and convert to DF
-      sas_data_dir <- 'path/to/sas/table/dataset/'
-      sas_filename <- '{input$sas$name}'
-      sas_table <- haven::read_sas(file.path(sas_data_dir, sas_filename))
-      
-      # prepare SAS table for comparison
-      sas_comp_ready <- tidyCDISC::prep_sas_table(sas_data = sas_table,
-                     # block_names = 'by1lbl',
-                     # block_ord_names = 'cat',
-                     # stat_names = 'by2lbl',
-                     # stat_ord_names = 'subcat',
-                     tg_data = tg_table,
-                     machine_readable = TRUE,
-                     keep_orig_ids = FALSE,
-                     rm_desc_col = TRUE
-      )
+tg_table <- 
+  purrr::pmap(list(blockData$agg,
+                   blockData$S3,
+                   blockData$dropdown,
+                   blockData$dataset), 
+               function(x,y,z,d) tidyCDISC::app_methods(x,y,z, 
+                                                        group = {column() %quote% 'NULL'}, 
+                                                        data = tidyCDISC::data_to_use_str(d, ae_data, bds_data),
+                                                        totals = total_df)) %>%
+  map(setNames, tidyCDISC::common_rownames({Rscript_use_preferred_pop_data()}, {column() %quote% 'NULL'})) %>%
+  setNames(paste(blockData$gt_group)) %>%
+  bind_rows(.id = 'ID') %>%
+  mutate(Variable = gsub('<b>','', gsub('</b>','', gsub('&nbsp;',' ', Variable)))) %>%
+  left_join(blockData %>% 
+              select(ID = gt_group, block, label, label_source, dropdown) %>%
+              distinct())
 
-      # prepare TG Table for comparison
-      colx <- names(sas_table)[stringr::str_detect(names(sas_table), '^col[0-9]')]
-      tg_comp_ready <- tidyCDISC::prep_tg_table(data = tg_table,
-                                           machine_readable = TRUE,
-                                           keep_orig_ids = FALSE,
-                                           rm_desc_col = TRUE,
-                                           generic_colnames = colx
-                                           )
+# read in SAS table and convert to DF
+sas_data_dir <- 'path/to/sas/table/dataset/'
+sas_filename <- '{input$sas$name}'
+sas_table <- haven::read_sas(file.path(sas_data_dir, sas_filename))
       
-      # Compare the two tables...
-      library(diffdf)
+# prepare SAS table for comparison
+sas_comp_ready <- tidyCDISC::prep_sas_table(sas_data = sas_table,
+                                            # block_names = 'by1lbl',
+                                            # block_ord_names = 'cat',
+                                            # stat_names = 'by2lbl',
+                                            # stat_ord_names = 'subcat',
+                                            tg_data = tg_table,
+                                            machine_readable = TRUE,
+                                            keep_orig_ids = FALSE,
+                                            rm_desc_col = TRUE)
+
+# prepare TG Table for comparison
+colx <- names(sas_table)[stringr::str_detect(names(sas_table), '^col[0-9]')]
+tg_comp_ready <- tidyCDISC::prep_tg_table(data = tg_table,
+                                          machine_readable = TRUE,
+                                          keep_orig_ids = FALSE,
+                                          rm_desc_col = TRUE,
+                                          generic_colnames = colx)
       
-      # ... by location in the tables
-      output_file <- file.path(sas_data_dir,paste0(
-        gsub('[^[:alnum:]]','_',gsub(tools::file_ext(sas_filename),'',sas_filename)),
-        'v_tidyCDISC.log')) 
-      order_diff <- diffdf(base = sas_comp_ready, 
-              compare = tg_comp_ready,
-              keys = c('id_block', 'id_rn'),
-              tolerance = 0.01,
-              strict_numeric = TRUE, # Integer != Double
-              strict_factor = TRUE,  # Factor != Character
-              file = output_file
-      )
-      file.edit(output_file) # open log file
-      
-      # # Additional functions to review differences
-      # diffdf_has_issues(order_diff) # any issues?
-      # 
-      # # which rows have an issue in each data frame
-      # diffdf_issuerows(sas_comp_ready, order_diff)
-      # diffdf_issuerows(tg_comp_ready, order_diff)
-      
-      "
+# Compare the two tables...
+library(diffdf)
+
+# ... by location in the tables
+output_file <- file.path(sas_data_dir,paste0(
+  gsub('[^[:alnum:]]','_',gsub(tools::file_ext(sas_filename),'',sas_filename)),
+       'v_tidyCDISC.log')) 
+order_diff <- diffdf(base = sas_comp_ready, 
+                     compare = tg_comp_ready,
+                     keys = c('id_block', 'id_rn'),
+                     tolerance = 0.01,
+                     strict_numeric = TRUE, # Integer != Double
+                     strict_factor = TRUE,  # Factor != Character
+                     file = output_file)
+file.edit(output_file) # open log file
+
+# # Additional functions to review differences
+# diffdf_has_issues(order_diff) # any issues?
+# 
+# # which rows have an issue in each data frame
+# diffdf_issuerows(sas_comp_ready, order_diff)
+# diffdf_issuerows(tg_comp_ready, order_diff)
+"
     )
   })
   
