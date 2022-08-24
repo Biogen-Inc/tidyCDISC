@@ -23,13 +23,19 @@ reference:
   contents:
   - run_app
 - title: Package data
-  desc: CDISC pilot data
+- subtitle: CDISC pilot data
+  desc: Pilot data used to demo the application
   contents:
     - adsl
     - adae
     - advs
     - adlbc
     - adtte
+- subtitle: Example data
+  desc: Example data used to show function usage
+  contents:
+    - example_dat1
+    - example_dat2
 - title: Reproducible analysis functions
   desc: R code generator will leverage these functions to mimic analysis performed in the app
   contents:
