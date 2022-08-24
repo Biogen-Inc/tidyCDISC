@@ -8,7 +8,16 @@
 #' @keywords tabGen_repro
 #' 
 #' @return A character object of class \code{from_markdown}.
-# get column names with N
+#' 
+#' @examples 
+#' data(example_dat2, package = "tidyCDISC")
+#' 
+#' example_dat2$TG_table
+#' 
+#' labels <- col_for_list_expr(example_dat2$col_names, example_dat2$col_totals)
+#' labels
+#' 
+#' gt::cols_label(example_dat2$TG_table, .list = labels)
 col_for_list_expr <- function(col_names, col_total) {
   purrr::map2(col_names, col_total, ~ gt::md(glue::glue("**{.x}** <br> N={.y}"))) %>%
     rlang::set_names(col_names)
