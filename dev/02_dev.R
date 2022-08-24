@@ -41,6 +41,7 @@ usethis::use_package("pkgdown", type = "Suggests")#, min_version = "1.6.1")
 usethis::use_package("rlang")
 # usethis::use_package("stringi")
 # usethis::use_package("forcats")
+# usethis::use_package("data.table")
 
 # cannot use dev!
 # usethis::use_dev_package("tippy") #remotes::install_github("JohnCoene/tippy") #‘1.0.0’
@@ -152,7 +153,7 @@ usethis::use_data_raw( name = "adsl", open = FALSE ) # ran
 usethis::use_data_raw( name = "adlbc", open = FALSE ) # ran
 usethis::use_data_raw( name = "advs", open = FALSE ) # ran
 usethis::use_data_raw( name = "adae", open = FALSE ) # ran
-usethis::use_data_raw( name = "adtte", open = T ) # ran
+usethis::use_data_raw( name = "adtte", open = TRUE ) # ran
 
 ## Tests ---- not run
 ## Add one line by test you want to create
@@ -307,7 +308,7 @@ usethis::use_version(which = c("patch", "minor", "major", "dev")[1])
 
 
 # When ready, submit to CRAN for the first time
-devtools::release(check = FALSE, args = "--no-build-vignettes")
+devtools::release(check = FALSE)
 # Re-submit:
 # devtools::submit_cran()
 

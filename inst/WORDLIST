@@ -28,6 +28,7 @@ Downloader
 EVENTTYP
 IDEAFilter
 Kaplan
+magrittr
 Ns
 OCCD
 OCCDS
@@ -40,6 +41,7 @@ PHUSE
 PHUSE's
 PROC
 Pharma
+pkgs
 Pre
 RStudio
 RTF
@@ -87,6 +89,7 @@ https
 ie
 io
 ish
+Ish
 iteratively
 jitter
 lowecase
@@ -116,6 +119,7 @@ submodule
 tableGen
 tagList
 tg
+TG
 tibble
 ui
 un

@@ -26,3 +26,4 @@ vignettes/dev0*
 vignettes/x0*
 ^doc$
 ^Meta$
+^CRAN-SUBMISSION$

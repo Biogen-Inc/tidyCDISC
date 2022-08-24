@@ -5,6 +5,8 @@
 
 * created a new toggle on the `Data` tab that allows users to select which CDISC pilot study data sources they wish to use in the app.
 
+* Minor bug improvements
+
 # tidyCDISC 0.0.4 
 * cleaning up `devtools::check()` & preparing for CRAN release.
 

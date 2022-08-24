@@ -1,7 +1,7 @@
 ## Submission
 This is the first ever CRAN submission of `tidyCDISC`- a large, multifaceted shiny application designed using the `golem` framework.
 
-The application can perform many typical pharma-industry tasks in the clinical reporting pipeline. As such, many tasks require much documentation (aka vignettes), especially considering our users are primarily SAS programmers who are generally tentative around the validation of R outputs. We've added 11 vignettes for users (& on-boarding developers) which take ~3 minutes of compute time build and include lots of `GIF`s and `PNG`s, bloating the installed package size. Thus, I've chosen to put the entire `vignettes/` folder in the `.Rbuildignore`. However, our `README` is comprehensive, with lots of links to the vignettes hosted on our `pkgdown` site [here](https://biogen-inc.github.io/tidyCDISC/).
+The application can perform many typical pharma-industry tasks in the clinical reporting pipeline. As such, many tasks require much documentation (aka vignettes), especially considering our users are primarily SAS programmers who are tentative around the validation of R outputs. To counter act that, we've added ~11 vignettes for users (& developer on-boarding) which take ~3 minutes of compute time to build. These vignettes include lots of `GIF`s and `PNG`s, bloating the installed package size so we've chosen to put nearly the entire `vignettes/` folder in the `.Rbuildignore`. However, our `README` is comprehensive, with lots of links to the vignettes hosted on our `pkgdown` site [here](https://biogen-inc.github.io/tidyCDISC/).
 
 ## R CMD check results
 0 errors | 0 warnings | 2 notes

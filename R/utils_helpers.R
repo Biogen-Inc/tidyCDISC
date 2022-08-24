@@ -309,7 +309,8 @@ varN_fctr_reorder <- function(data) {
       this_varc_sym <-rlang::sym(this_varc)
       pref_ord <- data %>% select(one_of(this_varc, this_varn)) %>% distinct() %>% arrange(!!this_varn_sym)
       data <-
-        data %>% mutate(!!this_varc_sym := factor(!!this_varc_sym, levels = unique(pref_ord[[this_varc]])))
+        data %>% mutate(!!this_varc_sym := factor(!!this_varc_sym,
+                          levels = unique(pref_ord[[this_varc]])))
       # return(data)
     }
   }
@@ -318,5 +319,4 @@ varN_fctr_reorder <- function(data) {
   data <- sjlabelled::set_label(data, label = savelbls)
   return(data)
 }
-
 
