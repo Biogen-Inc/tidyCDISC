@@ -1,6 +1,7 @@
 #' GT Column Names
 #' 
-#' @param nm A vector of column names
+#' @param col_names A vector of column names
+#' @param col_total A vector of column totals
 #' 
 #' @description The function creates the labels for each column using the total function so the columns are now NAME N= X
 #' @export
@@ -8,8 +9,9 @@
 #' 
 #' @return A character object of class \code{from_markdown}.
 # get column names with N
-col_for_list_expr <- function(nm) {
-  nm = md(glue::glue("**{row_names_n}** <br> N={total}"))
+col_for_list_expr <- function(col_names, col_total) {
+  purrr::map2(col_names, col_total, ~ gt::md(glue::glue("**{.x}** <br> N={.y}"))) %>%
+    rlang::set_names(col_names)
 }
 
 
