@@ -746,14 +746,12 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     
     options(digits = 3)
 
-    pkgs_req <- c('tidyCDISC', 'purrr', 'haven', 'dplyr', 'stringr', 'tidyr', 'gt', 'diffdf')
-    pkgs_needed <- pkgs_req[!(pkgs_req %in% installed.packages()[,'Package'])]
-    if(length(pkgs_needed)) install.packages(pkgs_needed)
-    
-    library(tidyCDISC)
-    library(purrr)
-    library(haven)
-    library(dplyr)
+require(tidyCDISC)
+require(purrr)
+require(dplyr)
+require(stringr)
+require(tidyr)
+require(gt)
 
     {create_script_data()}
     pre_adsl <- tidyCDISC::prep_adsl(datalist$ADSL, input_recipe = '{RECIPE()}')
@@ -841,7 +839,6 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       row_names_n <- names(tg_table)[-c(1:2)]
     
       # create the gt output
-      library(gt)
       tg_table %>%
           gt(groupname_col = 'ID') %>%
           fmt_markdown(columns = c(Variable),
