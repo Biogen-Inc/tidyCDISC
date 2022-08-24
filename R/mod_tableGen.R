@@ -646,6 +646,7 @@ datalist <- list({paste(purrr::map_chr(names(datafile()), ~ paste0(.x, ' = tidyC
 study_dir <- 'path/to/study/directory/'
 
 # use HAVEN to extract data, then merge
+require(haven)
 filenames <- c({filenames()})
 
 # create list of dataframes
