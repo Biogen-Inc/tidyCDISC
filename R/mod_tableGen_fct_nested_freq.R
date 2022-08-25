@@ -14,9 +14,9 @@
 #' @return a frequency table of grouped variables
 #'
 #' @family tableGen Functions
-#' @export
 #' @keywords tabGen
 #' 
+#' @noRd
 app_nested_freq <- function(column, nested_var = "NONE", group, data, totals, sort = "desc_tot") {
   UseMethod("app_nested_freq", column)
 }
@@ -33,6 +33,8 @@ app_nested_freq <- function(column, nested_var = "NONE", group, data, totals, so
 #' @rdname app_nested_freq
 #' 
 #' @family tableGen Functions
+#' 
+#' @noRd
 
 app_nested_freq.default <- app_nested_freq.OCCDS <- app_nested_freq.ADAE <- app_nested_freq.ADSL <- 
   function(column, nested_var = "NONE", group = NULL, data, totals, sort = "desc_tot") {
@@ -286,6 +288,8 @@ app_nested_freq.default <- app_nested_freq.OCCDS <- app_nested_freq.ADAE <- app_
 #' @rdname app_nested_freq
 #' 
 #' @family tableGen Functions
+#' 
+#' @noRd
 
 app_nested_freq.BDS <- function(column, nested_var = "NONE", group = NULL, data, totals, sort = "desc_tot") {
   rlang::abort(glue::glue(
@@ -297,6 +301,8 @@ app_nested_freq.BDS <- function(column, nested_var = "NONE", group = NULL, data,
 #' @rdname app_nested_freq
 #' 
 #' @family tableGen Functions
+#' 
+#' @noRd
 
 app_nested_freq.custom <- function(column, nested_var = "NONE", group, data, totals, sort = "desc_tot") {
   rlang::abort(glue::glue(

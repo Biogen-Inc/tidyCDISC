@@ -40,16 +40,16 @@ reference:
   desc: R code generator will leverage these functions to mimic analysis performed in the app
   contents:
   - has_keyword("tabGen_repro")
-- title: Help compare output to SAS functions
-  desc: User friendly utility functions built for comparing app output with SAS produced outputs
-  contents:
-  - has_keyword("tabGen_compare")
+# - title: Help compare output to SAS functions
+#   desc: User friendly utility functions built for comparing app output with SAS produced outputs
+#   contents:
+#   - has_keyword("tabGen_compare")
 - title: General helper functions
   contents:
   - has_keyword("helpers")
-- title: Table Generator Functions
-  contents:
-  - has_keyword("tabGen")
-- title: Population Explorer Figures
-  contents:
-  - has_keyword("popEx")
+# - title: Table Generator Functions
+#   contents:
+#   - has_keyword("tabGen")
+# - title: Population Explorer Figures
+#   contents:
+#   - has_keyword("popEx")

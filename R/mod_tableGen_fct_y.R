@@ -12,9 +12,9 @@
 #' @return a frequency table of grouped variables
 #' 
 #' @family tableGen Functions
-#' @export
 #' @keywords tabGen
 #' 
+#' @noRd
 app_y <- function(column, group, data, totals) {
   UseMethod("app_y", column)
 }
@@ -32,6 +32,8 @@ app_y <- function(column, group, data, totals) {
 #' @rdname app_y
 #' 
 #' @family tableGen Functions
+#' 
+#' @noRd
 app_y.default <- app_y.OCCDS <- app_y.ADAE <- app_y.ADSL <- function(column, group = NULL, data, totals) {
   # ########## ######### ######## #########
   # column <- "AOCCFL"
@@ -125,6 +127,8 @@ app_y.default <- app_y.OCCDS <- app_y.ADAE <- app_y.ADSL <- function(column, gro
 #' @rdname app_y
 #' 
 #' @family tableGen Functions
+#' 
+#' @noRd
 app_y.BDS <- function(column, group = NULL, data, totals) {
   rlang::abort(glue::glue(
     "Can't calculate Y frequency for BDS - {column} is numeric"
@@ -135,6 +139,8 @@ app_y.BDS <- function(column, group = NULL, data, totals) {
 #' @rdname app_y
 #' 
 #' @family tableGen Functions
+#' 
+#' @noRd
 app_y.custom <- function(column, group, data, totals) {
   rlang::abort(glue::glue(
     "Can't calculate mean, data is not classified as ADLB, BDS or OCCDS"

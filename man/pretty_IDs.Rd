@@ -9,7 +9,19 @@ pretty_IDs(ID)
 \arguments{
 \item{ID}{The ID vector of a TG table}
 }
+\value{
+A character vector of pretty IDs.
+}
 \description{
 Replaces ugly ID patterns of a stat block with pretty replacements for display purposes (e.g. NON_MISSING becomes Subject Count for those with Non Missing values)
+}
+\examples{
+# List of patterns that can be replaced
+patterns <- c("MEAN", "FREQ", "CHG", "Y_FREQ", "MAX_FREQ", "NON_MISSING", 
+              "NESTED_FREQ_DSC", "NESTED_FREQ_ABC")
+IDs <- paste(patterns, "of VAR")
+
+IDs
+pretty_IDs(IDs)
 }
 \keyword{tabGen_repro}

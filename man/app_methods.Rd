@@ -59,16 +59,5 @@ app_methods("MEAN",
             structure("PULSE", class = c("character", "BDS")), "Baseline", 
             "TRT01P", example_dat1$BDS, example_dat1$totals)
 }
-\seealso{
-Other tableGen Functions: 
-\code{\link{app_anova}()},
-\code{\link{app_chg}()},
-\code{\link{app_freq}()},
-\code{\link{app_max_freq}()},
-\code{\link{app_mean}()},
-\code{\link{app_nested_freq}()},
-\code{\link{app_non_missing}()},
-\code{\link{app_y}()}
-}
 \concept{tableGen Functions}
 \keyword{tabGen_repro}

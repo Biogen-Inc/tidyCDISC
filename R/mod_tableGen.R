@@ -60,12 +60,11 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   
   RECIPE <- reactive( if(rlang::is_empty(input$recipe)) "NONE" else input$recipe)
 
-  # observeEvent(RECIPE(), {
-  #   req(input$table_title)
-  #   val <- ifelse(RECIPE() == "NONE", "Table Title", RECIPE())
-  #   updateTextInput(session, session$ns("table_title"), label = "Table Title",
-  #                   value = val, width = '100%')
-  # })
+  observeEvent(RECIPE(), {
+    req(input$table_title)
+    val <- ifelse(RECIPE() == "NONE", "Table Title", RECIPE())
+    updateTextInput(session, "table_title", value = val)
+  })
   
   
   # ----------------------------------------------------------------------
