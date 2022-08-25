@@ -12,11 +12,11 @@
 #' @param points \code{logical} whether to add a jitter to the plot
 #' 
 #' @family popExp Functions
-#' @export
 #' @keywords popEx
 #' 
 #' @return A ggplot object representing the boxplot
 #' 
+#' @noRd
 app_boxplot <- function(data, yvar, group, value = NULL, points = FALSE) {
   
   # BDS Parameter not selected

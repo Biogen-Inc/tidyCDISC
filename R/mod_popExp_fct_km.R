@@ -17,11 +17,11 @@
 #' @importFrom survival survfit Surv
 #' 
 #' @family popExp functions
-#' @export
 #' @keywords popEx
 #' 
 #' @return A ggplot object containing the KM curve plot
 #' 
+#' @noRd
 app_km_curve <- function(data, yvar, resp_var, cnsr_var, group = "NONE", points = TRUE, ci = FALSE) {
     
   resp_var_sym <- rlang::sym(resp_var)

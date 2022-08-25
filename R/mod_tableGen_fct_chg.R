@@ -11,9 +11,9 @@
 #' @return an ANOVA table of grouped variables
 #' 
 #' @family tableGen Functions
-#' @export
 #' @keywords tabGen
 #' 
+#' @noRd
 app_chg <- function(column, week, group, data) {
   UseMethod("app_chg", column)
 }
@@ -22,6 +22,8 @@ app_chg <- function(column, week, group, data) {
 #' @rdname app_chg
 #' 
 #' @family tableGen Functions
+#' 
+#' @noRd
 
 app_chg.default <- function(column, week, group, data) {
   rlang::abort(glue::glue(
@@ -36,6 +38,8 @@ app_chg.default <- function(column, week, group, data) {
 #' @rdname app_chg
 #' 
 #' @family tableGen Functions
+#' 
+#' @noRd
 
 app_chg.ADSL <- function(column, week, group = NULL, data) {
   rlang::abort(glue::glue(
@@ -54,6 +58,8 @@ app_chg.ADSL <- function(column, week, group = NULL, data) {
 #' @rdname app_chg
 #' 
 #' @family tableGen Functions
+#' 
+#' @noRd
 
 app_chg.BDS <- function(column, week, group = NULL, data) {
   # column = "DIABP"
@@ -98,6 +104,8 @@ app_chg.BDS <- function(column, week, group = NULL, data) {
 #' @rdname app_chg
 #' 
 #' @family tableGen Functions
+#' 
+#' @noRd
 
 app_chg.OCCDS <- function(column, week = NULL, group = NULL, data) {
   rlang::abort(glue::glue(
@@ -111,6 +119,8 @@ app_chg.OCCDS <- function(column, week = NULL, group = NULL, data) {
 #' @rdname app_chg
 #' 
 #' @family tableGen Functions
+#' 
+#' @noRd
 
 app_chg.ADAE <- function(column, week = NULL, group = NULL, data) {
   rlang::abort(glue::glue(
@@ -124,6 +134,8 @@ app_chg.ADAE <- function(column, week = NULL, group = NULL, data) {
 #' @rdname app_chg
 #' 
 #' @family tableGen Functions
+#' 
+#' @noRd
 
 app_chg.custom <- function(column, week = NULL, group = NULL, data) {
   rlang::abort(glue::glue(

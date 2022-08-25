@@ -9,6 +9,14 @@
 #' @keywords tabGen_repro
 #' 
 #' @return A data frame containing the BDS data bound by rows.
+#' 
+#' @examples 
+#' datalist <- list(ADSL = tidyCDISC::adsl, ADVS = tidyCDISC::advs, 
+#'                  ADAE = tidyCDISC::adae, ADLBC = tidyCDISC::adlbc)
+#'                  
+#' pre_adsl <- prep_adsl(datalist$ADSL, input_recipe = 'NONE')
+#' 
+#' prep_bds(datalist, ADSL = pre_adsl$data)
 prep_bds <- function(datafile, ADSL) {
   init <- sapply(datafile, function(x) "PARAMCD" %in% colnames(x) & !("CNSR" %in% colnames(x)))
   BDS <- datafile[init[substr(names(init),1,4) != "ADTT"]] # remove TTE class df's because `AVISIT` col doesn't exist in that class of df
@@ -52,9 +60,21 @@ numeric_stan_table <- function(input_recipe){
 #' @param ADSL an ADSL data.frame
 #' @param input_recipe The shiny input that keeps track of the recipe selected
 #' 
+#' @return A `list` containing a `data.frame` object and character vector specifying the pre-filter applied.
+#' 
 #' @export
 #' @keywords tabGen_repro
 #' 
+#' @examples 
+#' data(adsl, package = "tidyCDISC")
+#' 
+#' # Process ADSL data for STAN table
+#' 
+#' prep_adsl(adsl, input_recipe = 'Table 3: Accounting of Subjects')
+#' 
+#' # Return ADSL data if no STAN table selected
+#' 
+#' prep_adsl(adsl, input_recipe = "NONE")
 prep_adsl <- function(ADSL, input_recipe) { #, stan_table_num
   stan_table_num <- numeric_stan_table(input_recipe)
   dat <- ADSL
@@ -128,9 +148,19 @@ clean_ADAE <- function(datafile, ADSL) {
 #' @param ADSL an ADSL data.frame
 #' @param input_recipe The shiny input that keeps track of the recipe selected
 #' 
+#' @return A `list` containing a `data.frame` object and character vector specifying the pre-filter applied.
+#' 
 #' @export
 #' @keywords tabGen_repro
 #' 
+#' @examples 
+#' datalist <- list(ADSL = tidyCDISC::adsl, ADVS = tidyCDISC::advs, 
+#'                  ADAE = tidyCDISC::adae, ADLBC = tidyCDISC::adlbc)
+#'                  
+#' pre_adsl <- prep_adsl(datalist$ADSL, input_recipe = 'NONE')
+#' 
+#' # Create AE data set
+#' prep_adae(datalist, pre_adsl$data, input_recipe = 'NONE')
 prep_adae <- function(datafile, ADSL, input_recipe) { #, stan_table_num
   stan_table_num <- numeric_stan_table(input_recipe)
   dat <- clean_ADAE(datafile = datafile, ADSL = ADSL)
@@ -315,9 +345,18 @@ check_params <- function(datafile, param_vector) {
 #' @param datafile list of ADaM-ish dataframes 
 #' @param input_filter_df The name of a dataset stored in `datafile`
 #' 
+#' @return A `data.frame` object based on the reduction of `datafile` from `input_filter_df`.
+#' 
 #' @export
 #' @keywords tabGen_repro
 #' 
+#' @examples 
+#' datalist <- list(ADSL = tidyCDISC::adsl, ADAE = tidyCDISC::adae, 
+#'                  ADVS = tidyCDISC::advs, ADLBC = tidyCDISC::adlbc, 
+#'                  ADTTE = tidyCDISC::adtte)
+#' 
+#' # Returns combined dataset
+#' data_to_filter(datalist, c("ADSL", "ADAE"))
 data_to_filter <- function(datafile, input_filter_df) {
   select_dfs <- datafile[input_filter_df]
   
@@ -353,9 +392,22 @@ data_to_filter <- function(datafile, input_filter_df) {
 #' @param ae_data data.frame, of the AE variety
 #' @param bds_data data.frame, of the BDS variety
 #' 
+#' @return A `data.frame` object containing data of the AE variety if `x == "ADAE"` or one of the BDS variety if not.
+#' 
 #' @export
 #' @keywords tabGen_repro
 #' 
+#' @examples 
+#' datalist <- list(ADSL = tidyCDISC::adsl, ADVS = tidyCDISC::advs, 
+#'                  ADAE = tidyCDISC::adae, ADLBC = tidyCDISC::adlbc)
+#'                  
+#' pre_adsl <- prep_adsl(datalist$ADSL, input_recipe = 'NONE')
+#' pre_adae <- prep_adae(datalist, pre_adsl$data, 'NONE')
+#' ae_data <- pre_adae$data
+#' bds_data <- prep_bds(datalist, ADSL = pre_adsl$data)
+#' 
+#' all.equal(data_to_use_str("ADAE", ae_data, bds_data), ae_data)
+#' all.equal(data_to_use_str("ADSL", ae_data, bds_data), bds_data)
 data_to_use_str <- function(x, ae_data, bds_data) {
   if (x == "ADAE") { ae_data }
   else bds_data
@@ -368,9 +420,20 @@ data_to_use_str <- function(x, ae_data, bds_data) {
 #' 
 #' @param ID The ID vector of a TG table
 #' 
+#' @return A character vector of pretty IDs.
+#' 
 #' @export
 #' 
 #' @keywords tabGen_repro
+#' 
+#' @examples 
+#' # List of patterns that can be replaced
+#' patterns <- c("MEAN", "FREQ", "CHG", "Y_FREQ", "MAX_FREQ", "NON_MISSING", 
+#'               "NESTED_FREQ_DSC", "NESTED_FREQ_ABC")
+#' IDs <- paste(patterns, "of VAR")
+#' 
+#' IDs
+#' pretty_IDs(IDs)
 pretty_IDs <- function(ID) {
   purrr::reduce(
     list(

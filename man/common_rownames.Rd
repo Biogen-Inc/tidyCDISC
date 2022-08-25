@@ -18,4 +18,13 @@ A character vector
 A function to transform the \code{gt} row names from generics to the column name and the total N of
 each column
 }
+\examples{
+data(adsl, package = "tidyCDISC")
+
+# Values of TRT01P
+unique(adsl$TRT01P)
+
+# Common row names based on TRT01P
+common_rownames(adsl, "TRT01P")
+}
 \keyword{tabGen_repro}

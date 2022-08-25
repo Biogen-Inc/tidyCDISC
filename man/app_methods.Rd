@@ -36,16 +36,5 @@ each statistical and column block pairing
 and use the metadata associated with 
 each column block for the function's arguments
 }
-\seealso{
-Other tableGen Functions: 
-\code{\link{app_anova}()},
-\code{\link{app_chg}()},
-\code{\link{app_freq}()},
-\code{\link{app_max_freq}()},
-\code{\link{app_mean}()},
-\code{\link{app_nested_freq}()},
-\code{\link{app_non_missing}()},
-\code{\link{app_y}()}
-}
 \concept{tableGen Functions}
 \keyword{tabGen_repro}
