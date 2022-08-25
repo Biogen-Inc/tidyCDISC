@@ -9,6 +9,11 @@
 #' 
 #' @return A character object of class \code{from_markdown}.
 #' 
+#' @importFrom purrr map2
+#' @importFrom gt md
+#' @importFrom glue glue
+#' @importFrom rlang set_names
+#' 
 #' @examples 
 #' data(example_dat2, package = "tidyCDISC")
 #' 
