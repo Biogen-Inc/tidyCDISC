@@ -437,7 +437,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     }
   })
   
-  total <- reactive({
+  col_total <- reactive({
     total_df()$n_tot
   })
 
@@ -511,15 +511,6 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     append(some_names_no_tot, "Total")
   })
   
-  # create the labels for each column using the total function
-  # so the columns are now NAME N= X
-  col_for_list <- function(nm) {
-    if (is.numeric(use_data_reactive()[[input$COLUMN]])) {
-      stop("Need categorical column for grouping")
-    }
-    nm = md(glue::glue("**{row_names_n()}** <br> N={total()}"))
-  }
-  
   # create gt table
   gt_table <- reactive({
     for_gt() %>%
@@ -530,7 +521,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
                      stringr::str_detect(Variable,'<b>') |
                      stringr::str_detect(Variable,'</b>')) %>%
       gt::tab_options(table.width = gt::px(700)) %>%
-      gt::cols_label(.list = purrr::imap(for_gt()[-c(1:2)], ~col_for_list(.x))) %>%
+      gt::cols_label(.list = col_for_list_expr(row_names_n(), col_total())) %>%
       gt::tab_header(
         title = gt::md(input$table_title),
         subtitle = gt::md(subtitle_html())
@@ -781,7 +772,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
         distinct(USUBJID) %>% 
         summarise(n_tot = n(), .groups='drop_last')
         
-        total <- total_df$n_tot
+        col_total <- total_df$n_tot
         ")
     } else {
       glue::glue(
@@ -806,7 +797,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
           mutate(n_tot = tidyr::replace_na(n_tot, 0)) 
         
         total_df <- bind_rows(groups, all)
-        total <- total_df$n_tot
+        col_total <- total_df$n_tot
         "
       )
     }
@@ -836,8 +827,8 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       bind_rows(.id = 'ID') %>%
       mutate(ID = tidyCDISC::pretty_IDs(ID))
       
-      # get the rownames for the table
-      row_names_n <- names(tg_table)[-c(1:2)]
+      # get the column names for the table
+      col_names <- names(tg_table)[-c(1:2)]
     
       # create the gt output
       library(gt)
@@ -848,7 +839,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
                    stringr::str_detect(Variable,'<b>') |
                    stringr::str_detect(Variable,'</b>')) %>%
           tab_options(table.width = px(700)) %>%
-          cols_label(.list = imap(tg_table[-c(1:2)], ~ tidyCDISC::col_for_list_expr(.x))) %>%
+          cols_label(.list = tidyCDISC::col_for_list_expr(col_names, col_total)) %>%
           tab_header(
             title = md('{input$table_title}'),
             subtitle = md(\"{subtitle_html()}\")

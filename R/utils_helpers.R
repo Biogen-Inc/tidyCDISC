@@ -1,15 +1,35 @@
 #' GT Column Names
 #' 
-#' @param nm A vector of column names
+#' @param col_names A vector of column names
+#' @param col_total A vector of column totals
 #' 
 #' @description The function creates the labels for each column using the total function so the columns are now NAME N= X
 #' @export
 #' @keywords tabGen_repro
 #' 
 #' @return A character object of class \code{from_markdown}.
-# get column names with N
-col_for_list_expr <- function(nm) {
-  nm = md(glue::glue("**{row_names_n}** <br> N={total}"))
+#' 
+#' @importFrom purrr map2
+#' @importFrom gt md
+#' @importFrom glue glue
+#' @importFrom rlang set_names
+#' 
+#' @examples 
+#' data(example_dat2, package = "tidyCDISC")
+#' 
+#' labels <- col_for_list_expr(example_dat2$col_names, example_dat2$col_totals)
+#' labels
+#' 
+#' if (interactive()) {
+#' # TG table without nice column labels or totals
+#' example_dat2$TG_table
+#' 
+#' # TG table with nice column labels and totals
+#' gt::cols_label(example_dat2$TG_table, .list = labels)
+#' }
+col_for_list_expr <- function(col_names, col_total) {
+  purrr::map2(col_names, col_total, ~ gt::md(glue::glue("**{.x}** <br> N={.y}"))) %>%
+    rlang::set_names(col_names)
 }
 
 
