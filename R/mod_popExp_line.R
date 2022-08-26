@@ -241,7 +241,7 @@ linePlot_srv <- function(input, output, session, data, run) {
     if(is.factor(sel_time_vals0[[1]])) {
       # print("is.factor")
       sel_time_vals <- sel_time_vals0 %>%
-        arrange(across(vars(one_of(varN), input$time))) %>%
+        arrange_at(vars(one_of(varN), input$time)) %>%
         pull(input$time) %>%
         as.character()
       # print(sel_time_vals)
@@ -291,7 +291,7 @@ linePlot_srv <- function(input, output, session, data, run) {
       
     } else {
       # print("else")
-      sel_time_vals <- sel_time_vals0 %>% arrange(across(vars(input$time))) %>%
+      sel_time_vals <- sel_time_vals0 %>% arrange_at(vars(input$time)) %>%
         pull() %>% as.character()
       # print(sel_time_vals)
       
