@@ -106,7 +106,7 @@ app_heatmap <- function(data, yvar_x, yvar_y, time, value = "AVAL",
         # mutate(across(yvar_x, function(col) sprintf("%.3f", col))) %>%
         tidyr::pivot_longer(cols = yvar_x, names_to = "param_x", values_to = "corr") %>%
         select(time, param_x, param_y, everything()) %>%
-        arrange(across(vars("param_x", "param_y"))) %>% #, one_of(time)  
+        arrange_at(vars("param_x", "param_y")) %>% #, one_of(time)  
         filter(param_y != param_x) %>%
         left_join(p.vals)
       
