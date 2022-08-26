@@ -20,11 +20,15 @@ The function creates the labels for each column using the total function so the 
 \examples{
 data(example_dat2, package = "tidyCDISC")
 
-example_dat2$TG_table
-
 labels <- col_for_list_expr(example_dat2$col_names, example_dat2$col_totals)
 labels
 
+if (interactive()) {
+# TG table without nice column labels or totals
+example_dat2$TG_table
+
+# TG table with nice column labels and totals
 gt::cols_label(example_dat2$TG_table, .list = labels)
+}
 }
 \keyword{tabGen_repro}
