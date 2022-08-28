@@ -729,16 +729,24 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   Rscript_use_preferred_pop_data <- reactive({
     ifelse(is_grp_col_adae() , "ae_data","pop_data")
   })
+  
+  # install packages (as needed) code. Assigning this as text string outside of
+  # text_code because it's too difficult to escape the { character in
+  # glue::glue()
+  install_text <- "invisible(sapply(pkgs_req, function(x){
+    if(length(find.package(x, quiet = TRUE)) == 0) {
+      message(paste('Installing package:', x))
+      install.packages(x)
+    }}))"
   # create code to generate table as dataframe object
   text_code <- reactive({
     glue::glue(
     "
-    
     options(digits = 3)
 
-    pkgs_req <- c('tidyCDISC', 'purrr', 'haven', 'dplyr', 'stringr', 'tidyr', 'gt', 'diffdf')
-    pkgs_needed <- pkgs_req[!(pkgs_req %in% installed.packages()[,'Package'])]
-    if(length(pkgs_needed)) install.packages(pkgs_needed)
+    # Code installs required packages if needed
+    pkgs_req <- c('tidyCDISC', 'purrr', 'haven', 'dplyr', 'stringr', 'tidyr', 'gt')
+    {install_text}
     
     library(tidyCDISC)
     library(purrr)
