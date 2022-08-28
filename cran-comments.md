@@ -22,7 +22,7 @@ This can make the functions,examples and cran-check very slow. ->
 R/mod_tableGen.R
 ```
 
-We left instances of `install.packages()` AS-IS because that code is only included in a function that produces a downloadable R script. Thus, the code never get's executed in the application - the user will have to first download the R script from the application (in their browser) and pull it open in an interactive R session in order to run. So it should never bog down functions, examples, and CRAN-checks. It's important that code is retained because our user base is a bunch of SAS-programmers with limited R experience, so the script needs to reproduce outputs developed in the app with 100% automation & no manual intervention.
+We left one instance of `install.packages()` AS-IS because that code is solely included in a function that produces a downloadable R script. Thus, the code never get's executed in the application - the user will have to first download the R script from the application (in their browser) and pull it open in an interactive R session in order to run. So it should never bog down functions, examples, and CRAN-checks. Our app user base is predominantly SAS-programmers with limited R experience, so our goal for the R script to reproduce outputs delivered in the app with 100% automation & no manual intervention.
   
 #### R CMD Check
 0 errors | 0 warnings | 2 notes
