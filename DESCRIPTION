@@ -13,7 +13,7 @@ Authors@R: c(
     person("Biogen", "Inc", role = "cph")
   )
 Description: Provides users a quick exploratory dive into common
-    visualizations without writing a sinlge line of code given the users
+    visualizations without writing a single line of code given the users
     data follows the Analysis Data Model (ADaM) standards put forth by 
     the Clinical Data Interchange Standards Consortium 
     (CDISC) <https://www.cdisc.org>. Prominent modules/ features of the application are the Table 
