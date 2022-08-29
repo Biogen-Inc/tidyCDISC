@@ -1,4 +1,30 @@
-## Re-submission 2022-08-27
+## Re-submission 2022-08-29 (Afternoon)
+This is a re-submission. In this version I have:
+
+* fixed a spelling error in the DESCRIPTION file's description field.
+
+* Ran both `spelling::spell_check_package()` & `usethis::use_spell_check()` to make sure there were no other spelling errors.
+
+#### R CMD Check
+0 errors | 0 warnings | 2 notes
+
+The 2 `NOTE`s included:
+```
+checking CRAN incoming feasibility ... NOTE
+  Maintainer: 'Aaron Clark <clark.aaronchris@gmail.com>'
+  
+  New submission
+
+checking package dependencies ... NOTE
+  Imports includes 25 non-default packages.
+  Importing from so many packages makes the package vulnerable to any of
+  them becoming unavailable.  Move as many as possible to Suggests and
+  use conditionally.
+```
+
+Notice that `NOTE` #2 existed in our initial submission attempt and we provided a justification of it's existence.
+
+## Re-submission 2022-08-29 (Morning)
 This is a re-submission. In this version I have:
 
 * Explained acronyms in the description text such as 'ADaM' and 'CDISC', providing URL links.
