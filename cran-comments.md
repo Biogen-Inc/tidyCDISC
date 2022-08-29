@@ -11,7 +11,7 @@ This is a re-submission. In this version I have:
 
 * Suppressed some unneeded `print()`/`cat()` messages.
 
-* Added immediate reverting to old options using `on.exit()` after a function changes users settings with `options()` call. Note there is still one instance where we called `options()` without an immediate call to `on.exit()` but it is in a downloadable R script that never get's executed in the application. The user will have to download the R script and run it in an interactive R session.
+* Incorporated immediate reverting to old options using `on.exit()` after a function changed users settings with `options()` call. Note there is still one instance where we called `options()` without an immediate `on.exit()` but that code is in the context of a downloadable R script that never get's executed in the application. That is, the user can only download the R script and run it in an interactive R session. So, if they user doesn't want the `options()` line of code, no function is forcing them to do so.
 
 * Switched from using `installed.packages()` to `find.package()` as the prior can be slow on windows or some network-mounted file systems, especially when thousands of packages are installed.
 
@@ -22,7 +22,7 @@ This can make the functions,examples and cran-check very slow. ->
 R/mod_tableGen.R
 ```
 
-We left one instance of `install.packages()` AS-IS because that code is solely included in a function that produces a downloadable R script. Thus, the code never get's executed in the application - the user will have to first download the R script from the application (in their browser) and pull it open in an interactive R session in order to run. So it should never bog down functions, examples, and CRAN-checks. Our app user base is predominantly SAS-programmers with limited R experience, so our goal for the R script is to reproduce outputs delivered in the app with 100% automation & no manual intervention.
+We left one instance of `install.packages()` AS-IS because that code is solely included in a function that organizes code into a downloadable R script. Thus, the code never get's executed in the application - the user will have to first download the R script from the application (in their browser) and pull it open in an interactive R session in order to run. So it should never bog down functions, examples, and CRAN-checks. If the user doesn't want to run the `install.packages()` line of code, no function is forcing them to do so. However, our app user base is predominantly SAS-programmers with limited R experience, so our goal for the R script is to reproduce outputs delivered in the app with 100% automation & no manual intervention.
   
 #### R CMD Check
 0 errors | 0 warnings | 2 notes
@@ -40,6 +40,8 @@ checking package dependencies ... NOTE
   them becoming unavailable.  Move as many as possible to Suggests and
   use conditionally.
 ```
+
+Notice that `NOTE` #2 existed in our initial submission attempt and we provided a justification of it's existence.
 
 ## Initial Submission 2022-08-05
 This is the first ever CRAN submission of `tidyCDISC`- a large, multifaceted shiny application designed using the `golem` framework.
