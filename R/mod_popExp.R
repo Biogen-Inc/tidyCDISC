@@ -7,7 +7,7 @@
 #' 
 #' @import shiny
 #' @import dplyr
-#' @import IDEAFilter
+#' @importFrom IDEAFilter shiny_data_filter
 #' @importFrom haven zap_label zap_formats
 #' @importFrom purrr map walk2
 #' 
@@ -57,7 +57,7 @@ mod_popExp_server <- function(input, output, session, datafile) {
       
       # Bind all the BDS (PARAMCD) files and filter them & remove any "ADSL" variables lurking
       all_BDSDATA <- bind_rows(NOTADSL, .id = "data_from")  %>%
-        select(-tidyselect::any_of(c("AGEGR","AGEGRN","RACE","RACEN","SEX","SEXN")))
+        select(-dplyr::any_of(c("AGEGR","AGEGRN","RACE","RACEN","SEX","SEXN")))
       
       # Manipulate ADSL to contain USUBJID plus all the names that are unique to ADSL
       ADSL.1 <- select(ADSL, USUBJID, dplyr::setdiff(names(ADSL), names(all_BDSDATA)))
@@ -103,7 +103,8 @@ mod_popExp_server <- function(input, output, session, datafile) {
       if("AVISIT" %in% colnames(all_data)) all_data <- all_data %>% mutate(AVISIT = stringr::str_wrap(AVISIT, width = 9))
       if("VISIT" %in% colnames(all_data)) all_data <- all_data %>% mutate(VISIT = stringr::str_wrap(VISIT, width = 9))
         
-      all_data <- all_data %>% varN_fctr_reorder() #%>% varN_fctr_reorder2() 
+      all_data <- all_data %>% 
+        varN_fctr_reorder() 
 
     }
     return(list(all_data = all_data, adsl_cols = my_adsl_cols))
@@ -154,7 +155,7 @@ mod_popExp_server <- function(input, output, session, datafile) {
   
   # Data to provide IDEAFilter
   feed_filter <- reactive({
-    if(input$apply_filters == T){
+    if(input$apply_filters == TRUE){
       req(input$filter_df)
       all_data() %>% subset(data_from %in% input$filter_df)
     } else {
@@ -173,7 +174,7 @@ mod_popExp_server <- function(input, output, session, datafile) {
   
   # Call IDEAFilter Module
   filtered_data <- callModule(
-    shiny_data_filter,
+    IDEAFilter::shiny_data_filter,
     "data_filter",         # whatever you named the widget
     data = feed_filter,    # the name of your pre-processed data
     verbose = FALSE)
@@ -268,7 +269,7 @@ mod_popExp_server <- function(input, output, session, datafile) {
   output$applied_filters <- renderUI({
     req(
       any(regexpr("%>%",capture.output(attr(filtered_data(), "code"))) > 0)
-      & input$apply_filters == T
+      & input$apply_filters == TRUE
     )
     filters_in_english(filtered_data())
   })

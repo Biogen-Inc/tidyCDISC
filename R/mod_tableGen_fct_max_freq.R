@@ -11,8 +11,9 @@
 #' @return a frequency table of grouped variables
 #'
 #' @family tableGen Functions
-#' @export
 #' @keywords tabGen
+#' 
+#' @noRd
 app_max_freq <- function(column, group, data, totals) {
   UseMethod("app_max_freq", column)
 }
@@ -29,6 +30,8 @@ app_max_freq <- function(column, group, data, totals) {
 #' @rdname app_max_freq
 #' 
 #' @family tableGen Functions
+#' 
+#' @noRd
 
 app_max_freq.default <- app_max_freq.OCCDS <- app_max_freq.ADAE <- app_max_freq.ADSL <- 
   function(column, group = NULL, data, totals) {
@@ -83,7 +86,7 @@ app_max_freq.default <- app_max_freq.OCCDS <- app_max_freq.ADAE <- app_max_freq.
     
     group <- rlang::sym(group)
     
-    grp_lvls <- getLevels(data[[group]])
+    grp_lvls <- get_levels(data[[group]])
     xyz <- data.frame(grp_lvls) %>%
       rename_with(~paste(group), grp_lvls)
     
@@ -131,6 +134,8 @@ app_max_freq.default <- app_max_freq.OCCDS <- app_max_freq.ADAE <- app_max_freq.
 #' @rdname app_max_freq
 #' 
 #' @family tableGen Functions
+#' 
+#' @noRd
 
 app_max_freq.BDS <- function(column, group = NULL, data, totals) {
   rlang::abort(glue::glue(
@@ -142,6 +147,8 @@ app_max_freq.BDS <- function(column, group = NULL, data, totals) {
 #' @rdname app_max_freq
 #' 
 #' @family tableGen Functions
+#' 
+#' @noRd
 
 app_max_freq.custom <- function(column, group, data, totals) {
   rlang::abort(glue::glue(

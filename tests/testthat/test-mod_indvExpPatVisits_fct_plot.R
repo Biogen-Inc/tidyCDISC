@@ -28,7 +28,7 @@ vv_dy_name <- input$visit_var
 
 # Create plots
 gg <- fnIndvExplVisits(
-  watermark = T,
+  watermark = TRUE,
   graph_output = "ggplot",
   bds_data = lb_data,
   usubjid = usubjid,

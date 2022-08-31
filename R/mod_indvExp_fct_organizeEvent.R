@@ -69,7 +69,7 @@ org_df_events <- function(
       
       dat <- 
         # conditionally toggle which dataset is used
-        (if(mi_input_apply_filter == T) mi_datafile[[df_name]] %>% semi_join(mi_filtered_dat) else mi_datafile[[df_name]]) %>% 
+        (if(mi_input_apply_filter == TRUE) mi_datafile[[df_name]] %>% semi_join(mi_filtered_dat) else mi_datafile[[df_name]]) %>% 
         filter(USUBJID == mi_usubjid) %>%
         filter(!is.na(!!st_date_var) ) %>%
         mutate(EVENTTYP = df_desc, DOMAIN = df_domain_abbr) %>%

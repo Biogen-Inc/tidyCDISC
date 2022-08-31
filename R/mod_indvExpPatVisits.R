@@ -365,7 +365,7 @@ mod_indvExpPatVisits_server <- function(input, output, session, datafile, loaded
         
         # find min dy value
         min_dy <- temp %>%
-          summarize(dy_min = min(!!dy, na.rm = T)) %>%
+          summarize(dy_min = min(!!dy, na.rm = TRUE)) %>%
           pull(dy_min)
         
         # name of (first) date when lab drawn
@@ -511,7 +511,7 @@ mod_indvExpPatVisits_server <- function(input, output, session, datafile, loaded
       lb_tab <- lb_data %>%
         filter(PARAMCD == input$plot_param) %>%
         mutate(avisit_sort = ifelse(is.na(AVISITN), -9000000000, AVISITN)) %>% # if no AVISIN, order it first
-        arrange_(ifelse(input$visit_var == "AVISITN", "avisit_sort", input$visit_var)) %>%
+        arrange(ifelse(input$visit_var == "AVISITN", "avisit_sort", input$visit_var)) %>%
         select(ends_with("DY"), one_of(
           "VISITNUM",
           "AVISITN",

@@ -1,41 +1,102 @@
-## Submission
-This is the first ever CRAN submission of `tidyCDISC`- a large, multifaceted application designed using the `golem` framework.
+## Re-submission 2022-08-29 (Afternoon)
+This is a re-submission. In this version I have:
 
-The application can perform many typical pharma-industry tasks in the clinical reporting pipeline. Many tasks require much documentation (aka vignettes), especially considering the users are primarily SAS programmers who are tentative around the validation of R outputs in general. As such, there are 11 vignettes (for both users & developer on-boarding) which take ~3 minutes of compute time during the build, so I've passed the argument "--no-build-vignettes" to `devtools::release()`. However, the vignettes are compiled into a nice `pkgdown` site [here](https://biogen-inc.github.io/tidyCDISC/), built using CI/CD (via GitHub Actions), so it's always up to date with each push/pull request.
+* fixed a spelling error in the DESCRIPTION file's description field.
 
-## R CMD check results
-There were no ERRORs or WARNINGs, passing on macOS-latest (release), windows-latest (release), ubuntu-latest (devel / release / oldrel-1) using GitHub Actions [here](https://github.com/Biogen-Inc/tidyCDISC/pull/78).
+* Ran both `spelling::spell_check_package()` & `usethis::use_spell_check()` to make sure there were no other spelling errors.
 
-There were 3 NOTEs:
+#### R CMD Check
+0 errors | 0 warnings | 2 notes
 
-* checking package dependencies ... NOTE
+The 2 `NOTE`s included:
+```
+checking CRAN incoming feasibility ... NOTE
+  Maintainer: 'Aaron Clark <clark.aaronchris@gmail.com>'
+  
+  New submission
 
-  Imports includes 35 non-default packages.
+checking package dependencies ... NOTE
+  Imports includes 25 non-default packages.
   Importing from so many packages makes the package vulnerable to any of
   them becoming unavailable.  Move as many as possible to Suggests and
   use conditionally.
+```
 
-  `tidyCDISC` is (nearly) a "one stop shop" application for clinical reporting in the pharmaceutical space. As such, it leverages many modules to perform many tasks. Many tasks require many packages. I've surgically paired the application down to only packages that are absolutely necessary prior to submission.
+Notice that `NOTE` #2 existed in our initial submission attempt and we provided a justification of it's existence.
+
+## Re-submission 2022-08-29 (Morning)
+This is a re-submission. In this version I have:
+
+* Explained acronyms in the description text such as 'ADaM' and 'CDISC', providing URL links.
+  
+* Used `TRUE` & `FALSE` (instead of `T` & `F`) where needed (man/app_heatmap.Rd).
+
+* Added \value to .Rd files that were exported, explaining the results. Also decided to not export a few methods.
+
+* Added small executable examples to .Rd files of exported functions to illustrate use.
+
+* Suppressed some unneeded `print()`/`cat()` messages.
+
+* Incorporated immediate reverting to old options using `on.exit()` after a function changed users settings with `options()` call. Note there is still one instance where we called `options()` without an immediate `on.exit()` but that code is in the context of a downloadable R script that never get's executed in the application. That is, the user can only download the R script and run it in an interactive R session. So, if they user doesn't want the `options()` line of code, no function is forcing them to do so.
+
+* Switched from using `installed.packages()` to `find.package()` as the prior can be slow on windows or some network-mounted file systems, especially when thousands of packages are installed.
+
+The tidyCDISC dev team chose to leave one piece of code AS-IS after receiving comments from the CRAN team. Specifically:
+```
+Please do not install packages in your functions, examples or vignette.
+This can make the functions,examples and cran-check very slow. ->
+R/mod_tableGen.R
+```
+
+We left one instance of `install.packages()` AS-IS because that code is solely included in a function that organizes code into a downloadable R script. Thus, the code never get's executed in the application - the user will have to first download the R script from the application (in their browser) and pull it open in an interactive R session in order to run. So it should never bog down functions, examples, and CRAN-checks. If the user doesn't want to run the `install.packages()` line of code, no function is forcing them to do so. However, our app user base is predominantly SAS-programmers with limited R experience, so our goal for the R script is to reproduce outputs delivered in the app with 100% automation & no manual intervention.
+  
+#### R CMD Check
+0 errors | 0 warnings | 2 notes
+
+The 2 `NOTE`s included:
+```
+checking CRAN incoming feasibility ... NOTE
+  Maintainer: 'Aaron Clark <clark.aaronchris@gmail.com>'
+  
+  New submission
+
+checking package dependencies ... NOTE
+  Imports includes 25 non-default packages.
+  Importing from so many packages makes the package vulnerable to any of
+  them becoming unavailable.  Move as many as possible to Suggests and
+  use conditionally.
+```
+
+Notice that `NOTE` #2 existed in our initial submission attempt and we provided a justification of it's existence.
+
+## Initial Submission 2022-08-05
+This is the first ever CRAN submission of `tidyCDISC`- a large, multifaceted shiny application designed using the `golem` framework.
+
+The application can perform many typical pharma-industry tasks in the clinical reporting pipeline. As such, many tasks require much documentation (aka vignettes), especially considering our users are primarily SAS programmers who are tentative around the validation of R outputs. To counter act that, we've added ~11 vignettes for users (& developer on-boarding) which take ~3 minutes of compute time to build. These vignettes include lots of `GIF`s and `PNG`s, bloating the installed package size so we've chosen to put nearly the entire `vignettes/` folder in the `.Rbuildignore`. However, our `README` is comprehensive, with lots of links to the vignettes hosted on our `pkgdown` site [here](https://biogen-inc.github.io/tidyCDISC/).
+
+#### R CMD check results
+0 errors | 0 warnings | 2 notes
+
+The 2 `NOTE`s included:
+```
+checking CRAN incoming feasibility ... NOTE
+  Maintainer: 'Aaron Clark <clark.aaronchris@gmail.com>'
+  
+  New submission
+
+checking package dependencies ... NOTE
+  Imports includes 25 non-default packages.
+  Importing from so many packages makes the package vulnerable to any of
+  them becoming unavailable.  Move as many as possible to Suggests and
+  use conditionally.
+```
+
+To address `NOTE` #2: `tidyCDISC` is (nearly) a "one stop shop" application for clinical reporting in the pharmaceutical space. As such, it leverages many modules to perform many tasks. Many tasks require many packages. While preparing for CRAN submission, we've surgically paired down the dependency list from 35 packages to 25 that (I feel) are necessary. And those that remain are primarily "mainstream" packages, meaning they are maintained by reputable & well known authors & dev teams in the R community.
 
 
-* checking installed package size ... NOTE
-  
-  installed size is 466.5Mb.
-  sub-directories of 1Mb or more:
-    doc  463.4Mb
     
-  As noted here, `tidyCDISC` leverages thousands of lines of R code in > 50 shiny modules & R scripts in the `R/` folder. As such, so much code needs an proportionally large amount of documentation. All the modules/functions have been exhaustively documented in great detail using `roxygen2`, even when not exported. Similarly, the package includes 11 vignettes to on-board both developers and app users, bundled together and published on our [GitHub Pages site](https://biogen-inc.github.io/tidyCDISC/).
-  
-  
-  
-* checking R code for possible problems ... NOTE
-  
-  fnIndvExplVisits: no visible binding for '<<-' assignment to 'avals_by'
-    
-  `tidyCDISC` used `<<-` to assign a value to an R object in a parent environment.
-    
-## Downstream dependencies
-There are currently no downstream dependencies for this package
+#### Downstream dependencies
+There are none.
 
 
 

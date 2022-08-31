@@ -10,6 +10,7 @@
 #' @param id Internal parameters for {shiny}.
 #'
 #' @import shiny
+#' @importFrom shinyWidgets dropdownButton tooltipOptions checkboxGroupButtons
 #' @noRd
 #' 
 mod_dataUpload_ui <- function(id){
@@ -17,7 +18,21 @@ mod_dataUpload_ui <- function(id){
   tagList(
     h1("Data Upload/Preview", align = "center"),
     br(), br(), br(),
-    actionButton(ns("pilot"), "Use CDISC Pilot Data"),
+    div(
+      div(style="display: inline-block; ", actionButton(ns("pilot"), "Use CDISC Pilot Data")),
+      div(style="display: inline-block; ", shinyWidgets::dropdownButton(inputId = ns("ddown"),
+        tags$h4("Choose Pilot Data Sources"),
+        shinyWidgets::checkboxGroupButtons(ns("pilot_selections"), NULL, #inline = TRUE, 
+           choices = c("ADSL" = "adsl", "ADVS" = "advs", "ADAE" = "adae",
+            "ADLBC" = "adlbc", "ADTTE" = "adtte"), #direction = "vertical",
+           status = "info", checkIcon = list(
+             yes = icon("ok", lib = "glyphicon"),
+             no = icon("remove", lib = "glyphicon")),
+           selected = c("adsl", "advs", "adae", "adlbc")),
+        circle = FALSE, status = "primary", icon = icon("cog"), width = "300px",
+        tooltip = shinyWidgets::tooltipOptions(title = "Click to change pilot data selections!")
+      ))
+    ),
     fluidRow(
       style = "padding: 20px",
       column(3,
@@ -68,6 +83,7 @@ mod_dataUpload_server <- function(input, output, session){
   # standard to imitate output of detectStandard.R
   dd <- reactiveValues()
   
+
   # modify reactive values when data is uploaded
   observeEvent(input$file, {
     
@@ -167,17 +183,18 @@ mod_dataUpload_server <- function(input, output, session){
   
   observeEvent( input$pilot, {
     
+    validate(need(all(input$pilot_selections %in% c("adae", "adlbc", "adsl", "adtte", "advs")), 
+                  "Something went wrong with pilot data selections"))
+    
     shinyjs::disable(id = "file")
     
-    dd$data <- list(
-      ADSL = tidyCDISC::adsl,
-      ADVS = tidyCDISC::advs,
-      ADAE = tidyCDISC::adae,
-      ADLBC = tidyCDISC::adlbc,
-      ADTTE = tidyCDISC::adtte
-    )
-    
+    # load specific pilot data
+    pilot_dat_ls <- purrr::map(input$pilot_selections, ~ switch(.x, adae = tidyCDISC::adae, adlbc = tidyCDISC::adlbc, adsl = tidyCDISC::adsl, adtte = tidyCDISC::adtte, advs = tidyCDISC::advs))
+    names(pilot_dat_ls) <- toupper(input$pilot_selections)
+    dd$data <- pilot_dat_ls
+      
     shinyjs::hide(id = "pilot")
+    shinyjs::hide(id = "ddown")
   })
   
   ### return all data

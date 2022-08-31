@@ -10,7 +10,7 @@
 #'
 #' @import shiny
 #' @importFrom plotly plotlyOutput
-#' @importFrom IDEAFilter shiny_data_filter
+#' @importFrom IDEAFilter shiny_data_filter_ui
 #' 
 #' @family popExp Functions
 #' @noRd
@@ -34,7 +34,7 @@ mod_popExp_ui <- function(id, label = "Population Explorer"){
                  checkboxInput(ns("adv_filtering"), 
                    div(class="filter-container", span("Filter Data ", style="float:left;"), 
                         span(icon("chevron-down w3-tiny", verify_fa = FALSE), style="float:right;")),
-                   value = F)
+                   value = FALSE)
                ),
                conditionalPanel(condition = "input.adv_filtering == true", ns = ns,
                   div(id = "custom_checkbox",
@@ -42,7 +42,7 @@ mod_popExp_ui <- function(id, label = "Population Explorer"){
                       div(id = "pop_cic_apply_filters", materialSwitch(ns("apply_filters")
                                      , label = strong(em(h5("Apply Filters")))
                                      , status = "primary"
-                                     , value = F)),
+                                     , value = FALSE)),
                       div(id = "pop_cic_filter_df", selectInput(ns("filter_df"),"Filter on Variable(s) in a loaded ADaM",
                                 multiple = TRUE, choices = "ADSL", selected = "ADSL") ),
                       div(id = "pop_cic_data_filter", IDEAFilter::shiny_data_filter_ui(ns("data_filter"))))

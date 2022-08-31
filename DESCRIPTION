@@ -1,65 +1,75 @@
 Package: tidyCDISC
-Title: tidyCDISC: Quick Exploratory Data Analyses on ADaM-ish Datasets
-Version: 0.0.4
-Authors@R: as.person(c( 
-    "Aaron Clark <clark.aaronchris@gmail.com> [aut, cre]",
-    "Maya Gans <maya.gans@biogen.com> [aut]",
-    "Robert Krajcik <robert.krajcik@biogen.com> [aut]",
-    "Marly Gotti <marly.cormar@biogen.com> [aut]",
-    "Biogen Inc [cph]"
-  ))
-Description: The tidyCDISC application relies on sas7bdat files in the ADaM-ish data structure to provide users a quick exploratory dive into common visualizations without writing a sinlge line of code. Prominent modules/ features of the application are the Table Generator, Population Explorer, and the Individual Explorer. The Table Generator allows users to drag and drop variables and desired statistics (frequencies, means, Anova, t-test, and other summary statistics) into bins that automagically create stunning tables with validated information. The Population Explorer offers various plots to visualize general trends in the population from various vantage points. Plot modules currently include scatter plot, spaghetti plot, box plot, histogram, means plot, and bar plot. Each plot type allows the user to plot uploaded variables against one another, and dissect the population by filtering out certain subjects. Last, the Individual Explorer establishes a cohesive patient narrative, allowing the user to interact with patient metrics (params) by visit or plotting important patient events on a timeline. All modules allow for concise filtering & downloading bulk outputs into html or pdf formats to save for later.
-License: AGPL (>= 3) + file LICENSE
-Imports: 
-    config,
-    golem,
-    shiny,
-    DT,
-    glue,
-    htmltools,
-    shinyjs,
-    tippy (>= 1.0.0),
-    haven,
-    shinyWidgets,
-    plotly,
-    RColorBrewer,
-    rmarkdown,
-    timevis,
-    sjlabelled,
-    data.table,
-    gt,
-    rlang,
-    stringi,
-    ggplot2,
-    dplyr,
-    stringr,
-    purrr,
-    forcats,
-    tidyr,
-    tibble,
-    magrittr,
-    cicerone,
-    tidyselect,
-    broom,
-    GGally,
-    survival,
-    ggcorrplot,
-    IDEAFilter (>= 0.1.0.9000)
-Encoding: UTF-8
-LazyData: true
-RoxygenNote: 7.1.2
+Title: Quick Table Generation & Exploratory Analyses on ADaM-Ish Datasets
+Version: 0.1.0
+Authors@R: c(
+    person("Aaron", "Clark", , "clark.aaronchris@gmail.com",
+      role = c("aut", "cre"), comment = c(ORCID = "0000-0002-0123-0970")),
+    person("Nate", "Mockler", , "nate.mockler@biogen.com", role = c("ccp", "led")),
+    person("Maya", "Gans", , "maya.gans@biogen.com", role = "aut"),
+    person("Robert", "Krajcik", , "robert.krajcik@biogen.com", role = "ctb"),
+    person("Marly", "Gotti", , "marly.cormar@biogen.com", role = "ctb"),
+    person(given = "Jeff", family = "Thompson", 
+        email = "jeff.thompson51317@gmail.com", role = "ctb"),
+    person("Biogen", "Inc", role = "cph")
+  )
+Description: Provides users a quick exploratory dive into common
+    visualizations without writing a single line of code given the users
+    data follows the Analysis Data Model (ADaM) standards put forth by 
+    the Clinical Data Interchange Standards Consortium 
+    (CDISC) <https://www.cdisc.org>. Prominent modules/ features of the application are the Table 
+    Generator, Population Explorer, and the Individual Explorer. The Table 
+    Generator allows users to drag and drop variables and desired statistics
+    (frequencies, means, ANOVA, t-test, and other summary statistics) into
+    bins that automagically create stunning tables with validated
+    information. The Population Explorer offers various plots to visualize
+    general trends in the population from various vantage points. Plot
+    modules currently include scatter plot, spaghetti plot, box plot,
+    histogram, means plot, and bar plot. Each plot type allows the user to
+    plot uploaded variables against one another, and dissect the
+    population by filtering out certain subjects. Last, the Individual
+    Explorer establishes a cohesive patient narrative, allowing the user
+    to interact with patient metrics (params) by visit or plotting
+    important patient events on a timeline. All modules allow for concise
+    filtering & downloading bulk outputs into html or pdf formats to save
+    for later.
+License: AGPL (>= 3)
 URL: https://Biogen-Inc.github.io/tidyCDISC/
 BugReports: https://github.com/Biogen-Inc/tidyCDISC/issues
-Suggests: 
-    testthat,
-    lazyeval,
-    scales,
-    knitr,
-    spelling
-Remotes: 
-    JohnCoene/tippy,
-    Biogen-Inc/IDEAFilter
 Depends: 
     R (>= 2.10)
-VignetteBuilder: knitr
+Imports: 
+    cicerone,
+    config,
+    dplyr,
+    DT,
+    GGally,
+    ggcorrplot,
+    ggplot2,
+    glue,
+    golem,
+    gt,
+    haven,
+    IDEAFilter,
+    plotly,
+    purrr,
+    rlang,
+    rmarkdown,
+    shiny,
+    shinyjs,
+    shinyWidgets,
+    sjlabelled,
+    stringr,
+    survival,
+    tidyr,
+    timevis,
+    tippy (== 0.1.0)
+Suggests: 
+    knitr,
+    pkgdown,
+    spelling,
+    testthat
+Encoding: UTF-8
 Language: en-US
+LazyData: true
+RoxygenNote: 7.2.0
+VignetteBuilder: knitr

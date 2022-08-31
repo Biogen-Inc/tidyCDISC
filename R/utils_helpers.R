@@ -1,15 +1,35 @@
 #' GT Column Names
 #' 
-#' @param nm name
+#' @param col_names A vector of column names
+#' @param col_total A vector of column totals
 #' 
-#' create the labels for each column using the total function
-#' so the columns are now NAME N= X
+#' @description The function creates the labels for each column using the total function so the columns are now NAME N= X
 #' @export
 #' @keywords tabGen_repro
 #' 
-# get column names with N
-col_for_list_expr <- function(nm) {
-  nm = md(glue::glue("**{row_names_n}** <br> N={total}"))
+#' @return A character object of class \code{from_markdown}.
+#' 
+#' @importFrom purrr map2
+#' @importFrom gt md
+#' @importFrom glue glue
+#' @importFrom rlang set_names
+#' 
+#' @examples 
+#' data(example_dat2, package = "tidyCDISC")
+#' 
+#' labels <- col_for_list_expr(example_dat2$col_names, example_dat2$col_totals)
+#' labels
+#' 
+#' if (interactive()) {
+#' # TG table without nice column labels or totals
+#' example_dat2$TG_table
+#' 
+#' # TG table with nice column labels and totals
+#' gt::cols_label(example_dat2$TG_table, .list = labels)
+#' }
+col_for_list_expr <- function(col_names, col_total) {
+  purrr::map2(col_names, col_total, ~ gt::md(glue::glue("**{.x}** <br> N={.y}"))) %>%
+    rlang::set_names(col_names)
 }
 
 
@@ -70,33 +90,43 @@ CapStr <- function(y) {
 #' transpose dataframes so they can all 
 #' be used with rbind to generate
 #' the gt tables
+#' 
 #' @param df the dataframe to transpose
 #' @param num the number of rows to return
+#' @importFrom dplyr mutate rename
+#' @importFrom tidyr pivot_longer pivot_wider
 #' @noRd
 #' 
 transpose_df <- function(df, num) {
-  t_df <- data.table::transpose(df)
-  colnames(t_df) <- rownames(df)
-  rownames(t_df) <- colnames(df)
-  t_df <- t_df %>%
-    tibble::rownames_to_column(.data = .) %>%
-    tibble::as_tibble(.)
+  t_df <- df %>%
+    dplyr::mutate("rowname" = rownames(.), .before = 1) %>%
+    tidyr::pivot_longer(-"rowname") %>%
+    tidyr::pivot_wider(names_from = "rowname") %>%
+    dplyr::rename("rowname" = "name")
   return(t_df[-num,])
 }
 
 #' Identify Names of Columns
 #' 
-#' transform the gt rownames from generics to the column name and the total N of
+#' @description A function to transform the \code{gt} row names from generics to the column name and the total N of
 #' each column
 #'
 #' @param data the data to create columns with
 #' @param group whether to group the data to calculate Ns
-#' 
-#' @importFrom forcats fct_count
-#' 
+#'  
 #' @export
 #' @keywords tabGen_repro
 #' 
+#' @return A character vector
+#' 
+#' @examples 
+#' data(adsl, package = "tidyCDISC")
+#' 
+#' # Values of TRT01P
+#' unique(adsl$TRT01P)
+#' 
+#' # Common row names based on TRT01P
+#' common_rownames(adsl, "TRT01P")
 common_rownames <- function(data, group) { 
   if (is.null(group) ) { #| group == "NONE"
     vars <- c("Variable", "Total")
@@ -154,7 +184,7 @@ common_rownames <- function(data, group) {
 #' @importFrom purrr map2
 #' @importFrom stringr str_locate_all
 #' @importFrom utils capture.output
-#' @importFrom tibble as_tibble
+#' @importFrom tidyr as_tibble
 #' @importFrom shiny HTML
 #' 
 #' @return An HTML string
@@ -173,12 +203,12 @@ filters_in_english <- function(filtered_data, filter_header = "Filters Applied:"
   
   # find the start of the variable expressions using position of "filter"
   f_loc <- str_locate_all(code_text,"filter\\(")
-  filter_loc <- as_tibble(f_loc[[1]])
+  filter_loc <- tidyr::as_tibble(f_loc[[1]])
   var_st <- filter_loc$end + 1
   
   # find the end of variable expression susing position of "%>%"
   p_loc <- str_locate_all(code_text,"\\%\\>\\%") # have to use this
-  pipe_loc <- as_tibble(p_loc[[1]])
+  pipe_loc <- tidyr::as_tibble(p_loc[[1]])
   num_pipes <- nrow(pipe_loc)
   var_end <- c(pipe_loc$start[ifelse(num_pipes == 1, 1, 2):num_pipes] - 3, len - 1) # ifelse(num_pipes == 1, 1, 2)
   
@@ -203,9 +233,9 @@ filters_in_english <- function(filtered_data, filter_header = "Filters Applied:"
                      ,paste(disp_msg, collapse = "<br/>&nbsp;&nbsp;&nbsp;&nbsp;"))))
 }
 
-#' getLevels function
+#' Get Factor Levels
 #'
-#' Return levels of a factor/vector
+#' Extracts the factor levels of a vector or returns the unique values if the vector is not a factor.
 #'
 #' @param x a vector
 #'   
@@ -214,7 +244,22 @@ filters_in_english <- function(filtered_data, filter_header = "Filters Applied:"
 #' @export
 #' @keywords helpers
 #' 
-getLevels <- function(x) {if(is.factor(x)) levels(x) else sort(unique(x), na.last = T) } 
+#' @references A character vector containing the levels of the factor/vector
+#' 
+#' @examples 
+#' data(adae, package = "tidyCDISC")
+#' 
+#' # Create levels based on VARN
+#' varN_fctr_adae <- varN_fctr_reorder(adae)
+#' 
+#' # `adae` does not have factor but `varN_fctr_adae` does
+#' levels(adae$RACE)
+#' levels(varN_fctr_adae$RACE)
+#' 
+#' # `get_levels()` either creates the factor or retrieves it
+#' get_levels(adae$RACE)
+#' get_levels(varN_fctr_adae$RACE)
+get_levels <- function(x) {if(is.factor(x)) levels(x) else sort(unique(x), na.last = TRUE) } 
 
 
 
@@ -232,33 +277,6 @@ getLevels <- function(x) {if(is.factor(x)) levels(x) else sort(unique(x), na.las
   }
 }
 
-#' Refactor variables
-#'
-#' Refactor variables by their common "N" counterparts
-#' 
-#' @param data A data frames
-#' @param varc A character vector of variables names with character values
-#' @param varn A character vector of variables names with numeric values
-#' 
-#' @import dplyr
-#' @importFrom data.table := 
-#' @importFrom forcats fct_reorder
-#' 
-#' @family popExp Functions
-#' @noRd
-#' 
-refact <- function(data, varc, varn) {
-  datac <- deparse(substitute(data))
-  if (varc %in% colnames(data) && varn %in% colnames(data)) {
-    # if not a factor yet, make it a factor, then re-order
-    if(!is.factor(data[,(varc)])) { data[, (varc) := as.factor(get(varc))] }
-    # If a level was dropped, then don't reorder the factor
-    if(length(levels(data[[varc]])) == length(unique(data[[varc]]))){
-      # message(paste("A factor was created for", varc, "based on", varn, "levels"))
-      data[, (varc) := forcats::fct_reorder(get(varc), get(varn))] 
-    }
-  }
-}
 
 
 #' Re-order Factor Levels by VARN
@@ -270,36 +288,26 @@ refact <- function(data, varc, varn) {
 #' @param data a dataframe, including one enriched with SAS labels attributes
 #' 
 #' @importFrom sjlabelled get_label set_label
-#' @importFrom data.table setDT 
 #' @importFrom purrr walk2 
 #' 
 #' @export
 #' @keywords helpers
 #' 
+#' @return The data frame after having factor levels re-ordered by VARN
+#' 
+#' @examples 
+#' data(adae, package = "tidyCDISC")
+#' 
+#' varN_fctr_adae <- varN_fctr_reorder(adae)
+#' 
+#' unique(adae[,c("AGEGR1", "AGEGR1N")])
+#' levels(adae$AGEGR1)
+#' levels(varN_fctr_adae$AGEGR1)
+#' 
+#' unique(adae[,c("RACE", "RACEN")])
+#' levels(adae$RACE)
+#' levels(varN_fctr_adae$RACE)
 varN_fctr_reorder <- function(data) {
-  # data <- all_data
-  # Now to refactor levels in VARN order, if they exist:
-  # save the variable labels into savelbls vector
-  savelbls <- sjlabelled::get_label(data)
-  
-  # identify all char - numeric variables pairs that need factor re-ordering
-  cols <- colnames(data)
-  non_num_cols <- c(subset_colclasses(data, is.factor),
-                    subset_colclasses(data, is.character))
-  varn <- paste0(non_num_cols,"N")[paste0(non_num_cols,"N") %in% cols]
-  varc <- substr(varn,1,nchar(varn) - 1)
-  
-  # varn <- "AVISITN"
-  # varc <- "AVISIT"
-  
-  data.table::setDT(data)
-  purrr::walk2(varc, varn, ~ refact(data, .x, .y))
-  # copy SAS labels back into data
-  data <- sjlabelled::set_label(data, label = savelbls)
-  return(data)
-}
-
-varN_fctr_reorder2 <- function(data) {
   # rm(data)
   # data <- all_data
   # Now to refactor levels in VARN order, if they exist:
@@ -321,7 +329,8 @@ varN_fctr_reorder2 <- function(data) {
       this_varc_sym <-rlang::sym(this_varc)
       pref_ord <- data %>% select(one_of(this_varc, this_varn)) %>% distinct() %>% arrange(!!this_varn_sym)
       data <-
-        data %>% mutate(!!this_varc_sym := factor(!!this_varc_sym, levels = pref_ord[[this_varc]]))
+        data %>% mutate(!!this_varc_sym := factor(!!this_varc_sym,
+                          levels = unique(pref_ord[[this_varc]])))
       # return(data)
     }
   }

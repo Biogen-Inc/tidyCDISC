@@ -84,7 +84,6 @@ utils::globalVariables(c(
   "tab_en",
   "tab_st",
   "type_col",
-  "%s+%",
   ".",
   "CHG",
   "ID",
@@ -111,6 +110,7 @@ utils::globalVariables(c(
   "advs",
   "adae",
   "adlbc",
+  "adtte",
   "warn",
   "dy_min",
   "AEACN", "AEACNOTH", "AREL", "CNSR", "FASFL", "ITTFL", "LOWER", "Lower", 
@@ -124,7 +124,7 @@ utils::globalVariables(c(
   "lab", "n_subgroups", "n_tot", "orig_id_rn", "orig_var_rn", "param_x",
   "param_y", "pt", "pval",
   "pval_hover", "sort_n", "v", "var", "var_rn", "where", "y"
-  # ,"<<-"
+  ,":="
 ))
 
 

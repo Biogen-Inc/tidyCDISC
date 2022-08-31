@@ -1,4 +1,4 @@
-#' tidyCDISC spaghetti plot
+#' Spaghetti Plot
 #' 
 #' Create a spaghetti plot with a time dependent variable as the x-axis
 #' and using either the selected response variable
@@ -12,9 +12,11 @@
 #' AVAL, CHG, or BASE to be plotted on the y-axis
 #' 
 #' @family popExp Functions
-#' @export
 #' @keywords popEx
 #' 
+#' @return A ggplot object representing the spaghetti plot
+#' 
+#' @noRd
 app_spaghettiplot <- function(data, yvar, time, value = NULL) {
   if (yvar %in% colnames(data)) {
     
@@ -51,9 +53,9 @@ app_spaghettiplot <- function(data, yvar, time, value = NULL) {
     ggplot2::geom_line() +
     ggplot2::geom_point(na.rm = TRUE) +
     ggplot2::theme_bw() +
-    ggplot2::theme(text = element_text(size = 12),
-                   axis.text = element_text(size = 12),
-                   plot.title = element_text(size = 16)) +
+    ggplot2::theme(text = ggplot2::element_text(size = 12),
+                   axis.text = ggplot2::element_text(size = 12),
+                   plot.title = ggplot2::element_text(size = 16)) +
     ggplot2::ggtitle(var_title)
   
   return(p)

@@ -84,13 +84,13 @@ to reproduce any analysis performed in the app.
 
 ## Usage
 
-`tidyCDISC` is primarily a web application, so no installation is
-necessary. Simply start using the demo version of the app here:
+You can start using the demo version of the app here:
 [tidyCDISC](https://rinpharma.shinyapps.io/tidyCDISC/). Note the demo
 version disables the **Data Upload** feature and instead uses the CDISC
 pilot data. If you’d like to upload your own study data, we recommend
-installing `tidyCDISC` (using the instructions below) to run the app
-locally or deploy in your preferred environment. Please review the “[Get
+installing `tidyCDISC` from CRAN (instructions below) to run the app
+locally or deploy it in your preferred environment. Please review the
+“[Get
 Started](https://Biogen-Inc.github.io/tidyCDISC/articles/tidyCDISC.html)”
 guide to follow an example use case with the app. However, to optimize
 one’s use of `tidyCDISC`, we highly recommend reading the following
@@ -122,33 +122,27 @@ message with your question or request!
 
 ## Install the `tidyCDISC` R package
 
-`tidyCDISC` is primarily an application, so no installation is
-necessary. Simply start using the demo version of the app here:
-[tidyCDISC](https://rinpharma.shinyapps.io/tidyCDISC/). However, if you
-choose to upload your own study data OR export & run R code from the
-Table Generator, you will need the `tidyCDISC` package installed on your
-machine locally. Execute the following code to install the package to
-your local machine:
+As a reminder, you can start using the demo version of the app here:
+[tidyCDISC](https://rinpharma.shinyapps.io/tidyCDISC/) without any
+installation required. However, if you choose to upload your own study
+data OR export & run R code from the Table Generator, you will need the
+`tidyCDISC` package installed on your machine locally. Execute the
+following code to install the package to your local machine:
 
 ``` r
+# Install from CRAN
+install.packages("tidyCDISC")
+
+# Or install the latest dev version
 remotes::install_github("Biogen-Inc/tidyCDISC")
 ```
 
 With a simple `library(tidyCDISC)` you can access all the exported
 functions from `tidyCDISC` that help users reproduce analysis performed
-in the app. Using the dev/run_dev.R file, you can even run the
-application locally:
+in the app. Or, you can run the application locally (or deploy it in an
+`app.R` file) using:
 
 ``` r
-# Set options here
-options(golem.app.prod = FALSE) # TRUE = production mode, FALSE = development mode
-
-# Detach all loaded packages and clean your environment
-golem::detach_all_attached()
-
-# Document and reload your package, which runs these three functions...
-golem::document_and_reload()
-
 # Run the application 
 tidyCDISC::run_app()
 ```

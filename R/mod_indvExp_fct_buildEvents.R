@@ -76,7 +76,7 @@ build_events <- function(
       select(USUBJID,ends_with("DT")) %>%
       colnames()
     
-    ds_rec <- (if(input_apply_filter == T) adsl %>% semi_join(my_filtered_dat) else adsl) %>%
+    ds_rec <- (if(input_apply_filter == TRUE) adsl %>% semi_join(my_filtered_dat) else adsl) %>%
       filter(USUBJID == my_usubjid) %>%
       select(all_of(adsl_date_cols)) %>%
       distinct() %>%
@@ -151,7 +151,7 @@ build_events <- function(
     if("MHSTDTC" %in% colnames(my_datafile[["ADMH"]])){
       mh_rec <- 
         # conditionally toggle which dataset is used
-        (if(input_apply_filter == T) my_datafile[["ADMH"]] %>% semi_join(my_filtered_dat) else my_datafile[["ADMH"]]) %>%
+        (if(input_apply_filter == TRUE) my_datafile[["ADMH"]] %>% semi_join(my_filtered_dat) else my_datafile[["ADMH"]]) %>%
         filter(USUBJID == my_usubjid) %>%
         mutate(EVENTTYP = str_to_title(MHCAT), #used to be "Medical History",
                
@@ -170,8 +170,8 @@ build_events <- function(
                  nchar(MHENDTC) == 10 ~ MHENDTC,
                  has_end & nchar(MHENDTC) == 7 ~ paste0(MHENDTC,"-28"),
                  has_end & nchar(MHENDTC) == 4 ~ paste0(MHENDTC,"-12-31"),
-                 has_end == F & nchar(MHSTDTC) == 7  ~ paste0(MHSTDTC,"-28"),
-                 has_end == F & nchar(MHSTDTC) == 4 ~ paste0(MHSTDTC,"-12-31"),
+                 has_end == FALSE & nchar(MHSTDTC) == 7  ~ paste0(MHSTDTC,"-28"),
+                 has_end == FALSE & nchar(MHSTDTC) == 4 ~ paste0(MHSTDTC,"-12-31"),
                  TRUE ~ NA_character_)),
                tab_st = ifelse(MHSTDTC == "", NA_character_, MHSTDTC), # disp chr in DT
                tab_en = ifelse(MHENDTC == "", NA_character_, MHENDTC), # disp chr in DT

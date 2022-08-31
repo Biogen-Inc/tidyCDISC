@@ -11,8 +11,9 @@
 #'
 #' @family tableGen Functions
 #' 
-#' @export
 #' @keywords tabGen
+#' 
+#' @noRd
 app_non_missing <- function(column, group, data, totals) {
   UseMethod("app_non_missing", column)
 }
@@ -30,6 +31,8 @@ app_non_missing <- function(column, group, data, totals) {
 #' @rdname app_non_missing
 #' 
 #' @family tableGen Functions
+#' 
+#' @noRd
 app_non_missing.default <- app_non_missing.BDS <- app_non_missing.OCCDS <- app_non_missing.ADAE <- app_non_missing.ADSL <- 
   function(column, group = NULL, data, totals) {
   # # ########## ######### ######## #########
@@ -66,7 +69,7 @@ app_non_missing.default <- app_non_missing.BDS <- app_non_missing.OCCDS <- app_n
     
     group <- rlang::sym(group)
     
-    grp_lvls <- getLevels(data[[group]])
+    grp_lvls <- get_levels(data[[group]])
     xyz <- data.frame(grp_lvls) %>%
       rename_with(~paste(group), grp_lvls)
     
@@ -108,6 +111,8 @@ app_non_missing.default <- app_non_missing.BDS <- app_non_missing.OCCDS <- app_n
 #' @rdname app_non_missing
 #' 
 #' @family tableGen Functions
+#' 
+#' @noRd
 app_non_missing.BDS <- function(column, group = NULL, data, totals) {
   rlang::abort(glue::glue(
     "Can't calculate Non Missings for BDS yet"
@@ -118,6 +123,8 @@ app_non_missing.BDS <- function(column, group = NULL, data, totals) {
 #' @rdname app_non_missing
 #' 
 #' @family tableGen Functions
+#' 
+#' @noRd
 app_non_missing.custom <- function(column, group, data, totals) {
   rlang::abort(glue::glue(
     "Can't calculate mean, data is not classified as ADLB, BDS or OCCDS"

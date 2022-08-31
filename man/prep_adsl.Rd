@@ -11,7 +11,21 @@ prep_adsl(ADSL, input_recipe)
 
 \item{input_recipe}{The shiny input that keeps track of the recipe selected}
 }
+\value{
+A `list` containing a `data.frame` object and character vector specifying the pre-filter applied.
+}
 \description{
 Function to pre-filter the ADSL depending on the stan table selected
+}
+\examples{
+data(adsl, package = "tidyCDISC")
+
+# Process ADSL data for STAN table
+
+prep_adsl(adsl, input_recipe = 'Table 3: Accounting of Subjects')
+
+# Return ADSL data if no STAN table selected
+
+prep_adsl(adsl, input_recipe = "NONE")
 }
 \keyword{tabGen_repro}

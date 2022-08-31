@@ -6,6 +6,9 @@
 #' @noRd
 app_server <- function( input, output, session ) {
   
+  old <- options()
+  on.exit(options(old))
+  
   observeEvent(input$myBrowser , {
     if(str_detect(input$myBrowser, "IE")){
       showModal(tags$div(id="browserModal", modalDialog(footer = NULL,

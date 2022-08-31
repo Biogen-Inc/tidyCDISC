@@ -5,3 +5,6 @@
 inst/doc
 rsconnect/
 docs/
+revdep/
+/doc/
+/Meta/

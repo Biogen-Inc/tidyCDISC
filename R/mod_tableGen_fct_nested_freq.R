@@ -14,9 +14,9 @@
 #' @return a frequency table of grouped variables
 #'
 #' @family tableGen Functions
-#' @export
 #' @keywords tabGen
 #' 
+#' @noRd
 app_nested_freq <- function(column, nested_var = "NONE", group, data, totals, sort = "desc_tot") {
   UseMethod("app_nested_freq", column)
 }
@@ -33,6 +33,8 @@ app_nested_freq <- function(column, nested_var = "NONE", group, data, totals, so
 #' @rdname app_nested_freq
 #' 
 #' @family tableGen Functions
+#' 
+#' @noRd
 
 app_nested_freq.default <- app_nested_freq.OCCDS <- app_nested_freq.ADAE <- app_nested_freq.ADSL <- 
   function(column, nested_var = "NONE", group = NULL, data, totals, sort = "desc_tot") {
@@ -57,7 +59,7 @@ app_nested_freq.default <- app_nested_freq.OCCDS <- app_nested_freq.ADAE <- app_
   }
   
   # First, get the desired order our by_var
-  column_lvls <- getLevels(data[[column]])
+  column_lvls <- get_levels(data[[column]])
   abc <- data.frame(column_lvls) %>%
     rename_with(~paste(column), column_lvls)
   
@@ -65,7 +67,7 @@ app_nested_freq.default <- app_nested_freq.OCCDS <- app_nested_freq.ADAE <- app_
     if(sort == "desc_tot"){
       init_dat <- data # do nothing
     } else { # sort == "desc_right"
-      grp_lvls <- getLevels(data[[grp]])
+      grp_lvls <- get_levels(data[[grp]])
       rightmost <- grp_lvls[length(grp_lvls)]
       init_dat <- data %>%
         filter(!!sym(grp) == rightmost)
@@ -148,7 +150,7 @@ app_nested_freq.default <- app_nested_freq.OCCDS <- app_nested_freq.ADAE <- app_
       
     } else { # alpha
       
-      inner_column_lvls <- rev(sort(as.character(getLevels(data[[nst_var]]))))
+      inner_column_lvls <- rev(sort(as.character(get_levels(data[[nst_var]]))))
       inner_abc <- data.frame(inner_column_lvls) %>%
         rename_with(~paste(nst_var), inner_column_lvls) %>%
         mutate(inner_sort = 1:length(inner_column_lvls))
@@ -192,7 +194,7 @@ app_nested_freq.default <- app_nested_freq.OCCDS <- app_nested_freq.ADAE <- app_
     
     # Need this in case dataset rows get filtered to a really small set, and
     # "lose" some levels
-    grp_lvls <- getLevels(data[[group]])
+    grp_lvls <- get_levels(data[[group]])
     xyz <- data.frame(grp_lvls) %>%
       rename_with(~paste(group), grp_lvls)
     
@@ -286,6 +288,8 @@ app_nested_freq.default <- app_nested_freq.OCCDS <- app_nested_freq.ADAE <- app_
 #' @rdname app_nested_freq
 #' 
 #' @family tableGen Functions
+#' 
+#' @noRd
 
 app_nested_freq.BDS <- function(column, nested_var = "NONE", group = NULL, data, totals, sort = "desc_tot") {
   rlang::abort(glue::glue(
@@ -297,6 +301,8 @@ app_nested_freq.BDS <- function(column, nested_var = "NONE", group = NULL, data,
 #' @rdname app_nested_freq
 #' 
 #' @family tableGen Functions
+#' 
+#' @noRd
 
 app_nested_freq.custom <- function(column, nested_var = "NONE", group, data, totals, sort = "desc_tot") {
   rlang::abort(glue::glue(

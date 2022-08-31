@@ -1,11 +1,12 @@
 #' Pipe operator
 #'
-#' See \code{magrittr::\link[magrittr:pipe]{\%>\%}} for details.
+#' See documentation for the pipe (\%>\%) within `magrittr` for details.
 #'
 #' @name %>%
 #' @rdname pipe
 #' @keywords internal
-#' @export
-#' @importFrom magrittr %>%
+#' @importFrom dplyr %>%
 #' @usage lhs \%>\% rhs
+#' 
+#' @noRd
 NULL

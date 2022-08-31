@@ -140,7 +140,7 @@ mod_tableGen_ui <- function(id){
         
         column(width = 6,
                wellPanel(
-                 fluidRow(gt_output(ns("all"))))
+                 fluidRow(gt::gt_output(ns("all"))))
                # ,fluidRow(tableOutput(ns("for_gt_table")))
         )
       )
