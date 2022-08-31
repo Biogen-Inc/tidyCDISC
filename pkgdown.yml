@@ -7,11 +7,12 @@ articles:
   dev01_Table_Gen: dev01_Table_Gen.html
   dev02_Pop_Exp: dev02_Pop_Exp.html
   dev03_Indv_Expl: dev03_Indv_Expl.html
+  getting_started: getting_started.html
   tidyCDISC: tidyCDISC.html
   x00_Data_Upload: x00_Data_Upload.html
   x01_Table_Generator: x01_Table_Generator.html
   x02_Pop_Exp: x02_Pop_Exp.html
   x03_Indv_Expl: x03_Indv_Expl.html
   x04_Filtering: x04_Filtering.html
-last_built: 2022-05-31T13:12Z
+last_built: 2022-08-31T18:48Z
 

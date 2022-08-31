@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidyCDISC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.0</span>
       </span>
     </div>
 
@@ -90,7 +90,11 @@
         <td><p>Run the Shiny Application</p></td>
       </tr></tbody><tbody><tr><th colspan="2">
           <h2 id="package-data">Package data <a href="#package-data" class="anchor" aria-hidden="true"></a></h2>
-          <p class="section-desc"></p><p>CDISC pilot data</p>
+          <p class="section-desc"></p>
+        </th>
+      </tr></tbody><tbody><tr><th colspan="2">
+          <h3 id="cdisc-pilot-data">CDISC pilot data <a href="#cdisc-pilot-data" class="anchor" aria-hidden="true"></a></h3>
+          <p class="section-desc"></p><p>Pilot data used to demo the application</p>
         </th>
       </tr></tbody><tbody><tr><td>
           <p><code><a href="adsl.html">adsl</a></code> </p>
@@ -113,6 +117,18 @@
         </td>
         <td><p>ADTTE</p></td>
       </tr></tbody><tbody><tr><th colspan="2">
+          <h3 id="example-data">Example data <a href="#example-data" class="anchor" aria-hidden="true"></a></h3>
+          <p class="section-desc"></p><p>Example data used to show function usage</p>
+        </th>
+      </tr></tbody><tbody><tr><td>
+          <p><code><a href="example_dat1.html">example_dat1</a></code> </p>
+        </td>
+        <td><p>Example Data Set 1</p></td>
+      </tr><tr><td>
+          <p><code><a href="example_dat2.html">example_dat2</a></code> </p>
+        </td>
+        <td><p>Example Data Set 2</p></td>
+      </tr></tbody><tbody><tr><th colspan="2">
           <h2 id="reproducible-analysis-functions">Reproducible analysis functions <a href="#reproducible-analysis-functions" class="anchor" aria-hidden="true"></a></h2>
           <p class="section-desc"></p><p>R code generator will leverage these functions to mimic analysis performed in the app</p>
         </th>
@@ -124,17 +140,9 @@ each statistical and column block pairing
 and use the metadata associated with 
 each column block for the function's arguments</p></td>
       </tr><tr><td>
-          <p><code><a href="cleanADAE.html">cleanADAE()</a></code> </p>
-        </td>
-        <td><p>Function to clean and combine ADAE dataset with ADSL</p></td>
-      </tr><tr><td>
           <p><code><a href="col_for_list_expr.html">col_for_list_expr()</a></code> </p>
         </td>
         <td><p>GT Column Names</p></td>
-      </tr><tr><td>
-          <p><code><a href="combineBDS.html">combineBDS()</a></code> </p>
-        </td>
-        <td><p>Function to bind data rows from the list of user supplied data frames</p></td>
       </tr><tr><td>
           <p><code><a href="common_rownames.html">common_rownames()</a></code> </p>
         </td>
@@ -156,107 +164,25 @@ each column block for the function's arguments</p></td>
         </td>
         <td><p>Function to pre-filter the ADSL depending on the stan table selected</p></td>
       </tr><tr><td>
-          <p><code><a href="pretty_blocks.html">pretty_blocks</a></code> </p>
+          <p><code><a href="prep_bds.html">prep_bds()</a></code> </p>
         </td>
-        <td><p>Table Generator Pretty Block lookup table</p></td>
+        <td><p>Combine BDS Data Frames</p></td>
       </tr><tr><td>
-          <p><code><a href="readData.html">readData()</a></code> </p>
+          <p><code><a href="pretty_IDs.html">pretty_IDs()</a></code> </p>
         </td>
-        <td><p>Function to read the SAS list of user supplied data frames</p></td>
-      </tr></tbody><tbody><tr><th colspan="2">
-          <h2 id="help-compare-output-to-sas-functions">Help compare output to SAS functions <a href="#help-compare-output-to-sas-functions" class="anchor" aria-hidden="true"></a></h2>
-          <p class="section-desc"></p><p>User friendly utility functions built for comparing app output with SAS produced outputs</p>
-        </th>
-      </tr></tbody><tbody><tr><td>
-          <p><code><a href="prep_sas_table.html">prep_sas_table()</a></code> </p>
-        </td>
-        <td><p>Organize SAS into a format for comparing</p></td>
-      </tr><tr><td>
-          <p><code><a href="prep_tg_table.html">prep_tg_table()</a></code> </p>
-        </td>
-        <td><p>Organize Table Generator table into a format for comparing</p></td>
+        <td><p>Create Pretty IDs for TG Table</p></td>
       </tr></tbody><tbody><tr><th colspan="2">
           <h2 id="general-helper-functions">General helper functions <a href="#general-helper-functions" class="anchor" aria-hidden="true"></a></h2>
           <p class="section-desc"></p>
         </th>
       </tr></tbody><tbody><tr><td>
-          <p><code><a href="getLevels.html">getLevels()</a></code> </p>
+          <p><code><a href="get_levels.html">get_levels()</a></code> </p>
         </td>
-        <td><p>getLevels function</p></td>
+        <td><p>Get Factor Levels</p></td>
       </tr><tr><td>
           <p><code><a href="varN_fctr_reorder.html">varN_fctr_reorder()</a></code> </p>
         </td>
         <td><p>Re-order Factor Levels by VARN</p></td>
-      </tr></tbody><tbody><tr><th colspan="2">
-          <h2 id="table-generator-functions">Table Generator Functions <a href="#table-generator-functions" class="anchor" aria-hidden="true"></a></h2>
-          <p class="section-desc"></p>
-        </th>
-      </tr></tbody><tbody><tr><td>
-          <p><code><a href="app_anova.html">app_anova()</a></code> </p>
-        </td>
-        <td><p>Generate ANOVA using table generator blocks</p></td>
-      </tr><tr><td>
-          <p><code><a href="app_chg.html">app_chg()</a></code> </p>
-        </td>
-        <td><p>Generate change from baseline
-summary statistics using table generator blocks</p></td>
-      </tr><tr><td>
-          <p><code><a href="app_freq.html">app_freq()</a></code> </p>
-        </td>
-        <td><p>Generate frequency of categorical variables
-using table generator blocks</p></td>
-      </tr><tr><td>
-          <p><code><a href="app_max_freq.html">app_max_freq()</a></code> </p>
-        </td>
-        <td><p>Generate frequency where each subject is only counted once for the maximum
-VAR</p></td>
-      </tr><tr><td>
-          <p><code><a href="app_mean.html">app_mean()</a></code> </p>
-        </td>
-        <td><p>Generate summary statistics 
-using table generator blocks</p></td>
-      </tr><tr><td>
-          <p><code><a href="app_nested_freq.html">app_nested_freq()</a></code> </p>
-        </td>
-        <td><p>Generate frequency where each subject is only counted once for the maximum
-VAR</p></td>
-      </tr><tr><td>
-          <p><code><a href="app_non_missing.html">app_non_missing()</a></code> </p>
-        </td>
-        <td><p>Generate frequency of categorical variables using table generator blocks</p></td>
-      </tr><tr><td>
-          <p><code><a href="app_y.html">app_y()</a></code> </p>
-        </td>
-        <td><p>Generate frequency of categorical variables
-using table generator blocks</p></td>
-      </tr></tbody><tbody><tr><th colspan="2">
-          <h2 id="population-explorer-figures">Population Explorer Figures <a href="#population-explorer-figures" class="anchor" aria-hidden="true"></a></h2>
-          <p class="section-desc"></p>
-        </th>
-      </tr></tbody><tbody><tr><td>
-          <p><code><a href="app_boxplot.html">app_boxplot()</a></code> </p>
-        </td>
-        <td><p>tidyCDISC boxplot</p></td>
-      </tr><tr><td>
-          <p><code><a href="app_heatmap.html">app_heatmap()</a></code> </p>
-        </td>
-        <td><p>tidyCDISC heatmap plot of endpoint correlations</p></td>
-      </tr><tr><td>
-          <p><code><a href="app_km_curve.html">app_km_curve()</a></code> </p>
-        </td>
-        <td><p>tidyCDISC Kaplan-Meier Curve</p></td>
-      </tr><tr><td>
-          <p><code><a href="app_lineplot.html">app_lineplot()</a></code> </p>
-        </td>
-        <td><p>tidyCDISC line plot</p></td>
-      </tr><tr><td>
-          <p><code><a href="app_scatterplot.html">app_scatterplot()</a></code> </p>
-        </td>
-        <td><p>tidyCDISC scatterplot</p></td>
-      </tr><tr><td>
-          <p><code><a href="app_spaghettiplot.html">app_spaghettiplot()</a></code> </p>
-        </td>
-        <td><p>tidyCDISC spaghetti plot</p></td>
       </tr></tbody></table></div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -266,7 +192,7 @@ using table generator blocks</p></td>
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Aaron Clark, Maya Gans, Robert Krajcik, Marly Gotti.</p>
+  <p></p><p>Developed by Aaron Clark, Maya Gans.</p>
 </div>
 
 <div class="pkgdown">

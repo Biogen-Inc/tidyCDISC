@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidyCDISC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.0</span>
       </span>
     </div>
 
@@ -87,7 +87,7 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">prep_adae</span><span class="op">(</span><span class="va">datafile</span>, <span class="va">ADSL</span>, <span class="va">input_recipe</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">prep_adae</span><span class="op">(</span><span class="va">datafile</span>, <span class="va">ADSL</span>, <span class="va">input_recipe</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -99,7 +99,47 @@
 <dt>input_recipe</dt>
 <dd><p>The shiny input that keeps track of the recipe selected</p></dd>
 </dl></div>
+    <div id="value">
+    <h2>Value</h2>
+    <p>A `list` containing a `data.frame` object and character vector specifying the pre-filter applied.</p>
+    </div>
 
+    <div id="ref-examples">
+    <h2>Examples</h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">datalist</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>ADSL <span class="op">=</span> <span class="fu">tidyCDISC</span><span class="fu">::</span><span class="va"><a href="adsl.html">adsl</a></span>, ADVS <span class="op">=</span> <span class="fu">tidyCDISC</span><span class="fu">::</span><span class="va"><a href="advs.html">advs</a></span>, </span></span>
+<span class="r-in"><span>                 ADAE <span class="op">=</span> <span class="fu">tidyCDISC</span><span class="fu">::</span><span class="va"><a href="adae.html">adae</a></span>, ADLBC <span class="op">=</span> <span class="fu">tidyCDISC</span><span class="fu">::</span><span class="va"><a href="adlbc.html">adlbc</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span>                 </span></span>
+<span class="r-in"><span><span class="va">pre_adsl</span> <span class="op">&lt;-</span> <span class="fu"><a href="prep_adsl.html">prep_adsl</a></span><span class="op">(</span><span class="va">datalist</span><span class="op">$</span><span class="va">ADSL</span>, input_recipe <span class="op">=</span> <span class="st">'NONE'</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Create AE data set</span></span></span>
+<span class="r-in"><span><span class="fu">prep_adae</span><span class="op">(</span><span class="va">datalist</span>, <span class="va">pre_adsl</span><span class="op">$</span><span class="va">data</span>, input_recipe <span class="op">=</span> <span class="st">'NONE'</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $data</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1,191 × 101</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    STUDYID     SITEID USUBJID TRTA  TRTAN   AGE AGEGR1 AGEGR1N RACE  RACEN SEX  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> CDISCPILOT… 701    01-701… Plac…     0    63 &lt;65          1 WHITE     1 F    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> CDISCPILOT… 701    01-701… Plac…     0    63 &lt;65          1 WHITE     1 F    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> CDISCPILOT… 701    01-701… Plac…     0    63 &lt;65          1 WHITE     1 F    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> CDISCPILOT… 701    01-701… Plac…     0    64 &lt;65          1 WHITE     1 M    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> CDISCPILOT… 701    01-701… Plac…     0    64 &lt;65          1 WHITE     1 M    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> CDISCPILOT… 701    01-701… Plac…     0    64 &lt;65          1 WHITE     1 M    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> CDISCPILOT… 701    01-701… Plac…     0    64 &lt;65          1 WHITE     1 M    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> CDISCPILOT… 701    01-701… Xano…    81    71 65-80        2 WHITE     1 M    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> CDISCPILOT… 701    01-701… Xano…    81    71 65-80        2 WHITE     1 M    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> CDISCPILOT… 701    01-701… Xano…    81    77 65-80        2 WHITE     1 F    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 1,181 more rows, and 90 more variables: SAFFL &lt;chr&gt;, TRTSDT &lt;date&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   TRTEDT &lt;date&gt;, ASTDT &lt;date&gt;, ASTDTF &lt;chr&gt;, ASTDY &lt;dbl&gt;, AENDT &lt;date&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   AENDY &lt;dbl&gt;, ADURN &lt;dbl&gt;, ADURU &lt;chr&gt;, AETERM &lt;chr&gt;, AELLT &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   AELLTCD &lt;dbl&gt;, AEDECOD &lt;chr&gt;, AEPTCD &lt;dbl&gt;, AEHLT &lt;chr&gt;, AEHLTCD &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   AEHLGT &lt;chr&gt;, AEHLGTCD &lt;dbl&gt;, AEBODSYS &lt;chr&gt;, AESOC &lt;chr&gt;, AESOCCD &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   AESEV &lt;fct&gt;, AESER &lt;chr&gt;, AESCAN &lt;chr&gt;, AESCONG &lt;chr&gt;, AESDISAB &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   AESDTH &lt;chr&gt;, AESHOSP &lt;chr&gt;, AESLIFE &lt;chr&gt;, AESOD &lt;chr&gt;, AEREL &lt;chr&gt;, …</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $message</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] ""</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+</code></pre></div>
+    </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top"><h2 data-toc-skip>Contents</h2>
@@ -108,7 +148,7 @@
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Aaron Clark, Maya Gans, Robert Krajcik, Marly Gotti.</p>
+  <p></p><p>Developed by Aaron Clark, Maya Gans.</p>
 </div>
 
 <div class="pkgdown">

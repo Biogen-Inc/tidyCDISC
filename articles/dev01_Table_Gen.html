@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidyCDISC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.0</span>
       </span>
     </div>
 
@@ -125,11 +125,11 @@
 <p>Within <code>R/mod_TableGen_ui</code> you’ll find a list of blocks.</p>
 <p>If you are going to create a simple block like in the case of <code>MEAN</code>, you’ll give the block an id in lowercase, and a label to be displayed in uppercase. You must also give the block <code>class = agg</code></p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">tags</span><span class="op">$</span><span class="fu">li</span><span class="op">(</span>id <span class="op">=</span> <span class="st">"mean"</span>,<span class="st">"MEAN"</span>,class <span class="op">=</span> <span class="st">"agg"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">tags</span><span class="op">$</span><span class="fu">li</span><span class="op">(</span>id <span class="op">=</span> <span class="st">"mean"</span>,<span class="st">"MEAN"</span>,class <span class="op">=</span> <span class="st">"agg"</span><span class="op">)</span></span></code></pre></div>
 <p>If you want to create a more complicated block that changes within the drop zone, or has hover text there are a couple more arguments you must add:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">tags</span><span class="op">$</span><span class="fu">li</span><span class="op">(</span>class <span class="op">=</span> <span class="st">"ui-state-default agg"</span>, id <span class="op">=</span> <span class="st">"chg"</span>,
-        <span class="fu">div</span><span class="op">(</span><span class="fu">tippy</span><span class="op">(</span><span class="fu">div</span><span class="op">(</span><span class="st">"CHG"</span><span class="op">)</span>, <span class="st">"Change from Baseline"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">tags</span><span class="op">$</span><span class="fu">li</span><span class="op">(</span>class <span class="op">=</span> <span class="st">"ui-state-default agg"</span>, id <span class="op">=</span> <span class="st">"chg"</span>,</span>
+<span>        <span class="fu">div</span><span class="op">(</span><span class="fu">tippy</span><span class="op">(</span><span class="fu">div</span><span class="op">(</span><span class="st">"CHG"</span><span class="op">)</span>, <span class="st">"Change from Baseline"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <ul>
 <li>an additional <code>ui-state-default</code> class</li>
 <li>another div using the package <code>tippy</code> to create the text to display <code>CHG</code> and the hover text</li>
@@ -161,68 +161,68 @@
 <h3 id="create-a-function">Create a function<a class="anchor" aria-label="anchor" href="#create-a-function"></a>
 </h3>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">app_freq</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">column</span>, <span class="va">week</span>, <span class="va">group</span>, <span class="va">data</span><span class="op">)</span> <span class="op">{</span>
-  <span class="kw"><a href="https://rdrr.io/r/base/UseMethod.html" class="external-link">UseMethod</a></span><span class="op">(</span><span class="st">"app_freq"</span>, <span class="va">column</span><span class="op">)</span>
-<span class="op">}</span>
-
-
-<span class="va">app_freq.default</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">column</span>, <span class="va">week</span>, <span class="va">group</span>, <span class="va">data</span><span class="op">)</span> <span class="op">{</span>
-  <span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/abort.html" class="external-link">abort</a></span><span class="op">(</span><span class="fu">glue</span><span class="fu">::</span><span class="fu"><a href="https://glue.tidyverse.org/reference/glue.html" class="external-link">glue</a></span><span class="op">(</span>
-    <span class="st">"Can't calculate mean because data is not classified as ADLB, BDS or OCCDS"</span>
-  <span class="op">)</span><span class="op">)</span>
-<span class="op">}</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">app_freq</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">column</span>, <span class="va">week</span>, <span class="va">group</span>, <span class="va">data</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/UseMethod.html" class="external-link">UseMethod</a></span><span class="op">(</span><span class="st">"app_freq"</span>, <span class="va">column</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span></span>
+<span></span>
+<span><span class="va">app_freq.default</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">column</span>, <span class="va">week</span>, <span class="va">group</span>, <span class="va">data</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/abort.html" class="external-link">abort</a></span><span class="op">(</span><span class="fu">glue</span><span class="fu">::</span><span class="fu"><a href="https://glue.tidyverse.org/reference/glue.html" class="external-link">glue</a></span><span class="op">(</span></span>
+<span>    <span class="st">"Can't calculate mean because data is not classified as ADLB, BDS or OCCDS"</span></span>
+<span>  <span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">}</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="create-a-method-for-adsl">Create a method for ADSL<a class="anchor" aria-label="anchor" href="#create-a-method-for-adsl"></a>
 </h3>
 <p>In the case of ADSL we need to calculate the frequency for the entire table, or if groups are selected and return a table of values to be used in gt.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">app_freq.ADSL</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">column</span>, <span class="va">week</span>, <span class="va">group</span> <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">data</span><span class="op">)</span> <span class="op">{</span>
-  
-  <span class="va">column</span> <span class="op">&lt;-</span> <span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/sym.html" class="external-link">sym</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">column</span><span class="op">)</span><span class="op">)</span>
-  
-  <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">is.character</a></span><span class="op">(</span><span class="va">data</span><span class="op">[[</span><span class="va">column</span><span class="op">]</span><span class="op">]</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span>
-    <span class="kw"><a href="https://rdrr.io/r/base/stop.html" class="external-link">stop</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"Can't calculate frequency, "</span>, <span class="va">column</span>, <span class="st">" is not categorical"</span><span class="op">)</span><span class="op">)</span>
-  <span class="op">}</span>
-  
-  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html" class="external-link">is.null</a></span><span class="op">(</span><span class="va">group</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span>
-    <span class="va">data</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
-      <span class="fu">distinct</span><span class="op">(</span><span class="va">USUBJID</span>, <span class="op">!</span><span class="op">!</span><span class="va">column</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
-      <span class="fu">count</span><span class="op">(</span><span class="op">!</span><span class="op">!</span><span class="va">column</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
-      <span class="fu">group_by</span><span class="op">(</span><span class="op">!</span><span class="op">!</span><span class="va">column</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
-      <span class="fu">summarise</span><span class="op">(</span>n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
-      <span class="fu">ungroup</span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
-      <span class="fu">mutate</span><span class="op">(</span>prop <span class="op">=</span> <span class="va">n</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
-      <span class="fu">mutate</span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">n</span>, <span class="st">" ("</span>, <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">prop</span><span class="op">*</span><span class="fl">100</span>, <span class="fl">2</span><span class="op">)</span>, <span class="st">")"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
-      <span class="fu">select</span><span class="op">(</span><span class="op">!</span><span class="op">!</span><span class="va">column</span>, <span class="va">x</span><span class="op">)</span>
-  <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span>
-    
-    <span class="kw">if</span> <span class="op">(</span><span class="va">group</span> <span class="op">==</span> <span class="va">column</span><span class="op">)</span> <span class="op">{</span>
-      <span class="kw"><a href="https://rdrr.io/r/base/stop.html" class="external-link">stop</a></span><span class="op">(</span><span class="fu">glue</span><span class="fu">::</span><span class="fu"><a href="https://glue.tidyverse.org/reference/glue.html" class="external-link">glue</a></span><span class="op">(</span><span class="st">"Cannot calculate frequency for {column} when also set as group."</span><span class="op">)</span><span class="op">)</span>
-    <span class="op">}</span>
-    
-    <span class="va">group</span> <span class="op">&lt;-</span> <span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/sym.html" class="external-link">sym</a></span><span class="op">(</span><span class="va">group</span><span class="op">)</span>
-    <span class="va">data</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
-      <span class="fu">distinct</span><span class="op">(</span><span class="va">USUBJID</span>, <span class="op">!</span><span class="op">!</span><span class="va">column</span>, <span class="op">!</span><span class="op">!</span><span class="va">group</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
-      <span class="fu">count</span><span class="op">(</span><span class="op">!</span><span class="op">!</span><span class="va">column</span>, <span class="op">!</span><span class="op">!</span><span class="va">group</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
-      <span class="fu">group_by</span><span class="op">(</span><span class="op">!</span><span class="op">!</span><span class="va">group</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
-      <span class="fu">mutate</span><span class="op">(</span>prop <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/proportions.html" class="external-link">prop.table</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
-      <span class="fu">mutate</span><span class="op">(</span>v1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">n</span>, <span class="st">' ('</span>, <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">prop</span><span class="op">*</span><span class="fl">100</span>, <span class="fl">2</span><span class="op">)</span>, <span class="st">')'</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
-      <span class="fu">select</span><span class="op">(</span><span class="op">-</span><span class="va">n</span>, <span class="op">-</span><span class="va">prop</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
-      <span class="fu">spread</span><span class="op">(</span><span class="op">!</span><span class="op">!</span><span class="va">group</span>, <span class="va">v1</span><span class="op">)</span>
-  <span class="op">}</span>
-<span class="op">}</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">app_freq.ADSL</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">column</span>, <span class="va">week</span>, <span class="va">group</span> <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">data</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  </span>
+<span>  <span class="va">column</span> <span class="op">&lt;-</span> <span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/sym.html" class="external-link">sym</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">column</span><span class="op">)</span><span class="op">)</span></span>
+<span>  </span>
+<span>  <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">is.character</a></span><span class="op">(</span><span class="va">data</span><span class="op">[[</span><span class="va">column</span><span class="op">]</span><span class="op">]</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="kw"><a href="https://rdrr.io/r/base/stop.html" class="external-link">stop</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"Can't calculate frequency, "</span>, <span class="va">column</span>, <span class="st">" is not categorical"</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="op">}</span></span>
+<span>  </span>
+<span>  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html" class="external-link">is.null</a></span><span class="op">(</span><span class="va">group</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="va">data</span> <span class="op">%&gt;%</span></span>
+<span>      <span class="fu">distinct</span><span class="op">(</span><span class="va">USUBJID</span>, <span class="op">!</span><span class="op">!</span><span class="va">column</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
+<span>      <span class="fu">count</span><span class="op">(</span><span class="op">!</span><span class="op">!</span><span class="va">column</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
+<span>      <span class="fu">group_by</span><span class="op">(</span><span class="op">!</span><span class="op">!</span><span class="va">column</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
+<span>      <span class="fu">summarise</span><span class="op">(</span>n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
+<span>      <span class="fu">ungroup</span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
+<span>      <span class="fu">mutate</span><span class="op">(</span>prop <span class="op">=</span> <span class="va">n</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
+<span>      <span class="fu">mutate</span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">n</span>, <span class="st">" ("</span>, <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">prop</span><span class="op">*</span><span class="fl">100</span>, <span class="fl">2</span><span class="op">)</span>, <span class="st">")"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
+<span>      <span class="fu">select</span><span class="op">(</span><span class="op">!</span><span class="op">!</span><span class="va">column</span>, <span class="va">x</span><span class="op">)</span></span>
+<span>  <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
+<span>    </span>
+<span>    <span class="kw">if</span> <span class="op">(</span><span class="va">group</span> <span class="op">==</span> <span class="va">column</span><span class="op">)</span> <span class="op">{</span></span>
+<span>      <span class="kw"><a href="https://rdrr.io/r/base/stop.html" class="external-link">stop</a></span><span class="op">(</span><span class="fu">glue</span><span class="fu">::</span><span class="fu"><a href="https://glue.tidyverse.org/reference/glue.html" class="external-link">glue</a></span><span class="op">(</span><span class="st">"Cannot calculate frequency for {column} when also set as group."</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="op">}</span></span>
+<span>    </span>
+<span>    <span class="va">group</span> <span class="op">&lt;-</span> <span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/sym.html" class="external-link">sym</a></span><span class="op">(</span><span class="va">group</span><span class="op">)</span></span>
+<span>    <span class="va">data</span> <span class="op">%&gt;%</span></span>
+<span>      <span class="fu">distinct</span><span class="op">(</span><span class="va">USUBJID</span>, <span class="op">!</span><span class="op">!</span><span class="va">column</span>, <span class="op">!</span><span class="op">!</span><span class="va">group</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
+<span>      <span class="fu">count</span><span class="op">(</span><span class="op">!</span><span class="op">!</span><span class="va">column</span>, <span class="op">!</span><span class="op">!</span><span class="va">group</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
+<span>      <span class="fu">group_by</span><span class="op">(</span><span class="op">!</span><span class="op">!</span><span class="va">group</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
+<span>      <span class="fu">mutate</span><span class="op">(</span>prop <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/proportions.html" class="external-link">prop.table</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
+<span>      <span class="fu">mutate</span><span class="op">(</span>v1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">n</span>, <span class="st">' ('</span>, <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">prop</span><span class="op">*</span><span class="fl">100</span>, <span class="fl">2</span><span class="op">)</span>, <span class="st">')'</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
+<span>      <span class="fu">select</span><span class="op">(</span><span class="op">-</span><span class="va">n</span>, <span class="op">-</span><span class="va">prop</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
+<span>      <span class="fu">spread</span><span class="op">(</span><span class="op">!</span><span class="op">!</span><span class="va">group</span>, <span class="va">v1</span><span class="op">)</span></span>
+<span>  <span class="op">}</span></span>
+<span><span class="op">}</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="create-a-method-for-bds">Create a method for BDS<a class="anchor" aria-label="anchor" href="#create-a-method-for-bds"></a>
 </h3>
 <p>We don’t need a method for BDS because we currently only import PARAMCD blocks and since AVAL and CHG are numeric we can’t calculate frequency:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">app_freq.BDS</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">column</span>, <span class="va">week</span>, <span class="va">group</span> <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">data</span><span class="op">)</span> <span class="op">{</span>
-  <span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/abort.html" class="external-link">abort</a></span><span class="op">(</span><span class="fu">glue</span><span class="fu">::</span><span class="fu"><a href="https://glue.tidyverse.org/reference/glue.html" class="external-link">glue</a></span><span class="op">(</span>
-    <span class="st">"Can't calculate frequency for BDS - {column} is numeric"</span>
-  <span class="op">)</span><span class="op">)</span>
-<span class="op">}</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">app_freq.BDS</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">column</span>, <span class="va">week</span>, <span class="va">group</span> <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">data</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/abort.html" class="external-link">abort</a></span><span class="op">(</span><span class="fu">glue</span><span class="fu">::</span><span class="fu"><a href="https://glue.tidyverse.org/reference/glue.html" class="external-link">glue</a></span><span class="op">(</span></span>
+<span>    <span class="st">"Can't calculate frequency for BDS - {column} is numeric"</span></span>
+<span>  <span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">}</span></span></code></pre></div>
 <p>Feel free to explore the mean, ANOVA, and chg files for other statistical examples. For instance, blocks with BDS methods use the <code>week</code> argument which is supplied from the block’s dropdown.</p>
 </div>
 </div>
@@ -231,17 +231,17 @@
 </h2>
 <p>Once you have your statistical function, you need to add it to the <code>app_methods</code> function:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">app_methods</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">agg</span>, <span class="va">column</span>, <span class="va">week</span>, <span class="va">group</span>, <span class="va">data</span><span class="op">)</span> <span class="op">{</span>
-  <span class="kw">if</span> <span class="op">(</span><span class="va">agg</span> <span class="op">==</span> <span class="st">"MEAN"</span><span class="op">)</span> <span class="op">{</span>
-    <span class="fu"><a href="../reference/app_mean.html">app_mean</a></span><span class="op">(</span><span class="va">column</span>, <span class="va">week</span>, <span class="va">group</span>, <span class="va">data</span><span class="op">)</span>
-  <span class="op">}</span> <span class="kw">else</span> <span class="kw">if</span> <span class="op">(</span><span class="va">agg</span> <span class="op">==</span> <span class="st">"FREQ"</span><span class="op">)</span> <span class="op">{</span>
-    <span class="fu"><a href="../reference/app_freq.html">app_freq</a></span><span class="op">(</span><span class="va">column</span>, <span class="va">week</span>, <span class="va">group</span>, <span class="va">data</span><span class="op">)</span>
-  <span class="op">}</span> <span class="kw">else</span> <span class="kw">if</span> <span class="op">(</span><span class="va">agg</span> <span class="op">==</span> <span class="st">"ANOVA"</span><span class="op">)</span> <span class="op">{</span>
-    <span class="fu"><a href="../reference/app_anova.html">app_anova</a></span><span class="op">(</span><span class="va">column</span>, <span class="va">week</span>, <span class="va">group</span>, <span class="va">data</span><span class="op">)</span>
-  <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span>
-    <span class="fu"><a href="../reference/app_chg.html">app_chg</a></span><span class="op">(</span><span class="va">column</span>, <span class="va">week</span>, <span class="va">group</span>, <span class="va">data</span><span class="op">)</span>
-  <span class="op">}</span>
-<span class="op">}</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">app_methods</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">agg</span>, <span class="va">column</span>, <span class="va">week</span>, <span class="va">group</span>, <span class="va">data</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="kw">if</span> <span class="op">(</span><span class="va">agg</span> <span class="op">==</span> <span class="st">"MEAN"</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="fu">app_mean</span><span class="op">(</span><span class="va">column</span>, <span class="va">week</span>, <span class="va">group</span>, <span class="va">data</span><span class="op">)</span></span>
+<span>  <span class="op">}</span> <span class="kw">else</span> <span class="kw">if</span> <span class="op">(</span><span class="va">agg</span> <span class="op">==</span> <span class="st">"FREQ"</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="fu">app_freq</span><span class="op">(</span><span class="va">column</span>, <span class="va">week</span>, <span class="va">group</span>, <span class="va">data</span><span class="op">)</span></span>
+<span>  <span class="op">}</span> <span class="kw">else</span> <span class="kw">if</span> <span class="op">(</span><span class="va">agg</span> <span class="op">==</span> <span class="st">"ANOVA"</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="fu">app_anova</span><span class="op">(</span><span class="va">column</span>, <span class="va">week</span>, <span class="va">group</span>, <span class="va">data</span><span class="op">)</span></span>
+<span>  <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
+<span>    <span class="fu">app_chg</span><span class="op">(</span><span class="va">column</span>, <span class="va">week</span>, <span class="va">group</span>, <span class="va">data</span><span class="op">)</span></span>
+<span>  <span class="op">}</span></span>
+<span><span class="op">}</span></span></code></pre></div>
 <p>This function will look for the name of the dragged in statistical block and apply the correct statistical function based on the block’s name. Since the first argument of the function is the column to apply the statistical block on, it will look for the data file the column came from and choose the correct method.</p>
 <p>Finally this function is used within a <code>map</code> in <code>mod_tableGen</code> so each statistical block is applied to each column in the drop zone iteratively.</p>
 <p><br><br><br><br></p>
@@ -260,7 +260,7 @@
 
       <footer><div class="copyright">
   <p></p>
-<p>Developed by Aaron Clark, Maya Gans, Robert Krajcik, Marly Gotti.</p>
+<p>Developed by Aaron Clark, Maya Gans.</p>
 </div>
 
 <div class="pkgdown">
