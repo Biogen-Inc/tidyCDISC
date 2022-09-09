@@ -830,20 +830,9 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       # Calculate totals for population set
       {total_for_code()}
       
+      tg_datalist <- list(ADAE = ae_data, ADSL = bds_data, POPDAT = {Rscript_use_preferred_pop_data()})
       
-      tg_table <- purrr::pmap(list(
-                  blockData$agg,
-                  blockData$S3,
-                  blockData$dropdown,
-                  blockData$dataset), 
-          function(x,y,z,d) tidyCDISC::app_methods(x,y,z,
-                       group = {column() %quote% 'NULL'}, 
-                       data = tidyCDISC::data_to_use_str(d, ae_data, bds_data),
-                       totals = total_df)) %>%
-      map(setNames, tidyCDISC::common_rownames({Rscript_use_preferred_pop_data()}, {column() %quote% 'NULL'})) %>%
-      setNames(paste(blockData$gt_group)) %>%
-      bind_rows(.id = 'ID') %>%
-      mutate(ID = tidyCDISC::pretty_IDs(ID))
+      tg_table <- tidyCDISC::tg_gt(tg_datalist, blockData, total_df, {column() %quote% 'NULL'})
       
       # get the column names for the table
       col_names <- names(tg_table)[-c(1:2)]

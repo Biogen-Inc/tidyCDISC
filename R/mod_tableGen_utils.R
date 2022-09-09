@@ -461,6 +461,22 @@ std_footnote <- function(data, source) {
                             style="text-align:left"))
 }
 
+tg_gt <- function(tg_datalist, blockData, total_df, group) {
+  purrr::pmap(list(
+    blockData$agg,
+    blockData$S3,
+    blockData$dropdown,
+    blockData$dataset), 
+    function(x,y,z,d) tidyCDISC::app_methods(x,y,z,
+                                             group = group, 
+                                             data = tidyCDISC::data_to_use_str(d, tg_datalist$ADAE, tg_datalist$ADSL),
+                                             totals = total_df)) %>%
+    purrr::map(setNames, tidyCDISC::common_rownames(tg_datalist$POPDAT, group)) %>%
+    setNames(paste(blockData$gt_group)) %>%
+    dplyr::bind_rows(.id = 'ID') %>%
+    dplyr::mutate(ID = tidyCDISC::pretty_IDs(ID))
+}
+
 #' Table Generator Cicerone R6 Object 
 #' 
 #' This object is used within the table generator module
