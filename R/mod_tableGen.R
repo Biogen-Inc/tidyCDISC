@@ -537,7 +537,8 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
         locations = gt::cells_stub(rows = TRUE)
       )%>%
       gt::cols_label(Variable = "") %>%
-      std_footnote("tidyCDISC app")
+      std_footnote("tidyCDISC app") %>%
+      gt::tab_footnote(input$table_footnote)
   })
   
   output$all <- gt::render_gt({  gt_table() })
@@ -866,7 +867,8 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
           locations = cells_row_groups()
           ) %>%
           cols_label(Variable = '') %>%
-          tidyCDISC::std_footnote({footnote_src()})
+          tidyCDISC::std_footnote({footnote_src()}) %>%
+          tab_footnote('{input$table_footnote}')
       "
     )
   })
