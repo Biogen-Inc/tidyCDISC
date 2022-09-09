@@ -453,6 +453,14 @@ prep_blocks <- function(blockData) {
     str_replace_all("(\\),)", "\\1\n")
 }
 
+std_footnote <- function(data, source) {
+  gt::tab_footnote(data, 
+                   tags$div(HTML("<b>Source:</b>", source), 
+                            shiny::tags$span(shiny::HTML("<b> Run Date:</b>", toupper(format(Sys.Date(), "%d%b%Y"))),
+                                             style="float:right"),
+                            style="text-align:left"))
+}
+
 #' Table Generator Cicerone R6 Object 
 #' 
 #' This object is used within the table generator module

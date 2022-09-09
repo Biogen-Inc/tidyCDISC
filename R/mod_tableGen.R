@@ -537,12 +537,8 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
         locations = gt::cells_stub(rows = TRUE)
       )%>%
       gt::cols_label(Variable = "") %>%
-      gt::tab_footnote(HTML("<b>Run Date:</b>", toupper(format(Sys.Date(), "%d%b%Y")))) %>%
-      gt::tab_style(
-        style = gt::cell_text(align = "right"),
-        locations = gt::cells_footnotes()
-      )
-  }) 
+      std_footnote("tidyCDISC app")
+  })
   
   output$all <- gt::render_gt({  gt_table() })
   
@@ -649,6 +645,14 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
             setNames(toupper(stringr::str_remove(file_names, '.sas7bdat')))
       ")}
   })
+  
+  footnote_src <- reactive({
+    if(any("CDISCPILOT01" %in% ADSL()$STUDYID)){
+      "'tidyCDISC app'"
+    } else {
+      "study_dir"
+    }
+    })
   
   # If ADAE exists, then prep that data too
   adae_expr <- reactive({
@@ -862,11 +866,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
           locations = cells_row_groups()
           ) %>%
           cols_label(Variable = '') %>%
-          gt::tab_footnote(HTML('<b>Run Date:</b>', toupper(format(Sys.Date(), '%d%b%Y')))) %>%
-          gt::tab_style(
-            style = gt::cell_text(align = 'right'),
-            locations = gt::cells_footnotes()
-          )
+          tidyCDISC::std_footnote({footnote_src()})
       "
     )
   })
