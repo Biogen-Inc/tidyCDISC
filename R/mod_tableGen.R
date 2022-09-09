@@ -765,7 +765,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
         
     # get drop zone area from tidyCDISC
     # and create table using data
-    blockData <- {paste0(capture.output(dput(blocks_and_functions())), collapse = '\n')}
+    blockData <- {prep_blocks(blocks_and_functions())}
     
     {df_empty_expr()}
     "
