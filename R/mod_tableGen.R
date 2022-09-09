@@ -536,7 +536,12 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
         ),
         locations = gt::cells_stub(rows = TRUE)
       )%>%
-      gt::cols_label(Variable = "")
+      gt::cols_label(Variable = "") %>%
+      gt::tab_footnote(HTML("<b>Run Date:</b>", toupper(format(Sys.Date(), "%d%b%Y")))) %>%
+      gt::tab_style(
+        style = gt::cell_text(align = "right"),
+        locations = gt::cells_footnotes()
+      )
   }) 
   
   output$all <- gt::render_gt({  gt_table() })
@@ -856,7 +861,12 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
           style = cell_text(weight = 'bold'),
           locations = cells_row_groups()
           ) %>%
-          cols_label(Variable = '')
+          cols_label(Variable = '') %>%
+          gt::tab_footnote(HTML('<b>Run Date:</b>', toupper(format(Sys.Date(), '%d%b%Y')))) %>%
+          gt::tab_style(
+            style = gt::cell_text(align = 'right'),
+            locations = gt::cells_footnotes()
+          )
       "
     )
   })
