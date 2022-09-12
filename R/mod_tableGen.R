@@ -262,7 +262,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # Send any and all AVISITs that exist to javascript side (script.js)
   observe({
     req(AVISIT())
-    session$sendCustomMessage("my_weeks", AVISIT())
+    session$sendCustomMessage("my_weeks", c("ALL", as.vector(AVISIT())))
   })
   
   
