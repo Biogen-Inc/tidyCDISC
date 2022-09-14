@@ -445,6 +445,61 @@ pretty_IDs <- function(ID) {
   )
 }
 
+#' Prep Block Data for TG Tables
+#' 
+#' @param blockData The `blockData` object from the application
+#' 
+#' @noRd
+prep_blocks <- function(blockData) {
+  dput(blockData) %>%
+    capture.output() %>%
+    paste0(collapse = "") %>%
+    str_replace_all("\\s{2,}", " ") %>%
+    str_replace_all("(\\),)", "\\1\n")
+}
+
+#' Create Standard Footnotes for TG Table
+#' 
+#' Creates a footnote with a source on the left and date run on the right.
+#' 
+#' @param data The `gt` table object to append the footnote
+#' @param source The source of the data in the table
+#' 
+#' @export
+std_footnote <- function(data, source) {
+  gt::tab_footnote(data, 
+                   tags$div(HTML("<b>Source:</b>", source), 
+                            shiny::tags$span(shiny::HTML("<b> Run Date:</b>", toupper(format(Sys.Date(), "%d%b%Y"))),
+                                             style="float:right"),
+                            style="text-align:left"))
+}
+
+#' Create the gt table object for TG
+#' 
+#' A wrapper for other functions to create the `gt` object from the data
+#' 
+#' @param tg_datalist A list containing the data frames used to create the table
+#' @param blockData The data for the construction of the blocks in the table
+#' @param total_df A data frame containing the totals by grouping variable
+#' @param group A character denoting the grouping variable
+#' 
+#' @export
+tg_gt <- function(tg_datalist, blockData, total_df, group) {
+  purrr::pmap(list(
+    blockData$agg,
+    blockData$S3,
+    blockData$dropdown,
+    blockData$dataset), 
+    function(x,y,z,d) tidyCDISC::app_methods(x,y,z,
+                                             group = group, 
+                                             data = tidyCDISC::data_to_use_str(d, tg_datalist$ADAE, tg_datalist$ADSL),
+                                             totals = total_df)) %>%
+    purrr::map(setNames, tidyCDISC::common_rownames(tg_datalist$POPDAT, group)) %>%
+    setNames(paste(blockData$gt_group)) %>%
+    dplyr::bind_rows(.id = 'ID') %>%
+    dplyr::mutate(ID = tidyCDISC::pretty_IDs(ID))
+}
+
 #' Table Generator Cicerone R6 Object 
 #' 
 #' This object is used within the table generator module
