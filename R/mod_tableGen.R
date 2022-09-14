@@ -660,13 +660,12 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     if("ADAE" %in% names(datafile())){
       glue::glue("
         # Create AE data set
-            pre_adae <- datalist %>%
-                tidyCDISC::prep_adae(pre_adsl$data, '{RECIPE()}')
-            ae_data <- pre_adae$data
+        pre_adae <- datalist %>%
+          tidyCDISC::prep_adae(pre_adsl$data, '{RECIPE()}')
+        ae_data <- pre_adae$data
         "
       )
-    } else {"
-      "}
+    } else {""}
   })
   # capture output of filtering expression
   # input_filter_df <- c("one","mild","Moderate")
@@ -830,7 +829,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       # Calculate totals for population set
       {total_for_code()}
       
-      tg_datalist <- list(ADAE = ae_data, ADSL = bds_data, POPDAT = {Rscript_use_preferred_pop_data()})
+      tg_datalist <- list({ifelse(adae_expr() == '', '', 'ADAE = ae_data, ')}ADSL = bds_data, POPDAT = {Rscript_use_preferred_pop_data()})
       
       tg_table <- tidyCDISC::tg_gt(tg_datalist, blockData, total_df, {column() %quote% 'NULL'})
       
