@@ -243,6 +243,7 @@ Shiny.addCustomMessageHandler('my_weeks', function(df) {
     return type + (newId + 1);
   }
 
+/*
 // on block dropdown create simple blocks 
 // with the block names from the droppable area
 // and delete buttons
@@ -260,8 +261,36 @@ $(function() {
     revert: false
   })
 })
+*/
 
 
+/**
+ * Function that bring in vectors from shiny and uses 
+ * them to create the appropriate style block for the block chosen
+*/
+Shiny.addCustomMessageHandler('avals_visit', function(avals) {
+  aval_array = Object.values(avals)
+  aval_opts = `${aval_array.map(createOption).join("")}`
+  
+  $(function() {
+    $(".blocks").draggable();
+    $("#droppable_blocks").droppable({
+      accept: ".block",
+      drop: function(event ,ui) {
+          var draggableId = ui.draggable.attr("id");
+      var df = ui.draggable.closest('ul')[0].classList[1];
+          var newid = getNewId(draggableId);
+          if (draggableId.includes("DIABP")) {
+            $(this).append(selectBlock(newid, "DIABP", aval_opts, df));
+          } else {
+            $(this).append(simpleBlock(newid, df));
+      }
+      }
+    }).sortable({
+    revert: false
+  })
+  })
+})
 
 
 
