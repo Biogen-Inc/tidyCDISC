@@ -8,3 +8,5 @@ docs/
 revdep/
 /doc/
 /Meta/
+vignettes/
+.github/
