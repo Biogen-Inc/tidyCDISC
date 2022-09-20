@@ -10,7 +10,6 @@
 #' @param id Internal parameters for {shiny}.
 #'
 #' @import shiny
-#' @importFrom shinyWidgets dropdownButton tooltipOptions checkboxGroupButtons
 #' @noRd
 #' 
 mod_dataUpload_ui <- function(id){
@@ -18,21 +17,7 @@ mod_dataUpload_ui <- function(id){
   tagList(
     h1("Data Upload/Preview", align = "center"),
     br(), br(), br(),
-    div(
-      div(style="display: inline-block; ", actionButton(ns("pilot"), "Use CDISC Pilot Data")),
-      div(style="display: inline-block; ", shinyWidgets::dropdownButton(inputId = ns("ddown"),
-        tags$h4("Choose Pilot Data Sources"),
-        shinyWidgets::checkboxGroupButtons(ns("pilot_selections"), NULL, #inline = TRUE, 
-           choices = c("ADSL" = "adsl", "ADVS" = "advs", "ADAE" = "adae",
-            "ADLBC" = "adlbc", "ADTTE" = "adtte"), #direction = "vertical",
-           status = "info", checkIcon = list(
-             yes = icon("ok", lib = "glyphicon"),
-             no = icon("remove", lib = "glyphicon")),
-           selected = c("adsl", "advs", "adae", "adlbc")),
-        circle = FALSE, status = "primary", icon = icon("cog"), width = "300px",
-        tooltip = shinyWidgets::tooltipOptions(title = "Click to change pilot data selections!")
-      ))
-    ),
+    # actionButton(ns("pilot"), "Use CDISC Pilot Data"),
     fluidRow(
       style = "padding: 20px",
       column(3,
@@ -41,6 +26,7 @@ mod_dataUpload_ui <- function(id){
                div(style="display: inline-block; float:right;",mod_dataComplyRules_ui("dataComplyRules_ui_1")),
                HTML("<br>ADSL file is mandatory & BDS/ OCCDS files are optional"),
                fileInput(ns("file"), "Upload sas7bdat files",accept = c(".sas7bdat"), multiple = TRUE),
+               h5("CDISC Pilot Data has been pre-loaded for Demo", style="color: #2573BA; font-weight: bold;"),
                uiOutput(ns("radio_test"))
              )
       ),
@@ -70,9 +56,9 @@ mod_dataUpload_ui <- function(id){
 #' to be used in other modules
 #' 
 #' @import shiny
-#' @importFrom haven zap_formats 
-#' @importFrom haven read_sas
+#' @importFrom haven zap_formats read_sas
 #' @importFrom stringr str_remove
+#' @importFrom shinyjs runjs enable disable
 #' 
 #' @noRd
 #' 
@@ -83,7 +69,6 @@ mod_dataUpload_server <- function(input, output, session){
   # standard to imitate output of detectStandard.R
   dd <- reactiveValues()
   
-
   # modify reactive values when data is uploaded
   observeEvent(input$file, {
     
@@ -181,21 +166,18 @@ mod_dataUpload_server <- function(input, output, session){
                   extensions = "Scroller", options = list(scrollY=400, scrollX=TRUE))
   })
   
-  observeEvent( input$pilot, {
-    
-    validate(need(all(input$pilot_selections %in% c("adae", "adlbc", "adsl", "adtte", "advs")), 
-                  "Something went wrong with pilot data selections"))
-    
+  # observeEvent( input$pilot, {
+    shinyjs::runjs(paste0('$("#',ns("file"),'").parents("span").addClass("disabled")'))
     shinyjs::disable(id = "file")
-    
-    # load specific pilot data
-    pilot_dat_ls <- purrr::map(input$pilot_selections, ~ switch(.x, adae = tidyCDISC::adae, adlbc = tidyCDISC::adlbc, adsl = tidyCDISC::adsl, adtte = tidyCDISC::adtte, advs = tidyCDISC::advs))
-    names(pilot_dat_ls) <- toupper(input$pilot_selections)
-    dd$data <- pilot_dat_ls
-      
-    shinyjs::hide(id = "pilot")
-    shinyjs::hide(id = "ddown")
-  })
+    dd$data <- list(
+      ADSL = tidyCDISC::adsl,
+      ADVS = tidyCDISC::advs,
+      ADAE = tidyCDISC::adae,
+      ADLBC = tidyCDISC::adlbc,
+      ADTTE = tidyCDISC::adtte
+    )
+    # shinyjs::hide(id = "pilot")
+  # })
   
   ### return all data
   return(reactive(dd$data))
