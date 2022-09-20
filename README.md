@@ -8,6 +8,7 @@
 [![R-CMD-check](https://github.com/Biogen-Inc/tidyCDISC/workflows/R-CMD-check/badge.svg)](https://github.com/Biogen-Inc/tidyCDISC/actions)
 [![OS
 Health](https://img.shields.io/badge/OS%20Health-86-green)](https://openpharma.github.io/GithubMetrics/)
+[![riskmetric](https://img.shields.io/badge/riskmetric-1-brightgreen)](https://pharmar.github.io/riskmetric/)
 <!-- badges: end -->
 
 `tidyCDISC` is a shiny app to easily create custom tables and figures
