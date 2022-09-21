@@ -69,9 +69,13 @@ golem_add_external_resources <- function(){
       path = app_sys('app/www'),
       app_title = 'tidyCDISC'
     ),
-    
     tags$script(HTML(htmljs)),
     tags$script(src = "https://code.jquery.com/ui/1.12.1/jquery-ui.js"),
+    shiny::tags$script(
+      src = "https://www.googletagmanager.com/gtag/js?id=G-LQS0T920YF",
+      async = ""
+    ),
+    shiny::tags$script(src = "gtag.js"),
     shinyjs::useShinyjs(),
     # waiter::use_waiter(),
     shinyjs::inlineCSS(css),
