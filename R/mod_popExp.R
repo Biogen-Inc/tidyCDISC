@@ -155,12 +155,8 @@ mod_popExp_server <- function(input, output, session, datafile) {
   
   # Data to provide IDEAFilter
   feed_filter <- reactive({
-    if(input$apply_filters == TRUE){
-      req(input$filter_df)
-      all_data() %>% subset(data_from %in% input$filter_df)
-    } else {
-      all_data()
-    }
+    req(input$filter_df)
+    all_data() %>% subset(data_from %in% input$filter_df)
   })
   
   # Data NOT provided to IDEAFilter... will need to subset later
