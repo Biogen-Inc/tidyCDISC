@@ -2,43 +2,42 @@ library(glue)
 library(dplyr)
 library(riskmetric)
 
-riskmetric_score <- "tidyCDiSC" %>%
+riskmetric_score <- "tidyCDISC" %>%
   pkg_ref() %>%
   as_tibble() %>%
   pkg_assess() %>%
   pkg_score() %>%
-  pull("pkg_score")
+  pull("pkg_score") %>%
+  round(2)
 
-riskmetric_score_quintile <- ntile(riskmetric_score, 5)
-
-template <- "https://img.shields.io/badge/{label}-{value}-{colour}"
+template <- "https://img.shields.io/badge/{label}-{sprintf('%.2f', value)}-{colour}"
 
 badge_riskmetric = case_when(
-  riskmetric_score_quintile == 1 ~ as.character(glue(
+  riskmetric_score >= .9 ~ as.character(glue(
     template, 
     label = "riskmetric",
     colour = "brightgreen",
     value = riskmetric_score
   )),
-  riskmetric_score_quintile == 2 ~ as.character(glue(
+  riskmetric_score >= .8 ~ as.character(glue(
     template, 
     label = "riskmetric",
     colour = "green",
     value = riskmetric_score
   )),
-  riskmetric_score_quintile == 3 ~ as.character(glue(
+  riskmetric_score >= .6 ~ as.character(glue(
     template, 
     label = "riskmetric",
     colour = "yellowgreen",
     value = riskmetric_score
   )),
-  riskmetric_score_quintile == 4 ~ as.character(glue(
+  riskmetric_score  >= .4 ~ as.character(glue(
     template, 
     label = "riskmetric",
     colour = "orange",
     value = riskmetric_score
   )),
-  riskmetric_score_quintile == 5 ~ as.character(glue(
+  TRUE ~ as.character(glue(
     template, 
     label = "riskmetric",
     colour = "red",
