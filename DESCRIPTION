@@ -67,7 +67,9 @@ Suggests:
     knitr,
     pkgdown,
     spelling,
-    testthat
+    testthat,
+    GithubMetrics,
+    riskmetric
 Encoding: UTF-8
 Language: en-US
 LazyData: true
