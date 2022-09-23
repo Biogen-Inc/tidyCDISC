@@ -68,8 +68,9 @@ Suggests:
     pkgdown,
     spelling,
     testthat,
-    GithubMetrics,
     riskmetric
+Remotes:
+    openpharma/GithubMetrics
 Encoding: UTF-8
 Language: en-US
 LazyData: true
