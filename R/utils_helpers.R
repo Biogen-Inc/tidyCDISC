@@ -182,7 +182,7 @@ common_rownames <- function(data, group) {
 #' @import dplyr
 #' @importFrom dplyr %>%
 #' @importFrom purrr map2
-#' @importFrom stringr str_locate_all
+#' @importFrom stringr str_locate_all str_remove str_replace_all
 #' @importFrom utils capture.output
 #' @importFrom tidyr as_tibble
 #' @importFrom shiny HTML
@@ -198,7 +198,7 @@ filters_in_english <- function(filtered_data, filter_header = "Filters Applied:"
   # convert double quotes to single quotes
   code_text <- orig_code %>%
     stringr::str_remove("^.*?\\%>\\%") %>%
-    str_replace_all('\"', "\'")
+    stringr::str_replace_all('\"', "\'")
   
   # find the character position for the end of the string
   len <- nchar(code_text)
