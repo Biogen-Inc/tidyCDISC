@@ -1,13 +1,14 @@
 # tidyCDISC 0.1.1
 
-* automate a footnote with **Source** and **Run Date** in table generation
-* allow custom user provided footnotes
+* automated a footnote with **Source** and **Run Date** in table generation
 
-* allow the selection of All when a time grouped statistic is chosen in the table generator
+* allowed custom user-defined footnotes
 
-* cleaned up downloadable R Script to replicate table generation output
+* allowed the selection of 'All' when a time/visit-based statistic is chosen in the table generator
 
-* fixed bug where `data_from` was listed as a grouping option in the population explorer
+* cleaned up downloadable R Script to replicate table generator output
+
+* fixed bug where `data_from` was erroneously listed as a grouping option in the population explorer
 
 
 # tidyCDISC 0.1.0 (CRAN Release)
