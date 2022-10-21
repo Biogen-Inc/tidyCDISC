@@ -111,7 +111,7 @@ custom_class <- function(x, df) {
 #' @importFrom purrr map_chr
 #' @importFrom stringr str_trim
 #' 
-#' @param agg the aggregate statistic block 
+#' @param aggs the aggregate statistic block 
 #' to apply to the column
 #' @param blocks the block corresponding 
 #' to the column name to apply statistic on
@@ -119,39 +119,54 @@ custom_class <- function(x, df) {
 #' @family tableGen Functions
 #' @noRd
 #' 
-convertTGOutput <- function(agg, blocks) {
+convertTGOutput <- function(aggs, blocks) {
   
-  agg <- unlist(agg, recursive = FALSE)
+  aggs <- unlist(aggs, recursive = FALSE)
   blocks <- unlist(blocks, recursive = FALSE)
-  
-  # why does it work if I assign it outside the tibble???
-  test <- purrr::map_chr(agg, "val", .default = NA_character_) %>% unname()
-  
-  if (length(agg) > length(blocks)) {
+
+  if (length(aggs) > length(blocks)) {
     stop("Need addional variable block")
-  } else if (length(agg) < length(blocks)) {
+  } else if (length(aggs) < length(blocks)) {
     stop("Need additional statistics block")
   } else {
     
-    tidyr::tibble(
-      agg = purrr::map_chr(agg, "txt") %>% unname() %>% str_trim(),
-      block = purrr::map_chr(blocks, "txt") %>% unname() %>% str_trim(),
-      dataset = purrr::map_chr(blocks, "df") %>% unname() %>% str_trim(),
-      # why is this NA in the tibble, but not NA pri
-      # dropdown = map_chr(agg, "val", .default = NA_character_) %>% unname()
-      dropdown = test,
-      S3 = map2(block, dataset, ~ custom_class(.x, .y)),
-      gt_group =
-        case_when(
-          dropdown == "NONE" ~ glue("{agg} of {block}"),
-          is.na(dropdown) ~ glue("{agg} of {block}"),
-          tolower(substr(dropdown, 1, 4)) %in% c("week","base","scree","end ") ~ glue("{agg} of {block} at {dropdown}"),
-          TRUE ~ glue("{agg} of {block} and {dropdown}") # "and" instead of "at"
-        )#, # will need to feed these datasets through to this function? Or create a new funct?
-            # that get's called "blocks_and_functions" that adds the labels?
-      # label = purrr::map(blockData$block, function(x) attr(data_to_use(dataset)[[x]], 'label')) %>% 
-      #   unname() %>% str_trim()
-    )
+    purrr::map2_df(aggs, blocks, function(aggs, blocks) {
+      if (!is.null(aggs$val) && aggs$val == "ALL") {
+        purrr::map_df(aggs$lst, function(dropdown) {
+          tidyr::tibble(
+            agg = aggs$txt %>% unname() %>% str_trim(),
+            block = blocks$txt %>% unname() %>% str_trim(),
+            dataset = blocks$df %>% unname() %>% str_trim(),
+            dropdown = dropdown %>% unname() %>% str_trim(),
+            S3 = map2(block, dataset, ~ custom_class(.x, .y)),
+            gt_group =
+              case_when(
+                dropdown == "NONE" ~ glue("{agg} of {block}"),
+                is.na(dropdown) ~ glue("{agg} of {block}"),
+                tolower(substr(dropdown, 1, 4)) %in% c("week","base","scree","end ") ~ glue("{agg} of {block} at {dropdown}"),
+                TRUE ~ glue("{agg} of {block} and {dropdown}") # "and" instead of "at"
+              )
+          )
+        })
+      } else {
+        tidyr::tibble(
+          agg = aggs$txt %>% unname() %>% str_trim(),
+          block = blocks$txt %>% unname() %>% str_trim(),
+          dataset = blocks$df %>% unname() %>% str_trim(),
+          dropdown = ifelse(is.null(aggs$val), NA_character_, aggs$val %>% unname() %>% str_trim()),
+          S3 = map2(block, dataset, ~ custom_class(.x, .y)),
+          gt_group =
+            case_when(
+              dropdown == "NONE" ~ glue("{agg} of {block}"),
+              is.na(dropdown) ~ glue("{agg} of {block}"),
+              tolower(substr(dropdown, 1, 4)) %in% c("week","base","scree","end ") ~ glue("{agg} of {block} at {dropdown}"),
+              TRUE ~ glue("{agg} of {block} and {dropdown}") # "and" instead of "at"
+            )
+        )
+      }
+
+
+    })
     
   }
 }

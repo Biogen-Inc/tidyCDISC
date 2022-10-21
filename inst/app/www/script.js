@@ -35,8 +35,14 @@ $( document ).ready(function() {
       txt = $(this).text()
       df = $(this).attr("class").split(" ")[1]  
       val = $(this).parent().find("select").children("option:selected").val()
+      lst = [];
+      if (val === "ALL") {
+      for (let i = 2; i < $(this).parent().find("select").children().length; i++) {
+        lst.push($(this).parent().find("select").children()[i].text);
+      }
+      }
       str += `${df}*${txt.replace(" ", "")}*${val} + `.replace(/\r?\n|\r/g, "")
-      obj.numbers.push({txt,df,val})
+      obj.numbers.push({txt,df,val,lst})
     })
   // currently return a string seperated by +
     // and blocks must be one word - this is very fragile!

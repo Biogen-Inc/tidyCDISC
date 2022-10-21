@@ -262,7 +262,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # Send any and all AVISITs that exist to javascript side (script.js)
   observe({
     req(AVISIT())
-    session$sendCustomMessage("my_weeks", AVISIT())
+    session$sendCustomMessage("my_weeks", c("ALL", as.vector(AVISIT())))
   })
   
   
@@ -536,8 +536,10 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
         ),
         locations = gt::cells_stub(rows = TRUE)
       )%>%
-      gt::cols_label(Variable = "")
-  }) 
+      gt::cols_label(Variable = "") %>%
+      std_footnote("tidyCDISC app") %>%
+      gt::tab_footnote(input$table_footnote)
+  })
   
   output$all <- gt::render_gt({  gt_table() })
   
@@ -645,18 +647,25 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       ")}
   })
   
+  footnote_src <- reactive({
+    if(any("CDISCPILOT01" %in% ADSL()$STUDYID)){
+      "'tidyCDISC app'"
+    } else {
+      "study_dir"
+    }
+    })
+  
   # If ADAE exists, then prep that data too
   adae_expr <- reactive({
     if("ADAE" %in% names(datafile())){
       glue::glue("
         # Create AE data set
-            pre_adae <- datalist %>%
-                tidyCDISC::prep_adae(pre_adsl$data, '{RECIPE()}')
-            ae_data <- pre_adae$data
+        pre_adae <- datalist %>%
+          tidyCDISC::prep_adae(pre_adsl$data, '{RECIPE()}')
+        ae_data <- pre_adae$data
         "
       )
-    } else {"
-      "}
+    } else {""}
   })
   # capture output of filtering expression
   # input_filter_df <- c("one","mild","Moderate")
@@ -748,6 +757,11 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     pkgs_req <- c('tidyCDISC', 'purrr', 'haven', 'dplyr', 'stringr', 'tidyr', 'gt')
     {install_text}
     
+    if (utils::compareVersion(as.character(utils::packageVersion('tidyCDISC')), '{packageVersion('tidyCDISC')}') < 0) {{
+      install.packages('remotes')
+      remotes::install_github('Biogen-Inc/tidyCDISC')
+    }}
+    
     library(tidyCDISC)
     library(purrr)
     library(haven)
@@ -765,7 +779,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
         
     # get drop zone area from tidyCDISC
     # and create table using data
-    blockData <- {paste0(capture.output(dput(blocks_and_functions())), collapse = '\n')}
+    blockData <- {prep_blocks(blocks_and_functions())}
     
     {df_empty_expr()}
     "
@@ -820,20 +834,9 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       # Calculate totals for population set
       {total_for_code()}
       
+      tg_datalist <- list({ifelse(adae_expr() == '', '', 'ADAE = ae_data, ')}ADSL = bds_data, POPDAT = {Rscript_use_preferred_pop_data()})
       
-      tg_table <- purrr::pmap(list(
-                  blockData$agg,
-                  blockData$S3,
-                  blockData$dropdown,
-                  blockData$dataset), 
-          function(x,y,z,d) tidyCDISC::app_methods(x,y,z,
-                       group = {column() %quote% 'NULL'}, 
-                       data = tidyCDISC::data_to_use_str(d, ae_data, bds_data),
-                       totals = total_df)) %>%
-      map(setNames, tidyCDISC::common_rownames({Rscript_use_preferred_pop_data()}, {column() %quote% 'NULL'})) %>%
-      setNames(paste(blockData$gt_group)) %>%
-      bind_rows(.id = 'ID') %>%
-      mutate(ID = tidyCDISC::pretty_IDs(ID))
+      tg_table <- tidyCDISC::tg_gt(tg_datalist, blockData, total_df, {column() %quote% 'NULL'})
       
       # get the column names for the table
       col_names <- names(tg_table)[-c(1:2)]
@@ -856,7 +859,9 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
           style = cell_text(weight = 'bold'),
           locations = cells_row_groups()
           ) %>%
-          cols_label(Variable = '')
+          cols_label(Variable = '') %>%
+          tidyCDISC::std_footnote({footnote_src()}) %>%
+          tab_footnote('{input$table_footnote}')
       "
     )
   })
