@@ -18,3 +18,4 @@ tg_gt(tg_datalist, blockData, total_df, group)
 \description{
 A wrapper for other functions to create the `gt` object from the data
 }
+\keyword{tabGen_repro}
