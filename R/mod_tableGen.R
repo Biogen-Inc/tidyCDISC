@@ -757,6 +757,11 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     pkgs_req <- c('tidyCDISC', 'purrr', 'haven', 'dplyr', 'stringr', 'tidyr', 'gt')
     {install_text}
     
+    if (utils::compareVersion(as.character(utils::packageVersion('tidyCDISC')), '{packageVersion('tidyCDISC')}') < 0) {{
+      install.packages('remotes')
+      remotes::install_github('Biogen-Inc/tidyCDISC')
+    }}
+    
     library(tidyCDISC)
     library(purrr)
     library(haven)
