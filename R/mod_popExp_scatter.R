@@ -114,6 +114,8 @@ scatterPlot_srv <- function(input, output, session, data, run) {
       group_dat <- x_cols %>% full_join(y_cols)
     }
     
+    group_dat <- select(group_dat, -data_from)
+    
     # character and factor columns for coloring or separating
     char_col <- subset_colclasses(group_dat, is.character)
     fac_col <- subset_colclasses(group_dat, is.factor)

@@ -314,9 +314,11 @@ linePlot_srv <- function(input, output, session, data, run) {
     if(!(input$yvar %in% colnames(data())) ){ # yvar paramcd #& input$xvar %in% colnames(data())
       group_dat <- data() %>% 
         dplyr::filter(PARAMCD == input$yvar) %>% 
-        select_if(~!all(is.na(.))) # remove NA cols
+        select_if(~!all(is.na(.))) %>% # remove NA cols
+        select(-data_from)
     } else {
-      group_dat <- data()
+      group_dat <- data() %>%
+        select(-data_from)
     } 
     
     # character and factor columns for coloring or separating
