@@ -1,25 +1,23 @@
-#' Function to read the SAS list of user supplied data frames
+#' Combine BDS Data Frames
 #' 
-#' @param datalist list of CDISC dataframes 
+#' @description A function to combine all BDS data frames into one large data set.
 #' 
-#' @export
-#' @keywords tabGen_repro
-#' 
-readData <- function(study_directory, file_names) {
-  purrr::map(file_names, ~haven::read_sas(file.path(study_directory,.x))) %>%
-    setNames(toupper(stringr::str_remove(file_names, ".sas7bdat")))
-}
-
-
-#' Function to bind data rows from the list of user supplied data frames
-#' 
-#' @param datafile list of ADaM-ish dataframes 
-#' @param ADSL A dataframe which contains the ADSL data
+#' @param datafile list of ADaM-ish data frames 
+#' @param ADSL A data frame which contains the ADSL data
 #' 
 #' @export
 #' @keywords tabGen_repro
 #' 
-combineBDS <- function(datafile, ADSL) {
+#' @return A data frame containing the BDS data bound by rows.
+#' 
+#' @examples 
+#' datalist <- list(ADSL = tidyCDISC::adsl, ADVS = tidyCDISC::advs, 
+#'                  ADAE = tidyCDISC::adae, ADLBC = tidyCDISC::adlbc)
+#'                  
+#' pre_adsl <- prep_adsl(datalist$ADSL, input_recipe = 'NONE')
+#' 
+#' prep_bds(datalist, ADSL = pre_adsl$data)
+prep_bds <- function(datafile, ADSL) {
   init <- sapply(datafile, function(x) "PARAMCD" %in% colnames(x) & !("CNSR" %in% colnames(x)))
   BDS <- datafile[init[substr(names(init),1,4) != "ADTT"]] # remove TTE class df's because `AVISIT` col doesn't exist in that class of df
   
@@ -59,12 +57,24 @@ numeric_stan_table <- function(input_recipe){
 
 #' Function to pre-filter the ADSL depending on the stan table selected
 #' 
-#' @param data an ADSL
+#' @param ADSL an ADSL data.frame
 #' @param input_recipe The shiny input that keeps track of the recipe selected
+#' 
+#' @return A `list` containing a `data.frame` object and character vector specifying the pre-filter applied.
 #' 
 #' @export
 #' @keywords tabGen_repro
 #' 
+#' @examples 
+#' data(adsl, package = "tidyCDISC")
+#' 
+#' # Process ADSL data for STAN table
+#' 
+#' prep_adsl(adsl, input_recipe = 'Table 3: Accounting of Subjects')
+#' 
+#' # Return ADSL data if no STAN table selected
+#' 
+#' prep_adsl(adsl, input_recipe = "NONE")
 prep_adsl <- function(ADSL, input_recipe) { #, stan_table_num
   stan_table_num <- numeric_stan_table(input_recipe)
   dat <- ADSL
@@ -100,13 +110,17 @@ prep_adsl <- function(ADSL, input_recipe) { #, stan_table_num
 
 #' Function to clean and combine ADAE dataset with ADSL
 #' 
-#' @param datafile list of ADaM-ish dataframes 
-#' @param ADSL A dataframe which contains the ADSL data
+#' @param datafile list of ADaM-ish data frames 
+#' @param ADSL A data frame which contains the ADSL data
 #' 
-#' @export
+#' @noRd
 #' @keywords tabGen_repro
 #' 
-cleanADAE <- function(datafile, ADSL) {
+#' @return A cleaned ADAE data frame
+#' 
+#' @details Finds the columns in the ADAE data frame, if it exists, in common with ADSL (besides USUBJID) and removes them from the ADAE so that the ADSL columns are used instead, then joins on USUBJID and re-orders the column names to match ADAE.
+#' 
+clean_ADAE <- function(datafile, ADSL) {
   if("ADAE" %in% names(datafile)){
     # find columns the ADAE & ADSL have in common (besides Usubjid), remove
     # them from the ADAE, so that the ADSL cols are used instead. Then join
@@ -131,15 +145,25 @@ cleanADAE <- function(datafile, ADSL) {
 #' Function to pre-filter the ADAE depending on the stan table selected
 #' 
 #' @param datafile list of ADaM-ish dataframes 
-#' @param data an ADSL
+#' @param ADSL an ADSL data.frame
 #' @param input_recipe The shiny input that keeps track of the recipe selected
+#' 
+#' @return A `list` containing a `data.frame` object and character vector specifying the pre-filter applied.
 #' 
 #' @export
 #' @keywords tabGen_repro
 #' 
+#' @examples 
+#' datalist <- list(ADSL = tidyCDISC::adsl, ADVS = tidyCDISC::advs, 
+#'                  ADAE = tidyCDISC::adae, ADLBC = tidyCDISC::adlbc)
+#'                  
+#' pre_adsl <- prep_adsl(datalist$ADSL, input_recipe = 'NONE')
+#' 
+#' # Create AE data set
+#' prep_adae(datalist, pre_adsl$data, input_recipe = 'NONE')
 prep_adae <- function(datafile, ADSL, input_recipe) { #, stan_table_num
   stan_table_num <- numeric_stan_table(input_recipe)
-  dat <- cleanADAE(datafile = datafile, ADSL = ADSL)
+  dat <- clean_ADAE(datafile = datafile, ADSL = ADSL)
   msg <- ""
   if(!is.null(input_recipe) & "ADAE" %in% names(datafile)){ # if recipe has initialized...
     
@@ -319,10 +343,20 @@ check_params <- function(datafile, param_vector) {
 #' The smallest possible data set we could filter to semi-join later
 #' 
 #' @param datafile list of ADaM-ish dataframes 
+#' @param input_filter_df The name of a dataset stored in `datafile`
+#' 
+#' @return A `data.frame` object based on the reduction of `datafile` from `input_filter_df`.
 #' 
 #' @export
-#' @noRd
+#' @keywords tabGen_repro
 #' 
+#' @examples 
+#' datalist <- list(ADSL = tidyCDISC::adsl, ADAE = tidyCDISC::adae, 
+#'                  ADVS = tidyCDISC::advs, ADLBC = tidyCDISC::adlbc, 
+#'                  ADTTE = tidyCDISC::adtte)
+#' 
+#' # Returns combined dataset
+#' data_to_filter(datalist, c("ADSL", "ADAE"))
 data_to_filter <- function(datafile, input_filter_df) {
   select_dfs <- datafile[input_filter_df]
   
@@ -336,7 +370,7 @@ data_to_filter <- function(datafile, input_filter_df) {
   
   # Combine selected data into a 1 usable data frame
   if (!rlang::is_empty(PARAMCD_dat)) {
-    all_PARAMCD <- bind_rows(PARAMCD_dat, .id = "data_from") %>% distinct(.keep_all = T)
+    all_PARAMCD <- bind_rows(PARAMCD_dat, .id = "data_from") %>% distinct(.keep_all = TRUE)
     
     if (!rlang::is_empty(non_bds)){
       combined_data <- inner_join(non_bds %>% purrr::reduce(inner_join), all_PARAMCD)
@@ -354,38 +388,119 @@ data_to_filter <- function(datafile, input_filter_df) {
 
 #' Function to clean and combine ADAE dataset with ADSL
 #' 
-#' @param datafile list of ADaM-ish dataframes 
+#' @param x string, naming a data.frame.
+#' @param ae_data data.frame, of the AE variety
+#' @param bds_data data.frame, of the BDS variety
+#' 
+#' @return A `data.frame` object containing data of the AE variety if `x == "ADAE"` or one of the BDS variety if not.
 #' 
 #' @export
 #' @keywords tabGen_repro
 #' 
-data_to_use_str <- function(x) {
+#' @examples 
+#' datalist <- list(ADSL = tidyCDISC::adsl, ADVS = tidyCDISC::advs, 
+#'                  ADAE = tidyCDISC::adae, ADLBC = tidyCDISC::adlbc)
+#'                  
+#' pre_adsl <- prep_adsl(datalist$ADSL, input_recipe = 'NONE')
+#' pre_adae <- prep_adae(datalist, pre_adsl$data, 'NONE')
+#' ae_data <- pre_adae$data
+#' bds_data <- prep_bds(datalist, ADSL = pre_adsl$data)
+#' 
+#' all.equal(data_to_use_str("ADAE", ae_data, bds_data), ae_data)
+#' all.equal(data_to_use_str("ADSL", ae_data, bds_data), bds_data)
+data_to_use_str <- function(x, ae_data, bds_data) {
   if (x == "ADAE") { ae_data }
   else bds_data
 }
 
 
-#' Table Generator Pretty Block lookup table
+#' Create Pretty IDs for TG Table
 #' 
-#' This object is used within the table generator module
-#' to add pretty names for each stat block when displayed in the table
+#' Replaces ugly ID patterns of a stat block with pretty replacements for display purposes (e.g. NON_MISSING becomes Subject Count for those with Non Missing values)
 #' 
-#' @importFrom tibble tibble
+#' @param ID The ID vector of a TG table
+#' 
+#' @return A character vector of pretty IDs.
+#' 
 #' @export
+#' 
 #' @keywords tabGen_repro
 #' 
-pretty_blocks <- tibble::tibble(
-  Pattern = c("MEAN", "FREQ", "CHG", "Y_FREQ", "MAX_FREQ", "NON_MISSING",
-              "NESTED_FREQ_DSC", "NESTED_FREQ_ABC"),
-  Replacement = c("Descriptive Statistics", 
-                  "Summary Counts", 
-                  "Descriptive Statistics of Change from Baseline",
-                  "Subject Count for those with 'Y' values",
-                  "Subject Count for maximum",
-                  "Subject Count for those with Non Missing values",
-                  "Subject Count at each variable level, sorted descending by total counts",
-                  "Subject Count at each variable level, sorted alphabetically by name")
-)
+#' @examples 
+#' # List of patterns that can be replaced
+#' patterns <- c("MEAN", "FREQ", "CHG", "Y_FREQ", "MAX_FREQ", "NON_MISSING", 
+#'               "NESTED_FREQ_DSC", "NESTED_FREQ_ABC")
+#' IDs <- paste(patterns, "of VAR")
+#' 
+#' IDs
+#' pretty_IDs(IDs)
+pretty_IDs <- function(ID) {
+  purrr::reduce(
+    list(
+      pattern = stringr::str_c('\\b', pretty_blocks$Pattern, '\\b', sep = ''),
+      replacement = pretty_blocks$Replacement
+    ) %>% purrr::transpose(),
+    ~ stringr::str_replace_all(.x, .y$pattern, .y$replacement),
+    .init = ID
+  )
+}
+
+#' Prep Block Data for TG Tables
+#' 
+#' @param blockData The `blockData` object from the application
+#' 
+#' @noRd
+prep_blocks <- function(blockData) {
+  dput(blockData) %>%
+    capture.output() %>%
+    paste0(collapse = "") %>%
+    str_replace_all("\\s{2,}", " ") %>%
+    str_replace_all("(\\),)", "\\1\n")
+}
+
+#' Create Standard Footnotes for TG Table
+#' 
+#' Creates a footnote with a source on the left and date run on the right.
+#' 
+#' @param data The `gt` table object to append the footnote
+#' @param source The source of the data in the table
+#' 
+#' @export
+#' @keywords tabGen_repro
+std_footnote <- function(data, source) {
+  gt::tab_footnote(data, 
+                   tags$div(HTML("<b>Source:</b>", source), 
+                            shiny::tags$span(shiny::HTML("<b> Run Date:</b>", toupper(format(Sys.Date(), "%d%b%Y"))),
+                                             style="float:right"),
+                            style="text-align:left"))
+}
+
+#' Create the gt table object for TG
+#' 
+#' A wrapper for other functions to create the `gt` object from the data
+#' 
+#' @param tg_datalist A list containing the data frames used to create the table
+#' @param blockData The data for the construction of the blocks in the table
+#' @param total_df A data frame containing the totals by grouping variable
+#' @param group A character denoting the grouping variable
+#' 
+#' @export
+#' @keywords tabGen_repro
+tg_gt <- function(tg_datalist, blockData, total_df, group) {
+  purrr::pmap(list(
+    blockData$agg,
+    blockData$S3,
+    blockData$dropdown,
+    blockData$dataset), 
+    function(x,y,z,d) tidyCDISC::app_methods(x,y,z,
+                                             group = group, 
+                                             data = tidyCDISC::data_to_use_str(d, tg_datalist$ADAE, tg_datalist$ADSL),
+                                             totals = total_df)) %>%
+    purrr::map(setNames, tidyCDISC::common_rownames(tg_datalist$POPDAT, group)) %>%
+    setNames(paste(blockData$gt_group)) %>%
+    dplyr::bind_rows(.id = 'ID') %>%
+    dplyr::mutate(ID = tidyCDISC::pretty_IDs(ID))
+}
 
 #' Table Generator Cicerone R6 Object 
 #' 

@@ -25,7 +25,7 @@ rowBlock <- function(name, classname) {
                   # allowHTML = TRUE,
                   # maxWidth = 80,
                   # placement = 'left'
-            )
+                  )
           )
         }) %>%
     purrr::map(., ~ .x)

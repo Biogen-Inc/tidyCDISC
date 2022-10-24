@@ -24,13 +24,14 @@
 #' @param input_plot_adam A character string containing the ADaM dataset name
 #' @param input_overlay_events A character vector containing the names of
 #'   patient events to plot
-#' @param vline_dat The vline data frame that contains x-intercept values for the
-#'   corrresponding events selected to be overlain on the plot
+#' @param vline_dat The vline data frame that contains x-intercept values for
+#'   the corrresponding events selected to be overlain on the plot
 #' @param vv_dy_name TA character vector containing the name of the visit
 #'   variable(s)
 #'
 #' @import dplyr
-#' @import ggplot2
+#' @importFrom ggplot2 ggplot aes geom_line scale_x_continuous labs geom_point
+#'   annotate geom_vline geom_hline scale_color_manual
 #' @importFrom dplyr %>%
 #' @importFrom rlang sym
 #' @importFrom plotly ggplotly layout config add_annotations
@@ -40,7 +41,7 @@
 #'
 #' @family indvExp Functions
 #' @noRd
-#'   
+#' 
 fnIndvExplVisits <- function(
   watermark = FALSE,
   graph_output = "plotly",
@@ -66,7 +67,7 @@ fnIndvExplVisits <- function(
     group_by(!!INPUT_visit_var) %>%
     summarize(n = n()) %>%
     ungroup() %>%
-    summarize(max_avals = max(n, na.rm = T)) %>%
+    summarize(max_avals = max(n, na.rm = TRUE)) %>%
     pull(max_avals)
     
   # initialize man_cols for manual color control
@@ -91,10 +92,10 @@ fnIndvExplVisits <- function(
     
     # GGPLOT2 OBJECT
     lb_plot <- 
-      ggplot(plot_dat, aes(x = !!INPUT_visit_var, y = AVAL)) + 
-      geom_line() +
-      scale_x_continuous(breaks = seq(min(plot_dat[,input_visit_var]), max(plot_dat[,input_visit_var]), 30)) +
-      labs(x = paste0("Study Visit (",input_visit_var,")"),
+      ggplot2::ggplot(plot_dat, ggplot2::aes(x = !!INPUT_visit_var, y = AVAL)) + 
+      ggplot2::geom_line() +
+      ggplot2::scale_x_continuous(breaks = seq(min(plot_dat[,input_visit_var]), max(plot_dat[,input_visit_var]), 30)) +
+      ggplot2::labs(x = paste0("Study Visit (",input_visit_var,")"),
            y = prm,
            title = paste(prm,"by Relative Study Day"),
            subtitle = paste0(
@@ -110,7 +111,12 @@ fnIndvExplVisits <- function(
     extra_aval_vars <- c("ATM","ATPT")
     if(most_avals_per_visit > 1 & any(extra_aval_vars %in% colnames(plot_dat))){
       # Grab first available variable that exists and could explain why their are extra avals
-      avals_by <<- sym(extra_aval_vars[extra_aval_vars %in% colnames(plot_dat)][1])
+      avals_by <- sym(extra_aval_vars[extra_aval_vars %in% colnames(plot_dat)][1])
+      # assign("avals_by", sym(extra_aval_vars[extra_aval_vars %in% colnames(plot_dat)][1]),
+      #        envir = parent.frame())
+      # avals_by <- sym(extra_aval_vars[extra_aval_vars %in% colnames(plot_dat)][1])
+      # deliver_avals_by(x = avals_by)
+      
       if(avals_by == "ATM") {
         plot_dat <- plot_dat %>% mutate(ATM = as.POSIXct(paste("1970-01-01",ATM)))
       }
@@ -118,8 +124,8 @@ fnIndvExplVisits <- function(
       if(avals_by == "ATPT"){
         lb_plot <- lb_plot + 
           suppressWarnings(
-            geom_point(data = plot_dat, na.rm = TRUE, 
-              aes(x = !!INPUT_visit_var, y = AVAL, 
+            ggplot2::geom_point(data = plot_dat, na.rm = TRUE, 
+              ggplot2::aes(x = !!INPUT_visit_var, y = AVAL, 
                   colour = !!avals_by, # colour aesthetic for for discrete
                   text = paste0(AVISIT,
                                 "<br>",input_visit_var, ": ",!!INPUT_visit_var,
@@ -137,8 +143,8 @@ fnIndvExplVisits <- function(
       else { # if continuous posixct object (like ATM) then use fill aesthetic for color gradient
         lb_plot <- lb_plot + 
           suppressWarnings(
-            geom_point(data = plot_dat, na.rm = TRUE, 
-              aes(x = !!INPUT_visit_var, y = AVAL, 
+            ggplot2::geom_point(data = plot_dat, na.rm = TRUE, 
+               ggplot2::aes(x = !!INPUT_visit_var, y = AVAL, 
                   fill = !!avals_by, # fill aesthetic for for continuous will make gradient legend
                   text = paste0(AVISIT,
                                 "<br>",input_visit_var, ": ",!!INPUT_visit_var,
@@ -150,10 +156,15 @@ fnIndvExplVisits <- function(
       }
       
     } else { # no color by variable in legend or hover text
-      avals_by <<- ""
+      avals_by <- ""
+      # assign("avals_by", "", envir = parent.frame())
+      # with(parent.frame(), { avals_by <- "" })
+      # avals_by <- ""
+      # deliver_avals_by(x = avals_by)
+      
       lb_plot <- lb_plot + 
-        suppressWarnings(geom_point(na.rm = TRUE, 
-          aes(text = paste0(AVISIT,
+        suppressWarnings(ggplot2::geom_point(na.rm = TRUE, 
+            ggplot2::aes(text = paste0(AVISIT,
                             "<br>",input_visit_var, ": ",!!INPUT_visit_var,
                             "<br>",input_plot_param ,": ",AVAL
               )
@@ -176,7 +187,7 @@ fnIndvExplVisits <- function(
         #                   grob(lab="tidyCDISC: PROOF ONLY", cl="watermark"))
         
         # Smaller watermark
-        annotate("text", x = Inf, y = -Inf, label = proof_lab,
+        ggplot2::annotate("text", x = Inf, y = -Inf, label = proof_lab,
                  hjust=1.1, vjust=-3.3, col="white", fontface = "bold", alpha = 0.8,
                  cex = ifelse(substr(proof_lab,1,4) == 'tidyCDISC',
                               ifelse(avals_by == "" | rlang::is_empty(avals_by),19,14),
@@ -194,9 +205,9 @@ fnIndvExplVisits <- function(
         if(nrow(vline_dat) > 0){
           
           lb_plot <- lb_plot + 
-            geom_vline(
+            ggplot2::geom_vline(
                data = vline_dat, 
-               aes(xintercept = !!INPUT_visit_var,
+               ggplot2::aes(xintercept = !!INPUT_visit_var,
                    colour = Event,
                    text = paste0(input_visit_var, ": ",floor(!!INPUT_visit_var),"<br>", DECODE)
                 ), size = .35
@@ -213,18 +224,18 @@ fnIndvExplVisits <- function(
     if(input_plot_adam %in% c("ADLB","ADLBC") &
        all(c("LBSTNRLO","LBSTNRHI") %in% colnames(plot_dat))){
       lb_plot <- lb_plot + 
-        geom_hline(aes(yintercept = mean(LBSTNRLO)), color = "blue") +
-        geom_hline(aes(yintercept = mean(LBSTNRHI)), color = "blue") +
-        theme(
-          plot.margin = margin(b = 1.2, unit = "cm")
+        ggplot2::geom_hline(ggplot2::aes(yintercept = mean(LBSTNRLO)), color = "blue") +
+        ggplot2::geom_hline(ggplot2::aes(yintercept = mean(LBSTNRHI)), color = "blue") +
+        ggplot2::theme(
+          plot.margin = ggplot2::margin(b = 1.2, unit = "cm")
         ) 
-    }
+    } 
     
     # Plotting hortizontal line
     if("Screening" %in% input_plot_hor){
       if(nrow(plot_scr) > 0){
         lb_plot <- lb_plot +
-          geom_hline(plot_scr, mapping = aes(yintercept = AVAL, colour = Visit))
+          ggplot2::geom_hline(plot_scr, mapping = ggplot2::aes(yintercept = AVAL, colour = Visit))
         
         man_cols <- c(man_cols, setNames(my_gg_color_hue(2)[2],"Screening"))
       }
@@ -232,7 +243,7 @@ fnIndvExplVisits <- function(
     if("Baseline" %in% input_plot_hor){
       if(nrow(plot_base) > 0){
         lb_plot <- lb_plot +
-          geom_hline(plot_base, mapping = aes(yintercept = AVAL, colour = Visit))
+          ggplot2::geom_hline(plot_base, mapping = ggplot2::aes(yintercept = AVAL, colour = Visit))
         
         man_cols <- c(man_cols, setNames(my_gg_color_hue(2)[1],"Baseline"))
       }
@@ -244,7 +255,7 @@ fnIndvExplVisits <- function(
        (length(input_overlay_events) > 0 & input_visit_var %in% vv_dy_name)){
 
       lb_plot <- lb_plot +
-        scale_color_manual(values= man_cols)
+        ggplot2::scale_color_manual(values= man_cols)
     }
     # End: ggplot2 object
     
@@ -278,12 +289,12 @@ fnIndvExplVisits <- function(
       if(input_plot_adam %in% c("ADLB","ADLBC") &
          all(c("LBSTNRLO","LBSTNRHI") %in% colnames(plot_dat))){
         ly <- ly %>%
-          plotly::add_annotations(x = ggplot_build(lb_plot)$layout$panel_params[[1]]$x.range[1],
+          plotly::add_annotations(x = ggplot2::ggplot_build(lb_plot)$layout$panel_params[[1]]$x.range[1],
                           y = -.15, # 15% below graph
                           yref = "paper",
                           text = paste0("<br>Note: Study's average ",input_plot_param," range shown in ",'<em style="color:blue">',"blue",'</em> ',lohi),
                           xanchor = 'left',
-                          showarrow = F)
+                          showarrow = FALSE)
       }
       
       # if watermark is desired, it can be added here
@@ -294,7 +305,7 @@ fnIndvExplVisits <- function(
                                 xref = "paper",
                                 yref = "paper",
                                 opacity = 0.1,
-                                showarrow = F,
+                                showarrow = FALSE,
                                 font=list(size = 40),
                                 textangle=-35)
           )

@@ -73,14 +73,13 @@ df_incl_rules <-
 #' @import dplyr
 #' @importFrom dplyr %>%
 #' @importFrom rlang is_empty
-#' @importFrom data.table rbindlist
 #' @importFrom purrr map2 pmap
 #'
 #' @return An shiny tagList
 #'
 #' @family dataComply Functions
-#' @noRd
-#'   
+#' @keywords internal
+#' 
 gather_rules <- function(input, output, session,
                          all_df_rules = list(error = c(""), warn = c("") ),
                          expl_rules = list( list(error = c(""), warn = c("")) ),
@@ -115,7 +114,7 @@ gather_rules <- function(input, output, session,
   if(!is.null(expl_rules) & !is.null(names(expl_rules))) {
     hdf <- 
       lapply(expl_rules, data.frame, stringsAsFactors = FALSE) %>%
-      data.table::rbindlist(fill=TRUE, idcol = "df")
+      bind_rows(.id = "df")
     
     hdf_err <- 
       hdf %>%
@@ -148,7 +147,7 @@ gather_rules <- function(input, output, session,
   if(!is.null(df_incl_rules) & !is.null(names(df_incl_rules))) {
     dfw <-
       lapply(df_incl_rules, data.frame, stringsAsFactors = FALSE) %>%
-      data.table::rbindlist(fill=TRUE, idcol = "df_var")
+      bind_rows(.id = "df_var")
     
     dfw_err <-
       dfw %>%
@@ -181,7 +180,7 @@ gather_rules <- function(input, output, session,
   if(!is.null(df_incl_rules_except_tte) & !is.null(names(df_incl_rules_except_tte))) {
     dfw_ette <-
       lapply(df_incl_rules_except_tte, data.frame, stringsAsFactors = FALSE) %>%
-      data.table::rbindlist(fill=TRUE, idcol = "df_var")
+      bind_rows(.id = "df_var")
     
     dfw_ette_err <-
       dfw_ette %>%
@@ -214,18 +213,18 @@ gather_rules <- function(input, output, session,
     
     # If they exist, format Rules for All Data Sets into a collapsed HTML string
     tagList(
-      if(!is_empty(err) | !is_empty(wrn)){
+      if(!rlang::is_empty(err) | !rlang::is_empty(wrn)){
         tagList(
           br(),
           h5(strong("Rules for All Data Sets")),
           div(style = "font-size: 12px;", tagList(
-            if(!is_empty(err)){
+            if(!rlang::is_empty(err)){
               tagList(
                 HTML(paste0("&nbsp;&nbsp;&nbsp;Required: ",paste(err, collapse = ", "))),
                 br(),br(),
               )
             } else {""},
-            if(!is_empty(wrn)){
+            if(!rlang::is_empty(wrn)){
               tagList(
                 HTML(paste0("&nbsp;&nbsp;&nbsp;Recommended: ",paste(wrn, collapse = ", "))),
                 br(),br(),
@@ -238,19 +237,19 @@ gather_rules <- function(input, output, session,
     # If they exist, format Specific Rules for Specific Data Sets into a
     # collapsed HTML string
     tagList(
-      if(!is_empty(hdf_err) | !is_empty(hdf_wrn)){
+      if(!rlang::is_empty(hdf_err) | !rlang::is_empty(hdf_wrn)){
         tagList(
           br(),
           h5(strong("Specific Rules for Specific Data Sets")),
           div(style = "font-size: 12px;", tagList(
-            if(!is_empty(hdf_err)){
+            if(!rlang::is_empty(hdf_err)){
               tagList(
                 HTML(paste0("&nbsp;&nbsp;&nbsp;Required:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;",
                             paste(hdf_err, collapse = "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"))),
                 br(),br(),
               )
             } else {""},
-            if(!is_empty(hdf_wrn)){
+            if(!rlang::is_empty(hdf_wrn)){
               tagList(
                 HTML(paste0("&nbsp;&nbsp;&nbsp;Recommended:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;",
                             paste(hdf_wrn, collapse = "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"))),
@@ -264,19 +263,19 @@ gather_rules <- function(input, output, session,
     # If they exist, format Rules for Data Sets That Contain Certain Variables
     # into a collapsed HTML string
     tagList(
-      if(!is_empty(dfw_err) | !is_empty(dfw_wrn)){
+      if(!rlang::is_empty(dfw_err) | !rlang::is_empty(dfw_wrn)){
         tagList(
           br(),
           h5(strong("Rules for Data Sets That Contain Certain Variables")),
           div(style = "font-size: 12px;", tagList(
-            if(!is_empty(dfw_err)){
+            if(!rlang::is_empty(dfw_err)){
               tagList(
                 HTML(paste0("&nbsp;&nbsp;&nbsp;Required:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;",
                             paste(dfw_err, collapse = "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"))),
                 br(),br(),
               )
             } else {""},
-            if(!is_empty(dfw_wrn)){
+            if(!rlang::is_empty(dfw_wrn)){
               tagList(
                 HTML(paste0("&nbsp;&nbsp;&nbsp;Recommended:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;",
                             paste(dfw_wrn, collapse = "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"))),
@@ -290,19 +289,19 @@ gather_rules <- function(input, output, session,
     # If they exist, format Rules for Data Sets That Contain Certain Variables
     # into a collapsed HTML string
     tagList(
-      if(!is_empty(dfw_ette_err) | !is_empty(dfw_ette_wrn)){
+      if(!rlang::is_empty(dfw_ette_err) | !rlang::is_empty(dfw_ette_wrn)){
         tagList(
           br(),
           h5(strong("Rules for all Data Sets That Contain Certain Variables, except 'Time to Event'")),
           div(style = "font-size: 12px;", tagList(
-            if(!is_empty(dfw_ette_err)){
+            if(!rlang::is_empty(dfw_ette_err)){
               tagList(
                 HTML(paste0("&nbsp;&nbsp;&nbsp;Required:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;",
                             paste(dfw_ette_err, collapse = "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"))),
                 br(),br(),
               )
             } else {""},
-            if(!is_empty(dfw_ette_wrn)){
+            if(!rlang::is_empty(dfw_ette_wrn)){
               tagList(
                 HTML(paste0("&nbsp;&nbsp;&nbsp;Recommended:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;",
                             paste(dfw_ette_wrn, collapse = "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"))),
@@ -320,11 +319,11 @@ gather_rules <- function(input, output, session,
   
 }
 
-###############################################################
-#
-# Run gather_rules help module UI once, before loading the app
-#
-###############################################################
+
+#' Rules UI
+#' 
+#' Run gather_rules() to create the rules UI one time, before loading the app
+#' @noRd
 rulesUI <- gather_rules(all_df_rules = all_df_rules,
                         expl_rules = expl_rules,
                         df_incl_rules = df_incl_rules,

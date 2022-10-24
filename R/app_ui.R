@@ -48,7 +48,6 @@ app_ui <- function(request) {
 #' 
 #' @import shiny
 #' @importFrom golem add_resource_path activate_js favicon bundle_resources
-#' @importFrom waiter use_waiter
 #' @importFrom shinyjs useShinyjs
 #' @importFrom shinyjs extendShinyjs
 #' @importFrom shinyjs inlineCSS
@@ -78,7 +77,7 @@ golem_add_external_resources <- function(){
     ),
     shiny::tags$script(src = "gtag.js"),
     shinyjs::useShinyjs(),
-    waiter::use_waiter(),
+    # waiter::use_waiter(),
     shinyjs::inlineCSS(css),
     shinyjs::extendShinyjs(text = jscode,
                            functions = c("disableTab","enableTab")),

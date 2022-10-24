@@ -27,7 +27,7 @@ delim_expand_rows <- function(data, sep){
       )) %>%
       mutate(Variable = ifelse(Variable == "", id_desc, Variable)) %>%
       tidyr::separate_rows(
-        starts_with("col"), sep = sep, convert = T)# convert works for sas
+        starts_with("col"), sep = sep, convert = TRUE)# convert works for sas
   } else {
     if(any((stringr::str_detect(tolower(unique(data$Variable)), "mean") &
            stringr::str_detect(tolower(unique(data$Variable)), "sd")) |
@@ -40,11 +40,11 @@ delim_expand_rows <- function(data, sep){
         mutate(across(starts_with("col"), 
           function(col) ifelse(!stringr::str_detect(col, sep), 
                                paste(col, gsub("\\\\","", sep)), col))) %>%
-        tidyr::separate_rows(c(Variable, starts_with("col")), sep = sep, convert = T)
+        tidyr::separate_rows(c(Variable, starts_with("col")), sep = sep, convert = TRUE)
     } else {
       d <- data %>%
         filter(if_any(starts_with("col"), function(col) stringr::str_detect(col, sep))) %>%
-        tidyr::separate_rows(starts_with("col"), sep = sep, convert = T)
+        tidyr::separate_rows(starts_with("col"), sep = sep, convert = TRUE)
     }
     
   }
@@ -135,13 +135,21 @@ mk_rep_seq_id <- function(x){
 }
 
 
+
+#' Create Comparison Table for SAS Table
+#' 
+#' Organize SAS table into a format for comparing with Table Generator table
 #'
-#' Organize SAS into a format for comparing
-#'
-#' @param sas_data the sas table dataframe, output from stat programmer
+#' @param sas_data the SAS table data.frame, output from stat programmer
+#' @param block_names default names to check in each table that represent a
+#'   'var block', case sensitive
+#' @param block_ord_names default names to check in each table that represent 
+#'   'the order of a var block', case sensitive
+#' @param stat_names default names to check in each table that represent a
+#'   'stat block', case sensitive
+#' @param stat_ord_names default names to check in each table that represent 
+#'   'the order of a stat block', case sensitive
 #' @param tg_data the table generator table dataframe, output from tidyCDISC
-#' @param chk_block_names case sensitive
-#' @param chk_stat_names case sensitive
 #' @param machine_readable a logical; should the table be prepared for optimal
 #'   machine readability; that is, should cells with multiple values be pivoted
 #'   to new rows
@@ -155,9 +163,11 @@ mk_rep_seq_id <- function(x){
 #' @importFrom rlang sym !!
 #' @importFrom stringr str_detect
 #'
-#' @export
 #' @keywords tabGen_compare
 #' 
+#' @return A data frame processed for comparison purposes
+#' 
+#' @noRd
 prep_sas_table <- function(
   sas_data,
   block_names = c("by1lbl","vis"),
@@ -347,7 +357,9 @@ revert_temp_colnames <- function(dat, orig_grp_names){
 }
 
 
-#' Organize Table Generator table into a format for comparing
+#' Create Comparison Table for Table Generator Table
+#' 
+#' Organize Table Generator table into a format for comparing to SAS table
 #'
 #' @param data the tg_table dataframe, output from tidyCDISC
 #' @param machine_readable a logical; should the table be prepared for optimal
@@ -365,9 +377,11 @@ revert_temp_colnames <- function(dat, orig_grp_names){
 #' @import dplyr
 #' @importFrom stringr str_detect
 #'
-#' @export
 #' @keywords tabGen_compare
 #' 
+#' @return A data frame processed for comparison purposes
+#' 
+#' @noRd
 prep_tg_table <- function(data,
                           machine_readable = TRUE,
                           keep_orig_ids = FALSE,

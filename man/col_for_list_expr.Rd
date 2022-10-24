@@ -4,19 +4,31 @@
 \alias{col_for_list_expr}
 \title{GT Column Names}
 \usage{
-col_for_list_expr(nm)
+col_for_list_expr(col_names, col_total)
 }
 \arguments{
-\item{nm}{name}
+\item{col_names}{A vector of column names}
 
-\item{dat}{data}
-
-\item{x}{columns
-
-create the labels for each column using the total function
-so the columns are now NAME N= X}
+\item{col_total}{A vector of column totals}
+}
+\value{
+A character object of class \code{from_markdown}.
 }
 \description{
-GT Column Names
+The function creates the labels for each column using the total function so the columns are now NAME N= X
+}
+\examples{
+data(example_dat2, package = "tidyCDISC")
+
+labels <- col_for_list_expr(example_dat2$col_names, example_dat2$col_totals)
+labels
+
+if (interactive()) {
+# TG table without nice column labels or totals
+example_dat2$TG_table
+
+# TG table with nice column labels and totals
+gt::cols_label(example_dat2$TG_table, .list = labels)
+}
 }
 \keyword{tabGen_repro}

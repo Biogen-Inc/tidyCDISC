@@ -14,6 +14,6 @@ Data frame with 32,740 features and 58 fields
 adlbc
 }
 \description{
-Laboratory Results Chemistry Analysis Dataset from Phuse Test Data Fractory Project's github.
+Laboratory Results Chemistry Analysis Data from PHUSE Test Data Factory Project's GitHub.
 }
 \keyword{datasets}

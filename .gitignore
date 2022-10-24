@@ -1,8 +1,12 @@
 .Rhistory
 .RData
 .Rproj.user
+.Renviron
 inst/doc
 rsconnect/
 docs/
+revdep/
+/doc/
+/Meta/
 vignettes/
 .github/

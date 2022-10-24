@@ -16,7 +16,7 @@ test_that("build_events fun", {
   # nrow should never change
   expect_equal(nrow(
     build_events(input_checkbox = c("DS")
-               , input_apply_filter = F
+               , input_apply_filter = FALSE
                , my_usubjid = datafile$ADSL$USUBJID[1]
                , my_loaded_adams = names(named_list)
                , my_datafile = datafile
@@ -28,7 +28,7 @@ test_that("build_events fun", {
   # start should be class date & end should be NA
   expect_equal(class(
     build_events(input_checkbox = c("DS")
-               , input_apply_filter = F
+               , input_apply_filter = FALSE
                , my_usubjid = datafile$ADSL$USUBJID[1]
                , my_loaded_adams = names(named_list)
                , my_datafile = datafile 
@@ -38,7 +38,7 @@ test_that("build_events fun", {
   )
   expect_equal(all(is.na(
     build_events(input_checkbox = c("DS")
-               , input_apply_filter = F
+               , input_apply_filter = FALSE
                , my_usubjid = datafile$ADSL$USUBJID[1]
                , my_loaded_adams = names(named_list)
                , my_datafile = datafile
@@ -49,7 +49,7 @@ test_that("build_events fun", {
   # 
   expect_equal(unique(
     build_events(input_checkbox = c("DS")
-               , input_apply_filter = F
+               , input_apply_filter = FALSE
                , my_usubjid = datafile$ADSL$USUBJID[1]
                , my_loaded_adams = names(named_list)
                , my_datafile = datafile
@@ -59,7 +59,7 @@ test_that("build_events fun", {
   )
   expect_equal(colnames(
     build_events(input_checkbox = c("DS")
-               , input_apply_filter = F
+               , input_apply_filter = FALSE
                , my_usubjid = datafile$ADSL$USUBJID[1]
                , my_loaded_adams = names(named_list)
                , my_datafile = datafile

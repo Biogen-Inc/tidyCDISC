@@ -345,14 +345,14 @@ mod_indvExpPatVisits_server <- function(input, output, session, datafile, loaded
         
         INPUT_visit_var <- sym(input$visit_var)
         
-        # calbrating new "DY" imputation for vlines based on ADLB since it
+        # calibrating new "DY" imputation for vlines based on ADLB since it
         # contains both dates and "DY" var LBDY
         
         # Which one 
         lab_dfs <- c('ADLB','ADLBC')
         lab_df <- lab_dfs[lab_dfs %in% loaded_adams()][1]
         
-        # namne of 1st dy var?
+        # name of 1st dy var?
         dys <- datafile()[[lab_df]]%>%
           select(ends_with("DY")) %>%
           colnames()
@@ -365,7 +365,7 @@ mod_indvExpPatVisits_server <- function(input, output, session, datafile, loaded
         
         # find min dy value
         min_dy <- temp %>%
-          summarize(dy_min = min(!!dy, na.rm = T)) %>%
+          summarize(dy_min = min(!!dy, na.rm = TRUE)) %>%
           pull(dy_min)
         
         # name of (first) date when lab drawn
@@ -511,7 +511,7 @@ mod_indvExpPatVisits_server <- function(input, output, session, datafile, loaded
       lb_tab <- lb_data %>%
         filter(PARAMCD == input$plot_param) %>%
         mutate(avisit_sort = ifelse(is.na(AVISITN), -9000000000, AVISITN)) %>% # if no AVISIN, order it first
-        arrange_(ifelse(input$visit_var == "AVISITN", "avisit_sort", input$visit_var)) %>%
+        arrange(ifelse(input$visit_var == "AVISITN", "avisit_sort", input$visit_var)) %>%
         select(ends_with("DY"), one_of(
           "VISITNUM",
           "AVISITN",

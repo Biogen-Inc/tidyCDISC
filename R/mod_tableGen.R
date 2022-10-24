@@ -1,11 +1,10 @@
 #' tableGen Server Function
 #'
-#' @param input,output,session 
-#' Internal parameters for {shiny}
-#' @param datafile all uploaded data files 
-#' from the dataImport module
-#' 
-#' @import IDEAFilter
+#' @param input,output,session Internal parameters for {shiny}
+#' @param datafile all uploaded data files from the dataImport module
+#' @param filePaths NULL
+#'
+#' @importFrom IDEAFilter shiny_data_filter
 #' @importFrom rlang sym
 #' @importFrom rlang !!
 #' @importFrom rlang call2
@@ -16,16 +15,18 @@
 #' @importFrom purrr map
 #' @importFrom purrr map2
 #' @importFrom purrr imap
-#' @import gt
-#' @importFrom stringi stri_replace_all_regex
-#' @importFrom stringi %s+%
+#' @importFrom gt gt fmt_markdown tab_options cols_label tab_header md tab_style
+#'   cell_text cells_row_groups cells_stub render_gt gtsave
+#' @importFrom purrr transpose
 #' @importFrom glue glue
-#' @importFrom forcats fct_reorder
-#' @import tidyr
+#' @importFrom tidyr replace_na
 #'
 #' @family tableGen Functions
 #' @noRd
 mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL), filePaths = reactive(NULL)) {
+  
+  old <- options()
+  on.exit(options(old))
   
   observeEvent( input$help, {
     tg_guide$init()$start()
@@ -59,12 +60,11 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   
   RECIPE <- reactive( if(rlang::is_empty(input$recipe)) "NONE" else input$recipe)
 
-  # observeEvent(RECIPE(), {
-  #   req(input$table_title)
-  #   val <- ifelse(RECIPE() == "NONE", "Table Title", RECIPE())
-  #   updateTextInput(session, session$ns("table_title"), label = "Table Title",
-  #                   value = val, width = '100%')
-  # })
+  observeEvent(RECIPE(), {
+    req(input$table_title)
+    val <- ifelse(RECIPE() == "NONE", "Table Title", RECIPE())
+    updateTextInput(session, "table_title", value = val)
+  })
   
   
   # ----------------------------------------------------------------------
@@ -128,12 +128,12 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     prep_adsl(ADSL = datafile()$ADSL,input_recipe = RECIPE())
   })
   
-  # cleanADAE() now happens inside this reactive!
+  # clean_ADAE() now happens inside this reactive!
   # use potentially pre-filtered ADSL when building/ joining w/ ADAE
   # Then filter ADAE based on STAN table selected.
   pre_ADAE <- reactive({
     req(RECIPE())
-    prep_adae(datafile = datafile(),ADSL = pre_ADSL()$data,input_recipe = RECIPE())
+    prep_adae(datafile = datafile(),ADSL = pre_ADSL()$data, input_recipe = RECIPE())
   })
   
   # Create cleaned up versions of raw data
@@ -161,7 +161,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
  
   # combine all BDS data files into one large data set
   bds_data <- reactive({ 
-    combineBDS(datafile = datafile(), ADSL = ADSL())
+    prep_bds(datafile = datafile(), ADSL = ADSL())
     # OLD code removed 2/17/2021
   })
   
@@ -178,11 +178,11 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   })
   
   # create a reactive for the data with filters applied
-  filtered_data <- callModule(shiny_data_filter, "data_filter", data = processed_data, verbose = FALSE)
+  filtered_data <- callModule(IDEAFilter::shiny_data_filter, "data_filter", data = processed_data, verbose = FALSE)
   
   # apply filters from selected dfs to tg data to create all data
-  all_data <- reactive({suppressMessages(bds_data() %>% semi_join(filtered_data()) %>% varN_fctr_reorder())})
-  ae_data <- reactive({suppressMessages(ADAE() %>% semi_join(filtered_data()) %>% varN_fctr_reorder())})
+  all_data <- reactive({suppressMessages(bds_data() %>% semi_join(filtered_data()))})
+  ae_data <- reactive({suppressMessages(ADAE() %>% semi_join(filtered_data()))})
   pop_data <- reactive({
     suppressMessages(
       pre_ADSL()$data %>% # Cannot be ADSL() because that has potentially been filtered to ADAE subj's
@@ -208,9 +208,11 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     if(any(purrr::map_lgl(datafile(), ~"AVISIT" %in% colnames(.x)))){
         purrr::map(BDS(), function(x) x %>% dplyr::select(AVISIT)) %>%
           dplyr::bind_rows() %>%
-          dplyr::pull(AVISIT)
+          dplyr::distinct(AVISIT) %>%
+          dplyr::pull()
     } else {
-      NULL #c("fake_weeky","dummy_weeky") # DON'T use this comment part. It's handled in AVISIT()
+      NULL #c("fake_weeky","dummy_weeky") # DON'T use this comment part.
+                                          # It's handled in AVISIT()
     }
     
   })
@@ -222,7 +224,8 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     if(any(purrr::map_lgl(datafile(), ~"AVISIT" %in% colnames(.x)))){
         purrr::map(BDS(), function(x) x %>% dplyr::select(AVISITN)) %>%
           dplyr::bind_rows() %>%
-          dplyr::pull(AVISITN)
+          dplyr::distinct(AVISITN) %>%
+          dplyr::pull()
     } else {
       1:2
     }
@@ -235,11 +238,21 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     if (is.null(avisit_words())) {
       avisit_words <- c("fake_weeky","dummy_weeky")
     } else {
+      # for testing
+      # nums <- c(2,4,6,8,12,16,20,24,26)
+      # avisit_words <- function() c("", "Baseline",paste("Week", nums), "End of Treatment")
+      # avisit_fctr <- function()c(NA, 0, nums, 99)
+      # rm(nums, avisit_words, avisit_fctr)
+      
+      awd <- tidyr::tibble(AVISIT = avisit_words(), AVISITN = avisit_fctr())
       avisit_words <-
-        tibble(AVISIT = avisit_words(), AVISITN = avisit_fctr()) %>%
-        mutate(AVISIT = as.factor(AVISIT)) %>%
-        mutate(AVISIT = forcats::fct_reorder(AVISIT, AVISITN)) %>%
-        pull(AVISIT) %>%
+        # tidyr::tibble(AVISIT = avisit_words(), AVISITN = avisit_fctr()) %>%
+        # dplyr::mutate(AVISIT = as.factor(AVISIT)) %>%
+        # dplyr::mutate(AVISIT = forcats::fct_reorder(AVISIT, AVISITN)) %>%
+        awd %>%
+        dplyr::mutate(AVISIT = factor(AVISIT,
+            levels = awd[order(awd$AVISITN), "AVISIT"][[1]] %>% unique() )) %>%
+        dplyr::pull(AVISIT) %>%
         unique()
     }
     avisit_words[avisit_words != ""]
@@ -249,7 +262,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # Send any and all AVISITs that exist to javascript side (script.js)
   observe({
     req(AVISIT())
-    session$sendCustomMessage("my_weeks", AVISIT())
+    session$sendCustomMessage("my_weeks", c("ALL", as.vector(AVISIT())))
   })
   
   
@@ -333,13 +346,6 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # ----------------------------------------------------------------------
   
   
-  # tell Shiny which dataframe to use when mapping through list of tables
-  # to render
-  data_to_use_str <- function(x) {
-    if (x == "ADAE") { ae_data() }
-    else all_data()
-  }
-  
   # convert the custom shiny input to a table output
   blocks_and_functions <- reactive({
     # create initial dataset
@@ -347,10 +353,10 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     
     blockData$label <- 
       purrr::map2(blockData$block, blockData$dataset, function(var, dat) {
-        if(!is.null(attr(data_to_use_str(dat)[[var]], 'label'))){
-          attr(data_to_use_str(dat)[[var]], 'label')
-        } else if(all(c("PARAM","PARAMCD") %in% colnames(data_to_use_str(dat)))){
-          data_to_use_str(dat) %>%
+        if(!is.null(attr(data_to_use_str(dat, ae_data(), all_data())[[var]], 'label'))){
+          attr(data_to_use_str(dat, ae_data(), all_data())[[var]], 'label')
+        } else if(all(c("PARAM","PARAMCD") %in% colnames(data_to_use_str(dat, ae_data(), all_data())))){
+          data_to_use_str(dat, ae_data(), all_data()) %>%
             filter(PARAMCD == var) %>%
             distinct(PARAM) %>%
             pull() %>% as.character()
@@ -361,9 +367,9 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     
     blockData$label_source <- 
       purrr::map2(blockData$block, blockData$dataset, function(var, dat) {
-        if(!is.null(attr(data_to_use_str(dat)[[var]], 'label'))){
+        if(!is.null(attr(data_to_use_str(dat, ae_data(), all_data())[[var]], 'label'))){
           'SAS "label" attribute'
-        } else if("PARAMCD" %in% colnames(data_to_use_str(dat))){
+        } else if("PARAMCD" %in% colnames(data_to_use_str(dat, ae_data(), all_data()))){
           'PARAM'
         } else {
           'No Label'
@@ -413,7 +419,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
         mutate(temp = 'Total') %>%
         rename_with(~paste(input$COLUMN), "temp")
       
-      grp_lvls <- getLevels(use_preferred_pop_data()[[input$COLUMN]])  # PUT ADAE() somehow?
+      grp_lvls <- get_levels(use_preferred_pop_data()[[input$COLUMN]])  # PUT ADAE() somehow?
       xyz <- data.frame(grp_lvls) %>%
         rename_with(~paste(input$COLUMN), grp_lvls)
       
@@ -431,7 +437,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     }
   })
   
-  total <- reactive({
+  col_total <- reactive({
     total_df()$n_tot
   })
 
@@ -485,17 +491,12 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
                  function(x,y,z,d) 
                    app_methods(x,y,z, 
                                 group = column(), 
-                                data  = data_to_use_str(d),
+                                data  = data_to_use_str(d, ae_data(), all_data()),
                                 totals = total_df())) %>%
     purrr::map(setNames, common_rownames(use_preferred_pop_data(), column())) %>%
     setNames(paste(blocks_and_functions()$gt_group)) %>%
     bind_rows(.id = "ID")  %>%
-      mutate(
-        ID = stringi::stri_replace_all_regex(
-          ID, 
-          pattern = '\\b'%s+%pretty_blocks$Pattern%s+%'\\b',
-          replacement = pretty_blocks$Replacement,
-          vectorize_all = FALSE))
+      mutate(ID = pretty_IDs(ID))
     return(d)
   })
   
@@ -510,44 +511,37 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     append(some_names_no_tot, "Total")
   })
   
-  # create the labels for each column using the total function
-  # so the columns are now NAME N= X
-  col_for_list <- function(nm) {
-    if (is.numeric(use_data_reactive()[[input$COLUMN]])) {
-      stop("Need categorical column for grouping")
-    }
-    nm = md(glue::glue("**{row_names_n()}** <br> N={total()}"))
-  }
-  
   # create gt table
   gt_table <- reactive({
     for_gt() %>%
-      # gt(rowname_col = "Variable", groupname_col = "ID") %>%
-      gt(groupname_col = "ID") %>%
-      fmt_markdown(columns = c(Variable),
+      # cols_labelgt(rowname_col = "Variable", groupname_col = "ID") %>%
+      gt::gt(groupname_col = "ID") %>%
+      gt::fmt_markdown(columns = c(Variable),
                    rows = stringr::str_detect(Variable,'&nbsp;') |
                      stringr::str_detect(Variable,'<b>') |
                      stringr::str_detect(Variable,'</b>')) %>%
-      tab_options(table.width = px(700)) %>%
-      cols_label(.list = purrr::imap(for_gt()[-c(1:2)], ~col_for_list(.x))) %>%
-      tab_header(
-        title = md(input$table_title),
-        subtitle = md(subtitle_html())
+      gt::tab_options(table.width = gt::px(700)) %>%
+      gt::cols_label(.list = col_for_list_expr(row_names_n(), col_total())) %>%
+      gt::tab_header(
+        title = gt::md(input$table_title),
+        subtitle = gt::md(subtitle_html())
       ) %>%
-      tab_style(
-        style = cell_text(weight = "bold"),
-        locations = cells_row_groups()
+      gt::tab_style(
+        style = gt::cell_text(weight = "bold"),
+        locations = gt::cells_row_groups()
       ) %>%
-      tab_style(
+      gt::tab_style(
         style = list(
-          cell_text(align = "right")
+          gt::cell_text(align = "right")
         ),
-        locations = cells_stub(rows = TRUE)
+        locations = gt::cells_stub(rows = TRUE)
       )%>%
-      cols_label(Variable = "")
+      gt::cols_label(Variable = "") %>%
+      std_footnote("tidyCDISC app") %>%
+      gt::tab_footnote(input$table_footnote)
   })
   
-  output$all <- render_gt({  gt_table() })
+  output$all <- gt::render_gt({  gt_table() })
   
   
   # ----------------------------------------------------------------------
@@ -616,7 +610,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
         write.csv(for_gt(), file, row.names = FALSE)
       } else if(input$download_type == ".html") {
         exportHTML <- gt_table()
-        gtsave(exportHTML, file)
+        gt::gtsave(exportHTML, file)
       }
     }
   ) 
@@ -634,9 +628,11 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     if(any("CDISCPILOT01" %in% ADSL()$STUDYID)){
       glue::glue("
         # create list of dataframes from CDISC pilot study
-        datalist <- list(ADSL = tidyCDISC::adsl, ADAE = tidyCDISC::adae, ADVS = tidyCDISC::advs, ADLBC = tidyCDISC::adlbc, ADTTE = tidyCDISC::adtte)
+        datalist <- list({paste(purrr::map_chr(names(datafile()), ~ paste0(.x, ' = tidyCDISC::', tolower(.x))), collapse = ', ')})
         "
       )
+      # names_datafile <- function() c("ADSL", "ADAE")
+      # paste(purrr::map_chr(names_datafile(), ~ paste0(.x, " = tidyCDISC::", tolower(.x))), collapse = ", ")
     } else {glue::glue("
       # User must manually set file paths for study
           study_dir <- 'path/to/study/directory/'
@@ -645,22 +641,31 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
           filenames <- c({filenames()})
           
           # create list of dataframes
-          datalist <- tidyCDISC::readData(study_dir, filenames)
+          datalist <- 
+            purrr::map(file_names, ~ haven::read_sas(file.path(study_directory,.x))) %>%
+            setNames(toupper(stringr::str_remove(file_names, '.sas7bdat')))
       ")}
   })
+  
+  footnote_src <- reactive({
+    if(any("CDISCPILOT01" %in% ADSL()$STUDYID)){
+      "'tidyCDISC app'"
+    } else {
+      "study_dir"
+    }
+    })
   
   # If ADAE exists, then prep that data too
   adae_expr <- reactive({
     if("ADAE" %in% names(datafile())){
       glue::glue("
         # Create AE data set
-            pre_adae <- datalist %>%
-                tidyCDISC::prep_adae(pre_adsl$data, '{RECIPE()}')
-            ae_data <- pre_adae$data
+        pre_adae <- datalist %>%
+          tidyCDISC::prep_adae(pre_adsl$data, '{RECIPE()}')
+        ae_data <- pre_adae$data
         "
       )
-    } else {"
-      "}
+    } else {""}
   })
   # capture output of filtering expression
   # input_filter_df <- c("one","mild","Moderate")
@@ -676,7 +681,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       glue::glue("
           # Create small filtered data set
               dat_to_filt <- tidyCDISC::data_to_filter(datalist, c({filter_dfs}))
-              filtered_data <- eval(parse(text = '{filter_code}')) %>% varN_fctr_reorder()
+              filtered_data <- {filter_code} %>% tidyCDISC::varN_fctr_reorder()
           ")
     } else {""}
   })
@@ -733,29 +738,39 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   Rscript_use_preferred_pop_data <- reactive({
     ifelse(is_grp_col_adae() , "ae_data","pop_data")
   })
+  
+  # install packages (as needed) code. Assigning this as text string outside of
+  # text_code because it's too difficult to escape the { character in
+  # glue::glue()
+  install_text <- "invisible(sapply(pkgs_req, function(x){
+    if(length(find.package(x, quiet = TRUE)) == 0) {
+      message(paste('Installing package:', x))
+      install.packages(x)
+    }}))"
   # create code to generate table as dataframe object
   text_code <- reactive({
     glue::glue(
     "
-    
     options(digits = 3)
 
-    pkgs_req <- c('tidyCDISC', 'purrr', 'haven', 'dplyr', 'stringi', 'stringr', 'tidyr', 'gt', 'diffdf')
-    pkgs_needed <- pkgs_req[!(pkgs_req %in% installed.packages()[,'Package'])]
-    if('tidyCDISC' %in% pkgs_needed) remotes::install_github('Biogen-Inc/tidyCDISC')
-    pkgs_needed <- pkgs_needed[pkgs_needed != 'tidyCDISC']
-    if(length(pkgs_needed)) install.packages(pkgs_needed)
+    # Code installs required packages if needed
+    pkgs_req <- c('tidyCDISC', 'purrr', 'haven', 'dplyr', 'stringr', 'tidyr', 'gt')
+    {install_text}
+    
+    if (utils::compareVersion(as.character(utils::packageVersion('tidyCDISC')), '{packageVersion('tidyCDISC')}') < 0) {{
+      install.packages('remotes')
+      remotes::install_github('Biogen-Inc/tidyCDISC')
+    }}
     
     library(tidyCDISC)
     library(purrr)
     library(haven)
     library(dplyr)
-    library(stringi)
-        
+
     {create_script_data()}
     pre_adsl <- tidyCDISC::prep_adsl(datalist$ADSL, input_recipe = '{RECIPE()}')
     {adae_expr()}
-    bds_data <- datalist %>% tidyCDISC::combineBDS(ADSL = pre_adsl$data)
+    bds_data <- datalist %>% tidyCDISC::prep_bds(ADSL = pre_adsl$data)
         
     {data_to_filter_expr()}
     {filter_pop_expr()}
@@ -764,7 +779,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
         
     # get drop zone area from tidyCDISC
     # and create table using data
-    blockData <- {paste0(capture.output(dput(blocks_and_functions())), collapse = '\n')}
+    blockData <- {prep_blocks(blocks_and_functions())}
     
     {df_empty_expr()}
     "
@@ -779,7 +794,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
         distinct(USUBJID) %>% 
         summarise(n_tot = n(), .groups='drop_last')
         
-        total <- total_df$n_tot
+        col_total <- total_df$n_tot
         ")
     } else {
       glue::glue(
@@ -789,7 +804,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
         summarise(n_tot = n(), .groups='drop_last') %>%
         mutate({input$COLUMN} = 'Total') 
         
-        grp_lvls <- tidyCDISC::getLevels({Rscript_use_preferred_pop_data()}[['{input$COLUMN}']])
+        grp_lvls <- tidyCDISC::get_levels({Rscript_use_preferred_pop_data()}[['{input$COLUMN}']])
         xyz <- data.frame(grp_lvls) %>%
             rename_with(~paste('{input$COLUMN}'), grp_lvls)
 
@@ -804,7 +819,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
           mutate(n_tot = tidyr::replace_na(n_tot, 0)) 
         
         total_df <- bind_rows(groups, all)
-        total <- total_df$n_tot
+        col_total <- total_df$n_tot
         "
       )
     }
@@ -819,28 +834,12 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       # Calculate totals for population set
       {total_for_code()}
       
+      tg_datalist <- list({ifelse(adae_expr() == '', '', 'ADAE = ae_data, ')}ADSL = bds_data, POPDAT = {Rscript_use_preferred_pop_data()})
       
-      tg_table <- purrr::pmap(list(
-                  blockData$agg,
-                  blockData$S3,
-                  blockData$dropdown,
-                  blockData$dataset), 
-          function(x,y,z,d) tidyCDISC::app_methods(x,y,z,
-                       group = {column() %quote% 'NULL'}, 
-                       data = tidyCDISC::data_to_use_str(d),
-                       totals = total_df)) %>%
-      map(setNames, tidyCDISC::common_rownames({Rscript_use_preferred_pop_data()}, {column() %quote% 'NULL'})) %>%
-      setNames(paste(blockData$gt_group)) %>%
-      bind_rows(.id = 'ID') %>%
-      mutate(
-        ID = stringi::stri_replace_all_regex(
-          ID, 
-          pattern = '\\\\b'%s+%pretty_blocks$Pattern%s+%'\\\\b',
-          replacement = pretty_blocks$Replacement,
-          vectorize_all = FALSE))
+      tg_table <- tidyCDISC::tg_gt(tg_datalist, blockData, total_df, {column() %quote% 'NULL'})
       
-      # get the rownames for the table
-      row_names_n <- names(tg_table)[-c(1:2)]
+      # get the column names for the table
+      col_names <- names(tg_table)[-c(1:2)]
     
       # create the gt output
       library(gt)
@@ -851,7 +850,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
                    stringr::str_detect(Variable,'<b>') |
                    stringr::str_detect(Variable,'</b>')) %>%
           tab_options(table.width = px(700)) %>%
-          cols_label(.list = imap(tg_table[-c(1:2)], ~ tidyCDISC::col_for_list_expr(.x))) %>%
+          cols_label(.list = tidyCDISC::col_for_list_expr(col_names, col_total)) %>%
           tab_header(
             title = md('{input$table_title}'),
             subtitle = md(\"{subtitle_html()}\")
@@ -860,7 +859,9 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
           style = cell_text(weight = 'bold'),
           locations = cells_row_groups()
           ) %>%
-          cols_label(Variable = '')
+          cols_label(Variable = '') %>%
+          tidyCDISC::std_footnote({footnote_src()}) %>%
+          tab_footnote('{input$table_footnote}')
       "
     )
   })
@@ -881,7 +882,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
               blockData$dataset), 
           function(x,y,z,d) tidyCDISC::app_methods(x,y,z, 
                        group = {column() %quote% 'NULL'}, 
-                       data = tidyCDISC::data_to_use_str(d),
+                       data = tidyCDISC::data_to_use_str(d, ae_data, bds_data),
                        totals = total_df)) %>%
       map(setNames, tidyCDISC::common_rownames({Rscript_use_preferred_pop_data()}, {column() %quote% 'NULL'})) %>%
       setNames(paste(blockData$gt_group)) %>%

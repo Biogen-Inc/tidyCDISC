@@ -14,10 +14,10 @@
 #' @return a frequency table of grouped variables
 #'
 #' @family tableGen Functions
-#' @export
 #' @keywords tabGen
 #' 
-app_nested_freq <- function(column, nested_var = "NONE", group, data, totals, sort) {
+#' @noRd
+app_nested_freq <- function(column, nested_var = "NONE", group, data, totals, sort = "desc_tot") {
   UseMethod("app_nested_freq", column)
 }
 
@@ -33,9 +33,11 @@ app_nested_freq <- function(column, nested_var = "NONE", group, data, totals, so
 #' @rdname app_nested_freq
 #' 
 #' @family tableGen Functions
+#' 
+#' @noRd
 
 app_nested_freq.default <- app_nested_freq.OCCDS <- app_nested_freq.ADAE <- app_nested_freq.ADSL <- 
-  function(column, nested_var = "NONE", group = NULL, data, totals, sort) {
+  function(column, nested_var = "NONE", group = NULL, data, totals, sort = "desc_tot") {
     
   # # ########## ######### ######## #########
   # column <- "EOSSTT"
@@ -57,7 +59,7 @@ app_nested_freq.default <- app_nested_freq.OCCDS <- app_nested_freq.ADAE <- app_
   }
   
   # First, get the desired order our by_var
-  column_lvls <- getLevels(data[[column]])
+  column_lvls <- get_levels(data[[column]])
   abc <- data.frame(column_lvls) %>%
     rename_with(~paste(column), column_lvls)
   
@@ -65,7 +67,7 @@ app_nested_freq.default <- app_nested_freq.OCCDS <- app_nested_freq.ADAE <- app_
     if(sort == "desc_tot"){
       init_dat <- data # do nothing
     } else { # sort == "desc_right"
-      grp_lvls <- getLevels(data[[grp]])
+      grp_lvls <- get_levels(data[[grp]])
       rightmost <- grp_lvls[length(grp_lvls)]
       init_dat <- data %>%
         filter(!!sym(grp) == rightmost)
@@ -99,7 +101,7 @@ app_nested_freq.default <- app_nested_freq.OCCDS <- app_nested_freq.ADAE <- app_
   
   total0 <- 
     sort_cnts %>%
-    mutate(n_tot = totals[nrow(totals),"n_tot"],
+    mutate(n_tot = as.integer(totals[nrow(totals),"n_tot"]),
            prop = n / n_tot,
            x = paste0(n, ' (', sprintf("%.1f", round(prop*100, 1)), ')')
     )  %>%
@@ -123,7 +125,7 @@ app_nested_freq.default <- app_nested_freq.OCCDS <- app_nested_freq.ADAE <- app_
           group_by(!!column, !!nst_var) %>%
           summarize(n = n_distinct(USUBJID)) %>%
           ungroup() %>%
-          mutate(n_tot = totals[nrow(totals),"n_tot"], # do we want to keep zeros?
+          mutate(n_tot = as.integer(totals[nrow(totals),"n_tot"]), # do we want to keep zeros?
                  prop = n / n_tot,
                  x = paste0(n, ' (', sprintf("%.1f", round(prop*100, 1)), ')')
           ) %>%
@@ -148,7 +150,7 @@ app_nested_freq.default <- app_nested_freq.OCCDS <- app_nested_freq.ADAE <- app_
       
     } else { # alpha
       
-      inner_column_lvls <- rev(sort(as.character(getLevels(data[[nst_var]]))))
+      inner_column_lvls <- rev(sort(as.character(get_levels(data[[nst_var]]))))
       inner_abc <- data.frame(inner_column_lvls) %>%
         rename_with(~paste(nst_var), inner_column_lvls) %>%
         mutate(inner_sort = 1:length(inner_column_lvls))
@@ -192,7 +194,7 @@ app_nested_freq.default <- app_nested_freq.OCCDS <- app_nested_freq.ADAE <- app_
     
     # Need this in case dataset rows get filtered to a really small set, and
     # "lose" some levels
-    grp_lvls <- getLevels(data[[group]])
+    grp_lvls <- get_levels(data[[group]])
     xyz <- data.frame(grp_lvls) %>%
       rename_with(~paste(group), grp_lvls)
     
@@ -286,8 +288,10 @@ app_nested_freq.default <- app_nested_freq.OCCDS <- app_nested_freq.ADAE <- app_
 #' @rdname app_nested_freq
 #' 
 #' @family tableGen Functions
+#' 
+#' @noRd
 
-app_nested_freq.BDS <- function(column, nested_var = "NONE", group = NULL, data, totals, sort) {
+app_nested_freq.BDS <- function(column, nested_var = "NONE", group = NULL, data, totals, sort = "desc_tot") {
   rlang::abort(glue::glue(
     "Can't calculate Distinct Frequency for for BDS variables"
   ))
@@ -297,8 +301,10 @@ app_nested_freq.BDS <- function(column, nested_var = "NONE", group = NULL, data,
 #' @rdname app_nested_freq
 #' 
 #' @family tableGen Functions
+#' 
+#' @noRd
 
-app_nested_freq.custom <- function(column, nested_var = "NONE", group, data, totals, sort) {
+app_nested_freq.custom <- function(column, nested_var = "NONE", group, data, totals, sort = "desc_tot") {
   rlang::abort(glue::glue(
     "Can't calculate Distinct Frequency for custom class data set."
   ))

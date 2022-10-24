@@ -111,6 +111,8 @@ mod_tableGen_ui <- function(id){
              fluidRow(column(width = 12,
                 div(id = "table_title", textInput(ns("table_title"), "Table Title", "Table Title", width = '100%')))),
              fluidRow(column(width = 12,
+                div(id = "table_footnote", textInput(ns("table_footnote"), "Table Footnote", placeholder = "Add footnote here", width = '100%')))),
+             fluidRow(column(width = 12,
                              div(id = "download_table", fluidRow(
                                column(6, downloadButton(ns("download_gt"), "Download Table")),
                                column(6, offset = 0,
@@ -140,7 +142,7 @@ mod_tableGen_ui <- function(id){
         
         column(width = 6,
                wellPanel(
-                 fluidRow(gt_output(ns("all"))))
+                 fluidRow(gt::gt_output(ns("all"))))
                # ,fluidRow(tableOutput(ns("for_gt_table")))
         )
       )

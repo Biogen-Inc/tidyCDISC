@@ -37,7 +37,7 @@ mod_indvExp_ui <- function(id){
                             , style = "display: inline-block; float:right; margin-bottom:15px;"
                )),
            br(),
-           div(id = "indv_cic_adv_filtering",checkboxInput(ns("adv_filtering"), "Advanced Pre-Filtering?", value = F)),
+           div(id = "indv_cic_adv_filtering",checkboxInput(ns("adv_filtering"), "Advanced Pre-Filtering?", value = FALSE)),
            conditionalPanel(condition = "input.adv_filtering", ns = ns,
                             div(id = "indv_cic_filter_df",
                               selectInput(ns("filter_df"),"Filter on Variable(s) in a loaded ADaM",
@@ -110,7 +110,7 @@ mod_indvExp_ui <- function(id){
                               materialSwitch(ns("events_apply_filter")
                                              , label = strong(em(h5("Apply Filters")))
                                              , status = "primary"
-                                             , value = F) # should default to false to avoid
+                                             , value = FALSE) # should default to false to avoid
                           )                               # semi-joins found in build-events
                      )
                    ) # end inner fluidRow
@@ -223,7 +223,7 @@ mod_indvExp_ui <- function(id){
                           selectizeInput(
                             ns("overlay_event_vals"),
                             label = HTML("<br/>Select Event Type(s)"),
-                            multiple = T,
+                            multiple = TRUE,
                             choices = c("All"),
                             selected = "All"
                           )

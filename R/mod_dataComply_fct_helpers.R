@@ -35,9 +35,10 @@
 #'
 #' @import shiny
 #' @import dplyr
-#' @import gt
 #' @importFrom purrr map map2 pmap
-#' @importFrom data.table rbindlist
+#' @importFrom gt gt cols_label text_transform cells_body local_image tab_header
+#'   tab_stubhead tab_style  cells_stubhead cols_align cells_row_groups
+#'   cols_hide cell_text
 #'
 #'
 #' @return A list of dataframes that are compliant with the rules in addition to
@@ -46,7 +47,7 @@
 #'
 #' @family dataComply Functions
 #' @noRd
-#'   
+#' 
 gather_reqs <- function(input, output, session, 
                         disp_type = c("error","warn"),
                         datalist = reactive(NULL),
@@ -60,7 +61,8 @@ gather_reqs <- function(input, output, session,
   # study_dir <- 'C:/Users/aclark5/Documents/small_adam/CDISC Pilot Data/'
   # study_dir <- 'C:/Users/aclark5/Documents/small_adam/isis396443_cs3b_csr_data_crt/'
   # filenames <- c('adsl.sas7bdat', 'adtte.sas7bdat', 'advs.sas7bdat')
-  # datalist <- tidyCDISC::readData(study_dir, filenames)
+  # datalist <- purrr::map(file_names, ~ haven::read_sas(file.path(study_directory,.x))) %>%
+  #   setNames(toupper(stringr::str_remove(file_names, ".sas7bdat")))
   # adtte <- datalist$ADTTE
   # adtte %>% distinct(PARAMCD)
   
@@ -94,7 +96,7 @@ gather_reqs <- function(input, output, session,
     alldf <- purrr::map(.x = names(datalist()), function(x) alldf[[x]] <- all_df_rules) %>%
       setNames(names(datalist()))%>%
       lapply(data.frame, stringsAsFactors = FALSE) %>%
-      data.table::rbindlist(fill=TRUE, idcol = "df") %>%
+      bind_rows(.id = "df") %>%
       subset(df %in% names(datalist())) %>% 
       mutate(type_col = if(disp_type == "error") error else warn) %>% 
       subset(type_col != "") %>% 
@@ -118,7 +120,7 @@ gather_reqs <- function(input, output, session,
     if(!expl_sl_nms_correct) stop("Sublist Names must be 'error' and 'warn' for each element of 'expl_rules'")
     
     hdf <- lapply(expl_rules, data.frame, stringsAsFactors = FALSE) %>%
-      data.table::rbindlist(fill=TRUE, idcol = "df") %>%
+      bind_rows(.id = "df") %>%
       subset(df %in% names(datalist())) %>% 
       mutate(type_col = if(disp_type == "error") error else warn) %>% 
       subset(type_col != "") %>% 
@@ -143,7 +145,7 @@ gather_reqs <- function(input, output, session,
     # Organize Rules into a dataframe & get concise initial reqs
     dfw_type <-
       lapply(df_incl_rules, data.frame, stringsAsFactors = FALSE) %>%
-      data.table::rbindlist(fill=TRUE, idcol = "df_var") %>%
+      bind_rows(.id = "df_var") %>%
       mutate(type_col = if(disp_type == "error") error else warn) %>%
       subset(type_col != "") %>% 
       distinct(df_var, type_col) 
@@ -156,7 +158,7 @@ gather_reqs <- function(input, output, session,
         map(.x = names(datalist()), ~df_vars[df_vars %in% colnames(datalist()[[.x]])]) %>%
         setNames(names(datalist())) %>%
         lapply(data.frame, stringsAsFactors = FALSE) %>%
-        data.table::rbindlist(fill=TRUE, idcol = "df") %>%
+        bind_rows(.id = "df") %>%
         rename("df_var" = "X..i..") %>%
         inner_join(dfw_type, by = c("df_var")) %>%
         distinct(df, df_var, type_col) %>%
@@ -184,7 +186,7 @@ gather_reqs <- function(input, output, session,
     # Organize Rules into a dataframe & get concise initial reqs
     dfw_ette_type <-
       lapply(df_incl_rules_except_tte, data.frame, stringsAsFactors = FALSE) %>%
-      data.table::rbindlist(fill=TRUE, idcol = "df_var") %>%
+      bind_rows(.id = "df_var") %>%
       mutate(type_col = if(disp_type == "error") error else warn) %>%
       subset(type_col != "") %>% 
       distinct(df_var, type_col) 
@@ -197,7 +199,7 @@ gather_reqs <- function(input, output, session,
         map(.x = names(datalist()), ~df_ette_var[df_ette_var %in% colnames(datalist()[[.x]]) & !("CNSR" %in% colnames(datalist()[[.x]]))]) %>%
         setNames(names(datalist())) %>%
         lapply(data.frame, stringsAsFactors = FALSE) %>%
-        data.table::rbindlist(fill=TRUE, idcol = "df") %>%
+        bind_rows(.id = "df") %>%
         rename("df_var" = "X..i..") %>%
         inner_join(dfw_ette_type, by = c("df_var")) %>%
         distinct(df, df_var, type_col) %>%
@@ -255,8 +257,8 @@ gather_reqs <- function(input, output, session,
         missing = ifelse(not_exist == TRUE,
                          ifelse(disp_type == "error", FALSE,TRUE),
                          unlist(purrr::map2(.x = df, .y = type_col, function(x, y)
-                           all(as.character(datalist()[[x]][,type_col[df == x & type_col == y & not_exist == F]]) == "") |
-                             all(is.na(datalist()[[x]][,type_col[df == x & type_col == y & not_exist == F]]))
+                           all(as.character(datalist()[[x]][,type_col[df == x & type_col == y & not_exist == FALSE]]) == "") |
+                             all(is.na(datalist()[[x]][,type_col[df == x & type_col == y & not_exist == FALSE]]))
                          )) )
         
       ) %>%
@@ -270,28 +272,28 @@ gather_reqs <- function(input, output, session,
     
     # modify the table displayed using gt, remove a column if just exporting warnings
     tab <- pf %>%
-      gt(rowname_col = "type_col" , groupname_col = "df") %>%
-      cols_label(not_exist_disp = "Doesn't Exist", missing_disp = "Missing Data") %>%
-      text_transform(
-        locations = list(cells_body(columns = c(not_exist_disp), rows = not_exist_disp == "X"),
-                         cells_body(columns = c(missing_disp), rows = missing_disp == "X")),
-        fn = function(X) local_image(filename = "inst/app/www/red_x.png", height = 15)
+      gt::gt(rowname_col = "type_col" , groupname_col = "df") %>%
+      gt::cols_label(not_exist_disp = "Doesn't Exist", missing_disp = "Missing Data") %>%
+      gt::text_transform(
+        locations = list(gt::cells_body(columns = c(not_exist_disp), rows = not_exist_disp == "X"),
+                         gt::cells_body(columns = c(missing_disp), rows = missing_disp == "X")),
+        fn = function(X) gt::local_image(filename = "inst/app/www/red_x.png", height = 15)
       ) %>%
-      tab_header(
+      gt::tab_header(
         title = paste(ifelse(disp_type == "error", "Required:", "Optional:"),"reconcile variables below"),
         subtitle = ifelse(disp_type == "error", "and re-upload data",
                           "to experience the app's full functionality")
       ) %>%
-      tab_stubhead(label = "Data") %>%
-      tab_style(style = cell_text(weight = "bold"), locations = cells_stubhead()) %>%
-      cols_align("center") %>%
-      tab_style(style = cell_text(weight = "bold"), locations = cells_row_groups())
+      gt::tab_stubhead(label = "Data") %>%
+      gt::tab_style(style = gt::cell_text(weight = "bold"), locations = gt::cells_stubhead()) %>%
+      gt::cols_align("center") %>%
+      gt::tab_style(style = gt::cell_text(weight = "bold"), locations = gt::cells_row_groups())
 
     
     if(disp_type == "warn") {
-      tab <- tab %>% cols_hide(vars(not_exist_disp))
+      tab <- tab %>% gt::cols_hide(columns = c(not_exist_disp))
     }
-  }
+  } 
   
   
   return(list(

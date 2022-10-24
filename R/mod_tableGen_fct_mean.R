@@ -11,9 +11,9 @@
 #' @return an summary statistic table of grouped variables
 #' 
 #' @family tableGen Functions
-#' @export
 #' @keywords tabGen
 #' 
+#' @noRd
 app_mean <- function(column, week, group, data) {
   UseMethod("app_mean", column)
 }
@@ -46,6 +46,8 @@ app_mean.default <- function(column, week, group, data) {
 #' 
 #' @family tableGen Functions
 #' @rdname app_mean
+#' 
+#' @noRd
 app_mean.ADAE <- app_mean.ADSL <- function(column, week, group = NULL, data) {
   
   column <- as.character(column)
@@ -92,6 +94,7 @@ app_mean.ADAE <- app_mean.ADSL <- function(column, week, group = NULL, data) {
 #' @family tableGen Functions
 #' @rdname app_mean
 #' 
+#' @noRd
 app_mean.BDS <- function(column, week, group = NULL, data) {
   
   ################################
@@ -119,7 +122,7 @@ app_mean.BDS <- function(column, week, group = NULL, data) {
     }
     
     group <- sym(group)
-    grp_lvls <- getLevels(data[[group]])
+    grp_lvls <- get_levels(data[[group]])
     xyz <- data.frame(grp_lvls) %>%
       rename_with(~paste(group), grp_lvls)
     

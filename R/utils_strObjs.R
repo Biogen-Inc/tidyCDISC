@@ -3,11 +3,12 @@
 #' my_cols
 #'
 #' Grab a quick color pallette
-#'
-#' @importFrom RColorBrewer brewer.pal
 #' 
 #' @noRd
-my_cols <- RColorBrewer::brewer.pal(7,"Pastel2")
+my_cols <- c("#B3E2CD", "#FDCDAC", "#CBD5E8", "#F4CAE4", "#E6F5C9",
+             "#FFF2AE", "#F1E2CC", "#CCCCCC")
+# don't want to add another import to package, so doing this manually
+# my_cols <- RColorBrewer::brewer.pal(8,"Pastel2")
 
 css <- paste0("
               .nav li a.disabled {
@@ -21,9 +22,10 @@ css <- paste0("
               .vis-item.CM { background-color: ",my_cols[2],"; }
               .vis-item.AE { background-color: ",my_cols[3],"; }
               .vis-item.LB { background-color: ",my_cols[4],"; }
-              .vis-item.MH_MH { background-color: ",my_cols[5],"; }
-              .vis-item.MH_FDH { background-color: ",my_cols[6],"; }
-              .vis-item.MH_DH { background-color: ",my_cols[7],"; }
+              .vis-item.LC { background-color: ",my_cols[5],"; }
+              .vis-item.MH_MH { background-color: ",my_cols[6],"; }
+              .vis-item.MH_FDH { background-color: ",my_cols[7],"; }
+              .vis-item.MH_DH { background-color: ",my_cols[8],"; }
               .vis-item.MH_LC { background-color: #e3e1e1; }
               ")
 # feel free to add more css strings above

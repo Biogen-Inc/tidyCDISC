@@ -84,7 +84,6 @@ utils::globalVariables(c(
   "tab_en",
   "tab_st",
   "type_col",
-  "%s+%",
   ".",
   "CHG",
   "ID",
@@ -111,6 +110,21 @@ utils::globalVariables(c(
   "advs",
   "adae",
   "adlbc",
+  "adtte",
   "warn",
-  "dy_min"
+  "dy_min",
+  "AEACN", "AEACNOTH", "AREL", "CNSR", "FASFL", "ITTFL", "LOWER", "Lower", 
+  "MEAN", "Mean (SD)",
+  "Median", "Min | Max", "N", "PANEL", "Q1 | Q3", "SAFFL", "SEM", "STD",
+  "TRTEMFL", "UPPER", "Upper",
+  "Variable", "ae_data", "avals_by", "bds_data", "colour", "colour2",
+  "corr", "corr_lab",
+  "corr_lab_hover", "descr", "grp", "id_block", "id_desc", "id_rn",
+  "id_stat", "inner_sort",
+  "lab", "n_subgroups", "n_tot", "orig_id_rn", "orig_var_rn", "param_x",
+  "param_y", "pt", "pval",
+  "pval_hover", "sort_n", "v", "var", "var_rn", "where", "y"
+  ,":="
 ))
+
+

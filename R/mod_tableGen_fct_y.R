@@ -12,9 +12,9 @@
 #' @return a frequency table of grouped variables
 #' 
 #' @family tableGen Functions
-#' @export
 #' @keywords tabGen
 #' 
+#' @noRd
 app_y <- function(column, group, data, totals) {
   UseMethod("app_y", column)
 }
@@ -25,12 +25,15 @@ app_y <- function(column, group, data, totals) {
 #' if data is grouped add total column to the grouped data
 #' 
 #' @importFrom rlang sym !!
+#' @importFrom tidyr pivot_wider
 #' @import dplyr
 #' 
 #' @return frequency table of ADSL column
 #' @rdname app_y
 #' 
-#' @family tableGen Functionss
+#' @family tableGen Functions
+#' 
+#' @noRd
 app_y.default <- app_y.OCCDS <- app_y.ADAE <- app_y.ADSL <- function(column, group = NULL, data, totals) {
   # ########## ######### ######## #########
   # column <- "AOCCFL"
@@ -62,7 +65,7 @@ app_y.default <- app_y.OCCDS <- app_y.ADAE <- app_y.ADSL <- function(column, gro
       summarize(n = n_distinct(USUBJID)) 
     ) %>%
     mutate(n = tidyr::replace_na(n, 0),
-           n_tot = totals[nrow(totals),"n_tot"],
+           n_tot = as.integer(totals[nrow(totals),"n_tot"]),
            prop = n / n_tot,
            x = paste0(n, ' (', sprintf("%.1f", round(prop*100, 1)), ')')
     )  %>%
@@ -82,7 +85,7 @@ app_y.default <- app_y.OCCDS <- app_y.ADAE <- app_y.ADSL <- function(column, gro
     # Calculate Group totals. Note that sometimes, a certain level of the 
     # grouping var may cease to exist, so precautions were taken below
     # to retain it's value and give it a 0 (0.0)
-    grp_lvls <- getLevels(data[[group]])
+    grp_lvls <- get_levels(data[[group]])
     xyz <- data.frame(grp_lvls) %>%
       rename_with(~paste(group), grp_lvls)
     
@@ -112,7 +115,7 @@ app_y.default <- app_y.OCCDS <- app_y.ADAE <- app_y.ADSL <- function(column, gro
              v = paste0(n, ' (', sprintf("%.1f", round(prop*100, 1)), ')')
       ) %>%
       select(-n, -prop, -n_tot) %>%
-      pivot_wider(!!column, names_from = !!group, values_from = v)
+      tidyr::pivot_wider(!!column, names_from = !!group, values_from = v)
     
     cbind(groups, total$x) # combine w/ Total
   }
@@ -124,6 +127,8 @@ app_y.default <- app_y.OCCDS <- app_y.ADAE <- app_y.ADSL <- function(column, gro
 #' @rdname app_y
 #' 
 #' @family tableGen Functions
+#' 
+#' @noRd
 app_y.BDS <- function(column, group = NULL, data, totals) {
   rlang::abort(glue::glue(
     "Can't calculate Y frequency for BDS - {column} is numeric"
@@ -134,6 +139,8 @@ app_y.BDS <- function(column, group = NULL, data, totals) {
 #' @rdname app_y
 #' 
 #' @family tableGen Functions
+#' 
+#' @noRd
 app_y.custom <- function(column, group, data, totals) {
   rlang::abort(glue::glue(
     "Can't calculate mean, data is not classified as ADLB, BDS or OCCDS"

@@ -12,9 +12,9 @@
 #' @return a frequency table of grouped variables
 #' 
 #' @family tableGen Functions
-#' @export
 #' @keywords tabGen
 #' 
+#' @noRd
 app_freq <- function(column, group, data, totals) {
   UseMethod("app_freq", column)
 }
@@ -23,6 +23,8 @@ app_freq <- function(column, group, data, totals) {
 #' @rdname app_freq
 #' 
 #' @family tableGen Functions
+#' 
+#' @noRd
 
 app_freq.default <- function(column, group, data, totals) {
   rlang::abort(glue::glue(
@@ -41,13 +43,15 @@ app_freq.default <- function(column, group, data, totals) {
 #' @rdname app_freq
 #' 
 #' @family tableGen Functions
+#' 
+#' @noRd
 
 app_freq.ADAE <- app_freq.ADSL <- function(column, group = NULL, data, totals) {
   # ########## ######### ######## #########
-  # column <- "SAFFL"
+  # column <- "SEX"
   # group = "TRT01P"
-  # # # group <- "NONE"
-  # data = bds_data #%>% filter(SAFFL == 'Y')
+  # group <- NULL
+  # data = tg_data #bds_data #%>% filter(SAFFL == 'Y')
   # totals <- total_df
   # ########## ######### ######## #########
   
@@ -71,13 +75,13 @@ app_freq.ADAE <- app_freq.ADSL <- function(column, group = NULL, data, totals) {
   } else {
     total0 <- total00
   }
-  
+
   total <- total0 %>%
     group_by(!!column) %>%
     summarise(n = sum(n)) %>%
     ungroup() %>%
     mutate(n = tidyr::replace_na(n, 0),
-      prop = ifelse(n == 0, 0, n/totals[nrow(totals),"n_tot"])) %>%
+      prop = if_else(n == 0, 0, n/as.integer(totals[nrow(totals),"n_tot"]))) %>%
     mutate(x = paste0(n, " (", sprintf("%.1f", round(prop*100, 1)), ")")) %>%
     select(!!column, x)
   
@@ -92,7 +96,7 @@ app_freq.ADAE <- app_freq.ADSL <- function(column, group = NULL, data, totals) {
     
     group <- rlang::sym(group)
     
-    grp_lvls <- getLevels(data[[group]])
+    grp_lvls <- get_levels(data[[group]])
     xyz <- data.frame(grp_lvls) %>%
       rename_with(~paste(group), grp_lvls)
     
@@ -144,6 +148,8 @@ app_freq.ADAE <- app_freq.ADSL <- function(column, group = NULL, data, totals) {
 #' @rdname app_freq
 #' 
 #' @family tableGen Functions
+#' 
+#' @noRd
 
 app_freq.BDS <- function(column, group = NULL, data, totals) {
   rlang::abort(glue::glue(
@@ -155,6 +161,8 @@ app_freq.BDS <- function(column, group = NULL, data, totals) {
 #' @rdname app_freq
 #' 
 #' @family tableGen Functions
+#' 
+#' @noRd
 app_freq.OCCDS <- function(column, group, data, totals) {
   rlang::abort(glue::glue(
     "Currently no method to perform frequency statistics on OCCDS"
@@ -166,6 +174,8 @@ app_freq.OCCDS <- function(column, group, data, totals) {
 #' @rdname app_freq
 #' 
 #' @family tableGen Functions
+#' 
+#' @noRd
 
 app_freq.custom <- function(column, group, data, totals) {
   rlang::abort(glue::glue(

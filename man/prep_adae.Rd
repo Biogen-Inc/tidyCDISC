@@ -9,11 +9,23 @@ prep_adae(datafile, ADSL, input_recipe)
 \arguments{
 \item{datafile}{list of ADaM-ish dataframes}
 
-\item{input_recipe}{The shiny input that keeps track of the recipe selected}
+\item{ADSL}{an ADSL data.frame}
 
-\item{data}{an ADSL}
+\item{input_recipe}{The shiny input that keeps track of the recipe selected}
+}
+\value{
+A `list` containing a `data.frame` object and character vector specifying the pre-filter applied.
 }
 \description{
 Function to pre-filter the ADAE depending on the stan table selected
+}
+\examples{
+datalist <- list(ADSL = tidyCDISC::adsl, ADVS = tidyCDISC::advs, 
+                 ADAE = tidyCDISC::adae, ADLBC = tidyCDISC::adlbc)
+                 
+pre_adsl <- prep_adsl(datalist$ADSL, input_recipe = 'NONE')
+
+# Create AE data set
+prep_adae(datalist, pre_adsl$data, input_recipe = 'NONE')
 }
 \keyword{tabGen_repro}

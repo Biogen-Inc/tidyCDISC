@@ -14,6 +14,6 @@ Data frame with 32,139 features and 34 fields
 advs
 }
 \description{
-Vital Signs Analysis Dataset from Phuse Test Data Fractory Project's github.
+Vital Signs Analysis Data from PHUSE Test Data Factory Project's GitHub.
 }
 \keyword{datasets}

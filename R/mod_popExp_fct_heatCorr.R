@@ -1,18 +1,30 @@
-#' tidyCDISC heatmap plot of endpoint correlations
-#' 
-#' Create a line plot with a time variable as the x-axis
-#' and using either the selected response variable
-#' or if a PARAMCD is selected, then plot the corresponding value
-#' to calculate the means. Lines are plotted by patient
-#' 
+#' Heatmap Plot
+#'
+#' Create a heatmap comparing param/endpoints variable on both axis
+#'
+#' @param data Merged data to be used in plot
+#' @param yvar_x character string of variable or paramcd names for x-axis
+#' @param yvar_y character string of variable or paramcd names for y-axis
+#' @param time character string of time variable
+#' @param value character value: permitted values include "AVAL", "CHG", or
+#'   "BASE"
+#' @param cor_mthd character string. Defaults to 'pearson' for calculating
+#'   correlation coefficients. See `?cor` for more supported test stats.
+#' @param show_sig logical, whether or not to display p-values for significant
+#'   tests statistics
+#' @param sig_level dbl, defaulting to .05. Used to determine significance level
+#'   for correlation tests performed
+#'
 #' @importFrom ggcorrplot cor_pmat
-#' 
+#'
 #' @family popExp Functions
-#' @export
 #' @keywords popEx
 #' 
+#' @return A list object containing a ggplot object and a data frame with the corresponding correlations
+#'   
+#' @noRd
 app_heatmap <- function(data, yvar_x, yvar_y, time, value = "AVAL",
-                         cor_mthd = "pearson", show_sig = F, sig_level = .05) {
+                         cor_mthd = "pearson", show_sig = FALSE, sig_level = .05) {
   
   
   
@@ -33,13 +45,13 @@ app_heatmap <- function(data, yvar_x, yvar_y, time, value = "AVAL",
   data0 <- data %>%
     select(USUBJID, AVISIT, one_of("PARAMCD", "AVAL"), one_of(time, paste0(time,"N")),
            yvar_x_norm, yvar_y_norm)  %>%
-    varN_fctr_reorder2()
+    varN_fctr_reorder()
   
   # Start of function
   time_sym <- rlang::sym(time)
   if(time != "NONE"){ # results need to be grouped by time var
     
-    time_vals0 <- getLevels(data0[[time]])
+    time_vals0 <- get_levels(data0[[time]])
     # print(time_vals0)
     time_vals <- time_vals0[time_vals0 != "" & !is.na(time_vals0)]
     
@@ -84,7 +96,7 @@ app_heatmap <- function(data, yvar_x, yvar_y, time, value = "AVAL",
       
       # Calculate p-value matrix
       p.mat <- wide_dat %>% dplyr::select_if(is.numeric) %>% ggcorrplot::cor_pmat()
-      p.vals <- t(p.mat[yvar_y, yvar_x, drop = F]) %>%
+      p.vals <- t(p.mat[yvar_y, yvar_x, drop = FALSE]) %>%
         as.data.frame.table(responseName = "pval") %>%
         rename_with(~"param_x", "Var1") %>%
         rename_with(~"param_y", "Var2")
@@ -118,7 +130,7 @@ app_heatmap <- function(data, yvar_x, yvar_y, time, value = "AVAL",
       mutate(
         pval_hover = sprintf("%.4f", pval),
         corr_lab_hover = sprintf("%.3f", corr),
-        corr_lab = case_when(show_sig == F ~ sprintf("%.2f", corr),
+        corr_lab = case_when(show_sig == FALSE ~ sprintf("%.2f", corr),
                              pval <= sig_level ~ sprintf("%.2f", corr),
                              TRUE ~ ""),
         param_y = factor(param_y, levels = rev(yvar_y))
@@ -178,7 +190,7 @@ app_heatmap <- function(data, yvar_x, yvar_y, time, value = "AVAL",
     tile_data <- t(m) %>%
       as.data.frame.table(responseName = "corr") %>%
       left_join(
-        t(p.mat[yvar_y, yvar_x, drop = F]) %>%
+        t(p.mat[yvar_y, yvar_x, drop = FALSE]) %>%
           as.data.frame.table(responseName = "pval")
       ) %>%
       rename_with(~"param_x", "Var1") %>%
@@ -186,7 +198,7 @@ app_heatmap <- function(data, yvar_x, yvar_y, time, value = "AVAL",
       mutate(
         pval_hover = sprintf("%.4f", pval),
         corr_lab_hover = sprintf("%.3f", corr),
-        corr_lab = case_when(show_sig == F ~ sprintf("%.2f", corr),
+        corr_lab = case_when(show_sig == FALSE ~ sprintf("%.2f", corr),
                              pval <= sig_level ~ sprintf("%.2f", corr),
                              TRUE ~ ""),
         param_y = factor(param_y, levels = rev(yvar_y))
@@ -197,7 +209,7 @@ app_heatmap <- function(data, yvar_x, yvar_y, time, value = "AVAL",
   }
   # make sure the factor levels of tile_data match those of data0
   if (time != "NONE") {
-    lvls <- getLevels(data0[[time]])
+    lvls <- get_levels(data0[[time]])
     tile_data <- tile_data %>%
       mutate(!!time_sym := factor(!!time_sym, levels = lvls))
   }
@@ -205,7 +217,7 @@ app_heatmap <- function(data, yvar_x, yvar_y, time, value = "AVAL",
   time_lab <- ifelse(rlang::is_empty(attr(data[["time"]], "label")), time, attr(data[[time]], "label"))
   
   # library(ggplot2)
-  p <- ggplot(tile_data, aes(param_x, param_y, fill=corr, label = corr_lab,
+  p <- ggplot2::ggplot(tile_data, aes(param_x, param_y, fill=corr, label = corr_lab,
          text = paste0(
            "<b>Param X: ", param_x,
            "<br>Param Y: ", param_y,
@@ -215,19 +227,19 @@ app_heatmap <- function(data, yvar_x, yvar_y, time, value = "AVAL",
            ifelse(rep(time == "NONE", nrow(tile_data)), "", paste0("<br>",time,": ", !!time_sym)),
            "</b>")
   ))  +
-    geom_tile(height=0.8, width=0.8) +
-    geom_text(cex = 4.5) +
-    scale_fill_gradient2(low = "#3B9AB2", mid = "#EEEEEE", high = "#F21A00") +
-    theme_minimal() +
+    ggplot2::geom_tile(height=0.8, width=0.8) +
+    ggplot2::geom_text(cex = 4.5) +
+    ggplot2::scale_fill_gradient2(low = "#3B9AB2", mid = "#EEEEEE", high = "#F21A00") +
+    ggplot2::theme_minimal() +
     # coord_equal() +
-    labs(title = paste("Endpoint Corrlation Matrix", ifelse(time == "NONE", "", paste("by", time_lab))),
+    ggplot2::labs(title = paste("Endpoint Corrlation Matrix", ifelse(time == "NONE", "", paste("by", time_lab))),
       x ="X Parameter(s)",y = "Y Parameter(s)", fill = "Corr") +
-    theme(axis.title=element_text(colour="gray20"),
-          axis.text.x=element_text(size=13, angle=0, vjust=1, hjust=1, 
-                                   margin=margin(-3,0,10,0)),
-          axis.text.y=element_text(size=13, margin=margin(0,-3,0,10)),
-          panel.grid.major=element_blank(),
-          plot.title = element_text(size = 16))
+    ggplot2::theme(axis.title=ggplot2::element_text(colour="gray20"),
+          axis.text.x=ggplot2::element_text(size=13, angle=0, vjust=1, hjust=1, 
+                                   margin = ggplot2::margin(-3,0,10,0)),
+          axis.text.y=ggplot2::element_text(size=13, margin = ggplot2::margin(0,-3,0,10)),
+          panel.grid.major=ggplot2::element_blank(),
+          plot.title = ggplot2::element_text(size = 16))
   if (time != "NONE") { 
     p <- p + ggplot2::facet_wrap(stats::as.formula(paste(".~", time)), scales = "free")
   }

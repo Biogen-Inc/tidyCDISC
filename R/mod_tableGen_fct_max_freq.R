@@ -11,8 +11,9 @@
 #' @return a frequency table of grouped variables
 #'
 #' @family tableGen Functions
-#' @export
 #' @keywords tabGen
+#' 
+#' @noRd
 app_max_freq <- function(column, group, data, totals) {
   UseMethod("app_max_freq", column)
 }
@@ -28,15 +29,17 @@ app_max_freq <- function(column, group, data, totals) {
 #' @return frequency table of ADSL column
 #' @rdname app_max_freq
 #' 
-#' @family tableGen Functionss
+#' @family tableGen Functions
+#' 
+#' @noRd
 
 app_max_freq.default <- app_max_freq.OCCDS <- app_max_freq.ADAE <- app_max_freq.ADSL <- 
   function(column, group = NULL, data, totals) {
   # # ########## ######### ######## #########
-  # column <- "AESEV"
-  # group = "TRT01P"
-  # data = ae_data #%>% filter(SAFFL == 'Y')
-  # totals <- total_df
+  # column <- "AVISITf2" # "AESEV"
+  # group = NULL "TRT01P"
+  # data = tg_data #ae_data #%>% filter(SAFFL == 'Y')
+  # totals <- no_grp_tots #total_df
   # # ########## ######### ######## #########
   
   # column is the variable selected on the left-hand side
@@ -66,7 +69,7 @@ app_max_freq.default <- app_max_freq.OCCDS <- app_max_freq.ADAE <- app_max_freq.
     group_by(!!column) %>%
     summarize(n = n_distinct(USUBJID)) %>%
     ungroup() %>%
-    mutate(n_tot = totals[nrow(totals),"n_tot"],
+    mutate(n_tot = as.integer(totals[nrow(totals),"n_tot"]),
            prop = n / n_tot,
            x = paste0(n, ' (', sprintf("%.1f", round(prop*100, 1)), ')')
     )  %>%
@@ -83,7 +86,7 @@ app_max_freq.default <- app_max_freq.OCCDS <- app_max_freq.ADAE <- app_max_freq.
     
     group <- rlang::sym(group)
     
-    grp_lvls <- getLevels(data[[group]])
+    grp_lvls <- get_levels(data[[group]])
     xyz <- data.frame(grp_lvls) %>%
       rename_with(~paste(group), grp_lvls)
     
@@ -131,6 +134,8 @@ app_max_freq.default <- app_max_freq.OCCDS <- app_max_freq.ADAE <- app_max_freq.
 #' @rdname app_max_freq
 #' 
 #' @family tableGen Functions
+#' 
+#' @noRd
 
 app_max_freq.BDS <- function(column, group = NULL, data, totals) {
   rlang::abort(glue::glue(
@@ -142,6 +147,8 @@ app_max_freq.BDS <- function(column, group = NULL, data, totals) {
 #' @rdname app_max_freq
 #' 
 #' @family tableGen Functions
+#' 
+#' @noRd
 
 app_max_freq.custom <- function(column, group, data, totals) {
   rlang::abort(glue::glue(
