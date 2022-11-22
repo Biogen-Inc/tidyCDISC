@@ -331,13 +331,10 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       
     } # end of "if labs exist"
     
-    session$sendCustomMessage("chem_weeks", as.vector(send_chem_wks))
-    session$sendCustomMessage("hema_weeks", as.vector(send_hema_wks))
-    session$sendCustomMessage("urin_weeks", as.vector(send_urin_wks))
+    session$sendCustomMessage("adlbc", list(params = as.vector(send_chem), weeks = as.vector(send_chem_wks)))
+    session$sendCustomMessage("adlbh", list(params = as.vector(send_hema), weeks = as.vector(send_hema_wks)))
+    session$sendCustomMessage("adlbu", list(params = as.vector(send_urin), weeks = as.vector(send_urin_wks)))
     
-    session$sendCustomMessage("adlbc_params", as.vector(send_chem))
-    session$sendCustomMessage("adlbh_params", as.vector(send_hema))
-    session$sendCustomMessage("adlbu_params", as.vector(send_urin))
     
   })
   
