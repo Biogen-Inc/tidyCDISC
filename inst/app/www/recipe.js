@@ -10,11 +10,12 @@ function simpleRecipeRowBlock(newid, df) {
   </div></div></div>`
 }
 
-function selectRecipeBlock(newid, df, values) { 
+function selectRecipeBlock(newid, df, selection, values = '') { 
   return `<div class="form-group drop_area">
     <label class="control-label ${df}" for="${newid}">${newid}</label>
       <select id="${newid}" class="dropdown">
-        <option value="${values}">${values}</option>
+        <option value="${selection}">${selection}</option>
+          ${values}
         </select>
           <button class="delete">X</button>
             </div>`
@@ -33,13 +34,21 @@ function combineRows(block_array, df) {
   return(t)
 }
 
+/**
+  * Create dropdown menu from the array of AVISIT values
+* @param {avisit} the text and value of the option
+*/
+function createOption(opt) {
+  return `<option value="${opt}">${opt}</option>`
+}
+
 // The following function creates a stat block for every var block on
 // the LHS, and creates a dropdown. The var_block and select_input arrays
 // must be of the same length. Used for Table 41.
-function oneAgg_combineSelects(var_block, agg_stat, df, select_input) {
+function oneAgg_combineSelects(var_block, agg_stat, df, select_options) {
   let t = Array(var_block.length);
   for(var i = 0; i < var_block.length; i += 1){
-    t.push(selectRecipeBlock(agg_stat, df, select_input[i]))
+    t.push(selectRecipeBlock(agg_stat, df, "ALL", select_options))
   };
   t= t.join("")
   return(t)
@@ -144,8 +153,9 @@ $("#RECIPE").bind("change", function(event, ui) {
       $("#droppable_blocks").append($(simpleRecipeRowBlock("AEDECOD", "ADAE")));
       break;
     case "Table 41: Blood Chemistry actual values by visit":
+      let select_opts = `${bc_obj.weeks.map(createOption).join("")}`
       document.getElementById("droppable_agg").innerHTML = "";
-      $("#droppable_agg").append($(oneAgg_combineSelects(bc_obj.params,"MEAN","ADLB",bc_obj.weeks)));
+      $("#droppable_agg").append($(oneAgg_combineSelects(bc_obj.params, "MEAN", "ADLB", select_opts)));
       document.getElementById("droppable_blocks").innerHTML = "";
       $("#droppable_blocks").append($(combineRows(bc_obj.params, "ADLB")));
       break;

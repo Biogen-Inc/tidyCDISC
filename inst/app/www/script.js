@@ -37,7 +37,8 @@ $( document ).ready(function() {
       val = $(this).parent().find("select").children("option:selected").val()
       lst = [];
       if (val === "ALL") {
-      for (let i = 2; i < $(this).parent().find("select").children().length; i++) {
+      for (let i = 0; i < $(this).parent().find("select").children().length; i++) {
+        if (["NONE", "ALL"].includes($(this).parent().find("select").children()[i].text)) { continue; }
         lst.push($(this).parent().find("select").children()[i].text);
       }
       }
