@@ -14,3 +14,4 @@ std_footnote(data, source)
 \description{
 Creates a footnote with a source on the left and date run on the right.
 }
+\keyword{tabGen_repro}

@@ -311,10 +311,10 @@ check_params <- function(datafile, param_vector) {
                               mutate(PARAMCD = factor(PARAMCD, levels = param_vector)) %>%
                               arrange(PARAMCD, AVISIT)
     )
-    param_vctr <- param_lst[[1]]$PARAMCD # Will this work if two ADLB's are uploaded?
+    param_vctr <- unique(param_lst[[1]]$PARAMCD) # Will this work if two ADLB's are uploaded?
     
     if(!rlang::is_empty(param_vctr)){
-      visit_vctr <- param_lst[[1]]$AVISIT
+      visit_vctr <- unique(param_lst[[1]]$AVISIT)
       dat_lgls <- purrr::map_lgl(param_lst, ~length(.x) > 0)
       param_lgl <- any(dat_lgls)
       dat_names <- purrr::map_chr(dat_lgls, ~names(param_dat[.x]))
@@ -466,6 +466,7 @@ prep_blocks <- function(blockData) {
 #' @param source The source of the data in the table
 #' 
 #' @export
+#' @keywords tabGen_repro
 std_footnote <- function(data, source) {
   gt::tab_footnote(data, 
                    tags$div(HTML("<b>Source:</b>", source), 
@@ -484,6 +485,7 @@ std_footnote <- function(data, source) {
 #' @param group A character denoting the grouping variable
 #' 
 #' @export
+#' @keywords tabGen_repro
 tg_gt <- function(tg_datalist, blockData, total_df, group) {
   purrr::pmap(list(
     blockData$agg,

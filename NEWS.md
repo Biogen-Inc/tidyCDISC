@@ -3,6 +3,18 @@
 * Use "ALL" as dropdown option for RECIPE 41 instead of listing all available weeks.
 * Make the list of columns available to filter on in the Population Explorer depend upon the data frame(s) selected for filtering
 
+# tidyCDISC 0.1.1
+
+* automated a footnote with **Source** and **Run Date** in table generation
+
+* allowed custom user-defined footnotes
+
+* allowed the selection of 'All' when a time/visit-based statistic is chosen in the table generator
+
+* cleaned up downloadable R Script to replicate table generator output
+
+* fixed bug where `data_from` was erroneously listed as a grouping option in the population explorer
+
 
 # tidyCDISC 0.1.0 (CRAN Release)
 * cleaning up `devtools::check()` & preparing for CRAN release.
