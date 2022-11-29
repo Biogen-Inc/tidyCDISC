@@ -227,9 +227,9 @@ Shiny.addCustomMessageHandler('my_weeks', function(df) {
 * @param {newid} the new, unique id of the dropped block
 * @param {label} the name of the new block
 */
-  function selectBlock(newid, label, values) { 
+  function selectBlock(newid, label, values, df = "") { 
     return `<div class="form-group drop_area">
-      <label class="control-label" for="${newid}">${label}</label>
+      <label class="control-label ${df}" for="${newid}">${label}</label>
         <select id="${newid}" class="dropdown">
           <option value="NONE">NONE</option>
             ${values}
