@@ -273,7 +273,7 @@ $(function() {
       var df = ui.draggable.closest('ul')[0].classList[1]
       var newid = getNewId(draggableId);
       if (atpt_array !== null && atpt_avals.some(el => draggableId.includes(el))) {
-        $(this).append(simpleBlock(newid, df));
+        $(this).append(selectBlock(newid, newid.slice(0, -1).toUpperCase(), atpt_opts, df));
       } else {
         $(this).append(simpleBlock(newid, df));
       }
