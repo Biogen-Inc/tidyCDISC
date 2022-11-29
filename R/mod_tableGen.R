@@ -274,6 +274,20 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     session$sendCustomMessage("all_cols", all_cols)
   })
   
+  ATPT <- reactive({
+    req(datafile())
+    req("ADVS" %in% names(datafile()))
+    req("ATPT" %in% colnames(datafile()$ADVS))
+    
+    atpt_values <- unique(datafile()$ADVS$ATPT)
+    atpt_values[atpt_values != ""]
+  })
+  
+  observe({
+    req(ATPT())
+    session$sendCustomMessage("my_avals", as.vector(ATPT()))
+  })
+  
   
   # Verify if certain lab params exist, and if so, which dataset they live in
   # in case there are multiple ADLBs- to use later to send data to js side
