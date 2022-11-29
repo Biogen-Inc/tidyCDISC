@@ -250,6 +250,17 @@ Shiny.addCustomMessageHandler('my_weeks', function(df) {
     return type + (newId + 1);
   }
 
+/**
+ * Function to import multiple avals per visit 
+*/
+let atpt_array = null;
+let atpt_opts = null;
+const atpt_avals = ["DIABP", "SYSBP", "PULSE"];
+Shiny.addCustomMessageHandler('my_avals', function(atpt) {
+  atpt_array = Object.values(atpt);
+  atpt_opts = `${atpt_array.map(createOption).join("")}`;
+});
+
 // on block dropdown create simple blocks 
 // with the block names from the droppable area
 // and delete buttons
@@ -261,7 +272,11 @@ $(function() {
       var draggableId = ui.draggable.attr("id");
       var df = ui.draggable.closest('ul')[0].classList[1]
       var newid = getNewId(draggableId);
-      $(this).append(simpleBlock(newid, df));
+      if (atpt_array !== null && atpt_avals.some(el => draggableId.includes(el))) {
+        $(this).append(simpleBlock(newid, df));
+      } else {
+        $(this).append(simpleBlock(newid, df));
+      }
     }
   }).sortable({
     revert: false
