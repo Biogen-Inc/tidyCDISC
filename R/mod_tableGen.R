@@ -285,7 +285,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   
   observe({
     req(ATPT())
-    session$sendCustomMessage("my_avals", as.vector(ATPT()))
+    session$sendCustomMessage("my_avals", c("ALL", as.vector(ATPT())))
   })
   
   
