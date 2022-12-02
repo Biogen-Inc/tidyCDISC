@@ -123,50 +123,50 @@ convertTGOutput <- function(aggs, blocks) {
   
   aggs <- unlist(aggs, recursive = FALSE)
   blocks <- unlist(blocks, recursive = FALSE)
-
-  if (length(aggs) > length(blocks)) {
+  process_dropdown <- function(droppable) {
+    for (i in 1:length(droppable)) {
+      if (is.null(droppable[[i]]$val) || droppable[[i]]$val == "NONE") {
+        droppable[[i]]$dropdown <- NA_character_
+      } else if (droppable[[i]]$val == "ALL") {
+        droppable[[i]]$dropdown <- droppable[[i]]$lst %>% unname() %>% str_trim()
+      } else {
+        droppable[[i]]$dropdown <- droppable[[i]]$val %>% unname() %>% str_trim()
+      }
+    }
+    droppable
+  }
+  
+  if (length(aggs) == 0 & length(blocks) == 0) {
+    tidyr::tibble(
+      agg = character(),
+      block = character(),
+      dataset = character(),
+      dropdown = character(),
+      measure = character(),
+      S3 = character(),
+      gt_group = character()
+    )
+  } else if (length(aggs) > length(blocks)) {
     stop("Need addional variable block")
   } else if (length(aggs) < length(blocks)) {
     stop("Need additional statistics block")
   } else {
-    
+    aggs <- process_dropdown(aggs)
+    blocks <- process_dropdown(blocks)
     purrr::map2_df(aggs, blocks, function(aggs, blocks) {
-      if (!is.null(aggs$val) && aggs$val == "ALL") {
-        purrr::map_df(aggs$lst, function(dropdown) {
+      purrr::map_df(aggs$dropdown, function(aggs_dd) {
+        purrr::map_df(blocks$dropdown, function(blocks_dd) {
           tidyr::tibble(
             agg = aggs$txt %>% unname() %>% str_trim(),
             block = blocks$txt %>% unname() %>% str_trim(),
             dataset = blocks$df %>% unname() %>% str_trim(),
-            dropdown = dropdown %>% unname() %>% str_trim(),
+            dropdown = aggs_dd,
+            measure = blocks_dd,
             S3 = map2(block, dataset, ~ custom_class(.x, .y)),
-            gt_group =
-              case_when(
-                dropdown == "NONE" ~ glue("{agg} of {block}"),
-                is.na(dropdown) ~ glue("{agg} of {block}"),
-                tolower(substr(dropdown, 1, 4)) %in% c("week","base","scree","end ") ~ glue("{agg} of {block} at {dropdown}"),
-                TRUE ~ glue("{agg} of {block} and {dropdown}") # "and" instead of "at"
-              )
+            gt_group = glue("{agg} of {block}{if (is.na(dropdown)) '' else if (tolower(substr(dropdown, 1, 4)) %in% c('week','base','scree','end ')) paste(' at', dropdown) else paste(' and', dropdown)}{if (is.na(measure)) '' else paste('/', measure)}")
           )
         })
-      } else {
-        tidyr::tibble(
-          agg = aggs$txt %>% unname() %>% str_trim(),
-          block = blocks$txt %>% unname() %>% str_trim(),
-          dataset = blocks$df %>% unname() %>% str_trim(),
-          dropdown = ifelse(is.null(aggs$val), NA_character_, aggs$val %>% unname() %>% str_trim()),
-          S3 = map2(block, dataset, ~ custom_class(.x, .y)),
-          gt_group =
-            case_when(
-              dropdown == "NONE" ~ glue("{agg} of {block}"),
-              is.na(dropdown) ~ glue("{agg} of {block}"),
-              tolower(substr(dropdown, 1, 4)) %in% c("week","base","scree","end ") ~ glue("{agg} of {block} at {dropdown}"),
-              TRUE ~ glue("{agg} of {block} and {dropdown}") # "and" instead of "at"
-            )
-        )
-      }
-
-
+      })
     })
-    
   }
 }
