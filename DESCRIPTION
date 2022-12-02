@@ -67,10 +67,7 @@ Suggests:
     knitr,
     pkgdown,
     spelling,
-    testthat,
-    riskmetric
-Remotes:
-    openpharma/GithubMetrics
+    testthat
 Encoding: UTF-8
 Language: en-US
 LazyData: true
