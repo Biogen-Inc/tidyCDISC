@@ -7,7 +7,7 @@
 
 [![R-CMD-check](https://github.com/Biogen-Inc/tidyCDISC/workflows/R-CMD-check/badge.svg)](https://github.com/Biogen-Inc/tidyCDISC/actions)
 [![OS
-Health](https://img.shields.io/badge/OS%20Health-86-green)](https://openpharma.github.io/GithubMetrics/)
+Health](https://img.shields.io/badge/OS%20Health-71-yellowgreen)](https://openpharma.github.io/GithubMetrics/)
 [![riskmetric](https://img.shields.io/badge/riskmetric-0.50-orange)](https://pharmar.github.io/riskmetric/)
 <!-- badges: end -->
 
@@ -37,23 +37,23 @@ lick of code to gather abundant insights from the study data, so it aims
 to serve a large population of clinical personnel with varying levels of
 programming experience. For example:
 
--   A **clinical head**, with presumably no programming skills but the
-    most domain expertise, can explore results without asking a
-    statistician or programmer to build tables & figures.
+- A **clinical head**, with presumably no programming skills but the
+  most domain expertise, can explore results without asking a
+  statistician or programmer to build tables & figures.
 
--   A **statistician** can use the application to make tables/figures
-    instantly, cutting down on statistical programming requests for
-    excess tables that aren’t required, but just “nice to see”.
+- A **statistician** can use the application to make tables/figures
+  instantly, cutting down on statistical programming requests for excess
+  tables that aren’t required, but just “nice to see”.
 
 <div class="floating">
 
 <img src="man/figures/pct_95_cropped.jpg" width="25%" style="float:right; padding:10px" />
 
--   A **statistical programmer** can use `tidyCDISC` to perform
-    preliminary QC programming prior to writing code in a validated
-    process. Users who’ve leverage `tidyCDISC` for routine trial
-    analysis tend to report **significant time savings, about 95%**,
-    when performing programming duties.
+- A **statistical programmer** can use `tidyCDISC` to perform
+  preliminary QC programming prior to writing code in a validated
+  process. Users who’ve leverage `tidyCDISC` for routine trial analysis
+  tend to report **significant time savings, about 95%**, when
+  performing programming duties.
 
 </div>
 
@@ -100,20 +100,20 @@ one’s use of `tidyCDISC`, we highly recommend reading the following
 articles that take a deeper look into the topics presented in the “Get
 Started” tutorial:
 
--   [00 Data
-    Upload](https://Biogen-Inc.github.io/tidyCDISC/articles/x00_Data_Upload.html)
+- [00 Data
+  Upload](https://Biogen-Inc.github.io/tidyCDISC/articles/x00_Data_Upload.html)
 
--   [01 Table
-    Generator](https://Biogen-Inc.github.io/tidyCDISC/articles/x01_Table_Generator.html)
+- [01 Table
+  Generator](https://Biogen-Inc.github.io/tidyCDISC/articles/x01_Table_Generator.html)
 
--   [02 Population
-    Explorer](https://Biogen-Inc.github.io/tidyCDISC/articles/x02_Pop_Exp.html)
+- [02 Population
+  Explorer](https://Biogen-Inc.github.io/tidyCDISC/articles/x02_Pop_Exp.html)
 
--   [03 Individual
-    Explorer](https://Biogen-Inc.github.io/tidyCDISC/articles/x03_Indv_Expl.html)
+- [03 Individual
+  Explorer](https://Biogen-Inc.github.io/tidyCDISC/articles/x03_Indv_Expl.html)
 
--   [04
-    Filtering](https://Biogen-Inc.github.io/tidyCDISC/articles/x04_Filtering.html)
+- [04
+  Filtering](https://Biogen-Inc.github.io/tidyCDISC/articles/x04_Filtering.html)
 
 We’re confident the `tidyCDISC` application can save you time. If there
 is some use case that `tidyCDISC` can’t solve, we want to know about it.
