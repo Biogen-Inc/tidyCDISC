@@ -15,11 +15,18 @@ knitr::opts_chunk$set(
 # remotes::install_github("tidyCDISC")
 ```
 
+```{r, include=FALSE}
+source("scripts/os-health.R")
+source("scripts/riskmetric.R")
+```
+
 # tidyCDISC <a href='https://Biogen-Inc.github.io/tidyCDISC/'><img src="man/figures/hex-tidyCDISC-170h.png" align="right"/></a>
 
 <!-- badges: start -->
   [![R-CMD-check](https://github.com/Biogen-Inc/tidyCDISC/workflows/R-CMD-check/badge.svg)](https://github.com/Biogen-Inc/tidyCDISC/actions)
-  <!-- badges: end -->
+  [![OS Health](`r badge_health`)](https://openpharma.github.io/GithubMetrics/)
+  [![riskmetric](`r badge_riskmetric`)](https://pharmar.github.io/riskmetric/)
+<!-- badges: end -->
 
 `tidyCDISC` is a shiny app to easily create custom tables and figures from ADaM-ish data sets.
 
