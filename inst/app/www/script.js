@@ -33,17 +33,18 @@ $( document ).ready(function() {
     var str = "";
     $('#' + id).each(function() {
       txt = $(this).text()
-      df = $(this).attr("class").split(" ")[1]  
-      val = $(this).parent().find("select").children("option:selected").val()
+      df = $(this).attr("class").split(" ")[1]
+      grp = $(this).parent().find(":selected").parent().attr("label")
+      val = $(this).parent().find(":selected").val()
       lst = [];
       if (val === "ALL") {
-      for (let i = 0; i < $(this).parent().find("select").children().length; i++) {
-        if (["NONE", "ALL"].includes($(this).parent().find("select").children()[i].text)) { continue; }
-        lst.push($(this).parent().find("select").children()[i].text);
+      for (let i = 0; i < $(this).parent().find(":selected").parent().children().length; i++) {
+        if (["NONE", "ALL"].includes($(this).parent().find(":selected").parent().children()[i].text)) { continue; }
+        lst.push($(this).parent().find(":selected").parent().children()[i].text);
       }
       }
       str += `${df}*${txt.replace(" ", "")}*${val} + `.replace(/\r?\n|\r/g, "")
-      obj.numbers.push({txt,df,val,lst})
+      obj.numbers.push({txt,df,grp,val,lst})
     })
   // currently return a string seperated by +
     // and blocks must be one word - this is very fragile!
