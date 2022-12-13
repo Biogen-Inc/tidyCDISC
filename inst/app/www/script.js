@@ -254,12 +254,22 @@ Shiny.addCustomMessageHandler('my_weeks', function(df) {
 /**
  * Function to import multiple avals per visit 
 */
-let atpt_array = null;
-let atpt_opts = null;
-const atpt_avals = ["DIABP", "SYSBP", "PULSE"];
-Shiny.addCustomMessageHandler('my_avals', function(atpt) {
-  atpt_array = Object.values(atpt);
-  atpt_opts = `${atpt_array.map(createOption).join("")}`;
+let tpnt_array = null;
+let tpnt_opts = null;
+const tpnt_avals = ["DIABP", "SYSBP", "PULSE"];
+Shiny.addCustomMessageHandler('my_avals', function(tpnt) {
+  tpnt_array = Object.values(tpnt);
+  if (Array.isArray(tpnt)) {
+    tpnt_opts = `${tpnt_array.map(createOption).join("")}`;
+  } else {
+    tpnt_opts = [''];
+    for (x in tpnt) {
+      tpnt_opts.push("<optgroup label='" + x + "'>");
+      tpnt_opts.push($.map(tpnt[x], createOption).join(""));
+      tpnt_opts.push("</optgroup>");
+    }
+    tpnt_opts.join("");
+  }
 });
 
 // on block dropdown create simple blocks 
@@ -273,8 +283,8 @@ $(function() {
       var draggableId = ui.draggable.attr("id");
       var df = ui.draggable.closest('ul')[0].classList[1]
       var newid = getNewId(draggableId);
-      if (atpt_array !== null && atpt_avals.some(el => draggableId.includes(el))) {
-        $(this).append(selectBlock(newid, newid.slice(0, -1).toUpperCase(), atpt_opts, df));
+      if (tpnt_array !== null && tpnt_avals.some(el => draggableId.includes(el))) {
+        $(this).append(selectBlock(newid, newid.slice(0, -1).toUpperCase(), tpnt_opts, df));
       } else {
         $(this).append(simpleBlock(newid, df));
       }
