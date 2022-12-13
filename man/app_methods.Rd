@@ -23,6 +23,8 @@ and class of the column dictated by the data frame it came from}
 
 \item{totals}{the totals data frame that contains denominator N's use when
 calculating column percentages}
+
+\item{filter}{a string denoting the additional filter to apply to the dataset}
 }
 \value{
 the table corresponding to the proper function

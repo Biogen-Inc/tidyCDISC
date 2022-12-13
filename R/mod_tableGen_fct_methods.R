@@ -10,6 +10,7 @@
 #' @param data the dataset to perform all functions on
 #' @param totals the totals data frame that contains denominator N's use when
 #'   calculating column percentages
+#' @param filter a string denoting the additional filter to apply to the dataset
 #' 
 #' @return the table corresponding to the proper function
 #' to perform given the supplied column.
