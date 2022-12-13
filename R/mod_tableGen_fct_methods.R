@@ -132,6 +132,8 @@ convertTGOutput <- function(aggs, blocks) {
       } else {
         droppable[[i]]$dropdown <- droppable[[i]]$val %>% unname() %>% str_trim()
       }
+      if (is.null(droppable[[i]]$grp))
+        droppable[[i]]$grp <- NA_character_
     }
     droppable
   }
@@ -142,6 +144,7 @@ convertTGOutput <- function(aggs, blocks) {
       block = character(),
       dataset = character(),
       dropdown = character(),
+      m_field = character(),
       measure = character(),
       S3 = character(),
       gt_group = character()
@@ -161,6 +164,7 @@ convertTGOutput <- function(aggs, blocks) {
             block = blocks$txt %>% unname() %>% str_trim(),
             dataset = blocks$df %>% unname() %>% str_trim(),
             dropdown = aggs_dd,
+            m_field = blocks$grp %>% unname() %>% str_trim(),
             measure = blocks_dd,
             S3 = map2(block, dataset, ~ custom_class(.x, .y)),
             gt_group = glue("{agg} of {block}{if (is.na(dropdown)) '' else if (tolower(substr(dropdown, 1, 4)) %in% c('week','base','scree','end ')) paste(' at', dropdown) else paste(' and', dropdown)}{if (is.na(measure)) '' else paste('/', measure)}")
