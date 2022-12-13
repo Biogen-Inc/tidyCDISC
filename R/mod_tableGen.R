@@ -498,19 +498,10 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
                       ,gsub("<br/>", "\n        ", pre_filter_msgs())))
     }
 
-    d <- purrr::pmap(list(blocks_and_functions()$agg, 
-                      blocks_and_functions()$S3, 
-                      blocks_and_functions()$dropdown,
-                      blocks_and_functions()$dataset), 
-                 function(x,y,z,d) 
-                   app_methods(x,y,z, 
-                                group = column(), 
-                                data  = data_to_use_str(d, ae_data(), all_data()),
-                                totals = total_df())) %>%
-    purrr::map(setNames, common_rownames(use_preferred_pop_data(), column())) %>%
-    setNames(paste(blocks_and_functions()$gt_group)) %>%
-    bind_rows(.id = "ID")  %>%
-      mutate(ID = pretty_IDs(ID))
+    d <- tg_gt(list(ADAE = ae_data(), ADSL = all_data(), POPDAT = use_preferred_pop_data()),
+               blocks_and_functions(),
+               total_df(),
+               column())
     return(d)
   })
   
