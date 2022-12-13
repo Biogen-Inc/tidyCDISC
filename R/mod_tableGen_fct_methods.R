@@ -42,7 +42,7 @@
 #' app_methods("MEAN", 
 #'             structure("PULSE", class = c("character", "BDS")), "Baseline", 
 #'             "TRT01P", example_dat1$BDS, example_dat1$totals)
-app_methods <- function(agg, column, week, group, data, totals) {
+app_methods <- function(agg, column, week, group, data, totals, filter = NA) {
   # informative error in case the selected variable doesn't exist in data
   # if no data in the source, do not run the pmap, just show this msg:
   if(nrow(data) == 0){
@@ -54,6 +54,8 @@ app_methods <- function(agg, column, week, group, data, totals) {
     stop(glue::glue("{column} variable doesn't exist in data, please remove or replace that variable from drop zone."))
   }
   
+  if (!is.na(filter))
+    data <- dplyr::filter(data, !!rlang::parse_expr(filter))
   
   if (agg == "MEAN") {
     app_mean(column, week, group, data)

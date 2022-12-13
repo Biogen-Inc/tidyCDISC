@@ -491,11 +491,13 @@ tg_gt <- function(tg_datalist, blockData, total_df, group) {
     blockData$agg,
     blockData$S3,
     blockData$dropdown,
-    blockData$dataset), 
-    function(x,y,z,d) tidyCDISC::app_methods(x,y,z,
+    blockData$dataset,
+    if (is.null(blockData$filter)) NA_character_ else blockData$filter), 
+    function(x,y,z,d,f) tidyCDISC::app_methods(x,y,z,
                                              group = group, 
                                              data = tidyCDISC::data_to_use_str(d, tg_datalist$ADAE, tg_datalist$ADSL),
-                                             totals = total_df)) %>%
+                                             totals = total_df,
+                                             filter = f)) %>%
     purrr::map(setNames, tidyCDISC::common_rownames(tg_datalist$POPDAT, group)) %>%
     setNames(paste(blockData$gt_group)) %>%
     dplyr::bind_rows(.id = 'ID') %>%
