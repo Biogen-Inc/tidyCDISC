@@ -27,7 +27,7 @@ prep_bds <- function(datafile, ADSL) {
     # Bind all the PARAMCD files 
     all_PARAMCD <- bind_rows(PARAMCD, .id = "data_from")  %>% 
       arrange(USUBJID, AVISITN, PARAMCD) %>% 
-      select(USUBJID, AVISITN, AVISIT, PARAMCD, PARAM, AVAL, CHG, data_from)
+      select(USUBJID, AVISITN, AVISIT, dplyr::any_of(c("ATPT", "ATM")), PARAMCD, PARAM, AVAL, CHG, data_from)
     # Join ADSL and all_PARAMCD
     combined_data <- inner_join(ADSL, all_PARAMCD, by = "USUBJID")
   } else {
