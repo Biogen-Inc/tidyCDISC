@@ -256,8 +256,7 @@ Shiny.addCustomMessageHandler('my_weeks', function(df) {
 */
 let tpnt_array = null;
 let tpnt_opts = null;
-const tpnt_avals = ["DIABP", "SYSBP", "PULSE"];
-Shiny.addCustomMessageHandler('my_avals', function(tpnt) {
+Shiny.addCustomMessageHandler('my_tpnts', function(tpnt) {
   tpnt_array = Object.values(tpnt);
   if (Array.isArray(tpnt)) {
     tpnt_opts = `${tpnt_array.map(createOption).join("")}`;
@@ -270,6 +269,12 @@ Shiny.addCustomMessageHandler('my_avals', function(tpnt) {
     }
     tpnt_opts.join("");
   }
+});
+
+
+let tpnt_avals = [];
+Shiny.addCustomMessageHandler('my_avals', function(aval) {
+  tpnt_avals = Object.values(aval);
 });
 
 // on block dropdown create simple blocks 
@@ -293,44 +298,6 @@ $(function() {
     revert: false
   })
 })
-
-
-
-
-
-
-/*
-// commented out Dec 9 on commit 937a4e8
-// for agg blocks, 
-// create dropdowns specific to each block
-$(function() {
-  $(".draggable_agg").draggable();
-  $("#droppable_agg").droppable({
-    accept: ".agg",
-    
-    drop: function(event, ui) {
-      var draggableId = ui.draggable.attr("id");
-      var newid = getNewId(draggableId);
-      if (draggableId.includes("anova")) {
-        $(this).append(selectBlock(newid, "ANOVA"));
-      } else if (draggableId.includes("chg")) {
-        $(this).append(selectBlock(newid, "CHG"));
-      } else if (draggableId.includes("mean")) {
-        $(this).append(selectBlock(newid, "MEAN"));
-      } else if (draggableId.includes("nested_freq_dsc")) {
-        $(this).append(selectBlock(newid, "NESTED_FREQ_DSC"));
-      } else if (draggableId.includes("nested_freq_abc")) {
-        $(this).append(selectBlock(newid, "NESTED_FREQ_ABC"));
-      } else {
-        $(this).append(simpleBlock(newid, "df"));
-      }
-    }
-    
-  }).sortable({
-    revert: false
-  })
-});
-*/
 
 $("#popExp_ui_1-adv_filtering").parent().parent().addClass('custom_checkbox');
 $("#popExp_ui_1-adv_filtering").parent().parent().parent().addClass('custom_shiny_width');

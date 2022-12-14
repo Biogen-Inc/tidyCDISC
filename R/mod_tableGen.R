@@ -288,9 +288,25 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   
   observe({
     req(TPNT())
-    session$sendCustomMessage("my_avals", TPNT())
+    session$sendCustomMessage("my_tpnts", TPNT())
   })
   
+  AVALS <- reactive({
+    req(datafile())
+    req("ADVS" %in% names(datafile()))
+    req(any(c("ATPT", "ATM") %in% colnames(datafile()$ADVS)))
+    
+    datafile()$ADVS %>%
+      dplyr::select(PARAMCD, dplyr::any_of(c("ATPT", "ATM"))) %>%
+      dplyr::filter(dplyr::if_any(-PARAMCD, ~ !is.na(.x) & .x != "")) %>%
+      dplyr::pull(PARAMCD) %>%
+      get_levels()
+  })
+  
+  observe({
+    req(AVALS())
+    session$sendCustomMessage("my_avals", AVALS())
+  })
   
   # Verify if certain lab params exist, and if so, which dataset they live in
   # in case there are multiple ADLBs- to use later to send data to js side
