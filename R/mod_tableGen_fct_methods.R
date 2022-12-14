@@ -128,7 +128,7 @@ convertTGOutput <- function(aggs, blocks) {
   blocks <- unlist(blocks, recursive = FALSE)
   process_dropdown <- function(droppable) {
     for (i in 1:length(droppable)) {
-      if (is.null(droppable[[i]]$val) || droppable[[i]]$val == "NONE") {
+      if (is.null(droppable[[i]]$val)) {
         droppable[[i]]$dropdown <- NA_character_
       } else if (droppable[[i]]$val == "ALL") {
         droppable[[i]]$dropdown <- droppable[[i]]$lst %>% unname() %>% str_trim()
@@ -166,9 +166,9 @@ convertTGOutput <- function(aggs, blocks) {
             block = blocks$txt %>% unname() %>% str_trim(),
             dataset = blocks$df %>% unname() %>% str_trim(),
             dropdown = aggs_dd,
-            filter = if (is.na(blocks_dd)) {NA_character_} else {glue::glue("{blocks$grp %>% unname() %>% str_trim()} == '{blocks_dd}'")},
+            filter = if (is.na(blocks$grp)) {NA_character_} else {glue::glue("{blocks$grp %>% unname() %>% str_trim()} == '{blocks_dd}'")},
             S3 = map2(block, dataset, ~ custom_class(.x, .y)),
-            gt_group = glue("{agg} of {block}{if (is.na(dropdown)) '' else if (tolower(substr(dropdown, 1, 4)) %in% c('week','base','scree','end ')) paste(' at', dropdown) else paste(' and', dropdown)}{if (is.na(blocks_dd)) '' else paste('/', blocks_dd)}")
+            gt_group = glue("{agg} of {block}{if (is.na(dropdown) || dropdown == 'NONE') '' else if (tolower(substr(dropdown, 1, 4)) %in% c('week','base','scree','end ')) paste(' at', dropdown) else paste(' and', dropdown)}{if (is.na(blocks$grp)) '' else paste('/', blocks_dd)}")
           )
         })
       })
