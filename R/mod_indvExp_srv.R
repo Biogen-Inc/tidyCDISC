@@ -39,6 +39,14 @@ mod_indvExp_server <- function(input, output, session, datafile){
     }
   })
   
+  output$study_indv_exp <- renderUI({
+    req(datafile())
+    
+    studies <- unique(unlist(lapply(datafile(), `[[`, "STUDYID")))
+    study_ids <- paste(studies, collapse = " & ")
+    h4(paste("Study ID: ", study_ids))
+  })
+  
   # Only select data that starts with AD followed by one or more alphanumerics or underscore
   my_loaded_adams <- reactive({
     req(!is.null(datafile()))
