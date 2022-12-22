@@ -28,6 +28,7 @@ mod_popExp_ui <- function(id, label = "Population Explorer"){
     h1("Population Explorer", align = "center"),
     br(), br(), br(),
     
+    div(uiOutput(ns("study_pop_exp"))),
     fluidRow(
       column(width = 3,
                div(id = "pop_cic_adv_filtering", class="filter-accordion",
