@@ -33,6 +33,7 @@ mod_dataUpload_ui <- function(id){
         tooltip = shinyWidgets::tooltipOptions(title = "Click to change pilot data selections!")
       ))
     ),
+    div(uiOutput(ns("study_data_upload")), style = "padding-left: 20px"),
     fluidRow(
       style = "padding: 20px",
       column(3,
@@ -166,6 +167,12 @@ mod_dataUpload_server <- function(input, output, session){
     req(length(studies()) > 1)
     paste0("Warning: data uploaded from multiple studies: ", paste(studies(), collapse = " & "))
   }) 
+  
+  output$study_data_upload <- renderUI({
+    req(studies())
+    study_ids <- paste(studies(), collapse = " & ")
+    h4(paste("Study ID: ", study_ids))
+  })
   
   # upon a dataset being uploaded and selected, generate data preview
   output$datapreview_header <- renderUI({
