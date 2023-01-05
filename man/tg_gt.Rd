@@ -9,7 +9,7 @@ tg_gt(tg_datalist, blockData, total_df, group)
 \arguments{
 \item{tg_datalist}{A list containing the data frames used to create the table}
 
-\item{blockData}{The data for the construction of the blocks in the table}
+\item{blockData}{The data frame for the construction of the blocks in the table or the block data object}
 
 \item{total_df}{A data frame containing the totals by grouping variable}
 
