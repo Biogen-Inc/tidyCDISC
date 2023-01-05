@@ -255,9 +255,12 @@ table_blocks <-
 #' 
 #' @return A block data object
 #' 
+#' @export
+#' 
 #' @examples 
 #' 
-#' datalist <- list(ADSL = tidyCDISC::adsl, ADVS = tidyCDISC::advs, ADAE = tidyCDISC::adae, ADLBC = tidyCDISC::adlbc)
+#' datalist <- list(ADSL = tidyCDISC::adsl, ADVS = tidyCDISC::advs, 
+#'                  ADAE = tidyCDISC::adae, ADLBC = tidyCDISC::adlbc)
 #' bd <- createBlockdata(datalist)
 #' bd
 createBlockdata <- function(datalist) {
@@ -273,9 +276,12 @@ createBlockdata <- function(datalist) {
 #' 
 #' @return The \code{bd} block data object with additional block
 #' 
+#' @export
+#' 
 #' @examples 
 #' 
-#' datalist <- list(ADSL = tidyCDISC::adsl, ADVS = tidyCDISC::advs, ADAE = tidyCDISC::adae, ADLBC = tidyCDISC::adlbc)
+#' datalist <- list(ADSL = tidyCDISC::adsl, ADVS = tidyCDISC::advs, 
+#'                  ADAE = tidyCDISC::adae, ADLBC = tidyCDISC::adlbc)
 #' bd <- createBlockdata(datalist)
 #' 
 #' if (interactive()) {

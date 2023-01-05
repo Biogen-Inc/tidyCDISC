@@ -17,7 +17,8 @@ Create Block Data Object
 }
 \examples{
 
-datalist <- list(ADSL = tidyCDISC::adsl, ADVS = tidyCDISC::advs, ADAE = tidyCDISC::adae, ADLBC = tidyCDISC::adlbc)
+datalist <- list(ADSL = tidyCDISC::adsl, ADVS = tidyCDISC::advs, 
+                 ADAE = tidyCDISC::adae, ADLBC = tidyCDISC::adlbc)
 bd <- createBlockdata(datalist)
 bd
 }
