@@ -8,6 +8,17 @@ import R6
 
 import R6
 }
+\section{Public fields}{
+\if{html}{\out{<div class="r6-fields">}}
+\describe{
+\item{\code{datalist}}{A list of ADaM-ish datasets used to generate the table}
+
+\item{\code{all_rows}}{A list of parameters/fields from the datalist with descriptions}
+
+\item{\code{blocks}}{A data frame containing the block data}
+}
+\if{html}{\out{</div>}}
+}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
@@ -21,17 +32,26 @@ import R6
 \if{html}{\out{<a id="method-table_blocks-new"></a>}}
 \if{latex}{\out{\hypertarget{method-table_blocks-new}{}}}
 \subsection{Method \code{new()}}{
+Create a new block data object
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{table_blocks$new(datalist)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{datalist}}{A list of ADaM-ish datasets used to generate the table}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-table_blocks-print"></a>}}
 \if{latex}{\out{\hypertarget{method-table_blocks-print}{}}}
 \subsection{Method \code{print()}}{
+Print the data frame containing the blocks
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{table_blocks$print(...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{table_blocks$print()}\if{html}{\out{</div>}}
 }
 
 }
@@ -39,10 +59,22 @@ import R6
 \if{html}{\out{<a id="method-table_blocks-add_block"></a>}}
 \if{latex}{\out{\hypertarget{method-table_blocks-add_block}{}}}
 \subsection{Method \code{add_block()}}{
+Add block to the block data object
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{table_blocks$add_block()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{table_blocks$add_block(variable, stat, dropdown)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{variable}}{The parameter or field the statistic is based on}
+
+\item{\code{stat}}{The statistic to be calculated}
+
+\item{\code{dropdown}}{A subgroup on which the statistic is calculated (usually an AVISIT)}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-table_blocks-clone"></a>}}

@@ -2,8 +2,11 @@
 table_blocks <-
   R6::R6Class("table_blocks",
               list(
+                #' @field datalist A list of ADaM-ish datasets used to generate the table
                 datalist = NULL,
+                #' @field all_rows A list of parameters/fields from the datalist with descriptions
                 all_rows = NULL,
+                #' @field blocks A data frame containing the block data
                 blocks = dplyr::tibble(
                   agg = character(),
                   block = character(),
@@ -14,6 +17,9 @@ table_blocks <-
                   label = character(),
                   label_source = character()
                 ),
+                #' @description 
+                #' Create a new block data object
+                #' @param datalist A list of ADaM-ish datasets used to generate the table
                 initialize = function(datalist) {
                   self$datalist <- datalist
                   
@@ -104,10 +110,17 @@ table_blocks <-
                     }
                   
                 },
-                print = function(...) {
+                #' @description 
+                #' Print the data frame containing the blocks
+                print = function() {
                   print(self$blocks)
                   invisible(self)
                 },
+                #' @description 
+                #' Add block to the block data object
+                #' @param variable The parameter or field the statistic is based on
+                #' @param stat The statistic to be calculated
+                #' @param dropdown A subgroup on which the statistic is calculated (usually an AVISIT)
                 add_block = function(variable, stat, dropdown) {
                   blocks <- list()
                   aggs <- list()
@@ -235,3 +248,43 @@ table_blocks <-
                 }
               )
   )
+
+#' Create Block Data Object
+#' 
+#' @param datalist A list of ADaM-ish datasets used to generate the table
+#' 
+#' @return A block data object
+#' 
+#' @examples 
+#' 
+#' datalist <- list(ADSL = tidyCDISC::adsl, ADVS = tidyCDISC::advs, ADAE = tidyCDISC::adae, ADLBC = tidyCDISC::adlbc)
+#' bd <- createBlockdata(datalist)
+#' bd
+createBlockdata <- function(datalist) {
+  invisible(table_blocks$new(datalist))
+}
+
+#' Add Block to Block Data Object
+#' 
+#' @param bd A block data object
+#' @param variable The parameter or field the statistic is based on
+#' @param stat The statistic to be calculated
+#' @param dropdown A subgroup on which the statistic is calculated (usually an AVISIT)
+#' 
+#' @return The \code{bd} block data object with additional block
+#' 
+#' @examples 
+#' 
+#' datalist <- list(ADSL = tidyCDISC::adsl, ADVS = tidyCDISC::advs, ADAE = tidyCDISC::adae, ADLBC = tidyCDISC::adlbc)
+#' bd <- createBlockdata(datalist)
+#' 
+#' if (interactive()) {
+#'   addBlock(bd)
+#'   bd
+#' }
+#' 
+#' addBlock(bd, "DIABP", "MEAN", "ALL")
+#' bd
+addBlock <- function(bd, variable, stat, dropdown) {
+  invisible(bd$add_block(variable, stat, dropdown))
+}
