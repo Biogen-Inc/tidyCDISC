@@ -33,7 +33,7 @@ mod_dataUpload_ui <- function(id){
         tooltip = shinyWidgets::tooltipOptions(title = "Click to change pilot data selections!")
       ))
     ),
-    div(uiOutput(ns("study_data_upload")), style = "padding-left: 20px"),
+    div(uiOutput(ns("study_data_upload")), style = "padding-left: 20px", class = "studyid"),
     fluidRow(
       style = "padding: 20px",
       column(3,

@@ -30,7 +30,7 @@ mod_tableGen_ui <- function(id){
     h1("Table Generator", align = "center"),
     br(), br(), br(),
     fluidPage(
-      div(uiOutput(ns("study_table_gen")), style = "padding-left: 20px"),
+      div(uiOutput(ns("study_table_gen")), style = "padding-left: 20px", class = "studyid"),
       
       fluidRow(
         style = "padding: 20px",

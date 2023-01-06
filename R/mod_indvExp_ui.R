@@ -25,7 +25,7 @@ mod_indvExp_ui <- function(id){
   tagList(
     h1("Individual Explorer", align = "center"),
     br(), br(), br(),
-    div(uiOutput(ns("study_indv_exp")), style = "padding-bottom: 20px"),
+    div(uiOutput(ns("study_indv_exp")), style = "padding-bottom: 20px", class = "studyid"),
     fluidRow(
       column(3,
          wellPanel(
