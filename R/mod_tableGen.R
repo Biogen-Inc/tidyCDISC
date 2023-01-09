@@ -616,6 +616,31 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       } else if(input$download_type == ".html") {
         exportHTML <- gt_table()
         gt::gtsave(exportHTML, file)
+      } else if(input$download_type == ".rtf") {
+        
+        export_rtf <- gt_table() %>%
+          gt::tab_options(
+            # table.font.names = c("Times", "Arial"),
+            # table.font.size = gt::px(18),
+            # heading.title.font.size = NULL,
+            # footnotes.font.size = NULL,
+            page.numbering = TRUE
+          )
+        
+        # Convert HTML to RTF in the Source footnote
+        export_rtf[["_footnotes"]]$footnotes[[1]] <- export_rtf[["_footnotes"]]$footnotes[[1]] %>%
+          as.character() %>%
+          # Convert bold from HTML to RTF
+          # This formatting does not render in RTF
+          # stringr::str_replace_all("</b>", "\\\\b0") %>%
+          # stringr::str_replace_all("<b>", "\\\\b") %>%
+          # Delete HTML elements
+          stringr::str_replace_all("<.+?>", "") %>%
+          trimws(which = "left")
+        
+        # page_numbering = c("none", "footer", "header")
+        gt::gtsave(export_rtf, file, page_numbering = "header")
+        
       }
     }
   ) 
