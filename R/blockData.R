@@ -182,8 +182,10 @@ table_blocks <-
                     } else {
                       agg_val <- x
                     }
-                    if (agg_val == "A") {
-                      cat("Please typ the week or the number corresponding to the desired option.\n")
+                    if (is.null(agg_val) || is.na(agg_val)) {
+                      return(NULL)
+                    } else if (agg_val == "A") {
+                      cat("Please type the week or the number corresponding to the desired option.\n")
                       cat(paste0(seq_along(opt_lst), ": ", opt_lst), sep = "\n"); cat("\n")
                       get_dropdown(opts=opts)
                     } else if (agg_val %in% seq_along(opt_lst)) {
@@ -229,7 +231,7 @@ table_blocks <-
                       cat('Please provide an AVISIT.',
                           'To see all options, type "A".\n', sep = "\n")
                     aggs$val <- get_dropdown(dropdown, "weeks")
-                    if (aggs$val == "ALL")
+                    if (!is.null(aggs$val) && aggs$val == "ALL")
                       aggs$lst <- as.list(private$my_weeks)
                   } else if (aggs$txt %in% c("NESTED_FREQ_DSC", "NESTED_FREQ_ABC")) {
                     if (missing(dropdown))
