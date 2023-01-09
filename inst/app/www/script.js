@@ -254,27 +254,17 @@ Shiny.addCustomMessageHandler('my_weeks', function(df) {
 /**
  * Function to import multiple avals per visit 
 */
-let tpnt_array = null;
-let tpnt_opts = null;
-Shiny.addCustomMessageHandler('my_tpnts', function(tpnt) {
-  tpnt_array = Object.values(tpnt);
-  if (Array.isArray(tpnt)) {
-    tpnt_opts = `${tpnt_array.map(createOption).join("")}`;
-  } else {
-    tpnt_opts = [''];
-    for (x in tpnt) {
-      tpnt_opts.push("<optgroup label='" + x + "'>");
-      tpnt_opts.push($.map(tpnt[x], createOption).join(""));
-      tpnt_opts.push("</optgroup>");
-    }
-    tpnt_opts.join("");
-  }
-});
-
-
-let tpnt_avals = [];
+let tpnt_avals = null;
 Shiny.addCustomMessageHandler('my_avals', function(aval) {
-  tpnt_avals = Object.values(aval);
+  tpnt_avals = aval;
+  for (x in tpnt_avals) {
+    for (y in tpnt_avals[x]) {
+      tpnt_avals[x].tpnt_opts = [''];
+      tpnt_avals[x].tpnt_opts.push("<optgroup label='" + y + "'>");
+      tpnt_avals[x].tpnt_opts.push($.map(tpnt_avals[x][y], createOption).join(""));
+      tpnt_avals[x].tpnt_opts.push("</optgroup>");
+    }
+  }
 });
 
 // on block dropdown create simple blocks 
@@ -288,8 +278,8 @@ $(function() {
       var draggableId = ui.draggable.attr("id");
       var df = ui.draggable.closest('ul')[0].classList[1]
       var newid = getNewId(draggableId);
-      if (tpnt_array !== null && tpnt_avals.some(el => draggableId.includes(el))) {
-        $(this).append(selectBlock(newid, newid.slice(0, -1).toUpperCase(), tpnt_opts, df));
+      if (tpnt_avals !== null && Object.keys(tpnt_avals).some(el => draggableId.includes(el))) {
+        $(this).append(selectBlock(newid, newid.slice(0, -1).toUpperCase(), tpnt_avals[Object.keys(tpnt_avals).find(el => draggableId.includes(el))].tpnt_opts, df));
       } else {
         $(this).append(simpleBlock(newid, df));
       }

@@ -274,33 +274,24 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     session$sendCustomMessage("all_cols", all_cols)
   })
   
-  TPNT <- reactive({
-    req(datafile())
-    req("ADVS" %in% names(datafile()))
-    req(any(c("ATPT", "ATM") %in% colnames(datafile()$ADVS)))
-    
-    datafile()$ADVS %>%
-      dplyr::select(dplyr::any_of(c("ATPT", "ATM"))) %>%
-      purrr::map(get_levels) %>% 
-      purrr::map(~ c("ALL", .x)) %>%
-      purrr::map(~ .x[.x != ""])
-  })
-  
-  observe({
-    req(TPNT())
-    session$sendCustomMessage("my_tpnts", TPNT())
-  })
-  
   AVALS <- reactive({
     req(datafile())
     req("ADVS" %in% names(datafile()))
-    req(any(c("ATPT", "ATM") %in% colnames(datafile()$ADVS)))
+    req(any(c("ATPT") %in% colnames(datafile()$ADVS)))
     
-    datafile()$ADVS %>%
-      dplyr::select(PARAMCD, dplyr::any_of(c("ATPT", "ATM"))) %>%
+    avals <- datafile()$ADVS %>%
+      dplyr::select(PARAMCD, dplyr::any_of(c("ATPT"))) %>%
       dplyr::filter(dplyr::if_any(-PARAMCD, ~ !is.na(.x) & .x != "")) %>%
       dplyr::pull(PARAMCD) %>%
       get_levels()
+
+    purrr::map(avals, ~ datafile()$ADVS %>% 
+                 dplyr::filter(PARAMCD == .x) %>%
+                 dplyr::select(dplyr::any_of(c("ATPT"))) %>%
+                 purrr::map(get_levels) %>% 
+                 purrr::map(~ c("ALL", .x)) %>%
+                 purrr::map(~ .x[.x != ""])) %>% 
+      purrr::set_names(avals)
   })
   
   observe({
