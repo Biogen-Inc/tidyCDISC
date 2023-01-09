@@ -485,15 +485,23 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
                       blocks_and_functions()$S3, 
                       blocks_and_functions()$dropdown,
                       blocks_and_functions()$dataset), 
-                 function(x,y,z,d) 
-                   app_methods(x,y,z, 
+                 function(x,y,z,d) {
+                   out <- app_methods(x,y,z, 
                                 group = column(), 
                                 data  = data_to_use_str(d, ae_data(), all_data()),
-                                totals = total_df())) %>%
+                                totals = total_df()) 
+                   
+                   # Add blank row between each block
+                   out[nrow(out) + 1, ] <- "" 
+                   
+                   return(out)
+                 }
+    ) %>%
     purrr::map(setNames, common_rownames(use_preferred_pop_data(), column())) %>%
     setNames(paste(blocks_and_functions()$gt_group)) %>%
     bind_rows(.id = "ID")  %>%
       mutate(ID = pretty_IDs(ID))
+    
     return(d)
   })
   
