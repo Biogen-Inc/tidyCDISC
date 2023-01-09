@@ -61,7 +61,7 @@ Print the data frame containing the blocks
 \subsection{Method \code{add_block()}}{
 Add block to the block data object
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{table_blocks$add_block(variable, stat, dropdown)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{table_blocks$add_block(variable, stat, dropdown, df)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -72,6 +72,8 @@ Add block to the block data object
 \item{\code{stat}}{The statistic to be calculated}
 
 \item{\code{dropdown}}{A subgroup on which the statistic is calculated (usually an AVISIT)}
+
+\item{\code{df}}{The dataset the parameter or field is from}
 }
 \if{html}{\out{</div>}}
 }

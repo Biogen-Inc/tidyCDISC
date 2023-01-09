@@ -121,7 +121,8 @@ table_blocks <-
                 #' @param variable The parameter or field the statistic is based on
                 #' @param stat The statistic to be calculated
                 #' @param dropdown A subgroup on which the statistic is calculated (usually an AVISIT)
-                add_block = function(variable, stat, dropdown) {
+                #' @param df The dataset the parameter or field is from
+                add_block = function(variable, stat, dropdown, df) {
                   blocks <- list()
                   aggs <- list()
                   get_var <- function(x) {
@@ -194,12 +195,29 @@ table_blocks <-
                       get_dropdown(opts=opts)
                     }
                   }
+                  get_df <- function(x, possible_dfs) {
+                    if (!missing(x) && !(x %in% possible_dfs || x %in% seq_along(possible_dfs))) {
+                      cat("The selected variable is not in the supplied dataset.\n")
+                    } else if (!missing(x) && x %in% possible_dfs) {
+                      return(x)
+                    } else if (!missing(x) && x %in% seq_along(possible_dfs)) {
+                      return(possible_dfs[as.numeric(x)])
+                    } else if (missing(x) & length(possible_dfs) == 1) {
+                      return(possible_dfs)
+                    }
+                    
+                    cat("Please type the dataset or the number corresponding to the desired option.\n")
+                    cat(paste0(seq_along(possible_dfs), ": ", possible_dfs), sep = "\n"); cat("\n")
+                    df_val <- readline("Input: ")
+                    get_df(df_val, possible_dfs)
+                  }
                   
                   if (missing(variable))
                     cat('Please provide a PARAMCD or field.', 
-                        'To see all options, type 1. To see all datasets, type 2. The see options for a particular dataset, type its name (e.g. "ADAE").\n', sep = "\n")
+                        'To see all options, type 1. To see all datasets, type 2. To see options for a particular dataset, type its name (e.g. "ADAE").\n', sep = "\n")
                   blocks$txt <- get_var(variable)
-                  blocks$df <- names(self$all_rows)[purrr::map_lgl(self$all_rows, ~ blocks$txt %in% .x[[1]])]
+                  possible_dfs <- names(self$all_rows)[purrr::map_lgl(self$all_rows, ~ blocks$txt %in% .x[[1]])]
+                  blocks$df <- get_df(df, possible_dfs)
                   
                   if (missing(stat))
                     cat('Please provide an aggregator.',
@@ -273,6 +291,7 @@ createBlockdata <- function(datalist) {
 #' @param variable The parameter or field the statistic is based on
 #' @param stat The statistic to be calculated
 #' @param dropdown A subgroup on which the statistic is calculated (usually an AVISIT)
+#' @param df The dataset the parameter or field is from
 #' 
 #' @return The \code{bd} block data object with additional block
 #' 
@@ -291,6 +310,6 @@ createBlockdata <- function(datalist) {
 #' 
 #' addBlock(bd, "DIABP", "MEAN", "ALL")
 #' bd
-addBlock <- function(bd, variable, stat, dropdown) {
-  invisible(bd$add_block(variable, stat, dropdown))
+addBlock <- function(bd, variable, stat, dropdown, df) {
+  invisible(bd$add_block(variable, stat, dropdown, df))
 }
