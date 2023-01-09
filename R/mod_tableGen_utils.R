@@ -555,7 +555,7 @@ tg_guide <- cicerone::Cicerone$
   step(
     "download_table",
     "Keep a copy for your records",
-    "Download a table in CSV or HTML format as seen in the app. RTF support coming soon!"
+    "Download a table in RTF, CSV, or HTML format as seen in the app."
   )$
   step(
     "tableGen_ui_1-tblcode",
