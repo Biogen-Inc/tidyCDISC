@@ -288,9 +288,11 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     purrr::map(avals, ~ datafile()$ADVS %>% 
                  dplyr::filter(PARAMCD == .x) %>%
                  dplyr::select(dplyr::any_of(c("ATPT"))) %>%
-                 purrr::map(get_levels) %>% 
-                 purrr::map(~ c("ALL", .x)) %>%
-                 purrr::map(~ .x[.x != ""])) %>% 
+                 purrr::map(~ .x %>%
+                              get_levels() %>%
+                              tidyr::replace_na("N/A") %>%
+                              c("ALL", .) %>%
+                              `[`(. != ""))) %>%
       purrr::set_names(avals)
   })
   
@@ -371,7 +373,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   blocks_and_functions <- reactive({
     # create initial dataset
     blockData <- convertTGOutput(input$agg_drop_zone, input$block_drop_zone)
-    
+
     blockData$label <- 
       purrr::map2(blockData$block, blockData$dataset, function(var, dat) {
         if(!is.null(attr(data_to_use_str(dat, ae_data(), all_data())[[var]], 'label'))){
