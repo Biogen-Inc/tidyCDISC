@@ -491,7 +491,11 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
                                 data  = data_to_use_str(d, ae_data(), all_data()),
                                 totals = total_df()) 
                    
-                   # Add blank row between each block
+                   # Add blank row between each block.
+                   # Convert factors to character so "NA" does not appear
+                   # on blank row.
+                   out <- out %>%
+                     mutate_if(is.factor, as.character)
                    out[nrow(out) + 1, ] <- "" 
                    
                    return(out)
