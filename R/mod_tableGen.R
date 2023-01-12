@@ -661,18 +661,21 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
           #   TRUE ~ col_widths_rtf()
           # )
         
-        # Convert HTML to RTF in the Source footnote
-        export_rtf[["_footnotes"]]$footnotes[[1]] <- export_rtf[["_footnotes"]]$footnotes[[1]] %>%
+        
+        # Convert HTML to markdown in the Source footnote
+        export_rtf[["_footnotes"]]$footnotes[[1]] <- 
+          export_rtf[["_footnotes"]]$footnotes[[1]] %>%
           as.character() %>%
-          # Convert bold from HTML to RTF
-          # This formatting does not render in RTF
-          # stringr::str_replace_all("</b>", "\\\\b0") %>%
-          # stringr::str_replace_all("<b>", "\\\\b") %>%
+          
+          # Convert bold from HTML to markdown
+          stringr::str_replace_all("</b>", "**") %>%
+          stringr::str_replace_all("<b>", "**") %>%
           # Delete HTML elements
           stringr::str_replace_all("<.+?>", "") %>%
-          trimws(which = "left")
+          trimws(which = "left") %>%
+          # Convert to markdown for formatting
+          gt::md()
         
-        # page_numbering = c("none", "footer", "header")
         gt::gtsave(export_rtf, file, page_numbering = "header")
         
       }
