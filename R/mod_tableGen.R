@@ -605,6 +605,24 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   })
   
 
+  # # TODO Function to be implemented when gt package fixes issue with col_widths()
+  # # Column widths for RTF output
+  # col_widths_rtf <- reactive({
+  #   
+  #   # Number of columns, excluding grouping column
+  #   ncols <- ncol(gt_table()[["_data"]]) - 1
+  #   
+  #   # Width of first column, in percentage
+  #   width_col_1 <- 40
+  #   width_col_rest <- (100 - width_col_1) / (ncols - 1) 
+  #   
+  #   widths <- c(width_col_1, rep(x = width_col_rest, times = ncols - 1))
+  #   widths <- gt::pct(widths)
+  #   
+  #   return(widths)
+  #   
+  # })
+  
   # ----------------------------------------------------------------------
   # Download table
   # Currently CSV and HTML but easy to add more!
@@ -628,8 +646,20 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
             # table.font.size = gt::px(18),
             # heading.title.font.size = NULL,
             # footnotes.font.size = NULL,
-            page.numbering = TRUE
-          )
+            
+            page.numbering = TRUE,
+            page.orientation = "landscape",
+            # Set table width to be the width of the page. Column widths
+            # will be distributed equally.
+            table.width = gt::pct(100)
+          ) #%>%
+          
+          # Set column widths
+          # Unable to pass dynamic column width to gt::cols_width() in a shiny
+          # app. Open issue: https://github.com/rstudio/gt/issues/641
+          # gt::cols_width(
+          #   TRUE ~ col_widths_rtf()
+          # )
         
         # Convert HTML to RTF in the Source footnote
         export_rtf[["_footnotes"]]$footnotes[[1]] <- export_rtf[["_footnotes"]]$footnotes[[1]] %>%
