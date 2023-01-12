@@ -640,8 +640,13 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
         gt::gtsave(exportHTML, file)
       } else if(input$download_type == ".rtf") {
         
+        # Table to be saved to RTF
         export_rtf <- gt_table() %>%
+          
           gt::tab_options(
+            
+            # Not currently possible to change font family or size
+            # Open issue: https://github.com/rstudio/gt/issues/687
             # table.font.names = c("Times", "Arial"),
             # table.font.size = gt::px(18),
             # heading.title.font.size = NULL,
@@ -661,6 +666,9 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
           #   TRUE ~ col_widths_rtf()
           # )
         
+        # Page breaks
+        # Not currently possible
+        # Sample open issue: https://github.com/rstudio/gt/issues/1081
         
         # Convert HTML to markdown in the Source footnote
         export_rtf[["_footnotes"]]$footnotes[[1]] <- 
