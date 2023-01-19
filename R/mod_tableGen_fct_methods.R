@@ -170,7 +170,7 @@ convertTGOutput <- function(aggs, blocks) {
             else if (blocks_dd == "N/A") {glue::glue("is.na({blocks$grp %>% unname() %>% str_trim()})")} 
             else {glue::glue("{blocks$grp %>% unname() %>% str_trim()} == '{blocks_dd}'")},
             S3 = map2(block, dataset, ~ custom_class(.x, .y)),
-            gt_group = glue("{agg} of {block}{if (is.na(dropdown) || dropdown == 'NONE') '' else if (tolower(substr(dropdown, 1, 4)) %in% c('week','base','scree','end ')) paste(' at', dropdown) else paste(' and', dropdown)}{if (is.na(blocks$grp) || blocks_dd == 'N/A') '' else paste('/', blocks_dd)}")
+            gt_group = glue("{agg} of {block}{if (is.na(dropdown) || dropdown == 'NONE') '' else if (tolower(substr(dropdown, 1, 4)) %in% c('week','base','scree','end ')) paste(' at', dropdown) else paste(' and', dropdown)}{if (is.na(blocks$grp) || blocks_dd == 'N/A' || blocks_dd == dropdown) '' else paste('/', blocks_dd)}")
           )
         })
       })
