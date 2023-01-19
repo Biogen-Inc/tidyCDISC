@@ -487,7 +487,7 @@ std_footnote <- function(data, source) {
 #' @export
 #' @keywords tabGen_repro
 tg_gt <- function(tg_datalist, blockData, total_df, group) {
-  purrr::pmap(list(
+  tbl_blocks <- purrr::pmap(list(
     blockData$agg,
     blockData$S3,
     blockData$dropdown,
@@ -498,8 +498,14 @@ tg_gt <- function(tg_datalist, blockData, total_df, group) {
                                              data = tidyCDISC::data_to_use_str(d, tg_datalist$ADAE, tg_datalist$ADSL),
                                              totals = total_df,
                                              filter = f)) %>%
-    purrr::map(setNames, tidyCDISC::common_rownames(tg_datalist$POPDAT, group)) %>%
     setNames(paste(blockData$gt_group)) %>%
+    purrr::compact()
+  
+  if (rlang::is_empty(tbl_blocks))
+    stop("There is no data for the selected pairs of analysis time points and visits.")
+  
+  tbl_blocks %>%
+    purrr::map(setNames, tidyCDISC::common_rownames(tg_datalist$POPDAT, group)) %>%
     dplyr::bind_rows(.id = 'ID') %>%
     dplyr::mutate(ID = tidyCDISC::pretty_IDs(ID))
 }

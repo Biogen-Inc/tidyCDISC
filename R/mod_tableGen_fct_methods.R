@@ -55,8 +55,14 @@ app_methods <- function(agg, column, week, group, data, totals, filter = NA) {
     stop(glue::glue("{column} variable doesn't exist in data, please remove or replace that variable from drop zone."))
   }
   
-  if (!is.na(filter))
+  if (!is.na(filter)) {
     data <- dplyr::filter(data, !!rlang::parse_expr(filter))
+    
+    if (week != "NONE" && nrow(dplyr::filter(data, AVISIT == week)) == 0) {
+      cat("\033[0;31mBlock output suppressed for `", filter, " & AVISIT == '", week, "'` because dataset was empty.\033[0m\n", sep = "")
+      return(NULL)
+    }
+  }
   
   if (agg == "MEAN") {
     app_mean(column, week, group, data)
