@@ -295,8 +295,8 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
                               purrr::possibly(relevel, otherwise = .)(NA_character_) %>%
                               get_levels() %>%
                               tidyr::replace_na("N/A") %>%
-                              c("ALL", .) %>%
-                              `[`(. != ""))) %>%
+                              {if (length(.) > 1) c("ALL", .) else .} %>%
+                              as.list())) %>%
       purrr::set_names(avals)
   })
   
