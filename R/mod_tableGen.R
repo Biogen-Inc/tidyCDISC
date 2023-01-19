@@ -287,8 +287,12 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
 
     purrr::map(avals, ~ datafile()$ADVS %>% 
                  dplyr::filter(PARAMCD == .x) %>%
+                 dplyr::select(dplyr::any_of(c("ATPT", "ATPTN"))) %>%
+                 varN_fctr_reorder() %>%
                  dplyr::select(dplyr::any_of(c("ATPT"))) %>%
                  purrr::map(~ .x %>%
+                              addNA(ifany = TRUE) %>%
+                              purrr::possibly(relevel, otherwise = .)(NA_character_) %>%
                               get_levels() %>%
                               tidyr::replace_na("N/A") %>%
                               c("ALL", .) %>%
