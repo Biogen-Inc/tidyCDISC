@@ -26,6 +26,14 @@ mod_popExp_server <- function(input, output, session, datafile) {
     }
   })
   
+  output$study_pop_exp <- renderUI({
+    req(datafile())
+    
+    studies <- unique(unlist(lapply(datafile(), `[[`, "STUDYID")))
+    study_ids <- paste(studies, collapse = " & ")
+    h4(paste("Study ID: ", study_ids))
+  })
+  
   col_list <- eventReactive(datafile(), {
     map(datafile(), colnames)
   })

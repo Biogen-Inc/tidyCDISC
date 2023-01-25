@@ -32,6 +32,14 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     tg_guide$init()$start()
   })
   
+  output$study_table_gen <- renderUI({
+    req(datafile())
+    
+    studies <- unique(unlist(lapply(datafile(), `[[`, "STUDYID")))
+    study_ids <- paste(studies, collapse = " & ")
+    h4(paste("Study ID: ", study_ids))
+  })
+  
   output$stan_recipe_ui <- renderUI({
       HTML(paste('
            <select id="RECIPE" class="selectize-input">
