@@ -58,7 +58,7 @@ app_methods <- function(agg, column, week, group, data, totals, filter = NA) {
   if (!is.na(filter)) {
     data <- dplyr::filter(data, !!rlang::parse_expr(filter))
     
-    if (week != "NONE" && nrow(dplyr::filter(data, AVISIT == week)) == 0) {
+    if (week != "NONE" && nrow(dplyr::filter(data, AVISIT == week, PARAMCD == column)) == 0) {
       cat("\033[0;31mBlock output suppressed for `", filter, " & AVISIT == '", week, "'` because dataset was empty.\033[0m\n", sep = "")
       return(NULL)
     }
