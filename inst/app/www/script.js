@@ -259,10 +259,12 @@ Shiny.addCustomMessageHandler('my_avals', function(aval) {
   tpnt_avals = aval;
   for (x in tpnt_avals) {
     for (y in tpnt_avals[x]) {
-      tpnt_avals[x].tpnt_opts = [''];
-      tpnt_avals[x].tpnt_opts.push("<optgroup label='" + y + "'>");
-      tpnt_avals[x].tpnt_opts.push($.map(tpnt_avals[x][y], createOption).join(""));
-      tpnt_avals[x].tpnt_opts.push("</optgroup>");
+      for (z in tpnt_avals[x][y]) {
+        tpnt_avals[x][y].tpnt_opts = [''];
+        tpnt_avals[x][y].tpnt_opts.push("<optgroup label='" + z + "'>");
+        tpnt_avals[x][y].tpnt_opts.push($.map(tpnt_avals[x][y][z], createOption).join(""));
+        tpnt_avals[x][y].tpnt_opts.push("</optgroup>");
+      }
     }
   }
 });
@@ -278,8 +280,10 @@ $(function() {
       var draggableId = ui.draggable.attr("id");
       var df = ui.draggable.closest('ul')[0].classList[1]
       var newid = getNewId(draggableId);
-      if (tpnt_avals !== null && Object.keys(tpnt_avals).some(el => draggableId.includes(el))) {
-        $(this).append(selectBlock(newid, newid.slice(0, -1).toUpperCase(), tpnt_avals[Object.keys(tpnt_avals).find(el => draggableId.includes(el))].tpnt_opts, df));
+      var df_key = Object.keys(tpnt_avals).find(el => df.includes(el));
+      var param_key = (df_key == undefined ? undefined : Object.keys(tpnt_avals[df_key]).find(el => draggableId.includes(el)));
+      if (tpnt_avals !== null && df_key != undefined && param_key != undefined) {
+        $(this).append(selectBlock(newid, newid.slice(0, -1).toUpperCase(), tpnt_avals[df_key][param_key].tpnt_opts, df));
       } else {
         $(this).append(simpleBlock(newid, df));
       }
