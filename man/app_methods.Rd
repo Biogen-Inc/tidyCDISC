@@ -7,7 +7,7 @@ each statistical and column block pairing
 and use the metadata associated with 
 each column block for the function's arguments}
 \usage{
-app_methods(agg, column, week, group, data, totals)
+app_methods(agg, column, week, group, data, totals, filter = NA)
 }
 \arguments{
 \item{agg}{the statistic to apply given the block name}
@@ -23,6 +23,8 @@ and class of the column dictated by the data frame it came from}
 
 \item{totals}{the totals data frame that contains denominator N's use when
 calculating column percentages}
+
+\item{filter}{a string denoting the additional filter to apply to the dataset}
 }
 \value{
 the table corresponding to the proper function
