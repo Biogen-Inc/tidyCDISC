@@ -282,6 +282,43 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     session$sendCustomMessage("all_cols", all_cols)
   })
   
+  AVALS <- reactive({
+    req(datafile())
+    req(purrr::map_lgl(datafile(), ~ "ATPT" %in% colnames(.x)))
+    
+    atpt_datasets <- purrr::map_lgl(datafile(), ~ "ATPT" %in% colnames(.x))
+
+    avals <- 
+      purrr::map(datafile()[atpt_datasets], ~ .x %>%
+      dplyr::select(PARAMCD, dplyr::any_of(c("ATPT"))) %>%
+      dplyr::filter(dplyr::if_any(-PARAMCD, ~ !is.na(.x) & .x != "")) %>%
+      dplyr::pull(PARAMCD) %>%
+      get_levels()
+      )
+    
+    ## TODO: Make this less confusing. I pity the soul who has to edit this.
+    purrr::imap(avals, ~ purrr::map(.x, function(i, j =.y) {
+      datafile()[[j]] %>% 
+                 dplyr::filter(PARAMCD == i) %>%
+                 dplyr::select(dplyr::any_of(c("ATPT", "ATPTN"))) %>%
+                 varN_fctr_reorder() %>%
+                 dplyr::select(dplyr::any_of(c("ATPT"))) %>%
+                 purrr::map(~ .x %>%
+                              addNA(ifany = TRUE) %>%
+                              purrr::possibly(relevel, otherwise = .)(NA_character_) %>%
+                              get_levels() %>%
+                              tidyr::replace_na("N/A") %>%
+                              {if (length(.) > 1) c("ALL", .) else .} %>%
+                              as.list())
+      }) %>%
+      purrr::set_names(.x)
+    )
+  })
+  
+  observe({
+    req(AVALS())
+    session$sendCustomMessage("my_avals", AVALS())
+  })
   
   # Verify if certain lab params exist, and if so, which dataset they live in
   # in case there are multiple ADLBs- to use later to send data to js side
@@ -355,7 +392,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   blocks_and_functions <- reactive({
     # create initial dataset
     blockData <- convertTGOutput(input$agg_drop_zone, input$block_drop_zone)
-    
+
     blockData$label <- 
       purrr::map2(blockData$block, blockData$dataset, function(var, dat) {
         if(!is.null(attr(data_to_use_str(dat, ae_data(), all_data())[[var]], 'label'))){
@@ -489,19 +526,10 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
                       ,gsub("<br/>", "\n        ", pre_filter_msgs())))
     }
 
-    d <- purrr::pmap(list(blocks_and_functions()$agg, 
-                      blocks_and_functions()$S3, 
-                      blocks_and_functions()$dropdown,
-                      blocks_and_functions()$dataset), 
-                 function(x,y,z,d) 
-                   app_methods(x,y,z, 
-                                group = column(), 
-                                data  = data_to_use_str(d, ae_data(), all_data()),
-                                totals = total_df())) %>%
-    purrr::map(setNames, common_rownames(use_preferred_pop_data(), column())) %>%
-    setNames(paste(blocks_and_functions()$gt_group)) %>%
-    bind_rows(.id = "ID")  %>%
-      mutate(ID = pretty_IDs(ID))
+    d <- tg_gt(list(ADAE = ae_data(), ADSL = all_data(), POPDAT = use_preferred_pop_data()),
+               blocks_and_functions(),
+               total_df(),
+               column())
     return(d)
   })
   

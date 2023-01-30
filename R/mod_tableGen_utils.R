@@ -27,7 +27,7 @@ prep_bds <- function(datafile, ADSL) {
     # Bind all the PARAMCD files 
     all_PARAMCD <- bind_rows(PARAMCD, .id = "data_from")  %>% 
       arrange(USUBJID, AVISITN, PARAMCD) %>% 
-      select(USUBJID, AVISITN, AVISIT, PARAMCD, PARAM, AVAL, CHG, data_from)
+      select(USUBJID, AVISITN, AVISIT, dplyr::any_of(c("ATPT")), PARAMCD, PARAM, AVAL, CHG, data_from)
     # Join ADSL and all_PARAMCD
     combined_data <- inner_join(ADSL, all_PARAMCD, by = "USUBJID")
   } else {
@@ -487,17 +487,25 @@ std_footnote <- function(data, source) {
 #' @export
 #' @keywords tabGen_repro
 tg_gt <- function(tg_datalist, blockData, total_df, group) {
-  purrr::pmap(list(
+  tbl_blocks <- purrr::pmap(list(
     blockData$agg,
     blockData$S3,
     blockData$dropdown,
-    blockData$dataset), 
-    function(x,y,z,d) tidyCDISC::app_methods(x,y,z,
+    blockData$dataset,
+    if (is.null(blockData$filter)) NA_character_ else blockData$filter), 
+    function(x,y,z,d,f) tidyCDISC::app_methods(x,y,z,
                                              group = group, 
                                              data = tidyCDISC::data_to_use_str(d, tg_datalist$ADAE, tg_datalist$ADSL),
-                                             totals = total_df)) %>%
-    purrr::map(setNames, tidyCDISC::common_rownames(tg_datalist$POPDAT, group)) %>%
+                                             totals = total_df,
+                                             filter = f)) %>%
     setNames(paste(blockData$gt_group)) %>%
+    purrr::compact()
+  
+  if (rlang::is_empty(tbl_blocks))
+    stop("There is no data for the selected pairs of analysis time points and visits.")
+  
+  tbl_blocks %>%
+    purrr::map(setNames, tidyCDISC::common_rownames(tg_datalist$POPDAT, group)) %>%
     dplyr::bind_rows(.id = 'ID') %>%
     dplyr::mutate(ID = tidyCDISC::pretty_IDs(ID))
 }
