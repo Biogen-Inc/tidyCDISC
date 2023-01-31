@@ -712,14 +712,33 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       paste0("TableGenerator", input$download_type)
     },
     content = function(file) {
+      progress <- Progress$new(max = 3)
+      progress$set(message = "Preparing Table...")
+      on.exit(progress$close())
+      
       if(input$download_type == ".csv") {
+        progress$inc(1) # increment progress bar
+        
         write.csv(for_gt(), file, row.names = FALSE)
+        progress$inc(1) # increment progress bar
+        
       } else if(input$download_type == ".html") {
+        progress$inc(1) # increment progress bar
+        
         exportHTML <- gt_table()
+        progress$inc(1) # increment progress bar
+        
         gt::gtsave(exportHTML, file)
+        progress$inc(1) # increment progress bar
+        
       } else if(input$download_type == ".rtf") {
+        progress$inc(1) # increment progress bar
+        
         export_rtf <- rtf_table()
+        progress$inc(1) # increment progress bar
+        
         gt::gtsave(export_rtf, file, page_numbering = "header")
+        progress$inc(1) # increment progress bar
       }
     }
   ) 
