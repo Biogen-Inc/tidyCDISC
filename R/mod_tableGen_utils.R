@@ -579,10 +579,14 @@ tg_guide <- cicerone::Cicerone$
 #' @param data The data frame used to create the table
 #' @param input_table_title The Shiny input with the table title
 #' @param input_table_footnote The Shiny input with the table footnote(s)
-#' 
+#' @param col_names A vector of column names
+#' @param col_total A vector of column totals
+#' @param subtitle The table subtitle
+#'  
 #' @export
 #' @keywords tabGen_repro
-create_gt_table <- function(data, input_table_title, input_table_footnote) {
+create_gt_table <- function(data, input_table_title, input_table_footnote,
+                            col_names, col_total, subtitle) {
   data %>%
     gt::gt(groupname_col = "ID") %>%
     gt::fmt_markdown(columns = c(Variable),
@@ -590,10 +594,10 @@ create_gt_table <- function(data, input_table_title, input_table_footnote) {
                        stringr::str_detect(Variable,'<b>') |
                        stringr::str_detect(Variable,'</b>')) %>%
     gt::tab_options(table.width = gt::px(700)) %>%
-    gt::cols_label(.list = col_for_list_expr(row_names_n(), col_total())) %>%
+    gt::cols_label(.list = col_for_list_expr(col_names, col_total)) %>%
     gt::tab_header(
       title = gt::md(input_table_title),
-      subtitle = gt::md(subtitle_html())
+      subtitle = gt::md(subtitle)
     ) %>%
     gt::tab_style(
       style = gt::cell_text(weight = "bold"),

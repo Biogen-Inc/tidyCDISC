@@ -548,7 +548,11 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # create gt table
   gt_table <- reactive({
     for_gt() %>%
-      create_gt_table(., input$table_title, input$table_footnote)
+      create_gt_table(., input_table_title = input$table_title, 
+                      input_table_footnote = input$table_footnote, 
+                      col_names = row_names_n(), 
+                      col_total = col_total(), 
+                      subtitle = subtitle_html())
   })
   
   # # TODO To be implemented when gt package fixes issue with col_widths()
@@ -590,8 +594,11 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     
     # Convert to gt table object
     gt_tab <- create_gt_table(data_with_blank_rows, 
-                              input$table_title, 
-                              input$table_footnote) 
+                              input_table_title = input$table_title, 
+                              input_table_footnote = input$table_footnote, 
+                              col_names = row_names_n(), 
+                              col_total = col_total(), 
+                              subtitle = subtitle_html()) 
     
     # Add formatting for RTF output
     rtf_tab <- gt_tab %>%
