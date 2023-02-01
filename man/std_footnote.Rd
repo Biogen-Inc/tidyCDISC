@@ -11,6 +11,9 @@ std_footnote(data, source)
 
 \item{source}{The source of the data in the table}
 }
+\value{
+a `gt` object
+}
 \description{
 Creates a footnote with a source on the left and date run on the right.
 }

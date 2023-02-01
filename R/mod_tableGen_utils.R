@@ -465,14 +465,17 @@ prep_blocks <- function(blockData) {
 #' @param data The `gt` table object to append the footnote
 #' @param source The source of the data in the table
 #' 
+#' @return a `gt` object
+#' 
 #' @export
 #' @keywords tabGen_repro
 std_footnote <- function(data, source) {
   gt::tab_footnote(data, 
-                   tags$div(HTML("<b>Source:</b>", source), 
-                            shiny::tags$span(shiny::HTML("<b> Run Date:</b>", toupper(format(Sys.Date(), "%d%b%Y"))),
-                                             style="float:right"),
-                            style="text-align:left"))
+     tags$div(HTML("<b>Source:</b>", source), 
+        shiny::tags$span(
+          shiny::HTML("<b> Run Date:</b>", toupper(format(Sys.Date(), "%d%b%Y"))),
+               style="float:right"),
+        style="text-align:left"))
 }
 
 #' Create the gt table object for TG
@@ -483,6 +486,8 @@ std_footnote <- function(data, source) {
 #' @param blockData The data for the construction of the blocks in the table
 #' @param total_df A data frame containing the totals by grouping variable
 #' @param group A character denoting the grouping variable
+#' 
+#' @return a data.frame containing output polished for presentation in `gt`
 #' 
 #' @export
 #' @keywords tabGen_repro
