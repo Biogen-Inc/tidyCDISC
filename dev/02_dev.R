@@ -230,7 +230,12 @@ usethis::use_revdep()
 
 # Update dependencies in DESCRIPTION
 # install.packages("attachment")
-attachment::att_amend_desc() 
+# library(dplyr)
+# library(shiny)
+# ?attachment::att_amend_desc
+attachment::att_amend_desc(pkg_ignore =
+   c("diffdf","remotes","stats","tools","utils")) 
+
 
 # # Run tests and examples (usually done with check)
 # devtools::test()
