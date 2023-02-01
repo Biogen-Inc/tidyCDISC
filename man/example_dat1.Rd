@@ -15,6 +15,9 @@ A list with 3 elements:
 \usage{
 example_dat1
 }
+\value{
+a list, containing three data.frames
+}
 \description{
 Pre-processed data for purposes of demonstrating \link[tidyCDISC]{app_methods}.
 }
