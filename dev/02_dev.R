@@ -251,6 +251,11 @@ rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran")) # , "--no-build-vigne
 # Check content
 # remotes::install_github("ThinkR-open/checkhelper")
 tags <- checkhelper::find_missing_tags()
+  # Ignore these objects... we are merely just trying to create help docs,
+  # so @export should not be used, yet Rd's are needed. 
+  # Ref: https://stackoverflow.com/questions/26697727/what-does-error-in-namespaceexportns-exports-undefined-exports-mean
+  # Doc available but need to choose between `@export` or `@noRd`:
+  # example_dat1, example_dat2, adsl, adlbc, advs, adae, adtte
 View(tags)
 
 # Check spelling
@@ -275,20 +280,24 @@ devtools::check_win_devel()
 # Doesn't really apply to tidyCDISC since it's never been published to CRAN
 # Check reverse dependencies
 # remotes::install_github("r-lib/revdepcheck")
-usethis::use_git_ignore("revdep/")
-usethis::use_build_ignore("revdep/")
+# usethis::use_git_ignore("revdep/") # use once
+# usethis::use_build_ignore("revdep/") # use once
 
-devtools::revdep()
-library(revdepcheck)
-# In another session
-id <- rstudioapi::terminalExecute("Rscript -e 'revdepcheck::revdep_check(num_workers = 4)'")
-rstudioapi::terminalKill(id)
-# See outputs
-revdep_details(revdep = "pkg")
-revdep_summary()                 # table of results by package
-revdep_report() # in revdep/
-# Clean up when on CRAN
-revdep_reset()
+# returns vector of pkg names that depend on tidyCDISC
+devtools::revdep(pkg = "tidyCDISC",
+    dependencies = c("Depends","Imports"))
+
+# if applicable... continue:
+# library(revdepcheck)
+# # In another session
+# id <- rstudioapi::terminalExecute("Rscript -e 'revdepcheck::revdep_check(num_workers = 4)'")
+# rstudioapi::terminalKill(id)
+# # See outputs
+# revdep_details(revdep = "pkg")
+# revdep_summary()                 # table of results by package
+# revdep_report() # in revdep/
+# # Clean up when on CRAN
+# revdep_reset()
 
 # Update NEWS
 # Bump version manually and add list of changes

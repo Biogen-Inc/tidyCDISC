@@ -15,9 +15,6 @@ A list with 3 elements:
 \usage{
 example_dat2
 }
-\value{
-a list of length 3
-}
 \description{
 Pre-processed data for the purposes of demonstrating \link[tidyCDISC]{col_for_list_expr}.
 }

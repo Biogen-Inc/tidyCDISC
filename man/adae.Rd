@@ -13,9 +13,6 @@ Data frame with 32,139 features and 34 fields
 \usage{
 adae
 }
-\value{
-a data.frame
-}
 \description{
 Adverse Events Analysis Data from PHUSE Test Data Factory Project's GitHub.
 }

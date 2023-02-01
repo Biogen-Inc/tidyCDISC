@@ -13,9 +13,6 @@ Data frame with 32,139 features and 34 fields
 \usage{
 advs
 }
-\value{
-a data.frame
-}
 \description{
 Vital Signs Analysis Data from PHUSE Test Data Factory Project's GitHub.
 }

@@ -8,8 +8,6 @@
 #'   \item{BDS}{data frame, pre-processed BDS dataset}
 #'   \item{totals}{data frame, contains totals by grouping variable for pre-processed data}
 #' }
-#' @export
-#' @return a list, containing three data.frames
 "example_dat1"
 
 #' Example Data Set 2
@@ -22,6 +20,4 @@
 #'   \item{col_names}{vector, the column names}
 #'   \item{col_totals}{vector, totals corresponding to each column}
 #' }
-#' @export
-#' @return a list of length 3
 "example_dat2"
