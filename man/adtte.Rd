@@ -13,6 +13,9 @@ Data frame with 32,740 features and 58 fields
 \usage{
 adtte
 }
+\value{
+a data.frame
+}
 \description{
 Time to Event Analysis Data from PHUSE Test Data Factory Project's GitHub.
 }

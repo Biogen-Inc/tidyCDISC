@@ -13,6 +13,9 @@ Data frame with 32,740 features and 58 fields
 \usage{
 adlbc
 }
+\value{
+a data.frame
+}
 \description{
 Laboratory Results Chemistry Analysis Data from PHUSE Test Data Factory Project's GitHub.
 }

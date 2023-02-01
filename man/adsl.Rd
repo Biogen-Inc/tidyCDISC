@@ -13,6 +13,9 @@ Data frame with 254 features and 51 fields
 \usage{
 adsl
 }
+\value{
+a data.frame
+}
 \description{
 Subject Level Analysis Data from PHUSE Test Data Factory Project's GitHub.
 }
