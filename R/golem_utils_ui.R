@@ -246,40 +246,47 @@ col_12 <- function(...){
   column(12, ...)
 }
 
+#' @noRd
 #' @importFrom shiny column
 col_10 <- function(...){
   column(10, ...)
 }
 
+#' @noRd
 #' @importFrom shiny column
 col_8 <- function(...){
   column(8, ...)
 }
 
+#' @noRd
 #' @importFrom shiny column
 col_6 <- function(...){
   column(6, ...)
 }
 
 
+#' @noRd
 #' @importFrom shiny column
 col_4 <- function(...){
   column(4, ...)
 }
 
 
+#' @noRd
 #' @importFrom shiny column
 col_3 <- function(...){
   column(3, ...)
 }
 
 
+#' @noRd
 #' @importFrom shiny column
 col_2 <- function(...){
   column(2, ...)
 }
 
 
+#' @noRd
 #' @importFrom shiny column
 col_1 <- function(...){
   column(1, ...)
