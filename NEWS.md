@@ -1,7 +1,7 @@
 # tidyCDISC 0.2.0 (CRAN Release)
 * Clean up JS to  `RECIPE` input (aka 'standard analyses') drop down.
 * Created "ALL" as dropdown option for standard analysis 41 instead of listing all available weeks.
-* added protocol / study id in prominent locaiton on each tab
+* added protocol / study id in prominent location on each tab
 * designed special `ATPT` variable integration in the Table Generator (when present in data)
 * added `OS Health` & `riskmetric` badges to the `README`
 * engineered "cleaner" function that creates the table generator output from the block data 
