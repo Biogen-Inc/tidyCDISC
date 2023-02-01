@@ -1,4 +1,5 @@
 # tidyCDISC (development version)
+* Add option for RTF download to Table Generator.
 * Clean up JS to input `RECIPE`s (aka stanard analyses).
 * Created "ALL" as dropdown option for Standard Analyses 41 instead of listing all available weeks.
 * Make the list of columns available to filter on in the Population Explorer depend upon the data frame(s) selected for filtering
