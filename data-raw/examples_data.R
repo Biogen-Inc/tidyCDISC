@@ -1,5 +1,5 @@
 datalist <- list(ADSL = tidyCDISC::adsl, ADVS = tidyCDISC::advs, ADAE = tidyCDISC::adae, ADLBC = tidyCDISC::adlbc)
-pre_adsl <- tidyCDISC::prep_adsl(datalist$ADSL, input_recipe = 'NONE')
+pre_adsl <- tidyCDISC::prep_adsl(datalist$ADSL[1:25,], input_recipe = 'NONE')
 # Create AE data set
 pre_adae <- datalist %>%
   tidyCDISC::prep_adae(pre_adsl$data, 'NONE')
@@ -51,7 +51,6 @@ col_total <- total_df$n_tot
 example_dat1 <- list(AE = ae_data,
                      BDS = bds_data,
                      totals = total_df)
-# rm(list=setdiff(ls(), "example_dat1"))
 usethis::use_data(example_dat1)
 
 tg_table <- purrr::pmap(list(
