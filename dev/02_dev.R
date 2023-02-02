@@ -246,7 +246,8 @@ attachment::att_amend_desc(pkg_ignore =
 pkgbuild::build()
 pkgbuild::build(vignettes = FALSE) # check build size quickly
 devtools::check()
-rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran")) # , "--no-build-vignettes"
+# rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran")) # , "--no-build-vignettes"
+rcmdcheck::rcmdcheck(args = c("--as-cran"))
 
 # Check content
 # remotes::install_github("ThinkR-open/checkhelper")
