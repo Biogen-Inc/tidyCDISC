@@ -251,11 +251,13 @@ rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran")) # , "--no-build-vigne
 # Check content
 # remotes::install_github("ThinkR-open/checkhelper")
 tags <- checkhelper::find_missing_tags()
-  # Ignore these objects... we are merely just trying to create help docs,
+  # Ignore below objects... we are merely just trying to create help docs,
   # so @export should not be used, yet Rd's are needed. 
-  # Ref: https://stackoverflow.com/questions/26697727/what-does-error-in-namespaceexportns-exports-undefined-exports-mean
+  #   Ref: https://stackoverflow.com/questions/26697727/what-does-error-in-namespaceexportns-exports-undefined-exports-mean
   # Doc available but need to choose between `@export` or `@noRd`:
   # example_dat1, example_dat2, adsl, adlbc, advs, adae, adtte
+  # if you do include it, you'll get this during r-cmd-check:
+  #   https://github.com/Biogen-Inc/tidyCDISC/actions/runs/4067293486/jobs/7004470694#step:6:69
 View(tags)
 
 # Check spelling
