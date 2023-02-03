@@ -470,7 +470,7 @@ prep_blocks <- function(blockData) {
 std_footnote <- function(data, source) {
   gt::tab_footnote(data, 
                    tags$div(HTML("<b>Source:</b>", source), 
-                            shiny::tags$span(shiny::HTML("<b> Run Date:</b>", toupper(format(Sys.Date(), "%d%b%Y"))),
+                            shiny::tags$span(shiny::HTML("<b>Run Date:</b>", toupper(format(Sys.Date(), "%d%b%Y"))),
                                              style="float:right"),
                             style="text-align:left"))
 }
@@ -563,13 +563,55 @@ tg_guide <- cicerone::Cicerone$
   step(
     "download_table",
     "Keep a copy for your records",
-    "Download a table in CSV or HTML format as seen in the app. RTF support coming soon!"
+    "Download a table in RTF, CSV, or HTML format as seen in the app."
   )$
   step(
     "tableGen_ui_1-tblcode",
     "Produce this table outside of the app",
     "Have more data coming? Don't download the table, download the R script needed to produce the table. Then there's no need to even open up the app periodically to re-create your outputs!"
   )
+
+#' Create a `gt` table object
+#' 
+#' Create a `gt` table object from the data that will then be used to generate
+#' output in specific formats
+#' 
+#' @param data The data frame used to create the table
+#' @param input_table_title The Shiny input with the table title
+#' @param input_table_footnote The Shiny input with the table footnote(s)
+#' @param col_names A vector of column names
+#' @param col_total A vector of column totals
+#' @param subtitle The table subtitle
+#'  
+#' @noRd
+create_gt_table <- function(data, input_table_title, input_table_footnote,
+                            col_names, col_total, subtitle) {
+  data %>%
+    gt::gt(groupname_col = "ID") %>%
+    gt::fmt_markdown(columns = c(Variable),
+                     rows = stringr::str_detect(Variable,'&nbsp;') |
+                       stringr::str_detect(Variable,'<b>') |
+                       stringr::str_detect(Variable,'</b>')) %>%
+    gt::tab_options(table.width = gt::px(700)) %>%
+    gt::cols_label(.list = col_for_list_expr(col_names, col_total)) %>%
+    gt::tab_header(
+      title = gt::md(input_table_title),
+      subtitle = gt::md(subtitle)
+    ) %>%
+    gt::tab_style(
+      style = gt::cell_text(weight = "bold"),
+      locations = gt::cells_row_groups()
+    ) %>%
+    gt::tab_style(
+      style = list(
+        gt::cell_text(align = "right")
+      ),
+      locations = gt::cells_stub(rows = TRUE)
+    )%>%
+    gt::cols_label(Variable = "") %>%
+    std_footnote("tidyCDISC app") %>%
+    gt::tab_footnote(input_table_footnote)
+}
 
 
 
