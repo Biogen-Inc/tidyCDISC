@@ -273,7 +273,7 @@ urlchecker::url_update()
 # check on other distributions
 # _rhub
 first_chk <- devtools::check_rhub()
-cran_chk <- rhub::check_for_cran(check_args = c("--as-cran", "--no-build-vignettes"))
+cran_chk <- rhub::check_for_cran(check_args = c("--as-cran"))
 
 rhub::check_on_windows(check_args = "--force-multiarch")
 rhub::check_on_solaris()
