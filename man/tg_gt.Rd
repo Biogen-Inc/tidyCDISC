@@ -15,6 +15,9 @@ tg_gt(tg_datalist, blockData, total_df, group)
 
 \item{group}{A character denoting the grouping variable}
 }
+\value{
+a data.frame containing output polished for presentation in `gt`
+}
 \description{
 A wrapper for other functions to create the `gt` object from the data
 }

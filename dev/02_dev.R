@@ -230,7 +230,12 @@ usethis::use_revdep()
 
 # Update dependencies in DESCRIPTION
 # install.packages("attachment")
-attachment::att_amend_desc() 
+# library(dplyr)
+# library(shiny)
+# ?attachment::att_amend_desc
+attachment::att_amend_desc(pkg_ignore =
+   c("diffdf","remotes","stats","tools","utils")) 
+
 
 # # Run tests and examples (usually done with check)
 # devtools::test()
@@ -241,11 +246,19 @@ attachment::att_amend_desc()
 pkgbuild::build()
 pkgbuild::build(vignettes = FALSE) # check build size quickly
 devtools::check()
-rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran")) # , "--no-build-vignettes"
+# rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran")) # , "--no-build-vignettes"
+rcmdcheck::rcmdcheck(args = c("--as-cran"))
 
 # Check content
 # remotes::install_github("ThinkR-open/checkhelper")
 tags <- checkhelper::find_missing_tags()
+  # Ignore below objects... we are merely just trying to create help docs,
+  # so @export should not be used, yet Rd's are needed. 
+  #   Ref: https://stackoverflow.com/questions/26697727/what-does-error-in-namespaceexportns-exports-undefined-exports-mean
+  # Doc available but need to choose between `@export` or `@noRd`:
+  # example_dat1, example_dat2, adsl, adlbc, advs, adae, adtte
+  # if you do include it, you'll get this during r-cmd-check:
+  #   https://github.com/Biogen-Inc/tidyCDISC/actions/runs/4067293486/jobs/7004470694#step:6:69
 View(tags)
 
 # Check spelling
@@ -260,7 +273,7 @@ urlchecker::url_update()
 # check on other distributions
 # _rhub
 first_chk <- devtools::check_rhub()
-cran_chk <- rhub::check_for_cran(check_args = c("--as-cran", "--no-build-vignettes"))
+cran_chk <- rhub::check_for_cran(check_args = c("--as-cran"))
 
 rhub::check_on_windows(check_args = "--force-multiarch")
 rhub::check_on_solaris()
@@ -270,20 +283,24 @@ devtools::check_win_devel()
 # Doesn't really apply to tidyCDISC since it's never been published to CRAN
 # Check reverse dependencies
 # remotes::install_github("r-lib/revdepcheck")
-usethis::use_git_ignore("revdep/")
-usethis::use_build_ignore("revdep/")
+# usethis::use_git_ignore("revdep/") # use once
+# usethis::use_build_ignore("revdep/") # use once
 
-devtools::revdep()
-library(revdepcheck)
-# In another session
-id <- rstudioapi::terminalExecute("Rscript -e 'revdepcheck::revdep_check(num_workers = 4)'")
-rstudioapi::terminalKill(id)
-# See outputs
-revdep_details(revdep = "pkg")
-revdep_summary()                 # table of results by package
-revdep_report() # in revdep/
-# Clean up when on CRAN
-revdep_reset()
+# returns vector of pkg names that depend on tidyCDISC
+devtools::revdep(pkg = "tidyCDISC",
+    dependencies = c("Depends","Imports"))
+
+# if applicable... continue:
+# library(revdepcheck)
+# # In another session
+# id <- rstudioapi::terminalExecute("Rscript -e 'revdepcheck::revdep_check(num_workers = 4)'")
+# rstudioapi::terminalKill(id)
+# # See outputs
+# revdep_details(revdep = "pkg")
+# revdep_summary()                 # table of results by package
+# revdep_report() # in revdep/
+# # Clean up when on CRAN
+# revdep_reset()
 
 # Update NEWS
 # Bump version manually and add list of changes
