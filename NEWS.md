@@ -1,4 +1,6 @@
+
 # tidyCDISC 0.2.0 (CRAN Release)
+
 * Clean up JS to  `RECIPE` input (aka 'standard analyses') drop down.
 * Created "ALL" as dropdown option for standard analysis 41 instead of listing all available weeks.
 * added protocol / study id in prominent location on each tab
@@ -8,6 +10,7 @@
 * table generator output automatically updates the table name when a standard analysis is selected
 * Fixed some Population Explorer filtering issues
 * Added an `app.R` file so that shiny app can be ran directly from `shiny::runGitHub()` or `runUrl()`
+
 
 # tidyCDISC 0.1.1
 
