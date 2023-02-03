@@ -583,8 +583,7 @@ tg_guide <- cicerone::Cicerone$
 #' @param col_total A vector of column totals
 #' @param subtitle The table subtitle
 #'  
-#' @export
-#' @keywords tabGen_repro
+#' @noRd
 create_gt_table <- function(data, input_table_title, input_table_footnote,
                             col_names, col_total, subtitle) {
   data %>%
