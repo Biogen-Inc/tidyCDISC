@@ -30,6 +30,8 @@ mod_tableGen_ui <- function(id){
     h1("Table Generator", align = "center"),
     br(), br(), br(),
     fluidPage(
+      div(uiOutput(ns("study_table_gen")), style = "padding-left: 20px", class = "studyid"),
+      
       fluidRow(
         style = "padding: 20px",
         column(width = 6,
@@ -117,7 +119,8 @@ mod_tableGen_ui <- function(id){
                                column(6, downloadButton(ns("download_gt"), "Download Table")),
                                column(6, offset = 0,
                                       radioButtons(ns("download_type"), "Download Type", 
-                                                   choices = c("CSV" = ".csv",
+                                                   choices = c("RTF" = ".rtf",
+                                                               "CSV" = ".csv",
                                                                "HTML" = ".html"),
                                                    inline = TRUE))
                                

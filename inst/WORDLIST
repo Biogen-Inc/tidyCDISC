@@ -20,12 +20,14 @@ Agg
 BDS
 CDISC
 CMD
+Conf
 DIY
 DT
 Downloader
 EVENTTYP
 IDEAFilter
 Ish
+JS
 Kaplan
 Ns
 OCCD
@@ -44,7 +46,6 @@ RTF
 SMEs
 TDF
 TG
-TTE
 TestDataFactory
 UI
 USUBJID
@@ -64,7 +65,6 @@ boxPlot
 callModule
 checkGroup
 checkboxInput
-dataComply
 df
 dropdown
 droppability
@@ -96,6 +96,7 @@ png
 pre
 radioButtons
 reproducibility
+riskmetric
 sas
 selectInput
 selectable
@@ -104,7 +105,6 @@ snagit
 stan
 submodule
 tableGen
-tagList
 tibble
 ui
 un

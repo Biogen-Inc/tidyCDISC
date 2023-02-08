@@ -32,6 +32,14 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     tg_guide$init()$start()
   })
   
+  output$study_table_gen <- renderUI({
+    req(datafile())
+    
+    studies <- unique(unlist(lapply(datafile(), `[[`, "STUDYID")))
+    study_ids <- paste(studies, collapse = " & ")
+    h4(paste("Study ID: ", study_ids))
+  })
+  
   output$stan_recipe_ui <- renderUI({
       HTML(paste('
            <select id="RECIPE" class="selectize-input">
@@ -274,6 +282,43 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     session$sendCustomMessage("all_cols", all_cols)
   })
   
+  AVALS <- reactive({
+    req(datafile())
+    req(purrr::map_lgl(datafile(), ~ "ATPT" %in% colnames(.x)))
+    
+    atpt_datasets <- purrr::map_lgl(datafile(), ~ "ATPT" %in% colnames(.x))
+
+    avals <- 
+      purrr::map(datafile()[atpt_datasets], ~ .x %>%
+      dplyr::select(PARAMCD, dplyr::any_of(c("ATPT"))) %>%
+      dplyr::filter(dplyr::if_any(-PARAMCD, ~ !is.na(.x) & .x != "")) %>%
+      dplyr::pull(PARAMCD) %>%
+      get_levels()
+      )
+    
+    ## TODO: Make this less confusing. I pity the soul who has to edit this.
+    purrr::imap(avals, ~ purrr::map(.x, function(i, j =.y) {
+      datafile()[[j]] %>% 
+                 dplyr::filter(PARAMCD == i) %>%
+                 dplyr::select(dplyr::any_of(c("ATPT", "ATPTN"))) %>%
+                 varN_fctr_reorder() %>%
+                 dplyr::select(dplyr::any_of(c("ATPT"))) %>%
+                 purrr::map(~ .x %>%
+                              addNA(ifany = TRUE) %>%
+                              purrr::possibly(relevel, otherwise = .)(NA_character_) %>%
+                              get_levels() %>%
+                              tidyr::replace_na("N/A") %>%
+                              {if (length(.) > 1) c("ALL", .) else .} %>%
+                              as.list())
+      }) %>%
+      purrr::set_names(.x)
+    )
+  })
+  
+  observe({
+    req(AVALS())
+    session$sendCustomMessage("my_avals", AVALS())
+  })
   
   # Verify if certain lab params exist, and if so, which dataset they live in
   # in case there are multiple ADLBs- to use later to send data to js side
@@ -331,13 +376,10 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       
     } # end of "if labs exist"
     
-    session$sendCustomMessage("chem_weeks", as.vector(send_chem_wks))
-    session$sendCustomMessage("hema_weeks", as.vector(send_hema_wks))
-    session$sendCustomMessage("urin_weeks", as.vector(send_urin_wks))
+    session$sendCustomMessage("adlbc", list(params = as.vector(send_chem), weeks = as.vector(send_chem_wks)))
+    session$sendCustomMessage("adlbh", list(params = as.vector(send_hema), weeks = as.vector(send_hema_wks)))
+    session$sendCustomMessage("adlbu", list(params = as.vector(send_urin), weeks = as.vector(send_urin_wks)))
     
-    session$sendCustomMessage("adlbc_params", as.vector(send_chem))
-    session$sendCustomMessage("adlbh_params", as.vector(send_hema))
-    session$sendCustomMessage("adlbu_params", as.vector(send_urin))
     
   })
   
@@ -350,7 +392,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   blocks_and_functions <- reactive({
     # create initial dataset
     blockData <- convertTGOutput(input$agg_drop_zone, input$block_drop_zone)
-    
+
     blockData$label <- 
       purrr::map2(blockData$block, blockData$dataset, function(var, dat) {
         if(!is.null(attr(data_to_use_str(dat, ae_data(), all_data())[[var]], 'label'))){
@@ -484,19 +526,10 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
                       ,gsub("<br/>", "\n        ", pre_filter_msgs())))
     }
 
-    d <- purrr::pmap(list(blocks_and_functions()$agg, 
-                      blocks_and_functions()$S3, 
-                      blocks_and_functions()$dropdown,
-                      blocks_and_functions()$dataset), 
-                 function(x,y,z,d) 
-                   app_methods(x,y,z, 
-                                group = column(), 
-                                data  = data_to_use_str(d, ae_data(), all_data()),
-                                totals = total_df())) %>%
-    purrr::map(setNames, common_rownames(use_preferred_pop_data(), column())) %>%
-    setNames(paste(blocks_and_functions()$gt_group)) %>%
-    bind_rows(.id = "ID")  %>%
-      mutate(ID = pretty_IDs(ID))
+    d <- tg_gt(list(ADAE = ae_data(), ADSL = all_data(), POPDAT = use_preferred_pop_data()),
+               blocks_and_functions(),
+               total_df(),
+               column())
     return(d)
   })
   
@@ -511,34 +544,107 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     append(some_names_no_tot, "Total")
   })
   
+
   # create gt table
   gt_table <- reactive({
     for_gt() %>%
-      # cols_labelgt(rowname_col = "Variable", groupname_col = "ID") %>%
-      gt::gt(groupname_col = "ID") %>%
-      gt::fmt_markdown(columns = c(Variable),
-                   rows = stringr::str_detect(Variable,'&nbsp;') |
-                     stringr::str_detect(Variable,'<b>') |
-                     stringr::str_detect(Variable,'</b>')) %>%
-      gt::tab_options(table.width = gt::px(700)) %>%
-      gt::cols_label(.list = col_for_list_expr(row_names_n(), col_total())) %>%
-      gt::tab_header(
-        title = gt::md(input$table_title),
-        subtitle = gt::md(subtitle_html())
-      ) %>%
-      gt::tab_style(
-        style = gt::cell_text(weight = "bold"),
-        locations = gt::cells_row_groups()
-      ) %>%
-      gt::tab_style(
-        style = list(
-          gt::cell_text(align = "right")
-        ),
-        locations = gt::cells_stub(rows = TRUE)
-      )%>%
-      gt::cols_label(Variable = "") %>%
-      std_footnote("tidyCDISC app") %>%
-      gt::tab_footnote(input$table_footnote)
+      create_gt_table(., input_table_title = input$table_title, 
+                      input_table_footnote = input$table_footnote, 
+                      col_names = row_names_n(), 
+                      col_total = col_total(), 
+                      subtitle = subtitle_html())
+  })
+  
+  # # TODO To be implemented when gt package fixes issue with col_widths()
+  # # Column widths for RTF output
+  # col_widths_rtf <- reactive({
+  #   
+  #   # Number of columns, excluding grouping column
+  #   ncols <- ncol(rtf_table()[["_data"]]) - 1
+  #   
+  #   # Width of first column, in percentage
+  #   width_col_1 <- 40
+  #   width_col_rest <- (100 - width_col_1) / (ncols - 1) 
+  #   
+  #   widths <- c(width_col_1, rep(x = width_col_rest, times = ncols - 1))
+  #   widths <- gt::pct(widths)
+  #   
+  #   return(widths)
+  #   
+  # })
+  
+  # Create RTF table
+  rtf_table <- reactive({
+    
+    data <- for_gt()
+    
+    # Add blank row after each ID group
+    
+    # Change factor to character to maintain order of blocks
+    data_factor <- data %>%
+      mutate(ID = factor(ID, levels = unique(ID)))
+    
+    # Add blank rows
+    data_with_blank_rows <- do.call(rbind, by(data, data_factor$ID, rbind, ""))
+    
+    # Populate ID in blank rows
+    ind <- which(data_with_blank_rows$ID == "")
+    data_with_blank_rows$ID[ind] <- data_with_blank_rows$ID[ind - 1]
+    
+    
+    # Convert to gt table object
+    gt_tab <- create_gt_table(data_with_blank_rows, 
+                              input_table_title = input$table_title, 
+                              input_table_footnote = input$table_footnote, 
+                              col_names = row_names_n(), 
+                              col_total = col_total(), 
+                              subtitle = subtitle_html()) 
+    
+    # Add formatting for RTF output
+    rtf_tab <- gt_tab %>%
+      gt::tab_options(
+        
+        # Not currently possible to change font family or size
+        # Open issue: https://github.com/rstudio/gt/issues/687
+        # table.font.names = c("Times", "Arial"),
+        # table.font.size = gt::px(18),
+        # heading.title.font.size = NULL,
+        # footnotes.font.size = NULL,
+        
+        page.numbering = TRUE,
+        page.orientation = "landscape",
+        
+        # Set table width to be the width of the page. Column widths
+        # will be distributed equally.
+        table.width = gt::pct(100)
+      ) #%>%
+    
+    # Set column widths
+    # Unable to pass dynamic column width to gt::cols_width() in a shiny
+    # app. Open issue: https://github.com/rstudio/gt/issues/641
+    # gt::cols_width(
+    #   TRUE ~ col_widths_rtf()
+    # )
+    
+    # Page breaks
+    # Not currently possible
+    # Sample open issue: https://github.com/rstudio/gt/issues/1081
+    
+    # Convert HTML to markdown in the Source footnote
+    rtf_tab[["_footnotes"]]$footnotes[[1]] <- 
+      rtf_tab[["_footnotes"]]$footnotes[[1]] %>%
+      as.character() %>%
+      
+      # Convert bold from HTML to markdown
+      stringr::str_replace_all("</b>", "**") %>%
+      stringr::str_replace_all("<b>", "**") %>%
+      # Delete HTML elements
+      stringr::str_replace_all("<.+?>", "") %>%
+      trimws(which = "left") %>%
+      # Convert to markdown for formatting
+      gt::md()
+    
+    return(rtf_tab)
   })
   
   output$all <- gt::render_gt({  gt_table() })
@@ -598,7 +704,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
 
   # ----------------------------------------------------------------------
   # Download table
-  # Currently CSV and HTML but easy to add more!
+  # Currently RTF, CSV, and HTML 
   # ----------------------------------------------------------------------
   
   output$download_gt <- downloadHandler(
@@ -606,11 +712,33 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       paste0("TableGenerator", input$download_type)
     },
     content = function(file) {
+      progress <- Progress$new(max = 3)
+      progress$set(message = "Preparing Table...")
+      on.exit(progress$close())
+      
       if(input$download_type == ".csv") {
+        progress$inc(1) # increment progress bar
+        
         write.csv(for_gt(), file, row.names = FALSE)
+        progress$inc(1) # increment progress bar
+        
       } else if(input$download_type == ".html") {
+        progress$inc(1) # increment progress bar
+        
         exportHTML <- gt_table()
+        progress$inc(1) # increment progress bar
+        
         gt::gtsave(exportHTML, file)
+        progress$inc(1) # increment progress bar
+        
+      } else if(input$download_type == ".rtf") {
+        progress$inc(1) # increment progress bar
+        
+        export_rtf <- rtf_table()
+        progress$inc(1) # increment progress bar
+        
+        gt::gtsave(export_rtf, file, page_numbering = "header")
+        progress$inc(1) # increment progress bar
       }
     }
   ) 

@@ -33,16 +33,18 @@ $( document ).ready(function() {
     var str = "";
     $('#' + id).each(function() {
       txt = $(this).text()
-      df = $(this).attr("class").split(" ")[1]  
-      val = $(this).parent().find("select").children("option:selected").val()
+      df = $(this).attr("class").split(" ")[1]
+      grp = $(this).parent().find(":selected").parent().attr("label")
+      val = $(this).parent().find(":selected").val()
       lst = [];
       if (val === "ALL") {
-      for (let i = 2; i < $(this).parent().find("select").children().length; i++) {
-        lst.push($(this).parent().find("select").children()[i].text);
+      for (let i = 0; i < $(this).parent().find(":selected").parent().children().length; i++) {
+        if (["NONE", "ALL"].includes($(this).parent().find(":selected").parent().children()[i].text)) { continue; }
+        lst.push($(this).parent().find(":selected").parent().children()[i].text);
       }
       }
       str += `${df}*${txt.replace(" ", "")}*${val} + `.replace(/\r?\n|\r/g, "")
-      obj.numbers.push({txt,df,val,lst})
+      obj.numbers.push({txt,df,grp,val,lst})
     })
   // currently return a string seperated by +
     // and blocks must be one word - this is very fragile!
@@ -226,9 +228,9 @@ Shiny.addCustomMessageHandler('my_weeks', function(df) {
 * @param {newid} the new, unique id of the dropped block
 * @param {label} the name of the new block
 */
-  function selectBlock(newid, label, values) { 
+  function selectBlock(newid, label, values, df = "") { 
     return `<div class="form-group drop_area">
-      <label class="control-label" for="${newid}">${label}</label>
+      <label class="control-label ${df}" for="${newid}">${label}</label>
         <select id="${newid}" class="dropdown">
           <option value="NONE">NONE</option>
             ${values}
@@ -249,6 +251,24 @@ Shiny.addCustomMessageHandler('my_weeks', function(df) {
     return type + (newId + 1);
   }
 
+/**
+ * Function to import multiple avals per visit 
+*/
+let tpnt_avals = null;
+Shiny.addCustomMessageHandler('my_avals', function(aval) {
+  tpnt_avals = aval;
+  for (x in tpnt_avals) {
+    for (y in tpnt_avals[x]) {
+      for (z in tpnt_avals[x][y]) {
+        tpnt_avals[x][y].tpnt_opts = [''];
+        tpnt_avals[x][y].tpnt_opts.push("<optgroup label='" + z + "'>");
+        tpnt_avals[x][y].tpnt_opts.push($.map(tpnt_avals[x][y][z], createOption).join(""));
+        tpnt_avals[x][y].tpnt_opts.push("</optgroup>");
+      }
+    }
+  }
+});
+
 // on block dropdown create simple blocks 
 // with the block names from the droppable area
 // and delete buttons
@@ -260,50 +280,18 @@ $(function() {
       var draggableId = ui.draggable.attr("id");
       var df = ui.draggable.closest('ul')[0].classList[1]
       var newid = getNewId(draggableId);
-      $(this).append(simpleBlock(newid, df));
+      var df_key = Object.keys(tpnt_avals).find(el => df.includes(el));
+      var param_key = (df_key == undefined ? undefined : Object.keys(tpnt_avals[df_key]).find(el => draggableId.includes(el)));
+      if (tpnt_avals !== null && df_key != undefined && param_key != undefined) {
+        $(this).append(selectBlock(newid, newid.slice(0, -1).toUpperCase(), tpnt_avals[df_key][param_key].tpnt_opts, df));
+      } else {
+        $(this).append(simpleBlock(newid, df));
+      }
     }
   }).sortable({
     revert: false
   })
 })
-
-
-
-
-
-
-/*
-// commented out Dec 9 on commit 937a4e8
-// for agg blocks, 
-// create dropdowns specific to each block
-$(function() {
-  $(".draggable_agg").draggable();
-  $("#droppable_agg").droppable({
-    accept: ".agg",
-    
-    drop: function(event, ui) {
-      var draggableId = ui.draggable.attr("id");
-      var newid = getNewId(draggableId);
-      if (draggableId.includes("anova")) {
-        $(this).append(selectBlock(newid, "ANOVA"));
-      } else if (draggableId.includes("chg")) {
-        $(this).append(selectBlock(newid, "CHG"));
-      } else if (draggableId.includes("mean")) {
-        $(this).append(selectBlock(newid, "MEAN"));
-      } else if (draggableId.includes("nested_freq_dsc")) {
-        $(this).append(selectBlock(newid, "NESTED_FREQ_DSC"));
-      } else if (draggableId.includes("nested_freq_abc")) {
-        $(this).append(selectBlock(newid, "NESTED_FREQ_ABC"));
-      } else {
-        $(this).append(simpleBlock(newid, "df"));
-      }
-    }
-    
-  }).sortable({
-    revert: false
-  })
-});
-*/
 
 $("#popExp_ui_1-adv_filtering").parent().parent().addClass('custom_checkbox');
 $("#popExp_ui_1-adv_filtering").parent().parent().parent().addClass('custom_shiny_width');
