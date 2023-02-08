@@ -26,6 +26,18 @@ mod_popExp_server <- function(input, output, session, datafile) {
     }
   })
   
+  output$study_pop_exp <- renderUI({
+    req(datafile())
+    
+    studies <- unique(unlist(lapply(datafile(), `[[`, "STUDYID")))
+    study_ids <- paste(studies, collapse = " & ")
+    h4(paste("Study ID: ", study_ids))
+  })
+  
+  col_list <- eventReactive(datafile(), {
+    map(datafile(), colnames)
+  })
+  
   # show/hide checkboxes depending on radiobutton selection
   process <- eventReactive(datafile(), {
     
@@ -155,12 +167,11 @@ mod_popExp_server <- function(input, output, session, datafile) {
   
   # Data to provide IDEAFilter
   feed_filter <- reactive({
-    if(input$apply_filters == TRUE){
-      req(input$filter_df)
-      all_data() %>% subset(data_from %in% input$filter_df)
-    } else {
-      all_data()
-    }
+    all_data() %>% subset(data_from %in% input$filter_df)
+  })
+  
+  filter_cols <- reactive({
+    col_list()[input$filter_df] %>% unlist()
   })
   
   # Data NOT provided to IDEAFilter... will need to subset later
@@ -173,16 +184,31 @@ mod_popExp_server <- function(input, output, session, datafile) {
   })
   
   # Call IDEAFilter Module
-  filtered_data <- callModule(
+  filters <- callModule(
     IDEAFilter::shiny_data_filter,
     "data_filter",         # whatever you named the widget
-    data = feed_filter,    # the name of your pre-processed data
+    data = reactive(feed_filter()[filter_cols()]),    # the name of your pre-processed data
     verbose = FALSE)
+  
+  filtered_data <- eventReactive(filters(), {
+    if (input$apply_filters == FALSE) {
+      all_data()
+    } else if (any(regexpr("%>%",capture.output(attr(filters(), "code"))) > 0)) {
+    attr(filters(), "code") %>% 
+        capture.output() %>% 
+        paste(collapse = "") %>% 
+        str_replace("^.*?(%>%)", "feed_filter\\(\\) \\1") %>% 
+        rlang::parse_expr() %>% 
+        rlang::eval_tidy()
+    } else {
+      feed_filter()
+    }
+  })
   
   
   # Update datset, depending on apply_filters or filtered_data() changing
   dataset <- eventReactive(list(input$apply_filters,filtered_data()), {
-    if (!is.null(filtered_data()) && input$apply_filters == TRUE ) {
+    if (input$apply_filters == TRUE && !is.null(filtered_data())) {
       
       req(input$filter_df) # needed 100% as this can be slow to update, causing an error
       
@@ -268,10 +294,10 @@ mod_popExp_server <- function(input, output, session, datafile) {
   # Output text string of what was filtered in IDEAFilter widget/ module
   output$applied_filters <- renderUI({
     req(
-      any(regexpr("%>%",capture.output(attr(filtered_data(), "code"))) > 0)
+      any(regexpr("%>%",capture.output(attr(filters(), "code"))) > 0)
       & input$apply_filters == TRUE
     )
-    filters_in_english(filtered_data())
+    filters_in_english(filters())
   })
 
   p_data <- 

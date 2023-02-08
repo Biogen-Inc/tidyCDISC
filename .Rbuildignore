@@ -27,3 +27,4 @@ vignettes/x0*
 ^doc$
 ^Meta$
 ^CRAN-SUBMISSION$
+^scripts$

@@ -104,12 +104,12 @@ mod_indvExpPatEvents_server <- function(input, output, session,
         shinyjs::show(id = "eventsPlot")
         
         if("MH_" %in% substr(uni_rec$DOMAIN,1,3)){
-          tab <- uni_rec %>% select(-START, -END, -DOMAIN)
+          tab <- uni_rec %>% select(EVENTTYP, tab_st, tab_en, DECODE)
           date_cols <- c("Start of Event","End of Event")
         }
         else{
           date_cols <- "Date of Event"
-          tab <- uni_rec %>% select(-END, -tab_st, -tab_en, -DOMAIN)
+          tab <- uni_rec %>% select(EVENTTYP, START, DECODE)
         }
         
         output$eventsTable <- DT::renderDataTable(server = FALSE, {  # This allows for downloading entire data set

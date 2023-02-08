@@ -10,6 +10,7 @@
 #' @param data the dataset to perform all functions on
 #' @param totals the totals data frame that contains denominator N's use when
 #'   calculating column percentages
+#' @param filter a string denoting the additional filter to apply to the dataset
 #' 
 #' @return the table corresponding to the proper function
 #' to perform given the supplied column.
@@ -20,29 +21,31 @@
 #' @export
 #' @keywords tabGen_repro
 #' 
-#' @examples 
-#' data(example_dat1, package = "tidyCDISC")
+#' @examples
+#' if(interactive()){
+#'   data(example_dat1, package = "tidyCDISC")
 #' 
-#' # Create non-missing table section
-#' app_methods("NON_MISSING", 
-#'             structure("USUBJID", class = c("character", "ADSL")), NA, 
-#'             "TRT01P", example_dat1$AE, example_dat1$totals)
+#'   # Create non-missing table section
+#'   app_methods("NON_MISSING", 
+#'              structure("USUBJID", class = c("character", "ADSL")), NA, 
+#'              "TRT01P", example_dat1$AE, example_dat1$totals)
 #'             
-#' # Create ANOVA table section
-#' app_methods("ANOVA", 
+#'   # Create ANOVA table section
+#'   app_methods("ANOVA", 
 #'             structure("TEMP", class = c("character", "BDS")), "Week 2", 
 #'             "TRT01P", example_dat1$BDS, example_dat1$totals)
 #' 
-#' # Create change table section
-#' app_methods("CHG", 
+#'   # Create change table section
+#'   app_methods("CHG", 
 #'             structure("WEIGHT", class = c("character", "BDS")), "Week 12", 
 #'             "TRT01P", example_dat1$BDS, example_dat1$totals)
 #' 
-#' # Create mean table section
-#' app_methods("MEAN", 
+#'   # Create mean table section
+#'   app_methods("MEAN", 
 #'             structure("PULSE", class = c("character", "BDS")), "Baseline", 
 #'             "TRT01P", example_dat1$BDS, example_dat1$totals)
-app_methods <- function(agg, column, week, group, data, totals) {
+#' }
+app_methods <- function(agg, column, week, group, data, totals, filter = NA) {
   # informative error in case the selected variable doesn't exist in data
   # if no data in the source, do not run the pmap, just show this msg:
   if(nrow(data) == 0){
@@ -54,6 +57,14 @@ app_methods <- function(agg, column, week, group, data, totals) {
     stop(glue::glue("{column} variable doesn't exist in data, please remove or replace that variable from drop zone."))
   }
   
+  if (!is.na(filter)) {
+    data <- dplyr::filter(data, !!rlang::parse_expr(filter))
+    
+    if (week != "NONE" && nrow(dplyr::filter(data, AVISIT == week, PARAMCD == column)) == 0) {
+      cat("\033[0;31mBlock output suppressed for `PARAMCD == '", column, "' & ", filter, " & AVISIT == '", week, "'` because dataset was empty.\033[0m\n", sep = "")
+      return(NULL)
+    }
+  }
   
   if (agg == "MEAN") {
     app_mean(column, week, group, data)
@@ -123,50 +134,54 @@ convertTGOutput <- function(aggs, blocks) {
   
   aggs <- unlist(aggs, recursive = FALSE)
   blocks <- unlist(blocks, recursive = FALSE)
-
-  if (length(aggs) > length(blocks)) {
+  process_dropdown <- function(droppable) {
+    for (i in 1:length(droppable)) {
+      if (is.null(droppable[[i]]$val)) {
+        droppable[[i]]$dropdown <- NA_character_
+      } else if (droppable[[i]]$val == "ALL") {
+        droppable[[i]]$dropdown <- droppable[[i]]$lst %>% unname() %>% str_trim()
+      } else {
+        droppable[[i]]$dropdown <- droppable[[i]]$val %>% unname() %>% str_trim()
+      }
+      if (is.null(droppable[[i]]$grp))
+        droppable[[i]]$grp <- NA_character_
+    }
+    droppable
+  }
+  
+  if (length(aggs) == 0 & length(blocks) == 0) {
+    tidyr::tibble(
+      agg = character(),
+      block = character(),
+      dataset = character(),
+      dropdown = character(),
+      filter = character(),
+      S3 = character(),
+      gt_group = character()
+    )
+  } else if (length(aggs) > length(blocks)) {
     stop("Need addional variable block")
   } else if (length(aggs) < length(blocks)) {
     stop("Need additional statistics block")
   } else {
-    
+    aggs <- process_dropdown(aggs)
+    blocks <- process_dropdown(blocks)
     purrr::map2_df(aggs, blocks, function(aggs, blocks) {
-      if (!is.null(aggs$val) && aggs$val == "ALL") {
-        purrr::map_df(aggs$lst, function(dropdown) {
+      purrr::map_df(aggs$dropdown, function(aggs_dd) {
+        purrr::map_df(blocks$dropdown, function(blocks_dd) {
           tidyr::tibble(
             agg = aggs$txt %>% unname() %>% str_trim(),
             block = blocks$txt %>% unname() %>% str_trim(),
             dataset = blocks$df %>% unname() %>% str_trim(),
-            dropdown = dropdown %>% unname() %>% str_trim(),
+            dropdown = aggs_dd,
+            filter = if (is.na(blocks$grp)) {NA_character_} 
+            else if (blocks_dd == "N/A") {glue::glue("is.na({blocks$grp %>% unname() %>% str_trim()})")} 
+            else {glue::glue("{blocks$grp %>% unname() %>% str_trim()} == '{blocks_dd}'")},
             S3 = map2(block, dataset, ~ custom_class(.x, .y)),
-            gt_group =
-              case_when(
-                dropdown == "NONE" ~ glue("{agg} of {block}"),
-                is.na(dropdown) ~ glue("{agg} of {block}"),
-                tolower(substr(dropdown, 1, 4)) %in% c("week","base","scree","end ") ~ glue("{agg} of {block} at {dropdown}"),
-                TRUE ~ glue("{agg} of {block} and {dropdown}") # "and" instead of "at"
-              )
+            gt_group = glue("{agg} of {block}{if (is.na(dropdown) || dropdown == 'NONE') '' else if (tolower(substr(dropdown, 1, 4)) %in% c('week','base','scree','end ')) paste(' at', dropdown) else paste(' and', dropdown)}{if (is.na(blocks$grp) || blocks_dd == 'N/A' || blocks_dd == dropdown) '' else paste('/', blocks_dd)}")
           )
         })
-      } else {
-        tidyr::tibble(
-          agg = aggs$txt %>% unname() %>% str_trim(),
-          block = blocks$txt %>% unname() %>% str_trim(),
-          dataset = blocks$df %>% unname() %>% str_trim(),
-          dropdown = ifelse(is.null(aggs$val), NA_character_, aggs$val %>% unname() %>% str_trim()),
-          S3 = map2(block, dataset, ~ custom_class(.x, .y)),
-          gt_group =
-            case_when(
-              dropdown == "NONE" ~ glue("{agg} of {block}"),
-              is.na(dropdown) ~ glue("{agg} of {block}"),
-              tolower(substr(dropdown, 1, 4)) %in% c("week","base","scree","end ") ~ glue("{agg} of {block} at {dropdown}"),
-              TRUE ~ glue("{agg} of {block} and {dropdown}") # "and" instead of "at"
-            )
-        )
-      }
-
-
+      })
     })
-    
   }
 }

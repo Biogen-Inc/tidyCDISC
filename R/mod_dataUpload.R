@@ -17,7 +17,23 @@ mod_dataUpload_ui <- function(id){
   tagList(
     h1("Data Upload/Preview", align = "center"),
     br(), br(), br(),
-    # actionButton(ns("pilot"), "Use CDISC Pilot Data"),
+    # div(
+    #   div(style="display: inline-block; ", actionButton(ns("pilot"), "Use CDISC Pilot Data")),
+    #   div(style="display: inline-block; ", shinyWidgets::dropdownButton(inputId = ns("ddown"),
+    #     tags$h4("Choose Pilot Data Sources"),
+    #     shinyWidgets::checkboxGroupButtons(ns("pilot_selections"), NULL, #inline = TRUE, 
+    #        choices = c("ADSL" = "adsl", "ADVS" = "advs", "ADAE" = "adae",
+    #         "ADLBC" = "adlbc", "ADTTE" = "adtte"), #direction = "vertical",
+    #        status = "info", checkIcon = list(
+    #          yes = icon("ok", lib = "glyphicon"),
+    #          no = icon("remove", lib = "glyphicon")),
+    #        selected = c("adsl", "advs", "adae", "adlbc")),
+    #     circle = FALSE, status = "primary", icon = icon("cog"), width = "300px",
+    #     tooltip = shinyWidgets::tooltipOptions(title = "Click to change pilot data selections!")
+    #   ))
+    # ),
+    div(uiOutput(ns("study_data_upload")), style = "padding-left: 20px", class = "studyid"),
+
     fluidRow(
       style = "padding: 20px",
       column(3,
@@ -151,6 +167,12 @@ mod_dataUpload_server <- function(input, output, session){
     req(length(studies()) > 1)
     paste0("Warning: data uploaded from multiple studies: ", paste(studies(), collapse = " & "))
   }) 
+  
+  output$study_data_upload <- renderUI({
+    req(studies())
+    study_ids <- paste(studies(), collapse = " & ")
+    h4(paste("Study ID: ", study_ids))
+  })
   
   # upon a dataset being uploaded and selected, generate data preview
   output$datapreview_header <- renderUI({

@@ -89,10 +89,10 @@ build_events <- function(
              tab_st = ifelse(as.character(START) == "", NA_character_, as.character(START)), # disp chr in DT
              tab_en = ifelse(as.character(END) == "", NA_character_, as.character(END))      # disp chr in DT
       ) %>%
-      distinct(USUBJID, EVENTTYP, START, END,
-               tab_st,
-               tab_en,
-               DECODE, DOMAIN)%>%
+      distinct(USUBJID, START,
+               DECODE, EVENTTYP,
+               DOMAIN, END,
+               tab_st, tab_en)%>%
       select(-starts_with("DS"))
     
     
