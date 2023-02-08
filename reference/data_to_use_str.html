@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidyCDISC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
       </span>
     </div>
 
@@ -106,18 +106,18 @@
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">datalist</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>ADSL <span class="op">=</span> <span class="fu">tidyCDISC</span><span class="fu">::</span><span class="va"><a href="adsl.html">adsl</a></span>, ADVS <span class="op">=</span> <span class="fu">tidyCDISC</span><span class="fu">::</span><span class="va"><a href="advs.html">advs</a></span>, </span></span>
-<span class="r-in"><span>                 ADAE <span class="op">=</span> <span class="fu">tidyCDISC</span><span class="fu">::</span><span class="va"><a href="adae.html">adae</a></span>, ADLBC <span class="op">=</span> <span class="fu">tidyCDISC</span><span class="fu">::</span><span class="va"><a href="adlbc.html">adlbc</a></span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span>  <span class="va">datalist</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>ADSL <span class="op">=</span> <span class="fu">tidyCDISC</span><span class="fu">::</span><span class="va"><a href="adsl.html">adsl</a></span>, ADVS <span class="op">=</span> <span class="fu">tidyCDISC</span><span class="fu">::</span><span class="va"><a href="advs.html">advs</a></span>, </span></span>
+<span class="r-in"><span>                   ADAE <span class="op">=</span> <span class="fu">tidyCDISC</span><span class="fu">::</span><span class="va"><a href="adae.html">adae</a></span>, ADLBC <span class="op">=</span> <span class="fu">tidyCDISC</span><span class="fu">::</span><span class="va"><a href="adlbc.html">adlbc</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span>                 </span></span>
-<span class="r-in"><span><span class="va">pre_adsl</span> <span class="op">&lt;-</span> <span class="fu"><a href="prep_adsl.html">prep_adsl</a></span><span class="op">(</span><span class="va">datalist</span><span class="op">$</span><span class="va">ADSL</span>, input_recipe <span class="op">=</span> <span class="st">'NONE'</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">pre_adae</span> <span class="op">&lt;-</span> <span class="fu"><a href="prep_adae.html">prep_adae</a></span><span class="op">(</span><span class="va">datalist</span>, <span class="va">pre_adsl</span><span class="op">$</span><span class="va">data</span>, <span class="st">'NONE'</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">ae_data</span> <span class="op">&lt;-</span> <span class="va">pre_adae</span><span class="op">$</span><span class="va">data</span></span></span>
-<span class="r-in"><span><span class="va">bds_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="prep_bds.html">prep_bds</a></span><span class="op">(</span><span class="va">datalist</span>, ADSL <span class="op">=</span> <span class="va">pre_adsl</span><span class="op">$</span><span class="va">data</span><span class="op">)</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/all.equal.html" class="external-link">all.equal</a></span><span class="op">(</span><span class="fu">data_to_use_str</span><span class="op">(</span><span class="st">"ADAE"</span>, <span class="va">ae_data</span>, <span class="va">bds_data</span><span class="op">)</span>, <span class="va">ae_data</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/all.equal.html" class="external-link">all.equal</a></span><span class="op">(</span><span class="fu">data_to_use_str</span><span class="op">(</span><span class="st">"ADSL"</span>, <span class="va">ae_data</span>, <span class="va">bds_data</span><span class="op">)</span>, <span class="va">bds_data</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
+<span class="r-in"><span>  <span class="va">pre_adsl</span> <span class="op">&lt;-</span> <span class="fu"><a href="prep_adsl.html">prep_adsl</a></span><span class="op">(</span><span class="va">datalist</span><span class="op">$</span><span class="va">ADSL</span>, input_recipe <span class="op">=</span> <span class="st">'NONE'</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="va">pre_adae</span> <span class="op">&lt;-</span> <span class="fu"><a href="prep_adae.html">prep_adae</a></span><span class="op">(</span><span class="va">datalist</span>, <span class="va">pre_adsl</span><span class="op">$</span><span class="va">data</span>, <span class="st">'NONE'</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="va">ae_data</span> <span class="op">&lt;-</span> <span class="va">pre_adae</span><span class="op">$</span><span class="va">data</span></span></span>
+<span class="r-in"><span>  <span class="va">bds_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="prep_bds.html">prep_bds</a></span><span class="op">(</span><span class="va">datalist</span>, ADSL <span class="op">=</span> <span class="va">pre_adsl</span><span class="op">$</span><span class="va">data</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  </span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/all.equal.html" class="external-link">all.equal</a></span><span class="op">(</span><span class="fu">data_to_use_str</span><span class="op">(</span><span class="st">"ADAE"</span>, <span class="va">ae_data</span>, <span class="va">bds_data</span><span class="op">)</span>, <span class="va">ae_data</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/all.equal.html" class="external-link">all.equal</a></span><span class="op">(</span><span class="fu">data_to_use_str</span><span class="op">(</span><span class="st">"ADSL"</span>, <span class="va">ae_data</span>, <span class="va">bds_data</span><span class="op">)</span>, <span class="va">bds_data</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -128,7 +128,7 @@
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Aaron Clark, Maya Gans.</p>
+  <p></p><p>Developed by Aaron Clark, Jeff Thompson, Teresa Wilson, Maya Gans.</p>
 </div>
 
 <div class="pkgdown">

@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidyCDISC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
       </span>
     </div>
 
@@ -114,25 +114,40 @@
 
     
     
-<p>Learn how to contribute useful code to the population explorer tab, by topic.</p>
+<p>Learn how to contribute useful code to the population explorer tab,
+by topic.</p>
 <div class="section level2">
 <h2 id="add-a-graph-to-the-population-explorer">Add a Graph to the Population Explorer<a class="anchor" aria-label="anchor" href="#add-a-graph-to-the-population-explorer"></a>
 </h2>
 <p>We plot points, but we graph functions.</p>
-<p>Adding a new graph to the population explorer is a four-step process:</p>
+<p>Adding a new graph to the population explorer is a four-step
+process:</p>
 <ul>
 <li>Create the plotting widgets</li>
 <li>Create the plotting output</li>
 <li>Connect the plot to the Population Explorer Module</li>
 <li>Testing</li>
 </ul>
-<p>Each plot in the Population Explorer is a submodule <code>mod_popExp_&lt;newgraph&gt;.R</code> (where <newgraph> is the plot name to be added) that is conditionally called within <code>mod_popExp.R</code> and <code>mod_popExp_ui.R</code>. The plotting module is used for the reactivity logic of the plot; the widgets needed as well as how to render them. The plot function itself is found within <code>mod_popExp_fct_&lt;newgraph&gt;.R</code></newgraph></p>
-<p>This tutorial will walk you through adding a graph module and a graph function, then applying it to the Population Explorer module using <code>mod_popExp_boxplot.R</code> and <code>mod_popExp_fct_boxplot.R</code> as examples. This is what the population explorer looked like when it first launched. Note we are using a small (N=15) test ADSL dataset here:</p>
+<p>Each plot in the Population Explorer is a submodule
+<code>mod_popExp_&lt;newgraph&gt;.R</code> (where <newgraph> is the plot
+name to be added) that is conditionally called within
+<code>mod_popExp.R</code> and <code>mod_popExp_ui.R</code>. The plotting
+module is used for the reactivity logic of the plot; the widgets needed
+as well as how to render them. The plot function itself is found within
+<code>mod_popExp_fct_&lt;newgraph&gt;.R</code></newgraph></p>
+<p>This tutorial will walk you through adding a graph module and a graph
+function, then applying it to the Population Explorer module using
+<code>mod_popExp_boxplot.R</code> and
+<code>mod_popExp_fct_boxplot.R</code> as examples. This is what the
+population explorer looked like when it first launched. Note we are
+using a small (N=15) test ADSL dataset here:</p>
 <p><img src="figures/popExp/boxplot_tidyCDISC.PNG" width="90%" height="90%"></p>
 <div class="section level3">
 <h3 id="create-the-plotting-widgets-ui">Create the Plotting Widgets (“ui”)<a class="anchor" aria-label="anchor" href="#create-the-plotting-widgets-ui"></a>
 </h3>
-<p>Inside <code>mod_popExp_boxplot.R</code>, <code>boxPlot_ui</code> is where we specify the widgets we need to create a boxplot, all wrapped inside a <code>wellPanel</code></p>
+<p>Inside <code>mod_popExp_boxplot.R</code>, <code>boxPlot_ui</code> is
+where we specify the widgets we need to create a boxplot, all wrapped
+inside a <code>wellPanel</code></p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">boxPlot_ui</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">id</span>, <span class="va">label</span> <span class="op">=</span> <span class="st">"box"</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">ns</span> <span class="op">&lt;-</span> <span class="fu">NS</span><span class="op">(</span><span class="va">id</span><span class="op">)</span></span>
@@ -146,12 +161,20 @@
 <span>    <span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
-<p>Note that this has two selectInput widgets, a fluidRow, and a checkboxInput widget.<br> Customize this to whatever widgets your graph requires.</p>
+<p>Note that this has two selectInput widgets, a fluidRow, and a
+checkboxInput widget.<br> Customize this to whatever widgets your graph
+requires.</p>
 </div>
 <div class="section level3">
 <h3 id="create-the-plotting-output-server">Create the Plotting Output (“server”)<a class="anchor" aria-label="anchor" href="#create-the-plotting-output-server"></a>
 </h3>
-<p>The bulk of the server function, <code>boxPlot_srv</code> uses <code>updateSelectInput</code>s to populate the dropdown fields of the widget based on the module’s data argument. The data is a reactive that is passed down from the parent module. The boxplot itself is created using the function <code>app_boxplot()</code>, located in <code>mod_popExp_fct_boxplot.R</code>. This function takes on the selected inputs from the widget.</p>
+<p>The bulk of the server function, <code>boxPlot_srv</code> uses
+<code>updateSelectInput</code>s to populate the dropdown fields of the
+widget based on the module’s data argument. The data is a reactive that
+is passed down from the parent module. The boxplot itself is created
+using the function <code>app_boxplot()</code>, located in
+<code>mod_popExp_fct_boxplot.R</code>. This function takes on the
+selected inputs from the widget.</p>
 <p>Here is the code for <code>mod_popExp_fct_boxplot.R</code></p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#' tidyCDISC boxplot</span></span>
@@ -210,7 +233,10 @@
 <div class="section level4">
 <h4 id="connect-to-ui">Connect to ui<a class="anchor" aria-label="anchor" href="#connect-to-ui"></a>
 </h4>
-<p>Inside <code>mod_popExp_ui</code>, the radioButtons <code>plot_type</code> control which plot widgets and plot output the user sees. Therefore the first step is to add your graph name to the types of graphs we can create:</p>
+<p>Inside <code>mod_popExp_ui</code>, the radioButtons
+<code>plot_type</code> control which plot widgets and plot output the
+user sees. Therefore the first step is to add your graph name to the
+types of graphs we can create:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">radioButtons</span>(<span class="fu">ns</span>(<span class="st">"plot_type"</span>), <span class="cn">NULL</span>, </span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>      <span class="at">choices =</span> <span class="fu">c</span>(<span class="st">"Scatter Plot"</span>, </span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>                  <span class="st">"Spaghetti Plot"</span>, </span>
@@ -218,7 +244,13 @@
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"&lt;newgraph&gt;"</span>)</span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>                      )</span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>                  <span class="er">)</span></span></code></pre></div>
-<p>Next we use <code>conditionalPanel</code> statements to show the correct inputs based on which plot the user selects. When the <code>input.plot_type</code> is <code>Box Plot</code> the <code>boxPlot_ui</code> function is called and the “boxPlot” name space is added so that the inputs all have a prefix of both the Population Explorer module and the Box Plot module. Do the same for your new graph.</p>
+<p>Next we use <code>conditionalPanel</code> statements to show the
+correct inputs based on which plot the user selects. When the
+<code>input.plot_type</code> is <code>Box Plot</code> the
+<code>boxPlot_ui</code> function is called and the “boxPlot” name space
+is added so that the inputs all have a prefix of both the Population
+Explorer module and the Box Plot module. Do the same for your new
+graph.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#wellPanel(uiOutput(ns("plot_ui")))</span></span>
 <span><span class="fu">div</span><span class="op">(</span>id <span class="op">=</span> <span class="st">"pop_cic_chart_inputs"</span>, </span>
@@ -231,13 +263,24 @@
 <div class="section level4">
 <h4 id="connect-to-server">Connect to Server<a class="anchor" aria-label="anchor" href="#connect-to-server"></a>
 </h4>
-<p>On the server side we save the output of the box plot server function to an object, <code>p_box</code>. Note that this module takes on a data argument. The user input files are properly merged and this merged dataset is what we pass to the child plot modules. Do the same for your new graph.</p>
+<p>On the server side we save the output of the box plot server function
+to an object, <code>p_box</code>. Note that this module takes on a data
+argument. The user input files are properly merged and this merged
+dataset is what we pass to the child plot modules. Do the same for your
+new graph.</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>  p_scatter <span class="ot">&lt;-</span> <span class="fu">callModule</span>(scatterPlot_srv, <span class="st">"scatterPlot"</span>, <span class="at">data =</span> dataset)</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  p_spaghetti <span class="ot">&lt;-</span> <span class="fu">callModule</span>(spaghettiPlot_srv, <span class="st">"spaghettiPlot"</span>, <span class="at">data =</span> dataset)</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  p_box <span class="ot">&lt;-</span> <span class="fu">callModule</span>(boxPlot_srv, <span class="st">"boxPlot"</span>, <span class="at">data =</span> dataset)</span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  p_<span class="sc">&lt;</span>newgraph<span class="sc">&gt;</span> <span class="er">&lt;</span><span class="sc">-</span> <span class="fu">callModule</span>(boxPlot_srv, <span class="st">"&lt;newgraph&gt;"</span>, <span class="at">data =</span> dataset)</span></code></pre></div>
-<p>Now that we have our module outputs, we can pass the graph object to Population Explorers plot_output. Don’t forget to add the reactive callModule statement for your graph. This takes on a switch statement where we render the module object based on which plot is selected.</p>
-<p>Note that the plot types are surrounded by back-ticks, not single quotes. On American keyboards, the back-tick resides on the same key as the tilde (“~”). Be sure your naming conventions are consistent. Don’t use lowerCamelCase for your graph name in one place and UpperCamelCase in another.</p>
+<p>Now that we have our module outputs, we can pass the graph object to
+Population Explorers plot_output. Don’t forget to add the reactive
+callModule statement for your graph. This takes on a switch statement
+where we render the module object based on which plot is selected.</p>
+<p>Note that the plot types are surrounded by back-ticks, not single
+quotes. On American keyboards, the back-tick resides on the same key as
+the tilde (“~”). Be sure your naming conventions are consistent. Don’t
+use lowerCamelCase for your graph name in one place and UpperCamelCase
+in another.</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>  <span class="co"># use plot output of the module to create the plot </span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  output<span class="sc">$</span>plot_output <span class="ot">&lt;-</span> <span class="fu">renderPlotly</span>({</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -254,7 +297,9 @@
 <div class="section level3">
 <h3 id="testing">Testing<a class="anchor" aria-label="anchor" href="#testing"></a>
 </h3>
-<p>A file called <code>test-popExp_fct_boxplot.R</code> is created to test that the plot function inside <code>mod_popExp_fct_boxplot</code> generates the expected output given various inputs.</p>
+<p>A file called <code>test-popExp_fct_boxplot.R</code> is created to
+test that the plot function inside <code>mod_popExp_fct_boxplot</code>
+generates the expected output given various inputs.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://testthat.r-lib.org" class="external-link">testthat</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://testthat.r-lib.org/reference/context.html" class="external-link">context</a></span><span class="op">(</span><span class="st">"Create popExp Boxplot"</span><span class="op">)</span></span>
@@ -275,13 +320,15 @@
 <span>  <span class="va">plot</span> <span class="op">&lt;-</span> <span class="fu">app_boxplot</span><span class="op">(</span><span class="va">tg_data</span>, <span class="st">"AGE"</span>, <span class="st">"SEX"</span>, points <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://testthat.r-lib.org/reference/equality-expectations.html" class="external-link">expect_equal</a></span><span class="op">(</span><span class="st">"PositionJitter"</span>, <span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">plot</span><span class="op">$</span><span class="va">layers</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">position</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
-<p>You will need to develop similar tests for you graph. Review the <code>testthat()</code> package first.</p>
+<p>You will need to develop similar tests for you graph. Review the
+<code>testthat()</code> package first.</p>
 </div>
 </div>
 <div class="section level2">
 <h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
 </h2>
-<p>Here is what the population explorer looks like after adding a Histogram to it. This is using the same small ADSL dataset as above.</p>
+<p>Here is what the population explorer looks like after adding a
+Histogram to it. This is using the same small ADSL dataset as above.</p>
 <p><img src="figures/popExp/geom_histogram.png" width="90%" height="90%"></p>
 <p><br><br><br><br></p>
 </div>
@@ -299,7 +346,7 @@
 
       <footer><div class="copyright">
   <p></p>
-<p>Developed by Aaron Clark, Maya Gans.</p>
+<p>Developed by Aaron Clark, Jeff Thompson, Teresa Wilson, Maya Gans.</p>
 </div>
 
 <div class="pkgdown">

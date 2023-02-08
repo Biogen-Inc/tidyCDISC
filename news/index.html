@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidyCDISC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
       </span>
     </div>
 
@@ -82,26 +82,43 @@
     </div>
 
     <div class="section level2">
+<h2 class="page-header" data-toc-text="0.2.0" id="tidycdisc-020-cran-release">tidyCDISC 0.2.0 (CRAN Release)<small>2023-02-03</small><a class="anchor" aria-label="anchor" href="#tidycdisc-020-cran-release"></a></h2>
+<ul><li>Added RTF export option for download from the Table Generator.</li>
+<li>Cleaned up JS to ‘standard analyses’ drop down.</li>
+<li>Created “ALL” as dropdown option for ‘standard analysis’ Table 41 instead of auto populating all available weeks in the drop zone.</li>
+<li>added protocol / study id in prominent location on each tab</li>
+<li>designed <code>ATPT</code> variable integration in the Table Generator (when present in data)</li>
+<li>added <code>OS Health</code> &amp; <code>riskmetric</code> badges to the <code>README</code>
+</li>
+<li>engineered more user-friendly function to create the table generator output from the block data</li>
+<li>ensured Table Generator output automatically updates the table name when a ‘standard analysis’ is selected</li>
+<li>Fixed some Population Explorer filtering issues</li>
+<li>Added an <code>app.R</code> file so that shiny app can be ran directly from <code><a href="https://shiny.rstudio.com/reference/shiny/latest/runUrl.html" class="external-link">shiny::runGitHub()</a></code> or <code>runUrl()</code>
+</li>
+</ul></div>
+    <div class="section level2">
 <h2 class="page-header" data-toc-text="0.1.1" id="tidycdisc-011">tidyCDISC 0.1.1<a class="anchor" aria-label="anchor" href="#tidycdisc-011"></a></h2>
-<ul><li><p>automated a footnote with <strong>Source</strong> and <strong>Run Date</strong> in table generation</p></li>
-<li><p>allowed custom user-defined footnotes</p></li>
-<li><p>allowed the selection of ‘All’ when a time/visit-based statistic is chosen in the table generator</p></li>
-<li><p>cleaned up downloadable R Script to replicate table generator output</p></li>
-<li><p>fixed bug where <code>data_from</code> was erroneously listed as a grouping option in the population explorer</p></li>
+<ul><li>automated a footnote with <strong>Source</strong> and <strong>Run Date</strong> in table generation</li>
+<li>allowed custom user-defined footnotes</li>
+<li>allowed the selection of ‘All’ when a time/visit-based statistic is chosen in the table generator</li>
+<li>cleaned up downloadable R Script to replicate table generator output</li>
+<li>fixed bug where <code>data_from</code> was erroneously listed as a grouping option in the population explorer</li>
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.1.0" id="tidycdisc-010-cran-release">tidyCDISC 0.1.0 (CRAN Release)<small>2022-08-30</small><a class="anchor" aria-label="anchor" href="#tidycdisc-010-cran-release"></a></h2>
-<ul><li><p>cleaning up <code>devtools::check()</code> &amp; preparing for CRAN release.</p></li>
-<li><p>unfortunately, had to revert back to importing <code>tippy 0.1.0</code> since it is the latest available version on CRAN and CRAN pkgs cannot depend on package versions under development.</p></li>
-<li><p>created a new toggle on the <code>Data</code> tab that allows users to select which CDISC pilot study data sources they wish to use in the app.</p></li>
-<li><p>Minor bug improvements</p></li>
+<ul><li>cleaning up <code>devtools::check()</code> &amp; preparing for CRAN release.</li>
+<li>unfortunately, had to revert back to importing <code>tippy 0.1.0</code> since it is the latest available version on CRAN and CRAN pkgs cannot depend on package versions under development.</li>
+<li>created a new toggle on the <code>Data</code> tab that allows users to select which CDISC pilot study data sources they wish to use in the app.</li>
+<li>Minor bug improvements</li>
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.0.4" id="tidycdisc-004">tidyCDISC 0.0.4<a class="anchor" aria-label="anchor" href="#tidycdisc-004"></a></h2>
-<ul><li>cleaning up <code>devtools::check()</code> &amp; preparing for CRAN release.</li></ul></div>
+<ul><li>cleaning up <code>devtools::check()</code> &amp; preparing for CRAN release.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.0.3" id="tidycdisc-003">tidyCDISC 0.0.3<a class="anchor" aria-label="anchor" href="#tidycdisc-003"></a></h2>
-<ul><li>For <code>tippy</code> package, added lower bound on to version <code>1.0.0</code> since it includes more user friendly options.</li></ul></div>
+<ul><li>For <code>tippy</code> package, added lower bound on to version <code>1.0.0</code> since it includes more user friendly options.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.0.2" id="tidycdisc-002">tidyCDISC 0.0.2<a class="anchor" aria-label="anchor" href="#tidycdisc-002"></a></h2>
 <p>This release (PR <a href="https://github.com/Biogen-Inc/tidyCDISC/issues/65" class="external-link">#65</a>) performs a lot of functions, testing on many non-pilot ADSL files to ensure app’s robustness beyond just the CDISC pilot data:</p>
@@ -116,18 +133,23 @@
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.0.1" id="tidycdisc-001">tidyCDISC 0.0.1<a class="anchor" aria-label="anchor" href="#tidycdisc-001"></a></h2>
 <p>This release adds meat to the previous skeleton version of <code>tidyCDISC</code>. The initial development release was intended to be a “bare bones” platform that could serve as a foundation to build a great clinical data exploratory tool. Version <code>0.0.1</code> enriches the user experience by adding useful &amp; commonly needed features for analysis. For more on this release, see <a href="https://biogen-inc.github.io/tidyCDISC/articles/Blog.html#announcing-tidycdisc-0-0-1-1" class="external-link">the announcement</a> on our blog.</p>
-<ul><li>Major Features added, by tab:<ul><li>
-<strong>Table Generator</strong><ul><li>New “STAT Blocks”, such as <code>Y FREQ</code>, <code>MAX FREQ</code>, <code>NON-MISSING</code>, and a pair of <code>NESTED FREQ</code> blocks</li>
+<ul><li>Major Features added, by tab:
+<ul><li>
+<strong>Table Generator</strong>
+<ul><li>New “STAT Blocks”, such as <code>Y FREQ</code>, <code>MAX FREQ</code>, <code>NON-MISSING</code>, and a pair of <code>NESTED FREQ</code> blocks</li>
 <li>Interact with <code>ADAE</code>
 </li>
 <li>17 new ‘standard analysis’ tables in the <code>ADAE</code> and <code>ADLB</code> space.</li>
 <li>An R Script download-er to reproduce analysis performed in the app</li>
 </ul></li>
 <li>
-<strong>Population Explorer</strong><ul><li>New Chart types<ul><li>line plot - means over time</li>
+<strong>Population Explorer</strong>
+<ul><li>New Chart types
+<ul><li>line plot - means over time</li>
 <li>Heat map - endpoint correlations</li>
 <li>Kaplan Meier Curve (when <code>TTE</code> class data uploaded)</li>
-</ul></li></ul></li>
+</ul></li>
+</ul></li>
 </ul></li>
 <li>Upgraded <code>pkgdown</code> site documentation to be more robust and hassle-free for developers</li>
 <li>Depends on updated version of IDEAFilter (&gt;= 0.1.0.9000)</li>
@@ -135,7 +157,8 @@
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.0.0.9000" id="tidycdisc-0009000">tidyCDISC 0.0.0.9000<a class="anchor" aria-label="anchor" href="#tidycdisc-0009000"></a></h2>
-<ul><li>Added a <code>NEWS.md</code> file to track changes to the package.</li></ul></div>
+<ul><li>Added a <code>NEWS.md</code> file to track changes to the package.</li>
+</ul></div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -146,7 +169,7 @@
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Aaron Clark, Maya Gans.</p>
+  <p></p><p>Developed by Aaron Clark, Jeff Thompson, Teresa Wilson, Maya Gans.</p>
 </div>
 
 <div class="pkgdown">

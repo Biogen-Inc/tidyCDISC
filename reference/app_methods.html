@@ -26,7 +26,7 @@ each column block for the function's arguments"><!-- mathjax --><script src="htt
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidyCDISC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
       </span>
     </div>
 
@@ -102,7 +102,7 @@ each column block for the function's arguments</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">app_methods</span><span class="op">(</span><span class="va">agg</span>, <span class="va">column</span>, <span class="va">week</span>, <span class="va">group</span>, <span class="va">data</span>, <span class="va">totals</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">app_methods</span><span class="op">(</span><span class="va">agg</span>, <span class="va">column</span>, <span class="va">week</span>, <span class="va">group</span>, <span class="va">data</span>, <span class="va">totals</span>, filter <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -121,6 +121,8 @@ and class of the column dictated by the data frame it came from</p></dd>
 <dt>totals</dt>
 <dd><p>the totals data frame that contains denominator N's use when
 calculating column percentages</p></dd>
+<dt>filter</dt>
+<dd><p>a string denoting the additional filter to apply to the dataset</p></dd>
 </dl></div>
     <div id="value">
     <h2>Value</h2>
@@ -132,50 +134,29 @@ inside the table generator module.</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">example_dat1</span>, package <span class="op">=</span> <span class="st">"tidyCDISC"</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">example_dat1</span>, package <span class="op">=</span> <span class="st">"tidyCDISC"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Create non-missing table section</span></span></span>
-<span class="r-in"><span><span class="fu">app_methods</span><span class="op">(</span><span class="st">"NON_MISSING"</span>, </span></span>
-<span class="r-in"><span>            <span class="fu"><a href="https://rdrr.io/r/base/structure.html" class="external-link">structure</a></span><span class="op">(</span><span class="st">"USUBJID"</span>, class <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"character"</span>, <span class="st">"ADSL"</span><span class="op">)</span><span class="op">)</span>, <span class="cn">NA</span>, </span></span>
-<span class="r-in"><span>            <span class="st">"TRT01P"</span>, <span class="va">example_dat1</span><span class="op">$</span><span class="va">AE</span>, <span class="va">example_dat1</span><span class="op">$</span><span class="va">totals</span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `PARAMCD`.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Joining, by = "TRT01P"</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Joining, by = "TRT01P"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       USUBJID   Placebo Xanomeline Low Dose Xanomeline High Dose    total$x</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 Non Missing 69 (80.2)           77 (91.7)            79 (94.0) 225 (88.6)</span>
+<span class="r-in"><span>  <span class="co"># Create non-missing table section</span></span></span>
+<span class="r-in"><span>  <span class="fu">app_methods</span><span class="op">(</span><span class="st">"NON_MISSING"</span>, </span></span>
+<span class="r-in"><span>             <span class="fu"><a href="https://rdrr.io/r/base/structure.html" class="external-link">structure</a></span><span class="op">(</span><span class="st">"USUBJID"</span>, class <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"character"</span>, <span class="st">"ADSL"</span><span class="op">)</span><span class="op">)</span>, <span class="cn">NA</span>, </span></span>
+<span class="r-in"><span>             <span class="st">"TRT01P"</span>, <span class="va">example_dat1</span><span class="op">$</span><span class="va">AE</span>, <span class="va">example_dat1</span><span class="op">$</span><span class="va">totals</span><span class="op">)</span></span></span>
 <span class="r-in"><span>            </span></span>
-<span class="r-in"><span><span class="co"># Create ANOVA table section</span></span></span>
-<span class="r-in"><span><span class="fu">app_methods</span><span class="op">(</span><span class="st">"ANOVA"</span>, </span></span>
+<span class="r-in"><span>  <span class="co"># Create ANOVA table section</span></span></span>
+<span class="r-in"><span>  <span class="fu">app_methods</span><span class="op">(</span><span class="st">"ANOVA"</span>, </span></span>
 <span class="r-in"><span>            <span class="fu"><a href="https://rdrr.io/r/base/structure.html" class="external-link">structure</a></span><span class="op">(</span><span class="st">"TEMP"</span>, class <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"character"</span>, <span class="st">"BDS"</span><span class="op">)</span><span class="op">)</span>, <span class="st">"Week 2"</span>, </span></span>
 <span class="r-in"><span>            <span class="st">"TRT01P"</span>, <span class="va">example_dat1</span><span class="op">$</span><span class="va">BDS</span>, <span class="va">example_dat1</span><span class="op">$</span><span class="va">totals</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                    X1 X2 X3 X4    X5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1             p-value          0.787</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2      Test Statistic           0.24</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 Mean Sum of Squares           0.05</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4      Sum of Squares            0.1</span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Create change table section</span></span></span>
-<span class="r-in"><span><span class="fu">app_methods</span><span class="op">(</span><span class="st">"CHG"</span>, </span></span>
+<span class="r-in"><span>  <span class="co"># Create change table section</span></span></span>
+<span class="r-in"><span>  <span class="fu">app_methods</span><span class="op">(</span><span class="st">"CHG"</span>, </span></span>
 <span class="r-in"><span>            <span class="fu"><a href="https://rdrr.io/r/base/structure.html" class="external-link">structure</a></span><span class="op">(</span><span class="st">"WEIGHT"</span>, class <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"character"</span>, <span class="st">"BDS"</span><span class="op">)</span><span class="op">)</span>, <span class="st">"Week 12"</span>, </span></span>
 <span class="r-in"><span>            <span class="st">"TRT01P"</span>, <span class="va">example_dat1</span><span class="op">$</span><span class="va">BDS</span>, <span class="va">example_dat1</span><span class="op">$</span><span class="va">totals</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     rowname             1           2             3            1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1         n            69          52            50          171</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 Mean (SD)    0.5 (2.29) -0.1 (2.03)    0.6 (4.90)   0.4 (3.22)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3    Median           0.2         0.0           0.0          0.0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4   Q1 | Q3    -0.9 | 1.4  -1.1 | 0.9    -0.9 | 1.3   -0.9 | 1.4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5 Min | Max -4.49 | 11.34 -5.9 | 5.45 -5.45 | 32.66 -5.9 | 32.66</span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Create mean table section</span></span></span>
-<span class="r-in"><span><span class="fu">app_methods</span><span class="op">(</span><span class="st">"MEAN"</span>, </span></span>
+<span class="r-in"><span>  <span class="co"># Create mean table section</span></span></span>
+<span class="r-in"><span>  <span class="fu">app_methods</span><span class="op">(</span><span class="st">"MEAN"</span>, </span></span>
 <span class="r-in"><span>            <span class="fu"><a href="https://rdrr.io/r/base/structure.html" class="external-link">structure</a></span><span class="op">(</span><span class="st">"PULSE"</span>, class <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"character"</span>, <span class="st">"BDS"</span><span class="op">)</span><span class="op">)</span>, <span class="st">"Baseline"</span>, </span></span>
 <span class="r-in"><span>            <span class="st">"TRT01P"</span>, <span class="va">example_dat1</span><span class="op">$</span><span class="va">BDS</span>, <span class="va">example_dat1</span><span class="op">$</span><span class="va">totals</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Joining, by = "TRT01P"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     rowname            1            2            3            1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1         n           85           84           84          253</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 Mean (SD) 73.5 (11.89) 71.5 (10.54) 73.0 (10.50) 72.7 (11.02)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3    Median         72.0         70.0         72.0         72.0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4   Q1 | Q3  64.0 | 80.0  64.0 | 80.0  64.0 | 80.0  64.0 | 80.0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5 Min | Max     51 | 134     50 | 104     52 | 104     50 | 134</span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -186,7 +167,7 @@ inside the table generator module.</p>
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Aaron Clark, Maya Gans.</p>
+  <p></p><p>Developed by Aaron Clark, Jeff Thompson, Teresa Wilson, Maya Gans.</p>
 </div>
 
 <div class="pkgdown">

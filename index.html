@@ -14,24 +14,24 @@
 <script src="pkgdown.js"></script><meta property="og:title" content="Quick Table Generation &amp; Exploratory Analyses on ADaM-Ish Datasets">
 <meta property="og:description" content="Provides users a quick exploratory dive into common
     visualizations without writing a single line of code given the users
-    data follows the Analysis Data Model (ADaM) standards put forth by 
-    the Clinical Data Interchange Standards Consortium 
-    (CDISC) &lt;https://www.cdisc.org&gt;. Prominent modules/ features of the application are the Table 
-    Generator, Population Explorer, and the Individual Explorer. The Table 
-    Generator allows users to drag and drop variables and desired statistics
-    (frequencies, means, ANOVA, t-test, and other summary statistics) into
-    bins that automagically create stunning tables with validated
-    information. The Population Explorer offers various plots to visualize
-    general trends in the population from various vantage points. Plot
-    modules currently include scatter plot, spaghetti plot, box plot,
-    histogram, means plot, and bar plot. Each plot type allows the user to
-    plot uploaded variables against one another, and dissect the
-    population by filtering out certain subjects. Last, the Individual
-    Explorer establishes a cohesive patient narrative, allowing the user
-    to interact with patient metrics (params) by visit or plotting
-    important patient events on a timeline. All modules allow for concise
-    filtering &amp; downloading bulk outputs into html or pdf formats to save
-    for later.">
+    data follows the Analysis Data Model (ADaM) standards put forth by the
+    Clinical Data Interchange Standards Consortium (CDISC)
+    &lt;https://www.cdisc.org&gt;. Prominent modules/ features of the
+    application are the Table Generator, Population Explorer, and the
+    Individual Explorer. The Table Generator allows users to drag and drop
+    variables and desired statistics (frequencies, means, ANOVA, t-test,
+    and other summary statistics) into bins that automagically create
+    stunning tables with validated information. The Population Explorer
+    offers various plots to visualize general trends in the population
+    from various vantage points. Plot modules currently include scatter
+    plot, spaghetti plot, box plot, histogram, means plot, and bar plot.
+    Each plot type allows the user to plot uploaded variables against one
+    another, and dissect the population by filtering out certain subjects.
+    Last, the Individual Explorer establishes a cohesive patient
+    narrative, allowing the user to interact with patient metrics (params)
+    by visit or plotting important patient events on a timeline. All
+    modules allow for concise filtering &amp; downloading bulk outputs into
+    html or pdf formats to save for later.">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -52,7 +52,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">tidyCDISC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
       </span>
     </div>
 
@@ -127,38 +127,45 @@
 <a class="anchor" aria-label="anchor" href="#tidycdisc-"></a>
 </h1></div>
 <!-- badges: start -->
+
 <p><code>tidyCDISC</code> is a shiny app to easily create custom tables and figures from ADaM-ish data sets.</p>
 <p><br></p>
-<center><a href="https://rinpharma.shinyapps.io/tidyCDISC/" class="external-link"> <img src="reference/figures/demo_tidyCDISC_button_lite2dark.png" alt="Demo full tidyCDISC app" width="25%"></a></center>
+<center>
+<a href="https://rinpharma.shinyapps.io/tidyCDISC/" class="external-link"> <img src="reference/figures/demo_tidyCDISC_button_lite2dark.png" alt="Demo full tidyCDISC app" width="25%"></a>
+</center>
 <div class="section level2">
 <h2 id="purpose">Purpose<a class="anchor" aria-label="anchor" href="#purpose"></a>
 </h2>
-<p>One of <code>tidyCDISC</code>’s goals is to develop clinical tables that meet table standards leveraged for submission filings, called “standard analyses”. However, this is secondary to the app’s primary purpose: providing rich exploratory capabilities for clinical studies. High-level features of the app allow users to produce customized tables using a point-and-click interface, examine trends in patient populations with dynamic figures, and supply visualizations that narrow in on single patient profile.</p>
-<p>The beauty of this application is that the user doesn’t have to write a lick of code to gather abundant insights from the study data, so it aims to serve a large population of clinical personnel with varying levels of programming experience. For example:</p>
+<p>One of <code>tidyCDISC</code>’s goals is to develop clinical tables that meet table standards leveraged for submission filings, called “standard analyses”. However, this is secondary to the app’s primary purpose: providing rich exploratory capabilities for clinical studies. High-level features of the app allow users to produce customized tables using a point-and-click interface, examine trends in patient populations with dynamic figures, and supply visualizations that narrow in on a single patient profile.</p>
+<p>The beauty of the application: users don’t have to write a lick of code to gather abundant insights from their study data. Thus, <code>tidyCDISC</code> aims to serve a large population of clinical personnel with varying levels of programming experience. For example:</p>
 <ul>
-<li><p>A <strong>clinical head</strong>, with presumably no programming skills but the most domain expertise, can explore results without asking a statistician or programmer to build tables &amp; figures.</p></li>
-<li><p>A <strong>statistician</strong> can use the application to make tables/figures instantly, cutting down on statistical programming requests for excess tables that aren’t required, but just “nice to see”.</p></li>
+<li><p>A <strong>clinical head</strong>, with presumably no programming experience (but the most domain expertise) can explore results without asking a statistician or programmer to build tables &amp; figures.</p></li>
+<li><p>A <strong>statistician</strong> can use the application to make tables / figures instantly, cutting down on excess statistical programming requests for tables that aren’t required, but are “nice to see”.</p></li>
 </ul>
 <div class="floating">
 <p><img src="reference/figures/pct_95_cropped.jpg" width="25%" style="float:right; padding:10px"></p>
-<ul><li>A <strong>statistical programmer</strong> can use <code>tidyCDISC</code> to perform preliminary QC programming prior to writing code in a validated process. Users who’ve leverage <code>tidyCDISC</code> for routine trial analysis tend to report <strong>significant time savings, about 95%</strong>, when performing programming duties.</li></ul>
+<ul>
+<li>A <strong>statistical programmer</strong> can use <code>tidyCDISC</code> to perform preliminary QC programming prior to writing their own code in a validated process. Users who leverage <code>tidyCDISC</code> for routine trial analysis report <strong>significant time savings, about 95%</strong> on average, when performing their programming duties.</li>
+</ul>
 </div>
-<p>For a high-level overview of the app with 10-minute demo, please review the following conference presentation on <code>tidyCDISC</code>at <strong>R/Medicine 2020</strong>:</p>
+<p>For a high-level overview of the app with brief 10-minute demo, please review the following presentation on <code>tidyCDISC</code>at <strong>Shiny Conf 2022</strong>:</p>
 <p><br></p>
-<center><p><a href="https://youtu.be/QeHSjw-vU3U?t=103" class="external-link"><img src="reference/figures/tidyCDISC_RMedicine_thumbnail.png" alt="tidyCDISC @ R/Medicine"></a></p></center>
+<center>
+<p><a href="https://www.youtube.com/watch?v=0K8PCeKDbrI" class="external-link"><img src="reference/figures/tidyCDISC_RMedicine_thumbnail.png" alt="tidyCDISC @ Shiny Conf 2022"></a></p>
+</center>
 <p><br></p>
 </div>
 <div class="section level2">
 <h2 id="scope">Scope<a class="anchor" aria-label="anchor" href="#scope"></a>
 </h2>
-<p>As previously mentioned, <code>tidyCDISC</code> can only accept data sets that conform to CDISC ADaM standards with some minor flexibility (see <a href="https://Biogen-Inc.github.io/tidyCDISC/articles/x00_Data_Upload.html" class="external-link">upload requirements</a> for more details). At this time, the app only accepts sas7bdat files.</p>
-<p>If you’re looking to regularly generate R code for tables, the <code>tidyCDISC</code> app has a built-in export feature that downloads an R script to reproduce any analysis performed in the app.</p>
+<p>As previously mentioned, <code>tidyCDISC</code> can only accept data sets that conform to CDISC ADaM standards with some minor flexibility (see <a href="https://Biogen-Inc.github.io/tidyCDISC/articles/x00_Data_Upload.html" class="external-link">upload requirements</a> for more details). At this time, the app is designed to accept <code>sas7bdat</code> files only.</p>
+<p>If you’re looking to regularly generate R code for tables, the <code>tidyCDISC</code> app offers a handy feature to export an R script for full reproducibility of analyses performed in the app.</p>
 <p><br></p>
 </div>
 <div class="section level2">
 <h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
 </h2>
-<p>You can start using the demo version of the app here: <a href="https://rinpharma.shinyapps.io/tidyCDISC/" class="external-link">tidyCDISC</a>. Note the demo version disables the <strong>Data Upload</strong> feature and instead uses the CDISC pilot data. If you’d like to upload your own study data, we recommend installing <code>tidyCDISC</code> from CRAN (instructions below) to run the app locally or deploy it in your preferred environment. Please review the “<a href="https://Biogen-Inc.github.io/tidyCDISC/articles/tidyCDISC.html" class="external-link">Get Started</a>” guide to follow an example use case with the app. However, to optimize one’s use of <code>tidyCDISC</code>, we highly recommend reading the following articles that take a deeper look into the topics presented in the “Get Started” tutorial:</p>
+<p>You can start using the demo version of the app here: <a href="https://rinpharma.shinyapps.io/tidyCDISC/" class="external-link">tidyCDISC</a>. Note the demo version disables the <strong>Data Upload</strong> feature and, instead, uses CDISC pilot data. If you’d like to upload your own study data, we recommend installing <code>tidyCDISC</code> from CRAN (instructions below) to run the app locally or deploy it in your preferred environment. Please review the “<a href="https://Biogen-Inc.github.io/tidyCDISC/articles/tidyCDISC.html" class="external-link">Get Started</a>” guide to follow an example use case with the app. However, to optimize one’s use of <code>tidyCDISC</code>, we highly recommend reading the following articles that take a deeper look into the topics presented in the “Get Started” tutorial:</p>
 <ul>
 <li><p><a href="https://Biogen-Inc.github.io/tidyCDISC/articles/x00_Data_Upload.html" class="external-link">00 Data Upload</a></p></li>
 <li><p><a href="https://Biogen-Inc.github.io/tidyCDISC/articles/x01_Table_Generator.html" class="external-link">01 Table Generator</a></p></li>
@@ -172,7 +179,7 @@
 <div class="section level2">
 <h2 id="install-the-tidycdisc-r-package">Install the <code>tidyCDISC</code> R package<a class="anchor" aria-label="anchor" href="#install-the-tidycdisc-r-package"></a>
 </h2>
-<p>As a reminder, you can start using the demo version of the app here: <a href="https://rinpharma.shinyapps.io/tidyCDISC/" class="external-link">tidyCDISC</a> without any installation required. However, if you choose to upload your own study data OR export &amp; run R code from the Table Generator, you will need the <code>tidyCDISC</code> package installed on your machine locally. Execute the following code to install the package to your local machine:</p>
+<p>As a reminder, you can start using the demo version of the app right now: <a href="https://rinpharma.shinyapps.io/tidyCDISC/" class="external-link">launch tidyCDISC</a> without any installation required. However, if you choose to upload your own study data OR export &amp; run R code from the Table Generator, you will need the <code>tidyCDISC</code> package installed on your machine. Execute the following code to install the package:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Install from CRAN</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"tidyCDISC"</span><span class="op">)</span></span>
@@ -181,7 +188,7 @@
 <span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"Biogen-Inc/tidyCDISC"</span><span class="op">)</span></span></code></pre></div>
 <p>With a simple <code><a href="https://Biogen-Inc.github.io/tidyCDISC/" class="external-link">library(tidyCDISC)</a></code> you can access all the exported functions from <code>tidyCDISC</code> that help users reproduce analysis performed in the app. Or, you can run the application locally (or deploy it in an <code>app.R</code> file) using:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Run the application </span></span>
+<code class="sourceCode R"><span><span class="co"># Launch the application </span></span>
 <span><span class="fu">tidyCDISC</span><span class="fu">::</span><span class="fu"><a href="reference/run_app.html">run_app</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><br></p>
 <p><br></p>
@@ -228,6 +235,8 @@
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
 <li>Aaron Clark <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-0123-0970" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li>Jeff Thompson <br><small class="roles"> Author </small>  </li>
+<li>Teresa Wilson <br><small class="roles"> Author </small>  </li>
 <li>Maya Gans <br><small class="roles"> Author </small>  </li>
 <li><a href="authors.html">More about authors...</a></li>
 </ul>
@@ -237,6 +246,8 @@
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
 <li><a href="https://github.com/Biogen-Inc/tidyCDISC/actions" class="external-link"><img src="https://github.com/Biogen-Inc/tidyCDISC/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a></li>
+<li><a href="https://openpharma.github.io/GithubMetrics/" class="external-link"><img src="https://img.shields.io/badge/OS%20Health-86-green" alt="OS Health"></a></li>
+<li><a href="https://pharmar.github.io/riskmetric/" class="external-link"><img src="https://img.shields.io/badge/riskmetric-0.31-brightgreen" alt="riskmetric"></a></li>
 </ul>
 </div>
 
@@ -246,7 +257,7 @@
 
       <footer><div class="copyright">
   <p></p>
-<p>Developed by Aaron Clark, Maya Gans.</p>
+<p>Developed by Aaron Clark, Jeff Thompson, Teresa Wilson, Maya Gans.</p>
 </div>
 
 <div class="pkgdown">

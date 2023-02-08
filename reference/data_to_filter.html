@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidyCDISC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
       </span>
     </div>
 
@@ -104,34 +104,14 @@
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">datalist</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>ADSL <span class="op">=</span> <span class="fu">tidyCDISC</span><span class="fu">::</span><span class="va"><a href="adsl.html">adsl</a></span>, ADAE <span class="op">=</span> <span class="fu">tidyCDISC</span><span class="fu">::</span><span class="va"><a href="adae.html">adae</a></span>, </span></span>
-<span class="r-in"><span>                 ADVS <span class="op">=</span> <span class="fu">tidyCDISC</span><span class="fu">::</span><span class="va"><a href="advs.html">advs</a></span>, ADLBC <span class="op">=</span> <span class="fu">tidyCDISC</span><span class="fu">::</span><span class="va"><a href="adlbc.html">adlbc</a></span>, </span></span>
-<span class="r-in"><span>                 ADTTE <span class="op">=</span> <span class="fu">tidyCDISC</span><span class="fu">::</span><span class="va"><a href="adtte.html">adtte</a></span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span>  <span class="va">datalist</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>ADSL <span class="op">=</span> <span class="fu">tidyCDISC</span><span class="fu">::</span><span class="va"><a href="adsl.html">adsl</a></span>, ADAE <span class="op">=</span> <span class="fu">tidyCDISC</span><span class="fu">::</span><span class="va"><a href="adae.html">adae</a></span>, </span></span>
+<span class="r-in"><span>                   ADVS <span class="op">=</span> <span class="fu">tidyCDISC</span><span class="fu">::</span><span class="va"><a href="advs.html">advs</a></span>, ADLBC <span class="op">=</span> <span class="fu">tidyCDISC</span><span class="fu">::</span><span class="va"><a href="adlbc.html">adlbc</a></span>, </span></span>
+<span class="r-in"><span>                   ADTTE <span class="op">=</span> <span class="fu">tidyCDISC</span><span class="fu">::</span><span class="va"><a href="adtte.html">adtte</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Returns combined dataset</span></span></span>
-<span class="r-in"><span><span class="fu">data_to_filter</span><span class="op">(</span><span class="va">datalist</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ADSL"</span>, <span class="st">"ADAE"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Joining, by = c("STUDYID", "USUBJID", "SITEID", "TRTSDT", "TRTEDT", "AGE",</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> "AGEGR1", "AGEGR1N", "RACE", "RACEN", "SEX", "SAFFL")</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1,191 × 101</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    STUDYID     USUBJID SUBJID SITEID SITEGR1 ARM   TRT01P TRT01PN TRT01A TRT01AN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> CDISCPILOT… 01-701… 1015   701    701     Plac… Place…       0 Place…       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> CDISCPILOT… 01-701… 1015   701    701     Plac… Place…       0 Place…       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> CDISCPILOT… 01-701… 1015   701    701     Plac… Place…       0 Place…       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> CDISCPILOT… 01-701… 1023   701    701     Plac… Place…       0 Place…       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> CDISCPILOT… 01-701… 1023   701    701     Plac… Place…       0 Place…       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> CDISCPILOT… 01-701… 1023   701    701     Plac… Place…       0 Place…       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> CDISCPILOT… 01-701… 1023   701    701     Plac… Place…       0 Place…       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> CDISCPILOT… 01-701… 1028   701    701     Xano… Xanom…      81 Xanom…      81</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> CDISCPILOT… 01-701… 1028   701    701     Xano… Xanom…      81 Xanom…      81</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> CDISCPILOT… 01-701… 1034   701    701     Xano… Xanom…      81 Xanom…      81</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 1,181 more rows, and 91 more variables: TRTSDT &lt;date&gt;, TRTEDT &lt;date&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   TRTDURD &lt;dbl&gt;, AVGDD &lt;dbl&gt;, CUMDOSE &lt;dbl&gt;, AGE &lt;dbl&gt;, AGEGR1 &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   AGEGR1N &lt;dbl&gt;, AGEU &lt;chr&gt;, RACE &lt;chr&gt;, RACEN &lt;dbl&gt;, SEX &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   ETHNIC &lt;chr&gt;, SAFFL &lt;chr&gt;, ITTFL &lt;chr&gt;, EFFFL &lt;chr&gt;, COMP8FL &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   COMP16FL &lt;chr&gt;, COMP24FL &lt;chr&gt;, DISCONFL &lt;chr&gt;, DSRAEFL &lt;chr&gt;, DTHFL &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   BMIBL &lt;dbl&gt;, BMIBLGR1 &lt;chr&gt;, HEIGHTBL &lt;dbl&gt;, WEIGHTBL &lt;dbl&gt;, EDUCLVL &lt;dbl&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   DISONSDT &lt;date&gt;, DURDIS &lt;dbl&gt;, DURDSGR1 &lt;chr&gt;, VISIT1DT &lt;date&gt;, …</span></span>
+<span class="r-in"><span>  <span class="co"># Returns combined dataset</span></span></span>
+<span class="r-in"><span>  <span class="fu">data_to_filter</span><span class="op">(</span><span class="va">datalist</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ADSL"</span>, <span class="st">"ADAE"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -142,7 +122,7 @@
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Aaron Clark, Maya Gans.</p>
+  <p></p><p>Developed by Aaron Clark, Jeff Thompson, Teresa Wilson, Maya Gans.</p>
 </div>
 
 <div class="pkgdown">
