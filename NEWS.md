@@ -1,5 +1,5 @@
 # tidyCDISC (development version)
-
+* Arranged visits in dropdown menu under Stats column in chronological order.
 
 # tidyCDISC 0.2.0 (CRAN Release)
 
