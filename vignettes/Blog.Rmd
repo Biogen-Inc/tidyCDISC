@@ -28,3 +28,9 @@ knitr::include_graphics("figures/blog/important_announcement_cropped.jpg")
 # [Announcing `tidyCDISC 0.0.1`](announcing-tidycdisc-0-0-1-1.html)
 
 This release adds meat to the previous skeleton version of `tidyCDISC`. The initial development release was intended to be a "bare bones" platform that could serve as a foundation to build a great clinical data exploratory tool. Version `0.0.1` enriches the user experience by adding useful & commonly needed features for analysis. For more on this release, see our [detailed exploration](https://biogen-inc.github.io/tidyCDISC/articles/announcing-tidycdisc-0-0-1-1.html) of new features in this blog post.
+
+# [Announcing `tidyCDISC 0.2.0`](announcing-tidycdisc-0-2-0.html)
+
+Version 0.2.0 of `tidyCDISC` has just been released. This version provides many improvements and new features, including some new features for the Table Generator, as well as some general changes, enhancements, and bug fixes. For more on this release, see our [detailed exploration](https://biogen-inc.github.io/tidyCDISC/articles/announcing-tidycdisc-0-2-0.html) of new features in [this blog post](https://biogen-inc.github.io/tidyCDISC/articles/announcing-tidycdisc-0-2-0.html).
+
+
