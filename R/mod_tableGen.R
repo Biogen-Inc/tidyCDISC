@@ -28,6 +28,14 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   old <- options()
   on.exit(options(old))
   
+  recipes <- reactiveVal(jsonlite::read_json("recipes.json"))
+  
+  observe({
+    req(recipes())
+    
+    session$sendCustomMessage("recipes", recipes())
+  })
+  
   observeEvent( input$help, {
     tg_guide$init()$start()
   })
@@ -44,22 +52,22 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       HTML(paste('
            <select id="RECIPE" class="selectize-input">
            <option  id="none">NONE</option>
-           <option  id="tbl03">Table 3: Accounting of Subjects</option>
-           <option  id="demography">Table 5: Demography</option>',
-           ifelse("ADAE" %in% names(datafile()),'<option  id="tbl18">Table 18: Overall summary of adverse events</option>',''),
-           ifelse("ADAE" %in% names(datafile()),'<option  id="tbl19">Table 19: Adverse events by system organ class and preferred term sorted by decreasing frequency</option>',''),
-           ifelse("ADAE" %in% names(datafile()),'<option  id="tbl20">Table 20: Adverse events by system organ class and preferred term sorted by alphabetical order</option>',''),
-           ifelse("ADAE" %in% names(datafile()),'<option  id="tbl21">Table 21: Adverse events by system organ class</option>',''),
-           ifelse("ADAE" %in% names(datafile()),'<option  id="tbl23">Table 23: Adverse events by preferred term</option>',''),
-           ifelse("ADAE" %in% names(datafile()),'<option  id="tbl25">Table 25: Severe adverse events by system organ class and preferred term</option>',''),
-           ifelse("ADAE" %in% names(datafile()),'<option  id="tbl26">Table 26: Severe adverse events by preferred term</option>',''),
-           ifelse("ADAE" %in% names(datafile()),'<option  id="tbl29">Table 29: Related adverse events by system organ class and preferred term</option>',''),
-           ifelse("ADAE" %in% names(datafile()),'<option  id="tbl30">Table 30: Serious adverse events by system organ class and preferred term</option>',''),
-           ifelse("ADAE" %in% names(datafile()),'<option  id="tbl31">Table 31: Serious adverse events by preferred term</option>',''),
-           ifelse("ADAE" %in% names(datafile()),'<option  id="tbl33">Table 33: Related serious adverse events by system organ class and preferred term</option>',''),
-           ifelse("ADAE" %in% names(datafile()),'<option  id="tbl34">Table 34: Adverse events that led to discontinuation of study treatment by system organ class and preferred term</option>',''),
-           ifelse("ADAE" %in% names(datafile()),'<option  id="tbl36">Table 36: Adverse events that led to withdrawl from study by system organ class and preferred term</option>',''),
-           ifelse("ADAE" %in% names(datafile()),'<option  id="tbl38">Table 38: Adverse events that led to drug interrupted, dose reduced, or dose increased by system organ class and preferred term</option>',''),
+           <option  id="stan_3">Table 3: Accounting of Subjects</option>
+           <option  id="stan_5">Table 5: Demography</option>',
+           ifelse("ADAE" %in% names(datafile()),'<option  id="stan_18">Table 18: Overall summary of adverse events</option>',''),
+           ifelse("ADAE" %in% names(datafile()),'<option  id="stan_19">Table 19: Adverse events by system organ class and preferred term sorted by decreasing frequency</option>',''),
+           ifelse("ADAE" %in% names(datafile()),'<option  id="stan_20">Table 20: Adverse events by system organ class and preferred term sorted by alphabetical order</option>',''),
+           ifelse("ADAE" %in% names(datafile()),'<option  id="stan_21">Table 21: Adverse events by system organ class</option>',''),
+           ifelse("ADAE" %in% names(datafile()),'<option  id="stan_23">Table 23: Adverse events by preferred term</option>',''),
+           ifelse("ADAE" %in% names(datafile()),'<option  id="stan_25">Table 25: Severe adverse events by system organ class and preferred term</option>',''),
+           ifelse("ADAE" %in% names(datafile()),'<option  id="stan_26">Table 26: Severe adverse events by preferred term</option>',''),
+           ifelse("ADAE" %in% names(datafile()),'<option  id="stan_29">Table 29: Related adverse events by system organ class and preferred term</option>',''),
+           ifelse("ADAE" %in% names(datafile()),'<option  id="stan_30">Table 30: Serious adverse events by system organ class and preferred term</option>',''),
+           ifelse("ADAE" %in% names(datafile()),'<option  id="stan_31">Table 31: Serious adverse events by preferred term</option>',''),
+           ifelse("ADAE" %in% names(datafile()),'<option  id="stan_33">Table 33: Related serious adverse events by system organ class and preferred term</option>',''),
+           ifelse("ADAE" %in% names(datafile()),'<option  id="stan_34">Table 34: Adverse events that led to discontinuation of study treatment by system organ class and preferred term</option>',''),
+           ifelse("ADAE" %in% names(datafile()),'<option  id="stan_36">Table 36: Adverse events that led to withdrawl from study by system organ class and preferred term</option>',''),
+           ifelse("ADAE" %in% names(datafile()),'<option  id="stan_38">Table 38: Adverse events that led to drug interrupted, dose reduced, or dose increased by system organ class and preferred term</option>',''),
            ifelse(!rlang::is_empty(loaded_labs()) & chem_params()$exist,'<option  id="tbl41_b">Table 41: Blood Chemistry actual values by visit</option>',''),
            ifelse(!rlang::is_empty(loaded_labs()) & hema_params()$exist,'<option  id="tbl41_h">Table 41: Hematology actual values by visit</option>',''),
            ifelse(!rlang::is_empty(loaded_labs()) & urin_params()$exist,'<option  id="tbl41_u">Table 41: Urinalysis actual values by visit</option>',''),
