@@ -79,7 +79,7 @@ df_incl_rules <-
 #'
 #' @family dataComply Functions
 #' @keywords internal
-#' 
+#' @noRd
 gather_rules <- function(input, output, session,
                          all_df_rules = list(error = c(""), warn = c("") ),
                          expl_rules = list( list(error = c(""), warn = c("")) ),

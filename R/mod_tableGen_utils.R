@@ -11,12 +11,14 @@
 #' @return A data frame containing the BDS data bound by rows.
 #' 
 #' @examples 
-#' datalist <- list(ADSL = tidyCDISC::adsl, ADVS = tidyCDISC::advs, 
-#'                  ADAE = tidyCDISC::adae, ADLBC = tidyCDISC::adlbc)
+#' if(interactive()) {
+#'   datalist <- list(ADSL = tidyCDISC::adsl, ADVS = tidyCDISC::advs, 
+#'                    ADAE = tidyCDISC::adae, ADLBC = tidyCDISC::adlbc)
 #'                  
-#' pre_adsl <- prep_adsl(datalist$ADSL, input_recipe = 'NONE')
+#'   pre_adsl <- prep_adsl(datalist$ADSL, input_recipe = 'NONE')
 #' 
-#' prep_bds(datalist, ADSL = pre_adsl$data)
+#'   prep_bds(datalist, ADSL = pre_adsl$data)
+#' }
 prep_bds <- function(datafile, ADSL) {
   init <- sapply(datafile, function(x) "PARAMCD" %in% colnames(x) & !("CNSR" %in% colnames(x)))
   BDS <- datafile[init[substr(names(init),1,4) != "ADTT"]] # remove TTE class df's because `AVISIT` col doesn't exist in that class of df
@@ -154,13 +156,15 @@ clean_ADAE <- function(datafile, ADSL) {
 #' @keywords tabGen_repro
 #' 
 #' @examples 
-#' datalist <- list(ADSL = tidyCDISC::adsl, ADVS = tidyCDISC::advs, 
-#'                  ADAE = tidyCDISC::adae, ADLBC = tidyCDISC::adlbc)
+#' if(interactive()) {
+#'   datalist <- list(ADSL = tidyCDISC::adsl, ADVS = tidyCDISC::advs, 
+#'                    ADAE = tidyCDISC::adae, ADLBC = tidyCDISC::adlbc)
 #'                  
-#' pre_adsl <- prep_adsl(datalist$ADSL, input_recipe = 'NONE')
+#'   pre_adsl <- prep_adsl(datalist$ADSL, input_recipe = 'NONE')
 #' 
-#' # Create AE data set
-#' prep_adae(datalist, pre_adsl$data, input_recipe = 'NONE')
+#'   # Create AE data set
+#'   prep_adae(datalist, pre_adsl$data, input_recipe = 'NONE')
+#' }
 prep_adae <- function(datafile, ADSL, input_recipe) { #, stan_table_num
   stan_table_num <- numeric_stan_table(input_recipe)
   dat <- clean_ADAE(datafile = datafile, ADSL = ADSL)
@@ -351,12 +355,14 @@ check_params <- function(datafile, param_vector) {
 #' @keywords tabGen_repro
 #' 
 #' @examples 
-#' datalist <- list(ADSL = tidyCDISC::adsl, ADAE = tidyCDISC::adae, 
-#'                  ADVS = tidyCDISC::advs, ADLBC = tidyCDISC::adlbc, 
-#'                  ADTTE = tidyCDISC::adtte)
+#' if(interactive()) {
+#'   datalist <- list(ADSL = tidyCDISC::adsl, ADAE = tidyCDISC::adae, 
+#'                    ADVS = tidyCDISC::advs, ADLBC = tidyCDISC::adlbc, 
+#'                    ADTTE = tidyCDISC::adtte)
 #' 
-#' # Returns combined dataset
-#' data_to_filter(datalist, c("ADSL", "ADAE"))
+#'   # Returns combined dataset
+#'   data_to_filter(datalist, c("ADSL", "ADAE"))
+#' }
 data_to_filter <- function(datafile, input_filter_df) {
   select_dfs <- datafile[input_filter_df]
   
@@ -398,16 +404,18 @@ data_to_filter <- function(datafile, input_filter_df) {
 #' @keywords tabGen_repro
 #' 
 #' @examples 
-#' datalist <- list(ADSL = tidyCDISC::adsl, ADVS = tidyCDISC::advs, 
-#'                  ADAE = tidyCDISC::adae, ADLBC = tidyCDISC::adlbc)
+#' if(interactive()) {
+#'   datalist <- list(ADSL = tidyCDISC::adsl, ADVS = tidyCDISC::advs, 
+#'                    ADAE = tidyCDISC::adae, ADLBC = tidyCDISC::adlbc)
 #'                  
-#' pre_adsl <- prep_adsl(datalist$ADSL, input_recipe = 'NONE')
-#' pre_adae <- prep_adae(datalist, pre_adsl$data, 'NONE')
-#' ae_data <- pre_adae$data
-#' bds_data <- prep_bds(datalist, ADSL = pre_adsl$data)
-#' 
-#' all.equal(data_to_use_str("ADAE", ae_data, bds_data), ae_data)
-#' all.equal(data_to_use_str("ADSL", ae_data, bds_data), bds_data)
+#'   pre_adsl <- prep_adsl(datalist$ADSL, input_recipe = 'NONE')
+#'   pre_adae <- prep_adae(datalist, pre_adsl$data, 'NONE')
+#'   ae_data <- pre_adae$data
+#'   bds_data <- prep_bds(datalist, ADSL = pre_adsl$data)
+#'   
+#'   all.equal(data_to_use_str("ADAE", ae_data, bds_data), ae_data)
+#'   all.equal(data_to_use_str("ADSL", ae_data, bds_data), bds_data)
+#' }
 data_to_use_str <- function(x, ae_data, bds_data) {
   if (x == "ADAE") { ae_data }
   else bds_data
@@ -465,14 +473,16 @@ prep_blocks <- function(blockData) {
 #' @param data The `gt` table object to append the footnote
 #' @param source The source of the data in the table
 #' 
+#' @return a `gt` object
+#' 
 #' @export
 #' @keywords tabGen_repro
 std_footnote <- function(data, source) {
   gt::tab_footnote(data, 
-                   tags$div(HTML("<b>Source:</b>", source), 
-                            shiny::tags$span(shiny::HTML("<b> Run Date:</b>", toupper(format(Sys.Date(), "%d%b%Y"))),
-                                             style="float:right"),
-                            style="text-align:left"))
+       tags$div(HTML("<b>Source:</b>", source), 
+                shiny::tags$span(shiny::HTML("<b>Run Date:</b>", toupper(format(Sys.Date(), "%d%b%Y"))),
+                                 style="float:right"),
+                style="text-align:left"))
 }
 
 #' Create the gt table object for TG
@@ -483,6 +493,8 @@ std_footnote <- function(data, source) {
 #' @param blockData The data for the construction of the blocks in the table
 #' @param total_df A data frame containing the totals by grouping variable
 #' @param group A character denoting the grouping variable
+#' 
+#' @return a data.frame containing output polished for presentation in `gt`
 #' 
 #' @export
 #' @keywords tabGen_repro
@@ -563,13 +575,55 @@ tg_guide <- cicerone::Cicerone$
   step(
     "download_table",
     "Keep a copy for your records",
-    "Download a table in CSV or HTML format as seen in the app. RTF support coming soon!"
+    "Download a table in RTF, CSV, or HTML format as seen in the app."
   )$
   step(
     "tableGen_ui_1-tblcode",
     "Produce this table outside of the app",
     "Have more data coming? Don't download the table, download the R script needed to produce the table. Then there's no need to even open up the app periodically to re-create your outputs!"
   )
+
+#' Create a `gt` table object
+#' 
+#' Create a `gt` table object from the data that will then be used to generate
+#' output in specific formats
+#' 
+#' @param data The data frame used to create the table
+#' @param input_table_title The Shiny input with the table title
+#' @param input_table_footnote The Shiny input with the table footnote(s)
+#' @param col_names A vector of column names
+#' @param col_total A vector of column totals
+#' @param subtitle The table subtitle
+#'  
+#' @noRd
+create_gt_table <- function(data, input_table_title, input_table_footnote,
+                            col_names, col_total, subtitle) {
+  data %>%
+    gt::gt(groupname_col = "ID") %>%
+    gt::fmt_markdown(columns = c(Variable),
+                     rows = stringr::str_detect(Variable,'&nbsp;') |
+                       stringr::str_detect(Variable,'<b>') |
+                       stringr::str_detect(Variable,'</b>')) %>%
+    gt::tab_options(table.width = gt::px(700)) %>%
+    gt::cols_label(.list = col_for_list_expr(col_names, col_total)) %>%
+    gt::tab_header(
+      title = gt::md(input_table_title),
+      subtitle = gt::md(subtitle)
+    ) %>%
+    gt::tab_style(
+      style = gt::cell_text(weight = "bold"),
+      locations = gt::cells_row_groups()
+    ) %>%
+    gt::tab_style(
+      style = list(
+        gt::cell_text(align = "right")
+      ),
+      locations = gt::cells_stub(rows = TRUE)
+    )%>%
+    gt::cols_label(Variable = "") %>%
+    std_footnote("tidyCDISC app") %>%
+    gt::tab_footnote(input_table_footnote)
+}
 
 
 

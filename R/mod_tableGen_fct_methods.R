@@ -21,28 +21,30 @@
 #' @export
 #' @keywords tabGen_repro
 #' 
-#' @examples 
-#' data(example_dat1, package = "tidyCDISC")
+#' @examples
+#' if(interactive()){
+#'   data(example_dat1, package = "tidyCDISC")
 #' 
-#' # Create non-missing table section
-#' app_methods("NON_MISSING", 
-#'             structure("USUBJID", class = c("character", "ADSL")), NA, 
-#'             "TRT01P", example_dat1$AE, example_dat1$totals)
+#'   # Create non-missing table section
+#'   app_methods("NON_MISSING", 
+#'              structure("USUBJID", class = c("character", "ADSL")), NA, 
+#'              "TRT01P", example_dat1$AE, example_dat1$totals)
 #'             
-#' # Create ANOVA table section
-#' app_methods("ANOVA", 
+#'   # Create ANOVA table section
+#'   app_methods("ANOVA", 
 #'             structure("TEMP", class = c("character", "BDS")), "Week 2", 
 #'             "TRT01P", example_dat1$BDS, example_dat1$totals)
 #' 
-#' # Create change table section
-#' app_methods("CHG", 
+#'   # Create change table section
+#'   app_methods("CHG", 
 #'             structure("WEIGHT", class = c("character", "BDS")), "Week 12", 
 #'             "TRT01P", example_dat1$BDS, example_dat1$totals)
 #' 
-#' # Create mean table section
-#' app_methods("MEAN", 
+#'   # Create mean table section
+#'   app_methods("MEAN", 
 #'             structure("PULSE", class = c("character", "BDS")), "Baseline", 
 #'             "TRT01P", example_dat1$BDS, example_dat1$totals)
+#' }
 app_methods <- function(agg, column, week, group, data, totals, filter = NA) {
   # informative error in case the selected variable doesn't exist in data
   # if no data in the source, do not run the pmap, just show this msg:
