@@ -74,8 +74,8 @@ $("#RECIPE").bind("change", function(event, ui) {
   
   if (Object.keys(recipes_obj).includes(publisher)) {
   for(block of recipes_obj[publisher].blocks){
-      $("#droppable_blocks").append($(createRecipeBlock(block.variable, block.data)));
-      $("#droppable_agg").append($(createRecipeBlock(block.statistic, block.data, block.args)));
+      $("#droppable_blocks").append($(createRecipeBlock(block.variable, block.data, block.var_arg)));
+      $("#droppable_agg").append($(createRecipeBlock(block.statistic, block.data, block.stat_arg)));
   }
   } else {
   switch(publisher) {

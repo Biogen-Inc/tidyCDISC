@@ -3,8 +3,8 @@
     "title": "Table 3: Accounting of Subjects",
     "blocks": [{"data":"ADSL", "variable":"RANDFL", "statistic":"Y_FREQ"}, 
     {"data":"ADSL", "variable":"SAFFL", "statistic":"FREQ"}, 
-    {"data":"ADSL", "variable":"EOTSTT", "statistic":"NESTED_FREQ_ABC", "args":"DCTREAS"}, 
-    {"data":"ADSL", "variable":"EOSSTT", "statistic":"NESTED_FREQ_ABC", "args":"DCSREAS"}]
+    {"data":"ADSL", "variable":"EOTSTT", "statistic":"NESTED_FREQ_ABC", "stat_arg":"DCTREAS"}, 
+    {"data":"ADSL", "variable":"EOSSTT", "statistic":"NESTED_FREQ_ABC", "stat_arg":"DCSREAS"}]
   },
   "stan_5": {
     "title": "Table 5: Demography",
@@ -26,114 +26,114 @@
   "stan_19": {
     "title": "Table 19: Adverse events by system organ class and preferred term sorted by decreasing frequency",
     "blocks": [{"data":"ADAE", "variable":"USUBJID", "statistic":"NON_MISSING"},
-    {"data":"ADAE", "variable":"AEBODSYS", "statistic":"NESTED_FREQ_DSC", "args":"AEDECOD"}]
+    {"data":"ADAE", "variable":"AEBODSYS", "statistic":"NESTED_FREQ_DSC", "stat_arg":"AEDECOD"}]
   },
   "stan_20": {
     "title": "Table 20: Adverse events by system organ class and preferred term sorted by alphabetical order",
     "blocks": [{"data":"ADAE", "variable":"USUBJID", "statistic":"NON_MISSING"},
-    {"data":"ADAE", "variable":"AEBODSYS", "statistic":"NESTED_FREQ_ABC", "args":"AEDECOD"}]
+    {"data":"ADAE", "variable":"AEBODSYS", "statistic":"NESTED_FREQ_ABC", "stat_arg":"AEDECOD"}]
   },
   "stan_21": {
     "title": "Table 21: Adverse events by system organ class",
     "blocks": [{"data":"ADAE", "variable":"USUBJID", "statistic":"NON_MISSING"},
-    {"data":"ADAE", "variable":"AEBODSYS", "statistic":"NESTED_FREQ_ABC", "args":"NONE"}]
+    {"data":"ADAE", "variable":"AEBODSYS", "statistic":"NESTED_FREQ_ABC", "stat_arg":"NONE"}]
   },
   "stan_23": {
     "title": "Table 23: Adverse events by preferred term",
     "blocks": [{"data":"ADAE", "variable":"USUBJID", "statistic":"NON_MISSING"},
-    {"data":"ADAE", "variable":"AEDECOD", "statistic":"NESTED_FREQ_ABC", "args":"NONE"}]
+    {"data":"ADAE", "variable":"AEDECOD", "statistic":"NESTED_FREQ_ABC", "stat_arg":"NONE"}]
   },
   "stan_25": {
     "title": "Table 25: Severe adverse events by system organ class and preferred term",
     "blocks": [{"data":"ADAE", "variable":"USUBJID", "statistic":"NON_MISSING"},
-    {"data":"ADAE", "variable":"AEBODSYS", "statistic":"NESTED_FREQ_DSC", "args":"AEDECOD"}]
+    {"data":"ADAE", "variable":"AEBODSYS", "statistic":"NESTED_FREQ_DSC", "stat_arg":"AEDECOD"}]
   },
   "stan_26": {
     "title": "Table 26: Severe adverse events by preferred term",
     "blocks": [{"data":"ADAE", "variable":"USUBJID", "statistic":"NON_MISSING"},
-    {"data":"ADAE", "variable":"AEDECOD", "statistic":"NESTED_FREQ_ABC", "args":"NONE"}]
+    {"data":"ADAE", "variable":"AEDECOD", "statistic":"NESTED_FREQ_ABC", "stat_arg":"NONE"}]
   },
   "stan_29": {
     "title": "Table 29: Related adverse events by system organ class and preferred term",
     "blocks": [{"data":"ADAE", "variable":"USUBJID", "statistic":"NON_MISSING"},
-    {"data":"ADAE", "variable":"AEBODSYS", "statistic":"NESTED_FREQ_DSC", "args":"AEDECOD"}]
+    {"data":"ADAE", "variable":"AEBODSYS", "statistic":"NESTED_FREQ_DSC", "stat_arg":"AEDECOD"}]
   },
   "stan_30": {
     "title": "Table 30: Serious adverse events by system organ class and preferred term",
     "blocks": [{"data":"ADAE", "variable":"USUBJID", "statistic":"NON_MISSING"},
-    {"data":"ADAE", "variable":"AEBODSYS", "statistic":"NESTED_FREQ_DSC", "args":"AEDECOD"}]
+    {"data":"ADAE", "variable":"AEBODSYS", "statistic":"NESTED_FREQ_DSC", "stat_arg":"AEDECOD"}]
   },
   "stan_31": {
     "title": "Table 31: Serious adverse events by preferred term",
     "blocks": [{"data":"ADAE", "variable":"USUBJID", "statistic":"NON_MISSING"},
-    {"data":"ADAE", "variable":"AEDECOD", "statistic":"NESTED_FREQ_ABC", "args":"NONE"}]
+    {"data":"ADAE", "variable":"AEDECOD", "statistic":"NESTED_FREQ_ABC", "stat_arg":"NONE"}]
   },
   "stan_33": {
     "title": "Table 33: Related serious adverse events by system organ class and preferred term",
     "blocks": [{"data":"ADAE", "variable":"USUBJID", "statistic":"NON_MISSING"},
-    {"data":"ADAE", "variable":"AEBODSYS", "statistic":"NESTED_FREQ_DSC", "args":"AEDECOD"}]
+    {"data":"ADAE", "variable":"AEBODSYS", "statistic":"NESTED_FREQ_DSC", "stat_arg":"AEDECOD"}]
   },
   "stan_34": {
     "title": "Table 34: Adverse events that led to discontinuation of study treatment by system organ class and preferred term",
     "blocks": [{"data":"ADAE", "variable":"USUBJID", "statistic":"NON_MISSING"},
-    {"data":"ADAE", "variable":"AEBODSYS", "statistic":"NESTED_FREQ_DSC", "args":"AEDECOD"}]
+    {"data":"ADAE", "variable":"AEBODSYS", "statistic":"NESTED_FREQ_DSC", "stat_arg":"AEDECOD"}]
   },
   "stan_36": {
     "title": "Table 36: Adverse events that led to withdrawl from study by system organ class and preferred term",
     "blocks": [{"data":"ADAE", "variable":"USUBJID", "statistic":"NON_MISSING"},
-    {"data":"ADAE", "variable":"AEBODSYS", "statistic":"NESTED_FREQ_DSC", "args":"AEDECOD"}]
+    {"data":"ADAE", "variable":"AEBODSYS", "statistic":"NESTED_FREQ_DSC", "stat_arg":"AEDECOD"}]
   },
   "stan_38": {
     "title": "Table 38: Adverse events that led to drug interrupted, dose reduced, or dose increased by system organ class and preferred term",
     "blocks": [{"data":"ADAE", "variable":"USUBJID", "statistic":"NON_MISSING"},
-    {"data":"ADAE", "variable":"AEBODSYS", "statistic":"NESTED_FREQ_DSC", "args":"AEDECOD"}]
+    {"data":"ADAE", "variable":"AEBODSYS", "statistic":"NESTED_FREQ_DSC", "stat_arg":"AEDECOD"}]
   },
   "stan_41_chem": {
     "title": "Table 41: Blood Chemistry actual values by visit",
-    "blocks": [{"data":"ADLB", "variable":"ALT", "statistic":"MEAN", "args":"ALL", "req":false},
-    {"data":"ADLB", "variable":"AST", "statistic":"MEAN", "args":"ALL", "req":false},
-    {"data":"ADLB", "variable":"ALP", "statistic":"MEAN", "args":"ALL", "req":false},
-    {"data":"ADLB", "variable":"BILI", "statistic":"MEAN", "args":"ALL", "req":false},
-    {"data":"ADLB", "variable":"GGT", "statistic":"MEAN", "args":"ALL", "req":false},
-    {"data":"ADLB", "variable":"BUN", "statistic":"MEAN", "args":"ALL", "req":false},
-    {"data":"ADLB", "variable":"CREAT", "statistic":"MEAN", "args":"ALL", "req":false},
-    {"data":"ADLB", "variable":"SODIUM", "statistic":"MEAN", "args":"ALL", "req":false},
-    {"data":"ADLB", "variable":"K", "statistic":"MEAN", "args":"ALL", "req":false},
-    {"data":"ADLB", "variable":"CL", "statistic":"MEAN", "args":"ALL", "req":false},
-    {"data":"ADLB", "variable":"BICARB", "statistic":"MEAN", "args":"ALL", "req":false},
-    {"data":"ADLB", "variable":"GLUC", "statistic":"MEAN", "args":"ALL", "req":false},
-    {"data":"ADLB", "variable":"CA", "statistic":"MEAN", "args":"ALL", "req":false},
-    {"data":"ADLB", "variable":"PHOS", "statistic":"MEAN", "args":"ALL", "req":false},
-    {"data":"ADLB", "variable":"ALB", "statistic":"MEAN", "args":"ALL", "req":false},
-    {"data":"ADLB", "variable":"CHOL", "statistic":"MEAN", "args":"ALL", "req":false},
-    {"data":"ADLB", "variable":"MG", "statistic":"MEAN", "args":"ALL", "req":false},
-    {"data":"ADLB", "variable":"TRIG", "statistic":"MEAN", "args":"ALL", "req":false},
-    {"data":"ADLB", "variable":"URATE", "statistic":"MEAN", "args":"ALL", "req":false}]
+    "blocks": [{"data":"ADLB", "variable":"ALT", "statistic":"MEAN", "stat_arg":"ALL", "req":false},
+    {"data":"ADLB", "variable":"AST", "statistic":"MEAN", "stat_arg":"ALL", "req":false},
+    {"data":"ADLB", "variable":"ALP", "statistic":"MEAN", "stat_arg":"ALL", "req":false},
+    {"data":"ADLB", "variable":"BILI", "statistic":"MEAN", "stat_arg":"ALL", "req":false},
+    {"data":"ADLB", "variable":"GGT", "statistic":"MEAN", "stat_arg":"ALL", "req":false},
+    {"data":"ADLB", "variable":"BUN", "statistic":"MEAN", "stat_arg":"ALL", "req":false},
+    {"data":"ADLB", "variable":"CREAT", "statistic":"MEAN", "stat_arg":"ALL", "req":false},
+    {"data":"ADLB", "variable":"SODIUM", "statistic":"MEAN", "stat_arg":"ALL", "req":false},
+    {"data":"ADLB", "variable":"K", "statistic":"MEAN", "stat_arg":"ALL", "req":false},
+    {"data":"ADLB", "variable":"CL", "statistic":"MEAN", "stat_arg":"ALL", "req":false},
+    {"data":"ADLB", "variable":"BICARB", "statistic":"MEAN", "stat_arg":"ALL", "req":false},
+    {"data":"ADLB", "variable":"GLUC", "statistic":"MEAN", "stat_arg":"ALL", "req":false},
+    {"data":"ADLB", "variable":"CA", "statistic":"MEAN", "stat_arg":"ALL", "req":false},
+    {"data":"ADLB", "variable":"PHOS", "statistic":"MEAN", "stat_arg":"ALL", "req":false},
+    {"data":"ADLB", "variable":"ALB", "statistic":"MEAN", "stat_arg":"ALL", "req":false},
+    {"data":"ADLB", "variable":"CHOL", "statistic":"MEAN", "stat_arg":"ALL", "req":false},
+    {"data":"ADLB", "variable":"MG", "statistic":"MEAN", "stat_arg":"ALL", "req":false},
+    {"data":"ADLB", "variable":"TRIG", "statistic":"MEAN", "stat_arg":"ALL", "req":false},
+    {"data":"ADLB", "variable":"URATE", "statistic":"MEAN", "stat_arg":"ALL", "req":false}]
   },
   "stan_41_hema": {
     "title": "Table 41: Hematology actual values by visit",
-    "blocks": [{"data":"ADLB", "variable":"LYM", "statistic":"MEAN", "args":"ALL", "req":false},
-    {"data":"ADLB", "variable":"NEUT", "statistic":"MEAN", "args":"ALL", "req":false},
-    {"data":"ADLB", "variable":"MONO", "statistic":"MEAN", "args":"ALL", "req":false},
-    {"data":"ADLB", "variable":"EOS", "statistic":"MEAN", "args":"ALL", "req":false},
-    {"data":"ADLB", "variable":"BASO", "statistic":"MEAN", "args":"ALL", "req":false},
-    {"data":"ADLB", "variable":"RBC", "statistic":"MEAN", "args":"ALL", "req":false},
-    {"data":"ADLB", "variable":"HGB", "statistic":"MEAN", "args":"ALL", "req":false},
-    {"data":"ADLB", "variable":"HCT", "statistic":"MEAN", "args":"ALL", "req":false},
-    {"data":"ADLB", "variable":"PLAT", "statistic":"MEAN", "args":"ALL", "req":false}]
+    "blocks": [{"data":"ADLB", "variable":"LYM", "statistic":"MEAN", "stat_arg":"ALL", "req":false},
+    {"data":"ADLB", "variable":"NEUT", "statistic":"MEAN", "stat_arg":"ALL", "req":false},
+    {"data":"ADLB", "variable":"MONO", "statistic":"MEAN", "stat_arg":"ALL", "req":false},
+    {"data":"ADLB", "variable":"EOS", "statistic":"MEAN", "stat_arg":"ALL", "req":false},
+    {"data":"ADLB", "variable":"BASO", "statistic":"MEAN", "stat_arg":"ALL", "req":false},
+    {"data":"ADLB", "variable":"RBC", "statistic":"MEAN", "stat_arg":"ALL", "req":false},
+    {"data":"ADLB", "variable":"HGB", "statistic":"MEAN", "stat_arg":"ALL", "req":false},
+    {"data":"ADLB", "variable":"HCT", "statistic":"MEAN", "stat_arg":"ALL", "req":false},
+    {"data":"ADLB", "variable":"PLAT", "statistic":"MEAN", "stat_arg":"ALL", "req":false}]
   },
   "stan_41_urin": {
     "title": "Table 41: Urinalysis actual values by visit",
-    "blocks": [{"data":"ADLB", "variable":"SPGRAV", "statistic":"MEAN", "args":"ALL", "req":false},
-    {"data":"ADLB", "variable":"PH", "statistic":"MEAN", "args":"ALL", "req":false},
-    {"data":"ADLB", "variable":"COLOR", "statistic":"MEAN", "args":"ALL", "req":false},
-    {"data":"ADLB", "variable":"OCCBLD", "statistic":"MEAN", "args":"ALL", "req":false},
-    {"data":"ADLB", "variable":"GLUCU", "statistic":"MEAN", "args":"ALL", "req":false},
-    {"data":"ADLB", "variable":"KETONES", "statistic":"MEAN", "args":"ALL", "req":false},
-    {"data":"ADLB", "variable":"PROTU", "statistic":"MEAN", "args":"ALL", "req":false},
-    {"data":"ADLB", "variable":"MWBCQU", "statistic":"MEAN", "args":"ALL", "req":false},
-    {"data":"ADLB", "variable":"MWBCU", "statistic":"MEAN", "args":"ALL", "req":false},
-    {"data":"ADLB", "variable":"MRBCQU", "statistic":"MEAN", "args":"ALL", "req":false},
-    {"data":"ADLB", "variable":"MRBCU", "statistic":"MEAN", "args":"ALL", "req":false}]
+    "blocks": [{"data":"ADLB", "variable":"SPGRAV", "statistic":"MEAN", "stat_arg":"ALL", "req":false},
+    {"data":"ADLB", "variable":"PH", "statistic":"MEAN", "stat_arg":"ALL", "req":false},
+    {"data":"ADLB", "variable":"COLOR", "statistic":"MEAN", "stat_arg":"ALL", "req":false},
+    {"data":"ADLB", "variable":"OCCBLD", "statistic":"MEAN", "stat_arg":"ALL", "req":false},
+    {"data":"ADLB", "variable":"GLUCU", "statistic":"MEAN", "stat_arg":"ALL", "req":false},
+    {"data":"ADLB", "variable":"KETONES", "statistic":"MEAN", "stat_arg":"ALL", "req":false},
+    {"data":"ADLB", "variable":"PROTU", "statistic":"MEAN", "stat_arg":"ALL", "req":false},
+    {"data":"ADLB", "variable":"MWBCQU", "statistic":"MEAN", "stat_arg":"ALL", "req":false},
+    {"data":"ADLB", "variable":"MWBCU", "statistic":"MEAN", "stat_arg":"ALL", "req":false},
+    {"data":"ADLB", "variable":"MRBCQU", "statistic":"MEAN", "stat_arg":"ALL", "req":false},
+    {"data":"ADLB", "variable":"MRBCU", "statistic":"MEAN", "stat_arg":"ALL", "req":false}]
   }
 }
