@@ -28,7 +28,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   old <- options()
   on.exit(options(old))
   
-  recipes <- reactiveVal(jsonlite::read_json("recipes.json"))
+  recipes <- reactiveVal(load_recipes("recipes.json"))
   
   observe({
     req(recipes())
@@ -36,7 +36,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     session$sendCustomMessage("recipes", recipes())
   })
   
-  observeEvent( input$help, {
+  observeEvent(input$help, {
     tg_guide$init()$start()
   })
   
@@ -49,32 +49,38 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   })
   
   output$stan_recipe_ui <- renderUI({
-      HTML(paste('
-           <select id="RECIPE" class="selectize-input">
-           <option  id="none">NONE</option>
-           <option  id="stan_3">Table 3: Accounting of Subjects</option>
-           <option  id="stan_5">Table 5: Demography</option>',
-           ifelse("ADAE" %in% names(datafile()),'<option  id="stan_18">Table 18: Overall summary of adverse events</option>',''),
-           ifelse("ADAE" %in% names(datafile()),'<option  id="stan_19">Table 19: Adverse events by system organ class and preferred term sorted by decreasing frequency</option>',''),
-           ifelse("ADAE" %in% names(datafile()),'<option  id="stan_20">Table 20: Adverse events by system organ class and preferred term sorted by alphabetical order</option>',''),
-           ifelse("ADAE" %in% names(datafile()),'<option  id="stan_21">Table 21: Adverse events by system organ class</option>',''),
-           ifelse("ADAE" %in% names(datafile()),'<option  id="stan_23">Table 23: Adverse events by preferred term</option>',''),
-           ifelse("ADAE" %in% names(datafile()),'<option  id="stan_25">Table 25: Severe adverse events by system organ class and preferred term</option>',''),
-           ifelse("ADAE" %in% names(datafile()),'<option  id="stan_26">Table 26: Severe adverse events by preferred term</option>',''),
-           ifelse("ADAE" %in% names(datafile()),'<option  id="stan_29">Table 29: Related adverse events by system organ class and preferred term</option>',''),
-           ifelse("ADAE" %in% names(datafile()),'<option  id="stan_30">Table 30: Serious adverse events by system organ class and preferred term</option>',''),
-           ifelse("ADAE" %in% names(datafile()),'<option  id="stan_31">Table 31: Serious adverse events by preferred term</option>',''),
-           ifelse("ADAE" %in% names(datafile()),'<option  id="stan_33">Table 33: Related serious adverse events by system organ class and preferred term</option>',''),
-           ifelse("ADAE" %in% names(datafile()),'<option  id="stan_34">Table 34: Adverse events that led to discontinuation of study treatment by system organ class and preferred term</option>',''),
-           ifelse("ADAE" %in% names(datafile()),'<option  id="stan_36">Table 36: Adverse events that led to withdrawl from study by system organ class and preferred term</option>',''),
-           ifelse("ADAE" %in% names(datafile()),'<option  id="stan_38">Table 38: Adverse events that led to drug interrupted, dose reduced, or dose increased by system organ class and preferred term</option>',''),
-           ifelse(!rlang::is_empty(loaded_labs()) & chem_params()$exist,'<option  id="tbl41_b">Table 41: Blood Chemistry actual values by visit</option>',''),
-           ifelse(!rlang::is_empty(loaded_labs()) & hema_params()$exist,'<option  id="tbl41_h">Table 41: Hematology actual values by visit</option>',''),
-           ifelse(!rlang::is_empty(loaded_labs()) & urin_params()$exist,'<option  id="tbl41_u">Table 41: Urinalysis actual values by visit</option>',''),
+    req(datafile())
+    
+    opts <- recipes() %>%
+      purrr::imap(~ if (any(recipe_inclusion(.x$blocks, datafile()))) glue::glue('<option id="{.y}">{.x$title}</option>')) %>%
+      purrr::compact() %>%
+      glue::glue_collapse()
+      HTML(paste0('
+           <select id=', session$ns("RECIPE"), ' class="selectize-input">
+           <option  id="none">NONE</option>',
+           opts,
+           # ifelse(!rlang::is_empty(loaded_labs()) & chem_params()$exist,'<option  id="tbl41_b">Table 41: Blood Chemistry actual values by visit</option>',''),
+           # ifelse(!rlang::is_empty(loaded_labs()) & hema_params()$exist,'<option  id="tbl41_h">Table 41: Hematology actual values by visit</option>',''),
+           # ifelse(!rlang::is_empty(loaded_labs()) & urin_params()$exist,'<option  id="tbl41_u">Table 41: Urinalysis actual values by visit</option>',''),
            '</select>'))
   })
   
-  RECIPE <- reactive( if(rlang::is_empty(input$recipe)) "NONE" else input$recipe)
+  observeEvent(input$RECIPE, {
+    if (input$RECIPE != "NONE") {
+      recipe <- recipes()[purrr::map_lgl(recipes(), ~ .x$title == input$RECIPE)][[1]]
+      blocks <- 
+        recipe$blocks %>%
+        `[`(recipe_inclusion(., datafile()))
+      recipe$blocks <- purrr::map(blocks, ~ stat_options(.x, datalist = datafile()))
+    } else {
+      recipe <- list(title = "NONE")
+    }
+    session$sendCustomMessage("submit_recipe", recipe)
+    RECIPE(input$RECIPE)
+  })
+  
+  RECIPE <- reactiveVal()
+  # RECIPE <- reactive( if(rlang::is_empty(input$recipe)) "NONE" else input$recipe)
 
   observeEvent(RECIPE(), {
     req(input$table_title)
