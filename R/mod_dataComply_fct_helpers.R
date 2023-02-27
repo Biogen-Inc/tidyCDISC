@@ -277,7 +277,9 @@ gather_reqs <- function(input, output, session,
       gt::text_transform(
         locations = list(gt::cells_body(columns = c(not_exist_disp), rows = not_exist_disp == "X"),
                          gt::cells_body(columns = c(missing_disp), rows = missing_disp == "X")),
-        fn = function(X) gt::local_image(filename = "inst/app/www/red_x.png", height = 15)
+        fn = function(X) gt::local_image(filename = system.file('app/www', 'red_x.png', package = "tidyCDISC"),
+                                           # "inst/app/www/red_x.png",
+                                         height = 15)
       ) %>%
       gt::tab_header(
         title = paste(ifelse(disp_type == "error", "Required:", "Optional:"),"reconcile variables below"),
