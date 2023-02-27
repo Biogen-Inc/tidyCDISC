@@ -265,7 +265,9 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
         dplyr::mutate(AVISIT = factor(AVISIT,
             levels = awd[order(awd$AVISITN), "AVISIT"][[1]] %>% unique() )) %>%
         dplyr::pull(AVISIT) %>%
-        unique()
+        unique() %>%
+        # Arrange by factor level (AVISITN)
+        sort()
     }
     avisit_words[avisit_words != ""]
   })
