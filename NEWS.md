@@ -1,5 +1,5 @@
 # tidyCDISC 0.2.1
-* Fixed bug in data compliance module (#166)
+* Fixed bug accessing files in "app/www/" (#166)
 
 # tidyCDISC 0.2.0 (CRAN Release)
 
