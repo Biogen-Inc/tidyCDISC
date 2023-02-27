@@ -1,5 +1,7 @@
-# tidyCDISC 0.2.1
+
+# tidyCDISC (development version)
 * Fixed bug accessing files in "app/www/" (#166)
+
 
 # tidyCDISC 0.2.0 (CRAN Release)
 
