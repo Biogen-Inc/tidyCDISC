@@ -56,12 +56,9 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       purrr::compact() %>%
       glue::glue_collapse()
       HTML(paste0('
-           <select id=', session$ns("RECIPE"), ' class="selectize-input">
+           <select id=', session$ns("RECIPE"), ' class="selectize-input RECIPES">
            <option  id="none">NONE</option>',
            opts,
-           # ifelse(!rlang::is_empty(loaded_labs()) & chem_params()$exist,'<option  id="tbl41_b">Table 41: Blood Chemistry actual values by visit</option>',''),
-           # ifelse(!rlang::is_empty(loaded_labs()) & hema_params()$exist,'<option  id="tbl41_h">Table 41: Hematology actual values by visit</option>',''),
-           # ifelse(!rlang::is_empty(loaded_labs()) & urin_params()$exist,'<option  id="tbl41_u">Table 41: Urinalysis actual values by visit</option>',''),
            '</select>'))
   })
   
