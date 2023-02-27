@@ -1,3 +1,4 @@
+#' @importFrom jsonlite read_json
 load_recipes <- function(recipe_file) {
   recipes <- jsonlite::read_json(recipe_file)
   

@@ -50,6 +50,7 @@ Imports:
     gt,
     haven,
     IDEAFilter,
+    jsonlite,
     plotly,
     purrr,
     rlang,
