@@ -27,6 +27,10 @@ jobs:
         with:
           extra-packages: covr
           
+      - name: Install tidyCDISC
+        shell: bash
+        run: R CMD INSTALL --preclean .
+          
       - name: Test coverage
         run: covr::codecov()
         shell: Rscript {0}
