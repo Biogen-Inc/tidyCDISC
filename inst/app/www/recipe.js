@@ -31,5 +31,7 @@ Shiny.addCustomMessageHandler('submit_recipe', function(recipe) {
       $("#droppable_agg").append($(createRecipeBlock(block.statistic, block.data, block.stat_arg, block.stat_options)));
     }
   }
+  
+  Shiny.setInputValue('tableGen_ui_1-recipe', recipe.title)
 })
 }); // $document.ready()

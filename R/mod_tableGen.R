@@ -62,7 +62,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
            '</select>'))
   })
   
-  observeEvent(input$RECIPE, {
+  recipe <- eventReactive(input$RECIPE, {
     if (input$RECIPE != "NONE") {
       recipe <- recipes()[purrr::map_lgl(recipes(), ~ .x$title == input$RECIPE)][[1]]
       blocks <- 
@@ -72,19 +72,18 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     } else {
       recipe <- list(title = "NONE")
     }
-    session$sendCustomMessage("submit_recipe", recipe)
-    RECIPE(input$RECIPE)
+    recipe
   })
   
-  RECIPE <- reactiveVal()
-  # RECIPE <- reactive( if(rlang::is_empty(input$recipe)) "NONE" else input$recipe)
+  observeEvent(recipe(), {
+    session$sendCustomMessage("submit_recipe", recipe())
+    updateSelectInput(session, "COLUMN", selected = if (is.null(recipe()$group_by)) "NONE" else recipe()$group_by)
+    updateTextInput(session, "table_title", value = if (recipe()$title == "NONE") "Table Title" else recipe()$title)
+  })
+  
+  RECIPE <- reactive( if(rlang::is_empty(input$recipe)) "NONE" else input$recipe)
 
-  observeEvent(RECIPE(), {
-    req(input$table_title)
-    val <- ifelse(RECIPE() == "NONE", "Table Title", RECIPE())
-    updateTextInput(session, "table_title", value = val)
-  })
-  
+
   
   # ----------------------------------------------------------------------
   # input prep for table manipulation
@@ -105,19 +104,14 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     return( all_cols )
   })
     
-  output$grp_col_ui <- renderUI({
-    sel_grp <- dplyr::case_when(
-      is.null(RECIPE()) | length(RECIPE()) == 0 ~ "NONE",
-      !is.null(RECIPE()) & RECIPE() != "NONE" ~ "TRT01P",
-      TRUE ~ "NONE"
-    )
-    selectInput(session$ns("COLUMN"), "Group Data By:",
-                choices = c("NONE", categ_vars()),
-                selected = sel_grp
+  observe({
+    updateSelectInput(session, "COLUMN",
+                      choices = c("NONE", categ_vars()),
+                      selected = "NONE"
     )
   })
   
-  
+
   # ----------------------------------------------------------------------
   # convert list of dataframes to a single joined dataframe
   # containing only BDS and ADSL files
@@ -142,17 +136,16 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   
   
   # perform any pre-filters on the data, when a STAN table is selected
-  pre_ADSL <- reactive({
-    req(RECIPE())
-    prep_adsl(ADSL = datafile()$ADSL,input_recipe = RECIPE())
+  pre_ADSL <- eventReactive(input$recipe, {
+    filter_adsl(recipe(), datafile()$ADSL)
   })
   
   # clean_ADAE() now happens inside this reactive!
   # use potentially pre-filtered ADSL when building/ joining w/ ADAE
   # Then filter ADAE based on STAN table selected.
   pre_ADAE <- reactive({
-    req(RECIPE())
-    prep_adae(datafile = datafile(),ADSL = pre_ADSL()$data, input_recipe = RECIPE())
+    req(pre_ADSL())
+    filter_adae(recipe(), datafile(), pre_ADSL()$data)
   })
   
   # Create cleaned up versions of raw data
@@ -329,69 +322,6 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   observe({
     req(AVALS())
     session$sendCustomMessage("my_avals", AVALS())
-  })
-  
-  # Verify if certain lab params exist, and if so, which dataset they live in
-  # in case there are multiple ADLBs- to use later to send data to js side
-  chem_params <- reactive({
-    req(datafile())
-    check_params(datafile(), chem)
-  })
-  hema_params <- reactive({
-    req(datafile())
-    check_params(datafile(), hema)
-  }) 
-  urin_params <- reactive({
-    req(datafile())
-    check_params(datafile(), urin)
-  }) 
-  loaded_labs <- reactive({
-    my_loaded_adams()[substr(my_loaded_adams(),1,4) == "ADLB"] 
-  })
-  
-  
-  # Send to Client (JS) side:
-  # Hematology
-  # Blood Chemistry
-  # Urinalysis
-  
-  # Sending vector of specific params (if they exist) for certain labs (if they exist)
-  observe({
-    req(datafile(), chem_params(), hema_params(), urin_params()) # don't req("ADLBC") because then the custom message will never get sent, and hang up the UI
-
-    send_chem <- send_urin <- send_hema <- c("not","used","fake","vector","to","convert","to","js","array")
-    send_chem_wks <- send_urin_wks <- send_hema_wks <- c("fake_weeky","fake_weeky2")
-    
-    if(!(rlang::is_empty(loaded_labs())) &
-        (chem_params()$exist | hema_params()$exist| urin_params()$exist)
-       ){
-      
-      
-      # Blood Chem
-      if(chem_params()$exist){ # add recipe() = 'tab 41'?
-        send_chem <- chem_params()$vctr
-        send_chem_wks <- chem_params()$tp
-      } 
-      
-      # Hematology
-      if(hema_params()$exist){ # add specific recipe() = 'tab 41'?
-        send_hema <- hema_params()$vctr
-        send_hema_wks <- hema_params()$tp
-      } 
-
-      # Urinalysis
-      if(urin_params()$exist){ # add specific recipe() = 'tab 41'?
-        send_urin <- urin_params()$vctr
-        send_urin_wks <- urin_params()$tp
-      } 
-      
-    } # end of "if labs exist"
-    
-    session$sendCustomMessage("adlbc", list(params = as.vector(send_chem), weeks = as.vector(send_chem_wks)))
-    session$sendCustomMessage("adlbh", list(params = as.vector(send_hema), weeks = as.vector(send_hema_wks)))
-    session$sendCustomMessage("adlbu", list(params = as.vector(send_urin), weeks = as.vector(send_urin_wks)))
-    
-    
   })
   
   # ----------------------------------------------------------------------

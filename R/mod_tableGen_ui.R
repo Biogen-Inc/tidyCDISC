@@ -40,7 +40,7 @@ mod_tableGen_ui <- function(id){
            fluidRow(column(width = 12,
                            div(
                              id = "COLUMN-wrapper",
-                             uiOutput(ns("grp_col_ui"))
+                             selectInput(ns("COLUMN"), "Group Data By:", choices = "NONE", selected = "NONE")
                            ),
                            shinyUI(bootstrapPage(
                              HTML('<button data-toggle="collapse" data-target="#demo" 

@@ -130,7 +130,8 @@ golem::add_utils( "helpers" ) # ran
 
 golem::add_fct("recipe_incl", module = "tableGen")
 golem::add_fct("param_opts", module = "tableGen")
-
+golem::add_fct("filter_adsl", module = "tableGen")
+golem::add_fct("filter_adae", module = "tableGen")
 
 ## External resources - ran
 ## Creates .js and .css files at inst/app/www
