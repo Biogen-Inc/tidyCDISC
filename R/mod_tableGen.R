@@ -28,7 +28,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   old <- options()
   on.exit(options(old))
   
-  recipes <- reactiveVal(load_recipes("recipes.json"))
+  recipes <- reactiveVal(load_recipes(golem::get_golem_options("recipes_json")))
   
   observe({
     req(recipes())
