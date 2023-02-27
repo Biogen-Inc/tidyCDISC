@@ -1,5 +1,9 @@
+
 # tidyCDISC (development version)
-* Arranged visits in dropdown menu under Stats column in chronological order.
+* Fixed bug accessing files in "app/www/" (#166)
+* Arranged visits in dropdown menu under Stats column in chronological order (#154).
+* Fixed bug where wrong values were being passed as options for some lab tables (#169).
+
 
 # tidyCDISC 0.2.0 (CRAN Release)
 
