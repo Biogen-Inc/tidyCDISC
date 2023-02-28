@@ -280,7 +280,7 @@ $(function() {
       var draggableId = ui.draggable.attr("id");
       var df = ui.draggable.closest('ul')[0].classList[1]
       var newid = getNewId(draggableId);
-      var df_key = Object.keys(tpnt_avals).find(el => df.includes(el));
+      var df_key = (tpnt_avals == null ? undefined : Object.keys(tpnt_avals).find(el => df.includes(el)));
       var param_key = (df_key == undefined ? undefined : Object.keys(tpnt_avals[df_key]).find(el => draggableId.includes(el)));
       if (tpnt_avals !== null && df_key != undefined && param_key != undefined) {
         $(this).append(selectBlock(newid, newid.slice(0, -1).toUpperCase(), tpnt_avals[df_key][param_key].tpnt_opts, df));
