@@ -39,17 +39,13 @@ PARAMCD
 PARAMs
 PHUSE
 PHUSE's
-PROC
-Pharma
 Pre
-README
 RStudio
 RTF
 SMEs
 TDF
 TG
 TestDataFactory
-timepoint
 UI
 USUBJID
 UpperCamelCase
@@ -69,6 +65,7 @@ callModule
 checkGroup
 checkboxInput
 df
+draggable
 dropdown
 droppability
 dropzone
@@ -112,5 +109,6 @@ tibble
 ui
 un
 vline
+www
 xpt
 ’s
