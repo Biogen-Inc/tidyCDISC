@@ -56,40 +56,31 @@ knitr::include_graphics("figures/blog-0-2-1/rtf_output.png")
 
 <br> 
 
-Options to further customize RTF output are currently limited, but the development team will be add plans to add new functionality in the future.
+Options to further customize RTF output are currently limited, but the development team plans to add additional functionality in the future.
 
 <br> 
 
-### User-defined footnotes
+### Footnotes!
 
-You may have noticed above, but a "Table footnote" field now allows users to supply a custom footnote onto the bottom of the table output.
+You may have noticed in the example above, but all tables now automatically receive a `Source` and `Run Date` footnote and optionally, can contain a user-defined footnote. The latter is rather straight forward: the new "Table footnote" field allows users to slap a custom footnote onto the bottom of any table output. Just update the text field with any content you want, and it will immediately show up on the table.
 
 <br> 
 
 ```{r, echo=FALSE, out.width="80%", fig.align = 'center'}
-knitr::include_graphics("figures/blog-0-2-1/table_footnote_field.png")
+knitr::include_graphics("figures/blog-0-2-1/table_footnote_field_arrow.png")
 ```
 
 <br>
 
 ```{r, echo=FALSE, out.width="80%", fig.align = 'center'}
-knitr::include_graphics("figures/blog-0-2-1/table_footnote_output.png")
+knitr::include_graphics("figures/blog-0-2-1/table_footnote_output_arrow.png")
 ```
 
 <br>
 
-### Automatic footnote with `Source` and `Run Date`
-
-A footnote with the Source and Run Date is automatically added to all table output
+Next, you can probably guess that all tables generated from the app will receive a `Source` and `Run Date` footnote. The '`Run Date` field is self-explanatory, cataloging the date in which the analysis was run. Conversely, the `Source` entry will vary depending on the context in which the table was produced. For example, if the output was created and downloaded in the application, the source will always display: "tidyCDISC app". However, when a reproducible R script is downloaded and run locally, `Source` will instead record the file location of the data used to produce the output. Give it a try!
 
 <br> 
-
-```{r, echo=FALSE, out.width="90%", fig.align = 'center'}
-knitr::include_graphics("figures/blog-0-2-1/source_footnote.png")
-```
-
-<br> 
-
 
 
 ### Display analysis timepoints for each visit
