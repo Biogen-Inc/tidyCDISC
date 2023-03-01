@@ -1,4 +1,10 @@
+
 # tidyCDISC (development version)
+* Fixed bug accessing files in "app/www/" (#166)
+* Arranged visits in dropdown menu under Stats column in chronological order (#154).
+* Fixed bug where wrong values were being passed as options for some lab tables (#169).
+* Fixed bug where draggable blocks were not working without inclusion of datasets with ATPT (#173)
+* Fixed bug where selected filters were not being applied in the Population Explorer when apply filters was toggled (#175)
 
 
 # tidyCDISC 0.2.0 (CRAN Release)

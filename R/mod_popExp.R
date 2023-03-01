@@ -190,7 +190,7 @@ mod_popExp_server <- function(input, output, session, datafile) {
     data = reactive(feed_filter()[filter_cols()]),    # the name of your pre-processed data
     verbose = FALSE)
   
-  filtered_data <- eventReactive(filters(), {
+  filtered_data <- reactive({
     if (input$apply_filters == FALSE) {
       all_data()
     } else if (any(regexpr("%>%",capture.output(attr(filters(), "code"))) > 0)) {
@@ -203,7 +203,8 @@ mod_popExp_server <- function(input, output, session, datafile) {
     } else {
       feed_filter()
     }
-  })
+  }) %>%
+    bindEvent(filters(), input$apply_filters)
   
   
   # Update datset, depending on apply_filters or filtered_data() changing
