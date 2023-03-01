@@ -78,14 +78,33 @@ knitr::include_graphics("figures/blog-0-2-1/table_footnote_output_arrow.png")
 
 <br>
 
-Next, you can probably guess that all tables generated from the app will receive a `Source` and `Run Date` footnote. The '`Run Date` field is self-explanatory, cataloging the date in which the analysis was run. Conversely, the `Source` entry will vary depending on the context in which the table was produced. For example, if the output was created and downloaded in the application, the source will always display: "tidyCDISC app". However, when a reproducible R script is downloaded and run locally, `Source` will instead record the file location of the data used to produce the output. Give it a try!
+Next, you can probably guess that all tables generated in the app will now receive a `Source` and `Run Date` footnote. The '`Run Date` field is self-explanatory, cataloging the date in which the analysis was run. Conversely, the `Source` entry will vary depending on the context in which the table was produced. For example, if the output was created and downloaded in the application, the `Source` will always display: "tidyCDISC app". However, when the user doesn't upload the CDISC Pilot data and then a reproducible R script is downloaded and run locally, `Source` will record the file location of the data used to produce the output. **Give it a try!**
 
 <br> 
 
 
-### Display analysis timepoints for each visit
+### Break out by "analysis time point"
 
-If the analysis timepoint (ATPT) variable is present in a dataset, you have the option in the Table Generator to display the results at each timepoint of a visit. Under the Variables block, you can select “ALL” timepoints or individual timepoints. If you drag multiple variables, you can select timepoints for each variable.
+The table generator can now intelligently identify when your `BDS` data contains more than one value (`AVAL`) for any parameter (`PARAM`) and visit. This most frequently happens in the presence of an analysis time point (`ATPT`) variable(s) in the data. The presence of `ATPT`-style variables are common in `ADVS` and `ADEG` datasets, to name a few. Prior to this enhancement, the values were aggregated together but now you can display output for each time point measured during a visit. To take advantage, watch for a new dropdown that appears on your variable blocks after they've been placed in the drop zone. Below is an example when `ATPT` exists in the uploaded `ADVS` data. When applicable, you can select "NONE" to revert to the old behavior of aggregating all time points. Conversely, selecting “ALL” will display output for each time point value available. In the example below example, that would produce a table containing a descriptive statistics on diastolic blood pressure while (1) lying down for 5 minutes, (2) after standing for 1 minute, and again (3) after standing for 3 minutes. Notice how these three outputs are created for each visit below.
+
+<br> 
+
+```{r, echo=FALSE, out.width="80%", fig.align = 'center'}
+knitr::include_graphics("figures/blog-0-2-1/select_all.png")
+```
+
+<br>
+
+```{r, echo=FALSE, out.width="80%", fig.align = 'center'}
+knitr::include_graphics("figures/blog-0-2-1/select_all_output.png")
+```
+
+
+
+<br>
+
+Last, you can (of course) select only one specific time point to display that measurement (and only that measurement). Let's see what that looks like (below) by selecting "After standing for 1 minute" and displaying "All" visits in our `MEAN` stat block:
+ 
 
 <br> 
 
@@ -101,84 +120,8 @@ knitr::include_graphics("figures/blog-0-2-1/atpt_output.png")
 
 <br>
 
-### Select “ALL” timepoints and/or visits
-
-If a time- or visit-based statistic is chosen in the Table Generator, you can select “ALL” for the timepoints and/or visits. “ALL” is now the default value, and you can change it manually to a single timepoint or visit.
-
-<br> 
-
-```{r, echo=FALSE, out.width="80%", fig.align = 'center'}
-knitr::include_graphics("figures/blog-0-2-1/select_all.png")
-```
-
-<br>
-
-```{r, echo=FALSE, out.width="80%", fig.align = 'center'}
-knitr::include_graphics("figures/blog-0-2-1/select_all_output.png")
-```
-
-<br>
-
 ### “ALL” is default visit selection for Table 41
 
-For Table 41 (“Blood Chemistry actual values by visit”), the visit dropdown menu for Stats now has “ALL” as the default selection. All visits will be selected for each Variable selected. You can always manually change it to a single visit if you like.
-
-<br> 
-
-```{r, echo=FALSE, out.width="80%", fig.align = 'center'}
-knitr::include_graphics("figures/blog-0-2-1/table41_all.png")
-```
-
-<br> 
-
-## Changes to Population Explorer
-
-### Population Explorer filtering depends on datasets
-
-The columns available for filtering in the Population Explorer now depend upon the dataset(s) selected for filtering.
-
-You can see which datasets are loaded on the Data tab. In this case, the ADSL, ADVS, ADAE, and ADLBC datasets are loaded.
-
-
-<br> 
-
-```{r, echo=FALSE, out.width="40%", fig.align = 'center'}
-knitr::include_graphics("figures/blog-0-2-1/pe_data_upload.png")
-```
-
-<br> 
-
-In the Population Explorer, click on the field “Filter on Variable(s) in a loaded ADaM” and select the dataset you want to filter on:
-
-<br> 
-
-```{r, echo=FALSE, out.width="40%", fig.align = 'center'}
-knitr::include_graphics("figures/blog-0-2-1/pe_dataset.png")
-```
-
-<br> 
-
-After you select a dataset, click on the Add Filter button and you will see a dropdown with the variables in the selected dataset.
-
-<br> 
-
-```{r, echo=FALSE, out.width="40%", fig.align = 'center'}
-knitr::include_graphics("figures/blog-0-2-1/pe_vars.png")
-```
-
-<br> 
-
-Click on one of the variables, and a field will appear where you can select the values for that variable:
-
-<br> 
-
-```{r, echo=FALSE, out.width="40%", fig.align = 'center'}
-knitr::include_graphics("figures/blog-0-2-1/pe_vals.png")
-```
-
-<br> 
-
-AARON: Do we want to include the following Miscellaneous enhancements?
 
 ## Miscellaneous enhancements 
 
