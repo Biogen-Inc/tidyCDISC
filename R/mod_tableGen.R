@@ -449,7 +449,13 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     }
   })
   
+  trigger <- reactiveVal(0)
+  observe({
+    trigger(trigger() + 1)
+  }, priority = -100) %>%
+    bindEvent(blocks_and_functions(), is_grp_col_adae(), use_data_reactive(), pre_filter_msgs(), ae_data(), all_data(), use_preferred_pop_data(), total_df(), column())
   
+  trigger_d <- trigger %>% debounce(250)
   # create a gt table output by mapping over each row in the block input
   # and performing the correct statistical method given the blocks S3 class
   for_gt <- reactive({
@@ -474,7 +480,8 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
                total_df(),
                column())
     return(d)
-  })
+  }) %>%
+    bindEvent(trigger_d())
   
   output$for_gt_table <- renderTable({ for_gt() })
   
