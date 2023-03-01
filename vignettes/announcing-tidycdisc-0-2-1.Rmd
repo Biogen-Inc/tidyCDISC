@@ -120,38 +120,32 @@ knitr::include_graphics("figures/blog-0-2-1/atpt_output.png")
 
 <br>
 
-### “ALL” is default visit selection for Table 41
+### tidyCDISC::tg_gt()
+
+Engineered more user-friendly function to create the Table Generator output from the block data
 
 
-## Miscellaneous enhancements 
+### Other enhancements 
+
+- Added `OS Health` and `riskmetric` badges to the `README`
+
+- Fixed filtering module in Population Explorer where columns for non-selected datasets would erroneously display
 
 - Added an app.R file so that the Shiny app can be run directly from `shiny::runGitHub()` or `runUrl()`
 
-- Ensured Table Generator output automatically updates the table name when a "standard analysis" is selected
+- Table title automatically when a "standard analysis" is selected
 
-- Engineered more user-friendly function to create the Table Generator output from the block data
-
-- Cleaned up downloadable R Script to replicate Table Generator output
+- “ALL” is now the default visit selection for standard analysis 41
 
 - Fixed bug where `data_from` was erroneously listed as a grouping option in the Population Explorer
 
-- Cleaned up JS to "standard analyses" drop down
 
-
-AARON: The below section is copied from the previous release. Modify?
 
 ## Contributions On the horizon
 
-There's still a long list of improvements we can make to `tidyCDISC` to help users incorporate into existing workflows within their respective companies. The end goal is to continue to develop `tidyCDISC` until it's users can't help but "fall into a pit of success". To start, we have our sights on the table generator:
+There's still a long list of improvements we can make to `tidyCDISC` to help users incorporate into existing workflows within their respective companies. The end goal is to continue to develop `tidyCDISC` until it's users can't help but "fall into a pit of success".
 
-- **An improved UI for the Table Generator**. There are a number of standard analysis tables that are low hanging fruit and could likely be added right now. However, the current user interface poses a slight barrier to some more complex tables typically prepared for submissions. As such, we feel there needs to be a little more space to add options to each layer (or row in the drop zone) of a table.
-
-- **Compare app output with SAS output**. If your goal is to use `tidyCDISC` for visual QC in parallel to your SAS programming efforts, it would be really convenient to compare the app's results to your own without having to sift with your own eye balls. `tidyCDISC` need only allow users to upload SAS results as `sas7bdat` file to generate R's version of a PROC COMPARE.
-
-
-## We need your help
-
-Does `tidyCDISC` not work for you? [Tell us why.](https://github.com/Biogen-Inc/tidyCDISC/issues) Is there something different about the way you (or your company) handles certain tables / analyses? We want to know about it. Do you have a passion to see clinical trials analysis in R come to fruition in the next few years? Help us shape the process. Do you want to advance the industry forward by contributing to an open source project? Become a `tidyCDISC` developer!
+So we want to hear from you! Does `tidyCDISC` not work for you? then [tell us why.](https://github.com/Biogen-Inc/tidyCDISC/issues) Is there something different about the way you (or your company) handles certain tables / analyses? We want to know about it. Do you have a passion to see clinical trials analysis in R come to fruition in the next few years? Help us shape the process. Do you want to advance the industry forward by contributing to an open source project? Become a `tidyCDISC` developer!
 
 whether you have time to contribute code to the project or not, we appreciate your feedback. We'd love to hear about any issues or improvements you'd like to see in the app by opening an [issue](https://github.com/Biogen-Inc/tidyCDISC/issues) in GitHub!
 
