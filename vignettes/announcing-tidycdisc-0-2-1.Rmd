@@ -8,6 +8,7 @@ vignette: >
 ---
 
 ```{r, include = FALSE}
+library(fontawesome)
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
@@ -18,34 +19,32 @@ knitr::opts_chunk$set(
 Version 0.2.1 of `tidyCDISC` was released in March, 2023 and provides improvements to existing functionality, introduces new features, and squashes some nasty bugs. As you'll read, most of the changes impact the the `Table Generator`.
 
 
+## Impacting all Modules/ Tabs
 
-## Study ID prominently displayed 
+### Study ID prominently displayed 
 
-After datasets are loaded into the application, the Study ID (or IDs, if there are multiple studies) will be displayed on each tab. This lets you easily see which studies you have loaded.
+After datasets are loaded into the application, the Study ID value is now displayed on each tab just above the content on each tab. This quickly reminds the user of which study they're analyzing, especially if they have multiple study analyses open at the same time!
 
 <br>
 
 ```{r, echo=FALSE, out.width="90%", fig.align = 'center'}
-knitr::include_graphics("figures/blog-0-2-1/studyid.png")
+knitr::include_graphics("figures/blog-0-2-1/studyid_arrow.png")
 ```
 
 <br>
 
 
-## Changes to Table Generator
+## Table Generator Enhancements
 
-Several new features and enhancements have been added to the Table Generator.
 
-<br> 
+### Export tables to RTF
 
-### RTF export option for tables
-
-You can now export your table from the Table Generator as an RTF document. After you generate your table on the screen, select RTF as the Download Type and click on the Download Table button. It will ask you for the file name and location of the RTF document, and then you can open the document to view.
+That's right! Users can (finally) export any table as an RTF document. After you've perfected the design of your table in the app, select `r fa(name = "circle-dot", fill = "blue", height = "1em")` **RTF** as the Download Type and click on the Download Table button. It will ask you for the file name and location of the RTF document, and then you can open the document to view.
 
 <br> 
 
 ```{r, echo=FALSE, out.width="80%", fig.align = 'center'}
-knitr::include_graphics("figures/blog-0-2-1/download_table.png")
+knitr::include_graphics("figures/blog-0-2-1/download_table_arrow.png")
 ```
 
 <br> 
@@ -57,25 +56,13 @@ knitr::include_graphics("figures/blog-0-2-1/rtf_output.png")
 
 <br> 
 
-The RTF document is generated using the `gt` package. Options for customization of RTF output are currently limited, but we will be adding new features as they are implemented in the `gt` package.
-
-<br> 
-
-### Automatic footnote with Source and Run Date
-
-A footnote with the Source and Run Date is automatically added to all tables now.
-
-<br> 
-
-```{r, echo=FALSE, out.width="90%", fig.align = 'center'}
-knitr::include_graphics("figures/blog-0-2-1/source_footnote.png")
-```
+Options to further customize RTF output are currently limited, but the development team will be add plans to add new functionality in the future.
 
 <br> 
 
 ### User-defined footnotes
 
-A Table Footnote field has been added where a user can enter a custom footnote. The footnote will be displayed below the Source footnote.
+You may have noticed above, but a "Table footnote" field now allows users to supply a custom footnote onto the bottom of the table output.
 
 <br> 
 
@@ -90,6 +77,20 @@ knitr::include_graphics("figures/blog-0-2-1/table_footnote_output.png")
 ```
 
 <br>
+
+### Automatic footnote with `Source` and `Run Date`
+
+A footnote with the Source and Run Date is automatically added to all table output
+
+<br> 
+
+```{r, echo=FALSE, out.width="90%", fig.align = 'center'}
+knitr::include_graphics("figures/blog-0-2-1/source_footnote.png")
+```
+
+<br> 
+
+
 
 ### Display analysis timepoints for each visit
 
