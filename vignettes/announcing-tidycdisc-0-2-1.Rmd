@@ -1,8 +1,8 @@
 ---
-title: "Announcing `tidyCDISC 0.2.0`"
+title: "`tidyCDISC 0.2.1` is out!"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Announcing `tidyCDISC 0.2.0`}
+  %\VignetteIndexEntry{`tidyCDISC 0.2.1` is out!}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -15,33 +15,18 @@ knitr::opts_chunk$set(
 )
 ```
 
-Version 0.2.0 of tidyCDISC has just been released and provides many improvements and new features. This new version has some new features for the Table Generator, as well as some general changes, enhancements, and bug fixes.
+Version 0.2.1 of `tidyCDISC` was released in March, 2023 and provides improvements to existing functionality, introduces new features, and squashes some nasty bugs. As you'll read, most of the changes impact the the `Table Generator`.
 
 
-##  General changes
 
+## Study ID prominently displayed 
 
-### `OS Health` and `riskmetric` badges
-
-The `OS Health` and `riskmetric` badges are now displayed in the README.md file.
-
-<br>
-
-```{r, echo=FALSE, out.width="80%", fig.align = 'center'}
-knitr::include_graphics("figures/blog-0-2-0/badges.png")
-```
-
-<br>
-
-
-### Study ID displayed 
-
-After you have selected and loaded your datasets, the Study ID (or IDs, if there are multiple studies) will be displayed on each tab. This lets you easily see which studies you have loaded.
+After datasets are loaded into the application, the Study ID (or IDs, if there are multiple studies) will be displayed on each tab. This lets you easily see which studies you have loaded.
 
 <br>
 
 ```{r, echo=FALSE, out.width="90%", fig.align = 'center'}
-knitr::include_graphics("figures/blog-0-2-0/studyid.png")
+knitr::include_graphics("figures/blog-0-2-1/studyid.png")
 ```
 
 <br>
@@ -60,14 +45,14 @@ You can now export your table from the Table Generator as an RTF document. After
 <br> 
 
 ```{r, echo=FALSE, out.width="80%", fig.align = 'center'}
-knitr::include_graphics("figures/blog-0-2-0/download_table.png")
+knitr::include_graphics("figures/blog-0-2-1/download_table.png")
 ```
 
 <br> 
 
 
 ```{r, echo=FALSE, out.width="90%", fig.align = 'center'}
-knitr::include_graphics("figures/blog-0-2-0/rtf_output.png")
+knitr::include_graphics("figures/blog-0-2-1/rtf_output.png")
 ```
 
 <br> 
@@ -83,7 +68,7 @@ A footnote with the Source and Run Date is automatically added to all tables now
 <br> 
 
 ```{r, echo=FALSE, out.width="90%", fig.align = 'center'}
-knitr::include_graphics("figures/blog-0-2-0/source_footnote.png")
+knitr::include_graphics("figures/blog-0-2-1/source_footnote.png")
 ```
 
 <br> 
@@ -95,13 +80,13 @@ A Table Footnote field has been added where a user can enter a custom footnote. 
 <br> 
 
 ```{r, echo=FALSE, out.width="80%", fig.align = 'center'}
-knitr::include_graphics("figures/blog-0-2-0/table_footnote_field.png")
+knitr::include_graphics("figures/blog-0-2-1/table_footnote_field.png")
 ```
 
 <br>
 
 ```{r, echo=FALSE, out.width="80%", fig.align = 'center'}
-knitr::include_graphics("figures/blog-0-2-0/table_footnote_output.png")
+knitr::include_graphics("figures/blog-0-2-1/table_footnote_output.png")
 ```
 
 <br>
@@ -113,13 +98,13 @@ If the analysis timepoint (ATPT) variable is present in a dataset, you have the 
 <br> 
 
 ```{r, echo=FALSE, out.width="80%", fig.align = 'center'}
-knitr::include_graphics("figures/blog-0-2-0/atpt_dropdown.png")
+knitr::include_graphics("figures/blog-0-2-1/atpt_dropdown.png")
 ```
 
 <br>
 
 ```{r, echo=FALSE, out.width="80%", fig.align = 'center'}
-knitr::include_graphics("figures/blog-0-2-0/atpt_output.png")
+knitr::include_graphics("figures/blog-0-2-1/atpt_output.png")
 ```
 
 <br>
@@ -131,13 +116,13 @@ If a time- or visit-based statistic is chosen in the Table Generator, you can se
 <br> 
 
 ```{r, echo=FALSE, out.width="80%", fig.align = 'center'}
-knitr::include_graphics("figures/blog-0-2-0/select_all.png")
+knitr::include_graphics("figures/blog-0-2-1/select_all.png")
 ```
 
 <br>
 
 ```{r, echo=FALSE, out.width="80%", fig.align = 'center'}
-knitr::include_graphics("figures/blog-0-2-0/select_all_output.png")
+knitr::include_graphics("figures/blog-0-2-1/select_all_output.png")
 ```
 
 <br>
@@ -149,7 +134,7 @@ For Table 41 (“Blood Chemistry actual values by visit”), the visit dropdown 
 <br> 
 
 ```{r, echo=FALSE, out.width="80%", fig.align = 'center'}
-knitr::include_graphics("figures/blog-0-2-0/table41_all.png")
+knitr::include_graphics("figures/blog-0-2-1/table41_all.png")
 ```
 
 <br> 
@@ -166,7 +151,7 @@ You can see which datasets are loaded on the Data tab. In this case, the ADSL, A
 <br> 
 
 ```{r, echo=FALSE, out.width="40%", fig.align = 'center'}
-knitr::include_graphics("figures/blog-0-2-0/pe_data_upload.png")
+knitr::include_graphics("figures/blog-0-2-1/pe_data_upload.png")
 ```
 
 <br> 
@@ -176,7 +161,7 @@ In the Population Explorer, click on the field “Filter on Variable(s) in a loa
 <br> 
 
 ```{r, echo=FALSE, out.width="40%", fig.align = 'center'}
-knitr::include_graphics("figures/blog-0-2-0/pe_dataset.png")
+knitr::include_graphics("figures/blog-0-2-1/pe_dataset.png")
 ```
 
 <br> 
@@ -186,7 +171,7 @@ After you select a dataset, click on the Add Filter button and you will see a dr
 <br> 
 
 ```{r, echo=FALSE, out.width="40%", fig.align = 'center'}
-knitr::include_graphics("figures/blog-0-2-0/pe_vars.png")
+knitr::include_graphics("figures/blog-0-2-1/pe_vars.png")
 ```
 
 <br> 
@@ -196,7 +181,7 @@ Click on one of the variables, and a field will appear where you can select the 
 <br> 
 
 ```{r, echo=FALSE, out.width="40%", fig.align = 'center'}
-knitr::include_graphics("figures/blog-0-2-0/pe_vals.png")
+knitr::include_graphics("figures/blog-0-2-1/pe_vals.png")
 ```
 
 <br> 
