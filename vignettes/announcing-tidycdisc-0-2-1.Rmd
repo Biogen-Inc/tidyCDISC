@@ -120,24 +120,26 @@ knitr::include_graphics("figures/blog-0-2-1/atpt_output.png")
 
 <br>
 
-### tidyCDISC::tg_gt()
+### Simplified function call to reproduce tables
 
-Engineered more user-friendly function to create the Table Generator output from the block data
+If you're using `tidyCDISC` as an R script generator for reproducing your favorite tables, then your R files just a little cleaner. We've engineered a user-friendly function called `tidyCDISC::tg_gt()` that consolidates a lot of the code used to easily generate a table from the "block data". If you don't know what block data is, it's basically just configuration data.frame you've developed via the drag and drop interface in the app. In other words, "Block data" tells `tidyCDISC` how to build the table, but don't worry about it too much for now. The next release of `tidyCDISC` will include code that helps users manually create "block data" in a lot more intuitive way.
+
+For more information on this releases' new function, run `?tidyCDISC::tg_gt` in your R console AND download an R script from the app to see it in action.
 
 
 ### Other enhancements 
 
 - Added `OS Health` and `riskmetric` badges to the `README`
 
-- Fixed filtering module in Population Explorer where columns for non-selected datasets would erroneously display
+- Resolved issue when filtering module in Population Explorer where columns for non-selected datasets would display erroneously
 
 - Added an app.R file so that the Shiny app can be run directly from `shiny::runGitHub()` or `runUrl()`
 
-- Table title automatically when a "standard analysis" is selected
+- Table title populates automatically when a "standard analysis" is selected
 
 - “ALL” is now the default visit selection for standard analysis 41
 
-- Fixed bug where `data_from` was erroneously listed as a grouping option in the Population Explorer
+- Fixed bug where erroneously variable was listed as a grouping option in the Population Explorer
 
 
 
