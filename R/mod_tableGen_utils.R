@@ -604,7 +604,15 @@ create_gt_table <- function(data, input_table_title, input_table_footnote,
                      rows = stringr::str_detect(Variable,'&nbsp;') |
                        stringr::str_detect(Variable,'<b>') |
                        stringr::str_detect(Variable,'</b>')) %>%
-    gt::tab_options(table.width = gt::px(700)) %>%
+    gt::tab_options(table.width = gt::px(700),
+                    # row_group.border.bottom.style = "none",
+                    # table_body.hlines.style = "none"
+                    
+                    row_group.border.bottom.style = "none",
+                    table_body.hlines.style = "none",
+                    table.border.top.style = "none",
+                    table.border.bottom.style = "none"
+                    ) %>%
     gt::cols_label(.list = col_for_list_expr(col_names, col_total)) %>%
     gt::tab_header(
       title = gt::md(input_table_title),
