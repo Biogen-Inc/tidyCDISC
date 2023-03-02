@@ -5,7 +5,7 @@
 * Fixed bug where wrong values were being passed as options for some lab tables (#169).
 * Fixed bug where draggable blocks were not working without inclusion of datasets with ATPT (#173)
 * Fixed bug where selected filters were not being applied in the Population Explorer when apply filters was toggled (#175)
-
+* Added vignette announcing release of `v0.2.1`
 
 # tidyCDISC 0.2.0 (CRAN Release)
 
