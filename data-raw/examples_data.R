@@ -1,3 +1,5 @@
+library(dplyr)
+library(gt)
 datalist <- list(ADSL = tidyCDISC::adsl, ADVS = tidyCDISC::advs, ADAE = tidyCDISC::adae, ADLBC = tidyCDISC::adlbc)
 pre_adsl <- tidyCDISC::prep_adsl(datalist$ADSL[1:25,], input_recipe = 'NONE')
 # Create AE data set
@@ -62,7 +64,7 @@ tg_table <- purrr::pmap(list(
                                            group = 'TRT01P',
                                            data = tidyCDISC::data_to_use_str(d, ae_data, bds_data),
                                            totals = total_df)) %>%
-  map(setNames, tidyCDISC::common_rownames(pop_data, 'TRT01P')) %>%
+  purrr::map(setNames, tidyCDISC::common_rownames(pop_data, 'TRT01P')) %>%
   setNames(paste(blockData$gt_group)) %>%
   bind_rows(.id = 'ID') %>%
   mutate(ID = tidyCDISC::pretty_IDs(ID))
