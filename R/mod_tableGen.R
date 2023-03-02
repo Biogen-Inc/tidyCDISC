@@ -965,7 +965,13 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
                  rows = stringr::str_detect(Variable,'&nbsp;') |
                    stringr::str_detect(Variable,'<b>') |
                    stringr::str_detect(Variable,'</b>')) %>%
-          tab_options(table.width = px(700)) %>%
+          tab_options(table.width = px(700),
+                    table.font.names = c('Times', 'Arial'),
+                    row_group.border.top.style = 'none',
+                    row_group.border.bottom.style = 'none',
+                    table_body.hlines.style = 'none',
+                    table.border.top.style = 'none',
+                    table.border.bottom.style = 'none') %>%
           cols_label(.list = tidyCDISC::col_for_list_expr(col_names, col_total)) %>%
           tab_header(
             title = md('{input$table_title}'),
