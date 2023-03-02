@@ -28,7 +28,7 @@ After datasets are loaded into the application, the Study ID value is now displa
 <br>
 
 ```{r, echo=FALSE, out.width="90%", fig.align = 'center'}
-knitr::include_graphics("figures/blog-0-2-1/studyid_arrow.png")
+knitr::include_graphics("figures/blog-0-2-1/studyid_w_arrow.png")
 ```
 
 <br>
