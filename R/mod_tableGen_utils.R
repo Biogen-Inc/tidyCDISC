@@ -605,9 +605,7 @@ create_gt_table <- function(data, input_table_title, input_table_footnote,
                        stringr::str_detect(Variable,'<b>') |
                        stringr::str_detect(Variable,'</b>')) %>%
     gt::tab_options(table.width = gt::px(700),
-                    # row_group.border.bottom.style = "none",
-                    # table_body.hlines.style = "none"
-                    
+                    table.font.names = c("Times", "Arial"),
                     row_group.border.bottom.style = "none",
                     table_body.hlines.style = "none",
                     table.border.top.style = "none",
