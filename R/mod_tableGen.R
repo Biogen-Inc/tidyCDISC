@@ -580,22 +580,8 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     
     data <- for_gt()
     
-    # Add blank row after each ID group
-    
-    # Change factor to character to maintain order of blocks
-    data_factor <- data %>%
-      mutate(ID = factor(ID, levels = unique(ID)))
-    
-    # Add blank rows
-    data_with_blank_rows <- do.call(rbind, by(data, data_factor$ID, rbind, ""))
-    
-    # Populate ID in blank rows
-    ind <- which(data_with_blank_rows$ID == "")
-    data_with_blank_rows$ID[ind] <- data_with_blank_rows$ID[ind - 1]
-    
-    
     # Convert to gt table object
-    gt_tab <- create_gt_table(data_with_blank_rows, 
+    gt_tab <- create_gt_table(data, 
                               input_table_title = input$table_title, 
                               input_table_footnote = input$table_footnote, 
                               col_names = row_names_n(), 
