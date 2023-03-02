@@ -580,22 +580,8 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     
     data <- for_gt()
     
-    # Add blank row after each ID group
-    
-    # Change factor to character to maintain order of blocks
-    data_factor <- data %>%
-      mutate(ID = factor(ID, levels = unique(ID)))
-    
-    # Add blank rows
-    data_with_blank_rows <- do.call(rbind, by(data, data_factor$ID, rbind, ""))
-    
-    # Populate ID in blank rows
-    ind <- which(data_with_blank_rows$ID == "")
-    data_with_blank_rows$ID[ind] <- data_with_blank_rows$ID[ind - 1]
-    
-    
     # Convert to gt table object
-    gt_tab <- create_gt_table(data_with_blank_rows, 
+    gt_tab <- create_gt_table(data, 
                               input_table_title = input$table_title, 
                               input_table_footnote = input$table_footnote, 
                               col_names = row_names_n(), 
@@ -721,7 +707,10 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       if(input$download_type == ".csv") {
         progress$inc(1) # increment progress bar
         
-        write.csv(for_gt(), file, row.names = FALSE)
+        write.csv(
+          for_gt() %>%
+            mutate(ID = ifelse(Variable == "", "", ID))
+            , file, row.names = FALSE)
         progress$inc(1) # increment progress bar
         
       } else if(input$download_type == ".html") {
@@ -979,7 +968,13 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
                  rows = stringr::str_detect(Variable,'&nbsp;') |
                    stringr::str_detect(Variable,'<b>') |
                    stringr::str_detect(Variable,'</b>')) %>%
-          tab_options(table.width = px(700)) %>%
+          tab_options(table.width = px(700),
+                    table.font.names = c('Times', 'Arial'),
+                    row_group.border.top.style = 'none',
+                    row_group.border.bottom.style = 'none',
+                    table_body.hlines.style = 'none',
+                    table.border.top.style = 'none',
+                    table.border.bottom.style = 'none') %>%
           cols_label(.list = tidyCDISC::col_for_list_expr(col_names, col_total)) %>%
           tab_header(
             title = md('{input$table_title}'),

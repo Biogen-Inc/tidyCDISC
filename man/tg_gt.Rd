@@ -2,7 +2,7 @@
 % Please edit documentation in R/mod_tableGen_utils.R
 \name{tg_gt}
 \alias{tg_gt}
-\title{Create the gt table object for TG}
+\title{Prepare the table generator data for output}
 \usage{
 tg_gt(tg_datalist, blockData, total_df, group)
 }
@@ -19,6 +19,6 @@ tg_gt(tg_datalist, blockData, total_df, group)
 a data.frame containing output polished for presentation in `gt`
 }
 \description{
-A wrapper for other functions to create the `gt` object from the data
+Prepare the data.frame so that it's ready for output via `gt` or other
 }
 \keyword{tabGen_repro}
