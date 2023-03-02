@@ -44,7 +44,7 @@ That's right! Users can (finally) export any table as an RTF document. After you
 <br> 
 
 ```{r, echo=FALSE, out.width="80%", fig.align = 'center'}
-knitr::include_graphics("figures/blog-0-2-1/download_table_arrow.png")
+knitr::include_graphics("figures/blog-0-2-1/rtf_output_download_table_arrow.png")
 ```
 
 <br> 
