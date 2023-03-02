@@ -598,7 +598,23 @@ tg_guide <- cicerone::Cicerone$
 #' @noRd
 create_gt_table <- function(data, input_table_title, input_table_footnote,
                             col_names, col_total, subtitle) {
-  data %>%
+  
+  # Add blank row after each ID group
+
+  # Change factor to character to maintain order of blocks
+  data_factor <- data %>%
+    mutate(ID = factor(ID, levels = unique(ID)))
+
+  # Add blank rows
+  data_with_blank_rows <- do.call(rbind, by(data, data_factor$ID, rbind, ""))
+
+  # Populate ID in blank rows
+  ind <- which(data_with_blank_rows$ID == "")
+  data_with_blank_rows$ID[ind] <- data_with_blank_rows$ID[ind - 1]
+
+  
+  
+  data_with_blank_rows %>%
     gt::gt(groupname_col = "ID") %>%
     gt::fmt_markdown(columns = c(Variable),
                      rows = stringr::str_detect(Variable,'&nbsp;') |
@@ -606,7 +622,7 @@ create_gt_table <- function(data, input_table_title, input_table_footnote,
                        stringr::str_detect(Variable,'</b>')) %>%
     gt::tab_options(table.width = gt::px(700),
                     table.font.names = c("Times", "Arial"),
-                    # row_group.border.top.style = "none",
+                    row_group.border.top.style = "none",
                     row_group.border.bottom.style = "none",
                     table_body.hlines.style = "none",
                     table.border.top.style = "none",
