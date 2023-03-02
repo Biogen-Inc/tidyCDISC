@@ -485,9 +485,9 @@ std_footnote <- function(data, source) {
                 style="text-align:left"))
 }
 
-#' Create the gt table object for TG
+#' Prepare the table generator data for output
 #' 
-#' A wrapper for other functions to create the `gt` object from the data
+#' Prepare the data.frame so that it's ready for output via `gt` or other
 #' 
 #' @param tg_datalist A list containing the data frames used to create the table
 #' @param blockData The data for the construction of the blocks in the table
@@ -516,10 +516,24 @@ tg_gt <- function(tg_datalist, blockData, total_df, group) {
   if (rlang::is_empty(tbl_blocks))
     stop("There is no data for the selected pairs of analysis time points and visits.")
   
-  tbl_blocks %>%
+  data <- tbl_blocks %>%
     purrr::map(setNames, tidyCDISC::common_rownames(tg_datalist$POPDAT, group)) %>%
     dplyr::bind_rows(.id = 'ID') %>%
     dplyr::mutate(ID = tidyCDISC::pretty_IDs(ID))
+  
+  # Add blank row after each ID group
+  # Change factor to character to maintain order of blocks
+  data_factor <- data %>%
+    mutate(ID = factor(ID, levels = unique(ID)))
+  
+  # Add blank rows
+  data_with_blank_rows <- do.call(rbind, by(data, data_factor$ID, rbind, ""))
+  
+  # Populate ID in blank rows
+  ind <- which(data_with_blank_rows$ID == "")
+  data_with_blank_rows$ID[ind] <- data_with_blank_rows$ID[ind - 1]
+  
+  return(data_with_blank_rows)
 }
 
 #' Table Generator Cicerone R6 Object 
@@ -599,22 +613,9 @@ tg_guide <- cicerone::Cicerone$
 create_gt_table <- function(data, input_table_title, input_table_footnote,
                             col_names, col_total, subtitle) {
   
-  # Add blank row after each ID group
-
-  # Change factor to character to maintain order of blocks
-  data_factor <- data %>%
-    mutate(ID = factor(ID, levels = unique(ID)))
-
-  # Add blank rows
-  data_with_blank_rows <- do.call(rbind, by(data, data_factor$ID, rbind, ""))
-
-  # Populate ID in blank rows
-  ind <- which(data_with_blank_rows$ID == "")
-  data_with_blank_rows$ID[ind] <- data_with_blank_rows$ID[ind - 1]
-
   
   
-  data_with_blank_rows %>%
+  data %>%
     gt::gt(groupname_col = "ID") %>%
     gt::fmt_markdown(columns = c(Variable),
                      rows = stringr::str_detect(Variable,'&nbsp;') |
