@@ -707,7 +707,10 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       if(input$download_type == ".csv") {
         progress$inc(1) # increment progress bar
         
-        write.csv(for_gt(), file, row.names = FALSE)
+        write.csv(
+          for_gt() %>%
+            mutate(ID = ifelse(Variable == "", "", ID))
+            , file, row.names = FALSE)
         progress$inc(1) # increment progress bar
         
       } else if(input$download_type == ".html") {
