@@ -1,3 +1,5 @@
+# tidyCDISC (development version)
+
 
 # tidyCDISC (development version)
 * Fixed bug accessing files in "app/www/" (#166)
@@ -6,6 +8,8 @@
 * Fixed bug where draggable blocks were not working without inclusion of datasets with ATPT (#173)
 * Fixed bug where selected filters were not being applied in the Population Explorer when apply filters was toggled (#175)
 * Added vignette announcing release of `v0.2.1`
+* Made the html output in the app look slightly more "CSR-like" using minor formatting
+
 
 # tidyCDISC 0.2.0 (CRAN Release)
 
