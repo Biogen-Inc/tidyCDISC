@@ -151,15 +151,17 @@ For more information on this releases' new function, run `?tidyCDISC::tg_gt` in 
 
 - Added `OS Health` and `riskmetric` badges to the `README`
 
-- Resolved issue when filtering module in Population Explorer where columns for non-selected datasets would display erroneously
-
 - Added an app.R file so that the Shiny app can be run directly from `shiny::runGitHub()` or `runUrl()`
 
 - Table title populates automatically when a "standard analysis" is selected
 
 - “ALL” is now the default visit selection for standard analysis 41
 
+- Resolved issue when filtering module in Population Explorer where columns for non-selected datasets would display erroneously
+
 - Fixed bug where erroneously variable was listed as a grouping option in the Population Explorer
+
+- Fixed bug accessing files in "app/www/"
 
 
 
