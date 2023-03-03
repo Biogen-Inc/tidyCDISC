@@ -614,15 +614,16 @@ create_gt_table <- function(data, input_table_title, input_table_footnote,
                             col_names, col_total, subtitle) {
   
   
-  
+  id <- gt::random_id()
   data %>%
-    gt::gt(groupname_col = "ID") %>%
+    gt::gt(groupname_col = "ID", id = id) %>%
     gt::fmt_markdown(columns = c(Variable),
                      rows = stringr::str_detect(Variable,'&nbsp;') |
                        stringr::str_detect(Variable,'<b>') |
                        stringr::str_detect(Variable,'</b>')) %>%
     gt::tab_options(table.width = gt::px(700),
                     table.font.names = c("Times", "Arial"),
+                    table.additional_css = glue::glue('#{id} .gt_table {{font-family: Times, Arial;}}'),
                     row_group.border.top.style = "none",
                     row_group.border.bottom.style = "none",
                     table_body.hlines.style = "none",
