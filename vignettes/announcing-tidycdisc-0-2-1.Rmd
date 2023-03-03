@@ -153,16 +153,17 @@ For more information on this releases' new function, run `?tidyCDISC::tg_gt` in 
 
 - Added an app.R file so that the Shiny app can be run directly from `shiny::runGitHub()` or `runUrl()`
 
-- Table title populates automatically when a "standard analysis" is selected
+- Populate Table title automatically when a "standard analysis" is selected
 
 - “ALL” is now the default visit selection for standard analysis 41
 
-- Resolved issue when filtering module in Population Explorer where columns for non-selected datasets would display erroneously
+- Fixed bug when filtering module in Population Explorer where columns for non-selected datasets would display erroneously
 
 - Fixed bug where erroneously variable was listed as a grouping option in the Population Explorer
 
 - Fixed bug accessing files in "app/www/"
 
+- Fixed bug where draggable blocks were not working without inclusion of datasets with ATPT
 
 
 ## Contributions On the horizon
