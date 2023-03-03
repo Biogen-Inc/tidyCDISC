@@ -33,7 +33,7 @@ Description: Provides users a quick exploratory dive into common
     modules allow for concise filtering & downloading bulk outputs into
     html or pdf formats to save for later.
 License: AGPL (>= 3)
-URL: https://Biogen-Inc.github.io/tidyCDISC/
+URL: https://github.com/Biogen-Inc/tidyCDISC/, https://Biogen-Inc.github.io/tidyCDISC/
 BugReports: https://github.com/Biogen-Inc/tidyCDISC/issues
 Depends: 
     R (>= 2.10)

@@ -7,8 +7,8 @@
 
 [![R-CMD-check](https://github.com/Biogen-Inc/tidyCDISC/workflows/R-CMD-check/badge.svg)](https://github.com/Biogen-Inc/tidyCDISC/actions)
 [![OS
-Health](https://img.shields.io/badge/OS%20Health-86-green)](https://openpharma.github.io/GithubMetrics/)
-[![riskmetric](https://img.shields.io/badge/riskmetric--0.87-red)](https://pharmar.github.io/riskmetric/)
+Health](https://img.shields.io/badge/OS%20Health-71-yellowgreen)](https://openpharma.github.io/GithubMetrics/)
+[![riskmetric](https://img.shields.io/badge/riskmetric-0.48-brightgreen)](https://pharmar.github.io/riskmetric/)
 [![Coverage
 status](https://codecov.io/gh/Biogen-Inc/tidyCDISC/branch/master/graph/badge.svg)](https://codecov.io/github/Biogen-Inc/tidyCDISC?branch=master)
 <!-- badges: end -->
@@ -151,6 +151,43 @@ in the app. Or, you can run the application locally (or deploy it in an
 # Launch the application 
 tidyCDISC::run_app()
 ```
+
+<br>
+
+## Staying current
+
+`tidyCDISC` is an actively developed project, so things are frequently
+changing. As such, there are a number of ways to stay current with the
+latest changes in any user workflows & methods for new (or past)
+releases! First, [our
+blog](https://biogen-inc.github.io/tidyCDISC/articles/Blog.html) covers
+all the new features and squashed bugs with detailed visuals and
+explanations to help you get up to speed. In addition, we have a
+[YouTube channel](https://www.youtube.com/@tidycdiscapp768) that posts
+explain-er videos for special how-to’s, tips, and techniques. Last, the
+[NEWS file](https://biogen-inc.github.io/tidyCDISC/news/index.html) is a
+great resource for a recap on all the changes, with links to issues and
+actual code changes available for your review.
+
+<br>
+
+<br>
+
+<center>
+
+[<img src="man/figures/blog-word-cloud.jpg"
+style="width:200px;float:left;margin-left: 60px;" alt="Blog" />](https://biogen-inc.github.io/tidyCDISC/articles/Blog.html)
+[<img src="man/figures/youtube.png" style="width:200px;" alt="YouTube" />](https://www.youtube.com/@tidycdiscapp768)
+[<img src="man/figures/news.png"
+style="width:200px;float:right;margin-right: 60px;" alt="News" />](https://biogen-inc.github.io/tidyCDISC/news/index.html)
+
+</center>
+
+<br>
+
+<br>
+
+<br>
 
 <br>
 
