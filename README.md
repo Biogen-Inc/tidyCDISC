@@ -8,7 +8,7 @@
 [![R-CMD-check](https://github.com/Biogen-Inc/tidyCDISC/workflows/R-CMD-check/badge.svg)](https://github.com/Biogen-Inc/tidyCDISC/actions)
 [![OS
 Health](https://img.shields.io/badge/OS%20Health-71-yellowgreen)](https://openpharma.github.io/GithubMetrics/)
-[![riskmetric](https://img.shields.io/badge/riskmetric--0.79-red)](https://pharmar.github.io/riskmetric/)
+[![riskmetric](https://img.shields.io/badge/riskmetric-0.48-brightgreen)](https://pharmar.github.io/riskmetric/)
 [![Coverage
 status](https://codecov.io/gh/Biogen-Inc/tidyCDISC/branch/master/graph/badge.svg)](https://codecov.io/github/Biogen-Inc/tidyCDISC?branch=master)
 <!-- badges: end -->
@@ -174,7 +174,6 @@ actual code changes available for your review.
 <br>
 
 <center>
-<!-- {style="float:right; width:60px; margin-left: 20px;"} -->
 
 [<img src="man/figures/blog-word-cloud.jpg"
 style="width:200px;float:left;margin-left: 60px;" alt="Blog" />](https://biogen-inc.github.io/tidyCDISC/articles/Blog.html)
