@@ -367,4 +367,7 @@ transform:rotate(180deg);
   color: dimgrey;
 }
 
+.gt_table {
+  font-family: Times, Arial;
+}
 

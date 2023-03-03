@@ -36,6 +36,27 @@ knitr::include_graphics("figures/blog-0-2-1/studyid_w_arrow.png")
 
 ## Table Generator Enhancements
 
+### Reformatting outputs to look more CSR-like
+
+This is an on-going effort that the `tidyCDISC` dev team has prioritized. The table contains the exact same information as before, but now it resembles what you'd expect a clinical trial CSR output to look like. And overtime, it will get even better! Previously, the output was littered with horizontal lines (as seen below) and leveraged the same font as the rest of the application. However, now the extra lines have been eradicated and "Times New Roman" font leveraged.
+
+
+<br> 
+
+#### Before:
+
+```{r, echo=FALSE, out.width="80%", fig.align = 'center'}
+knitr::include_graphics("figures/blog-0-2-1/hlines_present.png")
+```
+
+<br> 
+
+#### After:
+```{r, echo=FALSE, out.width="90%", fig.align = 'center'}
+knitr::include_graphics("figures/blog-0-2-1/hlines_gone.png")
+```
+
+<br> 
 
 ### Export tables to RTF
 
