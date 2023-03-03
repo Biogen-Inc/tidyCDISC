@@ -578,18 +578,8 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # Create RTF table
   rtf_table <- reactive({
     
-    data <- for_gt()
-    
-    # Convert to gt table object
-    gt_tab <- create_gt_table(data, 
-                              input_table_title = input$table_title, 
-                              input_table_footnote = input$table_footnote, 
-                              col_names = row_names_n(), 
-                              col_total = col_total(), 
-                              subtitle = subtitle_html()) 
-    
     # Add formatting for RTF output
-    rtf_tab <- gt_tab %>%
+    rtf_tab <- gt_table() %>%
       gt::tab_options(
         
         # Not currently possible to change font family or size
