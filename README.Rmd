@@ -137,7 +137,6 @@ tidyCDISC::run_app()
 
 <center>
 
-<!-- {style="float:right; width:60px; margin-left: 20px;"} -->
 [![Blog](man/figures/blog-word-cloud.jpg){style="width:200px;float:left;margin-left: 60px;"}](https://biogen-inc.github.io/tidyCDISC/articles/Blog.html)
 [![YouTube](man/figures/youtube.png){style="width:200px;"}](https://www.youtube.com/@tidycdiscapp768)
 [![News](man/figures/news.png){style="width:200px;float:right;margin-right: 60px;"}](https://biogen-inc.github.io/tidyCDISC/news/index.html)
