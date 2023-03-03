@@ -77,11 +77,15 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   
   observeEvent(recipe(), {
     session$sendCustomMessage("submit_recipe", recipe())
-    updateSelectInput(session, "COLUMN", selected = if (is.null(recipe()$group_by)) "NONE" else recipe()$group_by)
     updateTextInput(session, "table_title", value = if (recipe()$title == "NONE") "Table Title" else recipe()$title)
   })
   
   RECIPE <- reactive( if(rlang::is_empty(input$recipe)) "NONE" else input$recipe)
+  
+  observeEvent(input$recipe, {
+    column(recipe()$group_by)
+    updateSelectInput(session, "COLUMN", selected = if (is.null(recipe()$group_by)) "NONE" else recipe()$group_by)
+  })
 
 
   
@@ -136,44 +140,25 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   
   
   # perform any pre-filters on the data, when a STAN table is selected
-  pre_ADSL <- eventReactive(input$recipe, {
-    filter_adsl(recipe(), datafile()$ADSL)
+  pre_ADSL <- reactiveValues()
+  pre_ADAE <- reactiveValues()
+  observeEvent(input$recipe, {
+    purrr::iwalk(filter_adsl(recipe(), datafile()$ADSL),
+                 ~ {pre_ADSL[[.y]] <- .x})
+    purrr::iwalk(filter_adae(recipe(), datafile(), pre_ADSL$data),
+                 ~ {pre_ADAE[[.y]] <- .x})
   })
-  
-  # clean_ADAE() now happens inside this reactive!
-  # use potentially pre-filtered ADSL when building/ joining w/ ADAE
-  # Then filter ADAE based on STAN table selected.
-  pre_ADAE <- reactive({
-    req(pre_ADSL())
-    filter_adae(recipe(), datafile(), pre_ADSL()$data)
-  })
-  
+
   # Create cleaned up versions of raw data
-  ADSL <- reactive({ 
-    pre_ADSL()$data 
-    # CANNOT inner_join on the ADAE subjects that were filtered because some
-    # subjects had no adverse events so you'd make a mistake by excluding them.
-    # Really, we'd have to identify the subjects in pre_ADSL$data and not in the
-    # datalist$ADAE Then keep those, plus subjects that exist in the inner_join
-    # of pre_ADSL$data & pre_ADAE()$data. Have to take this out of R script
-    # still too ############################################################
-    
-      #%>% 
-      # inner_join(
-      #   pre_ADAE()$data %>%
-      #     distinct(USUBJID)
-      #   )
-  })
   BDS <- reactive({ 
     init <- sapply(datafile(), function(x) "PARAMCD" %in% colnames(x) & !("CNSR" %in% colnames(x)))
     datafile()[init] 
     # datafile()[sapply(datafile(), function(x) "PARAMCD" %in% colnames(x))]
   })
-  ADAE <- reactive({ pre_ADAE()$data })
- 
+
   # combine all BDS data files into one large data set
-  bds_data <- reactive({ 
-    prep_bds(datafile = datafile(), ADSL = ADSL())
+  bds_data <- eventReactive(pre_ADSL$data, { 
+    prep_bds(datafile = datafile(), ADSL = pre_ADSL$data)
     # OLD code removed 2/17/2021
   })
   
@@ -194,10 +179,10 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   
   # apply filters from selected dfs to tg data to create all data
   all_data <- reactive({suppressMessages(bds_data() %>% semi_join(filtered_data()))})
-  ae_data <- reactive({suppressMessages(ADAE() %>% semi_join(filtered_data()))})
+  ae_data <- reactive({req(pre_ADAE$data); suppressMessages(pre_ADAE$data %>% semi_join(filtered_data()))})
   pop_data <- reactive({
     suppressMessages(
-      pre_ADSL()$data %>% # Cannot be ADSL() because that has potentially been filtered to ADAE subj's
+      pre_ADSL$data %>% # Cannot be ADSL() because that has potentially been filtered to ADAE subj's
       semi_join(filtered_data()) %>%
       varN_fctr_reorder()
     )
@@ -364,12 +349,13 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     return(blockData)
   })
   
-  column <- reactive( if (input$COLUMN == "NONE") NULL else input$COLUMN)
-  
+  column <- reactiveVal()
+  observe({column(if (input$COLUMN == "NONE") NULL else input$COLUMN)})
+
 
   # check if the grouping column only exists in the ADAE
   is_grp_col_adae <- reactive({
-    input$COLUMN %in% dplyr::setdiff(colnames(ae_data()), colnames(all_data()))
+    isTRUE(column() %in% dplyr::setdiff(colnames(ae_data()), colnames(all_data())))
   })
   
   # Decide which reactive data frame to use below
@@ -396,23 +382,23 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       distinct(USUBJID) %>% 
       summarise(n_tot = n())
     
-    if (input$COLUMN == "NONE") {
+    if (is.null(column())) {
       df
       
     } else {
       df <- df %>%
         mutate(temp = 'Total') %>%
-        rename_with(~paste(input$COLUMN), "temp")
+        rename_with(~paste(column()), "temp")
       
-      grp_lvls <- get_levels(use_preferred_pop_data()[[input$COLUMN]])  # PUT ADAE() somehow?
+      grp_lvls <- get_levels(use_preferred_pop_data()[[column()]])  # PUT ADAE() somehow?
       xyz <- data.frame(grp_lvls) %>%
-        rename_with(~paste(input$COLUMN), grp_lvls)
+        rename_with(~paste(column()), grp_lvls)
       
       groups <- 
         xyz %>%
         left_join(
           use_preferred_pop_data() %>%
-          group_by(!!sym(input$COLUMN)) %>%
+          group_by(!!sym(column())) %>%
           distinct(USUBJID) %>%
           summarise(n_tot = n())
         )%>%
@@ -427,9 +413,9 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   })
 
   pre_filter_msgs <- reactive({
-    req(RECIPE())
-    paste0(pre_ADSL()$message, "<br/>", pre_ADAE()$message, collapse = "<br/>")
-  })
+    paste0(pre_ADSL$message, "<br/>", pre_ADSL$message, collapse = "<br/>")
+  }) %>%
+    bindEvent(pre_ADSL$message, pre_ADSL$message)
   
   # Create the tables subtitle if the table has been filtered
   subtitle_html <- reactive({
@@ -449,13 +435,6 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     }
   })
   
-  trigger <- reactiveVal(0)
-  observe({
-    trigger(trigger() + 1)
-  }, priority = -100) %>%
-    bindEvent(blocks_and_functions(), is_grp_col_adae(), use_data_reactive(), pre_filter_msgs(), ae_data(), all_data(), use_preferred_pop_data(), total_df(), column())
-  
-  trigger_d <- trigger %>% debounce(250)
   # create a gt table output by mapping over each row in the block input
   # and performing the correct statistical method given the blocks S3 class
   for_gt <- reactive({
@@ -474,15 +453,14 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       stop(paste0("No subjects remain when the following filters are applied.\n        "
                       ,gsub("<br/>", "\n        ", pre_filter_msgs())))
     }
-
+    
     d <- tg_gt(list(ADAE = ae_data(), ADSL = all_data(), POPDAT = use_preferred_pop_data()),
                blocks_and_functions(),
                total_df(),
                column())
     return(d)
-  }) %>%
-    bindEvent(trigger_d())
-  
+  })
+
   output$for_gt_table <- renderTable({ for_gt() })
   
   # remove the first two columns from the row names to use since 
@@ -703,7 +681,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   
   # Depending on data source used in the app, create data for R script
   create_script_data <- reactive({
-    if(any("CDISCPILOT01" %in% ADSL()$STUDYID)){
+    if(any("CDISCPILOT01" %in% pre_ADSL$data$STUDYID)){
       glue::glue("
         # create list of dataframes from CDISC pilot study
         datalist <- list({paste(purrr::map_chr(names(datafile()), ~ paste0(.x, ' = tidyCDISC::', tolower(.x))), collapse = ', ')})
@@ -726,7 +704,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   })
   
   footnote_src <- reactive({
-    if(any("CDISCPILOT01" %in% ADSL()$STUDYID)){
+    if(any("CDISCPILOT01" %in% pre_ADSL$data$STUDYID)){
       "'tidyCDISC app'"
     } else {
       "study_dir"
