@@ -1,14 +1,19 @@
-# tidyCDISC (development version)
+# tidyCDISC 0.2.1 (CRAN Release)
 
+### General
+* Fixed bug accessing files in `app/www/` (#166)
+* Improved documentation
+    * Added vignette announcing release of `v0.2.1`
+    * Added highly visible links to Blog, YouTube, and NEWS file
 
-# tidyCDISC (development version)
-* Fixed bug accessing files in "app/www/" (#166)
-* Arranged visits in dropdown menu under Stats column in chronological order (#154)
-* Fixed bug where wrong values were being passed as options for some lab tables (#169)
+### Table Generator
+* Made the html output in the app look slightly more "CSR-like" using minor formatting tricks (#181)
+* Arranged visits in chronological order for dropdown list found in Stat blocks  (#154)
+* Fixed bug where wrong options were being passed on some lab tables (#169)
 * Fixed bug where draggable blocks were not working without inclusion of datasets with ATPT (#173)
-* Fixed bug where selected filters were not being applied in the Population Explorer when apply filters was toggled (#175)
-* Added vignette announcing release of `v0.2.1`
-* Made the html output in the app look slightly more "CSR-like" using minor formatting
+
+### Population Explorer
+* Fixed bug where selected filters were not being applied when 'Apply Filters' was toggled on (#175)
 
 
 # tidyCDISC 0.2.0 (CRAN Release)

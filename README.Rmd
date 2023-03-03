@@ -26,7 +26,7 @@ source("scripts/riskmetric.R")
   [![R-CMD-check](https://github.com/Biogen-Inc/tidyCDISC/workflows/R-CMD-check/badge.svg)](https://github.com/Biogen-Inc/tidyCDISC/actions)
   [![OS Health](`r badge_health`)](https://openpharma.github.io/GithubMetrics/)
   [![riskmetric](`r badge_riskmetric`)](https://pharmar.github.io/riskmetric/)
-  [![Coverage status](https://codecov.io/gh/Biogen-Inc/tidyCDISC/branch/master/graph/badge.svg)](https://codecov.io/github/Biogen-Inc/tidyCDISC?branch=master)
+  [![Coverage status](https://codecov.io/gh/Biogen-Inc/tidyCDISC/branch/master/graph/badge.svg)](https://app.codecov.io/gh/Biogen-Inc/tidyCDISC/tree/devel)
 <!-- badges: end -->
 
 `tidyCDISC` is a shiny app to easily create custom tables and figures from ADaM-ish data sets.
