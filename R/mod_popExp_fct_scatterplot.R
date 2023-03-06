@@ -150,6 +150,13 @@ app_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y, 
         select_if(~!all(is.na(.))) # remove NA cols
     )
     
+    suppressWarnings(
+      grp_dat <-
+        data %>%
+        dplyr::select(USUBJID, one_of(color, separate)) %>%
+        dplyr::distinct()
+    )
+    
     # Initialize title of variables plotted
     var_title <- paste(unique(y_data$PARAM),"versus", unique(x_data$PARAM))
     
@@ -158,6 +165,7 @@ app_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y, 
       p <-
         y_dat %>%
         inner_join(x_dat) %>%
+        inner_join(grp_dat) %>%
         ggplot2::ggplot() +
         ggplot2::aes_string(x = xvar, y = yvar) +
         ggplot2::xlab(
