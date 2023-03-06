@@ -138,11 +138,13 @@ mod_indvExpPatEvents_server <- function(input, output, session,
             mutate(
               start = START,
               end = END,
-              content = DECODE,
+              content = "",
               group = EVENTTYP,
-              className = DOMAIN
+              className = DOMAIN,
+              type = if_else(is.na(END), "point", "range"),
+              title = DECODE
             ) %>%
-            select(start, end, content, group, className)
+            select(start, end, content, group, className, type, title)
           grp_dat <- 
             uni_rec %>%
             mutate(id = EVENTTYP,
