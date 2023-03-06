@@ -54,11 +54,11 @@ mod_popExp_ui <- function(id, label = "Population Explorer"){
                wellPanel(
                         br(),
                         radioButtons(ns("plot_type"), NULL, 
-                             choices = c("Scatter Plot", 
-                                         "Spaghetti Plot", 
+                             choices = c("Line plot - mean over time",
+                                         "Heatmap - endpoint correlations",
                                          "Box Plot",
-                                         "Line plot - mean over time",
-                                         "Heatmap - endpoint correlations"
+                                         "Scatter Plot", 
+                                         "Spaghetti Plot"
                                          )
                         )
                       )

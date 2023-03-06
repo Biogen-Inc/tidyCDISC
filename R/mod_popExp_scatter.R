@@ -184,6 +184,19 @@ scatterPlot_srv <- function(input, output, session, data, run) {
                  input$value_y, 
                  input$separate, 
                  input$color)
+    # app_scatterplot(data = all_data
+    #   # tidyCDISC::adlbc %>% mutate(fake = ifelse(row_number() %in% 1:25, NA, AGEGR1))
+    #                 , #data(),
+    #   yvar = "DIABP", #input$yvar,
+    #   xvar= "ALP", #input$xvar,
+    #   week_x= "Baseline", #input$week_x,
+    #   value_x= "AVAL", #input$value_x,
+    #   week_y= "Baseline", #input$week_y,
+    #   value_y= "AVAL", #input$value_y,
+    #   separate= "NONE", #input$separate,
+    #   # color= "NONE" #input$color
+    #   color= "AENTMTFL" #input$color
+    #                 )
   })
   
   return(p)
