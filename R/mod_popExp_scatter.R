@@ -85,7 +85,55 @@ scatterPlot_srv <- function(input, output, session, data, run) {
     )
   })
   
+  # generate list of viable color and separate values based on chosen xvar and yvar
   observeEvent(list(input$xvar, input$yvar), {
+    req(input$xvar != "" & input$yvar != "", run())
+
+    # Update grouping variable based on xvar & yvar selection
+    if(input$yvar %in% colnames(data()) & input$xvar %in% colnames(data())){ # neither paramcd
+      group_dat <- data()
+
+    } else if(!(input$yvar %in% colnames(data())) & input$xvar %in% colnames(data())){ # yvar paramcd
+      group_dat <- data() %>%
+        dplyr::filter(PARAMCD == input$yvar) %>%
+        select_if(~!all(is.na(.))) # remove NA cols
+
+    } else if(input$yvar %in% colnames(data()) & !(input$xvar %in% colnames(data()))){ # xvar paramcd
+      group_dat <- data() %>%
+        dplyr::filter(PARAMCD == input$xvar) %>%
+        select_if(~!all(is.na(.))) # remove NA cols
+
+    } else { # both paramcds
+      x_cols <- data() %>%
+        dplyr::filter(PARAMCD == input$xvar) %>%
+        select_if(~!all(is.na(.))) # remove NA cols
+
+      y_cols <- data() %>%
+        dplyr::filter(PARAMCD == input$yvar) %>%
+        select_if(~!all(is.na(.))) # remove NA cols
+
+      group_dat <- x_cols %>% full_join(y_cols)
+    }
+
+    group_dat <- select(group_dat, -data_from)
+
+    # character and factor columns for coloring or separating
+    char_col <- subset_colclasses(group_dat, is.character)
+    fac_col <- subset_colclasses(group_dat, is.factor)
+    group <- sort(c(fac_col, char_col))
+
+    # populate dropdowns with choices
+    updateSelectInput(session, "color",
+                      choices = c("NONE", group),
+                      selected = isolate(input$color))
+    updateSelectInput(session, "separate",
+                      choices = c("NONE", group),
+                      selected = isolate(input$separate))
+
+  })
+  
+  # Do the same thing, bu only if weeks are changed
+  observeEvent(list(input$week_x, input$week_y), {
     req(input$xvar != "" & input$yvar != "", run())
     
     # Update grouping variable based on xvar & yvar selection
@@ -93,24 +141,31 @@ scatterPlot_srv <- function(input, output, session, data, run) {
       group_dat <- data()
       
     } else if(!(input$yvar %in% colnames(data())) & input$xvar %in% colnames(data())){ # yvar paramcd
+      req(input$week_y)
       group_dat <- data() %>% 
         dplyr::filter(PARAMCD == input$yvar) %>% 
+        {if(input$yvar != "HEIGHT") dplyr::filter(., AVISIT == input$week_y) else .} %>%
         select_if(~!all(is.na(.))) # remove NA cols
       
     } else if(input$yvar %in% colnames(data()) & !(input$xvar %in% colnames(data()))){ # xvar paramcd
+      req(input$week_x)
       group_dat <- data() %>% 
         dplyr::filter(PARAMCD == input$xvar) %>% 
+        {if(input$xvar != "HEIGHT") dplyr::filter(., AVISIT == input$week_x) else .} %>%
         select_if(~!all(is.na(.))) # remove NA cols
       
     } else { # both paramcds
+      req(input$week_x, input$week_y)
       x_cols <- data() %>% 
         dplyr::filter(PARAMCD == input$xvar) %>% 
+        {if(input$xvar != "HEIGHT") dplyr::filter(., AVISIT == input$week_x) else .} %>%
         select_if(~!all(is.na(.))) # remove NA cols
-
+      
       y_cols <- data() %>%
         dplyr::filter(PARAMCD == input$yvar) %>% 
+        {if(input$yvar != "HEIGHT") dplyr::filter(., AVISIT == input$week_y) else .} %>%
         select_if(~!all(is.na(.))) # remove NA cols
-
+      
       group_dat <- x_cols %>% full_join(y_cols)
     }
     
@@ -120,7 +175,7 @@ scatterPlot_srv <- function(input, output, session, data, run) {
     char_col <- subset_colclasses(group_dat, is.character)
     fac_col <- subset_colclasses(group_dat, is.factor)
     group <- sort(c(fac_col, char_col))
-                  
+    
     # populate dropdowns with choices
     updateSelectInput(session, "color",
                       choices = c("NONE", group),
@@ -130,6 +185,8 @@ scatterPlot_srv <- function(input, output, session, data, run) {
                       selected = isolate(input$separate))
     
   })
+  
+  
   
   output$include_yvar <- renderUI({
     req(run(),input$yvar %in% data()$PARAMCD)
