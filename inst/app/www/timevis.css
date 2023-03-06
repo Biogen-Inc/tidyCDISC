@@ -46,3 +46,7 @@
 .vis-group .vis-item.vis-point {
   background: none;
 }
+
+.vis-range .vis-item-visible-frame {
+  margin-bottom: -10px;
+}

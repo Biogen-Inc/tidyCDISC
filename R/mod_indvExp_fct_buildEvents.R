@@ -41,6 +41,7 @@ build_events <- function(
   ae_rec <- org_df_events(
     df_name = "ADAE", df_domain_abbr = "AE", df_desc = "Adverse Events"
     , df_st_date_vars = c("AESTDT","ASTDT") # from left to right, use first var that exists
+    , df_en_date_vars = c("AEENDT","AENDT") # from left to right, use first var that exists
     , event_desc_vars = c("AEDECOD","AESEV","AESER")
     , event_desc = 'paste0(AEDECOD, ", AESEV: ", AESEV, ", AESER: ", AESER)'
     , mi_input_checkbox = input_checkbox
@@ -105,6 +106,7 @@ build_events <- function(
   cm_rec <- org_df_events(
     df_name = "ADCM", df_domain_abbr = "CM", df_desc = "Concomitant Meds"
     , df_st_date_vars = c("CMSTDT", "CMSTDTC", "ASTDT")# from left to right, use first var that exists
+    , df_en_date_vars = c("CMENDT", "CMENDTC", "AENDT")# from left to right, use first var that exists
     , event_desc_vars = "CMDECOD"
     , event_desc = 'CMDECOD'
     , mi_input_checkbox = input_checkbox

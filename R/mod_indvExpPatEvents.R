@@ -108,8 +108,8 @@ mod_indvExpPatEvents_server <- function(input, output, session,
           date_cols <- c("Start of Event","End of Event")
         }
         else{
-          date_cols <- "Date of Event"
-          tab <- uni_rec %>% select(EVENTTYP, START, DECODE)
+          date_cols <- c("Date of Event", "End Date of Event")
+          tab <- uni_rec %>% select(EVENTTYP, START, END, DECODE)
         }
         
         output$eventsTable <- DT::renderDataTable(server = FALSE, {  # This allows for downloading entire data set
@@ -137,7 +137,7 @@ mod_indvExpPatEvents_server <- function(input, output, session,
             subset(!is.na(START)) %>%
             mutate(
               start = START,
-              end = END,
+              end = END + 1,
               content = "",
               group = EVENTTYP,
               className = DOMAIN,
