@@ -1,6 +1,6 @@
 # Set options here
 options(golem.app.prod = FALSE) # TRUE = production mode, FALSE = development mode
-options(shiny.fullstacktrace = FALSE)
+options(shiny.fullstacktrace = TRUE)
 # options(shiny.autoload.r=FALSE)
 
 #Detach all loaded packages and clean your environment

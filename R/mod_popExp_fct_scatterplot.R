@@ -128,16 +128,12 @@ app_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y, 
     
     # Select the variables that matter and pivot aval into new column
     suppressWarnings(  
-      # {data} %>%
-      #   dplyr::group_by(USUBJID, AENTMTFL, PARAMCD) %>%
-      #   dplyr::summarise(n = dplyr::n(), .groups = "drop") %>%
-      #   dplyr::filter(n > 1L)
       y_dat <- y_data %>%
         dplyr::select(USUBJID, PARAMCD, value_y, one_of(color, separate)) %>%
         tidyr::pivot_wider(names_from = PARAMCD, values_from = value_y) %>%
-        tidyr::unnest(yvar)# %>% # if their are more than 1 AVAL per Patient, per Visit
-        # select_if(~!all(is.na(.))) # do not use this. If all values are missing
-          # for a certain combination of yvar, week, and value, it will remove the var
+        tidyr::unnest(yvar) %>% # if their are more than 1 AVAL per Patient, per Visit
+        dplyr::mutate(across(where(function(x) all(is.na(x))), ~ "NA" )) #%>% # Convert NA cols
+        # select_if(~!all(is.na(.))) # remove NA cols
     )
     
     # Build plot data for x variable
@@ -151,7 +147,8 @@ app_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y, 
       x_dat <- x_data %>%
         dplyr::select(USUBJID, PARAMCD, value_x, one_of(color, separate)) %>%
         tidyr::pivot_wider(names_from = PARAMCD, values_from = value_x) %>%
-        tidyr::unnest(xvar)# %>% # if their are more than 1 AVAL per Patient, per Visit
+        tidyr::unnest(xvar) %>% # if their are more than 1 AVAL per Patient, per Visit
+        dplyr::mutate(across(where(function(x) all(is.na(x))), ~ "NA" )) #%>% # Convert NA cols
         # select_if(~!all(is.na(.))) # remove NA cols
     )
     
