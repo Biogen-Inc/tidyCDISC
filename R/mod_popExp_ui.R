@@ -34,7 +34,7 @@ mod_popExp_ui <- function(id, label = "Population Explorer"){
                div(id = "pop_cic_adv_filtering", class="filter-accordion",
                  checkboxInput(ns("adv_filtering"), 
                    div(class="filter-container", span("Filter Data ", style="float:left;"), 
-                        span(icon("chevron-down w3-tiny", verify_fa = FALSE), style="float:right;")),
+                        span(icon("chevron-down", verify_fa = FALSE), style="float:right;")),
                    value = FALSE)
                ),
                conditionalPanel(condition = "input.adv_filtering == true", ns = ns,
