@@ -25,52 +25,44 @@
 #' 
 #' @noRd
 app_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y, separate = "NONE", color = "NONE") {
+  
   # ---------------------------
   # x and y are numeric columns
   if (yvar %in% colnames(data) & xvar %in% colnames(data)) {
     
     # If not displaying param var, but a BDS data set is loaded, filter to the first visit
-    if("AVISITN" %in% colnames(data)){
-      suppressWarnings(
-        d <- data %>%
-          filter(AVISITN == min(AVISITN, na.rm = TRUE)) %>%
-          select(USUBJID, xvar, yvar, one_of(color, separate)) %>%
-          distinct()
-      )
-    } else { # otherwise, no need to filter
-      suppressWarnings(
-        d <- data %>%
-          select(USUBJID, xvar, yvar, one_of(color, separate)) %>%
-          distinct()
-      )
-    }
+    suppressWarnings(
+      d <- data %>%
+        {if("AVISITN" %in% colnames(data)) filter(., AVISITN == min(AVISITN, na.rm = TRUE)) else .} %>%
+        select(USUBJID, xvar, yvar, one_of(color, separate)) %>%
+        distinct()%>%
+        dplyr::mutate(across(where(function(x) all(is.na(x))), ~ "NA" )) # Convert NA cols to "NA"
+    )
     
     # Initialize plot
     p <- d %>%
       ggplot2::ggplot() + 
       ggplot2::aes_string(x = xvar, y = yvar) +
       ggplot2::xlab(attr(data[[xvar]], 'label')) + 
-      ggplot2::ylab(attr(data[[yvar]], 'label')) +
-      ggplot2::geom_point(na.rm = TRUE)
+      ggplot2::ylab(attr(data[[yvar]], 'label'))
     
     # Initialize title of variables plotted
     var_title <- paste(attr(data[[yvar]], 'label'), "versus", attr(data[[xvar]], 'label'))
     
-    # --------------------------- 
-    # y numeric, x is paramcd 
+    
+    
+  # --------------------------- 
+  # y numeric, x is paramcd 
   } else if (yvar %in% colnames(data) & !xvar %in% colnames(data)) {
     
     # Filter data by param selected
-    d <- data %>% dplyr::filter(PARAMCD == xvar) 
-    
-    # If yvar is HEIGHT, then don't filter by AVISIT
-    if(xvar != "HEIGHT"){ d <- d %>% filter(AVISIT == week_x) }
-    
-    # select the variables that matter, and get distinct rows to duplicate points aren't plotted
     suppressWarnings(
-      d <- d %>%
+      d <- data %>% dplyr::filter(PARAMCD == xvar) %>%
+        {if(xvar != "HEIGHT") filter(., AVISIT == week_x) else .} %>% # If yvar is HEIGHT, then don't filter by AVISIT
+        # select the variables that matter, and get distinct rows to duplicate points aren't plotted
         dplyr::select(USUBJID, PARAM, PARAMCD, AVISIT, value_x, yvar, one_of(color, separate)) %>%
-        dplyr::distinct()
+        dplyr::distinct() %>%
+        dplyr::mutate(across(where(function(x) all(is.na(x))), ~ "NA" )) # Convert NA cols to "NA"
     )
     
     # Initialize title of variables plotted
@@ -83,24 +75,22 @@ app_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y, 
       ggplot2::xlab(
         glue::glue("{unique(d$PARAM)}: {week_x} ({attr(data[[value_x]], 'label')})")
       ) +
-      ggplot2::ylab(attr(data[[yvar]], 'label')) +
-      ggplot2::geom_point(na.rm = TRUE)
+      ggplot2::ylab(attr(data[[yvar]], 'label'))
     
-    # --------------------------- 
-    # x numeric, y paramcd
+    
+    
+  # --------------------------- 
+  # x numeric, y paramcd
   } else if (!yvar %in% colnames(data) & xvar %in% colnames(data)) {
     
     # Filter data by param selected
-    d <- data %>% dplyr::filter(PARAMCD == yvar)
-    
-    # If yvar is HEIGHT, then don't filter by AVISIT
-    if(yvar != "HEIGHT"){ d <- d %>% filter(AVISIT == week_y) }
-    
-    # select the variables that matter, and get distinct rows to duplicate points aren't plotted
     suppressWarnings(
-      d <- d %>%
-        dplyr::select(USUBJID, PARAM, PARAMCD, AVISIT, value_y, xvar, one_of(color, separate)) %>%
-        dplyr::distinct()
+    d <- data %>% dplyr::filter(PARAMCD == yvar) %>%
+      {if(yvar != "HEIGHT") filter(., AVISIT == week_y) else .} %>% # If yvar is HEIGHT, then don't filter by AVISIT
+      # select the variables that matter, and get distinct rows to duplicate points aren't plotted
+      dplyr::select(USUBJID, PARAM, PARAMCD, AVISIT, value_y, xvar, one_of(color, separate)) %>%
+      dplyr::distinct() %>%
+      dplyr::mutate(across(where(function(x) all(is.na(x))), ~ "NA" )) # Convert NA cols to "NA"
     )
     
     # Initialize title of variables plotted
@@ -113,43 +103,38 @@ app_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y, 
       ggplot2::xlab(attr(data[[xvar]], 'label')) + 
       ggplot2::ylab(
         glue::glue("{unique(d$PARAM)}: {week_y} ({attr(data[[value_y]], 'label')})")
-      ) +
-      ggplot2::geom_point(na.rm = TRUE)
+      )
     
-    # ---------------------------
-    # both paramcds
+    
+    
+  # ---------------------------
+  # both x & y are paramcds
   } else {
     
     # Build plot data for y variable
     y_data <- data %>% dplyr::filter(PARAMCD == yvar)
-    
-    # If yvar is HEIGHT, then don't filter by AVISIT
-    if(yvar != "HEIGHT"){ y_data <- y_data %>% filter(AVISIT == week_y) }
-    
-    # Select the variables that matter and pivot aval into new column
+      
     suppressWarnings(  
       y_dat <- y_data %>%
+        {if(yvar != "HEIGHT") filter(., AVISIT == week_y) else .} %>% # If yvar is HEIGHT, then don't filter by AVISIT
+        # Select the variables that matter and pivot aval into new column
         dplyr::select(USUBJID, PARAMCD, value_y, one_of(color, separate)) %>%
         tidyr::pivot_wider(names_from = PARAMCD, values_from = value_y) %>%
         tidyr::unnest(yvar) %>% # if their are more than 1 AVAL per Patient, per Visit
-        dplyr::mutate(across(where(function(x) all(is.na(x))), ~ "NA" )) #%>% # Convert NA cols
-        # select_if(~!all(is.na(.))) # remove NA cols
+        dplyr::mutate(across(where(function(x) all(is.na(x))), ~ "NA" )) # Convert NA cols to "NA"
     )
     
     # Build plot data for x variable
     x_data <-  data %>% dplyr::filter(PARAMCD == xvar)
     
-    # If yvar is HEIGHT, then don't filter by AVISIT
-    if(xvar != "HEIGHT"){ x_data <- x_data %>% filter(AVISIT == week_x) }
-    
-    # Select the variables that matter and pivot aval into new column
     suppressWarnings(
       x_dat <- x_data %>%
+        {if(xvar != "HEIGHT") filter(., AVISIT == week_x) else . } %>%# If yvar is HEIGHT, then don't filter by AVISIT
+        # Select the variables that matter and pivot aval into new column
         dplyr::select(USUBJID, PARAMCD, value_x, one_of(color, separate)) %>%
         tidyr::pivot_wider(names_from = PARAMCD, values_from = value_x) %>%
         tidyr::unnest(xvar) %>% # if their are more than 1 AVAL per Patient, per Visit
-        dplyr::mutate(across(where(function(x) all(is.na(x))), ~ "NA" )) #%>% # Convert NA cols
-        # select_if(~!all(is.na(.))) # remove NA cols
+        dplyr::mutate(across(where(function(x) all(is.na(x))), ~ "NA" )) # Convert NA cols to "NA"
     )
     
     # Initialize title of variables plotted
@@ -167,10 +152,12 @@ app_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y, 
         ) + 
         ggplot2::ylab(
           glue::glue("{unique(y_data$PARAM)}: {week_y} ({attr(data[[value_y]], 'label')})")
-        ) +
-        ggplot2::geom_point(na.rm = TRUE)
+        ) 
     )
   }
+  
+  
+  
   
   # if separate or color used, include those "by" variables in title
   by_title <- case_when(
@@ -182,6 +169,7 @@ app_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y, 
   
   # Add plot layers common to all graphs
   p <- p + 
+    ggplot2::geom_point(na.rm = TRUE) +
     ggplot2::theme_bw() +
     ggplot2::theme(
       text = ggplot2::element_text(size = 12),
@@ -193,9 +181,10 @@ app_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y, 
     )
   
   # Add in plot layers conditional upon user selection
-  if (separate != "NONE") { p <- p + ggplot2::facet_wrap(stats::as.formula(paste(".~", separate))) }
+  if (separate != "NONE") { 
+    p <- p + ggplot2::facet_wrap(stats::as.formula(paste(".~", separate)), labeller = ggplot2::label_both)}
   if (color != "NONE") { p <- p + ggplot2::aes_string(color = color)}
-  if (by_title != "") {p <- p + ggplot2::theme(plot.margin = ggplot2::margin(t = 1.2, unit = "cm"))}
+  if (by_title != "") {p <- p + ggplot2::theme(plot.margin = ggplot2::margin(t = 1.15, unit = "cm"))}
   
   return(p)
 }

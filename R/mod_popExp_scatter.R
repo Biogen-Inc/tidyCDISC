@@ -190,8 +190,8 @@ scatterPlot_srv <- function(input, output, session, data, run) {
     # app_scatterplot(data = all_data
     #   # tidyCDISC::adlbc %>% mutate(fake = ifelse(row_number() %in% 1:25, NA, AGEGR1))
     #                 , #data(),
-    #   yvar = "DIABP", #input$yvar,
-    #   xvar= "ALP", #input$xvar,
+    #   yvar = "AGE", #input$yvar,
+    #   xvar= "AGE", #input$xvar,
     #   week_x= "Baseline", #input$week_x,
     #   value_x= "AVAL", #input$value_x,
     #   week_y= "Baseline", #input$week_y,

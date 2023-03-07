@@ -71,7 +71,12 @@ mod_popExp_ui <- function(id, label = "Population Explorer"){
                conditionalPanel("input.plot_type === 'Kaplan-Meier Curve'", ns = ns, km_ui(ns("km"))),
                conditionalPanel("input.plot_type === 'Line plot - mean over time'", ns = ns, linePlot_ui(ns("linePlot"))),
                conditionalPanel("input.plot_type === 'Heatmap - endpoint correlations'", ns = ns, heatmap_ui(ns("heatmap")))
-             )
+             ),
+             br(),
+             br(),
+             br(),
+             br(),
+             br()
            ),
            column(width = 9,
                     div(id = "pop_cic_plot", 
