@@ -118,10 +118,10 @@ app_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y, 
       y_dat <- y_data %>%
         {if(yvar != "HEIGHT") filter(., AVISIT == week_y) else .} %>% # If yvar is HEIGHT, then don't filter by AVISIT
         # Select the variables that matter and pivot aval into new column
-        dplyr::select(USUBJID, PARAMCD, value_y, one_of(color, separate)) %>%
+        dplyr::select(USUBJID, AVISIT, PARAMCD, value_y, one_of(color, separate)) %>%
         tidyr::pivot_wider(names_from = PARAMCD, values_from = value_y) %>%
-        tidyr::unnest(yvar) %>% # if their are more than 1 AVAL per Patient, per Visit
-        dplyr::mutate(across(where(function(x) all(is.na(x))), ~ "NA" )) # Convert NA cols to "NA"
+        tidyr::unnest(yvar) #%>% # if their are more than 1 AVAL per Patient, per Visit
+        # dplyr::mutate(across(where(function(x) all(is.na(x))), ~ "NA" )) # Convert NA cols to "NA"
     )
     
     # Build plot data for x variable
@@ -131,20 +131,70 @@ app_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y, 
       x_dat <- x_data %>%
         {if(xvar != "HEIGHT") filter(., AVISIT == week_x) else . } %>%# If yvar is HEIGHT, then don't filter by AVISIT
         # Select the variables that matter and pivot aval into new column
-        dplyr::select(USUBJID, PARAMCD, value_x, one_of(color, separate)) %>%
+        dplyr::select(USUBJID, AVISIT, PARAMCD, value_x, one_of(color, separate)) %>%
         tidyr::pivot_wider(names_from = PARAMCD, values_from = value_x) %>%
-        tidyr::unnest(xvar) %>% # if their are more than 1 AVAL per Patient, per Visit
-        dplyr::mutate(across(where(function(x) all(is.na(x))), ~ "NA" )) # Convert NA cols to "NA"
+        tidyr::unnest(xvar) #%>% # if their are more than 1 AVAL per Patient, per Visit
+        # dplyr::mutate(across(where(function(x) all(is.na(x))), ~ "NA" )) # Convert NA cols to "NA"
     )
     
     # Initialize title of variables plotted
     var_title <- paste(unique(y_data$PARAM),"versus", unique(x_data$PARAM))
     
     # initialize plot
+    suppressWarnings(
+      by_u <- y_dat %>% rowwise() %>% #select(-AVISIT) %>%
+        mutate(across(tidyr::one_of(color, separate), function(x) if(is.na(x)) "NA" else x)) %>%
+        full_join(x_dat %>% rowwise() %>% #select(-AVISIT)
+                    mutate(across(tidyr::one_of(color, separate), function(x) if(is.na(x)) "NA" else x))
+                  , by = c("USUBJID") ) %>% 
+        #, suffix = c(paste0(": ", unique(y_dat$AVISIT)), paste0(": ", unique(x_dat$AVISIT)))) %>% #
+        arrange(USUBJID)  
+    )
     suppressMessages(
-      p <-
-        y_dat %>%
-        inner_join(x_dat) %>%
+      by_all <- y_dat %>% select(-AVISIT) %>%
+        full_join(x_dat %>% select(-AVISIT)) %>% #
+        arrange(USUBJID) 
+    )
+    suppressMessages(
+      p <- {if(nrow(by_u) == nrow(by_all) ) by_all else {
+        
+        # needed for option 1 or 2
+        suff <- function(x, suf) sym(paste0(x, ".", suf))
+        if(paste(suff(xvar,"x")) %in% names(by_u)) xvar <- paste(suff(xvar,"x"))
+        if(paste(suff(yvar,"y")) %in% names(by_u)) yvar <- paste(suff(yvar,"y"))
+        
+        # # option 1
+        # suppressWarnings(
+        #   y_dat %>%
+        #     mutate(across(tidyr::one_of(color, separate), function(x) paste0(AVISIT, ": ", ifelse(is.na(x), "NA", x)))) %>%
+        #     select(-AVISIT) %>%
+        #     full_join( x_dat %>%
+        #       mutate(across(tidyr::one_of(color, separate), function(x) paste0(AVISIT, ": ", ifelse(is.na(x), "NA", x)))) %>%
+        #       select(-AVISIT)
+        #     , by = c("USUBJID")
+        #     )  %>%
+        #     tidyr::drop_na() %>%
+        #     {if(color %in% names(by_all)) tidyr::unite(., !!sym(color), c(suff(color, "x"), suff(color, "y")), sep = " & ") else .} %>%
+        #     {if(separate %in% names(by_all)) tidyr::unite(., !!sym(separate), c(suff(separate, "x"), suff(separate, "y")), sep = " & ") else .}
+        # )
+        
+        # option 2
+        mk_str <- function(var.x, var.y, visit_var.x, visit_var.y) {
+          ifelse(
+            var.x == var.y, ifelse(is.na(var.x), "NA", var.x),
+            paste0(visit_var.x, ": ", ifelse(is.na(var.x), "NA", var.x), " & ",
+                   visit_var.y, ": ", ifelse(is.na(var.y), "NA", var.y))
+          )}
+        suppressWarnings(
+          by_u %>%
+            tidyr::drop_na() %>%
+            {if(color %in% names(by_all)) mutate(., !!sym(color) := mk_str(!!suff(color, "x"), !!suff(color, "y"), !!suff("AVISIT", "x"), !!suff("AVISIT", "y"))) else .} %>%
+            {if(separate %in% names(by_all)) mutate(., !!sym(separate) := mk_str(!!suff(separate, "x"), !!suff(separate, "y"), !!suff("AVISIT", "x"), !!suff("AVISIT", "y"))) else .} %>%
+            select(USUBJID, tidyr::one_of(color, separate), xvar, yvar)
+        )
+        
+      }} %>%
+        dplyr::mutate(across(where(function(x) all(is.na(x))), ~ "NA" )) %>%
         ggplot2::ggplot() +
         ggplot2::aes_string(x = xvar, y = yvar) +
         ggplot2::xlab(
