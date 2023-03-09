@@ -168,20 +168,7 @@ mod_indvExpPatEvents_server <- function(input, output, session,
                         # ,options = list(maxHeight = "400px")
           )
           
-          if(nonMH_n > 1){
-            s <- min(as.Date(nonMH_dat$start))
-            e <- max(as.Date(nonMH_dat$start))
-            
-            old_span <- e - s
-            new_span <- old_span / nonMH_n
-            new_s <- as.character(s - round(new_span*.10))
-            new_e <- as.character(s + new_span)
-            
-            tv <- tv %>%
-              setOptions(list(start = new_s, end = new_e))
-          }
           tv
-          
         }) # end of renderTimevis
         
         
