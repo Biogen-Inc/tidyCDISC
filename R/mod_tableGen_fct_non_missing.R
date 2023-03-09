@@ -98,7 +98,7 @@ app_non_missing.default <- app_non_missing.BDS <- app_non_missing.OCCDS <- app_n
       ) %>%
       rename_with(~as.character(column), "temp_col") %>%
       select(-n, -prop, -n_tot) %>%
-      tidyr::pivot_wider(!!column, names_from = !!group, values_from = v)
+      tidyr::pivot_wider(id_cols = !!column, names_from = !!group, values_from = v)
 
     
     cbind(groups, total$x)
