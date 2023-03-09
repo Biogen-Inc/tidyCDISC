@@ -108,7 +108,7 @@ mod_indvExpPatEvents_server <- function(input, output, session,
           date_cols <- c("Start of Event","End of Event")
         }
         else{
-          date_cols <- c("Date of Event", "End Date of Event")
+          date_cols <- c("Start Date", "End Date")
           tab <- uni_rec %>% select(EVENTTYP, START, END, DECODE)
         }
         
