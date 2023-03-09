@@ -184,6 +184,15 @@ scatterPlot_srv <- function(input, output, session, data, run) {
                  input$value_y, 
                  input$separate, 
                  input$color)
+    # data <- all_data
+    # yvar = "DIABP"
+    # xvar = "ALB"
+    # week_x  = "Baseline"
+    # value_x = "AVAL"
+    # week_y = "Baseline"
+    # value_y = "AVAL"
+    # separate = "AGEGR1"
+    # color = "AGEGR1"
   })
   
   return(p)

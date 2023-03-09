@@ -45,19 +45,19 @@ app_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y, 
       )
     }
     
-    # Initialize plot
-    p <- d %>%
-      ggplot2::ggplot() + 
-      ggplot2::aes_string(x = xvar, y = yvar) +
-      ggplot2::xlab(attr(data[[xvar]], 'label')) + 
-      ggplot2::ylab(attr(data[[yvar]], 'label')) +
-      ggplot2::geom_point(na.rm = TRUE)
+    # Initialize plot x & y vars
+    x.var <- xvar
+    x.lab <- attr(data[[xvar]], 'label')
+    y.var <- yvar
+    y.lab <- attr(data[[yvar]], 'label')
     
     # Initialize title of variables plotted
-    var_title <- paste(attr(data[[yvar]], 'label'), "versus", attr(data[[xvar]], 'label'))
+    var_title <- paste(y.lab, "versus", x.lab)
     
-    # --------------------------- 
-    # y numeric, x is paramcd 
+    
+    
+  # --------------------------- 
+  # y numeric, x is paramcd 
   } else if (yvar %in% colnames(data) & !xvar %in% colnames(data)) {
     
     # Filter data by param selected
@@ -73,21 +73,19 @@ app_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y, 
         dplyr::distinct()
     )
     
+    # initialize plot x & y vars
+    x.var <- value_x
+    x.lab <- glue::glue("{unique(d$PARAM)}: {week_x} ({attr(data[[value_x]], 'label')})")
+    y.var <- yvar
+    y.lab <- attr(data[[yvar]], 'label')
+    
     # Initialize title of variables plotted
-    var_title <- paste(attr(data[[yvar]], 'label'), "versus", unique(d$PARAM), "at", week_x)
+    var_title <- paste(y.lab, "versus", unique(d$PARAM), "at", week_x)
     
-    # initialize plot
-    p <- d %>%
-      ggplot2::ggplot() +
-      ggplot2::aes_string(x = value_x, y = yvar) +
-      ggplot2::xlab(
-        glue::glue("{unique(d$PARAM)}: {week_x} ({attr(data[[value_x]], 'label')})")
-      ) +
-      ggplot2::ylab(attr(data[[yvar]], 'label')) +
-      ggplot2::geom_point(na.rm = TRUE)
     
-    # --------------------------- 
-    # x numeric, y paramcd
+    
+  # --------------------------- 
+  # x numeric, y paramcd
   } else if (!yvar %in% colnames(data) & xvar %in% colnames(data)) {
     
     # Filter data by param selected
@@ -103,21 +101,19 @@ app_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y, 
         dplyr::distinct()
     )
     
+    # initialize plot x & y vars
+    x.var <- xvar
+    x.lab <- attr(data[[xvar]], 'label')
+    y.var <- value_y
+    y.lab <- glue::glue("{unique(d$PARAM)}: {week_y} ({attr(data[[value_y]], 'label')})")
+    
     # Initialize title of variables plotted
-    var_title <- paste(unique(d$PARAM), "at", week_y, "versus", attr(data[[xvar]], 'label'))
+    var_title <- paste(unique(d$PARAM), "at", week_y, "versus", x.lab)
     
-    # initialize plot
-    p <- d %>%
-      ggplot2::ggplot() +
-      ggplot2::aes_string(x = xvar, y = value_y) +
-      ggplot2::xlab(attr(data[[xvar]], 'label')) + 
-      ggplot2::ylab(
-        glue::glue("{unique(d$PARAM)}: {week_y} ({attr(data[[value_y]], 'label')})")
-      ) +
-      ggplot2::geom_point(na.rm = TRUE)
+  
     
-    # ---------------------------
-    # both paramcds
+  # ---------------------------
+  # both paramcds
   } else {
     
     # Build plot data for y variable
@@ -150,25 +146,25 @@ app_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y, 
         select_if(~!all(is.na(.))) # remove NA cols
     )
     
+    # Initialize plot x & y vars
+    x.var <- xvar
+    x.lab <- glue::glue("{unique(x_data$PARAM)}: {week_x} ({attr(data[[value_x]], 'label')})")
+    y.var <- yvar
+    y.lab <- glue::glue("{unique(y_data$PARAM)}: {week_y} ({attr(data[[value_y]], 'label')})")
+    
     # Initialize title of variables plotted
     var_title <- paste(unique(y_data$PARAM),"versus", unique(x_data$PARAM))
     
-    # initialize plot
     suppressMessages(
-      p <-
-        y_dat %>%
-        inner_join(x_dat) %>%
-        ggplot2::ggplot() +
-        ggplot2::aes_string(x = xvar, y = yvar) +
-        ggplot2::xlab(
-          glue::glue("{unique(x_data$PARAM)}: {week_x} ({attr(data[[value_x]], 'label')})")
-        ) + 
-        ggplot2::ylab(
-          glue::glue("{unique(y_data$PARAM)}: {week_y} ({attr(data[[value_y]], 'label')})")
-        ) +
-        ggplot2::geom_point(na.rm = TRUE)
+      d <- y_dat %>%
+        inner_join(x_dat)
     )
   }
+  
+  
+  # --------------
+  # Plot time
+  # --------------
   
   # if separate or color used, include those "by" variables in title
   by_title <- case_when(
@@ -178,8 +174,17 @@ app_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y, 
     TRUE ~ ""
   )
   
-  # Add plot layers common to all graphs
-  p <- p + 
+  # Add plot layers
+  p <- d %>%
+    # wrap text on color or separate variables as needed. Don't change the name
+    # of color var, but we do for sep just in case xvar = yvar.
+    {if(color != "NONE") mutate(., !!sym(color) := stringr::str_wrap(!!sym(color), 30)) else .} %>%
+    # {if(separate != "NONE") mutate(., !!sym(paste0(separate,"_sep")) := stringr::str_wrap(!!sym(separate), 50)) else .} %>%
+    ggplot2::ggplot() +
+    ggplot2::aes_string(x = x.var, y = y.var) + # here
+    ggplot2::xlab(x.lab) + 
+    ggplot2::ylab(y.lab) +
+    ggplot2::geom_point(na.rm = TRUE) +
     ggplot2::theme_bw() +
     ggplot2::theme(
       text = ggplot2::element_text(size = 12),
@@ -191,9 +196,41 @@ app_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y, 
     )
   
   # Add in plot layers conditional upon user selection
-  if (separate != "NONE") { p <- p + ggplot2::facet_wrap(stats::as.formula(paste(".~", separate))) }
-  if (color != "NONE") { p <- p + ggplot2::aes_string(color = color)}
+  if (separate != "NONE") {
+    my_labeller <- function(x) {
+      x[1] <- stringr::str_wrap(x[1], 50)
+      ggplot2::label_both(x, sep = ": ")
+    }
+    p <- p + ggplot2::facet_wrap(stats::as.formula(paste0(".~ ", separate)), #, "_sep"
+                                            labeller = my_labeller(x = unique(d[,separate]))
+    )
+    }
+  if (color != "NONE") { p <- p + ggplot2::aes_string(colour = color)}
   if (by_title != "") {p <- p + ggplot2::theme(plot.margin = ggplot2::margin(t = 1.2, unit = "cm"))}
   
   return(p)
 }
+
+# cases <- c("case1 has long name", "case2 long too", "case3 long as well", "case4 also long", "case5 long")
+# var1 <- cases[round(runif(100,1,3))]
+# var2 <- cases[round(runif(100,1,5))]
+# # var1 <- "the first variable"
+# # var2 <- "variable number two"
+# facetFormula <- as.formula("var1 ~ var2")
+# myX <- runif(100,0,10)
+# myY <- runif(100,-5,5)
+# myData <- data.frame(myX, myY, var1, var2)
+# ggplot(myData, aes(x = myX, y = myY)) +
+#   geom_point(alpha = .5) +
+#   facet_grid(facetFormula,
+#              labeller = label_both)
+# x <- distinct(myData[3:4])
+# names(x)[[1]]
+# my_label <- function(x) {
+#   x[1] <- stringr::str_wrap(gsub("_", " ", x[1]), 50)
+#   label_both(x, sep = ": ")
+# }
+# 
+# ggplot(myData, aes(x = myX, y = myY)) +
+#   geom_point(alpha = .5) +
+#   facet_grid(facetFormula, labeller = my_label)
