@@ -747,11 +747,11 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
           study_dir <- 'path/to/study/directory/'
           
           # use HAVEN to extract data, then merge
-          filenames <- c({filenames()})
+          file_names <- c({filenames()})
           
           # create list of dataframes
           datalist <- 
-            purrr::map(file_names, ~ haven::read_sas(file.path(study_directory,.x))) %>%
+            purrr::map(file_names, ~ haven::read_sas(file.path(study_dir,.x))) %>%
             setNames(toupper(stringr::str_remove(file_names, '.sas7bdat')))
       ")}
   })
