@@ -342,3 +342,14 @@ varN_fctr_reorder <- function(data) {
   return(data)
 }
 
+error_handler <- function(e) {
+  UseMethod("error_handler")
+}
+
+error_handler.default <- function(e) {
+  conditionMessage(e)
+}
+
+error_handler.purrr_error_indexed <- function(e) {
+  e$parent$message
+}
