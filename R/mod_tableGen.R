@@ -133,7 +133,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # perform any pre-filters on the data, when a STAN table is selected
   pre_ADSL <- reactive({
     req(RECIPE())
-    prep_adsl(ADSL = datafile()$ADSL,input_recipe = RECIPE())
+    tryCatch(prep_adsl(ADSL = datafile()$ADSL,input_recipe = RECIPE()), error = function(e) validate(error_handler(e)))
   })
   
   # clean_ADAE() now happens inside this reactive!
@@ -141,7 +141,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # Then filter ADAE based on STAN table selected.
   pre_ADAE <- reactive({
     req(RECIPE())
-    prep_adae(datafile = datafile(),ADSL = pre_ADSL()$data, input_recipe = RECIPE())
+    tryCatch(prep_adae(datafile = datafile(),ADSL = pre_ADSL()$data, input_recipe = RECIPE()), error = function(e) validate(error_handler(e)))
   })
   
   # Create cleaned up versions of raw data
@@ -523,15 +523,14 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       )
     }
     # if no data in the source, do not run the pmap, just show this msg:
-    if(nrow(use_data_reactive()) == 0){
-      stop(paste0("No subjects remain when the following filters are applied.\n        "
-                      ,gsub("<br/>", "\n        ", pre_filter_msgs())))
-    }
+    validate(nrow(use_data_reactive()) != 0, paste0("No subjects remain when the following filters are applied.\n        "
+                                                    ,gsub("<br/>", "\n        ", pre_filter_msgs())))
 
-    d <- tg_gt(list(ADAE = ae_data(), ADSL = all_data(), POPDAT = use_preferred_pop_data()),
+    d <- tryCatch(tg_gt(list(ADAE = ae_data(), ADSL = all_data(), POPDAT = use_preferred_pop_data()),
                blocks_and_functions(),
                total_df(),
-               column())
+               column()), error = function(e) validate(error_handler(e)))
+
     return(d)
   })
   
