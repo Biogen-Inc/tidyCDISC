@@ -85,42 +85,43 @@ scatterPlot_srv <- function(input, output, session, data, run) {
     )
   })
   
+  # generate list of viable color and separate values based on chosen xvar and yvar
   observeEvent(list(input$xvar, input$yvar), {
     req(input$xvar != "" & input$yvar != "", run())
-    
+
     # Update grouping variable based on xvar & yvar selection
     if(input$yvar %in% colnames(data()) & input$xvar %in% colnames(data())){ # neither paramcd
       group_dat <- data()
-      
+
     } else if(!(input$yvar %in% colnames(data())) & input$xvar %in% colnames(data())){ # yvar paramcd
-      group_dat <- data() %>% 
-        dplyr::filter(PARAMCD == input$yvar) %>% 
+      group_dat <- data() %>%
+        dplyr::filter(PARAMCD == input$yvar) %>%
         select_if(~!all(is.na(.))) # remove NA cols
-      
+
     } else if(input$yvar %in% colnames(data()) & !(input$xvar %in% colnames(data()))){ # xvar paramcd
-      group_dat <- data() %>% 
-        dplyr::filter(PARAMCD == input$xvar) %>% 
+      group_dat <- data() %>%
+        dplyr::filter(PARAMCD == input$xvar) %>%
         select_if(~!all(is.na(.))) # remove NA cols
-      
+
     } else { # both paramcds
-      x_cols <- data() %>% 
-        dplyr::filter(PARAMCD == input$xvar) %>% 
+      x_cols <- data() %>%
+        dplyr::filter(PARAMCD == input$xvar) %>%
         select_if(~!all(is.na(.))) # remove NA cols
 
       y_cols <- data() %>%
-        dplyr::filter(PARAMCD == input$yvar) %>% 
+        dplyr::filter(PARAMCD == input$yvar) %>%
         select_if(~!all(is.na(.))) # remove NA cols
 
       group_dat <- x_cols %>% full_join(y_cols)
     }
-    
+
     group_dat <- select(group_dat, -data_from)
-    
+
     # character and factor columns for coloring or separating
     char_col <- subset_colclasses(group_dat, is.character)
     fac_col <- subset_colclasses(group_dat, is.factor)
     group <- sort(c(fac_col, char_col))
-                  
+
     # populate dropdowns with choices
     updateSelectInput(session, "color",
                       choices = c("NONE", group),
@@ -128,8 +129,10 @@ scatterPlot_srv <- function(input, output, session, data, run) {
     updateSelectInput(session, "separate",
                       choices = c("NONE", group),
                       selected = isolate(input$separate))
-    
+
   })
+  
+
   
   output$include_yvar <- renderUI({
     req(run(),input$yvar %in% data()$PARAMCD)

@@ -16,7 +16,8 @@
 
 ### Population Explorer
 * Fixed bug where selected filters were not being applied when 'Apply Filters' was toggled on (#175)
-* Fixed bug where plot's visual appeal was destroyed when faceting variable labels were too long (#200)
+* Fixed bug where plots' visual appeal was destroyed when faceting variable labels were too long (#200)
+* Fixed bug where scatter plot wouldn't display by categorical variable with `NA` values (#192)
 
 
 # tidyCDISC 0.2.0 (CRAN Release)
