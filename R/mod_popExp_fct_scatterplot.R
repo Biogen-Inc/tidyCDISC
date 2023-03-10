@@ -27,14 +27,14 @@
 app_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y, separate = "NONE", color = "NONE") {
   
   # data = all_data
-  # yvar = "ALB"
-  # xvar = "ALP"
-  # week_x = "Baseline"
+  # yvar = "DIABP"
+  # xvar = "DIABP"
+  # week_x = "SCREENING"
   # value_x = "AVAL"
-  # week_y = "Week 2"
+  # week_y = "SCREENING"
   # value_y = "AVAL"
-  # separate = "AGEGR1"
-  # color = "AENTMTFL"
+  # separate = "ACTARM"
+  # color = "ACTARM"
   
   # ---------------------------
   # x and y are numeric columns
@@ -140,14 +140,6 @@ app_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y, 
         # dplyr::mutate(across(where(function(x) all(is.na(x))), ~ "NA" )) # Convert NA cols to "NA"
     )
     
-    # Initialize plot x & y vars
-    x.var <- xvar
-    x.lab <- glue::glue("{unique(x_data$PARAM)}: {week_x} ({attr(data[[value_x]], 'label')})")
-    y.var <- yvar
-    y.lab <- glue::glue("{unique(y_data$PARAM)}: {week_y} ({attr(data[[value_y]], 'label')})")
-    
-    # Initialize title of variables plotted
-    var_title <- paste(unique(y_data$PARAM),"versus", unique(x_data$PARAM))
     
     # create plot data
     suppressWarnings(
@@ -207,6 +199,15 @@ app_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y, 
       }} %>%
         dplyr::mutate(across(where(function(x) all(is.na(x))), ~ "NA" ))
     )
+    
+    # Initialize plot x & y vars
+    x.var <- xvar
+    x.lab <- glue::glue("{unique(x_data$PARAM)}: {week_x} ({attr(data[[value_x]], 'label')})")
+    y.var <- yvar
+    y.lab <- glue::glue("{unique(y_data$PARAM)}: {week_y} ({attr(data[[value_y]], 'label')})")
+    
+    # Initialize title of variables plotted
+    var_title <- paste(unique(y_data$PARAM),"versus", unique(x_data$PARAM))
   }
   
   
