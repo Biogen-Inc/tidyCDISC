@@ -168,6 +168,7 @@ app_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y, 
   
   # if separate or color used, include those "by" variables in title
   by_title <- case_when(
+    separate == color & color != "NONE" ~  paste("\nby", attr(data[[color]], "label")),
     separate != "NONE" & color != "NONE" ~ paste("\nby", attr(data[[color]], "label"), "and", attr(data[[separate]], "label")),
     separate != "NONE" ~ paste("\nby", attr(data[[separate]], "label")),
     color != "NONE" ~ paste("\nby", attr(data[[color]], "label")), 
@@ -197,13 +198,9 @@ app_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y, 
   
   # Add in plot layers conditional upon user selection
   if (separate != "NONE") {
-    my_labeller <- function(x) {
-      x[1] <- stringr::str_wrap(x[1], 50)
-      ggplot2::label_both(x, sep = ": ")
-    }
+    lbl <- paste0(separate, ": ", get_levels(pull(d, separate)) ) %>% stringr::str_wrap(50)
     p <- p + ggplot2::facet_wrap(stats::as.formula(paste0(".~ ", separate)), #, "_sep"
-                                            labeller = my_labeller(x = unique(d[,separate]))
-    )
+           labeller = ggplot2::as_labeller(setNames(lbl , get_levels(pull(d, separate)))))
     }
   if (color != "NONE") { p <- p + ggplot2::aes_string(colour = color)}
   if (by_title != "") {p <- p + ggplot2::theme(plot.margin = ggplot2::margin(t = 1.2, unit = "cm"))}
