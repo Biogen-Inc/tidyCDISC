@@ -1,3 +1,5 @@
+# tidyCDISC (development version)
+
 # tidyCDISC 0.2.1 (CRAN Release)
 
 ### General
@@ -14,6 +16,7 @@
 
 ### Population Explorer
 * Fixed bug where selected filters were not being applied when 'Apply Filters' was toggled on (#175)
+* Fixed bug where plot's visual appeal was destroyed when faceting variable labels were too long (#200)
 
 
 # tidyCDISC 0.2.0 (CRAN Release)
