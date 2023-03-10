@@ -37,8 +37,8 @@ scatterPlot_ui <- function(id, label = "scatter") {
     ),
     h4("Group data:"),
     wellPanel(
-      selectInput(ns("separate"), "Separate Plots By", choices = "NONE", selected = "NONE"),
-      selectInput(ns("color"), "Color Plots By", choices = "NONE", selected = "NONE")
+      selectInput(ns("color"), "Color Plots By", choices = "NONE", selected = "NONE"),
+      selectInput(ns("separate"), "Separate Plots By", choices = "NONE", selected = "NONE")
     )
   )
 }
@@ -186,13 +186,13 @@ scatterPlot_srv <- function(input, output, session, data, run) {
                  input$color)
     # data <- all_data
     # yvar = "DIABP"
-    # xvar = "ALB"
-    # week_x  = "Baseline"
+    # xvar = "SYSBP"
+    # week_x  = "BASELINE"
     # value_x = "AVAL"
-    # week_y = "Baseline"
+    # week_y = "BASELINE"
     # value_y = "AVAL"
-    # separate = "AGEGR1"
-    # color = "AGEGR1"
+    # separate = "ACTARM"
+    # color = "ACTARM"
   })
   
   return(p)
