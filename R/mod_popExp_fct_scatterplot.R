@@ -26,6 +26,16 @@
 #' @noRd
 app_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y, separate = "NONE", color = "NONE") {
   
+  # data = all_data
+  # yvar = "ALB"
+  # xvar = "ALP"
+  # week_x = "Baseline"
+  # value_x = "AVAL"
+  # week_y = "Week 2"
+  # value_y = "AVAL"
+  # separate = "AGEGR1"
+  # color = "AENTMTFL"
+  
   # ---------------------------
   # x and y are numeric columns
   if (yvar %in% colnames(data) & xvar %in% colnames(data)) {
@@ -180,14 +190,16 @@ app_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y, 
         
         # option 2
         mk_str <- function(var.x, var.y, visit_var.x, visit_var.y) {
-          ifelse(
-            var.x == var.y, ifelse(is.na(var.x), "NA", var.x),
-            paste0(visit_var.x, ": ", ifelse(is.na(var.x), "NA", var.x), " & ",
-                   visit_var.y, ": ", ifelse(is.na(var.y), "NA", var.y))
-          )}
+          if(var.x == var.y) {
+            if(is.na(var.x)) "NA" else var.x
+        } else {
+            paste0(visit_var.x, ": ", if(is.na(var.x)) "NA" else var.x, " & ",
+                   visit_var.y, ": ", if(is.na(var.y)) "NA" else var.y)
+        }}
         suppressWarnings(
           by_u %>%
             tidyr::drop_na() %>%
+            rowwise() %>% # new
             {if(color %in% names(by_all)) mutate(., !!sym(color) := mk_str(!!suff(color, "x"), !!suff(color, "y"), !!suff("AVISIT", "x"), !!suff("AVISIT", "y"))) else .} %>%
             {if(separate %in% names(by_all)) mutate(., !!sym(separate) := mk_str(!!suff(separate, "x"), !!suff(separate, "y"), !!suff("AVISIT", "x"), !!suff("AVISIT", "y"))) else .} %>%
             select(USUBJID, tidyr::one_of(color, separate), xvar, yvar)
@@ -205,8 +217,13 @@ app_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y, 
         ) 
     )
   }
-  
-  
+  # test <- by_u %>%
+  #   tidyr::drop_na() %>%
+  #   rowwise() %>% # new
+  #   {if(color %in% names(by_all)) mutate(., !!sym(color) := mk_str(!!suff(color, "x"), !!suff(color, "y"), !!suff("AVISIT", "x"), !!suff("AVISIT", "y"))) else .} %>%
+  #   {if(separate %in% names(by_all)) mutate(., !!sym(separate) := mk_str(!!suff(separate, "x"), !!suff(separate, "y"), !!suff("AVISIT", "x"), !!suff("AVISIT", "y"))) else .} %>%
+  #   select(USUBJID, tidyr::one_of(color, separate), xvar, yvar)
+  # test
   
   
   # if separate or color used, include those "by" variables in title

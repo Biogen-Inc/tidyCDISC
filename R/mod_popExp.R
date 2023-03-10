@@ -62,7 +62,7 @@ mod_popExp_server <- function(input, output, session, datafile) {
     
     # split the non-ADSL data into those which have a USUBJID or not
     NOTADSL <- datafile()[names(datafile()) != "ADSL" ]
-    if (!is_empty(NOTADSL)) {
+    if (!rlang::is_empty(NOTADSL)) {
       
       # zap formats
       for (i in 1:length(NOTADSL)) ( NOTADSL[[i]] <- haven::zap_formats(NOTADSL[[i]]) )
