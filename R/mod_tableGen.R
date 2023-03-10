@@ -393,7 +393,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # convert the custom shiny input to a table output
   blocks_and_functions <- reactive({
     # create initial dataset
-    blockData <- convertTGOutput(input$agg_drop_zone, input$block_drop_zone)
+    blockData <- tryCatch(convertTGOutput(input$agg_drop_zone, input$block_drop_zone), error = function(e) validate(error_handler(e)))
 
     blockData$label <- 
       purrr::map2(blockData$block, blockData$dataset, function(var, dat) {
@@ -523,8 +523,8 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       )
     }
     # if no data in the source, do not run the pmap, just show this msg:
-    validate(nrow(use_data_reactive()) != 0, paste0("No subjects remain when the following filters are applied.\n        "
-                                                    ,gsub("<br/>", "\n        ", pre_filter_msgs())))
+    validate(need(nrow(use_data_reactive()) != 0, paste0("No subjects remain when the following filters are applied.\n        "
+                                                    ,gsub("<br/>", "\n        ", pre_filter_msgs()))))
 
     d <- tryCatch(tg_gt(list(ADAE = ae_data(), ADSL = all_data(), POPDAT = use_preferred_pop_data()),
                blocks_and_functions(),
