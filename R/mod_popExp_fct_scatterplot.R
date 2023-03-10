@@ -227,27 +227,3 @@ app_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y, 
   
   return(p)
 }
-
-# cases <- c("case1 has long name", "case2 long too", "case3 long as well", "case4 also long", "case5 long")
-# var1 <- cases[round(runif(100,1,3))]
-# var2 <- cases[round(runif(100,1,5))]
-# # var1 <- "the first variable"
-# # var2 <- "variable number two"
-# facetFormula <- as.formula("var1 ~ var2")
-# myX <- runif(100,0,10)
-# myY <- runif(100,-5,5)
-# myData <- data.frame(myX, myY, var1, var2)
-# ggplot(myData, aes(x = myX, y = myY)) +
-#   geom_point(alpha = .5) +
-#   facet_grid(facetFormula,
-#              labeller = label_both)
-# x <- distinct(myData[3:4])
-# names(x)[[1]]
-# my_label <- function(x) {
-#   x[1] <- stringr::str_wrap(gsub("_", " ", x[1]), 50)
-#   label_both(x, sep = ": ")
-# }
-# 
-# ggplot(myData, aes(x = myX, y = myY)) +
-#   geom_point(alpha = .5) +
-#   facet_grid(facetFormula, labeller = my_label)

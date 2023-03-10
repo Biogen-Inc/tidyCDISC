@@ -89,10 +89,16 @@ app_lineplot <- function(data, yvar, time, value = NULL, separate = "NONE", colo
                 .groups = "keep") %>%
       ungroup() %>%
       mutate(Lower = MEAN - (1.96 * SEM), Upper = MEAN + (1.96 * SEM)) %>%
-      select( -n)
+      select( -n) %>%
+    # wrap text on color or separate variables as needed. Don't change the name
+    # of color var, but we do for sep just in case xvar = yvar
+    {if(color != "NONE") mutate(., !!sym(paste0("By ", color)) := 
+      factor(stringr::str_wrap(!!sym(color), 30), levels = 
+        stringr::str_wrap(get_levels(pull(d0, color)), 30))) else .}
   )
   # print(d)
   
+  # Returning "my_d" for display
   my_d <- d %>%
     ungroup() %>%
     rename_with(toupper) %>%
@@ -112,6 +118,7 @@ app_lineplot <- function(data, yvar, time, value = NULL, separate = "NONE", colo
   # if separate or color used, include those "by" variables in title
   var_title <- paste(y_lab, "by", xl)
   by_title <- case_when(
+    separate == color & color != "NONE" ~ paste("\nby", attr(data[[color]], "label")),
     separate != "NONE" & color != "NONE" ~ paste("\nby", attr(data[[color]], "label"), "and", attr(data[[separate]], "label")),
     separate != "NONE" ~ paste("\nby", attr(data[[separate]], "label")),
     color != "NONE" ~ paste("\nby", attr(data[[color]], "label")), 
@@ -120,7 +127,7 @@ app_lineplot <- function(data, yvar, time, value = NULL, separate = "NONE", colo
   
   dodge <- ggplot2::position_dodge(.9)
   time_sym <- rlang::sym(time)
-  color_sym <- rlang::sym(color)
+  color_sym <- rlang::sym(paste0("By ", color))
   
   # Add common layers to plot
   p <- d %>%
@@ -147,12 +154,28 @@ app_lineplot <- function(data, yvar, time, value = NULL, separate = "NONE", colo
                    )
   
   # Add in plot layers conditional upon user selection
-  if (color != "NONE") { p <- p + ggplot2::aes_string(color = color, group = color) }
+  # if (color != "NONE") { p <- p + ggplot2::aes_string(color = color, group = color) }
+  if (color != "NONE") { p <- p + ggplot2::aes_string(colour = paste0("`By ", color, "`")) + 
+    ggplot2::labs(colour = paste0("By ", color)) +
+    ggplot2::theme(plot.title = ggplot2::element_text(size = 16, vjust = 4))
+  }
   if (err_bars) {
     p <- p + ggplot2::aes(ymin = Lower, ymax = Upper) +
     ggplot2::geom_errorbar(position = dodge, width = 1.5)
   }
-  if (separate != "NONE") { p <- p + ggplot2::facet_wrap(stats::as.formula(paste(".~", separate))) }
+  # if (separate != "NONE") { p <- p + ggplot2::facet_wrap(stats::as.formula(paste(".~", separate))) }
+  if (separate != "NONE") {
+    lbl <- paste0(separate, ": ", get_levels(pull(d, separate)) ) %>% stringr::str_wrap(50)
+    max_lines <- max(stringr::str_count(lbl, "\n")) + 1
+    p <- p +
+      ggplot2::facet_wrap(stats::as.formula(paste0(".~ ", separate)), 
+                          labeller = ggplot2::as_labeller(setNames(lbl , get_levels(pull(d, separate))))
+      ) + # strip height is not adjusting automatically with text wrap in the app (though it does locally)
+      ggplot2::theme(strip.text = ggplot2::element_text(
+        margin = ggplot2::margin(t = (5 * max_lines), b = (6 * max_lines))),
+        plot.title = ggplot2::element_text(size = 16, vjust = 10)
+      ) 
+  }
   if (by_title != "") {p <- p + ggplot2::theme(plot.margin = ggplot2::margin(t = 1.2, unit = "cm"))}
   
   if(label_points){
