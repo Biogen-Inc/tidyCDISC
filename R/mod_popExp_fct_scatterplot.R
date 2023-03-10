@@ -217,13 +217,6 @@ app_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y, 
         ) 
     )
   }
-  # test <- by_u %>%
-  #   tidyr::drop_na() %>%
-  #   rowwise() %>% # new
-  #   {if(color %in% names(by_all)) mutate(., !!sym(color) := mk_str(!!suff(color, "x"), !!suff(color, "y"), !!suff("AVISIT", "x"), !!suff("AVISIT", "y"))) else .} %>%
-  #   {if(separate %in% names(by_all)) mutate(., !!sym(separate) := mk_str(!!suff(separate, "x"), !!suff(separate, "y"), !!suff("AVISIT", "x"), !!suff("AVISIT", "y"))) else .} %>%
-  #   select(USUBJID, tidyr::one_of(color, separate), xvar, yvar)
-  # test
   
   
   # if separate or color used, include those "by" variables in title
