@@ -353,3 +353,7 @@ error_handler.default <- function(e) {
 error_handler.purrr_error_indexed <- function(e) {
   e$parent$message
 }
+
+error_handler.rlang_error <- function(e) {
+  stringr::str_replace_all(rlang::cnd_message(e), "\n.*? ", " ")
+}
