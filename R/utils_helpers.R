@@ -350,7 +350,8 @@ error_handler.default <- function(e) {
   conditionMessage(e)
 }
 
-error_handler.purrr_error_indexed <- function(e) {
+error_handler.purrr_error_indexed <-
+  `error_handler.dplyr:::mutate_error` <- function(e) {
   e$parent$message
 }
 
