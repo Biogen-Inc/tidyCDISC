@@ -17,16 +17,6 @@ css <- paste0("
               cursor: not-allowed !important;
               border-color: #aaa !important;
               }
-              
-              .vis-item.DS { background-color: ",my_cols[1],"; }
-              .vis-item.CM { background-color: ",my_cols[2],"; }
-              .vis-item.AE { background-color: ",my_cols[3],"; }
-              .vis-item.LB { background-color: ",my_cols[4],"; }
-              .vis-item.LC { background-color: ",my_cols[5],"; }
-              .vis-item.MH_MH { background-color: ",my_cols[6],"; }
-              .vis-item.MH_FDH { background-color: ",my_cols[7],"; }
-              .vis-item.MH_DH { background-color: ",my_cols[8],"; }
-              .vis-item.MH_LC { background-color: #e3e1e1; }
               ")
 # feel free to add more css strings above
 
