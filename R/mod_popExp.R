@@ -62,7 +62,7 @@ mod_popExp_server <- function(input, output, session, datafile) {
     
     # split the non-ADSL data into those which have a USUBJID or not
     NOTADSL <- datafile()[names(datafile()) != "ADSL" ]
-    if (!is_empty(NOTADSL)) {
+    if (!rlang::is_empty(NOTADSL)) {
       
       # zap formats
       for (i in 1:length(NOTADSL)) ( NOTADSL[[i]] <- haven::zap_formats(NOTADSL[[i]]) )
@@ -152,12 +152,13 @@ mod_popExp_server <- function(input, output, session, datafile) {
     # adtt_ <- my_loaded_adams()[substr(my_loaded_adams(), 1, 4) == "ADTT"]
     req(any(purrr::map_lgl(my_loaded_adams(), ~ "CNSR" %in% colnames(datafile()[[.x]]))))
     updateRadioButtons(session, "plot_type",
-                       choices = c("Scatter Plot", 
-                                   "Spaghetti Plot", 
-                                   "Box Plot",
+                       choices = c("Kaplan-Meier Curve",
                                    "Line plot - mean over time",
                                    "Heatmap - endpoint correlations",
-                                   "Kaplan-Meier Curve") # new ... added KM
+                                   "Box Plot",
+                                   "Scatter Plot", 
+                                   "Spaghetti Plot"
+                                   ) # new ... added KM
     )
   })
   
