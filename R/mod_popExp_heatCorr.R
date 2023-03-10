@@ -212,8 +212,8 @@ heatmap_srv <- function(input, output, session, data, run) {
   p_both <- reactive({
     req(run(), data(), input$yvar_x, input$yvar_y) #, input$time, input$cor_mthd)
 
-    pp <- app_heatmap(data(), input$yvar_x, input$yvar_y, input$time, "AVAL",
-                       input$cor_mthd, input$show_sig, input$sig_level)
+    pp <- tryCatch(app_heatmap(data(), input$yvar_x, input$yvar_y, input$time, "AVAL",
+                       input$cor_mthd, input$show_sig, input$sig_level), error = function(e) validate(error_handler(e)))
     
     return(list(plot = pp$plot, data = pp$data))
   })

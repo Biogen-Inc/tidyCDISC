@@ -14,6 +14,7 @@
 
 ### Population Explorer
 * Fixed bug where selected filters were not being applied when 'Apply Filters' was toggled on (#175)
+* Fixed bug where scatter plot wouldn't display by categorical variable with `NA` values (#192)
 
 ### Individual Explorer
 * Updated the look of the time visualization (#194)
@@ -21,6 +22,7 @@
     * Incorporated end dates (where applicable) to display ranges
     * Removed the auto-zoom when multiple groups were selected
 
+=======
 
 # tidyCDISC 0.2.0 (CRAN Release)
 

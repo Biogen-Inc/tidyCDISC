@@ -84,19 +84,30 @@ mod_indvExpPatEvents_server <- function(input, output, session,
       output$events_tv_caption2 <- renderText({NULL})
       shinyjs::hide(id = "events_tv_caption1")
       shinyjs::hide(id = "events_tv_caption2")
+      shinyjs::hide(id = "events_error")
       shinyjs::hide(id = "eventsPlot")
       shinyjs::hide(id = "eventsTable")
     }
     else{
       
       # See build_events_df.R
-      uni_rec <- build_events(input_checkbox = input$checkGroup
+      uni_rec <- tryCatch(build_events(input_checkbox = input$checkGroup
                               , input_apply_filter = input$events_apply_filter
                               , my_usubjid = usubjid()
                               , my_loaded_adams = loaded_adams()
                               , my_datafile = datafile()
-                              , my_filtered_dat = filtered_dat())
+                              , my_filtered_dat = filtered_dat()),
+                          error = function(e) simpleError(error_handler(e))
+      )
       
+      if ("simpleError" %in% class(uni_rec)) {
+        output$events_error <- renderText(uni_rec$message)
+        shinyjs::show("events_error")
+        shinyjs::hide("eventsTable")
+        shinyjs::hide("eventsPlot")
+      }
+      req(!"simpleError" %in% class(uni_rec))
+      shinyjs::hide("events_error")
       
       # If data exists, output a DT object containing Events date data
       if (!is.null(uni_rec) && nrow(uni_rec) > 0) {
