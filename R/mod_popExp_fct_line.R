@@ -176,7 +176,7 @@ app_lineplot <- function(data, yvar, time, value = NULL, separate = "NONE", colo
         plot.title = ggplot2::element_text(size = 16, vjust = 10)
       ) 
   }
-  if (by_title != "") {p <- p + ggplot2::theme(plot.margin = ggplot2::margin(t = 1.2, unit = "cm"))}
+  if (by_title != "") {p <- p + ggplot2::theme(plot.margin = ggplot2::margin(t = 1.25, unit = "cm"))}
   
   if(label_points){
     x_scale <- ggplot2::layer_scales(p)$x$range$range
