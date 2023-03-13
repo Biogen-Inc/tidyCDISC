@@ -10,6 +10,7 @@
 #' @importFrom IDEAFilter shiny_data_filter
 #' @importFrom haven zap_label zap_formats
 #' @importFrom purrr map walk2
+#' @importFrom plotly renderPlotly ggplotly layout
 #' 
 #' @family popExp Functions
 #' @noRd
@@ -273,10 +274,13 @@ mod_popExp_server <- function(input, output, session, datafile) {
   # use plot output of the module to create the plot 
   output$plot_output <- renderPlotly({
         switch(input$plot_type,
-         `Scatter Plot` = p_scatter() %>% plotly::ggplotly(),
+         `Scatter Plot` = p_scatter() %>% plotly::ggplotly() %>%
+           plotly::layout(title = list(yref = "container", y = .95, yanchor = "bottom")),
          `Box Plot` = p_box() %>% plotly::ggplotly(),
          `Spaghetti Plot` = p_spaghetti() %>% plotly::ggplotly(),
-         `Line plot - mean over time` = p_line$plot() %>% plotly::ggplotly(tooltip = c("text")),
+         `Line plot - mean over time` = p_line$plot() %>%
+           plotly::ggplotly(tooltip = c("text")) %>%
+           plotly::layout(title = list(yref = "container", y = .95, yanchor = "bottom")),
          `Heatmap - endpoint correlations` = p_heatmap$plot() %>% plotly::ggplotly(tooltip = c("text"))
          , `Kaplan-Meier Curve` = p_km() %>% plotly::ggplotly()
         ) %>%

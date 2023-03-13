@@ -27,12 +27,21 @@
 app_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y, separate = "NONE", color = "NONE") {
   
   # data = all_data
-  # yvar = "ALB"
-  # xvar = "ADY"
-  # week_x = NULL
-  # value_x = NULL
-  # week_y = "Baseline"
+  # yvar = "DIABP"
+  # xvar = "DIABP"
+  # week_x = "SCREENING"
+  # value_x = "AVAL"
+  # week_y = "SCREENING"
   # value_y = "AVAL"
+  # separate = "ACTARM"
+  # color = "ACTARM"
+  
+  # separate = "NONE"
+  # color = "ACTARM"
+  
+  # separate = "ACTARM"
+  # color = "NONE"
+  
   # separate = "NONE"
   # color = "NONE"
   
@@ -49,15 +58,14 @@ app_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y, 
         dplyr::mutate(across(where(function(x) all(is.na(x))), ~ "NA" )) # Convert NA cols to "NA"
     )
     
-    # Initialize plot
-    p <- d %>%
-      ggplot2::ggplot() + 
-      ggplot2::aes_string(x = xvar, y = yvar) +
-      ggplot2::xlab(attr(data[[xvar]], 'label')) + 
-      ggplot2::ylab(attr(data[[yvar]], 'label'))
+    # Initialize plot x & y vars
+    x.var <- xvar
+    x.lab <- attr(data[[xvar]], 'label')
+    y.var <- yvar
+    y.lab <- attr(data[[yvar]], 'label')
     
     # Initialize title of variables plotted
-    var_title <- paste(attr(data[[yvar]], 'label'), "versus", attr(data[[xvar]], 'label'))
+    var_title <- paste(y.lab, "versus", x.lab)
     
     
     
@@ -77,19 +85,16 @@ app_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y, 
         dplyr::mutate(across(where(function(x) all(is.na(x))), ~ "NA" )) # Convert NA cols to "NA"
     )
     
+    # initialize plot x & y vars
+    x.var <- value_x
+    x.lab <- glue::glue("{unique(d$PARAM)}: {week_x} ({attr(data[[value_x]], 'label')})")
+    y.var <- yvar
+    y.lab <- attr(data[[yvar]], 'label')
+    
     # Initialize title of variables plotted
-    var_title <- paste(attr(data[[yvar]], 'label'), "versus", unique(d$PARAM), "at", week_x)
+    var_title <- paste(y.lab, "versus", unique(d$PARAM), "at", week_x)
     
-    # initialize plot
-    p <- d %>%
-      ggplot2::ggplot() +
-      ggplot2::aes_string(x = value_x, y = yvar) +
-      ggplot2::xlab(
-        glue::glue("{unique(d$PARAM)}: {week_x} ({attr(data[[value_x]], 'label')})")
-      ) +
-      ggplot2::ylab(attr(data[[yvar]], 'label'))
-    
-    
+
     
   # --------------------------- 
   # x numeric, y paramcd
@@ -107,19 +112,16 @@ app_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y, 
       dplyr::mutate(across(where(function(x) all(is.na(x))), ~ "NA" )) # Convert NA cols to "NA"
     )
     
+    # initialize plot x & y vars
+    x.var <- xvar
+    x.lab <- attr(data[[xvar]], 'label')
+    y.var <- value_y
+    y.lab <- glue::glue("{unique(d$PARAM)}: {week_y} ({attr(data[[value_y]], 'label')})")
+    
     # Initialize title of variables plotted
-    var_title <- paste(unique(d$PARAM), "at", week_y, "versus", attr(data[[xvar]], 'label'))
+    var_title <- paste(unique(d$PARAM), "at", week_y, "versus", x.lab)
     
-    # initialize plot
-    p <- d %>%
-      ggplot2::ggplot() +
-      ggplot2::aes_string(x = xvar, y = value_y) +
-      ggplot2::xlab(attr(data[[xvar]], 'label')) + 
-      ggplot2::ylab(
-        glue::glue("{unique(d$PARAM)}: {week_y} ({attr(data[[value_y]], 'label')})")
-      )
-    
-    
+
     
   # ---------------------------
   # both x & y are paramcds
@@ -153,10 +155,8 @@ app_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y, 
         # dplyr::mutate(across(where(function(x) all(is.na(x))), ~ "NA" )) # Convert NA cols to "NA"
     )
     
-    # Initialize title of variables plotted
-    var_title <- paste(unique(y_data$PARAM),"versus", unique(x_data$PARAM))
     
-    # initialize plot
+    # create plot data
     suppressWarnings(
       by_u <- y_dat %>% rowwise() %>% #select(-AVISIT) %>%
         mutate(across(tidyr::one_of(color, separate), function(x) if(is.na(x)) "NA" else x)) %>%
@@ -172,7 +172,7 @@ app_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y, 
         arrange(USUBJID) 
     )
     suppressMessages(
-      p <- {if(nrow(by_u) == nrow(by_all) ) by_all else {
+      d <- {if(nrow(by_u) == nrow(by_all) ) by_all else {
         
         # needed for option 1 or 2
         suff <- function(x, suf) sym(paste0(x, ".", suf))
@@ -212,29 +212,43 @@ app_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y, 
         )
         
       }} %>%
-        dplyr::mutate(across(where(function(x) all(is.na(x))), ~ "NA" )) %>%
-        ggplot2::ggplot() +
-        ggplot2::aes_string(x = xvar, y = yvar) +
-        ggplot2::xlab(
-          glue::glue("{unique(x_data$PARAM)}: {week_x} ({attr(data[[value_x]], 'label')})")
-        ) + 
-        ggplot2::ylab(
-          glue::glue("{unique(y_data$PARAM)}: {week_y} ({attr(data[[value_y]], 'label')})")
-        ) 
+        dplyr::mutate(across(where(function(x) all(is.na(x))), ~ "NA" ))
     )
+    
+    # Initialize plot x & y vars
+    x.var <- xvar
+    x.lab <- glue::glue("{unique(x_data$PARAM)}: {week_x} ({attr(data[[value_x]], 'label')})")
+    y.var <- yvar
+    y.lab <- glue::glue("{unique(y_data$PARAM)}: {week_y} ({attr(data[[value_y]], 'label')})")
+    
+    # Initialize title of variables plotted
+    var_title <- paste(unique(y_data$PARAM),"versus", unique(x_data$PARAM))
   }
   
   
+
+  # --------------
+  # Plot time
+  # --------------
+
   # if separate or color used, include those "by" variables in title
   by_title <- case_when(
+    separate == color & color != "NONE" ~  paste("\nby", attr(data[[color]], "label")),
     separate != "NONE" & color != "NONE" ~ paste("\nby", attr(data[[color]], "label"), "and", attr(data[[separate]], "label")),
     separate != "NONE" ~ paste("\nby", attr(data[[separate]], "label")),
     color != "NONE" ~ paste("\nby", attr(data[[color]], "label")), 
     TRUE ~ ""
   )
-  
-  # Add plot layers common to all graphs
-  p <- p + 
+
+  # Add plot layers
+  p <- d %>%
+    # wrap text on color variable. Changing the name of color var in the process
+    {if(color != "NONE") mutate(., !!sym(paste0("By ", color)) := factor(stringr::str_wrap(!!sym(color), 30),
+               levels = stringr::str_wrap(get_levels(pull(d,color)), 30))) else .} %>%
+    ggplot2::ggplot() +
+    ggplot2::aes_string(x = x.var, y = y.var) + # here
+    ggplot2::xlab(x.lab) + 
+    ggplot2::ylab(y.lab) +
     ggplot2::geom_point(na.rm = TRUE) +
     ggplot2::theme_bw() +
     ggplot2::theme(
@@ -245,12 +259,36 @@ app_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y, 
     ggplot2::ggtitle(paste(var_title, by_title)
                      # ,subtitle = paste(by_title) # plotly won't automatically accept this
     )
+  # plotly::ggplotly(p) %>% plotly::layout(title = list(yref = "container", y = .95, yanchor = "bottom"))
   
-  # Add in plot layers conditional upon user selection
-  if (separate != "NONE") { 
-    p <- p + ggplot2::facet_wrap(stats::as.formula(paste(".~", separate)), labeller = ggplot2::label_both)}
-  if (color != "NONE") { p <- p + ggplot2::aes_string(color = color)}
-  if (by_title != "") {p <- p + ggplot2::theme(plot.margin = ggplot2::margin(t = 1.15, unit = "cm"))}
+  if (color != "NONE") { p <- p + ggplot2::aes_string(colour = paste0("`By ", color, "`")) + 
+        ggplot2::labs(colour = paste0("By ", color)) +
+        ggplot2::theme(plot.title = ggplot2::element_text(size = 16, vjust = 4)
+                       ,plot.margin = ggplot2::margin(t = .7, unit = "cm")
+        )
+  # p
+  # plotly::ggplotly(p) %>% plotly::layout(title =
+  #      list(yref = "container", y = .95, yanchor = "bottom")) #pad = list(b = 200)
+  }
   
+  if (separate != "NONE") {
+    lbl <- paste0(separate, ": ", get_levels(pull(d, separate)) ) %>% stringr::str_wrap(50)
+    max_lines <- max(stringr::str_count(lbl, "\n")) + 1
+    p <- p +
+      ggplot2::facet_wrap(stats::as.formula(paste0(".~ ", separate)), 
+        labeller = ggplot2::as_labeller(setNames(lbl , get_levels(pull(d, separate))))
+      ) + # strip height is not adjusting automatically with text wrap in the app (though it does locally)
+      ggplot2::theme(
+        strip.text = ggplot2::element_text(
+          margin = ggplot2::margin(t = (5 * max_lines), b = (6 * max_lines))),
+        plot.title = ggplot2::element_text(size = 16, vjust = 10)
+        ,plot.margin = ggplot2::margin(t = 1.15, unit = "cm")
+      ) 
+    if(max_lines > 1) p <- p + ggplot2::theme(panel.spacing.y = 
+                   ggplot2::unit((.5 * max_lines),"lines"))
+    # p
+    # plotly::ggplotly(p) %>% plotly::layout(title =
+    #               list(yref = "container", y = .95, yanchor = "bottom")) #pad = list(b = 200)
+  }
   return(p)
 }
