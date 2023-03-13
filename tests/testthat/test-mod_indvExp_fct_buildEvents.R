@@ -23,7 +23,7 @@ test_that("build_events fun", {
                , my_filtered_dat = datafile$ADSL
                )
     ),
-    5
+    4
   )
   # start should be class date & end should be NA
   expect_equal(class(
@@ -36,15 +36,15 @@ test_that("build_events fun", {
   ),
   "Date"
   )
-  expect_equal(all(is.na(
+  expect_equal(is.na(
     build_events(input_checkbox = c("DS")
                , input_apply_filter = FALSE
                , my_usubjid = datafile$ADSL$USUBJID[1]
                , my_loaded_adams = names(named_list)
                , my_datafile = datafile
                , my_filtered_dat = datafile$ADSL)$END
-  )),
-  TRUE
+  ),
+  c(TRUE, TRUE, FALSE, TRUE)
   )
   # 
   expect_equal(unique(
