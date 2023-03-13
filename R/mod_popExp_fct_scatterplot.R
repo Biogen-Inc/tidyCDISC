@@ -28,13 +28,13 @@ app_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y, 
   
   # data = all_data
   # yvar = "ALB"
-  # xvar = "ALP"
-  # week_x = "Baseline"
-  # value_x = "AVAL"
-  # week_y = "Week 2"
+  # xvar = "ADY"
+  # week_x = NULL
+  # value_x = NULL
+  # week_y = "Baseline"
   # value_y = "AVAL"
-  # separate = "AGEGR1"
-  # color = "AENTMTFL"
+  # separate = "NONE"
+  # color = "NONE"
   
   # ---------------------------
   # x and y are numeric columns
@@ -65,6 +65,8 @@ app_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y, 
   # y numeric, x is paramcd 
   } else if (yvar %in% colnames(data) & !xvar %in% colnames(data)) {
     
+    shiny::req(week_x)
+    
     # Filter data by param selected
     suppressWarnings(
       d <- data %>% dplyr::filter(PARAMCD == xvar) %>%
@@ -93,6 +95,8 @@ app_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y, 
   # x numeric, y paramcd
   } else if (!yvar %in% colnames(data) & xvar %in% colnames(data)) {
     
+    shiny::req(week_y)
+    
     # Filter data by param selected
     suppressWarnings(
     d <- data %>% dplyr::filter(PARAMCD == yvar) %>%
@@ -120,6 +124,8 @@ app_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y, 
   # ---------------------------
   # both x & y are paramcds
   } else {
+    
+    shiny::req(week_y, week_x)
     
     # Build plot data for y variable
     y_data <- data %>% dplyr::filter(PARAMCD == yvar)
