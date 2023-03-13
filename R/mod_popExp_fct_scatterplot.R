@@ -36,6 +36,15 @@ app_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y, 
   # separate = "ACTARM"
   # color = "ACTARM"
   
+  # separate = "NONE"
+  # color = "ACTARM"
+  
+  # separate = "ACTARM"
+  # color = "NONE"
+  
+  # separate = "NONE"
+  # color = "NONE"
+  
   # ---------------------------
   # x and y are numeric columns
   if (yvar %in% colnames(data) & xvar %in% colnames(data)) {
@@ -224,20 +233,12 @@ app_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y, 
     color != "NONE" ~ paste("\nby", attr(data[[color]], "label")), 
     TRUE ~ ""
   )
-  
 
   # Add plot layers
   p <- d %>%
-    # wrap text on color or separate variables as needed. Don't change the name
-    # of color var, but we do for sep just in case xvar = yvar.
-    
-    # {if(separate != "NONE") mutate(., !!sym(paste0(separate,"_sep")) :=
-    #     factor(stringr::str_wrap(!!sym(separate), 50),
-    #            levels = stringr::str_wrap(get_levels(pull(d,separate)), 50))) else .} %>%
-    
+    # wrap text on color variable. Changing the name of color var in the process
     {if(color != "NONE") mutate(., !!sym(paste0("By ", color)) := factor(stringr::str_wrap(!!sym(color), 30),
                levels = stringr::str_wrap(get_levels(pull(d,color)), 30))) else .} %>%
-    
     ggplot2::ggplot() +
     ggplot2::aes_string(x = x.var, y = y.var) + # here
     ggplot2::xlab(x.lab) + 
@@ -252,12 +253,18 @@ app_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y, 
     ggplot2::ggtitle(paste(var_title, by_title)
                      # ,subtitle = paste(by_title) # plotly won't automatically accept this
     )
+  # plotly::ggplotly(p) %>% plotly::layout(title = list(yref = "container", y = .95, yanchor = "bottom"))
   
-  # Add in plot layers conditional upon user selection
   if (color != "NONE") { p <- p + ggplot2::aes_string(colour = paste0("`By ", color, "`")) + 
         ggplot2::labs(colour = paste0("By ", color)) +
-        ggplot2::theme(plot.title = ggplot2::element_text(size = 16, vjust = 4))
+        ggplot2::theme(plot.title = ggplot2::element_text(size = 16, vjust = 4)
+                       ,plot.margin = ggplot2::margin(t = .7, unit = "cm")
+        )
+  # p
+  # plotly::ggplotly(p) %>% plotly::layout(title =
+  #      list(yref = "container", y = .95, yanchor = "bottom")) #pad = list(b = 200)
   }
+  
   if (separate != "NONE") {
     lbl <- paste0(separate, ": ", get_levels(pull(d, separate)) ) %>% stringr::str_wrap(50)
     max_lines <- max(stringr::str_count(lbl, "\n")) + 1
@@ -265,12 +272,15 @@ app_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y, 
       ggplot2::facet_wrap(stats::as.formula(paste0(".~ ", separate)), 
         labeller = ggplot2::as_labeller(setNames(lbl , get_levels(pull(d, separate))))
       ) + # strip height is not adjusting automatically with text wrap in the app (though it does locally)
-      ggplot2::theme(strip.text = ggplot2::element_text(
-        margin = ggplot2::margin(t = (5 * max_lines), b = (6 * max_lines))),
+      ggplot2::theme(
+        strip.text = ggplot2::element_text(
+          margin = ggplot2::margin(t = (5 * max_lines), b = (6 * max_lines))),
         plot.title = ggplot2::element_text(size = 16, vjust = 10)
+        ,plot.margin = ggplot2::margin(t = 1.15, unit = "cm")
       ) 
+    # p
+    # plotly::ggplotly(p) %>% plotly::layout(title =
+    #               list(yref = "container", y = .95, yanchor = "bottom")) #pad = list(b = 200)
   }
-  if (by_title != "") {p <- p + ggplot2::theme(plot.margin = ggplot2::margin(t = 1.15, unit = "cm"))}
-  
   return(p)
 }
