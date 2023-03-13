@@ -258,7 +258,7 @@ app_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y, 
   if (color != "NONE") { p <- p + ggplot2::aes_string(colour = paste0("`By ", color, "`")) + 
         ggplot2::labs(colour = paste0("By ", color)) +
         ggplot2::theme(plot.title = ggplot2::element_text(size = 16, vjust = 4)
-                       ,plot.margin = ggplot2::margin(t = .7, unit = "cm")
+                       ,plot.margin = ggplot2::margin(t = .35, unit = "cm")
         )
   # p
   # plotly::ggplotly(p) %>% plotly::layout(title =
@@ -276,8 +276,10 @@ app_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y, 
         strip.text = ggplot2::element_text(
           margin = ggplot2::margin(t = (5 * max_lines), b = (6 * max_lines))),
         plot.title = ggplot2::element_text(size = 16, vjust = 10)
-        ,plot.margin = ggplot2::margin(t = 1.15, unit = "cm")
+        ,plot.margin = ggplot2::margin(t = .6, unit = "cm")
       ) 
+    if(max_lines > 1) p <- p + ggplot2::theme(panel.spacing.y = 
+                   ggplot2::unit((.25 * max_lines),"lines"))
     # p
     # plotly::ggplotly(p) %>% plotly::layout(title =
     #               list(yref = "container", y = .95, yanchor = "bottom")) #pad = list(b = 200)

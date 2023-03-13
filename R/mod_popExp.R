@@ -278,7 +278,9 @@ mod_popExp_server <- function(input, output, session, datafile) {
            plotly::layout(title = list(yref = "container", y = .95, yanchor = "bottom")),
          `Box Plot` = p_box() %>% plotly::ggplotly(),
          `Spaghetti Plot` = p_spaghetti() %>% plotly::ggplotly(),
-         `Line plot - mean over time` = p_line$plot() %>% plotly::ggplotly(tooltip = c("text")),
+         `Line plot - mean over time` = p_line$plot() %>%
+           plotly::ggplotly(tooltip = c("text")) %>%
+           plotly::layout(title = list(yref = "container", y = .95, yanchor = "bottom")),
          `Heatmap - endpoint correlations` = p_heatmap$plot() %>% plotly::ggplotly(tooltip = c("text"))
          , `Kaplan-Meier Curve` = p_km() %>% plotly::ggplotly()
         ) %>%

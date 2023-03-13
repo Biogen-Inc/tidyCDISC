@@ -157,7 +157,8 @@ app_lineplot <- function(data, yvar, time, value = NULL, separate = "NONE", colo
   # if (color != "NONE") { p <- p + ggplot2::aes_string(color = color, group = color) }
   if (color != "NONE") { p <- p + ggplot2::aes_string(colour = paste0("`By ", color, "`")) + 
     ggplot2::labs(colour = paste0("By ", color)) +
-    ggplot2::theme(plot.title = ggplot2::element_text(size = 16, vjust = 4))
+    ggplot2::theme(plot.title = ggplot2::element_text(size = 16, vjust = 4)
+                   ,plot.margin = ggplot2::margin(t = .35, unit = "cm"))
   }
   if (err_bars) {
     p <- p + ggplot2::aes(ymin = Lower, ymax = Upper) +
@@ -171,12 +172,16 @@ app_lineplot <- function(data, yvar, time, value = NULL, separate = "NONE", colo
       ggplot2::facet_wrap(stats::as.formula(paste0(".~ ", separate)), 
                           labeller = ggplot2::as_labeller(setNames(lbl , get_levels(pull(d, separate))))
       ) + # strip height is not adjusting automatically with text wrap in the app (though it does locally)
-      ggplot2::theme(strip.text = ggplot2::element_text(
-        margin = ggplot2::margin(t = (5 * max_lines), b = (6 * max_lines))),
+      ggplot2::theme(
+        strip.text = ggplot2::element_text(
+          margin = ggplot2::margin(t = (5 * max_lines), b = (6 * max_lines))),
         plot.title = ggplot2::element_text(size = 16, vjust = 10)
+        ,plot.margin = ggplot2::margin(t = .6, unit = "cm")
       ) 
+    if(max_lines > 1) p <- p + ggplot2::theme(panel.spacing.y = 
+                                 ggplot2::unit((.25 * max_lines),"lines"))
   }
-  if (by_title != "") {p <- p + ggplot2::theme(plot.margin = ggplot2::margin(t = 1.25, unit = "cm"))}
+  # if (by_title != "") {p <- p + ggplot2::theme(plot.margin = ggplot2::margin(t = 1.25, unit = "cm"))}
   
   if(label_points){
     x_scale <- ggplot2::layer_scales(p)$x$range$range
