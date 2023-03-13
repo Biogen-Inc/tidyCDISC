@@ -119,8 +119,8 @@ mod_indvExpPatEvents_server <- function(input, output, session,
           date_cols <- c("Start of Event","End of Event")
         }
         else{
-          date_cols <- "Date of Event"
-          tab <- uni_rec %>% select(EVENTTYP, START, DECODE)
+          date_cols <- c("Start Date", "End Date")
+          tab <- uni_rec %>% select(EVENTTYP, START, END, DECODE)
         }
         
         output$eventsTable <- DT::renderDataTable(server = FALSE, {  # This allows for downloading entire data set
@@ -148,12 +148,14 @@ mod_indvExpPatEvents_server <- function(input, output, session,
             subset(!is.na(START)) %>%
             mutate(
               start = START,
-              end = END,
-              content = DECODE,
+              end = END + 1,
+              content = "",
               group = EVENTTYP,
-              className = DOMAIN
+              className = DOMAIN,
+              type = if_else(is.na(END), "point", "range"),
+              title = DECODE
             ) %>%
-            select(start, end, content, group, className)
+            select(start, end, content, group, className, type, title)
           grp_dat <- 
             uni_rec %>%
             mutate(id = EVENTTYP,
@@ -177,20 +179,7 @@ mod_indvExpPatEvents_server <- function(input, output, session,
                         # ,options = list(maxHeight = "400px")
           )
           
-          if(nonMH_n > 1){
-            s <- min(as.Date(nonMH_dat$start))
-            e <- max(as.Date(nonMH_dat$start))
-            
-            old_span <- e - s
-            new_span <- old_span / nonMH_n
-            new_s <- as.character(s - round(new_span*.10))
-            new_e <- as.character(s + new_span)
-            
-            tv <- tv %>%
-              setOptions(list(start = new_s, end = new_e))
-          }
           tv
-          
         }) # end of renderTimevis
         
         

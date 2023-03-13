@@ -19,6 +19,12 @@
 * Fixed bug where plots' visual appeal was destroyed when faceting variable labels were too long (#200)
 * Fixed bug where scatter plot wouldn't display by categorical variable with `NA` values (#192)
 
+### Individual Explorer
+* Updated the look of the time visualization (#194)
+    * Moved the event description to a tooltip instead of a label
+    * Incorporated end dates (where applicable) to display ranges
+    * Removed the auto-zoom when multiple groups were selected
+
 
 # tidyCDISC 0.2.0 (CRAN Release)
 
