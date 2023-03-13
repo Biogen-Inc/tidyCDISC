@@ -177,7 +177,7 @@ scatterPlot_srv <- function(input, output, session, data, run) {
   # create plot object using the numeric column on the yaxis
   # or by filtering the data by PARAMCD, then using AVAL or CHG for the yaxis
   p <- reactive({
-    req(run(),data(), input$yvar, input$xvar)
+    req(run(), data(), input$yvar, input$xvar)
     app_scatterplot(data(), 
                  input$yvar, 
                  input$xvar, 
