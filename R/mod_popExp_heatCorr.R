@@ -110,6 +110,13 @@ heatmap_srv <- function(input, output, session, data, run) {
     }) %>%
       na.omit() %>% as.character()
     
+    # If there is only one paramcd, need to pass to choices() as a one-element
+    # named list so that the name appears in dropdown
+    if (length(paramcd) == 1) {
+      paramcd <- c(paramcd)
+      names(paramcd) <- paramcd
+    }
+    
     updateSelectInput(session, "yvar_x",
                       choices = list(`Time Dependent` = paramcd,`Time Independent` = num_col),
                       selected = isolate(input$yvar_x))
