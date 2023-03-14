@@ -1,4 +1,5 @@
 # tidyCDISC (development version)
+- Allowed for one-element lists in heatmap axis dropdowns.
 
 # tidyCDISC 0.2.1 (CRAN Release)
 
