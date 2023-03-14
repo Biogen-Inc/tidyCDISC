@@ -140,16 +140,13 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   
   
   # perform any pre-filters on the data, when a STAN table is selected
-  pre_ADSL <- reactiveValues()
-  pre_ADAE <- reactiveValues()
-  observeEvent(input$recipe, {
-    purrr::iwalk(tryCatch(filter_adsl(recipe(), datafile()$ADSL),
-                          error = function(e) validate(error_handler(e))),
-                 ~ {pre_ADSL[[.y]] <- .x})
-    purrr::iwalk(tryCatch(filter_adae(recipe(), datafile(), pre_ADSL$data),
-                          error = function(e) validate(error_handler(e))),
-                 ~ {pre_ADAE[[.y]] <- .x})
+  pre_ADSL <- eventReactive(input$recipe, {
+    tryCatch(filter_adsl(recipe(), datafile()$ADSL), error = function(e) validate(error_handler(e)))
   })
+  pre_ADAE <- reactive({
+    tryCatch(filter_adae(recipe(), datafile(), pre_ADSL()$data), error = function(e) validate(error_handler(e)))
+  }) %>%
+    bindEvent(input$recipe, pre_ADSL())
 
   # Create cleaned up versions of raw data
   BDS <- reactive({ 
@@ -159,8 +156,8 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   })
 
   # combine all BDS data files into one large data set
-  bds_data <- eventReactive(pre_ADSL$data, { 
-    prep_bds(datafile = datafile(), ADSL = pre_ADSL$data)
+  bds_data <- eventReactive(pre_ADSL(), { 
+    prep_bds(datafile = datafile(), ADSL = pre_ADSL()$data)
     # OLD code removed 2/17/2021
   })
   
@@ -181,10 +178,10 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   
   # apply filters from selected dfs to tg data to create all data
   all_data <- reactive({suppressMessages(bds_data() %>% semi_join(filtered_data()))})
-  ae_data <- reactive({req(pre_ADAE$data); suppressMessages(pre_ADAE$data %>% semi_join(filtered_data()))})
+  ae_data <- reactive({suppressMessages(pre_ADAE()$data %>% semi_join(filtered_data()))})
   pop_data <- reactive({
     suppressMessages(
-      pre_ADSL$data %>% # Cannot be ADSL() because that has potentially been filtered to ADAE subj's
+      pre_ADSL()$data %>% # Cannot be ADSL() because that has potentially been filtered to ADAE subj's
       semi_join(filtered_data()) %>%
       varN_fctr_reorder()
     )
@@ -415,9 +412,8 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   })
 
   pre_filter_msgs <- reactive({
-    paste0(pre_ADSL$message, "<br/>", pre_ADAE$message, collapse = "<br/>")
-  }) %>%
-    bindEvent(pre_ADSL$message, pre_ADAE$message)
+    paste0(pre_ADSL()$message, "<br/>", pre_ADAE()$message, collapse = "<br/>")
+  })
   
   # Create the tables subtitle if the table has been filtered
   subtitle_html <- reactive({
@@ -661,7 +657,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   
   # Depending on data source used in the app, create data for R script
   create_script_data <- reactive({
-    if(any("CDISCPILOT01" %in% pre_ADSL$data$STUDYID)){
+    if(any("CDISCPILOT01" %in% pre_ADSL()$data$STUDYID)){
       glue::glue("
         # create list of dataframes from CDISC pilot study
         datalist <- list({paste(purrr::map_chr(names(datafile()), ~ paste0(.x, ' = tidyCDISC::', tolower(.x))), collapse = ', ')})
@@ -684,7 +680,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   })
   
   footnote_src <- reactive({
-    if(any("CDISCPILOT01" %in% pre_ADSL$data$STUDYID)){
+    if(any("CDISCPILOT01" %in% pre_ADSL()$data$STUDYID)){
       "'tidyCDISC app'"
     } else {
       "study_dir"
