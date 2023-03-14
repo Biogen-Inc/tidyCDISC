@@ -415,9 +415,9 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   })
 
   pre_filter_msgs <- reactive({
-    paste0(pre_ADSL$message, "<br/>", pre_ADSL$message, collapse = "<br/>")
+    paste0(pre_ADSL$message, "<br/>", pre_ADAE$message, collapse = "<br/>")
   }) %>%
-    bindEvent(pre_ADSL$message, pre_ADSL$message)
+    bindEvent(pre_ADSL$message, pre_ADAE$message)
   
   # Create the tables subtitle if the table has been filtered
   subtitle_html <- reactive({
