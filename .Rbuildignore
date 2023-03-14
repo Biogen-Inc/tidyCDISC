@@ -19,6 +19,7 @@ $run_dev.*
 ^cran-comments\.md$
 ^revdep$
 vignettes/announcing-tidycdisc-0-0-1-1.Rmd
+vignettes/announcing-tidycdisc-0-2-1.Rmd
 vignettes/Blog.Rmd
 vignettes/figures$
 vignettes/tidyCDISC.Rmd
@@ -28,3 +29,4 @@ vignettes/x0*
 ^Meta$
 ^CRAN-SUBMISSION$
 ^scripts$
+\.sass$

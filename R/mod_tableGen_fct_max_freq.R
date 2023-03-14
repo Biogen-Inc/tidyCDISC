@@ -122,7 +122,7 @@ app_max_freq.default <- app_max_freq.OCCDS <- app_max_freq.ADAE <- app_max_freq.
              v = paste0(n, ' (', sprintf("%.1f", round(prop*100, 1)), ')')
       ) %>%
       select(-n, -prop, -n_tot) %>%
-      pivot_wider(!!column, names_from = !!group, values_from = v)
+      pivot_wider(id_cols = !!column, names_from = !!group, values_from = v)
     
     cbind(groups, total$x)
   }

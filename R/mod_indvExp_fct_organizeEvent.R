@@ -48,6 +48,7 @@ org_df_events <- function(
   , df_domain_abbr
   , df_desc
   , df_st_date_vars
+  , df_en_date_vars
   , event_desc_vars
   , event_desc
   , mi_input_checkbox
@@ -66,6 +67,18 @@ org_df_events <- function(
       # left-to-right from most-preferred to least-preferred
       st_date_var_str <- df_st_date_vars[df_st_date_vars %in% colnames(mi_datafile[[df_name]])][1]
       st_date_var <- sym(st_date_var_str)
+      if (!missing(df_en_date_vars)) {
+      en_date_var_str <- df_en_date_vars[df_en_date_vars %in% colnames(mi_datafile[[df_name]])][1]
+      if (!is.na(en_date_var_str)) {
+        en_date_var <- sym(en_date_var_str)
+      } else {
+        en_date_var_str <- ""
+        en_date_var <- sym("NA")
+      }
+      } else {
+        en_date_var_str <- ""
+        en_date_var <- sym("NA")
+      }
       
       dat <- 
         # conditionally toggle which dataset is used
@@ -73,18 +86,18 @@ org_df_events <- function(
         filter(USUBJID == mi_usubjid) %>%
         filter(!is.na(!!st_date_var) ) %>%
         mutate(EVENTTYP = df_desc, DOMAIN = df_domain_abbr) %>%
-        select(USUBJID, EVENTTYP, !!st_date_var, one_of(event_desc_vars), DOMAIN) %>%
+        select(USUBJID, EVENTTYP, !!st_date_var, any_of(en_date_var_str), one_of(event_desc_vars), DOMAIN) %>%
         distinct() %>%
         mutate(
           START = !!st_date_var,
-          END = NA,
+          END = if (en_date_var_str == "") NA else !!en_date_var,
           tab_st = ifelse(as.character(START) == "", NA_character_, as.character(START)), # disp chr in DT
           tab_en = ifelse(as.character(END) == "", NA_character_, as.character(END))      # disp chr in DT
           ) %>% 
         mutate_(
           DECODE = event_desc
         ) %>%
-        select(-starts_with(df_domain_abbr), -!!st_date_var) %>%
+        select(-starts_with(df_domain_abbr), -!!st_date_var, -any_of(en_date_var_str)) %>%
         distinct(.keep_all = TRUE)
     } else{
       if(df_domain_abbr %in% c(mi_input_checkbox)){

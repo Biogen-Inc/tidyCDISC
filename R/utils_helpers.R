@@ -342,3 +342,19 @@ varN_fctr_reorder <- function(data) {
   return(data)
 }
 
+error_handler <- function(e) {
+  UseMethod("error_handler")
+}
+
+error_handler.default <- function(e) {
+  conditionMessage(e)
+}
+
+error_handler.purrr_error_indexed <-
+  `error_handler.dplyr:::mutate_error` <- function(e) {
+  e$parent$message
+}
+
+error_handler.rlang_error <- function(e) {
+  stringr::str_replace_all(rlang::cnd_message(e), "\n.*? ", " ")
+}

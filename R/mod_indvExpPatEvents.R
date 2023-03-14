@@ -84,19 +84,30 @@ mod_indvExpPatEvents_server <- function(input, output, session,
       output$events_tv_caption2 <- renderText({NULL})
       shinyjs::hide(id = "events_tv_caption1")
       shinyjs::hide(id = "events_tv_caption2")
+      shinyjs::hide(id = "events_error")
       shinyjs::hide(id = "eventsPlot")
       shinyjs::hide(id = "eventsTable")
     }
     else{
       
       # See build_events_df.R
-      uni_rec <- build_events(input_checkbox = input$checkGroup
+      uni_rec <- tryCatch(build_events(input_checkbox = input$checkGroup
                               , input_apply_filter = input$events_apply_filter
                               , my_usubjid = usubjid()
                               , my_loaded_adams = loaded_adams()
                               , my_datafile = datafile()
-                              , my_filtered_dat = filtered_dat())
+                              , my_filtered_dat = filtered_dat()),
+                          error = function(e) simpleError(error_handler(e))
+      )
       
+      if ("simpleError" %in% class(uni_rec)) {
+        output$events_error <- renderText(uni_rec$message)
+        shinyjs::show("events_error")
+        shinyjs::hide("eventsTable")
+        shinyjs::hide("eventsPlot")
+      }
+      req(!"simpleError" %in% class(uni_rec))
+      shinyjs::hide("events_error")
       
       # If data exists, output a DT object containing Events date data
       if (!is.null(uni_rec) && nrow(uni_rec) > 0) {
@@ -108,8 +119,8 @@ mod_indvExpPatEvents_server <- function(input, output, session,
           date_cols <- c("Start of Event","End of Event")
         }
         else{
-          date_cols <- "Date of Event"
-          tab <- uni_rec %>% select(EVENTTYP, START, DECODE)
+          date_cols <- c("Start Date", "End Date")
+          tab <- uni_rec %>% select(EVENTTYP, START, END, DECODE)
         }
         
         output$eventsTable <- DT::renderDataTable(server = FALSE, {  # This allows for downloading entire data set
@@ -137,12 +148,14 @@ mod_indvExpPatEvents_server <- function(input, output, session,
             subset(!is.na(START)) %>%
             mutate(
               start = START,
-              end = END,
-              content = DECODE,
+              end = END + 1,
+              content = "",
               group = EVENTTYP,
-              className = DOMAIN
+              className = DOMAIN,
+              type = if_else(is.na(END), "point", "range"),
+              title = DECODE
             ) %>%
-            select(start, end, content, group, className)
+            select(start, end, content, group, className, type, title)
           grp_dat <- 
             uni_rec %>%
             mutate(id = EVENTTYP,
@@ -166,20 +179,7 @@ mod_indvExpPatEvents_server <- function(input, output, session,
                         # ,options = list(maxHeight = "400px")
           )
           
-          if(nonMH_n > 1){
-            s <- min(as.Date(nonMH_dat$start))
-            e <- max(as.Date(nonMH_dat$start))
-            
-            old_span <- e - s
-            new_span <- old_span / nonMH_n
-            new_s <- as.character(s - round(new_span*.10))
-            new_e <- as.character(s + new_span)
-            
-            tv <- tv %>%
-              setOptions(list(start = new_s, end = new_e))
-          }
           tv
-          
         }) # end of renderTimevis
         
         

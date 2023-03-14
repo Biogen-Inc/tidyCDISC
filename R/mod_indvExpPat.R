@@ -59,7 +59,7 @@ mod_indvExpPat_server <- function(input, output, session, datafile, loaded_adams
     output$events_tv_caption1 <- renderText({NULL})
     output$events_tv_caption2 <- renderText({NULL})
     hide_em <- c("events_tv_caption1", "events_tv_caption2", "eventsPlot", "eventsTable", "display_dy",
-                 "overlay_events","overlay_event_vals")
+                 "overlay_events","overlay_event_vals", "events_error")
     purrr::map(hide_em, ~shinyjs::hide(.x))
     output$display_dy <- renderText({NULL})
     

@@ -1,6 +1,6 @@
 Package: tidyCDISC
 Title: Quick Table Generation & Exploratory Analyses on ADaM-Ish Datasets
-Version: 0.2.0.9001
+Version: 0.2.1.9000
 Authors@R: c(
     person("Aaron", "Clark", , "clark.aaronchris@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-0123-0970")),
@@ -33,7 +33,7 @@ Description: Provides users a quick exploratory dive into common
     modules allow for concise filtering & downloading bulk outputs into
     html or pdf formats to save for later.
 License: AGPL (>= 3)
-URL: https://Biogen-Inc.github.io/tidyCDISC/
+URL: https://github.com/Biogen-Inc/tidyCDISC/, https://Biogen-Inc.github.io/tidyCDISC/
 BugReports: https://github.com/Biogen-Inc/tidyCDISC/issues
 Depends: 
     R (>= 2.10)
@@ -73,4 +73,4 @@ VignetteBuilder:
 Encoding: UTF-8
 Language: en-US
 LazyData: true
-RoxygenNote: 7.2.0
+RoxygenNote: 7.2.3

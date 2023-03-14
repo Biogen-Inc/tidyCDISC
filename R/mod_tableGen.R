@@ -319,7 +319,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # convert the custom shiny input to a table output
   blocks_and_functions <- reactive({
     # create initial dataset
-    blockData <- convertTGOutput(input$agg_drop_zone, input$block_drop_zone)
+    blockData <- tryCatch(convertTGOutput(input$agg_drop_zone, input$block_drop_zone), error = function(e) validate(error_handler(e)))
 
     blockData$label <- 
       purrr::map2(blockData$block, blockData$dataset, function(var, dat) {
@@ -449,15 +449,14 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       )
     }
     # if no data in the source, do not run the pmap, just show this msg:
-    if(nrow(use_data_reactive()) == 0){
-      stop(paste0("No subjects remain when the following filters are applied.\n        "
-                      ,gsub("<br/>", "\n        ", pre_filter_msgs())))
-    }
-    
-    d <- tg_gt(list(ADAE = ae_data(), ADSL = all_data(), POPDAT = use_preferred_pop_data()),
+    validate(need(nrow(use_data_reactive()) != 0, paste0("No subjects remain when the following filters are applied.\n        "
+                                                    ,gsub("<br/>", "\n        ", pre_filter_msgs()))))
+
+    d <- tryCatch(tg_gt(list(ADAE = ae_data(), ADSL = all_data(), POPDAT = use_preferred_pop_data()),
                blocks_and_functions(),
                total_df(),
-               column())
+               column()), error = function(e) validate(error_handler(e)))
+
     return(d)
   })
 
@@ -504,32 +503,8 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # Create RTF table
   rtf_table <- reactive({
     
-    data <- for_gt()
-    
-    # Add blank row after each ID group
-    
-    # Change factor to character to maintain order of blocks
-    data_factor <- data %>%
-      mutate(ID = factor(ID, levels = unique(ID)))
-    
-    # Add blank rows
-    data_with_blank_rows <- do.call(rbind, by(data, data_factor$ID, rbind, ""))
-    
-    # Populate ID in blank rows
-    ind <- which(data_with_blank_rows$ID == "")
-    data_with_blank_rows$ID[ind] <- data_with_blank_rows$ID[ind - 1]
-    
-    
-    # Convert to gt table object
-    gt_tab <- create_gt_table(data_with_blank_rows, 
-                              input_table_title = input$table_title, 
-                              input_table_footnote = input$table_footnote, 
-                              col_names = row_names_n(), 
-                              col_total = col_total(), 
-                              subtitle = subtitle_html()) 
-    
     # Add formatting for RTF output
-    rtf_tab <- gt_tab %>%
+    rtf_tab <- gt_table() %>%
       gt::tab_options(
         
         # Not currently possible to change font family or size
@@ -647,7 +622,10 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       if(input$download_type == ".csv") {
         progress$inc(1) # increment progress bar
         
-        write.csv(for_gt(), file, row.names = FALSE)
+        write.csv(
+          for_gt() %>%
+            mutate(ID = ifelse(Variable == "", "", ID))
+            , file, row.names = FALSE)
         progress$inc(1) # increment progress bar
         
       } else if(input$download_type == ".html") {
@@ -694,11 +672,11 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
           study_dir <- 'path/to/study/directory/'
           
           # use HAVEN to extract data, then merge
-          filenames <- c({filenames()})
+          file_names <- c({filenames()})
           
           # create list of dataframes
           datalist <- 
-            purrr::map(file_names, ~ haven::read_sas(file.path(study_directory,.x))) %>%
+            purrr::map(file_names, ~ haven::read_sas(file.path(study_dir,.x))) %>%
             setNames(toupper(stringr::str_remove(file_names, '.sas7bdat')))
       ")}
   })
@@ -905,7 +883,13 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
                  rows = stringr::str_detect(Variable,'&nbsp;') |
                    stringr::str_detect(Variable,'<b>') |
                    stringr::str_detect(Variable,'</b>')) %>%
-          tab_options(table.width = px(700)) %>%
+          tab_options(table.width = px(700),
+                    table.font.names = c('Times', 'Arial'),
+                    row_group.border.top.style = 'none',
+                    row_group.border.bottom.style = 'none',
+                    table_body.hlines.style = 'none',
+                    table.border.top.style = 'none',
+                    table.border.bottom.style = 'none') %>%
           cols_label(.list = tidyCDISC::col_for_list_expr(col_names, col_total)) %>%
           tab_header(
             title = md('{input$table_title}'),

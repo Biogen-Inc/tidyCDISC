@@ -34,5 +34,5 @@ test_that("facet by group", {
 
 test_that("color by group", {
   plot <- app_scatterplot(tg_data, "AGE", "CHG", color = "SEX")
-  expect_equal(rlang::sym("SEX"), rlang::quo_get_expr(plot$mapping$colour))
+  expect_equal(rlang::sym("By SEX"), rlang::quo_get_expr(plot$mapping$colour))
 })
