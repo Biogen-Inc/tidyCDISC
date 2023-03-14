@@ -143,9 +143,11 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   pre_ADSL <- reactiveValues()
   pre_ADAE <- reactiveValues()
   observeEvent(input$recipe, {
-    purrr::iwalk(filter_adsl(recipe(), datafile()$ADSL),
+    purrr::iwalk(tryCatch(filter_adsl(recipe(), datafile()$ADSL),
+                          error = function(e) validate(error_handler(e))),
                  ~ {pre_ADSL[[.y]] <- .x})
-    purrr::iwalk(filter_adae(recipe(), datafile(), pre_ADSL$data),
+    purrr::iwalk(tryCatch(filter_adae(recipe(), datafile(), pre_ADSL$data),
+                          error = function(e) validate(error_handler(e))),
                  ~ {pre_ADAE[[.y]] <- .x})
   })
 
