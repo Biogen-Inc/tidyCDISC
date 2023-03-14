@@ -108,7 +108,10 @@ heatmap_srv <- function(input, output, session, data, run) {
         nrow()
       ifelse(rows > 0, NA_character_, test_pcd)
     }) %>%
-      na.omit() %>% as.character()
+      na.omit() %>% as.character() %>%
+      # Convert to list so that one-element vectors are displayed correctly
+      # in the dropdown
+      as.list()
     
     updateSelectInput(session, "yvar_x",
                       choices = list(`Time Dependent` = paramcd,`Time Independent` = num_col),
