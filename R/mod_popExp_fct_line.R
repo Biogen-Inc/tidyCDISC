@@ -49,28 +49,23 @@ app_lineplot <- function(data, yvar, time, value = NULL, separate = "NONE", colo
   colorN <- paste0(color, "N")
   separateN <- paste0(separate, "N")
     
-  # print(unique(data0[,c("AVISIT", "AVISITN")]))
-  # print(".")
-  # print(levels(data0$AVISIT))
-  # print(".")
-  # print(unique(data0$AVISIT))
-  # print(".")
   # subset data based on yvar being paramcd or not
   if (yvar %in% colnames(data)) {
     suppressWarnings(
       d0 <- data0 %>% select(USUBJID, time, one_of(timeN), val = yvar, one_of(color, colorN, separate, separateN))
     )
-    yvar_label <- yl <- ifelse(rlang::is_empty(attr(data[[yvar]], "label")), yvar, attr(data[[yvar]], "label"))
+    yvar_label <- yl <- label_me(data, yvar)
   } else {
     suppressWarnings(
       d0 <- data0 %>%
         dplyr::filter(PARAMCD == yvar) %>%
         select(USUBJID, time, one_of(timeN), PARAM, PARAMCD, val = value, one_of(color, colorN, separate, separateN))
     )
+    # do not use label_me() since this is checking for an empty string
     yvar_label <- ifelse(rlang::is_empty(paste(unique(d0$PARAM))), yvar, paste(unique(d0$PARAM)))
-    yl <- glue::glue("{yvar_label} ({attr(data[[value]], 'label') %||% value})")
+    yl <- glue::glue("{yvar_label} ({label_me(data, value)})")
   }
-  xl <- ifelse(rlang::is_empty(attr(d0[[time]], "label")), time, attr(d0[[time]], "label"))
+  xl <- label_me(d0, time) # ifelse(rlang::is_empty(attr(d0[[time]], "label")), time, attr(d0[[time]], "label"))
   y_lab <- paste(ifelse(value == "CHG", "Mean Change from Baseline", "Mean"), yvar_label)
   
   val_sym <- rlang::sym("val")
@@ -118,10 +113,10 @@ app_lineplot <- function(data, yvar, time, value = NULL, separate = "NONE", colo
   # if separate or color used, include those "by" variables in title
   var_title <- paste(y_lab, "by", xl)
   by_title <- case_when(
-    separate == color & color != "NONE" ~  paste("\nby", attr(data[[color]], "label") %||% color),
-    separate != "NONE" & color != "NONE" ~ paste("\nby", attr(data[[color]], "label") %||% color, "and", attr(data[[separate]], "label") %||% separate),
-    separate != "NONE" ~ paste("\nby", attr(data[[separate]], "label") %||% separate),
-    color != "NONE" ~ paste("\nby", attr(data[[color]], "label") %||% color), 
+    separate == color & color != "NONE" ~  paste("\nby", label_me(data, color)), 
+    separate != "NONE" & color != "NONE" ~ paste("\nby", label_me(data, color), "and", label_me(data, separate)), 
+    separate != "NONE" ~ paste("\nby", label_me(data, separate)),
+    color != "NONE" ~ paste("\nby", label_me(data, color)), 
     TRUE ~ ""
   )
   

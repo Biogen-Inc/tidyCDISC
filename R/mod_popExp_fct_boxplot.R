@@ -25,10 +25,10 @@ app_boxplot <- function(data, yvar, group, value = NULL, points = FALSE) {
     # initialize plot
     p <- ggplot2::ggplot(data) + 
       ggplot2::aes_string(x = group, y = yvar) +
-      ggplot2::ylab(attr(data[[yvar]], "label") %||% yvar)
+      ggplot2::ylab(label_me(data, yvar))
     
     # initialize title with variable of interst
-    var_title <- paste(attr(data[[yvar]], 'label') %||% yvar, "by", attr(data[[group]], "label") %||% group)
+    var_title <- paste(label_me(data, yvar), "by", label_me(data, group))
     
   # BDS Param selected
   } else {
@@ -37,13 +37,13 @@ app_boxplot <- function(data, yvar, group, value = NULL, points = FALSE) {
     
     # Initialize title with variable selected
     var_label <- paste(unique(d$PARAM))
-    var_title <- paste(var_label, "by", attr(data[[group]], "label") %||% group)
+    var_title <- paste(var_label, "by", label_me(data, group))
     
     # Initialize plot
     p <- d %>%
       ggplot2::ggplot() +
       ggplot2::aes_string(x = group, y = value) +
-      ggplot2::ylab(glue::glue("{var_label} ({attr(data[[value]], 'label') %||% group})"))
+      ggplot2::ylab(glue::glue("{var_label} ({label_me(data, value)})"))
   }
   
   # Add layer of common plot elements
