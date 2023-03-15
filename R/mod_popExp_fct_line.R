@@ -65,7 +65,7 @@ app_lineplot <- function(data, yvar, time, value = NULL, separate = "NONE", colo
     yvar_label <- ifelse(rlang::is_empty(paste(unique(d0$PARAM))), yvar, paste(unique(d0$PARAM)))
     yl <- glue::glue("{yvar_label} ({label_me(data, value)})")
   }
-  xl <- label_me(d0, time) # ifelse(rlang::is_empty(attr(d0[[time]], "label")), time, attr(d0[[time]], "label"))
+  xl <- label_me(d0, time) 
   y_lab <- paste(ifelse(value == "CHG", "Mean Change from Baseline", "Mean"), yvar_label)
   
   val_sym <- rlang::sym("val")

@@ -23,11 +23,11 @@ app_spaghettiplot <- function(data, yvar, time, value = NULL) {
     # initialize plot
     p <- ggplot2::ggplot(data) + 
       ggplot2::aes_string(x = time, y = yvar, group = "USUBJID") +
-      ggplot2::ylab(attr(data[[yvar]], "label") %||% yvar) +
-      ggplot2::xlab(attr(data[[time]], "label") %||% time)
+      ggplot2::ylab(label_me(data, yvar)) +
+      ggplot2::xlab(label_me(data, time))
     
     # initialize title with variables plotted
-    var_title <- paste(attr(data[[yvar]], 'label') %||% yvar, "by", attr(data[[time]], "label") %||% time)
+    var_title <- paste(label_me(data, yvar), "by", label_me(data, time))
     
   } else {
     
@@ -36,16 +36,16 @@ app_spaghettiplot <- function(data, yvar, time, value = NULL) {
     
     # initialize title with variables plotted
     var_label <- paste(unique(d$PARAM))
-    var_title <- paste(var_label, "by", attr(data[[time]], "label") %||% time)
+    var_title <- paste(var_label, "by", label_me(data, time))
     
     # initialize plot
     p <- d %>%
       ggplot2::ggplot() +
       ggplot2::aes_string(x = time, y = value, group = "USUBJID")  +
       ggplot2::ylab(
-        glue::glue("{var_label} ({attr(d[[value]], 'label') %||% value})")
+        glue::glue("{var_label} ({label_me(d, value)})")
       ) +
-      ggplot2::xlab(attr(data[[time]], "label") %||% time)
+      ggplot2::xlab(label_me(data, time))
   }
   
   # Add common layers to plot
