@@ -27,22 +27,13 @@
 app_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y, separate = "NONE", color = "NONE") {
   
   # data = all_data
-  # yvar = "DIABP"
-  # xvar = "DIABP"
-  # week_x = "SCREENING"
+  # yvar = "ALB"
+  # xvar = "ALP"
+  # week_x = "Baseline"
   # value_x = "AVAL"
-  # week_y = "SCREENING"
+  # week_y = "Week 2"
   # value_y = "AVAL"
-  # separate = "ACTARM"
-  # color = "ACTARM"
-  
-  # separate = "NONE"
-  # color = "ACTARM"
-  
-  # separate = "ACTARM"
-  # color = "NONE"
-  
-  # separate = "NONE"
+  # separate = "AVISIT"
   # color = "NONE"
   
   # ---------------------------
@@ -60,9 +51,9 @@ app_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y, 
     
     # Initialize plot x & y vars
     x.var <- xvar
-    x.lab <- attr(data[[xvar]], 'label')
+    x.lab <- attr(data[[xvar]], 'label') %||% xvar
     y.var <- yvar
-    y.lab <- attr(data[[yvar]], 'label')
+    y.lab <- attr(data[[yvar]], 'label') %||% yvar
     
     # Initialize title of variables plotted
     var_title <- paste(y.lab, "versus", x.lab)
@@ -87,9 +78,9 @@ app_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y, 
     
     # initialize plot x & y vars
     x.var <- value_x
-    x.lab <- glue::glue("{unique(d$PARAM)}: {week_x} ({attr(data[[value_x]], 'label')})")
+    x.lab <- glue::glue("{unique(d$PARAM)}: {week_x} ({attr(data[[value_x]], 'label') %||% value_x})")
     y.var <- yvar
-    y.lab <- attr(data[[yvar]], 'label')
+    y.lab <- attr(data[[yvar]], 'label') %||% yvar
     
     # Initialize title of variables plotted
     var_title <- paste(y.lab, "versus", unique(d$PARAM), "at", week_x)
@@ -114,9 +105,9 @@ app_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y, 
     
     # initialize plot x & y vars
     x.var <- xvar
-    x.lab <- attr(data[[xvar]], 'label')
+    x.lab <- attr(data[[xvar]], 'label') %||% xvar
     y.var <- value_y
-    y.lab <- glue::glue("{unique(d$PARAM)}: {week_y} ({attr(data[[value_y]], 'label')})")
+    y.lab <- glue::glue("{unique(d$PARAM)}: {week_y} ({attr(data[[value_y]], 'label') %||% value_y})")
     
     # Initialize title of variables plotted
     var_title <- paste(unique(d$PARAM), "at", week_y, "versus", x.lab)
@@ -167,8 +158,10 @@ app_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y, 
         arrange(USUBJID)  
     )
     suppressMessages(
-      by_all <- y_dat %>% select(-AVISIT) %>%
-        full_join(x_dat %>% select(-AVISIT)) %>% #
+      by_all <- y_dat %>%
+        {if(!"AVISIT" %in% c(separate, color)) select(., -AVISIT) else .} %>%
+        full_join(x_dat %>% 
+          {if(!"AVISIT" %in% c(separate, color)) select(., -AVISIT) else .}) %>% #
         arrange(USUBJID) 
     )
     suppressMessages(
@@ -199,8 +192,16 @@ app_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y, 
           if(var.x == var.y) {
             if(is.na(var.x)) "NA" else var.x
         } else {
+          # if coloring / faceting by AVISIT, we need special logic
+          var.x.str <- deparse(substitute(var.x))
+          visit_var.x.str <- deparse(substitute(visit_var.x))
+          if(var.x.str == visit_var.x.str) {
+            paste0(if(is.na(var.x)) "NA" else var.x, " & ", if(is.na(var.y)) "NA" else var.y)
+          } else {
+            # normal logic:
             paste0(visit_var.x, ": ", if(is.na(var.x)) "NA" else var.x, " & ",
                    visit_var.y, ": ", if(is.na(var.y)) "NA" else var.y)
+          }
         }}
         suppressWarnings(
           by_u %>%
@@ -217,9 +218,9 @@ app_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y, 
     
     # Initialize plot x & y vars
     x.var <- xvar
-    x.lab <- glue::glue("{unique(x_data$PARAM)}: {week_x} ({attr(data[[value_x]], 'label')})")
+    x.lab <- glue::glue("{unique(x_data$PARAM)}: {week_x} ({attr(data[[value_x]], 'label') %||% value_x})")
     y.var <- yvar
-    y.lab <- glue::glue("{unique(y_data$PARAM)}: {week_y} ({attr(data[[value_y]], 'label')})")
+    y.lab <- glue::glue("{unique(y_data$PARAM)}: {week_y} ({attr(data[[value_y]], 'label') %||% value_y})")
     
     # Initialize title of variables plotted
     var_title <- paste(unique(y_data$PARAM),"versus", unique(x_data$PARAM))
@@ -233,10 +234,10 @@ app_scatterplot <- function(data, yvar, xvar, week_x, value_x, week_y, value_y, 
 
   # if separate or color used, include those "by" variables in title
   by_title <- case_when(
-    separate == color & color != "NONE" ~  paste("\nby", attr(data[[color]], "label")),
-    separate != "NONE" & color != "NONE" ~ paste("\nby", attr(data[[color]], "label"), "and", attr(data[[separate]], "label")),
-    separate != "NONE" ~ paste("\nby", attr(data[[separate]], "label")),
-    color != "NONE" ~ paste("\nby", attr(data[[color]], "label")), 
+    separate == color & color != "NONE" ~  paste("\nby", attr(data[[color]], "label") %||% color),
+    separate != "NONE" & color != "NONE" ~ paste("\nby", attr(data[[color]], "label") %||% color, "and", attr(data[[separate]], "label") %||% separate),
+    separate != "NONE" ~ paste("\nby", attr(data[[separate]], "label") %||% separate),
+    color != "NONE" ~ paste("\nby", attr(data[[color]], "label") %||% color), 
     TRUE ~ ""
   )
 

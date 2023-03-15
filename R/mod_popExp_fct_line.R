@@ -68,7 +68,7 @@ app_lineplot <- function(data, yvar, time, value = NULL, separate = "NONE", colo
         select(USUBJID, time, one_of(timeN), PARAM, PARAMCD, val = value, one_of(color, colorN, separate, separateN))
     )
     yvar_label <- ifelse(rlang::is_empty(paste(unique(d0$PARAM))), yvar, paste(unique(d0$PARAM)))
-    yl <- glue::glue("{yvar_label} ({attr(data[[value]], 'label')})")
+    yl <- glue::glue("{yvar_label} ({attr(data[[value]], 'label') %||% value})")
   }
   xl <- ifelse(rlang::is_empty(attr(d0[[time]], "label")), time, attr(d0[[time]], "label"))
   y_lab <- paste(ifelse(value == "CHG", "Mean Change from Baseline", "Mean"), yvar_label)
@@ -118,12 +118,13 @@ app_lineplot <- function(data, yvar, time, value = NULL, separate = "NONE", colo
   # if separate or color used, include those "by" variables in title
   var_title <- paste(y_lab, "by", xl)
   by_title <- case_when(
-    separate == color & color != "NONE" ~ paste("\nby", attr(data[[color]], "label")),
-    separate != "NONE" & color != "NONE" ~ paste("\nby", attr(data[[color]], "label"), "and", attr(data[[separate]], "label")),
-    separate != "NONE" ~ paste("\nby", attr(data[[separate]], "label")),
-    color != "NONE" ~ paste("\nby", attr(data[[color]], "label")), 
+    separate == color & color != "NONE" ~  paste("\nby", attr(data[[color]], "label") %||% color),
+    separate != "NONE" & color != "NONE" ~ paste("\nby", attr(data[[color]], "label") %||% color, "and", attr(data[[separate]], "label") %||% separate),
+    separate != "NONE" ~ paste("\nby", attr(data[[separate]], "label") %||% separate),
+    color != "NONE" ~ paste("\nby", attr(data[[color]], "label") %||% color), 
     TRUE ~ ""
   )
+  
   
   dodge <- ggplot2::position_dodge(.9)
   time_sym <- rlang::sym(time)
