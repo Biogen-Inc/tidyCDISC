@@ -371,7 +371,7 @@ error_handler.rlang_error <- function(e) {
 #' @return a string containing a useful label
 #'
 #' @noRd
-label_me <- function(data, var_str) {
+best_lab <- function(data, var_str) {
   attr(data[[var_str]], "label") %||% var_str
 }
 

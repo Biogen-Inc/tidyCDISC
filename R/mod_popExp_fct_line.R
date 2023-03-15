@@ -54,18 +54,18 @@ app_lineplot <- function(data, yvar, time, value = NULL, separate = "NONE", colo
     suppressWarnings(
       d0 <- data0 %>% select(USUBJID, time, one_of(timeN), val = yvar, one_of(color, colorN, separate, separateN))
     )
-    yvar_label <- yl <- label_me(data, yvar)
+    yvar_label <- yl <- best_lab(data, yvar)
   } else {
     suppressWarnings(
       d0 <- data0 %>%
         dplyr::filter(PARAMCD == yvar) %>%
         select(USUBJID, time, one_of(timeN), PARAM, PARAMCD, val = value, one_of(color, colorN, separate, separateN))
     )
-    # do not use label_me() since this is checking for an empty string
+    # do not use best_lab() since this is checking for an empty string
     yvar_label <- ifelse(rlang::is_empty(paste(unique(d0$PARAM))), yvar, paste(unique(d0$PARAM)))
-    yl <- glue::glue("{yvar_label} ({label_me(data, value)})")
+    yl <- glue::glue("{yvar_label} ({best_lab(data, value)})")
   }
-  xl <- label_me(d0, time) 
+  xl <- best_lab(d0, time) 
   y_lab <- paste(ifelse(value == "CHG", "Mean Change from Baseline", "Mean"), yvar_label)
   
   val_sym <- rlang::sym("val")
@@ -113,10 +113,10 @@ app_lineplot <- function(data, yvar, time, value = NULL, separate = "NONE", colo
   # if separate or color used, include those "by" variables in title
   var_title <- paste(y_lab, "by", xl)
   by_title <- case_when(
-    separate == color & color != "NONE" ~  paste("\nby", label_me(data, color)), 
-    separate != "NONE" & color != "NONE" ~ paste("\nby", label_me(data, color), "and", label_me(data, separate)), 
-    separate != "NONE" ~ paste("\nby", label_me(data, separate)),
-    color != "NONE" ~ paste("\nby", label_me(data, color)), 
+    separate == color & color != "NONE" ~  paste("\nby", best_lab(data, color)), 
+    separate != "NONE" & color != "NONE" ~ paste("\nby", best_lab(data, color), "and", best_lab(data, separate)), 
+    separate != "NONE" ~ paste("\nby", best_lab(data, separate)),
+    color != "NONE" ~ paste("\nby", best_lab(data, color)), 
     TRUE ~ ""
   )
   
