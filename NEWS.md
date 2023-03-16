@@ -1,5 +1,5 @@
 # tidyCDISC (development version)
-- Allowed for one-element lists in heatmap axis dropdowns.
+
 
 # tidyCDISC 0.2.1 (CRAN Release)
 
@@ -19,6 +19,7 @@
 * Fixed bug where selected filters were not being applied when 'Apply Filters' was toggled on (#175)
 * Fixed bug where plots' visual appeal was destroyed when faceting variable labels were too long (#200)
 * Fixed bug where scatter plot wouldn't display by categorical variable with `NA` values (#192)
+* Allowed for one-element lists in heatmap axis dropdowns (#214).
 
 ### Individual Explorer
 * Updated the look of the time visualization (#194)
