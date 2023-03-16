@@ -226,7 +226,7 @@ app_nested_freq.default <- app_nested_freq.OCCDS <- app_nested_freq.ADAE <- app_
     if(nested_var == "NONE"){
       groups <- 
         col_grp  %>% 
-        tidyr::pivot_wider(!!column, names_from = !!group, values_from = v) %>%
+        tidyr::pivot_wider(id_cols = !!column, names_from = !!group, values_from = v) %>%
         left_join(total0) %>%
         arrange(desc(sort_n)) %>%
         select(-sort_n)
@@ -246,7 +246,7 @@ app_nested_freq.default <- app_nested_freq.OCCDS <- app_nested_freq.ADAE <- app_
         total_by %>%
         left_join(
           col_grp %>%
-            tidyr::pivot_wider(!!column, names_from = !!group, values_from = v) %>%
+            tidyr::pivot_wider(id_cols = !!column, names_from = !!group, values_from = v) %>%
             mutate(pt = 'Overall') %>%
             rename_with(~nested_var, pt) %>%
             bind_rows(

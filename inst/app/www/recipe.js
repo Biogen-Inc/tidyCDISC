@@ -153,21 +153,23 @@ $("#RECIPE").bind("change", function(event, ui) {
       $("#droppable_blocks").append($(simpleRecipeRowBlock("AEDECOD", "ADAE")));
       break;
     case "Table 41: Blood Chemistry actual values by visit":
-      let select_opts = `${bc_obj.weeks.map(createOption).join("")}`
+      var select_opts = `${bc_obj.weeks.map(createOption).join("")}`
       document.getElementById("droppable_agg").innerHTML = "";
       $("#droppable_agg").append($(oneAgg_combineSelects(bc_obj.params, "MEAN", "ADLB", select_opts)));
       document.getElementById("droppable_blocks").innerHTML = "";
       $("#droppable_blocks").append($(combineRows(bc_obj.params, "ADLB")));
       break;
     case "Table 41: Hematology actual values by visit":
+      var select_opts = `${he_obj.weeks.map(createOption).join("")}`
       document.getElementById("droppable_agg").innerHTML = "";
-      $("#droppable_agg").append($(oneAgg_combineSelects(he_obj.params,"MEAN","ADLB",he_obj.weeks)));
+      $("#droppable_agg").append($(oneAgg_combineSelects(he_obj.params,"MEAN","ADLB", select_opts)));
       document.getElementById("droppable_blocks").innerHTML = "";
       $("#droppable_blocks").append($(combineRows(he_obj.params, "ADLB")));
       break;
     case "Table 41: Urinalysis actual values by visit":
+      var select_opts = `${ur_obj.weeks.map(createOption).join("")}`
       document.getElementById("droppable_agg").innerHTML = "";
-      $("#droppable_agg").append($(oneAgg_combineSelects(ur_obj.params,"MEAN","ADLB",ur_obj.weeks)));
+      $("#droppable_agg").append($(oneAgg_combineSelects(ur_obj.params,"MEAN","ADLB", select_opts)));
       document.getElementById("droppable_blocks").innerHTML = "";
       $("#droppable_blocks").append($(combineRows(ur_obj.params, "ADLB")));
       break;

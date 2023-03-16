@@ -205,12 +205,14 @@ fnIndvExplVisits <- function(
         if(nrow(vline_dat) > 0){
           
           lb_plot <- lb_plot + 
-            ggplot2::geom_vline(
-               data = vline_dat, 
-               ggplot2::aes(xintercept = !!INPUT_visit_var,
-                   colour = Event,
-                   text = paste0(input_visit_var, ": ",floor(!!INPUT_visit_var),"<br>", DECODE)
+            suppressWarnings(
+              ggplot2::geom_vline(
+                data = vline_dat, 
+                ggplot2::aes(xintercept = !!INPUT_visit_var,
+                             colour = Event,
+                             text = paste0(input_visit_var, ": ",floor(!!INPUT_visit_var),"<br>", DECODE)
                 ), size = .35
+              )
             )
           
           names2 <- c("Milestones","Concomitant Meds","Adverse Events")

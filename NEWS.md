@@ -1,3 +1,31 @@
+# tidyCDISC (development version)
+- Allowed for one-element lists in heatmap axis dropdowns.
+
+# tidyCDISC 0.2.1 (CRAN Release)
+
+### General
+* Fixed bug accessing files in `app/www/` (#166)
+* Improved documentation
+    * Added vignette announcing release of `v0.2.1`
+    * Added highly visible links to Blog, YouTube, and NEWS file
+
+### Table Generator
+* Made the html output in the app look slightly more "CSR-like" using minor formatting tricks (#181)
+* Arranged visits in chronological order for dropdown list found in Stat blocks  (#154)
+* Fixed bug where wrong options were being passed on some lab tables (#169)
+* Fixed bug where draggable blocks were not working without inclusion of datasets with ATPT (#173)
+
+### Population Explorer
+* Fixed bug where selected filters were not being applied when 'Apply Filters' was toggled on (#175)
+* Fixed bug where plots' visual appeal was destroyed when faceting variable labels were too long (#200)
+* Fixed bug where scatter plot wouldn't display by categorical variable with `NA` values (#192)
+
+### Individual Explorer
+* Updated the look of the time visualization (#194)
+    * Moved the event description to a tooltip instead of a label
+    * Incorporated end dates (where applicable) to display ranges
+    * Removed the auto-zoom when multiple groups were selected
+
 
 # tidyCDISC 0.2.0 (CRAN Release)
 

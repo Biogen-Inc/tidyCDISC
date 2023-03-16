@@ -169,6 +169,7 @@ usethis::use_vignette("x02_Pop_Exp")
 usethis::use_vignette("x04_Filtering")
 usethis::use_vignette("Blog")
 usethis::use_vignette("announcing-tidycdisc-0-0-1-1")
+usethis::use_vignette("announcing-tidycdisc-0-2-1")
 usethis::use_vignette("dev01_Table_Gen")
 usethis::use_vignette("dev02_Pop_Exp")
 usethis::use_vignette("dev03_Indv_Expl")
@@ -255,6 +256,7 @@ tags <- checkhelper::find_missing_tags()
   # Ignore below objects... we are merely just trying to create help docs,
   # so @export should not be used, yet Rd's are needed. 
   #   Ref: https://stackoverflow.com/questions/26697727/what-does-error-in-namespaceexportns-exports-undefined-exports-mean
+  
   # Doc available but need to choose between `@export` or `@noRd`:
   # example_dat1, example_dat2, adsl, adlbc, advs, adae, adtte
   # if you do include it, you'll get this during r-cmd-check:

@@ -58,7 +58,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
            ifelse("ADAE" %in% names(datafile()),'<option  id="tbl31">Table 31: Serious adverse events by preferred term</option>',''),
            ifelse("ADAE" %in% names(datafile()),'<option  id="tbl33">Table 33: Related serious adverse events by system organ class and preferred term</option>',''),
            ifelse("ADAE" %in% names(datafile()),'<option  id="tbl34">Table 34: Adverse events that led to discontinuation of study treatment by system organ class and preferred term</option>',''),
-           ifelse("ADAE" %in% names(datafile()),'<option  id="tbl36">Table 36: Adverse events that led to withdrawl from study by system organ class and preferred term</option>',''),
+           ifelse("ADAE" %in% names(datafile()),'<option  id="tbl36">Table 36: Adverse events that led to withdrawal from study by system organ class and preferred term</option>',''),
            ifelse("ADAE" %in% names(datafile()),'<option  id="tbl38">Table 38: Adverse events that led to drug interrupted, dose reduced, or dose increased by system organ class and preferred term</option>',''),
            ifelse(!rlang::is_empty(loaded_labs()) & chem_params()$exist,'<option  id="tbl41_b">Table 41: Blood Chemistry actual values by visit</option>',''),
            ifelse(!rlang::is_empty(loaded_labs()) & hema_params()$exist,'<option  id="tbl41_h">Table 41: Hematology actual values by visit</option>',''),
@@ -133,7 +133,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # perform any pre-filters on the data, when a STAN table is selected
   pre_ADSL <- reactive({
     req(RECIPE())
-    prep_adsl(ADSL = datafile()$ADSL,input_recipe = RECIPE())
+    tryCatch(prep_adsl(ADSL = datafile()$ADSL,input_recipe = RECIPE()), error = function(e) validate(error_handler(e)))
   })
   
   # clean_ADAE() now happens inside this reactive!
@@ -141,7 +141,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # Then filter ADAE based on STAN table selected.
   pre_ADAE <- reactive({
     req(RECIPE())
-    prep_adae(datafile = datafile(),ADSL = pre_ADSL()$data, input_recipe = RECIPE())
+    tryCatch(prep_adae(datafile = datafile(),ADSL = pre_ADSL()$data, input_recipe = RECIPE()), error = function(e) validate(error_handler(e)))
   })
   
   # Create cleaned up versions of raw data
@@ -261,7 +261,9 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
         dplyr::mutate(AVISIT = factor(AVISIT,
             levels = awd[order(awd$AVISITN), "AVISIT"][[1]] %>% unique() )) %>%
         dplyr::pull(AVISIT) %>%
-        unique()
+        unique() %>%
+        # Arrange by factor level (AVISITN)
+        sort()
     }
     avisit_words[avisit_words != ""]
   })
@@ -391,7 +393,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # convert the custom shiny input to a table output
   blocks_and_functions <- reactive({
     # create initial dataset
-    blockData <- convertTGOutput(input$agg_drop_zone, input$block_drop_zone)
+    blockData <- tryCatch(convertTGOutput(input$agg_drop_zone, input$block_drop_zone), error = function(e) validate(error_handler(e)))
 
     blockData$label <- 
       purrr::map2(blockData$block, blockData$dataset, function(var, dat) {
@@ -521,15 +523,14 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       )
     }
     # if no data in the source, do not run the pmap, just show this msg:
-    if(nrow(use_data_reactive()) == 0){
-      stop(paste0("No subjects remain when the following filters are applied.\n        "
-                      ,gsub("<br/>", "\n        ", pre_filter_msgs())))
-    }
+    validate(need(nrow(use_data_reactive()) != 0, paste0("No subjects remain when the following filters are applied.\n        "
+                                                    ,gsub("<br/>", "\n        ", pre_filter_msgs()))))
 
-    d <- tg_gt(list(ADAE = ae_data(), ADSL = all_data(), POPDAT = use_preferred_pop_data()),
+    d <- tryCatch(tg_gt(list(ADAE = ae_data(), ADSL = all_data(), POPDAT = use_preferred_pop_data()),
                blocks_and_functions(),
                total_df(),
-               column())
+               column()), error = function(e) validate(error_handler(e)))
+
     return(d)
   })
   
@@ -576,32 +577,8 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # Create RTF table
   rtf_table <- reactive({
     
-    data <- for_gt()
-    
-    # Add blank row after each ID group
-    
-    # Change factor to character to maintain order of blocks
-    data_factor <- data %>%
-      mutate(ID = factor(ID, levels = unique(ID)))
-    
-    # Add blank rows
-    data_with_blank_rows <- do.call(rbind, by(data, data_factor$ID, rbind, ""))
-    
-    # Populate ID in blank rows
-    ind <- which(data_with_blank_rows$ID == "")
-    data_with_blank_rows$ID[ind] <- data_with_blank_rows$ID[ind - 1]
-    
-    
-    # Convert to gt table object
-    gt_tab <- create_gt_table(data_with_blank_rows, 
-                              input_table_title = input$table_title, 
-                              input_table_footnote = input$table_footnote, 
-                              col_names = row_names_n(), 
-                              col_total = col_total(), 
-                              subtitle = subtitle_html()) 
-    
     # Add formatting for RTF output
-    rtf_tab <- gt_tab %>%
+    rtf_tab <- gt_table() %>%
       gt::tab_options(
         
         # Not currently possible to change font family or size
@@ -719,7 +696,10 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       if(input$download_type == ".csv") {
         progress$inc(1) # increment progress bar
         
-        write.csv(for_gt(), file, row.names = FALSE)
+        write.csv(
+          for_gt() %>%
+            mutate(ID = ifelse(Variable == "", "", ID))
+            , file, row.names = FALSE)
         progress$inc(1) # increment progress bar
         
       } else if(input$download_type == ".html") {
@@ -766,11 +746,11 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
           study_dir <- 'path/to/study/directory/'
           
           # use HAVEN to extract data, then merge
-          filenames <- c({filenames()})
+          file_names <- c({filenames()})
           
           # create list of dataframes
           datalist <- 
-            purrr::map(file_names, ~ haven::read_sas(file.path(study_directory,.x))) %>%
+            purrr::map(file_names, ~ haven::read_sas(file.path(study_dir,.x))) %>%
             setNames(toupper(stringr::str_remove(file_names, '.sas7bdat')))
       ")}
   })
@@ -977,7 +957,13 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
                  rows = stringr::str_detect(Variable,'&nbsp;') |
                    stringr::str_detect(Variable,'<b>') |
                    stringr::str_detect(Variable,'</b>')) %>%
-          tab_options(table.width = px(700)) %>%
+          tab_options(table.width = px(700),
+                    table.font.names = c('Times', 'Arial'),
+                    row_group.border.top.style = 'none',
+                    row_group.border.bottom.style = 'none',
+                    table_body.hlines.style = 'none',
+                    table.border.top.style = 'none',
+                    table.border.bottom.style = 'none') %>%
           cols_label(.list = tidyCDISC::col_for_list_expr(col_names, col_total)) %>%
           tab_header(
             title = md('{input$table_title}'),

@@ -24,7 +24,14 @@ A place for news, announcements, and training!
 knitr::include_graphics("figures/blog/important_announcement_cropped.jpg")
 ```
 
+# [`tidyCDISC 0.2.1` is out!](announcing-tidycdisc-0-2-1.html)
+
+Version 0.2.1 of `tidyCDISC` hits the market with several notable enhancements, from new features to  squashed bugs. Most of the changes impact how the user interacts with the `Table Generator` in the app, but also improves the reproducibility outside of the app. In this blog post, we [comb through the details](announcing-tidycdisc-0-2-1.html) with you so you know what to expect.
+
 
 # [Announcing `tidyCDISC 0.0.1`](announcing-tidycdisc-0-0-1-1.html)
 
-This release adds meat to the previous skeleton version of `tidyCDISC`. The initial development release was intended to be a "bare bones" platform that could serve as a foundation to build a great clinical data exploratory tool. Version `0.0.1` enriches the user experience by adding useful & commonly needed features for analysis. For more on this release, see our [detailed exploration](https://biogen-inc.github.io/tidyCDISC/articles/announcing-tidycdisc-0-0-1-1.html) of new features in this blog post.
+This release adds meat to the previous skeleton version of `tidyCDISC`. The initial development release was intended to be a "bare bones" platform that could serve as a foundation to build a great clinical data exploratory tool. Version `0.0.1` enriches the user experience by adding useful & commonly needed features for analysis. For more on this release, see our [detailed exploration](announcing-tidycdisc-0-0-1-1.html) of new features in this blog post.
+
+
+
