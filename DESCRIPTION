@@ -1,6 +1,6 @@
 Package: tidyCDISC
 Title: Quick Table Generation & Exploratory Analyses on ADaM-Ish Datasets
-Version: 0.2.1.9000
+Version: 0.2.1
 Authors@R: c(
     person("Aaron", "Clark", , "clark.aaronchris@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-0123-0970")),
