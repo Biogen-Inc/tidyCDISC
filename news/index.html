@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidyCDISC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.1</span>
       </span>
     </div>
 
@@ -82,6 +82,43 @@
     </div>
 
     <div class="section level2">
+<h2 class="page-header" data-toc-text="development version" id="tidycdisc-development-version">tidyCDISC (development version)<a class="anchor" aria-label="anchor" href="#tidycdisc-development-version"></a></h2>
+<ul><li>Allowed for one-element lists in heatmap axis dropdowns.</li>
+</ul></div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="0.2.1" id="tidycdisc-021-cran-release">tidyCDISC 0.2.1 (CRAN Release)<a class="anchor" aria-label="anchor" href="#tidycdisc-021-cran-release"></a></h2>
+<div class="section level4">
+<h4 id="general-0-2-1">General<a class="anchor" aria-label="anchor" href="#general-0-2-1"></a></h4>
+<ul><li>Fixed bug accessing files in <code>app/www/</code> (<a href="https://github.com/Biogen-Inc/tidyCDISC/issues/166" class="external-link">#166</a>)</li>
+<li>Improved documentation
+<ul><li>Added vignette announcing release of <code>v0.2.1</code>
+</li>
+<li>Added highly visible links to Blog, YouTube, and NEWS file</li>
+</ul></li>
+</ul></div>
+<div class="section level4">
+<h4 id="table-generator-0-2-1">Table Generator<a class="anchor" aria-label="anchor" href="#table-generator-0-2-1"></a></h4>
+<ul><li>Made the html output in the app look slightly more “CSR-like” using minor formatting tricks (<a href="https://github.com/Biogen-Inc/tidyCDISC/issues/181" class="external-link">#181</a>)</li>
+<li>Arranged visits in chronological order for dropdown list found in Stat blocks (<a href="https://github.com/Biogen-Inc/tidyCDISC/issues/154" class="external-link">#154</a>)</li>
+<li>Fixed bug where wrong options were being passed on some lab tables (<a href="https://github.com/Biogen-Inc/tidyCDISC/issues/169" class="external-link">#169</a>)</li>
+<li>Fixed bug where draggable blocks were not working without inclusion of datasets with ATPT (<a href="https://github.com/Biogen-Inc/tidyCDISC/issues/173" class="external-link">#173</a>)</li>
+</ul></div>
+<div class="section level4">
+<h4 id="population-explorer-0-2-1">Population Explorer<a class="anchor" aria-label="anchor" href="#population-explorer-0-2-1"></a></h4>
+<ul><li>Fixed bug where selected filters were not being applied when ‘Apply Filters’ was toggled on (<a href="https://github.com/Biogen-Inc/tidyCDISC/issues/175" class="external-link">#175</a>)</li>
+<li>Fixed bug where plots’ visual appeal was destroyed when faceting variable labels were too long (<a href="https://github.com/Biogen-Inc/tidyCDISC/issues/200" class="external-link">#200</a>)</li>
+<li>Fixed bug where scatter plot wouldn’t display by categorical variable with <code>NA</code> values (<a href="https://github.com/Biogen-Inc/tidyCDISC/issues/192" class="external-link">#192</a>)</li>
+</ul></div>
+<div class="section level4">
+<h4 id="individual-explorer-0-2-1">Individual Explorer<a class="anchor" aria-label="anchor" href="#individual-explorer-0-2-1"></a></h4>
+<ul><li>Updated the look of the time visualization (<a href="https://github.com/Biogen-Inc/tidyCDISC/issues/194" class="external-link">#194</a>)
+<ul><li>Moved the event description to a tooltip instead of a label</li>
+<li>Incorporated end dates (where applicable) to display ranges</li>
+<li>Removed the auto-zoom when multiple groups were selected</li>
+</ul></li>
+</ul></div>
+</div>
+    <div class="section level2">
 <h2 class="page-header" data-toc-text="0.2.0" id="tidycdisc-020-cran-release">tidyCDISC 0.2.0 (CRAN Release)<small>2023-02-03</small><a class="anchor" aria-label="anchor" href="#tidycdisc-020-cran-release"></a></h2>
 <ul><li>Added RTF export option for download from the Table Generator.</li>
 <li>Cleaned up JS to ‘standard analyses’ drop down.</li>
@@ -106,14 +143,14 @@
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.1.0" id="tidycdisc-010-cran-release">tidyCDISC 0.1.0 (CRAN Release)<small>2022-08-30</small><a class="anchor" aria-label="anchor" href="#tidycdisc-010-cran-release"></a></h2>
-<ul><li>cleaning up <code>devtools::check()</code> &amp; preparing for CRAN release.</li>
+<ul><li>cleaning up <code><a href="https://devtools.r-lib.org/reference/check.html" class="external-link">devtools::check()</a></code> &amp; preparing for CRAN release.</li>
 <li>unfortunately, had to revert back to importing <code>tippy 0.1.0</code> since it is the latest available version on CRAN and CRAN pkgs cannot depend on package versions under development.</li>
 <li>created a new toggle on the <code>Data</code> tab that allows users to select which CDISC pilot study data sources they wish to use in the app.</li>
 <li>Minor bug improvements</li>
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.0.4" id="tidycdisc-004">tidyCDISC 0.0.4<a class="anchor" aria-label="anchor" href="#tidycdisc-004"></a></h2>
-<ul><li>cleaning up <code>devtools::check()</code> &amp; preparing for CRAN release.</li>
+<ul><li>cleaning up <code><a href="https://devtools.r-lib.org/reference/check.html" class="external-link">devtools::check()</a></code> &amp; preparing for CRAN release.</li>
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.0.3" id="tidycdisc-003">tidyCDISC 0.0.3<a class="anchor" aria-label="anchor" href="#tidycdisc-003"></a></h2>

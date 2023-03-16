@@ -4,6 +4,7 @@ pkgdown_sha: ~
 articles:
   Blog: Blog.html
   announcing-tidycdisc-0-0-1-1: announcing-tidycdisc-0-0-1-1.html
+  announcing-tidycdisc-0-2-1: announcing-tidycdisc-0-2-1.html
   dev01_Table_Gen: dev01_Table_Gen.html
   dev02_Pop_Exp: dev02_Pop_Exp.html
   dev03_Indv_Expl: dev03_Indv_Expl.html
@@ -14,5 +15,5 @@ articles:
   x02_Pop_Exp: x02_Pop_Exp.html
   x03_Indv_Expl: x03_Indv_Expl.html
   x04_Filtering: x04_Filtering.html
-last_built: 2023-02-08T13:17Z
+last_built: 2023-03-16T13:08Z
 
