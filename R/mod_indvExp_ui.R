@@ -117,8 +117,8 @@ mod_indvExp_ui <- function(id){
                    ) # end inner fluidRow
                  )) # end column 10 & wellPanel
                  ,column(2,HTML("")) # blank column
-               ) # end fluidRow
-               ,
+               ), # end fluidRow
+               textOutput(ns("events_error")),
                div(id = "indv_cic_eventsPlot", 
                  fluidRow(column(10,timevisOutput(ns("eventsPlot")))),
                  textOutput(ns("events_tv_caption1")),

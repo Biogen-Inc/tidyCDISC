@@ -342,3 +342,41 @@ varN_fctr_reorder <- function(data) {
   return(data)
 }
 
+error_handler <- function(e) {
+  UseMethod("error_handler")
+}
+
+error_handler.default <- function(e) {
+  conditionMessage(e)
+}
+
+error_handler.purrr_error_indexed <-
+  `error_handler.dplyr:::mutate_error` <- function(e) {
+  e$parent$message
+}
+
+error_handler.rlang_error <- function(e) {
+  stringr::str_replace_all(rlang::cnd_message(e), "\n.*? ", " ")
+}
+
+#' Extract best variable label
+#'
+#' A function that will grab a label attribute from a given variable, or if one
+#' doesn't exist, it will just use the variable name
+#'
+#' @param data a data.frame, hopefully containing variable label attributes
+#' @param var_str you guessed it, the name of a variable inside of `data`, in
+#'   the form of a string
+#'   
+#' @return a string containing a useful label
+#'
+#' @noRd
+best_lab <- function(data, var_str) {
+  attr(data[[var_str]], "label") %||% var_str
+}
+
+
+
+
+
+

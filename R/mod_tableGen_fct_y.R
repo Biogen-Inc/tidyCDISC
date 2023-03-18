@@ -115,7 +115,7 @@ app_y.default <- app_y.OCCDS <- app_y.ADAE <- app_y.ADSL <- function(column, gro
              v = paste0(n, ' (', sprintf("%.1f", round(prop*100, 1)), ')')
       ) %>%
       select(-n, -prop, -n_tot) %>%
-      tidyr::pivot_wider(!!column, names_from = !!group, values_from = v)
+      tidyr::pivot_wider(id_cols = !!column, names_from = !!group, values_from = v)
     
     cbind(groups, total$x) # combine w/ Total
   }

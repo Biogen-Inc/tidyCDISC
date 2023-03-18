@@ -14,12 +14,14 @@ ADaMs
 AE
 AESTDT
 ASTDT
+ATPT
 AVAL
 AVISIT
 Agg
 BDS
 CDISC
 CMD
+CSR
 Conf
 DIY
 DT
@@ -38,8 +40,6 @@ PARAMCD
 PARAMs
 PHUSE
 PHUSE's
-PROC
-Pharma
 Pre
 RStudio
 RTF
@@ -65,7 +65,9 @@ boxPlot
 callModule
 checkGroup
 checkboxInput
+dev
 df
+draggable
 dropdown
 droppability
 dropzone
@@ -94,6 +96,7 @@ phuse
 pkgs
 png
 pre
+px
 radioButtons
 reproducibility
 riskmetric
@@ -106,8 +109,12 @@ stan
 submodule
 tableGen
 tibble
+to's
+tooltip
+to’s
 ui
 un
 vline
+www
 xpt
 ’s

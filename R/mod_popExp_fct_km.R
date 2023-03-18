@@ -54,7 +54,7 @@ app_km_curve <- function(data, yvar, resp_var, cnsr_var, group = "NONE", points 
   # Initialize title of variables plotted
   # if group used, include those "by" variables in title
   by_title <- case_when(
-    group != "NONE" ~ paste("\nby", attr(data[[group]], "label")), 
+    group != "NONE" ~ paste("\nby", best_lab(data, group)),
     TRUE ~ ""
   )
   

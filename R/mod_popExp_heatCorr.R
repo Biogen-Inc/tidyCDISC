@@ -108,7 +108,10 @@ heatmap_srv <- function(input, output, session, data, run) {
         nrow()
       ifelse(rows > 0, NA_character_, test_pcd)
     }) %>%
-      na.omit() %>% as.character()
+      na.omit() %>% as.character() %>%
+      # Convert to list so that one-element vectors are displayed correctly
+      # in the dropdown
+      as.list()
     
     updateSelectInput(session, "yvar_x",
                       choices = list(`Time Dependent` = paramcd,`Time Independent` = num_col),
@@ -212,8 +215,8 @@ heatmap_srv <- function(input, output, session, data, run) {
   p_both <- reactive({
     req(run(), data(), input$yvar_x, input$yvar_y) #, input$time, input$cor_mthd)
 
-    pp <- app_heatmap(data(), input$yvar_x, input$yvar_y, input$time, "AVAL",
-                       input$cor_mthd, input$show_sig, input$sig_level)
+    pp <- tryCatch(app_heatmap(data(), input$yvar_x, input$yvar_y, input$time, "AVAL",
+                       input$cor_mthd, input$show_sig, input$sig_level), error = function(e) validate(error_handler(e)))
     
     return(list(plot = pp$plot, data = pp$data))
   })
