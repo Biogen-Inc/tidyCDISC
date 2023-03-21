@@ -3,7 +3,8 @@ stat_options <- function(block, datalist, ...) {
 }
 
 stat_options.default <- function(block, datalist, ...) {
-  block$stat_options <- block$stat_arg
+  if (is.null(block$stat_options))
+    block$stat_options <- block$stat_arg
   
   block
 }
