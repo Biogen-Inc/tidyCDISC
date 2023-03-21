@@ -260,6 +260,7 @@ tags <- checkhelper::find_missing_tags()
   # Ignore below objects... we are merely just trying to create help docs,
   # so @export should not be used, yet Rd's are needed. 
   #   Ref: https://stackoverflow.com/questions/26697727/what-does-error-in-namespaceexportns-exports-undefined-exports-mean
+  
   # Doc available but need to choose between `@export` or `@noRd`:
   # example_dat1, example_dat2, adsl, adlbc, advs, adae, adtte
   # if you do include it, you'll get this during r-cmd-check:
