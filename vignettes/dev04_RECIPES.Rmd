@@ -1,8 +1,8 @@
 ---
-title: "RECIPE Processing"
+title: "'Standard Analysis' Table RECIPE Processing"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{RECIPE Processing}
+  %\VignetteIndexEntry{'Standard Analysis' Table RECIPE Processing}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -14,48 +14,128 @@ knitr::opts_chunk$set(
 )
 ```
 
-Learn how RECIPES are parsed by the application so that you can write your own custom tables.
+Learn how RECIPES metadata, used to populate the "standard analysis" dropdown list, are parsed by the application so that you can write your own custom tables.
 
  
 
 ## The structure of `recipes.json`
 
-This tutorial will walk you through the structure of the `recipes.json` file.
+This tutorial will walk you through the structural components of the `recipes.json` file.
 
 ### The table object
 
 Within the `recipes.json` file you'll find a list of table objects. Below is the standard table #3 object.
 
-```{r, out.width="90%", out.height="90%", echo=FALSE}
+```{r, out.width="100%", fig.align='center', out.extra = 'style="border:1px solid; padding:5px;"', echo=FALSE}
 knitr::include_graphics("figures/recipes/table_object.png")
 ```
 
-The naming of the table is important! When pulling this data into the application S3 objects are heavily utilized. In this example, the table object will be given the class `stan_3`. The application will use this information to correctly process the data used in the creation of the table.
+The **naming** of the table object ("stan_3") is important! When pulling this data into the application, S3 objects are heavily utilized. In this example, the table object will be given the class `stan_3`. The application will then use this information to correctly process the data for the creation of the table.
 
-The table object can contain a number of sub-objects. In the example, there are three such objects with the following key names: `title`, `group_by`, and `blocks`. The `title` object contains the text to be used as the title in the table generation. The `group_by` object contains the name of the field that the table generator should use to group by. The `blocks` object is more complicated.
+The table object can contain a number of sub-objects. In the example, there are three such objects with the following key names: 
 
-### The `blocks` object
+* `title`: the text to be used as the title in the table generation
+* `group_by`: the name of the field that should be used for grouping
+* `blocks`: an array containing table processing information. More details are provided below!
 
-The `blocks` object is an array of `block` objects. The setup is very similar to blocks used in the Table Generator. The `blocks` object and the blocks from the Table Generator are two sides of the same coin, hence the naming convention used. Each `block` is a named list that can contain a number of different elements. Some of the most important elements are included in the example: `data`, `variable`, and `statistic`.
+#### The `blocks` object
 
-The `data` element denotes which data set provided is being used to create the block. The `variable` element denotes the field or parameter from the data set used for the block's statistical computation. The `statistic` element denotes which statistic is being calculated for the field/parameter.
+The `blocks` object is actually an array of `block` objects. The setup may feel familiar given it mimics the drag-and-drop blocks used within the Table Generator's interface. That is, each `block` is a named list that can contain important elements required to build a table. In our example: `data`, `variable`, and `statistic` are foundational.
 
-A few other elements can also be present within a `block` object. The `recipes.json` file contains a couple more: `stat_arg` and `stat_options_fn`.  Currently no other elements have usage in the application, but active development will be changing this soon.
+* The `data` element denotes which data set is being used to provide the variable referenced in the `variable` element.
+* The `variable` element denotes the field or parameter from the `data` data set to analyze with a statistical computation.
+* The `statistic` element denotes which statistical procedure to perform on said field/parameter.
 
-## The parsing of `recipes.json`
+A few other elements can also be present within a `block` object, such as: `stat_arg`, `stat_options`, and `stat_options_fn`.  A `stat_arg` element is only required when the `statistic` element requires it. As seen in the example above, the "NESTED_FREQ_ABC" `statistic` needs to know a secondary variable by which to produce its "nested" output. Besides those mentioned, no other elements are used in the `recipes.json` file or within the application's code base, but active development will be changing this soon.
+
+## Parsing `recipes.json`
 
 ### The table object
 
-As stated previously, the key/name of the table object in `recipes.json` is assigned as a class when pulling the table object into R. This class is used to determine how the pre-filtering should be completed in the functions `filter_adsl()` and `filter_adae()`. New outputs can be created for a hypothetical table with key `tbl_01` by defining `filter_adsl.tbl_01()` and `filter_adae.tbl_01()`.
+As stated previously, the **name** of the table object is assigned as an S3 class in the app's codebase. This class is used to manage how population filters are applied, if necessary, in the functions `filter_adsl()` and `filter_adae()`. Thus, when engineering a new standard analysis in `recipes.json`, then a new S3 class must also be created if population filters are desired. For example, for a hypothetical table with key **name** `tbl_01`, you must also define methods for `filter_adsl.tbl_01()` and `filter_adae.tbl_01()`.
 
-The key/name of the table object will also be used to define the option in the recipe select input in the application.
+```{r, eval=FALSE}
+# For example a Safety Population filter
+filter_adsl.tbl_01 <- function(recipe, ADSL) {
+  dat <- ADSL
+  msg <- ""
+  if("SAFFL" %in% colnames(dat)) {
+    dat <- dat %>% filter(SAFFL == 'Y')
+    msg <- "Population Set: SAFFL = 'Y'"
+  } else {
+    msg <- "Variable 'SAFFL' doesn't exist in ADSL. STAN table not displayed because filter \"SAFFL == 'Y'\" cannot be applied!"
+    stop(msg)
+  }
+  list(data = dat, message = msg)
+}
+```
+
+The **name** of the table along with the `title` element will be used to generate the recipe dropdown in the Table Generator's user interface.
 
 ### The `blocks` object
 
 There is one additional sub-object not yet mentioned, the `recipe_inclusion` object, which can assign a class to the `blocks` object. The standard inclusion criteria is for all data sets in a `blocks` object to be present in the list of data sets uploaded and for all variables listed in the `block` objects to be present in the data set identified with them. Assigning a value to `recipe_inclusion` can affect the rules for inclusion in the recipes select input HTML element. If a user had a special set of criteria, they could assign `crit_01` to `recipe_inclusion` and assign the function `recipe_inclusion.crit_01()` to determine the criteria.
 
+```{r, eval=FALSE}
+# The default
+recipe_inclusion.default <- function(blocks, datalist, ...) {
+  # Checks that all data sets are present in the uploaded data list
+  data_incl <- purrr::map_lgl(blocks, ~ .x$data %in% names(datalist))
+  if (!all(data_incl)) 
+    return(rep(FALSE, length(blocks)))
+  
+  # Checks that all variables are present in the associated data set
+  param_col_incl <- purrr::map_lgl(blocks, ~ .x$variable %in% datalist[[.x$data]][["PARAMCD"]] || .x$variable %in% names(datalist[[.x$data]]))
+  if (!all(param_col_incl)) 
+    return(rep(FALSE, length(blocks)))
+  
+  # Note that a vector the same length of blocks is returned
+  # This is an all or nothing check. Every `block` must be present for inclusion.
+  param_col_incl
+}
+
+# Standard lab tables
+recipe_inclusion.stan_labs <- function(blocks, datalist, ...) {
+  # Checks that at least one data set with naming convention "ADLBXX" is present in the uploaded data list
+  data_incl <- purrr::map_lgl(blocks, ~ "ADLB" %in% substr(names(datalist), 1, 4))
+  if (!all(data_incl)) 
+    return(rep(FALSE, length(blocks)))
+  
+  # Checks that the variables are located in "PARAMCD"
+  param_incl <- purrr::map_lgl(blocks, ~ .x$variable %in% unlist(purrr::map(datalist["ADLB" == substr(names(datalist), 1, 4)], ~ unique(.x[["PARAMCD"]])), use.names = FALSE))
+  
+  # Note that this vector need not be all TRUE or FALSE like the default.
+  # If at least one variable returns TRUE, the table will appear in the dropdown.
+  # However, only the `block`'s that return TRUE will be passed to the table generator.
+  param_incl
+}
+```
+
 ### The `block` object
 
-Currently only one potential class is being assigned to the `block` object and it is the value of element `stat_options_fn`. For certain statistics, such as `MEAN`, a drop down is provided in the statistic block (e.g. `AVISIT` values for `MEAN`). In the event the user wants a block to output multiple weeks, they can provide a value for `stat_options_fn` and its corresponding function (i.e. A value of `opt_01` would correspond to `stat_options.opt_01()`). The user could also opt to hard code these values using the element `stat_options`.
+Currently only one potential class is being assigned to the `block` object and it is the value of element `stat_options_fn`. If you recall, when the `MEAN` statistic is selected in the app, a dropdown list is displayed containing different `AVISIT` values. Thus, if the user wants a block to output multiple weeks, they can provide a class for `stat_options_fn`. For example, with a value of `opt_01` you would create the function `stat_options.opt_01()`. The user could also opt to hard code these values using the element `stat_options`.
 
-The element `stat_arg` is used to determine the input for a statistic with a drop down. These two elements together can allow the user to create multiple generated blocks with only one `block` object.
+```{r, eval=FALSE}
+# Example for `avisit` class
+stat_options.avisit <- function(block, datalist, ...) {
+  # This grabs all scheduled `AVISIT`s ordered by `AVISITN`
+  avisits <- 
+    datalist[[block$data]] %>%
+    dplyr::filter(stringr::str_detect(toupper(AVISIT), "UNSCHEDULED", negate = TRUE)) %>%
+    dplyr::distinct(AVISIT, AVISITN) %>%
+    varN_fctr_reorder() %>%
+    dplyr::pull(AVISIT) %>%
+    get_levels() %>%
+    as.list()
+  
+  # This assigns those values to `stat_options` in the codebase
+  block$stat_options <- avisits
+  
+  block
+}
+
+# Alternatively, if we have AVISITS we know we want
+# In the JSON file {..."stat_options":["BASELINE", "WEEK 2", "WEEK 4"]...}
+```
+
+Similarly, the element `stat_arg` is used to determine the input for a statistic with a drop down. Paired with `stat_options_fn`, these two elements together can allow the user to create multiple generated blocks with only one `block` object. For example, the standard lab tables have `stat_arg = "ALL"` and `stat_options_fn = avisit_lab`. This will generate a block for each week.
