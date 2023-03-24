@@ -1,5 +1,7 @@
 # tidyCDISC (development version)
-
+* Moved "recipe" for standard table creation from JavaScript to JSON file (#167)
+* Improved code determining which standard tables to provide as options based on data uploaded (#167)
+* Fixed bug causing standard tables to run twice when grouping selected (#167)
 
 # tidyCDISC 0.2.1 (CRAN Release)
 

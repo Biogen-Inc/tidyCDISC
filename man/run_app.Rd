@@ -4,10 +4,12 @@
 \alias{run_app}
 \title{Run the Shiny Application}
 \usage{
-run_app(...)
+run_app(..., recipes_json = NULL)
 }
 \arguments{
 \item{...}{A series of options to be used inside the app.}
+
+\item{recipes_json}{Path to JSON file with metadata}
 }
 \value{
 No return value, called to run the application.
