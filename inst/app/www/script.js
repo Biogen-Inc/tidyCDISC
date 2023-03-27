@@ -1,4 +1,4 @@
-$( document ).ready(function() {
+$( document ).on('shiny:connected', function() {
   // setup sortable and draggable functionality
   $(function() {
     $("#sortable_agg").sortable();
@@ -131,7 +131,8 @@ selectChange("droppable_blocks", 'droppable_blocks label', 'tableGen_ui_1-block_
   }
 
 
-
+let weeks_array = null
+let week_opts = ''
 /**
   * Function that brings in vectors from shiny and uses 
   * them to create the appropriate style block for the agg chosen
@@ -142,85 +143,57 @@ Shiny.addCustomMessageHandler('my_weeks', function(df) {
     weeks_array = Object.values(df)
     week_opts = `${weeks_array.map(createOption).join("")}`
     //console.log("weeks_array[0]:", weeks_array[0])
-    
+});
 
-    Shiny.addCustomMessageHandler('all_cols', function(cols) {
-      
+let col_array = null
+let col_opts = ''
+Shiny.addCustomMessageHandler('all_cols', function(cols) {
+
       // the dataframe column is imported as an array
       col_array = Object.values(cols)
       col_opts = `${col_array.map(createOption).join("")}`
-  
-  
+});
+
 /**
   * A function to run if no BDS dataframes are loaded: leave
   * week options blank since their default method is null and remove the
   * rows for the mean block since we don't need a dropdown for week
 */
-    // if weeks array is undefined, then do all cols version, else all cols and weeks_array
-    if (weeks_array[0] === "fake_weeky") {
-      // no weeks, just col dropdowns
-    $(function() {
-      $(".draggable_agg").draggable();
-      $("#droppable_agg").droppable({
-        accept: ".agg",
-        drop: function(event, ui) {
-          var draggableId = ui.draggable.attr("id");
-          var newid = getNewId(draggableId);
-          if (draggableId.includes("anova")) {
-            $(this).append(selectBlock(newid, "ANOVA"));
-          } else if (draggableId.includes("chg")) {
-            $(this).append(selectBlock(newid, "CHG"));
-          //} else if (draggableId.includes("mean")) {
-          //  $(this).append(selectBlock(newid, "MEAN"));
-          } else if (draggableId.includes("nested_freq_dsc")) {
-            $(this).append(selectBlock(newid, "NESTED_FREQ_DSC", col_opts));
-          } else if (draggableId.includes("nested_freq_abc")) {
-            $(this).append(selectBlock(newid, "NESTED_FREQ_ABC", col_opts));
-          } else {
-            $(this).append(simpleBlock(newid, "df"));
-          }
+$(function() {
+  $(".draggable_agg").draggable();
+  $("#droppable_agg").droppable({
+    accept: ".agg",
+    drop: function(event, ui) {
+      var draggableId = ui.draggable.attr("id");
+      var newid = getNewId(draggableId);
+      if (weeks_array) {
+        if (draggableId.includes("anova")) {
+          $(this).append(selectBlock(newid, "ANOVA", week_opts));
+        } else if (draggableId.includes("chg")) {
+          $(this).append(selectBlock(newid, "CHG", week_opts));
+        } else if (draggableId.includes("mean")) {
+          $(this).append(selectBlock(newid, "MEAN", week_opts));
+        } else if (draggableId.includes("nested_freq_dsc")) {
+          $(this).append(selectBlock(newid, "NESTED_FREQ_DSC", col_opts));
+        } else if (draggableId.includes("nested_freq_abc")) {
+          $(this).append(selectBlock(newid, "NESTED_FREQ_ABC", col_opts));
+        } else {
+          $(this).append(simpleBlock(newid, "df"));
         }
-      }).sortable({
-        revert: false
-      })
-    }); // end all_cols only function(), ie, no weeks!
-    
-      
-    } else { // Weeks exist in the function below
-    
-/**
-  * A function to run if BDS dataframes are loaded and a
-  * week option needs to be created for some agg blocks
-*/
-    $(function() {
-      $(".draggable_agg").draggable();
-      $("#droppable_agg").droppable({
-        accept: ".agg",
-        drop: function(event, ui) {
-          var draggableId = ui.draggable.attr("id");
-          var newid = getNewId(draggableId);
-          if (draggableId.includes("anova")) {
-            $(this).append(selectBlock(newid, "ANOVA", week_opts));
-          } else if (draggableId.includes("chg")) {
-            $(this).append(selectBlock(newid, "CHG", week_opts));
-          } else if (draggableId.includes("mean")) {
-            $(this).append(selectBlock(newid, "MEAN", week_opts));
-          } else if (draggableId.includes("nested_freq_dsc")) {
-            $(this).append(selectBlock(newid, "NESTED_FREQ_DSC", col_opts));
-          } else if (draggableId.includes("nested_freq_abc")) {
-            $(this).append(selectBlock(newid, "NESTED_FREQ_ABC", col_opts));
-          } else {
-            $(this).append(simpleBlock(newid, "df"));
-          }
+      } else {
+        if (draggableId.includes("nested_freq_dsc")) {
+          $(this).append(selectBlock(newid, "NESTED_FREQ_DSC", col_opts));
+        } else if (draggableId.includes("nested_freq_abc")) {
+          $(this).append(selectBlock(newid, "NESTED_FREQ_ABC", col_opts));
+        } else {
+          $(this).append(simpleBlock(newid, "df"));
         }
-      }).sortable({
-        revert: false
-      })
-    }); // end all_cols and weeks function()
-    
-    } // end of if-then-else
-  }); // end "all_cols"  handler
-}); // end "my_weeks" handler
+      }
+    }
+  }).sortable({
+    revert: false
+  })
+})
 
 
 /**
