@@ -48,51 +48,51 @@ scoring <- tibble(
   ) %>%
   gh_score()
 
-os_health <- scoring$score
+os_activity <- scoring$score
 
 template <- "https://img.shields.io/badge/{label}-{value}-{colour}"
 
-badge_health = case_when(
-  is.na(os_health) ~ as.character(glue(
+badge_activity = case_when(
+  is.na(os_activity) ~ as.character(glue(
     template, 
-    label = "OS Health",
+    label = "OS Activity",
     colour = "red",
     value = 0
   )),
-  os_health > 90 ~ as.character(glue(
+  os_activity > 90 ~ as.character(glue(
     template, 
-    label = "OS Health",
+    label = "OS Activity",
     colour = "brightgreen",
-    value = os_health
+    value = os_activity
   )),
-  os_health > 80 ~ as.character(glue(
+  os_activity > 80 ~ as.character(glue(
     template, 
-    label = "OS Health",
+    label = "OS Activity",
     colour = "green",
-    value = os_health
+    value = os_activity
   )),
-  os_health > 60 ~ as.character(glue(
+  os_activity > 60 ~ as.character(glue(
     template, 
-    label = "OS Health",
+    label = "OS Activity",
     colour = "yellowgreen",
-    value = os_health
+    value = os_activity
   )),
-  os_health > 50 ~ as.character(glue(
+  os_activity > 50 ~ as.character(glue(
     template, 
-    label = "OS Health",
+    label = "OS Activity",
     colour = "yellow",
-    value = os_health
+    value = os_activity
   )),
-  os_health > 40 ~ as.character(glue(
+  os_activity > 40 ~ as.character(glue(
     template, 
-    label = "OS Health",
+    label = "OS Activity",
     colour = "orange",
-    value = os_health
+    value = os_activity
   )),
   TRUE ~ as.character(glue(
     template, 
-    label = "OS Health",
+    label = "OS Activity",
     colour = "red",
-    value = os_health
+    value = os_activity
   ))
 )

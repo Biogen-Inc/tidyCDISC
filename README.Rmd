@@ -16,7 +16,7 @@ knitr::opts_chunk$set(
 ```
 
 ```{r, include=FALSE}
-source("scripts/os-health.R")
+source("scripts/os-activity.R")
 source("scripts/riskmetric.R")
 ```
 
@@ -24,7 +24,8 @@ source("scripts/riskmetric.R")
 
 <!-- badges: start -->
   [![R-CMD-check](https://github.com/Biogen-Inc/tidyCDISC/workflows/R-CMD-check/badge.svg)](https://github.com/Biogen-Inc/tidyCDISC/actions)
-  [![OS Health](`r badge_health`)](https://openpharma.github.io/GithubMetrics/)
+  [![pharmaverse](http://pharmaverse.org/shields/tidyCDISC.svg)](https://pharmaverse.org)
+  [![OS Activity](`r badge_activity`)](https://openpharma.github.io/GithubMetrics/)
   [![riskmetric](`r badge_riskmetric`)](https://pharmar.github.io/riskmetric/)
   [![Coverage status](https://codecov.io/gh/Biogen-Inc/tidyCDISC/branch/master/graph/badge.svg)](https://app.codecov.io/gh/Biogen-Inc/tidyCDISC/tree/devel)
 <!-- badges: end -->
