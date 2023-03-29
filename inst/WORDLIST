@@ -66,10 +66,14 @@ boxPlot
 callModule
 checkGroup
 checkboxInput
+cloneable
+codebase
+datalist
 dev
 df
 draggable
 dropdown
+dropdowns
 droppability
 dropzone
 eventtype
