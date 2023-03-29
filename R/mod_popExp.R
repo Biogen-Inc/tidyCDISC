@@ -10,6 +10,7 @@
 #' @importFrom IDEAFilter shiny_data_filter
 #' @importFrom haven zap_label zap_formats
 #' @importFrom purrr map walk2
+#' @importFrom plotly renderPlotly ggplotly layout
 #' 
 #' @family popExp Functions
 #' @noRd
@@ -24,6 +25,14 @@ mod_popExp_server <- function(input, output, session, datafile) {
     } else {
       guide_popex$init()$start()
     }
+  })
+  
+  output$study_pop_exp <- renderUI({
+    req(datafile())
+    
+    studies <- unique(unlist(lapply(datafile(), `[[`, "STUDYID")))
+    study_ids <- paste(studies, collapse = " & ")
+    h4(paste("Study ID: ", study_ids))
   })
   
   col_list <- eventReactive(datafile(), {
@@ -54,7 +63,7 @@ mod_popExp_server <- function(input, output, session, datafile) {
     
     # split the non-ADSL data into those which have a USUBJID or not
     NOTADSL <- datafile()[names(datafile()) != "ADSL" ]
-    if (!is_empty(NOTADSL)) {
+    if (!rlang::is_empty(NOTADSL)) {
       
       # zap formats
       for (i in 1:length(NOTADSL)) ( NOTADSL[[i]] <- haven::zap_formats(NOTADSL[[i]]) )
@@ -144,12 +153,13 @@ mod_popExp_server <- function(input, output, session, datafile) {
     # adtt_ <- my_loaded_adams()[substr(my_loaded_adams(), 1, 4) == "ADTT"]
     req(any(purrr::map_lgl(my_loaded_adams(), ~ "CNSR" %in% colnames(datafile()[[.x]]))))
     updateRadioButtons(session, "plot_type",
-                       choices = c("Scatter Plot", 
-                                   "Spaghetti Plot", 
-                                   "Box Plot",
+                       choices = c("Kaplan-Meier Curve",
                                    "Line plot - mean over time",
                                    "Heatmap - endpoint correlations",
-                                   "Kaplan-Meier Curve") # new ... added KM
+                                   "Box Plot",
+                                   "Scatter Plot", 
+                                   "Spaghetti Plot"
+                                   ) # new ... added KM
     )
   })
   
@@ -182,7 +192,7 @@ mod_popExp_server <- function(input, output, session, datafile) {
     data = reactive(feed_filter()[filter_cols()]),    # the name of your pre-processed data
     verbose = FALSE)
   
-  filtered_data <- eventReactive(filters(), {
+  filtered_data <- reactive({
     if (input$apply_filters == FALSE) {
       all_data()
     } else if (any(regexpr("%>%",capture.output(attr(filters(), "code"))) > 0)) {
@@ -195,7 +205,8 @@ mod_popExp_server <- function(input, output, session, datafile) {
     } else {
       feed_filter()
     }
-  })
+  }) %>%
+    bindEvent(filters(), input$apply_filters)
   
   
   # Update datset, depending on apply_filters or filtered_data() changing
@@ -263,10 +274,13 @@ mod_popExp_server <- function(input, output, session, datafile) {
   # use plot output of the module to create the plot 
   output$plot_output <- renderPlotly({
         switch(input$plot_type,
-         `Scatter Plot` = p_scatter() %>% plotly::ggplotly(),
+         `Scatter Plot` = p_scatter() %>% plotly::ggplotly() %>%
+           plotly::layout(title = list(yref = "container", y = .95, yanchor = "bottom")),
          `Box Plot` = p_box() %>% plotly::ggplotly(),
          `Spaghetti Plot` = p_spaghetti() %>% plotly::ggplotly(),
-         `Line plot - mean over time` = p_line$plot() %>% plotly::ggplotly(tooltip = c("text")),
+         `Line plot - mean over time` = p_line$plot() %>%
+           plotly::ggplotly(tooltip = c("text")) %>%
+           plotly::layout(title = list(yref = "container", y = .95, yanchor = "bottom")),
          `Heatmap - endpoint correlations` = p_heatmap$plot() %>% plotly::ggplotly(tooltip = c("text"))
          , `Kaplan-Meier Curve` = p_km() %>% plotly::ggplotly()
         ) %>%

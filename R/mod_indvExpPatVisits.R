@@ -474,8 +474,9 @@ mod_indvExpPatVisits_server <- function(input, output, session, datafile, loaded
                                                   HTML = "batchDownload_html.Rmd",
                                                   PDF = "batchDownload_pdf.Rmd"))
         file.copy(switch(input$format, 
-                         HTML = "inst/app/www/batchDownload_html.Rmd",
-                         PDF = "inst/app/www/batchDownload_pdf.Rmd"), tempReport, overwrite = TRUE)
+           HTML = app_sys('app/www', 'batchDownload_html.Rmd'),
+           PDF = app_sys('app/www', 'batchDownload_pdf.Rmd')),
+           tempReport, overwrite = TRUE)
         
         
         # Knit the document: passing in the `params` list is optional by default but will
@@ -487,8 +488,8 @@ mod_indvExpPatVisits_server <- function(input, output, session, datafile, loaded
         on.exit(progress$close())
         rmarkdown::render(
           input = switch(input$format, 
-                         HTML = "inst/app/www/batchDownload_html.Rmd",
-                         PDF = "inst/app/www/batchDownload_pdf.Rmd"),
+             HTML = app_sys('app/www', 'batchDownload_html.Rmd'),
+             PDF = app_sys('app/www', 'batchDownload_pdf.Rmd')),
           output_file = file,
           params = list(
             bds_data_ = lb_data,

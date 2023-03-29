@@ -41,6 +41,7 @@ build_events <- function(
   ae_rec <- org_df_events(
     df_name = "ADAE", df_domain_abbr = "AE", df_desc = "Adverse Events"
     , df_st_date_vars = c("AESTDT","ASTDT") # from left to right, use first var that exists
+    , df_en_date_vars = c("AEENDT","AENDT") # from left to right, use first var that exists
     , event_desc_vars = c("AEDECOD","AESEV","AESER")
     , event_desc = 'paste0(AEDECOD, ", AESEV: ", AESEV, ", AESER: ", AESER)'
     , mi_input_checkbox = input_checkbox
@@ -80,19 +81,24 @@ build_events <- function(
       filter(USUBJID == my_usubjid) %>%
       select(all_of(adsl_date_cols)) %>%
       distinct() %>%
-      tidyr::pivot_longer(-USUBJID, names_to = "event_var", values_to = "START") %>%
-      subset(!is.na(START)) %>%
+      tidyr::pivot_longer(-USUBJID, names_to = "event_var", values_to = "DATE") %>%
+      subset(!is.na(DATE)) %>%
       left_join(labs, by = "event_var") %>% # DECODE variable exists in "labs"
-      arrange(START)%>%
+      dplyr::mutate(EVENT_TIME = if_else(stringr::str_detect(event_var, "EN?DT$"), "EN", "ST"), 
+                    EVENT = stringr::str_remove(event_var, "EN?DT$|ST?DT$|DT$")) %>% 
+      tidyr::pivot_wider(id_cols = c("USUBJID", "EVENT"), names_from = EVENT_TIME, values_from = c(DATE, DECODE)) %>%
+      dplyr::mutate(START = DATE_ST, END = NA, DECODE = DECODE_ST) %>% #Initialized columns in case no end dates existed
+      purrr::possibly(dplyr::mutate)(START = if_else(!is.na(DATE_ST), DATE_ST, DATE_EN), END = if_else(!is.na(DATE_ST), DATE_EN, DATE_ST)) %>%
+      purrr::possibly(tidyr::unite)("DECODE", DECODE_ST, DECODE_EN, sep = " - ", na.rm = TRUE) %>%
+      arrange(START, END) %>%
       mutate(EVENTTYP = "Milestones", DOMAIN = "DS",
-             END = NA,
              tab_st = ifelse(as.character(START) == "", NA_character_, as.character(START)), # disp chr in DT
              tab_en = ifelse(as.character(END) == "", NA_character_, as.character(END))      # disp chr in DT
       ) %>%
-      distinct(USUBJID, EVENTTYP, START, END,
-               tab_st,
-               tab_en,
-               DECODE, DOMAIN)%>%
+      distinct(USUBJID, START,
+               DECODE, EVENTTYP,
+               DOMAIN, END,
+               tab_st, tab_en)%>%
       select(-starts_with("DS"))
     
     
@@ -105,6 +111,7 @@ build_events <- function(
   cm_rec <- org_df_events(
     df_name = "ADCM", df_domain_abbr = "CM", df_desc = "Concomitant Meds"
     , df_st_date_vars = c("CMSTDT", "CMSTDTC", "ASTDT")# from left to right, use first var that exists
+    , df_en_date_vars = c("CMENDT", "CMENDTC", "AENDT")# from left to right, use first var that exists
     , event_desc_vars = "CMDECOD"
     , event_desc = 'CMDECOD'
     , mi_input_checkbox = input_checkbox

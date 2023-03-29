@@ -28,12 +28,13 @@ mod_popExp_ui <- function(id, label = "Population Explorer"){
     h1("Population Explorer", align = "center"),
     br(), br(), br(),
     
+    div(uiOutput(ns("study_pop_exp")), class = "studyid"),
     fluidRow(
       column(width = 3,
                div(id = "pop_cic_adv_filtering", class="filter-accordion",
                  checkboxInput(ns("adv_filtering"), 
                    div(class="filter-container", span("Filter Data ", style="float:left;"), 
-                        span(icon("chevron-down w3-tiny", verify_fa = FALSE), style="float:right;")),
+                        span(icon("chevron-down", verify_fa = FALSE), style="float:right;")),
                    value = FALSE)
                ),
                conditionalPanel(condition = "input.adv_filtering == true", ns = ns,
@@ -53,11 +54,11 @@ mod_popExp_ui <- function(id, label = "Population Explorer"){
                wellPanel(
                         br(),
                         radioButtons(ns("plot_type"), NULL, 
-                             choices = c("Scatter Plot", 
-                                         "Spaghetti Plot", 
+                             choices = c("Line plot - mean over time",
+                                         "Heatmap - endpoint correlations",
                                          "Box Plot",
-                                         "Line plot - mean over time",
-                                         "Heatmap - endpoint correlations"
+                                         "Scatter Plot", 
+                                         "Spaghetti Plot"
                                          )
                         )
                       )
@@ -70,7 +71,12 @@ mod_popExp_ui <- function(id, label = "Population Explorer"){
                conditionalPanel("input.plot_type === 'Kaplan-Meier Curve'", ns = ns, km_ui(ns("km"))),
                conditionalPanel("input.plot_type === 'Line plot - mean over time'", ns = ns, linePlot_ui(ns("linePlot"))),
                conditionalPanel("input.plot_type === 'Heatmap - endpoint correlations'", ns = ns, heatmap_ui(ns("heatmap")))
-             )
+             ),
+             br(),
+             br(),
+             br(),
+             br(),
+             br()
            ),
            column(width = 9,
                     div(id = "pop_cic_plot", 

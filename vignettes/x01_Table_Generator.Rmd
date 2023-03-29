@@ -131,7 +131,7 @@ knitr::include_graphics("figures/tableGen/grouped_by.PNG")
 
 <br>
 
-Now that we've created a simple table, it's time to name and download it for saving/ sharing. Below, we insert our table title and download as CSV. Currently, the app supports CSV and HTML output formats, but PDF and RTF are coming soon!
+Now that we've created a simple table, it's time to name and download it for saving/ sharing. Below, we insert our table title and download as CSV. Currently, the app supports RTF, CSV, and HTML output formats, but PDF is coming soon!
 
 <br>
 
@@ -275,7 +275,7 @@ knitr::include_graphics("figures/tableGen/TG_STAN_TAB41.PNG")
 
 <br>
 
-As displayed in an earlier demo, you can export table output to a CSV or HTML file. In a future release of `tidyCDISC`, you'll be able to prepare PDF and RTF versions of your output. In the meantime, you can create a PDF using a temporary work-around: first export as HTML, then download page as a PDF.
+As displayed in an earlier demo, you can export table output to an RTF, CSV, or HTML file. In a future release of `tidyCDISC`, you'll be able to prepare a PDF version of your output. In the meantime, you can create a PDF using a temporary work-around: first export as HTML, then download page as a PDF.
 
 <br> 
 

@@ -1,5 +1,7 @@
+library(dplyr)
+library(gt)
 datalist <- list(ADSL = tidyCDISC::adsl, ADVS = tidyCDISC::advs, ADAE = tidyCDISC::adae, ADLBC = tidyCDISC::adlbc)
-pre_adsl <- tidyCDISC::prep_adsl(datalist$ADSL, input_recipe = 'NONE')
+pre_adsl <- tidyCDISC::prep_adsl(datalist$ADSL[1:25,], input_recipe = 'NONE')
 # Create AE data set
 pre_adae <- datalist %>%
   tidyCDISC::prep_adae(pre_adsl$data, 'NONE')
@@ -62,7 +64,7 @@ tg_table <- purrr::pmap(list(
                                            group = 'TRT01P',
                                            data = tidyCDISC::data_to_use_str(d, ae_data, bds_data),
                                            totals = total_df)) %>%
-  map(setNames, tidyCDISC::common_rownames(pop_data, 'TRT01P')) %>%
+  purrr::map(setNames, tidyCDISC::common_rownames(pop_data, 'TRT01P')) %>%
   setNames(paste(blockData$gt_group)) %>%
   bind_rows(.id = 'ID') %>%
   mutate(ID = tidyCDISC::pretty_IDs(ID))
@@ -77,7 +79,13 @@ tg_table2 <-
                rows = stringr::str_detect(Variable,'&nbsp;') |
                  stringr::str_detect(Variable,'<b>') |
                  stringr::str_detect(Variable,'</b>')) %>%
-  tab_options(table.width = gt::px(700)) %>%
+  tab_options(table.width = gt::px(700),
+              table.font.names = c('Times', 'Arial'),
+              row_group.border.top.style = 'none',
+              row_group.border.bottom.style = 'none',
+              table_body.hlines.style = 'none',
+              table.border.top.style = 'none',
+              table.border.bottom.style = 'none') %>%
   tab_header(
     title = md('Table Title'),
     subtitle = md(" ")

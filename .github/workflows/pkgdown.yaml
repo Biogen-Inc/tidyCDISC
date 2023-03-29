@@ -4,7 +4,7 @@ on:
   push:
     branches: [main, master]
   pull_request:
-    branches: [main, master, for_cranny]
+    branches: [main, master, devel]
   release:
     types: [published]
   workflow_dispatch:
@@ -28,7 +28,7 @@ jobs:
         with:
           use-public-rspm: true
 
-      - uses: r-lib/actions/setup-r-dependencies@v2
+      - uses: r-lib/actions/setup-renv@v2
         with:
           extra-packages: any::pkgdown, local::.
           needs: website
@@ -36,6 +36,10 @@ jobs:
       - name: Install specific pkgdown version
         run: install.packages("remotes") ; remotes::install_version("pkgdown", version = "2.0.3", repos = "cran.rstudio.com", dependencies = FALSE)
         shell: Rscript {0}
+        
+      - name: Install tidyCDISC
+        shell: bash
+        run: R CMD INSTALL --preclean .
 
       - name: Build site
         run: pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE)

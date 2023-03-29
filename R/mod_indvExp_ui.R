@@ -25,6 +25,7 @@ mod_indvExp_ui <- function(id){
   tagList(
     h1("Individual Explorer", align = "center"),
     br(), br(), br(),
+    div(uiOutput(ns("study_indv_exp")), style = "padding-bottom: 20px", class = "studyid"),
     fluidRow(
       column(3,
          wellPanel(
@@ -116,8 +117,8 @@ mod_indvExp_ui <- function(id){
                    ) # end inner fluidRow
                  )) # end column 10 & wellPanel
                  ,column(2,HTML("")) # blank column
-               ) # end fluidRow
-               ,
+               ), # end fluidRow
+               textOutput(ns("events_error")),
                div(id = "indv_cic_eventsPlot", 
                  fluidRow(column(10,timevisOutput(ns("eventsPlot")))),
                  textOutput(ns("events_tv_caption1")),

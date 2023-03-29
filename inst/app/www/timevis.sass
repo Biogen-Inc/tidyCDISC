@@ -1,0 +1,39 @@
+@mixin color-style($color)
+  background-color: $color
+  border-color: darken($color, 20)
+
+
+.vis-item.DS
+  @include color-style(#B3E2CD)
+
+.vis-item.CM
+  @include color-style(#FDCDAC)
+
+.vis-item.AE
+  @include color-style(#CBD5E8)
+
+.vis-item.LB
+  @include color-style(#F4CAE4)
+
+.vis-item.LC
+  @include color-style(#E6F5C9)
+
+.vis-item.MH_MH
+  @include color-style(#FFF2AE)
+
+.vis-item.MH_FDH
+  @include color-style(#F1E2CC)
+
+.vis-item.MH_DH
+  @include color-style(#CCCCCC)
+
+.vis-item.MH_LC
+  @include color-style(#E3E1E1)
+
+.vis-group .vis-item.vis-point 
+  background: none
+
+
+.vis-range .vis-item-visible-frame 
+  margin-bottom: -10px
+

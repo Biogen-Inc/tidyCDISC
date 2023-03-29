@@ -1,4 +1,4 @@
-$( document ).ready(function() {
+$( document ).on('shiny:connected', function() {
   // setup sortable and draggable functionality
   $(function() {
     $("#sortable_agg").sortable();
@@ -33,17 +33,18 @@ $( document ).ready(function() {
     var str = "";
     $('#' + id).each(function() {
       txt = $(this).text()
-      df = $(this).attr("class").split(" ")[1]  
-      val = $(this).parent().find("select").children("option:selected").val()
+      df = $(this).attr("class").split(" ")[1]
+      grp = $(this).parent().find(":selected").parent().attr("label")
+      val = $(this).parent().find(":selected").val()
       lst = [];
       if (val === "ALL") {
-      for (let i = 0; i < $(this).parent().find("select").children().length; i++) {
-        if (["NONE", "ALL"].includes($(this).parent().find("select").children()[i].text)) { continue; }
-        lst.push($(this).parent().find("select").children()[i].text);
+      for (let i = 0; i < $(this).parent().find(":selected").parent().children().length; i++) {
+        if (["NONE", "ALL"].includes($(this).parent().find(":selected").parent().children()[i].text)) { continue; }
+        lst.push($(this).parent().find(":selected").parent().children()[i].text);
       }
       }
       str += `${df}*${txt.replace(" ", "")}*${val} + `.replace(/\r?\n|\r/g, "")
-      obj.numbers.push({txt,df,val,lst})
+      obj.numbers.push({txt,df,grp,val,lst})
     })
   // currently return a string seperated by +
     // and blocks must be one word - this is very fragile!
@@ -130,7 +131,8 @@ selectChange("droppable_blocks", 'droppable_blocks label', 'tableGen_ui_1-block_
   }
 
 
-
+let weeks_array = null
+let week_opts = ''
 /**
   * Function that brings in vectors from shiny and uses 
   * them to create the appropriate style block for the agg chosen
@@ -141,85 +143,57 @@ Shiny.addCustomMessageHandler('my_weeks', function(df) {
     weeks_array = Object.values(df)
     week_opts = `${weeks_array.map(createOption).join("")}`
     //console.log("weeks_array[0]:", weeks_array[0])
-    
+});
 
-    Shiny.addCustomMessageHandler('all_cols', function(cols) {
-      
+let col_array = null
+let col_opts = ''
+Shiny.addCustomMessageHandler('all_cols', function(cols) {
+
       // the dataframe column is imported as an array
       col_array = Object.values(cols)
       col_opts = `${col_array.map(createOption).join("")}`
-  
-  
+});
+
 /**
   * A function to run if no BDS dataframes are loaded: leave
   * week options blank since their default method is null and remove the
   * rows for the mean block since we don't need a dropdown for week
 */
-    // if weeks array is undefined, then do all cols version, else all cols and weeks_array
-    if (weeks_array[0] === "fake_weeky") {
-      // no weeks, just col dropdowns
-    $(function() {
-      $(".draggable_agg").draggable();
-      $("#droppable_agg").droppable({
-        accept: ".agg",
-        drop: function(event, ui) {
-          var draggableId = ui.draggable.attr("id");
-          var newid = getNewId(draggableId);
-          if (draggableId.includes("anova")) {
-            $(this).append(selectBlock(newid, "ANOVA"));
-          } else if (draggableId.includes("chg")) {
-            $(this).append(selectBlock(newid, "CHG"));
-          //} else if (draggableId.includes("mean")) {
-          //  $(this).append(selectBlock(newid, "MEAN"));
-          } else if (draggableId.includes("nested_freq_dsc")) {
-            $(this).append(selectBlock(newid, "NESTED_FREQ_DSC", col_opts));
-          } else if (draggableId.includes("nested_freq_abc")) {
-            $(this).append(selectBlock(newid, "NESTED_FREQ_ABC", col_opts));
-          } else {
-            $(this).append(simpleBlock(newid, "df"));
-          }
+$(function() {
+  $(".draggable_agg").draggable();
+  $("#droppable_agg").droppable({
+    accept: ".agg",
+    drop: function(event, ui) {
+      var draggableId = ui.draggable.attr("id");
+      var newid = getNewId(draggableId);
+      if (weeks_array) {
+        if (draggableId.includes("anova")) {
+          $(this).append(selectBlock(newid, "ANOVA", week_opts));
+        } else if (draggableId.includes("chg")) {
+          $(this).append(selectBlock(newid, "CHG", week_opts));
+        } else if (draggableId.includes("mean")) {
+          $(this).append(selectBlock(newid, "MEAN", week_opts));
+        } else if (draggableId.includes("nested_freq_dsc")) {
+          $(this).append(selectBlock(newid, "NESTED_FREQ_DSC", col_opts));
+        } else if (draggableId.includes("nested_freq_abc")) {
+          $(this).append(selectBlock(newid, "NESTED_FREQ_ABC", col_opts));
+        } else {
+          $(this).append(simpleBlock(newid, "df"));
         }
-      }).sortable({
-        revert: false
-      })
-    }); // end all_cols only function(), ie, no weeks!
-    
-      
-    } else { // Weeks exist in the function below
-    
-/**
-  * A function to run if BDS dataframes are loaded and a
-  * week option needs to be created for some agg blocks
-*/
-    $(function() {
-      $(".draggable_agg").draggable();
-      $("#droppable_agg").droppable({
-        accept: ".agg",
-        drop: function(event, ui) {
-          var draggableId = ui.draggable.attr("id");
-          var newid = getNewId(draggableId);
-          if (draggableId.includes("anova")) {
-            $(this).append(selectBlock(newid, "ANOVA", week_opts));
-          } else if (draggableId.includes("chg")) {
-            $(this).append(selectBlock(newid, "CHG", week_opts));
-          } else if (draggableId.includes("mean")) {
-            $(this).append(selectBlock(newid, "MEAN", week_opts));
-          } else if (draggableId.includes("nested_freq_dsc")) {
-            $(this).append(selectBlock(newid, "NESTED_FREQ_DSC", col_opts));
-          } else if (draggableId.includes("nested_freq_abc")) {
-            $(this).append(selectBlock(newid, "NESTED_FREQ_ABC", col_opts));
-          } else {
-            $(this).append(simpleBlock(newid, "df"));
-          }
+      } else {
+        if (draggableId.includes("nested_freq_dsc")) {
+          $(this).append(selectBlock(newid, "NESTED_FREQ_DSC", col_opts));
+        } else if (draggableId.includes("nested_freq_abc")) {
+          $(this).append(selectBlock(newid, "NESTED_FREQ_ABC", col_opts));
+        } else {
+          $(this).append(simpleBlock(newid, "df"));
         }
-      }).sortable({
-        revert: false
-      })
-    }); // end all_cols and weeks function()
-    
-    } // end of if-then-else
-  }); // end "all_cols"  handler
-}); // end "my_weeks" handler
+      }
+    }
+  }).sortable({
+    revert: false
+  })
+})
 
 
 /**
@@ -227,9 +201,9 @@ Shiny.addCustomMessageHandler('my_weeks', function(df) {
 * @param {newid} the new, unique id of the dropped block
 * @param {label} the name of the new block
 */
-  function selectBlock(newid, label, values) { 
+  function selectBlock(newid, label, values, df = "") { 
     return `<div class="form-group drop_area">
-      <label class="control-label" for="${newid}">${label}</label>
+      <label class="control-label ${df}" for="${newid}">${label}</label>
         <select id="${newid}" class="dropdown">
           <option value="NONE">NONE</option>
             ${values}
@@ -250,6 +224,24 @@ Shiny.addCustomMessageHandler('my_weeks', function(df) {
     return type + (newId + 1);
   }
 
+/**
+ * Function to import multiple avals per visit 
+*/
+let tpnt_avals = null;
+Shiny.addCustomMessageHandler('my_avals', function(aval) {
+  tpnt_avals = aval;
+  for (x in tpnt_avals) {
+    for (y in tpnt_avals[x]) {
+      for (z in tpnt_avals[x][y]) {
+        tpnt_avals[x][y].tpnt_opts = [''];
+        tpnt_avals[x][y].tpnt_opts.push("<optgroup label='" + z + "'>");
+        tpnt_avals[x][y].tpnt_opts.push($.map(tpnt_avals[x][y][z], createOption).join(""));
+        tpnt_avals[x][y].tpnt_opts.push("</optgroup>");
+      }
+    }
+  }
+});
+
 // on block dropdown create simple blocks 
 // with the block names from the droppable area
 // and delete buttons
@@ -261,50 +253,18 @@ $(function() {
       var draggableId = ui.draggable.attr("id");
       var df = ui.draggable.closest('ul')[0].classList[1]
       var newid = getNewId(draggableId);
-      $(this).append(simpleBlock(newid, df));
+      var df_key = (tpnt_avals == null ? undefined : Object.keys(tpnt_avals).find(el => df.includes(el)));
+      var param_key = (df_key == undefined ? undefined : Object.keys(tpnt_avals[df_key]).find(el => draggableId.includes(el)));
+      if (tpnt_avals !== null && df_key != undefined && param_key != undefined) {
+        $(this).append(selectBlock(newid, newid.slice(0, -1).toUpperCase(), tpnt_avals[df_key][param_key].tpnt_opts, df));
+      } else {
+        $(this).append(simpleBlock(newid, df));
+      }
     }
   }).sortable({
     revert: false
   })
 })
-
-
-
-
-
-
-/*
-// commented out Dec 9 on commit 937a4e8
-// for agg blocks, 
-// create dropdowns specific to each block
-$(function() {
-  $(".draggable_agg").draggable();
-  $("#droppable_agg").droppable({
-    accept: ".agg",
-    
-    drop: function(event, ui) {
-      var draggableId = ui.draggable.attr("id");
-      var newid = getNewId(draggableId);
-      if (draggableId.includes("anova")) {
-        $(this).append(selectBlock(newid, "ANOVA"));
-      } else if (draggableId.includes("chg")) {
-        $(this).append(selectBlock(newid, "CHG"));
-      } else if (draggableId.includes("mean")) {
-        $(this).append(selectBlock(newid, "MEAN"));
-      } else if (draggableId.includes("nested_freq_dsc")) {
-        $(this).append(selectBlock(newid, "NESTED_FREQ_DSC"));
-      } else if (draggableId.includes("nested_freq_abc")) {
-        $(this).append(selectBlock(newid, "NESTED_FREQ_ABC"));
-      } else {
-        $(this).append(simpleBlock(newid, "df"));
-      }
-    }
-    
-  }).sortable({
-    revert: false
-  })
-});
-*/
 
 $("#popExp_ui_1-adv_filtering").parent().parent().addClass('custom_checkbox');
 $("#popExp_ui_1-adv_filtering").parent().parent().parent().addClass('custom_shiny_width');
