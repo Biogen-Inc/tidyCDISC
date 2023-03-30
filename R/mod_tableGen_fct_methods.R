@@ -115,39 +115,40 @@ process_droppables <- function(aggs, blocks) {
   aggs <- unlist(aggs, recursive = FALSE)
   blocks <- unlist(blocks, recursive = FALSE)
   process_dropdown <- function(droppable) {
-    for (i in 1:length(droppable)) {
-      if (is.null(droppable[[i]]$val)) {
-        droppable[[i]]$dropdown <- NA_character_
-      } else if (droppable[[i]]$val == "ALL") {
-        droppable[[i]]$dropdown <- droppable[[i]]$lst %>% unname() %>% str_trim()
+    droppable$dropdown <-
+      if (is.null(droppable$val)) {
+        NA_character_
+      } else if (droppable$val == "ALL") {
+        droppable$lst
       } else {
-        droppable[[i]]$dropdown <- droppable[[i]]$val %>% unname() %>% str_trim()
-      }
-      if (is.null(droppable[[i]]$grp))
-        droppable[[i]]$grp <- NA_character_
-    }
+        droppable$val
+      } %>%
+      unname() %>% str_trim()
+    if (is.null(droppable$grp))
+        droppable$grp <- NA_character_
     droppable
   }
-  if (length(aggs) == 0 & length(blocks) == 0) {
+  
+  if (length(aggs) == 0 && length(blocks) == 0) {
     return(list(aggs = aggs, blocks = blocks))
   } else if (length(aggs) > length(blocks)) {
     stop("Need addional variable block")
   } else if (length(aggs) < length(blocks)) {
     stop("Need additional statistics block")
   } else {
-    aggs <- process_dropdown(aggs)
-    blocks <- process_dropdown(blocks)
+    aggs <- purrr::map(aggs, process_dropdown)
+    blocks <- purrr::map(blocks, process_dropdown)
     aggs_out <- blocks_out <- list()
     for (i in seq_along(aggs)) {
       for (j in seq_along(aggs[[i]]$dropdown)) {
         for (k in seq_along(blocks[[i]]$dropdown)) {
           len <- length(aggs_out) + 1
           aggs_out[[len]] <- aggs[[i]]
-          aggs_out[[len]]$val <- aggs[[i]]$dropdown[j]
+          aggs_out[[len]]$val <- aggs[[i]]$dropdown[[j]]
           aggs_out[[len]]$lst <- NULL
           aggs_out[[len]]$dropdown <- NULL
           blocks_out[[len]] <- blocks[[i]]
-          blocks_out[[len]]$val <- blocks[[i]]$dropdown[k]
+          blocks_out[[len]]$val <- blocks[[i]]$dropdown[[k]]
           blocks_out[[len]]$lst <- NULL
           blocks_out[[len]]$dropdown <- NULL
         }
