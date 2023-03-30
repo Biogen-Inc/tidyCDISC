@@ -12,7 +12,8 @@ stat_options.default <- function(block, datalist, ...) {
 stat_options.avisit <- function(block, datalist, ...) {
   avisits <- 
     datalist[[block$data]] %>%
-    dplyr::filter(stringr::str_detect(toupper(AVISIT), "UNSCHEDULED", negate = TRUE)) %>%
+    dplyr::filter(stringr::str_detect(toupper(AVISIT), "UNSCHEDULED", negate = TRUE),
+                  AVISIT != "") %>%
     dplyr::distinct(AVISIT, AVISITN) %>%
     varN_fctr_reorder() %>%
     dplyr::pull(AVISIT) %>%
