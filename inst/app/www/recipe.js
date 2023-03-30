@@ -16,7 +16,6 @@ function createRecipeBlock(newid, df, selection, options) {
   } else {
     values = ''
   }
-  //Array.isArray(options) ? options.map(createOption).join("") : ''
   return `<div class="form-group drop_area">` +
   `<label class="control-label ${df}" for="${newid}">${newid}</label>` +
   (selection === undefined ? `` : `<select id="${newid}" class="dropdown">` +
