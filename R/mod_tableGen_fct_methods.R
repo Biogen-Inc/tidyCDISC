@@ -218,7 +218,7 @@ convertTGOutput <- function(aggs, blocks) {
 
 create_avisit <- function(datalist, bds_data) {
   if (!any(purrr::map_lgl(datalist, ~"AVISIT" %in% colnames(.x))))
-    stop("The column AVISIT must be present in the data list")
+    stop("The field AVISIT must be present in the data list")
 
     avisit_words <-  
       purrr::map(bds_data, function(x) x %>% dplyr::select(AVISIT)) %>%
@@ -256,4 +256,37 @@ create_all_cols <- function(datalist) {
     ))
   }
   all_cols
+}
+
+create_avals <- function(datalist) {
+  if (!any(purrr::map_lgl(datalist, ~ "ATPT" %in% colnames(.x))))
+    stop("The field ATPT must be present in the data list")
+  
+  atpt_datasets <- purrr::map_lgl(datalist, ~ "ATPT" %in% colnames(.x))
+  
+  avals <- 
+    purrr::map(datalist[atpt_datasets], ~ .x %>%
+                 dplyr::select(PARAMCD, dplyr::any_of(c("ATPT"))) %>%
+                 dplyr::filter(dplyr::if_any(-PARAMCD, ~ !is.na(.x) & .x != "")) %>%
+                 dplyr::pull(PARAMCD) %>%
+                 get_levels()
+    )
+  
+  ## TODO: Make this less confusing. I pity the soul who has to edit this.
+  purrr::imap(avals, ~ purrr::map(.x, function(i, j =.y) {
+    datalist[[j]] %>% 
+      dplyr::filter(PARAMCD == i) %>%
+      dplyr::select(dplyr::any_of(c("ATPT", "ATPTN"))) %>%
+      varN_fctr_reorder() %>%
+      dplyr::select(dplyr::any_of(c("ATPT"))) %>%
+      purrr::map(~ .x %>%
+                   addNA(ifany = TRUE) %>%
+                   purrr::possibly(relevel, otherwise = .)(NA_character_) %>%
+                   get_levels() %>%
+                   tidyr::replace_na("N/A") %>%
+                   {if (length(.) > 1) c("ALL", .) else .} %>%
+                   as.list())
+  }) %>%
+    purrr::set_names(.x)
+  )
 }

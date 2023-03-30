@@ -214,33 +214,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     req(datafile())
     req(purrr::map_lgl(datafile(), ~ "ATPT" %in% colnames(.x)))
     
-    atpt_datasets <- purrr::map_lgl(datafile(), ~ "ATPT" %in% colnames(.x))
-
-    avals <- 
-      purrr::map(datafile()[atpt_datasets], ~ .x %>%
-      dplyr::select(PARAMCD, dplyr::any_of(c("ATPT"))) %>%
-      dplyr::filter(dplyr::if_any(-PARAMCD, ~ !is.na(.x) & .x != "")) %>%
-      dplyr::pull(PARAMCD) %>%
-      get_levels()
-      )
-    
-    ## TODO: Make this less confusing. I pity the soul who has to edit this.
-    purrr::imap(avals, ~ purrr::map(.x, function(i, j =.y) {
-      datafile()[[j]] %>% 
-                 dplyr::filter(PARAMCD == i) %>%
-                 dplyr::select(dplyr::any_of(c("ATPT", "ATPTN"))) %>%
-                 varN_fctr_reorder() %>%
-                 dplyr::select(dplyr::any_of(c("ATPT"))) %>%
-                 purrr::map(~ .x %>%
-                              addNA(ifany = TRUE) %>%
-                              purrr::possibly(relevel, otherwise = .)(NA_character_) %>%
-                              get_levels() %>%
-                              tidyr::replace_na("N/A") %>%
-                              {if (length(.) > 1) c("ALL", .) else .} %>%
-                              as.list())
-      }) %>%
-      purrr::set_names(.x)
-    )
+    create_avals(datafile())
   })
   
   observe({
