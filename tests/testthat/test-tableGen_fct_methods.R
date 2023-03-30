@@ -9,8 +9,8 @@ test_that("create custom class based on dataframe", {
 })
 
 test_that("convertTGOutput creates a dataframe row from input blocks", {
-  output <- convertTGOutput(agg, block)
-  
+  output <- do.call(convertTGOutput, process_droppables(agg, block))
+
   expect_equal(output$agg, "MEAN")
   expect_equal(output$block, "AGE")
   expect_equal(output$dataset, "ADSL")
@@ -19,6 +19,6 @@ test_that("convertTGOutput creates a dataframe row from input blocks", {
 })
 
 test_that("combining all idea functions as app_methods", {
-  output <- convertTGOutput(agg, block)
+  output <- do.call(convertTGOutput, process_droppables(agg, block))
   app_methods(output$agg, output$S3[[1]], output$dropdown, NULL, tg_data)
 })
