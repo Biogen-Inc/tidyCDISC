@@ -109,6 +109,38 @@ table_blocks <-
                       ))
                     }
                   
+                  private$my_avals <- 
+                    if (!any(purrr::map_lgl(datalist, ~ "ATPT" %in% colnames(.x)))) {
+                      list()
+                    } else {
+                      atpt_datasets <- purrr::map_lgl(datalist, ~ "ATPT" %in% colnames(.x))
+                      
+                      avals <- 
+                        purrr::map(datalist[atpt_datasets], ~ .x %>%
+                                     dplyr::select(PARAMCD, dplyr::any_of(c("ATPT"))) %>%
+                                     dplyr::filter(dplyr::if_any(-PARAMCD, ~ !is.na(.x) & .x != "")) %>%
+                                     dplyr::pull(PARAMCD) %>%
+                                     get_levels()
+                        )
+                      
+                      purrr::imap(avals, ~ purrr::map(.x, function(i, j =.y) {
+                        datalist[[j]] %>% 
+                          dplyr::filter(PARAMCD == i) %>%
+                          dplyr::select(dplyr::any_of(c("ATPT", "ATPTN"))) %>%
+                          varN_fctr_reorder() %>%
+                          dplyr::select(dplyr::any_of(c("ATPT"))) %>%
+                          purrr::map(~ .x %>%
+                                       addNA(ifany = TRUE) %>%
+                                       purrr::possibly(relevel, otherwise = .)(NA_character_) %>%
+                                       get_levels() %>%
+                                       tidyr::replace_na("N/A") %>%
+                                       {if (length(.) > 1) c("ALL", .) else .} %>%
+                                       as.list())
+                      }) %>%
+                        purrr::set_names(.x)
+                      )
+                    }
+                  
                 },
                 #' @description 
                 #' Print the data frame containing the blocks
@@ -146,6 +178,45 @@ table_blocks <-
                         get_var()
                       }
                       return(block_txt)
+                    }
+                  }
+                  get_filter <- function(x, atpt_lst) {
+                    opt_lst <- c("NONE", purrr::imap(atpt_lst, ~ glue::glue("{.y} - {.x}")) %>% unlist())
+                    
+                    if (missing(x)) {
+                      filter_txt <- readline("INPUT: ")
+                    } else {
+                      filter_txt <- x
+                    }
+                    if (filter_txt == "A") {
+                      cat("Please type the name or the number corresponding to the desired time point.\n")
+                      cat(paste0(seq_along(opt_lst), ": ", opt_lst), sep = "\n"); cat("\n")
+                      get_filter(atpt_lst = atpt_lst)
+                    } else if (filter_txt %in% seq_along(opt_lst)) {
+                      if (filter_txt == "1")
+                        return("NONE")
+                      str_parse <- stringr::str_match(opt_lst[as.numeric(filter_txt)], "(^.*?) - (.*$)")
+                      filter_return <- str_parse[3]
+                      names(filter_return) <- str_parse[2]
+                      return(filter_return)
+                    } else if (filter_txt %in% opt_lst) {
+                      if (filter_txt == "NONE")
+                        return("NONE")
+                      str_parse <- stringr::str_match(filter_txt, "(^.*?) - (.*$)")
+                      filter_return <- str_parse[3]
+                      names(filter_return) <- str_parse[2]
+                      return(filter_return)
+                    } else if (filter_txt %in% unlist(atpt_lst)) {
+                      if (sum(filter_txt == unlist(atpt_lst)) > 1) {
+                        cat('Time point is not unique. Please type "A" to see all available options.\n')
+                        get_filter(atpt_lst = atpt_lst)
+                      } else {
+                        x <- as.character(match(filter_txt, unlist(atpt_lst)) + 1)
+                        get_filter(x, atpt_lst = atpt_lst)
+                      }
+                    } else {
+                      cat('Time point not valid. Please type "A" to see all available options.\n')
+                      get_filter(atpt_lst = atpt_lst)
                     }
                   }
                   get_stat <- function(x) {
@@ -221,6 +292,17 @@ table_blocks <-
                   possible_dfs <- names(self$all_rows)[purrr::map_lgl(self$all_rows, ~ blocks$txt %in% .x[[1]])]
                   blocks$df <- get_df(df, possible_dfs)
                   
+                  if (blocks$df %in% names(private$my_avals) && blocks$txt %in% names(private$my_avals[[blocks$df]])) {
+                    cat('Pleae provide a time point.',
+                        'To see all options, type "A".\n', sep = "\n")
+                    atpt_lst <- private$my_avals[[blocks$df]][[blocks$txt]]
+                    filter_return <- get_filter(atpt_lst = atpt_lst)
+                    blocks$grp <- names(filter_return)
+                    blocks$val <- as.character(filter_return)
+                    if (blocks$val == "ALL")
+                      blocks$lst <- atpt_lst[[blocks$grp]][-1]
+                  }
+                  
                   if (missing(stat))
                     cat('Please provide an aggregator.',
                         'To see all options, type "A".\n', sep = "\n")
@@ -274,6 +356,7 @@ table_blocks <-
                 stats = c("ANOVA", "CHG", "MEAN", "FREQ", "Y_FREQ", "MAX_FREQ", "NON_MISSING", "NESTED_FREQ_DSC", "NESTED_FREQ_ABC"),
                 my_weeks = NULL,
                 all_cols = NULL,
+                my_avals = NULL,
                 block_drop = list(),
                 agg_drop = list(),
                 create_TG = function(aggs, blocks) {
