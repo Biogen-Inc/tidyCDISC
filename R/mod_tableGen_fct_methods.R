@@ -215,3 +215,43 @@ convertTGOutput <- function(aggs, blocks) {
     })
   }
 }
+
+create_avisit <- function(datalist, bds_data) {
+  # prepare the AVISIT dropdown of the statistics blocks
+  # by converting them to a factor in the order of AVISITN
+  # this allows our dropdown to be in chronological order
+  avisit_words <-  
+    if(any(purrr::map_lgl(datalist, ~"AVISIT" %in% colnames(.x)))){
+      purrr::map(bds_data, function(x) x %>% dplyr::select(AVISIT)) %>%
+        dplyr::bind_rows() %>%
+        dplyr::distinct(AVISIT) %>%
+        dplyr::pull()
+    } else {
+      NULL
+    }
+  
+  avisit_fctr  <- 
+    if(any(purrr::map_lgl(datalist, ~"AVISIT" %in% colnames(.x)))){
+      purrr::map(bds_data, function(x) x %>% dplyr::select(AVISITN)) %>%
+        dplyr::bind_rows() %>%
+        dplyr::distinct(AVISITN) %>%
+        dplyr::pull()
+    } else {
+      1:2
+    }
+  
+  if (is.null(avisit_words())) {
+    avisit_words <- c("fake_weeky","dummy_weeky")
+  } else {
+    awd <- tidyr::tibble(AVISIT = avisit_words, AVISITN = avisit_fctr)
+    avisit_words <-
+      awd %>%
+      dplyr::mutate(AVISIT = factor(AVISIT,
+                                    levels = awd[order(awd$AVISITN), "AVISIT"][[1]] %>% unique() )) %>%
+      dplyr::pull(AVISIT) %>%
+      unique() %>%
+      # Arrange by factor level (AVISITN)
+      sort()
+  }
+  avisit_words[avisit_words != ""]
+}
