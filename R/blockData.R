@@ -240,8 +240,22 @@ table_blocks <-
                     aggs$val <- get_dropdown(dropdown, "cols")
                   }
                   
-                  private$block_drop[[length(private$block_drop) + 1]] <- blocks
-                  private$agg_drop[[length(private$agg_drop) + 1]] <- aggs
+                  if (!is.null(aggs$lst)) {
+                    for (i in aggs$lst) {
+                      aggs_lst <- aggs
+                      aggs_lst$val <- i
+                      aggs_lst$lst <- NULL
+                      private$block_drop[[length(private$block_drop) + 1]] <- blocks
+                      private$agg_drop[[length(private$agg_drop) + 1]] <- aggs_lst
+                    }
+                  } else {
+                    private$block_drop[[length(private$block_drop) + 1]] <- blocks
+                    private$agg_drop[[length(private$agg_drop) + 1]] <- aggs
+                  }
+                  
+                  private$create_TG(private$agg_drop, private$block_drop)
+                  
+                  self
                   
                   private$create_TG(private$agg_drop, private$block_drop)
                   
