@@ -62,38 +62,11 @@ table_blocks <-
 
                   self$all_rows <- new_list
                   
-                  avisit_words <-
-                    if(any(purrr::map_lgl(datalist, ~"AVISIT" %in% colnames(.x)))){
-                      purrr::map(BDS, function(x) x %>% dplyr::select(AVISIT)) %>%
-                        dplyr::bind_rows() %>%
-                        dplyr::distinct(AVISIT) %>%
-                        dplyr::pull()
-                    } else {
-                      NULL
-                    }
-                  
-                  avisit_fctr <-
-                    if(any(purrr::map_lgl(datalist, ~"AVISIT" %in% colnames(.x)))){
-                      purrr::map(BDS, function(x) x %>% dplyr::select(AVISITN)) %>%
-                        dplyr::bind_rows() %>%
-                        dplyr::distinct(AVISITN) %>%
-                        dplyr::pull()
-                    } else {
-                      1:2
-                    }
-                  
                   private$my_weeks <- 
-                    if (is.null(avisit_words)) {
+                    if (!any(purrr::map_lgl(datalist, ~"AVISIT" %in% colnames(.x)))) {
                       NULL
                     } else {
-                      awd <- tidyr::tibble(AVISIT = avisit_words, AVISITN = avisit_fctr)
-                      avisit_words <-
-                        awd %>%
-                        dplyr::mutate(AVISIT = factor(AVISIT,
-                                                      levels = awd[order(awd$AVISITN), "AVISIT"][[1]] %>% unique() )) %>%
-                        dplyr::pull(AVISIT) %>%
-                        unique()
-                      avisit_words[avisit_words != ""] %>%
+                      create_avisit(datalist, BDS) %>%
                         as.vector()
                     }
                   

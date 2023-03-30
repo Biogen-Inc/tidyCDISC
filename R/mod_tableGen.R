@@ -198,62 +198,11 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # prepare the AVISIT dropdown of the statistics blocks
   # by converting them to a factor in the order of AVISITN
   # this allows our dropdown to be in chronological order
-  avisit_words <- reactive({ 
-    req(datafile())
-    
-    if(any(purrr::map_lgl(datafile(), ~"AVISIT" %in% colnames(.x)))){
-        purrr::map(BDS(), function(x) x %>% dplyr::select(AVISIT)) %>%
-          dplyr::bind_rows() %>%
-          dplyr::distinct(AVISIT) %>%
-          dplyr::pull()
-    } else {
-      NULL #c("fake_weeky","dummy_weeky") # DON'T use this comment part.
-                                          # It's handled in AVISIT()
-    }
-    
-  })
-  
-  avisit_fctr  <- reactive({
-    req(datafile())
-    req(any(purrr::map_lgl(datafile(), ~"AVISIT" %in% colnames(.x))))
-    
-    if(any(purrr::map_lgl(datafile(), ~"AVISIT" %in% colnames(.x)))){
-        purrr::map(BDS(), function(x) x %>% dplyr::select(AVISITN)) %>%
-          dplyr::bind_rows() %>%
-          dplyr::distinct(AVISITN) %>%
-          dplyr::pull()
-    } else {
-      1:2
-    }
-    
-  })
-  
   AVISIT <- reactive({
     req(datafile())
+    req(any(purrr::map_lgl(datafile(), ~"AVISIT" %in% colnames(.x))))
 
-    if (is.null(avisit_words())) {
-      avisit_words <- c("fake_weeky","dummy_weeky")
-    } else {
-      # for testing
-      # nums <- c(2,4,6,8,12,16,20,24,26)
-      # avisit_words <- function() c("", "Baseline",paste("Week", nums), "End of Treatment")
-      # avisit_fctr <- function()c(NA, 0, nums, 99)
-      # rm(nums, avisit_words, avisit_fctr)
-      
-      awd <- tidyr::tibble(AVISIT = avisit_words(), AVISITN = avisit_fctr())
-      avisit_words <-
-        # tidyr::tibble(AVISIT = avisit_words(), AVISITN = avisit_fctr()) %>%
-        # dplyr::mutate(AVISIT = as.factor(AVISIT)) %>%
-        # dplyr::mutate(AVISIT = forcats::fct_reorder(AVISIT, AVISITN)) %>%
-        awd %>%
-        dplyr::mutate(AVISIT = factor(AVISIT,
-            levels = awd[order(awd$AVISITN), "AVISIT"][[1]] %>% unique() )) %>%
-        dplyr::pull(AVISIT) %>%
-        unique() %>%
-        # Arrange by factor level (AVISITN)
-        sort()
-    }
-    avisit_words[avisit_words != ""]
+    create_avisit(datafile(), BDS())
   })
   
   
