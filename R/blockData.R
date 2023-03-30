@@ -153,6 +153,7 @@ table_blocks <-
                 #' @param variable The parameter or field the statistic is based on
                 #' @param stat The statistic to be calculated
                 #' @param dropdown A subgroup on which the statistic is calculated (usually an AVISIT)
+                #' @param tpnt A time point on which the calculation is filtered
                 #' @param df The dataset the parameter or field is from
                 add_block = function(variable, stat, dropdown, tpnt, df) {
                   blocks <- list()
@@ -390,6 +391,7 @@ createBlockdata <- function(datalist) {
 #' @param variable The parameter or field the statistic is based on
 #' @param stat The statistic to be calculated
 #' @param dropdown A subgroup on which the statistic is calculated (usually an AVISIT)
+#' @param tpnt A time point on which the calculation is filtered
 #' @param df The dataset the parameter or field is from
 #' 
 #' @return The \code{bd} block data object with additional block

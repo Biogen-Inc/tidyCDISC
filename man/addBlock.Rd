@@ -4,7 +4,7 @@
 \alias{addBlock}
 \title{Add Block to Block Data Object}
 \usage{
-addBlock(bd, variable, stat, dropdown, df)
+addBlock(bd, variable, stat, dropdown, tpnt, df)
 }
 \arguments{
 \item{bd}{A block data object}
@@ -14,6 +14,8 @@ addBlock(bd, variable, stat, dropdown, df)
 \item{stat}{The statistic to be calculated}
 
 \item{dropdown}{A subgroup on which the statistic is calculated (usually an AVISIT)}
+
+\item{tpnt}{A time point on which the calculation is filtered}
 
 \item{df}{The dataset the parameter or field is from}
 }

@@ -110,6 +110,16 @@ custom_class <- function(x, df) {
   return(x)
 }
 
+#' Process the drag and drops blocks
+#' 
+#' @param aggs the aggregate statistic block 
+#' to apply to the column
+#' @param blocks the block corresponding 
+#' to the column name to apply statistic on
+#' 
+#' @family tableGen Functions
+#' @noRd
+#' @importFrom purrr map
 process_droppables <- function(aggs, blocks) {
   
   aggs <- unlist(aggs, recursive = FALSE)
