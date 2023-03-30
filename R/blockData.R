@@ -322,18 +322,9 @@ table_blocks <-
                     aggs$val <- get_dropdown(dropdown, "cols")
                   }
                   
-                  if (!is.null(aggs$lst)) {
-                    for (i in aggs$lst) {
-                      aggs_lst <- aggs
-                      aggs_lst$val <- i
-                      aggs_lst$lst <- NULL
-                      private$block_drop[[length(private$block_drop) + 1]] <- blocks
-                      private$agg_drop[[length(private$agg_drop) + 1]] <- aggs_lst
-                    }
-                  } else {
-                    private$block_drop[[length(private$block_drop) + 1]] <- blocks
-                    private$agg_drop[[length(private$agg_drop) + 1]] <- aggs
-                  }
+                  process_drops <- process_droppables(list(list(aggs)), list(list(blocks)))
+                  private$block_drop <- c(private$block_drop, process_drops$blocks)
+                  private$agg_drop <- c(private$agg_drop, process_drops$aggs)
                   
                   private$create_TG(private$agg_drop, private$block_drop)
                   
@@ -360,7 +351,7 @@ table_blocks <-
                 block_drop = list(),
                 agg_drop = list(),
                 create_TG = function(aggs, blocks) {
-                  blockData <- convertTGOutput(list(numbers = aggs), list(numbers = blocks))
+                  blockData <- convertTGOutput(aggs, blocks)
                   
                   blockData$label <-
                     "N/A"

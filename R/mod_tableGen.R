@@ -318,7 +318,8 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # convert the custom shiny input to a table output
   blocks_and_functions <- reactive({
     # create initial dataset
-    blockData <- tryCatch(convertTGOutput(input$agg_drop_zone, input$block_drop_zone), error = function(e) validate(error_handler(e)))
+    droppables_lst <- tryCatch(process_droppables(input$agg_drop_zone, input$block_drop_zone), error = function(e) validate(error_handler(e)))
+    blockData <- do.call(convertTGOutput, droppables_lst)
 
     blockData$label <- 
       purrr::map2(blockData$block, blockData$dataset, function(var, dat) {

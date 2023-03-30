@@ -110,6 +110,52 @@ custom_class <- function(x, df) {
   return(x)
 }
 
+process_droppables <- function(aggs, blocks) {
+  
+  aggs <- unlist(aggs, recursive = FALSE)
+  blocks <- unlist(blocks, recursive = FALSE)
+  process_dropdown <- function(droppable) {
+    for (i in 1:length(droppable)) {
+      if (is.null(droppable[[i]]$val)) {
+        droppable[[i]]$dropdown <- NA_character_
+      } else if (droppable[[i]]$val == "ALL") {
+        droppable[[i]]$dropdown <- droppable[[i]]$lst %>% unname() %>% str_trim()
+      } else {
+        droppable[[i]]$dropdown <- droppable[[i]]$val %>% unname() %>% str_trim()
+      }
+      if (is.null(droppable[[i]]$grp))
+        droppable[[i]]$grp <- NA_character_
+    }
+    droppable
+  }
+  if (length(aggs) == 0 & length(blocks) == 0) {
+    return(list(aggs = aggs, blocks = blocks))
+  } else if (length(aggs) > length(blocks)) {
+    stop("Need addional variable block")
+  } else if (length(aggs) < length(blocks)) {
+    stop("Need additional statistics block")
+  } else {
+    aggs <- process_dropdown(aggs)
+    blocks <- process_dropdown(blocks)
+    aggs_out <- blocks_out <- list()
+    for (i in seq_along(aggs)) {
+      for (j in seq_along(aggs[[i]]$dropdown)) {
+        for (k in seq_along(blocks[[i]]$dropdown)) {
+          len <- length(aggs_out) + 1
+          aggs_out[[len]] <- aggs[[i]]
+          aggs_out[[len]]$val <- aggs[[i]]$dropdown[j]
+          aggs_out[[len]]$lst <- NULL
+          aggs_out[[len]]$dropdown <- NULL
+          blocks_out[[len]] <- blocks[[i]]
+          blocks_out[[len]]$val <- blocks[[i]]$dropdown[k]
+          blocks_out[[len]]$lst <- NULL
+          blocks_out[[len]]$dropdown <- NULL
+        }
+      }
+    }
+    return(list(aggs = aggs_out, blocks = blocks_out))
+  }
+}
 
 #' Using the drag and drop blocks
 #' and the shiny inputs,
@@ -132,23 +178,6 @@ custom_class <- function(x, df) {
 #' 
 convertTGOutput <- function(aggs, blocks) {
   
-  aggs <- unlist(aggs, recursive = FALSE)
-  blocks <- unlist(blocks, recursive = FALSE)
-  process_dropdown <- function(droppable) {
-    for (i in 1:length(droppable)) {
-      if (is.null(droppable[[i]]$val)) {
-        droppable[[i]]$dropdown <- NA_character_
-      } else if (droppable[[i]]$val == "ALL") {
-        droppable[[i]]$dropdown <- droppable[[i]]$lst %>% unname() %>% str_trim()
-      } else {
-        droppable[[i]]$dropdown <- droppable[[i]]$val %>% unname() %>% str_trim()
-      }
-      if (is.null(droppable[[i]]$grp))
-        droppable[[i]]$grp <- NA_character_
-    }
-    droppable
-  }
-  
   if (length(aggs) == 0 & length(blocks) == 0) {
     tidyr::tibble(
       agg = character(),
@@ -159,29 +188,19 @@ convertTGOutput <- function(aggs, blocks) {
       S3 = character(),
       gt_group = character()
     )
-  } else if (length(aggs) > length(blocks)) {
-    stop("Need addional variable block")
-  } else if (length(aggs) < length(blocks)) {
-    stop("Need additional statistics block")
   } else {
-    aggs <- process_dropdown(aggs)
-    blocks <- process_dropdown(blocks)
     purrr::map2_df(aggs, blocks, function(aggs, blocks) {
-      purrr::map_df(aggs$dropdown, function(aggs_dd) {
-        purrr::map_df(blocks$dropdown, function(blocks_dd) {
-          tidyr::tibble(
-            agg = aggs$txt %>% unname() %>% str_trim(),
-            block = blocks$txt %>% unname() %>% str_trim(),
-            dataset = blocks$df %>% unname() %>% str_trim(),
-            dropdown = aggs_dd,
-            filter = if (is.na(blocks$grp)) {NA_character_} 
-            else if (blocks_dd == "N/A") {glue::glue("is.na({blocks$grp %>% unname() %>% str_trim()})")} 
-            else {glue::glue("{blocks$grp %>% unname() %>% str_trim()} == '{blocks_dd}'")},
-            S3 = map2(block, dataset, ~ custom_class(.x, .y)),
-            gt_group = glue("{agg} of {block}{if (is.na(dropdown) || dropdown == 'NONE') '' else if (tolower(substr(dropdown, 1, 4)) %in% c('week','base','scree','end ')) paste(' at', dropdown) else paste(' and', dropdown)}{if (is.na(blocks$grp) || blocks_dd == 'N/A' || blocks_dd == dropdown) '' else paste('/', blocks_dd)}")
-          )
-        })
-      })
+      tidyr::tibble(
+        agg = aggs$txt %>% unname() %>% str_trim(),
+        block = blocks$txt %>% unname() %>% str_trim(),
+        dataset = blocks$df %>% unname() %>% str_trim(),
+        dropdown = aggs$val,
+        filter = if (is.na(blocks$grp)) {NA_character_} 
+        else if (blocks$val == "N/A") {glue::glue("is.na({blocks$grp %>% unname() %>% str_trim()})")} 
+        else {glue::glue("{blocks$grp %>% unname() %>% str_trim()} == '{blocks$val}'")},
+        S3 = map2(block, dataset, ~ custom_class(.x, .y)),
+        gt_group = glue("{agg} of {block}{if (is.na(dropdown) || dropdown == 'NONE') '' else if (tolower(substr(dropdown, 1, 4)) %in% c('week','base','scree','end ')) paste(' at', dropdown) else paste(' and', dropdown)}{if (is.na(blocks$grp) || blocks$val == 'N/A' || blocks$val == dropdown) '' else paste('/', blocks$val)}")
+      )
     })
   }
 }
