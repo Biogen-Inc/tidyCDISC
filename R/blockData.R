@@ -348,7 +348,7 @@ createBlockdata <- function(datalist) {
 #'   bd
 #' }
 #' 
-#' addBlock(bd, "DIABP", "MEAN", "ALL")
+#' addBlock(bd, "DIABP", "MEAN", "ALL", "ALL")
 #' bd
 addBlock <- function(bd, variable, stat, dropdown, tpnt, df) {
   bd$add_block(variable = variable, stat = stat, dropdown = dropdown, tpnt = tpnt, df = df)

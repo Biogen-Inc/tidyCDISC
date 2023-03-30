@@ -36,6 +36,6 @@ if (interactive()) {
   bd
 }
 
-addBlock(bd, "DIABP", "MEAN", "ALL")
+addBlock(bd, "DIABP", "MEAN", "ALL", "ALL")
 bd
 }
