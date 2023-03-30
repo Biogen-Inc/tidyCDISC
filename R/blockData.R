@@ -256,6 +256,14 @@ table_blocks <-
                   private$create_TG(private$agg_drop, private$block_drop)
                   
                   self
+                },
+                #' @description 
+                #' Remove block from the block data object
+                #' @param x vector specifying elements to remove from block data object
+                remove_block = function(x) {
+                  
+                  private$block_drop <- private$block_drop[-x]
+                  private$agg_drop <- private$agg_drop[-x]
                   
                   private$create_TG(private$agg_drop, private$block_drop)
                   
@@ -298,7 +306,7 @@ table_blocks <-
 #' bd <- createBlockdata(datalist)
 #' bd
 createBlockdata <- function(datalist) {
-  invisible(table_blocks$new(datalist))
+  table_blocks$new(datalist)
 }
 
 #' Add Block to Block Data Object
@@ -327,7 +335,7 @@ createBlockdata <- function(datalist) {
 #' addBlock(bd, "DIABP", "MEAN", "ALL")
 #' bd
 addBlock <- function(bd, variable, stat, dropdown, df) {
-  invisible(bd$add_block(variable, stat, dropdown, df))
+  bd$add_block(variable, stat, dropdown, df)
 }
 
 #' Remove Block(s) from Block Data Object
