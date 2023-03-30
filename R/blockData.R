@@ -154,7 +154,7 @@ table_blocks <-
                 #' @param stat The statistic to be calculated
                 #' @param dropdown A subgroup on which the statistic is calculated (usually an AVISIT)
                 #' @param df The dataset the parameter or field is from
-                add_block = function(variable, stat, dropdown, df) {
+                add_block = function(variable, stat, dropdown, tpnt, df) {
                   blocks <- list()
                   aggs <- list()
                   get_var <- function(x) {
@@ -293,10 +293,11 @@ table_blocks <-
                   blocks$df <- get_df(df, possible_dfs)
                   
                   if (blocks$df %in% names(private$my_avals) && blocks$txt %in% names(private$my_avals[[blocks$df]])) {
-                    cat('Pleae provide a time point.',
-                        'To see all options, type "A".\n', sep = "\n")
+                    if (missing(tpnt))
+                      cat('Pleae provide a time point.',
+                          'To see all options, type "A".\n', sep = "\n")
                     atpt_lst <- private$my_avals[[blocks$df]][[blocks$txt]]
-                    filter_return <- get_filter(atpt_lst = atpt_lst)
+                    filter_return <- get_filter(tpnt, atpt_lst = atpt_lst)
                     blocks$grp <- names(filter_return)
                     blocks$val <- as.character(filter_return)
                     if (blocks$val == "ALL")
@@ -380,7 +381,7 @@ table_blocks <-
 #' bd <- createBlockdata(datalist)
 #' bd
 createBlockdata <- function(datalist) {
-  table_blocks$new(datalist)
+  table_blocks$new(datalist = datalist)
 }
 
 #' Add Block to Block Data Object
@@ -408,8 +409,8 @@ createBlockdata <- function(datalist) {
 #' 
 #' addBlock(bd, "DIABP", "MEAN", "ALL")
 #' bd
-addBlock <- function(bd, variable, stat, dropdown, df) {
-  bd$add_block(variable, stat, dropdown, df)
+addBlock <- function(bd, variable, stat, dropdown, tpnt, df) {
+  bd$add_block(variable = variable, stat = stat, dropdown = dropdown, tpnt = tpnt, df = df)
 }
 
 #' Remove Block(s) from Block Data Object
@@ -421,5 +422,5 @@ addBlock <- function(bd, variable, stat, dropdown, df) {
 #' 
 #' @export
 removeBlock <- function(bd, x) {
-  bd$remove_block(x)
+  bd$remove_block(x = x)
 }
