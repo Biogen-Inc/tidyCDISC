@@ -25,6 +25,7 @@ import R6
 \item \href{#method-table_blocks-new}{\code{table_blocks$new()}}
 \item \href{#method-table_blocks-print}{\code{table_blocks$print()}}
 \item \href{#method-table_blocks-add_block}{\code{table_blocks$add_block()}}
+\item \href{#method-table_blocks-remove_block}{\code{table_blocks$remove_block()}}
 \item \href{#method-table_blocks-clone}{\code{table_blocks$clone()}}
 }
 }
@@ -74,6 +75,23 @@ Add block to the block data object
 \item{\code{dropdown}}{A subgroup on which the statistic is calculated (usually an AVISIT)}
 
 \item{\code{df}}{The dataset the parameter or field is from}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-table_blocks-remove_block"></a>}}
+\if{latex}{\out{\hypertarget{method-table_blocks-remove_block}{}}}
+\subsection{Method \code{remove_block()}}{
+Remove block from the block data object
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{table_blocks$remove_block(x)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{x}}{vector specifying elements to remove from block data object}
 }
 \if{html}{\out{</div>}}
 }

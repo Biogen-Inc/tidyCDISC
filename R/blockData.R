@@ -329,3 +329,15 @@ createBlockdata <- function(datalist) {
 addBlock <- function(bd, variable, stat, dropdown, df) {
   invisible(bd$add_block(variable, stat, dropdown, df))
 }
+
+#' Remove Block(s) from Block Data Object
+#' 
+#' @param bd A block data object
+#' @param x vector specifying elements to remove from block data object
+#' 
+#' @return The \code{bd} block data object with additional block
+#' 
+#' @export
+removeBlock <- function(bd, x) {
+  bd$remove_block(x)
+}
