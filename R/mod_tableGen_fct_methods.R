@@ -243,3 +243,17 @@ create_avisit <- function(datalist, bds_data) {
     
   avisit_words[avisit_words != ""]
 }
+
+create_all_cols <- function(datalist) {
+  if("ADAE" %in% names(datalist)){
+    all_cols <- unique(c(
+      colnames(datalist$ADSL)[sapply(datalist$ADSL, class) %in% c('character', 'factor')],
+      colnames(datalist$ADAE)[sapply(datalist$ADAE, class) %in% c('character', 'factor')]
+    ))
+  } else {
+    all_cols <- unique(c(
+      colnames(datalist$ADSL)[sapply(datalist$ADSL, class) %in% c('character', 'factor')]
+    ))
+  }
+  all_cols
+}

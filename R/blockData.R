@@ -71,16 +71,7 @@ table_blocks <-
                     }
                   
                   private$all_cols <-
-                    if("ADAE" %in% names(datalist)){
-                      unique(c(
-                        colnames(datalist$ADSL)[sapply(datalist$ADSL, class) %in% c('character', 'factor')],
-                        colnames(datalist$ADAE)[sapply(datalist$ADAE, class) %in% c('character', 'factor')]
-                      ))
-                    } else { # just adsl cols
-                      unique(c(
-                        colnames(datalist$ADSL)[sapply(datalist$ADSL, class) %in% c('character', 'factor')]
-                      ))
-                    }
+                    create_all_cols(datalist)
                   
                   private$my_avals <- 
                     if (!any(purrr::map_lgl(datalist, ~ "ATPT" %in% colnames(.x)))) {

@@ -95,17 +95,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   categ_vars <- reactive({
     req(datafile()) # this also doesn't need to depend on pre-filters, so grabbing root df cols
     
-    if("ADAE" %in% names(datafile())){
-      all_cols <- unique(c(
-        colnames(datafile()$ADSL)[sapply(datafile()$ADSL, class) %in% c('character', 'factor')],
-        colnames(datafile()$ADAE)[sapply(datafile()$ADAE, class) %in% c('character', 'factor')]
-      ))
-    } else { # just adsl cols
-      all_cols <- unique(c(
-        colnames(datafile()$ADSL)[sapply(datafile()$ADSL, class) %in% c('character', 'factor')]
-      ))
-    }
-    return( all_cols )
+    create_all_cols(datafile())
   })
     
   observe({
@@ -217,8 +207,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # just character of factor vars from the ADSL or ADAE
   observe({
     req(categ_vars())
-    all_cols <- categ_vars()
-    session$sendCustomMessage("all_cols", all_cols)
+    session$sendCustomMessage("all_cols", categ_vars())
   })
   
   AVALS <- reactive({
