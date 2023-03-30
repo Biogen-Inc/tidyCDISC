@@ -44,3 +44,29 @@ stat_options.avisit_lab <- function(block, datalist, ...) {
   
   block
 }
+
+var_options <- function(block, datalist, ...) {
+  UseMethod("var_options", block)
+}
+
+var_options.default <- function(block, datalist, ...) {
+  if (is.null(block$var_options))
+    block$var_options <- block$var_arg
+  
+  block
+}
+
+var_options.atpt <- function(block, datalist, ...) {
+  atpts <-
+    datalist[[block$data]] %>%
+    dplyr::filter(PARAMCD == block$variable) %>%
+    dplyr::distinct(ATPT, ATPTN) %>%
+    varN_fctr_reorder() %>%
+    dplyr::pull(ATPT) %>%
+    get_levels() %>%
+    {list(ATPT = as.list(.))}
+  
+  block$var_options <- atpts
+  
+  block
+}
