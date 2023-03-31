@@ -20,6 +20,8 @@ table_blocks <-
                 ),
                 #' @field title A string used for table title
                 title = character(),
+                #' @field group_by A string indicating the field to use for grouping the table
+                group_by = NULL,
                 #' @description 
                 #' Create a new block data object
                 #' @param datalist A list of ADaM-ish datasets used to generate the table
@@ -105,6 +107,15 @@ table_blocks <-
                     stop("Invalid input. Title must be a string.")
                   
                   self$title <- title 
+                },
+                #' @description 
+                #' Set the group by field
+                #' @param group_by A field to group the table by
+                set_groupby = function(group_by) {
+                  if (length(title) != 1 || !is.character(title))
+                    stop("Invalid input. Must be a column from a data set in the data list.")
+                  
+                  self$group_by <- group_by 
                 },
                 #' @description 
                 #' Add block to the block data object
@@ -301,6 +312,11 @@ table_blocks <-
                   private$create_TG(private$agg_drop, private$block_drop)
                   
                   self
+                },
+                #' @description 
+                #' Export the table metadata as a JSON for 'recipe' inclusion
+                json_export = function() {
+                  
                 }
               ),
               list(
@@ -357,6 +373,19 @@ createBlockdata <- function(datalist, title) {
 #' @keywords table_blocks
 setTitle <- function(bd, title) {
   bd$set_title(title = title)
+}
+
+#' Set the title for the table object
+#' 
+#' @param bd A block data object
+#' @param group_by A field to group the table by
+#' 
+#' @return The \code{bd} block data object with updated group by field
+#' 
+#' @export
+#' @keywords table_blocks
+setGroup <- function(bd, group_by) {
+  bd$set_groupby(group_by = group_by)
 }
 
 #' Add Block to Block Data Object
