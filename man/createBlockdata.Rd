@@ -22,3 +22,4 @@ datalist <- list(ADSL = tidyCDISC::adsl, ADVS = tidyCDISC::advs,
 bd <- createBlockdata(datalist)
 bd
 }
+\keyword{table_blocks}

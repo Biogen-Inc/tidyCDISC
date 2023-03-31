@@ -1,4 +1,5 @@
 #' import R6
+#' @noRd
 table_blocks <-
   R6::R6Class("table_blocks",
               list(
@@ -313,6 +314,7 @@ table_blocks <-
 #' @return A block data object
 #' 
 #' @export
+#' @keywords table_blocks
 #' 
 #' @examples 
 #' 
@@ -336,6 +338,7 @@ createBlockdata <- function(datalist) {
 #' @return The \code{bd} block data object with additional block
 #' 
 #' @export
+#' @keywords table_blocks
 #' 
 #' @examples 
 #' 
@@ -343,7 +346,7 @@ createBlockdata <- function(datalist) {
 #'                  ADAE = tidyCDISC::adae, ADLBC = tidyCDISC::adlbc)
 #' bd <- createBlockdata(datalist)
 #' 
-#' if (interactive()) {
+#' \dontrun {
 #'   addBlock(bd)
 #'   bd
 #' }
@@ -362,6 +365,7 @@ addBlock <- function(bd, variable, stat, dropdown, tpnt, df) {
 #' @return The \code{bd} block data object with additional block
 #' 
 #' @export
+#' @keywords table_blocks
 removeBlock <- function(bd, x) {
   bd$remove_block(x = x)
 }

@@ -17,3 +17,4 @@ The \code{bd} block data object with additional block
 \description{
 Remove Block(s) from Block Data Object
 }
+\keyword{table_blocks}

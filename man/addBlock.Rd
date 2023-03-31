@@ -31,7 +31,7 @@ datalist <- list(ADSL = tidyCDISC::adsl, ADVS = tidyCDISC::advs,
                  ADAE = tidyCDISC::adae, ADLBC = tidyCDISC::adlbc)
 bd <- createBlockdata(datalist)
 
-if (interactive()) {
+\dontrun {
   addBlock(bd)
   bd
 }
@@ -39,3 +39,4 @@ if (interactive()) {
 addBlock(bd, "DIABP", "MEAN", "ALL", "ALL")
 bd
 }
+\keyword{table_blocks}
