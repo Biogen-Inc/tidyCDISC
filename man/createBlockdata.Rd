@@ -4,10 +4,12 @@
 \alias{createBlockdata}
 \title{Create Block Data Object}
 \usage{
-createBlockdata(datalist)
+createBlockdata(datalist, title)
 }
 \arguments{
 \item{datalist}{A list of ADaM-ish datasets used to generate the table}
+
+\item{title}{The title for the table}
 }
 \value{
 A block data object

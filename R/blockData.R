@@ -1,4 +1,4 @@
-#' import R6
+#' @import R6
 #' @noRd
 table_blocks <-
   R6::R6Class("table_blocks",
@@ -18,11 +18,20 @@ table_blocks <-
                   label = character(),
                   label_source = character()
                 ),
+                #' @field title A string used for table title
+                title = character(),
                 #' @description 
                 #' Create a new block data object
                 #' @param datalist A list of ADaM-ish datasets used to generate the table
-                initialize = function(datalist) {
+                #' @param title The title for the table
+                initialize = function(datalist, title) {
                   self$datalist <- datalist
+                  
+                  private$tbl_key <- paste("tbl", round(runif(1)*100000000), sep = "_")
+                  if (missing(title) || length(title) != 1 || !is.character(title))
+                    title <- private$tbl_key
+                  
+                  self$title <- title
                   
                   init <- sapply(datalist, function(x) "PARAMCD" %in% colnames(x) & !("CNSR" %in% colnames(x)))
                   BDS <- datalist[init]
@@ -87,6 +96,15 @@ table_blocks <-
                 print = function() {
                   print(self$blocks)
                   invisible(self)
+                },
+                #' @description 
+                #' Set the title for the table
+                #' @param title The title for the table
+                set_title = function(title) {
+                  if (!group_by %in% private$all_cols)
+                    stop("Invalid input. Title must be a string.")
+                  
+                  self$title <- title 
                 },
                 #' @description 
                 #' Add block to the block data object
@@ -286,6 +304,7 @@ table_blocks <-
                 }
               ),
               list(
+                tbl_key = character(),
                 stats = c("ANOVA", "CHG", "MEAN", "FREQ", "Y_FREQ", "MAX_FREQ", "NON_MISSING", "NESTED_FREQ_DSC", "NESTED_FREQ_ABC"),
                 my_weeks = NULL,
                 all_cols = NULL,
@@ -310,6 +329,7 @@ table_blocks <-
 #' Create Block Data Object
 #' 
 #' @param datalist A list of ADaM-ish datasets used to generate the table
+#' @param title The title for the table
 #' 
 #' @return A block data object
 #' 
@@ -322,8 +342,21 @@ table_blocks <-
 #'                  ADAE = tidyCDISC::adae, ADLBC = tidyCDISC::adlbc)
 #' bd <- createBlockdata(datalist)
 #' bd
-createBlockdata <- function(datalist) {
-  table_blocks$new(datalist = datalist)
+createBlockdata <- function(datalist, title) {
+  table_blocks$new(datalist = datalist, title = title)
+}
+
+#' Set the title for the table object
+#' 
+#' @param bd A block data object
+#' @param title The title for the table
+#' 
+#' @return The \code{bd} block data object with supplied title
+#' 
+#' @export
+#' @keywords table_blocks
+setTitle <- function(bd, title) {
+  bd$set_title(title = title)
 }
 
 #' Add Block to Block Data Object
