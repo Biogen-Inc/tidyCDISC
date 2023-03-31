@@ -53,6 +53,7 @@ Imports:
     jsonlite,
     plotly,
     purrr,
+    R6,
     rlang,
     rmarkdown,
     shiny,
