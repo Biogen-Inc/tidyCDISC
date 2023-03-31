@@ -31,6 +31,7 @@ $( document ).on('shiny:connected', function() {
   function setUpShiny(id, outputID, obj) {
     var obj = { numbers: [] }
     var str = "";
+    var txt; var df; var grp; var val; var lst;
     $('#' + id).each(function() {
       txt = $(this).text()
       df = $(this).attr("class").split(" ")[1]
@@ -132,7 +133,7 @@ selectChange("droppable_blocks", 'droppable_blocks label', 'tableGen_ui_1-block_
 
 
 let weeks_array = null
-let week_opts = ''
+let week_opts = ['']
 /**
   * Function that brings in vectors from shiny and uses 
   * them to create the appropriate style block for the agg chosen
@@ -141,17 +142,16 @@ let week_opts = ''
 Shiny.addCustomMessageHandler('my_weeks', function(df) {
     // the dataframe column is imported as an array
     weeks_array = Object.values(df)
-    week_opts = `${weeks_array.map(createOption).join("")}`
-    //console.log("weeks_array[0]:", weeks_array[0])
+    week_opts = weeks_array.map(createOption)
 });
 
 let col_array = null
-let col_opts = ''
+let col_opts = ['']
 Shiny.addCustomMessageHandler('all_cols', function(cols) {
 
       // the dataframe column is imported as an array
       col_array = Object.values(cols)
-      col_opts = `${col_array.map(createOption).join("")}`
+      col_opts = col_array.map(createOption)
 });
 
 /**
@@ -206,7 +206,7 @@ $(function() {
       <label class="control-label ${df}" for="${newid}">${label}</label>
         <select id="${newid}" class="dropdown">
           <option value="NONE">NONE</option>
-            ${values}
+            ${values.join("")}
           </select>
             <button class="delete">X</button>
               </div>`
