@@ -3,12 +3,23 @@ $(document).ready(function(){
 /* Function to create list of row blocks. If we need a block with a text String
 or a dropdown, make a new function here */
 function createRecipeBlock(newid, df, selection, options) {
-  let values = Array.isArray(options) ? options.map(createOption).join("") : ''
+  let values = ['']
+  if (Array.isArray(options)) {
+    values = options.map(function(x) {return createOption(x, selection)})
+  } else if (typeof options === "object") {
+    for (i in options) {
+      values = ['']
+      values.push("<optgroup label='" + i + "'>");
+      values.push($.map(options[i], function(x) {return createOption(x, selection)}).join(""));
+      values.push("</optgroup>");
+    }
+  }
+  
   return `<div class="form-group drop_area">` +
   `<label class="control-label ${df}" for="${newid}">${newid}</label>` +
   (selection === undefined ? `` : `<select id="${newid}" class="dropdown">` +
-        `<option value="${selection}">${selection}</option>` +
-          `${values}</select>`) +
+        (values.join('').search("<option selected") != -1 ? `` : `<option value="${selection}">${selection}</option>`) +
+          `${values.join("")}</select>`) +
         `<button class="delete">X</button>` +
             `</div>`
 }
@@ -17,8 +28,8 @@ function createRecipeBlock(newid, df, selection, options) {
   * Create dropdown menu from the array of AVISIT values
 * @param {avisit} the text and value of the option
 */
-function createOption(opt) {
-  return `<option value="${opt}">${opt}</option>`
+function createOption(opt, selection) {
+  return selection === undefined || selection != opt ? `<option value="${opt}">${opt}</option>` : `<option selected="${selection}" value="${opt}">${opt}</option>`
 }
 
 Shiny.addCustomMessageHandler('submit_recipe', function(recipe) {

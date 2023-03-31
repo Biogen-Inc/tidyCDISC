@@ -68,7 +68,9 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       blocks <- 
         recipe$blocks %>%
         `[`(recipe_inclusion(., datafile()))
-      recipe$blocks <- purrr::map(blocks, ~ stat_options(.x, datalist = datafile()))
+      recipe$blocks <- blocks %>%
+        purrr::map(~ stat_options(.x, datalist = datafile())) %>%
+        purrr::map(~ var_options(.x, datalist = datafile()))
     } else {
       recipe <- list(title = "NONE")
     }
