@@ -107,6 +107,7 @@ table_blocks <-
                     stop("Invalid input. Title must be a string.")
                   
                   self$title <- title 
+                  self
                 },
                 #' @description 
                 #' Set the group by field
@@ -115,7 +116,8 @@ table_blocks <-
                   if (length(title) != 1 || !is.character(title))
                     stop("Invalid input. Must be a column from a data set in the data list.")
                   
-                  self$group_by <- group_by 
+                  self$group_by <- group_by
+                  self
                 },
                 #' @description 
                 #' Add block to the block data object
@@ -390,7 +392,7 @@ createBlockdata <- function(datalist, title) {
 #' @export
 #' @keywords table_blocks
 setTitle <- function(bd, title) {
-  bd$set_title(title = title)
+  invisible(bd$set_title(title = title))
 }
 
 #' Set the title for the table object
@@ -403,7 +405,7 @@ setTitle <- function(bd, title) {
 #' @export
 #' @keywords table_blocks
 setGroup <- function(bd, group_by) {
-  bd$set_groupby(group_by = group_by)
+  invisible(bd$set_groupby(group_by = group_by))
 }
 
 #' Add Block to Block Data Object
@@ -434,7 +436,7 @@ setGroup <- function(bd, group_by) {
 #' addBlock(bd, "DIABP", "MEAN", "ALL", "ALL")
 #' bd
 addBlock <- function(bd, variable, stat, dropdown, tpnt, df) {
-  bd$add_block(variable = variable, stat = stat, dropdown = dropdown, tpnt = tpnt, df = df)
+  invisible(bd$add_block(variable = variable, stat = stat, dropdown = dropdown, tpnt = tpnt, df = df))
 }
 
 #' Remove Block(s) from Block Data Object
@@ -447,7 +449,7 @@ addBlock <- function(bd, variable, stat, dropdown, tpnt, df) {
 #' @export
 #' @keywords table_blocks
 removeBlock <- function(bd, x) {
-  bd$remove_block(x = x)
+  invisible(bd$remove_block(x = x))
 }
 
 #' Write block data object to a JSON file
