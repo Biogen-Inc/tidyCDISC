@@ -327,6 +327,7 @@ table_blocks <-
                                   out_lst$data <- block$df
                                   out_lst$variable <- block$txt
                                   out_lst$var_arg <- block$val
+                                  out_lst$var_options <- if (!is.null(block$val)) list(ATPT = as.list(block$val))
                                   out_lst$statistic <- agg$txt
                                   out_lst$stat_arg <- agg$val
                                   out_lst
