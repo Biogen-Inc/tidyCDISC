@@ -31,7 +31,7 @@ datalist <- list(ADSL = tidyCDISC::adsl, ADVS = tidyCDISC::advs,
                  ADAE = tidyCDISC::adae, ADLBC = tidyCDISC::adlbc)
 bd <- createBlockdata(datalist)
 
-\dontrun {
+\dontrun{
   addBlock(bd)
   bd
 }

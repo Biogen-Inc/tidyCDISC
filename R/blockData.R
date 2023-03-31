@@ -346,7 +346,7 @@ createBlockdata <- function(datalist) {
 #'                  ADAE = tidyCDISC::adae, ADLBC = tidyCDISC::adlbc)
 #' bd <- createBlockdata(datalist)
 #' 
-#' \dontrun {
+#' \dontrun{
 #'   addBlock(bd)
 #'   bd
 #' }
