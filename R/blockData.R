@@ -315,8 +315,26 @@ table_blocks <-
                 },
                 #' @description 
                 #' Export the table metadata as a JSON for 'recipe' inclusion
-                json_export = function() {
+                #' @param file File or connection to write to
+                #' @importFrom jsonlite toJSON write_json
+                json_export = function(file) {
+                  block_lst <-
+                    purrr::map2(private$agg_drop, private$block_drop,
+                                function(agg, block) {
+                                  out_lst <- list()
+                                  out_lst$data <- block$df
+                                  out_lst$variable <- block$txt
+                                  out_lst$var_arg <- block$val
+                                  out_lst$statistic <- agg$txt
+                                  out_lst$stat_arg <- agg$val
+                                  out_lst
+                                })
                   
+                  out_lst <- list()
+                  out_lst[[private$tbl_key]] <- list(title = self$title)
+                  out_lst[[1]]$group_by <- self$group_by
+                  out_lst[[1]]$blocks <- block_lst
+                  jsonlite::write_json(path = file, out_lst, auto_unbox = TRUE, pretty = TRUE)
                 }
               ),
               list(
@@ -430,4 +448,15 @@ addBlock <- function(bd, variable, stat, dropdown, tpnt, df) {
 #' @keywords table_blocks
 removeBlock <- function(bd, x) {
   bd$remove_block(x = x)
+}
+
+#' Write block data object to a JSON file
+#' 
+#' @param bd A block data object
+#' @param file File or connection to write to
+#' 
+#' @export
+#' @keywords table_blocks
+writeJSON <- function(bd, file) {
+  bd$json_export(file = file)
 }
