@@ -26,8 +26,15 @@ This tutorial will walk you through the structural components of the `recipes.js
 
 Within the `recipes.json` file you'll find a list of table objects. Below is the standard table #3 object.
 
-```{r, out.width="100%", fig.align='center', out.extra = 'style="border:1px solid; padding:5px;"', echo=FALSE}
-knitr::include_graphics("figures/recipes/table_object.png")
+```{r, eval=FALSE}
+"stan_3": {
+    "title": "Table 3: Accounting of Subjects",
+    "group_by": "TRT01P",
+    "blocks": [{"data":"ADSL", "variable":"RANDFL", "statistic":"Y_FREQ"}, 
+    {"data":"ADSL", "variable":"SAFFL", "statistic":"FREQ"}, 
+    {"data":"ADSL", "variable":"EOTSTT", "statistic":"NESTED_FREQ_ABC", "stat_selection":"DCTREAS"}, 
+    {"data":"ADSL", "variable":"EOSSTT", "statistic":"NESTED_FREQ_ABC", "stat_selection":"DCSREAS"}]
+}
 ```
 
 The **naming** of the table object ("stan_3") is important! When pulling this data into the application, S3 objects are heavily utilized. In this example, the table object will be given the class `stan_3`. The application will then use this information to correctly process the data for the creation of the table.
