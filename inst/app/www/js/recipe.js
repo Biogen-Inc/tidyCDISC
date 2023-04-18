@@ -38,8 +38,8 @@ Shiny.addCustomMessageHandler('submit_recipe', function(recipe) {
   
   if (Object.keys(recipe).includes("blocks")) {
     for(block of recipe.blocks){
-      $("#droppable_blocks").append($(createRecipeBlock(block.variable, block.data, block.var_arg, block.var_options)));
-      $("#droppable_agg").append($(createRecipeBlock(block.statistic, block.data, block.stat_arg, block.stat_options)));
+      $("#droppable_blocks").append($(createRecipeBlock(block.variable, block.data, block.var_selection, block.var_options)));
+      $("#droppable_agg").append($(createRecipeBlock(block.statistic, block.data, block.stat_selection, block.stat_options)));
     }
   }
   

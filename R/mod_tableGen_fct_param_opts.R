@@ -4,7 +4,7 @@ stat_options <- function(block, datalist, ...) {
 
 stat_options.default <- function(block, datalist, ...) {
   if (is.null(block$stat_options))
-    block$stat_options <- block$stat_arg
+    block$stat_options <- block$stat_selection
   
   block
 }
@@ -52,7 +52,7 @@ var_options <- function(block, datalist, ...) {
 
 var_options.default <- function(block, datalist, ...) {
   if (is.null(block$var_options))
-    block$var_options <- block$var_arg
+    block$var_options <- block$var_selection
   
   block
 }
