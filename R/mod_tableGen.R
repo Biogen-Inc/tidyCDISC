@@ -71,6 +71,20 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       recipe$blocks <- blocks %>%
         purrr::map(~ stat_options(.x, datalist = datafile())) %>%
         purrr::map(~ var_options(.x, datalist = datafile()))
+      var_check <- recipe$blocks %>%
+        purrr::map(~ .x$var_selection %in% c("ALL", .x$var_options)) %>%
+        purrr::compact() %>%
+        unlist()
+      stat_check <- recipe$blocks %>%
+        purrr::map(~ .x$stat_selection %in% c("ALL", .x$stat_options)) %>%
+        purrr::compact() %>%
+        unlist()
+      if (!is.null(var_check) && !all(var_check)) {
+        showNotification(h4("Variable drop down selection not contained in options."), type = "error")
+      }
+      if (!is.null(stat_check) && !all(stat_check)) {
+        showNotification(h4("Statistic drop down selection not contained in options."), type = "error")
+      }
     } else {
       recipe <- list(title = "NONE")
     }
