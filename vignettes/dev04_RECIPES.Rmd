@@ -46,7 +46,7 @@ The `blocks` object is actually an array of `block` objects. The setup may feel 
 * The `variable` element denotes the field or parameter from the `data` data set to analyze with a statistical computation.
 * The `statistic` element denotes which statistical procedure to perform on said field/parameter.
 
-A few other elements can also be present within a `block` object, such as: `stat_selection`, `stat_options`, and `stat_options_fn`.  A `stat_selection` element is only required when the `statistic` element requires it. As seen in the example above, the "NESTED_FREQ_ABC" `statistic` needs to know a secondary variable by which to produce its "nested" output. Besides those mentioned, no other elements are used in the `recipes.json` file or within the application's code base, but active development will be changing this soon.
+A few other elements can also be present within a `block` object, such as: `var_selction`, `var_options`, `var_options_fn` and their statistic counterparts `stat_selection`, `stat_options`, and `stat_options_fn`. A `var_selection` element can be used in conjunction with `var_options` to create a subgroup filter for the variable.  A `stat_selection` element is only required when the `statistic` element requires it. As seen in the example above, the "NESTED_FREQ_ABC" `statistic` needs to know a secondary variable by which to produce its "nested" output. Besides those mentioned, no other elements are used in the `recipes.json` file or within the application's code base, but active development will be changing this soon.
 
 ## Parsing `recipes.json`
 
@@ -113,7 +113,7 @@ recipe_inclusion.stan_labs <- function(blocks, datalist, ...) {
 
 ### The `block` object
 
-Currently only one potential class is being assigned to the `block` object and it is the value of element `stat_options_fn`. If you recall, when the `MEAN` statistic is selected in the app, a dropdown list is displayed containing different `AVISIT` values. Thus, if the user wants a block to output multiple weeks, they can provide a class for `stat_options_fn`. For example, with a value of `opt_01` you would create the function `stat_options.opt_01()`. The user could also opt to hard code these values using the element `stat_options`.
+Up to two classes can be assigned to the `block` object via the elements `var_options_fn` and `stat_options_fn`. If you recall, when the `MEAN` statistic is selected in the app, a dropdown list is displayed containing different `AVISIT` values. Thus, if the user wants a block to output multiple weeks, they can provide a class for `stat_options_fn`. For example, with a value of `opt_01` you would create the function `stat_options.opt_01()`. The user could also opt to hard code these values using the element `stat_options`.
 
 ```{r, eval=FALSE}
 # Example for `avisit` class
@@ -139,3 +139,23 @@ stat_options.avisit <- function(block, datalist, ...) {
 ```
 
 Similarly, the element `stat_selection` is used to determine the input for a statistic with a drop down. Paired with `stat_options_fn`, these two elements together can allow the user to create multiple generated blocks with only one `block` object. For example, the standard lab tables have `stat_selection = "ALL"` and `stat_options_fn = avisit_lab`. This will generate a block for each week.
+
+The `var_selection` and `var_options` combination is processed in a slightly different way. The application tries to create a filter. In order to accomplish this, the field must also be included as a group. For instance, one could have the following variable options: `"var_options": {"ATPT": ["AFTER LYING DOWN FOR 5 MINUTES", "AFTER STANDING FOR 1 MINUTE", "AFTER STANDING FOR 3 MINUTES"]`. The variable selection of `"var_selection":"AFTER STANDING FOR 3 MINUTES"` would result in creating the filter `ATPT == "AFTER STANDING FOR 3 MINUTES"`. There are two exceptions: (1) `"var_selection":"ALL"` will make multiple blocks, one for each options and (2) `"var_selection":"N/A"` will create the filter `is.na(ATPT)` if "N/A" was included as one of the options. Note that if using `var_options_fn`, a named list must be output.
+
+```{r, eval=FALSE}
+# Example for `atpt` class
+var_options.atpt <- function(block, datalist, ...) {
+  atpts <-
+    datalist[[block$data]] %>%
+    dplyr::filter(PARAMCD == block$variable) %>%
+    dplyr::distinct(ATPT, ATPTN) %>%
+    varN_fctr_reorder() %>%
+    dplyr::pull(ATPT) %>%
+    get_levels() %>%
+    {list(ATPT = as.list(.))}
+  
+  block$var_options <- atpts
+  
+  block
+}
+```
