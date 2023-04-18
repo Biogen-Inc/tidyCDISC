@@ -72,7 +72,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
         purrr::map(~ stat_options(.x, datalist = datafile())) %>%
         purrr::map(~ var_options(.x, datalist = datafile()))
       var_check <- recipe$blocks %>%
-        purrr::map(~ .x$var_selection %in% c("ALL", .x$var_options)) %>%
+        purrr::map(~ .x$var_selection %in% c("ALL", unlist(.x$var_options, use.names = FALSE))) %>%
         purrr::compact() %>%
         unlist()
       stat_check <- recipe$blocks %>%
