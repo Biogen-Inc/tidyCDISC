@@ -6,7 +6,7 @@ load_recipes <- function(recipe_file) {
     class(recipes[[i]]) <- c(class(recipes[[i]]), names(recipes)[i])
     class(recipes[[i]]$blocks) <- c(class(recipes[[i]]$blocks), recipes[[i]]$recipe_inclusion)
     for (j in seq_along(recipes[[i]]$blocks)) {
-      class(recipes[[i]]$blocks[[j]]) <- c(class(recipes[[i]]$blocks), recipes[[i]]$blocks[[j]]$stat_options_fn)
+      class(recipes[[i]]$blocks[[j]]) <- c(class(recipes[[i]]$blocks), recipes[[i]]$blocks[[j]]$stat_options_fn, recipes[[i]]$blocks[[j]]$var_options_fn)
     }
   }
 
