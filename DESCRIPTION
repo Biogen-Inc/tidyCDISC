@@ -65,6 +65,7 @@ Imports:
     timevis,
     tippy (== 0.1.0)
 Suggests: 
+    htmltools,
     knitr,
     spelling,
     testthat
