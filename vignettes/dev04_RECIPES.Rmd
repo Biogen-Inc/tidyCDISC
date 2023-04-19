@@ -207,7 +207,6 @@ stat_options.avisit <- function(block, datalist, ...) {
 ```
 
 ### The Table Output
-
 ```{r, echo=FALSE}
-knitr::asis_output(htmltools::includeHTML("figures/recipes/ATPT_tbl.html"))
+htmltools::includeHTML("figures/recipes/ATPT_tbl.html")
 ```
