@@ -23,7 +23,6 @@ CDISC
 CMD
 CSR
 Conf
-DIABP
 DIY
 DT
 Downloader
@@ -56,14 +55,13 @@ VARN
 VARN's
 YYYY
 adae
-addBlock
 adlbc
 adsl
 adtte
 advs
 automagically
-bd
 bdat
+blockData
 bonafide
 boxPlot
 callModule
