@@ -65,7 +65,7 @@ var_options.atpt <- function(block, datalist, ...) {
     varN_fctr_reorder() %>%
     dplyr::pull(ATPT) %>%
     get_levels() %>%
-    {list(ATPT = as.list(.))}
+    {list(ATPT = as.list(c("ALL", .)))}
   
   block$var_options <- atpts
   
