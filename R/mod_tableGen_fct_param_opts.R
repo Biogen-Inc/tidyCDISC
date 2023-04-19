@@ -4,7 +4,7 @@ stat_options <- function(block, datalist, ...) {
 
 stat_options.default <- function(block, datalist, ...) {
   if (is.null(block$stat_options))
-    block$stat_options <- block$stat_arg
+    block$stat_options <- block$stat_selection
   
   block
 }
@@ -52,7 +52,7 @@ var_options <- function(block, datalist, ...) {
 
 var_options.default <- function(block, datalist, ...) {
   if (is.null(block$var_options))
-    block$var_options <- block$var_arg
+    block$var_options <- block$var_selection
   
   block
 }
@@ -65,7 +65,7 @@ var_options.atpt <- function(block, datalist, ...) {
     varN_fctr_reorder() %>%
     dplyr::pull(ATPT) %>%
     get_levels() %>%
-    {list(ATPT = as.list(.))}
+    {list(ATPT = as.list(c("ALL", .)))}
   
   block$var_options <- atpts
   
