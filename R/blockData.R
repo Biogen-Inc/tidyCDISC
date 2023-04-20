@@ -103,7 +103,7 @@ table_blocks <-
                 #' Set the title for the table
                 #' @param title The title for the table
                 set_title = function(title) {
-                  if (!group_by %in% private$all_cols)
+                  if (length(title) != 1 || !is.character(title))
                     stop("Invalid input. Title must be a string.")
                   
                   self$title <- title 
@@ -113,7 +113,7 @@ table_blocks <-
                 #' Set the group by field
                 #' @param group_by A field to group the table by
                 set_groupby = function(group_by) {
-                  if (length(title) != 1 || !is.character(title))
+                  if (!group_by %in% private$all_cols)
                     stop("Invalid input. Must be a column from a data set in the data list.")
                   
                   self$group_by <- group_by
