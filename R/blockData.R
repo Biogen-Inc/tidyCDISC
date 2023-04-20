@@ -297,12 +297,12 @@ table_blocks <-
                   }
                   
                   process_drops <- process_droppables(list(list(aggs)), list(list(blocks)))
-                  private$block_drop <- c(private$block_drop, process_drops$blocks)
-                  private$agg_drop <- c(private$agg_drop, process_drops$aggs)
+                  private$block_drop <- append(private$block_drop, process_drops$blocks)
+                  private$agg_drop <- append(private$agg_drop, process_drops$aggs)
                   
                   blockData <- private$create_TG(process_drops$aggs, process_drops$blocks)
                   
-                  self$blocks <- dplyr::bind_rows(self$blocks, blockData)
+                  self$blocks <- dplyr::add_row(self$blocks, blockData)
                   self
                 },
                 #' @description 
