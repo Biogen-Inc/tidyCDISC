@@ -13,6 +13,7 @@ table_blocks <-
                   block = character(),
                   dataset = character(),
                   dropdown = character(),
+                  filter = character(),
                   S3 = list(),
                   gt_group = glue::glue(),
                   label = character(),
