@@ -23,6 +23,7 @@ source("scripts/riskmetric.R")
 # tidyCDISC <a href='https://Biogen-Inc.github.io/tidyCDISC/'><img src="man/figures/hex-tidyCDISC-170h.png" align="right"/></a>
 
 <!-- badges: start -->
+  [![pharmaverse](http://pharmaverse.org/shields/tidyCDISC.svg)](https://pharmaverse.org/e2eclinical/tlg/)
   [![R-CMD-check](https://github.com/Biogen-Inc/tidyCDISC/workflows/R-CMD-check/badge.svg)](https://github.com/Biogen-Inc/tidyCDISC/actions)
   [![OS Health](`r badge_health`)](https://openpharma.github.io/GithubMetrics/)
   [![riskmetric](`r badge_riskmetric`)](https://pharmar.github.io/riskmetric/)
