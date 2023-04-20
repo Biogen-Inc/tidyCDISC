@@ -299,8 +299,9 @@ table_blocks <-
                   private$block_drop <- c(private$block_drop, process_drops$blocks)
                   private$agg_drop <- c(private$agg_drop, process_drops$aggs)
                   
-                  private$create_TG(private$agg_drop, private$block_drop)
+                  blockData <- private$create_TG(process_drops$aggs, process_drops$blocks)
                   
+                  self$blocks <- dplyr::bind_rows(self$blocks, blockData)
                   self
                 },
                 #' @description 
@@ -311,7 +312,7 @@ table_blocks <-
                   private$block_drop <- private$block_drop[-x]
                   private$agg_drop <- private$agg_drop[-x]
                   
-                  private$create_TG(private$agg_drop, private$block_drop)
+                  self$blocks <- self$blocks[-x, ]
                   
                   self
                 },
@@ -357,8 +358,7 @@ table_blocks <-
                   blockData$label_source <-
                     "N/A"
                   
-                  self$blocks <- blockData
-                  invisible(self)
+                  blockData
                 }
               )
   )
