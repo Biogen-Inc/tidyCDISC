@@ -139,17 +139,17 @@ table_blocks <-
                     }
                     if (block_txt == "1") {
                       purrr::iwalk(tmp$all_rows, ~ {cat(.y, ":\n  ", sep = ""); cat(.x[[1]], sep = ", "); cat("\n")})
-                      get_var()
+                      return(get_var())
                     } else if (block_txt == "2") {
                       cat(names(self$all_rows), sep = ", ")
-                      get_var()
+                      return(get_var())
                     } else if (block_txt %in% names(self$all_rows)) {
                       cat(self$all_rows[[block_txt]][[1]], sep = ","); cat("\n")
-                      get_var()
+                      return(get_var())
                     } else {
                       if (!any(purrr::map_lgl(self$all_rows, ~ block_txt %in% .x[[1]]))) {
                         cat("Param/field not found. Please type 1 to see all available options.\n")
-                        get_var()
+                        return(get_var())
                       }
                       return(block_txt)
                     }
@@ -165,7 +165,7 @@ table_blocks <-
                     if (filter_txt == "A") {
                       cat("Please type the name or the number corresponding to the desired time point.\n")
                       cat(paste0(seq_along(opt_lst), ": ", opt_lst), sep = "\n"); cat("\n")
-                      get_filter(atpt_lst = atpt_lst)
+                      return(get_filter(atpt_lst = atpt_lst))
                     } else if (filter_txt %in% seq_along(opt_lst)) {
                       if (filter_txt == "1")
                         return("NONE")
@@ -186,11 +186,11 @@ table_blocks <-
                         get_filter(atpt_lst = atpt_lst)
                       } else {
                         x <- as.character(match(filter_txt, unlist(atpt_lst)) + 1)
-                        get_filter(x, atpt_lst = atpt_lst)
+                        return(get_filter(x, atpt_lst = atpt_lst))
                       }
                     } else {
                       cat('Time point not valid. Please type "A" to see all available options.\n')
-                      get_filter(atpt_lst = atpt_lst)
+                      return(get_filter(atpt_lst = atpt_lst))
                     }
                   }
                   get_stat <- function(x) {
@@ -202,14 +202,14 @@ table_blocks <-
                     if (agg_txt == "A") {
                       cat("Please type statistic or the number corresponding to desired stat.\n")
                       cat(paste0(seq_along(private$stats), ": ", private$stats), sep = "\n"); cat("\n")
-                      get_stat()
+                      return(get_stat())
                     } else if (agg_txt %in% seq_along(private$stats)) {
                       return(private$stats[as.numeric(agg_txt)])
                     } else if (agg_txt %in% private$stats) {
                       return(agg_txt)
                     } else {
                       cat('Statistic not valid. Please type "A" to see all available options.\n')
-                      get_stat()
+                      return(get_stat())
                     }
                   }
                   get_dropdown <- function(x, opts = c("weeks", "cols")) {
@@ -232,14 +232,14 @@ table_blocks <-
                     } else if (agg_val == "A") {
                       cat("Please type the week or the number corresponding to the desired option.\n")
                       cat(paste0(seq_along(opt_lst), ": ", opt_lst), sep = "\n"); cat("\n")
-                      get_dropdown(opts=opts)
+                      return(get_dropdown(opts=opts))
                     } else if (agg_val %in% seq_along(opt_lst)) {
                       return(opt_lst[as.numeric(agg_val)])
                     } else if (agg_val %in% opt_lst) {
                       return(agg_val)
                     } else {
                       cat('Option not valid. Please type "A" to see all available.\n')
-                      get_dropdown(opts=opts)
+                      return(get_dropdown(opts=opts))
                     }
                   }
                   get_df <- function(x, possible_dfs) {
