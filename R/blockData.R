@@ -127,7 +127,8 @@ table_blocks <-
                 #' @param dropdown A subgroup on which the statistic is calculated (usually an AVISIT)
                 #' @param tpnt A time point on which the calculation is filtered
                 #' @param df The dataset the parameter or field is from
-                add_block = function(variable, stat, dropdown, tpnt, df) {
+                #' @param after A subscript, after which the values are to be appended
+                add_block = function(variable, stat, dropdown, tpnt, df, after = NULL) {
                   blocks <- list()
                   aggs <- list()
                   get_var <- function(x) {
@@ -296,13 +297,15 @@ table_blocks <-
                     aggs$val <- get_dropdown(dropdown, "cols")
                   }
                   
+                  if (is.null(after)) after <- length(self$blocks)
+                  
                   process_drops <- process_droppables(list(list(aggs)), list(list(blocks)))
-                  private$block_drop <- append(private$block_drop, process_drops$blocks)
-                  private$agg_drop <- append(private$agg_drop, process_drops$aggs)
+                  private$block_drop <- append(private$block_drop, process_drops$blocks, after = after)
+                  private$agg_drop <- append(private$agg_drop, process_drops$aggs, after = after)
                   
                   blockData <- private$create_TG(process_drops$aggs, process_drops$blocks)
                   
-                  self$blocks <- dplyr::add_row(self$blocks, blockData)
+                  self$blocks <- dplyr::add_row(self$blocks, blockData, .after = after)
                   self
                 },
                 #' @description 
@@ -418,6 +421,7 @@ setGroup <- function(bd, group_by) {
 #' @param dropdown A subgroup on which the statistic is calculated (usually an AVISIT)
 #' @param tpnt A time point on which the calculation is filtered
 #' @param df The dataset the parameter or field is from
+#' @param after A subscript, after which the values are to be appended
 #' 
 #' @return The \code{bd} block data object with additional block
 #' 
@@ -437,8 +441,8 @@ setGroup <- function(bd, group_by) {
 #' 
 #' addBlock(bd, "DIABP", "MEAN", "ALL", "ALL")
 #' bd
-addBlock <- function(bd, variable, stat, dropdown, tpnt, df) {
-  invisible(bd$add_block(variable = variable, stat = stat, dropdown = dropdown, tpnt = tpnt, df = df))
+addBlock <- function(bd, variable, stat, dropdown, tpnt, df, after = NULL) {
+  invisible(bd$add_block(variable = variable, stat = stat, dropdown = dropdown, tpnt = tpnt, df = df, after = after))
 }
 
 #' Remove Block(s) from Block Data Object
