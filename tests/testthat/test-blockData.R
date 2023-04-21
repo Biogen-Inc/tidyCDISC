@@ -114,4 +114,37 @@ test_that("table_block wrappers work", {
               row.names = c(NA, -1L), class = c("tbl_df", "tbl", "data.frame"))
   expect_equal(bd$blocks, block_table)
   
+  setTitle(bd, "My Title")
+  expect_equal(bd$title, "My Title")
+  
+  setGroup(bd, "TRT01P")
+  expect_equal(bd$group_by, "TRT01P")
+  
+})
+
+test_that("User input is working", {
+  con <- file()
+  options(tidyCDISC.connection = con)
+  
+  datalist <- list(ADSL = tidyCDISC::adsl, ADAE = tidyCDISC::adae)
+  
+  bd <- createBlockdata(datalist)
+  
+  user_input <- c("AGEGR1", "FREQ")
+  write(paste(user_input, collapse = "\n"), con)
+  addBlock(bd)
+  expect_equal(nrow(bd$blocks), 1)
+  
+  user_input <- c("AGE", "MEN")
+  write(paste(user_input, collapse = "\n"), con)
+  expect_error(addBlock(bd))
+  expect_equal(nrow(bd$blocks), 1)
+  
+  user_input <- c("AGE", "MEN", "MEAN")
+  write(paste(user_input, collapse = "\n"), con)
+  addBlock(bd)
+  expect_equal(nrow(bd$blocks), 2)
+  
+  options(tidyCDISC.connection = stdin())
+  close(con)
 })
