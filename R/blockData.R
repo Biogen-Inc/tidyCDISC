@@ -275,7 +275,7 @@ table_blocks <-
                       cat(user_interface$message, "\n\n")
                       user_interface$triggered <- TRUE
                     }
-                    cat('Please provide a PARAMCD or field.', 
+                    cat('Please type a PARAMCD or field to use.', 
                         'To see all options, type 1. To see all datasets, type 2. To see options for a particular dataset, type its name (e.g. "ADAE").\n', sep = "\n")
                   }
                   blocks$txt <- get_var(variable)
@@ -288,7 +288,7 @@ table_blocks <-
                         cat(user_interface$message, "\n\n")
                         user_interface$triggered <- TRUE
                       }
-                      cat('Pleae provide a time point.',
+                      cat('Pleae type a time point to use.',
                           'To see all options, type "A".\n', sep = "\n")
                     }
                     atpt_lst <- private$my_avals[[blocks$df]][[blocks$txt]]
@@ -304,7 +304,7 @@ table_blocks <-
                       cat(user_interface$message, "\n\n")
                       user_interface$triggered <- TRUE
                     }
-                    cat('Please provide an aggregator.',
+                    cat('Please type an aggregator to use.',
                         'To see all options, type "A".\n', sep = "\n")
                   }
                   aggs$txt <- get_stat(stat)
@@ -315,7 +315,7 @@ table_blocks <-
                         cat(user_interface$message, "\n\n")
                         user_interface$triggered <- TRUE
                       }
-                      cat('Please provide an AVISIT.',
+                      cat('Please type an AVISIT to use.',
                           'To see all options, type "A".\n', sep = "\n")
                     }
                     aggs$val <- get_dropdown(dropdown, "weeks")
@@ -327,7 +327,7 @@ table_blocks <-
                         cat(user_interface$message, "\n\n")
                         user_interface$triggered <- TRUE
                       }
-                      cat('Please provide a field.',
+                      cat('Please type a field to use.',
                           'To see all options, type "A",\n', sep = "\n")
                     }
                     aggs$val <- get_dropdown(dropdown, "cols")
