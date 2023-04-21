@@ -4,7 +4,7 @@
 \alias{addBlock}
 \title{Add Block to Block Data Object}
 \usage{
-addBlock(bd, variable, stat, dropdown, tpnt, df)
+addBlock(bd, variable, stat, dropdown, tpnt, df, after = NULL)
 }
 \arguments{
 \item{bd}{A block data object}
@@ -18,6 +18,8 @@ addBlock(bd, variable, stat, dropdown, tpnt, df)
 \item{tpnt}{A time point on which the calculation is filtered}
 
 \item{df}{The dataset the parameter or field is from}
+
+\item{after}{A subscript, after which the values are to be appended}
 }
 \value{
 The \code{bd} block data object with additional block
