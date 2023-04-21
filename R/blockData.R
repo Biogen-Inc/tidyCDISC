@@ -280,7 +280,6 @@ table_blocks <-
                   }
                   blocks$txt <- get_var(variable)
                   possible_dfs <- names(self$all_rows)[purrr::map_lgl(self$all_rows, ~ blocks$txt %in% .x[[1]])]
-                  browser()
                   blocks$df <- get_df(df, possible_dfs)
                   
                   if (blocks$df %in% names(private$my_avals) && blocks$txt %in% names(private$my_avals[[blocks$df]])) {
