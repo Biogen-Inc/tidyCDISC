@@ -129,6 +129,13 @@ table_blocks <-
                 #' @param df The dataset the parameter or field is from
                 #' @param after A subscript, after which the values are to be appended
                 add_block = function(variable, stat, dropdown, tpnt, df, after = NULL) {
+                  msg_call <- deparse1(sys.calls()[[sys.nframe()-1]], collapse = "") %>%
+                    stringr::str_match("(^addBlock\\().*\\)?(,.*\\)$)") %>%
+                    as.character() %>%
+                    `[`(-1) %>%
+                    paste(collapse = "bd")
+                  user_interface <- list(triggered = FALSE,
+                                         message = paste("Requested user input for", msg_call))
                   blocks <- list()
                   aggs <- list()
                   get_var <- function(x) {
@@ -244,6 +251,10 @@ table_blocks <-
                   }
                   get_df <- function(x, possible_dfs) {
                     if (!missing(x) && !(x %in% possible_dfs || x %in% seq_along(possible_dfs))) {
+                      if (!user_interface$triggered) {
+                        cat(user_interface$message, "\n\n")
+                        user_interface$triggered <- TRUE
+                      }
                       cat("The selected variable is not in the supplied dataset.\n")
                     } else if (!missing(x) && x %in% possible_dfs) {
                       return(x)
@@ -259,17 +270,28 @@ table_blocks <-
                     get_df(df_val, possible_dfs)
                   }
                   
-                  if (missing(variable))
+                  if (missing(variable)) {
+                    if (!user_interface$triggered) {
+                      cat(user_interface$message, "\n\n")
+                      user_interface$triggered <- TRUE
+                    }
                     cat('Please provide a PARAMCD or field.', 
                         'To see all options, type 1. To see all datasets, type 2. To see options for a particular dataset, type its name (e.g. "ADAE").\n', sep = "\n")
+                  }
                   blocks$txt <- get_var(variable)
                   possible_dfs <- names(self$all_rows)[purrr::map_lgl(self$all_rows, ~ blocks$txt %in% .x[[1]])]
+                  browser()
                   blocks$df <- get_df(df, possible_dfs)
                   
                   if (blocks$df %in% names(private$my_avals) && blocks$txt %in% names(private$my_avals[[blocks$df]])) {
-                    if (missing(tpnt))
+                    if (missing(tpnt)) {
+                      if (!user_interface$triggered) {
+                        cat(user_interface$message, "\n\n")
+                        user_interface$triggered <- TRUE
+                      }
                       cat('Pleae provide a time point.',
                           'To see all options, type "A".\n', sep = "\n")
+                    }
                     atpt_lst <- private$my_avals[[blocks$df]][[blocks$txt]]
                     filter_return <- get_filter(tpnt, atpt_lst = atpt_lst)
                     blocks$grp <- names(filter_return)
@@ -278,22 +300,37 @@ table_blocks <-
                       blocks$lst <- atpt_lst[[blocks$grp]][-1]
                   }
                   
-                  if (missing(stat))
+                  if (missing(stat)) {
+                    if (!user_interface$triggered) {
+                      cat(user_interface$message, "\n\n")
+                      user_interface$triggered <- TRUE
+                    }
                     cat('Please provide an aggregator.',
                         'To see all options, type "A".\n', sep = "\n")
+                  }
                   aggs$txt <- get_stat(stat)
                   
                   if (aggs$txt %in% c("ANOVA", "CHG", "MEAN") & !is.null(private$my_weeks)) {
-                    if (missing(dropdown))
+                    if (missing(dropdown)) {
+                      if (!user_interface$triggered) {
+                        cat(user_interface$message, "\n\n")
+                        user_interface$triggered <- TRUE
+                      }
                       cat('Please provide an AVISIT.',
                           'To see all options, type "A".\n', sep = "\n")
+                    }
                     aggs$val <- get_dropdown(dropdown, "weeks")
                     if (!is.null(aggs$val) && aggs$val == "ALL")
                       aggs$lst <- as.list(private$my_weeks)
                   } else if (aggs$txt %in% c("NESTED_FREQ_DSC", "NESTED_FREQ_ABC")) {
-                    if (missing(dropdown))
+                    if (missing(dropdown)) {
+                      if (!user_interface$triggered) {
+                        cat(user_interface$message, "\n\n")
+                        user_interface$triggered <- TRUE
+                      }
                       cat('Please provide a field.',
                           'To see all options, type "A",\n', sep = "\n")
+                    }
                     aggs$val <- get_dropdown(dropdown, "cols")
                   }
                   
