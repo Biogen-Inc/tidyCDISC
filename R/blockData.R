@@ -129,15 +129,27 @@ table_blocks <-
                 #' @param df The dataset the parameter or field is from
                 #' @param after A subscript, after which the values are to be appended
                 add_block = function(variable, stat, dropdown, tpnt, df, after = NULL) {
-                  msg_call <- deparse1(sys.calls()[[sys.nframe()-1]], collapse = "") %>%
-                    stringr::str_match("(^addBlock\\().*\\)?(,.*\\)$)") %>%
-                    as.character() %>%
-                    `[`(-1) %>%
-                    paste(collapse = "bd")
+                  arg_list <- c('variable', 'stat', 'dropdown', 'tpnt', 'df')
+                  msg_call <- "addBlock(bd"
+                  for (i in arg_list) {
+                    if (do.call(missing, list(i)))
+                      next
+                    
+                    argument <- glue::glue("{i} = '{eval(parse(text = i))}'")
+                    msg_call <- paste(msg_call, argument, sep = ", ")
+                  }
+                  msg_call <- paste0(msg_call, ")")
                   user_interface <- list(triggered = FALSE,
                                          message = paste("Requested user input for", msg_call))
                   blocks <- list()
                   aggs <- list()
+                  cat1 <- function(...) {
+                    if (!user_interface$triggered) {
+                      cat(user_interface$message, "\n\n")
+                      user_interface$triggered <<- TRUE
+                    }
+                    cat(...)
+                  }
                   get_var <- function(x) {
                     if (missing(x)) {
                       block_txt <- readLines(con = getOption("tidyCDISC.connection"), n = 1)
@@ -145,17 +157,17 @@ table_blocks <-
                       block_txt <- x
                     }
                     if (block_txt == "1") {
-                      purrr::iwalk(tmp$all_rows, ~ {cat(.y, ":\n  ", sep = ""); cat(.x[[1]], sep = ", "); cat("\n")})
+                      purrr::iwalk(tmp$all_rows, ~ {cat1(.y, ":\n  ", sep = ""); cat1(.x[[1]], sep = ", "); cat1("\n")})
                       return(get_var())
                     } else if (block_txt == "2") {
-                      cat(names(self$all_rows), sep = ", ")
+                      cat1(names(self$all_rows), sep = ", ")
                       return(get_var())
                     } else if (block_txt %in% names(self$all_rows)) {
-                      cat(self$all_rows[[block_txt]][[1]], sep = ","); cat("\n")
+                      cat1(self$all_rows[[block_txt]][[1]], sep = ","); cat1("\n")
                       return(get_var())
                     } else {
                       if (!any(purrr::map_lgl(self$all_rows, ~ block_txt %in% .x[[1]]))) {
-                        cat("Param/field not found. Please type 1 to see all available options.\n")
+                        cat1("Param/field not found. Please type 1 to see all available options.\n")
                         return(get_var())
                       }
                       return(block_txt)
@@ -170,8 +182,8 @@ table_blocks <-
                       filter_txt <- x
                     }
                     if (filter_txt == "A") {
-                      cat("Please type the name or the number corresponding to the desired time point.\n")
-                      cat(paste0(seq_along(opt_lst), ": ", opt_lst), sep = "\n"); cat("\n")
+                      cat1("Please type the name or the number corresponding to the desired time point.\n")
+                      cat1(paste0(seq_along(opt_lst), ": ", opt_lst), sep = "\n"); cat1("\n")
                       return(get_filter(atpt_lst = atpt_lst))
                     } else if (filter_txt %in% seq_along(opt_lst)) {
                       if (filter_txt == "1")
@@ -189,14 +201,14 @@ table_blocks <-
                       return(filter_return)
                     } else if (filter_txt %in% unlist(atpt_lst)) {
                       if (sum(filter_txt == unlist(atpt_lst)) > 1) {
-                        cat('Time point is not unique. Please type "A" to see all available options.\n')
+                        cat1('Time point is not unique. Please type "A" to see all available options.\n')
                         get_filter(atpt_lst = atpt_lst)
                       } else {
                         x <- as.character(match(filter_txt, unlist(atpt_lst)) + 1)
                         return(get_filter(x, atpt_lst = atpt_lst))
                       }
                     } else {
-                      cat('Time point not valid. Please type "A" to see all available options.\n')
+                      cat1('Time point not valid. Please type "A" to see all available options.\n')
                       return(get_filter(atpt_lst = atpt_lst))
                     }
                   }
@@ -207,15 +219,15 @@ table_blocks <-
                       agg_txt <- x
                     }
                     if (agg_txt == "A") {
-                      cat("Please type statistic or the number corresponding to desired stat.\n")
-                      cat(paste0(seq_along(private$stats), ": ", private$stats), sep = "\n"); cat("\n")
+                      cat1("Please type statistic or the number corresponding to desired stat.\n")
+                      cat1(paste0(seq_along(private$stats), ": ", private$stats), sep = "\n"); cat1("\n")
                       return(get_stat())
                     } else if (agg_txt %in% seq_along(private$stats)) {
                       return(private$stats[as.numeric(agg_txt)])
                     } else if (agg_txt %in% private$stats) {
                       return(agg_txt)
                     } else {
-                      cat('Statistic not valid. Please type "A" to see all available options.\n')
+                      cat1('Statistic not valid. Please type "A" to see all available options.\n')
                       return(get_stat())
                     }
                   }
@@ -237,25 +249,21 @@ table_blocks <-
                     if (is.null(agg_val) || is.na(agg_val)) {
                       return(NULL)
                     } else if (agg_val == "A") {
-                      cat("Please type the week or the number corresponding to the desired option.\n")
-                      cat(paste0(seq_along(opt_lst), ": ", opt_lst), sep = "\n"); cat("\n")
+                      cat1("Please type the week or the number corresponding to the desired option.\n")
+                      cat1(paste0(seq_along(opt_lst), ": ", opt_lst), sep = "\n"); cat1("\n")
                       return(get_dropdown(opts=opts))
                     } else if (agg_val %in% seq_along(opt_lst)) {
                       return(opt_lst[as.numeric(agg_val)])
                     } else if (agg_val %in% opt_lst) {
                       return(agg_val)
                     } else {
-                      cat('Option not valid. Please type "A" to see all available.\n')
+                      cat1('Option not valid. Please type "A" to see all available.\n')
                       return(get_dropdown(opts=opts))
                     }
                   }
                   get_df <- function(x, possible_dfs) {
                     if (!missing(x) && !(x %in% possible_dfs || x %in% seq_along(possible_dfs))) {
-                      if (!user_interface$triggered) {
-                        cat(user_interface$message, "\n\n")
-                        user_interface$triggered <- TRUE
-                      }
-                      cat("The selected variable is not in the supplied dataset.\n")
+                      cat1("The selected variable is not in the supplied dataset.\n")
                     } else if (!missing(x) && x %in% possible_dfs) {
                       return(x)
                     } else if (!missing(x) && x %in% seq_along(possible_dfs)) {
@@ -264,18 +272,14 @@ table_blocks <-
                       return(possible_dfs)
                     }
                     
-                    cat("Please type the dataset or the number corresponding to the desired option.\n")
-                    cat(paste0(seq_along(possible_dfs), ": ", possible_dfs), sep = "\n"); cat("\n")
+                    cat1("Please type the dataset or the number corresponding to the desired option.\n")
+                    cat1(paste0(seq_along(possible_dfs), ": ", possible_dfs), sep = "\n"); cat1("\n")
                     df_val <- readLines(con = getOption("tidyCDISC.connection"), n = 1)
                     get_df(df_val, possible_dfs)
                   }
                   
                   if (missing(variable)) {
-                    if (!user_interface$triggered) {
-                      cat(user_interface$message, "\n\n")
-                      user_interface$triggered <- TRUE
-                    }
-                    cat('Please type a PARAMCD or field to use.', 
+                    cat1('Please type a PARAMCD or field to use.', 
                         'To see all options, type 1. To see all datasets, type 2. To see options for a particular dataset, type its name (e.g. "ADAE").\n', sep = "\n")
                   }
                   blocks$txt <- get_var(variable)
@@ -284,11 +288,7 @@ table_blocks <-
                   
                   if (blocks$df %in% names(private$my_avals) && blocks$txt %in% names(private$my_avals[[blocks$df]])) {
                     if (missing(tpnt)) {
-                      if (!user_interface$triggered) {
-                        cat(user_interface$message, "\n\n")
-                        user_interface$triggered <- TRUE
-                      }
-                      cat('Pleae type a time point to use.',
+                      cat1('Pleae type a time point to use.',
                           'To see all options, type "A".\n', sep = "\n")
                     }
                     atpt_lst <- private$my_avals[[blocks$df]][[blocks$txt]]
@@ -300,22 +300,14 @@ table_blocks <-
                   }
                   
                   if (missing(stat)) {
-                    if (!user_interface$triggered) {
-                      cat(user_interface$message, "\n\n")
-                      user_interface$triggered <- TRUE
-                    }
-                    cat('Please type an aggregator to use.',
+                    cat1('Please type an aggregator to use.',
                         'To see all options, type "A".\n', sep = "\n")
                   }
                   aggs$txt <- get_stat(stat)
                   
                   if (aggs$txt %in% c("ANOVA", "CHG", "MEAN") & !is.null(private$my_weeks)) {
                     if (missing(dropdown)) {
-                      if (!user_interface$triggered) {
-                        cat(user_interface$message, "\n\n")
-                        user_interface$triggered <- TRUE
-                      }
-                      cat('Please type an AVISIT to use.',
+                      cat1('Please type an AVISIT to use.',
                           'To see all options, type "A".\n', sep = "\n")
                     }
                     aggs$val <- get_dropdown(dropdown, "weeks")
@@ -323,11 +315,7 @@ table_blocks <-
                       aggs$lst <- as.list(private$my_weeks)
                   } else if (aggs$txt %in% c("NESTED_FREQ_DSC", "NESTED_FREQ_ABC")) {
                     if (missing(dropdown)) {
-                      if (!user_interface$triggered) {
-                        cat(user_interface$message, "\n\n")
-                        user_interface$triggered <- TRUE
-                      }
-                      cat('Please type a field to use.',
+                      cat1('Please type a field to use.',
                           'To see all options, type "A",\n', sep = "\n")
                     }
                     aggs$val <- get_dropdown(dropdown, "cols")
