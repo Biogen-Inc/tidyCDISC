@@ -140,7 +140,7 @@ table_blocks <-
                   aggs <- list()
                   get_var <- function(x) {
                     if (missing(x)) {
-                      block_txt <- readline("INPUT: ")
+                      block_txt <- readLines(con = getOption("tidyCDISC.connection"), n = 1)
                     } else {
                       block_txt <- x
                     }
@@ -165,7 +165,7 @@ table_blocks <-
                     opt_lst <- c("NONE", purrr::imap(atpt_lst, ~ glue::glue("{.y} - {.x}")) %>% unlist())
                     
                     if (missing(x)) {
-                      filter_txt <- readline("INPUT: ")
+                      filter_txt <- readLines(con = getOption("tidyCDISC.connection"), n = 1)
                     } else {
                       filter_txt <- x
                     }
@@ -202,7 +202,7 @@ table_blocks <-
                   }
                   get_stat <- function(x) {
                     if (missing(x)) {
-                      agg_txt <- readline("INPUT: ")
+                      agg_txt <- readLines(con = getOption("tidyCDISC.connection"), n = 1)
                     } else {
                       agg_txt <- x
                     }
@@ -230,7 +230,7 @@ table_blocks <-
                       }
                     
                     if (missing(x)) {
-                      agg_val <- readline("INPUT: ")
+                      agg_val <- readLines(con = getOption("tidyCDISC.connection"), n = 1)
                     } else {
                       agg_val <- x
                     }
@@ -266,7 +266,7 @@ table_blocks <-
                     
                     cat("Please type the dataset or the number corresponding to the desired option.\n")
                     cat(paste0(seq_along(possible_dfs), ": ", possible_dfs), sep = "\n"); cat("\n")
-                    df_val <- readline("Input: ")
+                    df_val <- readLines(con = getOption("tidyCDISC.connection"), n = 1)
                     get_df(df_val, possible_dfs)
                   }
                   
