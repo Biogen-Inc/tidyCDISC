@@ -144,6 +144,8 @@ table_blocks <-
                   blocks <- list()
                   aggs <- list()
                   cat1 <- function(...) {
+                    if(identical(Sys.getenv("TESTTHAT"), "true")) return(NULL)
+                    
                     if (!user_interface$triggered) {
                       cat(user_interface$message, "\n\n")
                       user_interface$triggered <<- TRUE
