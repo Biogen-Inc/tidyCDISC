@@ -45,6 +45,8 @@ jobs:
           r-version: ${{ matrix.config.r }}
           use-public-rspm: true
       - uses: r-lib/actions/setup-renv@v2
+        with:
+          cache-version: 2
       
       # likely not needed since 'r-lib/actions/check-r-package@v2' will build
       # the pkg, but including it for consistency with other workflows
