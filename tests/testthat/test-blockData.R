@@ -25,10 +25,12 @@ table_blocks_tester <- R6::R6Class(
 test_that("table_blocks is working", {
   datalist <- list(ADSL = tidyCDISC::adsl, ADVS = tidyCDISC::advs)
   
-  test_bd <- table_blocks_tester$new(datalist)
+  test_bd <- table_blocks_tester$new(datalist, "My Title")
   
   # Check initialization values
   expect_equal(nrow(test_bd$blocks), 0)
+  expect_equal(test_bd$title, "My Title")
+  expect_equal(test_bd$group_by, NULL)
   
   stats <- c("ANOVA", "CHG", "MEAN", "FREQ", "Y_FREQ", "MAX_FREQ", "NON_MISSING", "NESTED_FREQ_DSC", "NESTED_FREQ_ABC")
   test_bd$test_stats(stats)
