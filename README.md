@@ -5,10 +5,11 @@
 
 <!-- badges: start -->
 
-[![R-CMD-check](https://github.com/Biogen-Inc/tidyCDISC/workflows/R-CMD-check/badge.svg)](https://github.com/Biogen-Inc/tidyCDISC/actions)
+[![pharmaverse](http://pharmaverse.org/shields/tidyCDISC.svg)](https://pharmaverse.org)
 [![OS
-Health](https://img.shields.io/badge/OS%20Health-71-yellowgreen)](https://openpharma.github.io/GithubMetrics/)
-[![riskmetric](https://img.shields.io/badge/riskmetric-0.48-brightgreen)](https://pharmar.github.io/riskmetric/)
+Activity](https://img.shields.io/badge/OS%20Activity-86-green)](https://openpharma.github.io/GithubMetrics/)
+[![riskmetric](https://img.shields.io/badge/riskmetric-0.25-brightgreen)](https://pharmar.github.io/riskmetric/)
+[![R-CMD-check](https://github.com/Biogen-Inc/tidyCDISC/workflows/R-CMD-check/badge.svg)](https://github.com/Biogen-Inc/tidyCDISC/actions)
 [![Coverage
 status](https://codecov.io/gh/Biogen-Inc/tidyCDISC/branch/master/graph/badge.svg)](https://app.codecov.io/gh/Biogen-Inc/tidyCDISC/tree/devel)
 <!-- badges: end -->
