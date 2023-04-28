@@ -17,4 +17,12 @@ The \code{bd} block data object with supplied title
 \description{
 Set the title for the table object
 }
+\examples{
+
+datalist <- list(ADSL = tidyCDISC::adsl, ADVS = tidyCDISC::advs, 
+                 ADAE = tidyCDISC::adae, ADLBC = tidyCDISC::adlbc)
+bd <- createBlockdata(datalist)
+setTitle("Table 1")
+bd$title
+}
 \keyword{table_blocks}

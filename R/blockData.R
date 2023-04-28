@@ -97,7 +97,11 @@ table_blocks <-
                 #' @description 
                 #' Print the data frame containing the blocks
                 print = function() {
-                  print(self$blocks)
+                  print(list(
+                    Title = self$title,
+                    "Group By" = self$group_by,
+                    Blocks = self$blocks
+                  ))
                   invisible(self)
                 },
                 #' @description 
@@ -422,6 +426,14 @@ createBlockdata <- function(datalist, title) {
 #' 
 #' @export
 #' @keywords table_blocks
+#' 
+#' @examples 
+#' 
+#' datalist <- list(ADSL = tidyCDISC::adsl, ADVS = tidyCDISC::advs, 
+#'                  ADAE = tidyCDISC::adae, ADLBC = tidyCDISC::adlbc)
+#' bd <- createBlockdata(datalist)
+#' setTitle("Table 1")
+#' bd$title
 setTitle <- function(bd, title) {
   invisible(bd$set_title(title = title))
 }
@@ -435,6 +447,14 @@ setTitle <- function(bd, title) {
 #' 
 #' @export
 #' @keywords table_blocks
+#' 
+#' @examples 
+#' 
+#' datalist <- list(ADSL = tidyCDISC::adsl, ADVS = tidyCDISC::advs, 
+#'                  ADAE = tidyCDISC::adae, ADLBC = tidyCDISC::adlbc)
+#' bd <- createBlockdata(datalist)
+#' setGroup("TRT01P")
+#' bd$group_by
 setGroup <- function(bd, group_by) {
   invisible(bd$set_groupby(group_by = group_by))
 }

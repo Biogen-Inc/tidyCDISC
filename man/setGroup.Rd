@@ -17,4 +17,12 @@ The \code{bd} block data object with updated group by field
 \description{
 Set the title for the table object
 }
+\examples{
+
+datalist <- list(ADSL = tidyCDISC::adsl, ADVS = tidyCDISC::advs, 
+                 ADAE = tidyCDISC::adae, ADLBC = tidyCDISC::adlbc)
+bd <- createBlockdata(datalist)
+setGroup("TRT01P")
+bd$group_by
+}
 \keyword{table_blocks}
