@@ -92,13 +92,12 @@ test_that("table_block wrappers work", {
                    dropdown = c(NA, "DCSREAS"), 
                    filter = c(NA_character_, NA_character_), 
                    S3 = list(structure("RANDFL", class = c("character", "ADSL")), 
-                            structure("EOSSTT", class = c("character", "ADSL"))), 
+                             structure("EOSSTT", class = c("character", "ADSL"))), 
                    gt_group = structure(c("Y_FREQ of RANDFL", "NESTED_FREQ_ABC of EOSSTT and DCSREAS"), 
-                                        class = c("glue", "character")), 
-                   label = c("N/A", "N/A"),
-                   label_source = c("N/A", "N/A")), 
-              row.names = c(NA, -2L), 
-              class = c("tbl_df", "tbl", "data.frame"))
+                   class = c("glue", "character")), 
+                   label = c("Randomized Population Flag", "End of Study Status"), 
+                   label_source = c("SAS \"label\" attribute", "SAS \"label\" attribute")), 
+              row.names = c(NA, -2L), class = c("tbl_df", "tbl", "data.frame"))
   expect_equal(bd$blocks, block_table)
   
   removeBlock(bd, 1)
@@ -111,8 +110,8 @@ test_that("table_block wrappers work", {
                    filter = NA_character_, 
                    S3 = list(structure("EOSSTT", class = c("character", "ADSL"))), 
                    gt_group = structure("NESTED_FREQ_ABC of EOSSTT and DCSREAS", class = c("glue", "character")), 
-                   label = "N/A", 
-                   label_source = "N/A"), 
+                   label = "End of Study Status", 
+                   label_source = "SAS \"label\" attribute"), 
               row.names = c(NA, -1L), class = c("tbl_df", "tbl", "data.frame"))
   expect_equal(bd$blocks, block_table)
   

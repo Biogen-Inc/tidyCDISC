@@ -386,11 +386,30 @@ table_blocks <-
                 create_TG = function(aggs, blocks) {
                   blockData <- convertTGOutput(aggs, blocks)
                   
-                  blockData$label <-
-                    "N/A"
+                  blockData$label <- 
+                    purrr::map2(blockData$block, blockData$dataset, function(var, dat) {
+                      if(!is.null(attr(self$datalist[[dat]][[var]], 'label'))){
+                        attr(self$datalist[[dat]][[var]], 'label')
+                      } else if(all(c("PARAM","PARAMCD") %in% colnames(self$datalist[[dat]]))){
+                        self$datalist[[dat]] %>%
+                          filter(PARAMCD == var) %>%
+                          distinct(PARAM) %>%
+                          pull() %>% as.character()
+                      } else {
+                        var
+                      }
+                    }) %>% unname() %>% stringr::str_trim()
                   
-                  blockData$label_source <-
-                    "N/A"
+                  blockData$label_source <- 
+                    purrr::map2(blockData$block, blockData$dataset, function(var, dat) {
+                      if(!is.null(attr(self$datalist[[dat]][[var]], 'label'))){
+                        'SAS "label" attribute'
+                      } else if("PARAMCD" %in% colnames(self$datalist[[dat]])){
+                        'PARAM'
+                      } else {
+                        'No Label'
+                      }
+                    }) %>% unname() %>% stringr::str_trim()
                   
                   blockData
                 }
