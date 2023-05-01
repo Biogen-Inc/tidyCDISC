@@ -44,6 +44,9 @@ reference:
 #   desc: User friendly utility functions built for comparing app output with SAS produced outputs
 #   contents:
 #   - has_keyword("tabGen_compare")
+- title: Block data functions
+  contents:
+  - has_keyword("table_blocks")
 - title: General helper functions
   contents:
   - has_keyword("helpers")

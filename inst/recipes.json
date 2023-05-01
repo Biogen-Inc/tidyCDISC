@@ -1,0 +1,161 @@
+{
+  "stan_3": {
+    "title": "Table 3: Accounting of Subjects",
+    "group_by": "TRT01P",
+    "blocks": [{"data":"ADSL", "variable":"RANDFL", "statistic":"Y_FREQ"}, 
+    {"data":"ADSL", "variable":"SAFFL", "statistic":"FREQ"}, 
+    {"data":"ADSL", "variable":"EOTSTT", "statistic":"NESTED_FREQ_ABC", "stat_selection":"DCTREAS"}, 
+    {"data":"ADSL", "variable":"EOSSTT", "statistic":"NESTED_FREQ_ABC", "stat_selection":"DCSREAS"}]
+  },
+  "stan_5": {
+    "title": "Table 5: Demography",
+    "group_by": "TRT01P",
+    "blocks": [{"data":"ADSL", "variable":"AGEGR1", "statistic":"FREQ"},
+    {"data":"ADSL", "variable":"AGE", "statistic":"MEAN"},
+    {"data":"ADSL", "variable":"SEX", "statistic":"FREQ"},
+    {"data":"ADSL", "variable":"ETHNIC", "statistic":"FREQ"},
+    {"data":"ADSL", "variable":"RACE", "statistic":"FREQ"},
+    {"data":"ADSL", "variable":"HEIGHTBL", "statistic":"MEAN"},
+    {"data":"ADSL", "variable":"WEIGHTBL", "statistic":"MEAN"}]
+  },
+  "stan_18": {
+    "title": "Table 18: Overall summary of adverse events",
+    "group_by": "TRT01P",
+    "blocks": [{"data":"ADAE", "variable":"AOCCFL", "statistic":"Y_FREQ"},
+    {"data":"ADAE", "variable":"AESEV", "statistic":"MAX_FREQ"},
+    {"data":"ADAE", "variable":"AESER", "statistic":"Y_FREQ"},
+    {"data":"ADSL", "variable":"DTHDT", "statistic":"NON_MISSING"}]
+  },
+  "stan_19": {
+    "title": "Table 19: Adverse events by system organ class and preferred term sorted by decreasing frequency",
+    "group_by": "TRT01P",
+    "blocks": [{"data":"ADAE", "variable":"USUBJID", "statistic":"NON_MISSING"},
+    {"data":"ADAE", "variable":"AEBODSYS", "statistic":"NESTED_FREQ_DSC", "stat_selection":"AEDECOD"}]
+  },
+  "stan_20": {
+    "title": "Table 20: Adverse events by system organ class and preferred term sorted by alphabetical order",
+    "group_by": "TRT01P",
+    "blocks": [{"data":"ADAE", "variable":"USUBJID", "statistic":"NON_MISSING"},
+    {"data":"ADAE", "variable":"AEBODSYS", "statistic":"NESTED_FREQ_ABC", "stat_selection":"AEDECOD"}]
+  },
+  "stan_21": {
+    "title": "Table 21: Adverse events by system organ class",
+    "group_by": "TRT01P",
+    "blocks": [{"data":"ADAE", "variable":"USUBJID", "statistic":"NON_MISSING"},
+    {"data":"ADAE", "variable":"AEBODSYS", "statistic":"NESTED_FREQ_ABC", "stat_selection":"NONE"}]
+  },
+  "stan_23": {
+    "title": "Table 23: Adverse events by preferred term",
+    "group_by": "TRT01P",
+    "blocks": [{"data":"ADAE", "variable":"USUBJID", "statistic":"NON_MISSING"},
+    {"data":"ADAE", "variable":"AEDECOD", "statistic":"NESTED_FREQ_ABC", "stat_selection":"NONE"}]
+  },
+  "stan_25": {
+    "title": "Table 25: Severe adverse events by system organ class and preferred term",
+    "group_by": "TRT01P",
+    "blocks": [{"data":"ADAE", "variable":"USUBJID", "statistic":"NON_MISSING"},
+    {"data":"ADAE", "variable":"AEBODSYS", "statistic":"NESTED_FREQ_DSC", "stat_selection":"AEDECOD"}]
+  },
+  "stan_26": {
+    "title": "Table 26: Severe adverse events by preferred term",
+    "group_by": "TRT01P",
+    "blocks": [{"data":"ADAE", "variable":"USUBJID", "statistic":"NON_MISSING"},
+    {"data":"ADAE", "variable":"AEDECOD", "statistic":"NESTED_FREQ_ABC", "stat_selection":"NONE"}]
+  },
+  "stan_29": {
+    "title": "Table 29: Related adverse events by system organ class and preferred term",
+    "group_by": "TRT01P",
+    "blocks": [{"data":"ADAE", "variable":"USUBJID", "statistic":"NON_MISSING"},
+    {"data":"ADAE", "variable":"AEBODSYS", "statistic":"NESTED_FREQ_DSC", "stat_selection":"AEDECOD"}]
+  },
+  "stan_30": {
+    "title": "Table 30: Serious adverse events by system organ class and preferred term",
+    "group_by": "TRT01P",
+    "blocks": [{"data":"ADAE", "variable":"USUBJID", "statistic":"NON_MISSING"},
+    {"data":"ADAE", "variable":"AEBODSYS", "statistic":"NESTED_FREQ_DSC", "stat_selection":"AEDECOD"}]
+  },
+  "stan_31": {
+    "title": "Table 31: Serious adverse events by preferred term",
+    "group_by": "TRT01P",
+    "blocks": [{"data":"ADAE", "variable":"USUBJID", "statistic":"NON_MISSING"},
+    {"data":"ADAE", "variable":"AEDECOD", "statistic":"NESTED_FREQ_ABC", "stat_selection":"NONE"}]
+  },
+  "stan_33": {
+    "title": "Table 33: Related serious adverse events by system organ class and preferred term",
+    "group_by": "TRT01P",
+    "blocks": [{"data":"ADAE", "variable":"USUBJID", "statistic":"NON_MISSING"},
+    {"data":"ADAE", "variable":"AEBODSYS", "statistic":"NESTED_FREQ_DSC", "stat_selection":"AEDECOD"}]
+  },
+  "stan_34": {
+    "title": "Table 34: Adverse events that led to discontinuation of study treatment by system organ class and preferred term",
+    "group_by": "TRT01P",
+    "blocks": [{"data":"ADAE", "variable":"USUBJID", "statistic":"NON_MISSING"},
+    {"data":"ADAE", "variable":"AEBODSYS", "statistic":"NESTED_FREQ_DSC", "stat_selection":"AEDECOD"}]
+  },
+  "stan_36": {
+    "title": "Table 36: Adverse events that led to withdrawl from study by system organ class and preferred term",
+    "group_by": "TRT01P",
+    "blocks": [{"data":"ADAE", "variable":"USUBJID", "statistic":"NON_MISSING"},
+    {"data":"ADAE", "variable":"AEBODSYS", "statistic":"NESTED_FREQ_DSC", "stat_selection":"AEDECOD"}]
+  },
+  "stan_38": {
+    "title": "Table 38: Adverse events that led to drug interrupted, dose reduced, or dose increased by system organ class and preferred term",
+    "group_by": "TRT01P",
+    "blocks": [{"data":"ADAE", "variable":"USUBJID", "statistic":"NON_MISSING"},
+    {"data":"ADAE", "variable":"AEBODSYS", "statistic":"NESTED_FREQ_DSC", "stat_selection":"AEDECOD"}]
+  },
+  "stan_41_chem": {
+    "title": "Table 41: Blood Chemistry actual values by visit",
+    "group_by": "TRT01P",
+    "recipe_inclusion": "stan_labs",
+    "blocks": [{"data":"ADLB", "variable":"ALT", "statistic":"MEAN", "stat_selection":"ALL", "stat_options_fn":"avisit_lab"},
+    {"data":"ADLB", "variable":"AST", "statistic":"MEAN", "stat_selection":"ALL", "stat_options_fn":"avisit_lab"},
+    {"data":"ADLB", "variable":"ALP", "statistic":"MEAN", "stat_selection":"ALL", "stat_options_fn":"avisit_lab"},
+    {"data":"ADLB", "variable":"BILI", "statistic":"MEAN", "stat_selection":"ALL", "stat_options_fn":"avisit_lab"},
+    {"data":"ADLB", "variable":"GGT", "statistic":"MEAN", "stat_selection":"ALL", "stat_options_fn":"avisit_lab"},
+    {"data":"ADLB", "variable":"BUN", "statistic":"MEAN", "stat_selection":"ALL", "stat_options_fn":"avisit_lab"},
+    {"data":"ADLB", "variable":"CREAT", "statistic":"MEAN", "stat_selection":"ALL", "stat_options_fn":"avisit_lab"},
+    {"data":"ADLB", "variable":"SODIUM", "statistic":"MEAN", "stat_selection":"ALL", "stat_options_fn":"avisit_lab"},
+    {"data":"ADLB", "variable":"K", "statistic":"MEAN", "stat_selection":"ALL", "stat_options_fn":"avisit_lab"},
+    {"data":"ADLB", "variable":"CL", "statistic":"MEAN", "stat_selection":"ALL", "stat_options_fn":"avisit_lab"},
+    {"data":"ADLB", "variable":"BICARB", "statistic":"MEAN", "stat_selection":"ALL", "stat_options_fn":"avisit_lab"},
+    {"data":"ADLB", "variable":"GLUC", "statistic":"MEAN", "stat_selection":"ALL", "stat_options_fn":"avisit_lab"},
+    {"data":"ADLB", "variable":"CA", "statistic":"MEAN", "stat_selection":"ALL", "stat_options_fn":"avisit_lab"},
+    {"data":"ADLB", "variable":"PHOS", "statistic":"MEAN", "stat_selection":"ALL", "stat_options_fn":"avisit_lab"},
+    {"data":"ADLB", "variable":"ALB", "statistic":"MEAN", "stat_selection":"ALL", "stat_options_fn":"avisit_lab"},
+    {"data":"ADLB", "variable":"CHOL", "statistic":"MEAN", "stat_selection":"ALL", "stat_options_fn":"avisit_lab"},
+    {"data":"ADLB", "variable":"MG", "statistic":"MEAN", "stat_selection":"ALL", "stat_options_fn":"avisit_lab"},
+    {"data":"ADLB", "variable":"TRIG", "statistic":"MEAN", "stat_selection":"ALL", "stat_options_fn":"avisit_lab"},
+    {"data":"ADLB", "variable":"URATE", "statistic":"MEAN", "stat_selection":"ALL", "stat_options_fn":"avisit_lab"}]
+  },
+  "stan_41_hema": {
+    "title": "Table 41: Hematology actual values by visit",
+    "group_by": "TRT01P",
+    "recipe_inclusion": "stan_labs",
+    "blocks": [{"data":"ADLB", "variable":"LYM", "statistic":"MEAN", "stat_selection":"ALL", "stat_options_fn":"avisit_lab_lab"},
+    {"data":"ADLB", "variable":"NEUT", "statistic":"MEAN", "stat_selection":"ALL", "stat_options_fn":"avisit_lab"},
+    {"data":"ADLB", "variable":"MONO", "statistic":"MEAN", "stat_selection":"ALL", "stat_options_fn":"avisit_lab"},
+    {"data":"ADLB", "variable":"EOS", "statistic":"MEAN", "stat_selection":"ALL", "stat_options_fn":"avisit_lab"},
+    {"data":"ADLB", "variable":"BASO", "statistic":"MEAN", "stat_selection":"ALL", "stat_options_fn":"avisit_lab"},
+    {"data":"ADLB", "variable":"RBC", "statistic":"MEAN", "stat_selection":"ALL", "stat_options_fn":"avisit_lab"},
+    {"data":"ADLB", "variable":"HGB", "statistic":"MEAN", "stat_selection":"ALL", "stat_options_fn":"avisit_lab"},
+    {"data":"ADLB", "variable":"HCT", "statistic":"MEAN", "stat_selection":"ALL", "stat_options_fn":"avisit_lab"},
+    {"data":"ADLB", "variable":"PLAT", "statistic":"MEAN", "stat_selection":"ALL", "stat_options_fn":"avisit_lab"}]
+  },
+  "stan_41_urin": {
+    "title": "Table 41: Urinalysis actual values by visit",
+    "group_by": "TRT01P",
+    "recipe_inclusion": "stan_labs",
+    "blocks": [{"data":"ADLB", "variable":"SPGRAV", "statistic":"MEAN", "stat_selection":"ALL", "stat_options_fn":"avisit_lab"},
+    {"data":"ADLB", "variable":"PH", "statistic":"MEAN", "stat_selection":"ALL", "stat_options_fn":"avisit_lab"},
+    {"data":"ADLB", "variable":"COLOR", "statistic":"MEAN", "stat_selection":"ALL", "stat_options_fn":"avisit_lab"},
+    {"data":"ADLB", "variable":"OCCBLD", "statistic":"MEAN", "stat_selection":"ALL", "stat_options_fn":"avisit_lab"},
+    {"data":"ADLB", "variable":"GLUCU", "statistic":"MEAN", "stat_selection":"ALL", "stat_options_fn":"avisit_lab"},
+    {"data":"ADLB", "variable":"KETONES", "statistic":"MEAN", "stat_selection":"ALL", "stat_options_fn": "avisit_lab"},
+    {"data":"ADLB", "variable":"PROTU", "statistic":"MEAN", "stat_selection":"ALL", "stat_options_fn": "avisit_lab"},
+    {"data":"ADLB", "variable":"MWBCQU", "statistic":"MEAN", "stat_selection":"ALL", "stat_options_fn": "avisit_lab"},
+    {"data":"ADLB", "variable":"MWBCU", "statistic":"MEAN", "stat_selection":"ALL", "stat_options_fn": "avisit_lab"},
+    {"data":"ADLB", "variable":"MRBCQU", "statistic":"MEAN", "stat_selection":"ALL", "stat_options_fn": "avisit_lab"},
+    {"data":"ADLB", "variable":"MRBCU", "statistic":"MEAN", "stat_selection":"ALL", "stat_options_fn": "avisit_lab"}]
+  }
+}

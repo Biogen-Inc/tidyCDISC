@@ -28,7 +28,15 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   old <- options()
   on.exit(options(old))
   
-  observeEvent( input$help, {
+  recipes <- reactiveVal(load_recipes(golem::get_golem_options("recipes_json")))
+  
+  observe({
+    req(recipes())
+    
+    session$sendCustomMessage("recipes", recipes())
+  })
+  
+  observeEvent(input$help, {
     tg_guide$init()$start()
   })
   
@@ -41,39 +49,61 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   })
   
   output$stan_recipe_ui <- renderUI({
-      HTML(paste('
-           <select id="RECIPE" class="selectize-input">
-           <option  id="none">NONE</option>
-           <option  id="tbl03">Table 3: Accounting of Subjects</option>
-           <option  id="demography">Table 5: Demography</option>',
-           ifelse("ADAE" %in% names(datafile()),'<option  id="tbl18">Table 18: Overall summary of adverse events</option>',''),
-           ifelse("ADAE" %in% names(datafile()),'<option  id="tbl19">Table 19: Adverse events by system organ class and preferred term sorted by decreasing frequency</option>',''),
-           ifelse("ADAE" %in% names(datafile()),'<option  id="tbl20">Table 20: Adverse events by system organ class and preferred term sorted by alphabetical order</option>',''),
-           ifelse("ADAE" %in% names(datafile()),'<option  id="tbl21">Table 21: Adverse events by system organ class</option>',''),
-           ifelse("ADAE" %in% names(datafile()),'<option  id="tbl23">Table 23: Adverse events by preferred term</option>',''),
-           ifelse("ADAE" %in% names(datafile()),'<option  id="tbl25">Table 25: Severe adverse events by system organ class and preferred term</option>',''),
-           ifelse("ADAE" %in% names(datafile()),'<option  id="tbl26">Table 26: Severe adverse events by preferred term</option>',''),
-           ifelse("ADAE" %in% names(datafile()),'<option  id="tbl29">Table 29: Related adverse events by system organ class and preferred term</option>',''),
-           ifelse("ADAE" %in% names(datafile()),'<option  id="tbl30">Table 30: Serious adverse events by system organ class and preferred term</option>',''),
-           ifelse("ADAE" %in% names(datafile()),'<option  id="tbl31">Table 31: Serious adverse events by preferred term</option>',''),
-           ifelse("ADAE" %in% names(datafile()),'<option  id="tbl33">Table 33: Related serious adverse events by system organ class and preferred term</option>',''),
-           ifelse("ADAE" %in% names(datafile()),'<option  id="tbl34">Table 34: Adverse events that led to discontinuation of study treatment by system organ class and preferred term</option>',''),
-           ifelse("ADAE" %in% names(datafile()),'<option  id="tbl36">Table 36: Adverse events that led to withdrawal from study by system organ class and preferred term</option>',''),
-           ifelse("ADAE" %in% names(datafile()),'<option  id="tbl38">Table 38: Adverse events that led to drug interrupted, dose reduced, or dose increased by system organ class and preferred term</option>',''),
-           ifelse(!rlang::is_empty(loaded_labs()) & chem_params()$exist,'<option  id="tbl41_b">Table 41: Blood Chemistry actual values by visit</option>',''),
-           ifelse(!rlang::is_empty(loaded_labs()) & hema_params()$exist,'<option  id="tbl41_h">Table 41: Hematology actual values by visit</option>',''),
-           ifelse(!rlang::is_empty(loaded_labs()) & urin_params()$exist,'<option  id="tbl41_u">Table 41: Urinalysis actual values by visit</option>',''),
+    req(datafile())
+    
+    opts <- recipes() %>%
+      purrr::imap(~ if (any(recipe_inclusion(.x$blocks, datafile()))) glue::glue('<option id="{.y}">{.x$title}</option>')) %>%
+      purrr::compact() %>%
+      glue::glue_collapse()
+      HTML(paste0('
+           <select id=', session$ns("RECIPE"), ' class="selectize-input RECIPES">
+           <option  id="none">NONE</option>',
+           opts,
            '</select>'))
   })
   
-  RECIPE <- reactive( if(rlang::is_empty(input$recipe)) "NONE" else input$recipe)
-
-  observeEvent(RECIPE(), {
-    req(input$table_title)
-    val <- ifelse(RECIPE() == "NONE", "Table Title", RECIPE())
-    updateTextInput(session, "table_title", value = val)
+  recipe <- eventReactive(input$RECIPE, {
+    if (input$RECIPE != "NONE") {
+      recipe <- recipes()[purrr::map_lgl(recipes(), ~ .x$title == input$RECIPE)][[1]]
+      blocks <- 
+        recipe$blocks %>%
+        `[`(recipe_inclusion(., datafile()))
+      recipe$blocks <- blocks %>%
+        purrr::map(~ stat_options(.x, datalist = datafile())) %>%
+        purrr::map(~ var_options(.x, datalist = datafile()))
+      var_check <- recipe$blocks %>%
+        purrr::map(~ .x$var_selection %in% unlist(.x$var_options, use.names = FALSE)) %>%
+        purrr::compact() %>%
+        unlist()
+      stat_check <- recipe$blocks %>%
+        purrr::map(~ .x$stat_selection %in% c("ALL", .x$stat_options)) %>%
+        purrr::compact() %>%
+        unlist()
+      if (!is.null(var_check) && !all(var_check)) {
+        showNotification(h4("Variable drop down selection not contained in options."), type = "error")
+      }
+      if (!is.null(stat_check) && !all(stat_check)) {
+        showNotification(h4("Statistic drop down selection not contained in options."), type = "error")
+      }
+    } else {
+      recipe <- list(title = "NONE")
+    }
+    recipe
   })
   
+  observeEvent(recipe(), {
+    session$sendCustomMessage("submit_recipe", recipe())
+    updateTextInput(session, "table_title", value = if (recipe()$title == "NONE") "Table Title" else recipe()$title)
+  })
+  
+  RECIPE <- reactive( if(rlang::is_empty(input$recipe)) "NONE" else input$recipe)
+  
+  observeEvent(input$recipe, {
+    column(recipe()$group_by)
+    updateSelectInput(session, "COLUMN", selected = if (is.null(recipe()$group_by)) "NONE" else recipe()$group_by)
+  })
+
+
   
   # ----------------------------------------------------------------------
   # input prep for table manipulation
@@ -81,32 +111,17 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   categ_vars <- reactive({
     req(datafile()) # this also doesn't need to depend on pre-filters, so grabbing root df cols
     
-    if("ADAE" %in% names(datafile())){
-      all_cols <- unique(c(
-        colnames(datafile()$ADSL)[sapply(datafile()$ADSL, class) %in% c('character', 'factor')],
-        colnames(datafile()$ADAE)[sapply(datafile()$ADAE, class) %in% c('character', 'factor')]
-      ))
-    } else { # just adsl cols
-      all_cols <- unique(c(
-        colnames(datafile()$ADSL)[sapply(datafile()$ADSL, class) %in% c('character', 'factor')]
-      ))
-    }
-    return( all_cols )
+    create_all_cols(datafile())
   })
     
-  output$grp_col_ui <- renderUI({
-    sel_grp <- dplyr::case_when(
-      is.null(RECIPE()) | length(RECIPE()) == 0 ~ "NONE",
-      !is.null(RECIPE()) & RECIPE() != "NONE" ~ "TRT01P",
-      TRUE ~ "NONE"
-    )
-    selectInput(session$ns("COLUMN"), "Group Data By:",
-                choices = c("NONE", categ_vars()),
-                selected = sel_grp
+  observe({
+    updateSelectInput(session, "COLUMN",
+                      choices = c("NONE", categ_vars()),
+                      selected = "NONE"
     )
   })
   
-  
+
   # ----------------------------------------------------------------------
   # convert list of dataframes to a single joined dataframe
   # containing only BDS and ADSL files
@@ -131,45 +146,24 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   
   
   # perform any pre-filters on the data, when a STAN table is selected
-  pre_ADSL <- reactive({
-    req(RECIPE())
-    tryCatch(prep_adsl(ADSL = datafile()$ADSL,input_recipe = RECIPE()), error = function(e) validate(error_handler(e)))
+  pre_ADSL <- eventReactive(input$recipe, {
+    tryCatch(filter_adsl(recipe(), datafile()$ADSL), error = function(e) validate(error_handler(e)))
   })
-  
-  # clean_ADAE() now happens inside this reactive!
-  # use potentially pre-filtered ADSL when building/ joining w/ ADAE
-  # Then filter ADAE based on STAN table selected.
   pre_ADAE <- reactive({
-    req(RECIPE())
-    tryCatch(prep_adae(datafile = datafile(),ADSL = pre_ADSL()$data, input_recipe = RECIPE()), error = function(e) validate(error_handler(e)))
-  })
-  
+    tryCatch(filter_adae(recipe(), datafile(), pre_ADSL()$data), error = function(e) validate(error_handler(e)))
+  }) %>%
+    bindEvent(input$recipe, pre_ADSL())
+
   # Create cleaned up versions of raw data
-  ADSL <- reactive({ 
-    pre_ADSL()$data 
-    # CANNOT inner_join on the ADAE subjects that were filtered because some
-    # subjects had no adverse events so you'd make a mistake by excluding them.
-    # Really, we'd have to identify the subjects in pre_ADSL$data and not in the
-    # datalist$ADAE Then keep those, plus subjects that exist in the inner_join
-    # of pre_ADSL$data & pre_ADAE()$data. Have to take this out of R script
-    # still too ############################################################
-    
-      #%>% 
-      # inner_join(
-      #   pre_ADAE()$data %>%
-      #     distinct(USUBJID)
-      #   )
-  })
   BDS <- reactive({ 
     init <- sapply(datafile(), function(x) "PARAMCD" %in% colnames(x) & !("CNSR" %in% colnames(x)))
     datafile()[init] 
     # datafile()[sapply(datafile(), function(x) "PARAMCD" %in% colnames(x))]
   })
-  ADAE <- reactive({ pre_ADAE()$data })
- 
+
   # combine all BDS data files into one large data set
-  bds_data <- reactive({ 
-    prep_bds(datafile = datafile(), ADSL = ADSL())
+  bds_data <- eventReactive(pre_ADSL(), { 
+    prep_bds(datafile = datafile(), ADSL = pre_ADSL()$data)
     # OLD code removed 2/17/2021
   })
   
@@ -190,7 +184,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   
   # apply filters from selected dfs to tg data to create all data
   all_data <- reactive({suppressMessages(bds_data() %>% semi_join(filtered_data()))})
-  ae_data <- reactive({suppressMessages(ADAE() %>% semi_join(filtered_data()))})
+  ae_data <- reactive({suppressMessages(pre_ADAE()$data %>% semi_join(filtered_data()))})
   pop_data <- reactive({
     suppressMessages(
       pre_ADSL()$data %>% # Cannot be ADSL() because that has potentially been filtered to ADAE subj's
@@ -210,62 +204,11 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # prepare the AVISIT dropdown of the statistics blocks
   # by converting them to a factor in the order of AVISITN
   # this allows our dropdown to be in chronological order
-  avisit_words <- reactive({ 
-    req(datafile())
-    
-    if(any(purrr::map_lgl(datafile(), ~"AVISIT" %in% colnames(.x)))){
-        purrr::map(BDS(), function(x) x %>% dplyr::select(AVISIT)) %>%
-          dplyr::bind_rows() %>%
-          dplyr::distinct(AVISIT) %>%
-          dplyr::pull()
-    } else {
-      NULL #c("fake_weeky","dummy_weeky") # DON'T use this comment part.
-                                          # It's handled in AVISIT()
-    }
-    
-  })
-  
-  avisit_fctr  <- reactive({
-    req(datafile())
-    req(any(purrr::map_lgl(datafile(), ~"AVISIT" %in% colnames(.x))))
-    
-    if(any(purrr::map_lgl(datafile(), ~"AVISIT" %in% colnames(.x)))){
-        purrr::map(BDS(), function(x) x %>% dplyr::select(AVISITN)) %>%
-          dplyr::bind_rows() %>%
-          dplyr::distinct(AVISITN) %>%
-          dplyr::pull()
-    } else {
-      1:2
-    }
-    
-  })
-  
   AVISIT <- reactive({
     req(datafile())
+    req(any(purrr::map_lgl(datafile(), ~"AVISIT" %in% colnames(.x))))
 
-    if (is.null(avisit_words())) {
-      avisit_words <- c("fake_weeky","dummy_weeky")
-    } else {
-      # for testing
-      # nums <- c(2,4,6,8,12,16,20,24,26)
-      # avisit_words <- function() c("", "Baseline",paste("Week", nums), "End of Treatment")
-      # avisit_fctr <- function()c(NA, 0, nums, 99)
-      # rm(nums, avisit_words, avisit_fctr)
-      
-      awd <- tidyr::tibble(AVISIT = avisit_words(), AVISITN = avisit_fctr())
-      avisit_words <-
-        # tidyr::tibble(AVISIT = avisit_words(), AVISITN = avisit_fctr()) %>%
-        # dplyr::mutate(AVISIT = as.factor(AVISIT)) %>%
-        # dplyr::mutate(AVISIT = forcats::fct_reorder(AVISIT, AVISITN)) %>%
-        awd %>%
-        dplyr::mutate(AVISIT = factor(AVISIT,
-            levels = awd[order(awd$AVISITN), "AVISIT"][[1]] %>% unique() )) %>%
-        dplyr::pull(AVISIT) %>%
-        unique() %>%
-        # Arrange by factor level (AVISITN)
-        sort()
-    }
-    avisit_words[avisit_words != ""]
+    create_avisit(datafile(), BDS())
   })
   
   
@@ -280,109 +223,19 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # just character of factor vars from the ADSL or ADAE
   observe({
     req(categ_vars())
-    all_cols <- categ_vars()
-    session$sendCustomMessage("all_cols", all_cols)
+    session$sendCustomMessage("all_cols", categ_vars())
   })
   
   AVALS <- reactive({
     req(datafile())
     req(purrr::map_lgl(datafile(), ~ "ATPT" %in% colnames(.x)))
     
-    atpt_datasets <- purrr::map_lgl(datafile(), ~ "ATPT" %in% colnames(.x))
-
-    avals <- 
-      purrr::map(datafile()[atpt_datasets], ~ .x %>%
-      dplyr::select(PARAMCD, dplyr::any_of(c("ATPT"))) %>%
-      dplyr::filter(dplyr::if_any(-PARAMCD, ~ !is.na(.x) & .x != "")) %>%
-      dplyr::pull(PARAMCD) %>%
-      get_levels()
-      )
-    
-    ## TODO: Make this less confusing. I pity the soul who has to edit this.
-    purrr::imap(avals, ~ purrr::map(.x, function(i, j =.y) {
-      datafile()[[j]] %>% 
-                 dplyr::filter(PARAMCD == i) %>%
-                 dplyr::select(dplyr::any_of(c("ATPT", "ATPTN"))) %>%
-                 varN_fctr_reorder() %>%
-                 dplyr::select(dplyr::any_of(c("ATPT"))) %>%
-                 purrr::map(~ .x %>%
-                              addNA(ifany = TRUE) %>%
-                              purrr::possibly(relevel, otherwise = .)(NA_character_) %>%
-                              get_levels() %>%
-                              tidyr::replace_na("N/A") %>%
-                              {if (length(.) > 1) c("ALL", .) else .} %>%
-                              as.list())
-      }) %>%
-      purrr::set_names(.x)
-    )
+    create_avals(datafile())
   })
   
   observe({
     req(AVALS())
     session$sendCustomMessage("my_avals", AVALS())
-  })
-  
-  # Verify if certain lab params exist, and if so, which dataset they live in
-  # in case there are multiple ADLBs- to use later to send data to js side
-  chem_params <- reactive({
-    req(datafile())
-    check_params(datafile(), chem)
-  })
-  hema_params <- reactive({
-    req(datafile())
-    check_params(datafile(), hema)
-  }) 
-  urin_params <- reactive({
-    req(datafile())
-    check_params(datafile(), urin)
-  }) 
-  loaded_labs <- reactive({
-    my_loaded_adams()[substr(my_loaded_adams(),1,4) == "ADLB"] 
-  })
-  
-  
-  # Send to Client (JS) side:
-  # Hematology
-  # Blood Chemistry
-  # Urinalysis
-  
-  # Sending vector of specific params (if they exist) for certain labs (if they exist)
-  observe({
-    req(datafile(), chem_params(), hema_params(), urin_params()) # don't req("ADLBC") because then the custom message will never get sent, and hang up the UI
-
-    send_chem <- send_urin <- send_hema <- c("not","used","fake","vector","to","convert","to","js","array")
-    send_chem_wks <- send_urin_wks <- send_hema_wks <- c("fake_weeky","fake_weeky2")
-    
-    if(!(rlang::is_empty(loaded_labs())) &
-        (chem_params()$exist | hema_params()$exist| urin_params()$exist)
-       ){
-      
-      
-      # Blood Chem
-      if(chem_params()$exist){ # add recipe() = 'tab 41'?
-        send_chem <- chem_params()$vctr
-        send_chem_wks <- chem_params()$tp
-      } 
-      
-      # Hematology
-      if(hema_params()$exist){ # add specific recipe() = 'tab 41'?
-        send_hema <- hema_params()$vctr
-        send_hema_wks <- hema_params()$tp
-      } 
-
-      # Urinalysis
-      if(urin_params()$exist){ # add specific recipe() = 'tab 41'?
-        send_urin <- urin_params()$vctr
-        send_urin_wks <- urin_params()$tp
-      } 
-      
-    } # end of "if labs exist"
-    
-    session$sendCustomMessage("adlbc", list(params = as.vector(send_chem), weeks = as.vector(send_chem_wks)))
-    session$sendCustomMessage("adlbh", list(params = as.vector(send_hema), weeks = as.vector(send_hema_wks)))
-    session$sendCustomMessage("adlbu", list(params = as.vector(send_urin), weeks = as.vector(send_urin_wks)))
-    
-    
   })
   
   # ----------------------------------------------------------------------
@@ -393,7 +246,8 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # convert the custom shiny input to a table output
   blocks_and_functions <- reactive({
     # create initial dataset
-    blockData <- tryCatch(convertTGOutput(input$agg_drop_zone, input$block_drop_zone), error = function(e) validate(error_handler(e)))
+    droppables_lst <- tryCatch(process_droppables(input$agg_drop_zone, input$block_drop_zone), error = function(e) validate(error_handler(e)))
+    blockData <- do.call(convertTGOutput, droppables_lst)
 
     blockData$label <- 
       purrr::map2(blockData$block, blockData$dataset, function(var, dat) {
@@ -423,12 +277,13 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
     return(blockData)
   })
   
-  column <- reactive( if (input$COLUMN == "NONE") NULL else input$COLUMN)
-  
+  column <- reactiveVal()
+  observe({column(if (input$COLUMN == "NONE") NULL else input$COLUMN)})
+
 
   # check if the grouping column only exists in the ADAE
   is_grp_col_adae <- reactive({
-    input$COLUMN %in% dplyr::setdiff(colnames(ae_data()), colnames(all_data()))
+    isTRUE(column() %in% dplyr::setdiff(colnames(ae_data()), colnames(all_data())))
   })
   
   # Decide which reactive data frame to use below
@@ -455,23 +310,23 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       distinct(USUBJID) %>% 
       summarise(n_tot = n())
     
-    if (input$COLUMN == "NONE") {
+    if (is.null(column())) {
       df
       
     } else {
       df <- df %>%
         mutate(temp = 'Total') %>%
-        rename_with(~paste(input$COLUMN), "temp")
+        rename_with(~paste(column()), "temp")
       
-      grp_lvls <- get_levels(use_preferred_pop_data()[[input$COLUMN]])  # PUT ADAE() somehow?
+      grp_lvls <- get_levels(use_preferred_pop_data()[[column()]])  # PUT ADAE() somehow?
       xyz <- data.frame(grp_lvls) %>%
-        rename_with(~paste(input$COLUMN), grp_lvls)
+        rename_with(~paste(column()), grp_lvls)
       
       groups <- 
         xyz %>%
         left_join(
           use_preferred_pop_data() %>%
-          group_by(!!sym(input$COLUMN)) %>%
+          group_by(!!sym(column())) %>%
           distinct(USUBJID) %>%
           summarise(n_tot = n())
         )%>%
@@ -486,7 +341,6 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   })
 
   pre_filter_msgs <- reactive({
-    req(RECIPE())
     paste0(pre_ADSL()$message, "<br/>", pre_ADAE()$message, collapse = "<br/>")
   })
   
@@ -507,7 +361,6 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
       " "
     }
   })
-  
   
   # create a gt table output by mapping over each row in the block input
   # and performing the correct statistical method given the blocks S3 class
@@ -533,7 +386,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
 
     return(d)
   })
-  
+
   output$for_gt_table <- renderTable({ for_gt() })
   
   # remove the first two columns from the row names to use since 
@@ -733,7 +586,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   
   # Depending on data source used in the app, create data for R script
   create_script_data <- reactive({
-    if(any("CDISCPILOT01" %in% ADSL()$STUDYID)){
+    if(any("CDISCPILOT01" %in% pre_ADSL()$data$STUDYID)){
       glue::glue("
         # create list of dataframes from CDISC pilot study
         datalist <- list({paste(purrr::map_chr(names(datafile()), ~ paste0(.x, ' = tidyCDISC::', tolower(.x))), collapse = ', ')})
@@ -756,7 +609,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   })
   
   footnote_src <- reactive({
-    if(any("CDISCPILOT01" %in% ADSL()$STUDYID)){
+    if(any("CDISCPILOT01" %in% pre_ADSL()$data$STUDYID)){
       "'tidyCDISC app'"
     } else {
       "study_dir"

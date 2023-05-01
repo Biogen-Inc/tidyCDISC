@@ -168,7 +168,7 @@ button:hover {
   overflow-y: scroll;
 }
 
-#RECIPE {
+.RECIPES.selectize-input {
   width: 100%;
   text-align: center;
 }
