@@ -490,7 +490,7 @@ std_footnote <- function(data, source) {
 #' Prepare the data.frame so that it's ready for output via `gt` or other
 #' 
 #' @param tg_datalist A list containing the data frames used to create the table
-#' @param blockData The data for the construction of the blocks in the table
+#' @param blockData The data frame for the construction of the blocks in the table or the block data object
 #' @param total_df A data frame containing the totals by grouping variable
 #' @param group A character denoting the grouping variable
 #' 
@@ -499,6 +499,9 @@ std_footnote <- function(data, source) {
 #' @export
 #' @keywords tabGen_repro
 tg_gt <- function(tg_datalist, blockData, total_df, group) {
+  if (all(c("table_blocks", "R6") %in% class(blockData)))
+    blockData <- blockData$blocks
+  
   tbl_blocks <- purrr::pmap(list(
     blockData$agg,
     blockData$S3,

@@ -111,17 +111,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   categ_vars <- reactive({
     req(datafile()) # this also doesn't need to depend on pre-filters, so grabbing root df cols
     
-    if("ADAE" %in% names(datafile())){
-      all_cols <- unique(c(
-        colnames(datafile()$ADSL)[sapply(datafile()$ADSL, class) %in% c('character', 'factor')],
-        colnames(datafile()$ADAE)[sapply(datafile()$ADAE, class) %in% c('character', 'factor')]
-      ))
-    } else { # just adsl cols
-      all_cols <- unique(c(
-        colnames(datafile()$ADSL)[sapply(datafile()$ADSL, class) %in% c('character', 'factor')]
-      ))
-    }
-    return( all_cols )
+    create_all_cols(datafile())
   })
     
   observe({
@@ -214,62 +204,11 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # prepare the AVISIT dropdown of the statistics blocks
   # by converting them to a factor in the order of AVISITN
   # this allows our dropdown to be in chronological order
-  avisit_words <- reactive({ 
-    req(datafile())
-    
-    if(any(purrr::map_lgl(datafile(), ~"AVISIT" %in% colnames(.x)))){
-        purrr::map(BDS(), function(x) x %>% dplyr::select(AVISIT)) %>%
-          dplyr::bind_rows() %>%
-          dplyr::distinct(AVISIT) %>%
-          dplyr::pull()
-    } else {
-      NULL #c("fake_weeky","dummy_weeky") # DON'T use this comment part.
-                                          # It's handled in AVISIT()
-    }
-    
-  })
-  
-  avisit_fctr  <- reactive({
-    req(datafile())
-    req(any(purrr::map_lgl(datafile(), ~"AVISIT" %in% colnames(.x))))
-    
-    if(any(purrr::map_lgl(datafile(), ~"AVISIT" %in% colnames(.x)))){
-        purrr::map(BDS(), function(x) x %>% dplyr::select(AVISITN)) %>%
-          dplyr::bind_rows() %>%
-          dplyr::distinct(AVISITN) %>%
-          dplyr::pull()
-    } else {
-      1:2
-    }
-    
-  })
-  
   AVISIT <- reactive({
     req(datafile())
+    req(any(purrr::map_lgl(datafile(), ~"AVISIT" %in% colnames(.x))))
 
-    if (is.null(avisit_words())) {
-      avisit_words <- c("fake_weeky","dummy_weeky")
-    } else {
-      # for testing
-      # nums <- c(2,4,6,8,12,16,20,24,26)
-      # avisit_words <- function() c("", "Baseline",paste("Week", nums), "End of Treatment")
-      # avisit_fctr <- function()c(NA, 0, nums, 99)
-      # rm(nums, avisit_words, avisit_fctr)
-      
-      awd <- tidyr::tibble(AVISIT = avisit_words(), AVISITN = avisit_fctr())
-      avisit_words <-
-        # tidyr::tibble(AVISIT = avisit_words(), AVISITN = avisit_fctr()) %>%
-        # dplyr::mutate(AVISIT = as.factor(AVISIT)) %>%
-        # dplyr::mutate(AVISIT = forcats::fct_reorder(AVISIT, AVISITN)) %>%
-        awd %>%
-        dplyr::mutate(AVISIT = factor(AVISIT,
-            levels = awd[order(awd$AVISITN), "AVISIT"][[1]] %>% unique() )) %>%
-        dplyr::pull(AVISIT) %>%
-        unique() %>%
-        # Arrange by factor level (AVISITN)
-        sort()
-    }
-    avisit_words[avisit_words != ""]
+    create_avisit(datafile(), BDS())
   })
   
   
@@ -284,41 +223,14 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # just character of factor vars from the ADSL or ADAE
   observe({
     req(categ_vars())
-    all_cols <- categ_vars()
-    session$sendCustomMessage("all_cols", all_cols)
+    session$sendCustomMessage("all_cols", categ_vars())
   })
   
   AVALS <- reactive({
     req(datafile())
     req(purrr::map_lgl(datafile(), ~ "ATPT" %in% colnames(.x)))
     
-    atpt_datasets <- purrr::map_lgl(datafile(), ~ "ATPT" %in% colnames(.x))
-
-    avals <- 
-      purrr::map(datafile()[atpt_datasets], ~ .x %>%
-      dplyr::select(PARAMCD, dplyr::any_of(c("ATPT"))) %>%
-      dplyr::filter(dplyr::if_any(-PARAMCD, ~ !is.na(.x) & .x != "")) %>%
-      dplyr::pull(PARAMCD) %>%
-      get_levels()
-      )
-    
-    ## TODO: Make this less confusing. I pity the soul who has to edit this.
-    purrr::imap(avals, ~ purrr::map(.x, function(i, j =.y) {
-      datafile()[[j]] %>% 
-                 dplyr::filter(PARAMCD == i) %>%
-                 dplyr::select(dplyr::any_of(c("ATPT", "ATPTN"))) %>%
-                 varN_fctr_reorder() %>%
-                 dplyr::select(dplyr::any_of(c("ATPT"))) %>%
-                 purrr::map(~ .x %>%
-                              addNA(ifany = TRUE) %>%
-                              purrr::possibly(relevel, otherwise = .)(NA_character_) %>%
-                              get_levels() %>%
-                              tidyr::replace_na("N/A") %>%
-                              {if (length(.) > 1) c("ALL", .) else .} %>%
-                              as.list())
-      }) %>%
-      purrr::set_names(.x)
-    )
+    create_avals(datafile())
   })
   
   observe({
@@ -334,7 +246,8 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   # convert the custom shiny input to a table output
   blocks_and_functions <- reactive({
     # create initial dataset
-    blockData <- tryCatch(convertTGOutput(input$agg_drop_zone, input$block_drop_zone), error = function(e) validate(error_handler(e)))
+    droppables_lst <- tryCatch(process_droppables(input$agg_drop_zone, input$block_drop_zone), error = function(e) validate(error_handler(e)))
+    blockData <- do.call(convertTGOutput, droppables_lst)
 
     blockData$label <- 
       purrr::map2(blockData$block, blockData$dataset, function(var, dat) {

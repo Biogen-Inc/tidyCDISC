@@ -110,6 +110,63 @@ custom_class <- function(x, df) {
   return(x)
 }
 
+#' Process the drag and drops blocks
+#' 
+#' @param aggs the aggregate statistic block 
+#' to apply to the column
+#' @param blocks the block corresponding 
+#' to the column name to apply statistic on
+#' 
+#' @family tableGen Functions
+#' @noRd
+#' @importFrom purrr map
+process_droppables <- function(aggs, blocks) {
+  
+  aggs <- unlist(aggs, recursive = FALSE)
+  blocks <- unlist(blocks, recursive = FALSE)
+  process_dropdown <- function(droppable) {
+    droppable$dropdown <-
+      if (is.null(droppable$val)) {
+        NA_character_
+      } else if (droppable$val == "ALL") {
+        droppable$lst
+      } else {
+        droppable$val
+      } %>%
+      unname() %>% str_trim()
+    if (is.null(droppable$grp))
+        droppable$grp <- NA_character_
+    droppable
+  }
+  
+  if (length(aggs) == 0 && length(blocks) == 0) {
+    return(list(aggs = aggs, blocks = blocks))
+  } else if (length(aggs) > length(blocks)) {
+    stop("Need addional variable block")
+  } else if (length(aggs) < length(blocks)) {
+    stop("Need additional statistics block")
+  } else {
+    aggs <- purrr::map(aggs, process_dropdown)
+    blocks <- purrr::map(blocks, process_dropdown)
+    aggs_out <- blocks_out <- list()
+    for (i in seq_along(aggs)) {
+      for (j in seq_along(aggs[[i]]$dropdown)) {
+        for (k in seq_along(blocks[[i]]$dropdown)) {
+          len <- length(aggs_out) + 1
+          aggs_out[[len]] <- aggs[[i]]
+          aggs_out[[len]]$val <- aggs[[i]]$dropdown[[j]]
+          aggs_out[[len]]$lst <- NULL
+          aggs_out[[len]]$dropdown <- NULL
+          blocks_out[[len]] <- blocks[[i]]
+          blocks_out[[len]]$val <- blocks[[i]]$dropdown[[k]]
+          blocks_out[[len]]$lst <- NULL
+          blocks_out[[len]]$dropdown <- NULL
+        }
+      }
+    }
+    return(list(aggs = aggs_out, blocks = blocks_out))
+  }
+}
 
 #' Using the drag and drop blocks
 #' and the shiny inputs,
@@ -132,23 +189,6 @@ custom_class <- function(x, df) {
 #' 
 convertTGOutput <- function(aggs, blocks) {
   
-  aggs <- unlist(aggs, recursive = FALSE)
-  blocks <- unlist(blocks, recursive = FALSE)
-  process_dropdown <- function(droppable) {
-    for (i in 1:length(droppable)) {
-      if (is.null(droppable[[i]]$val)) {
-        droppable[[i]]$dropdown <- NA_character_
-      } else if (droppable[[i]]$val == "ALL") {
-        droppable[[i]]$dropdown <- droppable[[i]]$lst %>% unname() %>% str_trim()
-      } else {
-        droppable[[i]]$dropdown <- droppable[[i]]$val %>% unname() %>% str_trim()
-      }
-      if (is.null(droppable[[i]]$grp))
-        droppable[[i]]$grp <- NA_character_
-    }
-    droppable
-  }
-  
   if (length(aggs) == 0 & length(blocks) == 0) {
     tidyr::tibble(
       agg = character(),
@@ -159,29 +199,94 @@ convertTGOutput <- function(aggs, blocks) {
       S3 = character(),
       gt_group = character()
     )
-  } else if (length(aggs) > length(blocks)) {
-    stop("Need addional variable block")
-  } else if (length(aggs) < length(blocks)) {
-    stop("Need additional statistics block")
   } else {
-    aggs <- process_dropdown(aggs)
-    blocks <- process_dropdown(blocks)
     purrr::map2_df(aggs, blocks, function(aggs, blocks) {
-      purrr::map_df(aggs$dropdown, function(aggs_dd) {
-        purrr::map_df(blocks$dropdown, function(blocks_dd) {
-          tidyr::tibble(
-            agg = aggs$txt %>% unname() %>% str_trim(),
-            block = blocks$txt %>% unname() %>% str_trim(),
-            dataset = blocks$df %>% unname() %>% str_trim(),
-            dropdown = aggs_dd,
-            filter = if (is.na(blocks$grp)) {NA_character_} 
-            else if (blocks_dd == "N/A") {glue::glue("is.na({blocks$grp %>% unname() %>% str_trim()})")} 
-            else {glue::glue("{blocks$grp %>% unname() %>% str_trim()} == '{blocks_dd}'")},
-            S3 = map2(block, dataset, ~ custom_class(.x, .y)),
-            gt_group = glue("{agg} of {block}{if (is.na(dropdown) || dropdown == 'NONE') '' else if (tolower(substr(dropdown, 1, 4)) %in% c('week','base','scree','end ')) paste(' at', dropdown) else paste(' and', dropdown)}{if (is.na(blocks$grp) || blocks_dd == 'N/A' || blocks_dd == dropdown) '' else paste('/', blocks_dd)}")
-          )
-        })
-      })
+      tidyr::tibble(
+        agg = aggs$txt %>% unname() %>% str_trim(),
+        block = blocks$txt %>% unname() %>% str_trim(),
+        dataset = blocks$df %>% unname() %>% str_trim(),
+        dropdown = aggs$val,
+        filter = if (is.na(blocks$grp)) {NA_character_} 
+        else if (blocks$val == "N/A") {glue::glue("is.na({blocks$grp %>% unname() %>% str_trim()})")} 
+        else {glue::glue("{blocks$grp %>% unname() %>% str_trim()} == '{blocks$val}'")},
+        S3 = map2(block, dataset, ~ custom_class(.x, .y)),
+        gt_group = glue("{agg} of {block}{if (is.na(dropdown) || dropdown == 'NONE') '' else if (tolower(substr(dropdown, 1, 4)) %in% c('week','base','scree','end ')) paste(' at', dropdown) else paste(' and', dropdown)}{if (is.na(blocks$grp) || blocks$val == 'N/A' || blocks$val == dropdown) '' else paste('/', blocks$val)}")
+      )
     })
   }
+}
+
+create_avisit <- function(datalist, bds_data) {
+  if (!any(purrr::map_lgl(datalist, ~"AVISIT" %in% colnames(.x))))
+    stop("The field AVISIT must be present in the data list")
+
+    avisit_words <-  
+      purrr::map(bds_data, function(x) x %>% dplyr::select(AVISIT)) %>%
+        dplyr::bind_rows() %>%
+        dplyr::distinct(AVISIT) %>%
+        dplyr::pull()
+
+  avisit_fctr  <- 
+      purrr::map(bds_data, function(x) x %>% dplyr::select(AVISITN)) %>%
+        dplyr::bind_rows() %>%
+        dplyr::distinct(AVISITN) %>%
+        dplyr::pull()
+
+    awd <- tidyr::tibble(AVISIT = avisit_words, AVISITN = avisit_fctr)
+    avisit_words <-
+      awd %>%
+      dplyr::mutate(AVISIT = factor(AVISIT,
+                                    levels = awd[order(awd$AVISITN), "AVISIT"][[1]] %>% unique() )) %>%
+      dplyr::pull(AVISIT) %>%
+      unique() %>%
+      sort()
+    
+  avisit_words[avisit_words != ""]
+}
+
+create_all_cols <- function(datalist) {
+  if("ADAE" %in% names(datalist)){
+    all_cols <- unique(c(
+      colnames(datalist$ADSL)[sapply(datalist$ADSL, class) %in% c('character', 'factor')],
+      colnames(datalist$ADAE)[sapply(datalist$ADAE, class) %in% c('character', 'factor')]
+    ))
+  } else {
+    all_cols <- unique(c(
+      colnames(datalist$ADSL)[sapply(datalist$ADSL, class) %in% c('character', 'factor')]
+    ))
+  }
+  all_cols
+}
+
+create_avals <- function(datalist) {
+  if (!any(purrr::map_lgl(datalist, ~ "ATPT" %in% colnames(.x))))
+    stop("The field ATPT must be present in the data list")
+  
+  atpt_datasets <- purrr::map_lgl(datalist, ~ "ATPT" %in% colnames(.x))
+  
+  avals <- 
+    purrr::map(datalist[atpt_datasets], ~ .x %>%
+                 dplyr::select(PARAMCD, dplyr::any_of(c("ATPT"))) %>%
+                 dplyr::filter(dplyr::if_any(-PARAMCD, ~ !is.na(.x) & .x != "")) %>%
+                 dplyr::pull(PARAMCD) %>%
+                 get_levels()
+    )
+  
+  ## TODO: Make this less confusing. I pity the soul who has to edit this.
+  purrr::imap(avals, ~ purrr::map(.x, function(i, j =.y) {
+    datalist[[j]] %>% 
+      dplyr::filter(PARAMCD == i) %>%
+      dplyr::select(dplyr::any_of(c("ATPT", "ATPTN"))) %>%
+      varN_fctr_reorder() %>%
+      dplyr::select(dplyr::any_of(c("ATPT"))) %>%
+      purrr::map(~ .x %>%
+                   addNA(ifany = TRUE) %>%
+                   purrr::possibly(relevel, otherwise = .)(NA_character_) %>%
+                   get_levels() %>%
+                   tidyr::replace_na("N/A") %>%
+                   {if (length(.) > 1) c("ALL", .) else .} %>%
+                   as.list())
+  }) %>%
+    purrr::set_names(.x)
+  )
 }

@@ -3,6 +3,7 @@
 * Improved code determining which standard tables to provide as options based on data uploaded (#167)
 * Fixed bug causing standard tables to run twice when grouping selected (#167)
 * Added var option functionality to "recipe" creation
+* Added a new R6 class to create blockData (#126)
 
 # tidyCDISC 0.2.1 (CRAN Release)
 
