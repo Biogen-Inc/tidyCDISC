@@ -78,6 +78,10 @@ mod_tableGen_ui <- function(id){
                                    div(tippy(div("ANOVA"), "ANOVA"))
                                  ),
                                  tags$li(
+                                   class = "ui-state-default agg", id = "rm_anova",
+                                   div(tippy(div("RM-ANOVA"), "Repeated Measures ANOVA"))
+                                 ),
+                                 tags$li(
                                    class = "ui-state-default agg", id = "chg",
                                    div(tippy(div("CHG"), "Change from Baseline"))
                                  ),

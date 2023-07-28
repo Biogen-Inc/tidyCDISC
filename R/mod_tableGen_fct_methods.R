@@ -72,6 +72,8 @@ app_methods <- function(agg, column, week, group, data, totals, filter = NA) {
     app_freq(column, group, data, totals)
   } else if (agg == "ANOVA") {
     app_anova(column, week, group, data)
+  } else if (agg == "RM_ANOVA") {
+    app_rmanova(column, week, group, data)
   } else if (agg == "NESTED_FREQ_DSC"){
     app_nested_freq(column, week, group, data, totals, sort = "desc_tot")
   } else if (agg == "NESTED_FREQ_ABC"){
