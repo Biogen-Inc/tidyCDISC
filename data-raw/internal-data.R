@@ -1,7 +1,8 @@
 pretty_blocks <- tidyr::tibble(
-  Pattern = c("MEAN", "FREQ", "CHG", "Y_FREQ", "MAX_FREQ", "NON_MISSING",
+  Pattern = c("RM_ANOVA", "MEAN", "FREQ", "CHG", "Y_FREQ", "MAX_FREQ", "NON_MISSING",
               "NESTED_FREQ_DSC", "NESTED_FREQ_ABC"),
-  Replacement = c("Descriptive Statistics", 
+  Replacement = c("Repeated Measures ANOVA",
+                  "Descriptive Statistics", 
                   "Summary Counts", 
                   "Descriptive Statistics of Change from Baseline",
                   "Subject Count for those with 'Y' values",

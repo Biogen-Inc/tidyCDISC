@@ -167,8 +167,10 @@ $(function() {
       var draggableId = ui.draggable.attr("id");
       var newid = getNewId(draggableId);
       if (weeks_array) {
-        if (draggableId.includes("anova")) {
+        if (draggableId === "anova") {
           $(this).append(selectBlock(newid, "ANOVA", week_opts));
+        } else if (draggableId === "rm_anova") {
+          $(this).append(selectBlock(newid, "RM_ANOVA", week_opts));
         } else if (draggableId.includes("chg")) {
           $(this).append(selectBlock(newid, "CHG", week_opts));
         } else if (draggableId.includes("mean")) {
