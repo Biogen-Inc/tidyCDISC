@@ -89,15 +89,15 @@
     },
     "IDEAFilter": {
       "Package": "IDEAFilter",
-      "Version": "0.1.3.9007",
+      "Version": "0.1.3.9008",
       "Source": "GitHub",
       "RemoteType": "github",
       "RemoteHost": "api.github.com",
       "RemoteRepo": "IDEAFilter",
       "RemoteUsername": "Biogen-Inc",
       "RemoteRef": "devel",
-      "RemoteSha": "b42d5b59638e222ae240f979b4847dc9708e92db",
-      "Hash": "ef8cd4098075bbc965697df9643a740e",
+      "RemoteSha": "a917cd33539efdc06dafc5713582951ffb44c596",
+      "Hash": "2501b36f26e192d194dba37869c9cb0a",
       "Requirements": [
         "RColorBrewer",
         "crayon",
