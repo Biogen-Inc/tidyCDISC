@@ -10,7 +10,7 @@
 #'
 #' @import shiny
 #' @importFrom plotly plotlyOutput
-#' @importFrom IDEAFilter shiny_data_filter_ui
+#' @importFrom IDEAFilter shiny_data_filter_ui IDEAFilter_ui
 #' 
 #' @family popExp Functions
 #' @noRd
@@ -46,7 +46,7 @@ mod_popExp_ui <- function(id, label = "Population Explorer"){
                                      , value = FALSE)),
                       div(id = "pop_cic_filter_df", selectInput(ns("filter_df"),"Filter on Variable(s) in a loaded ADaM",
                                 multiple = TRUE, choices = "ADSL", selected = "ADSL") ),
-                      div(id = "pop_cic_data_filter", IDEAFilter::shiny_data_filter_ui(ns("data_filter"))))
+                      div(id = "pop_cic_data_filter", IDEAFilter::IDEAFilter_ui(ns("data_filter"))))
                ),
              
              div(id = "pop_cic_chart_type", 

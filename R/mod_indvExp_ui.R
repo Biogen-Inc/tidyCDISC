@@ -11,7 +11,7 @@
 #'
 #' @import shiny
 #' @importFrom shinyjs useShinyjs hidden
-#' @importFrom IDEAFilter shiny_data_filter_ui
+#' @importFrom IDEAFilter shiny_data_filter_ui IDEAFilter_ui
 #' @importFrom shinyWidgets materialSwitch
 #' @importFrom timevis timevisOutput
 #' @importFrom plotly plotlyOutput
@@ -46,7 +46,7 @@ mod_indvExp_ui <- function(id){
                             ),
                             conditionalPanel(condition = "input.filter_df != null", ns = ns,
                                div(id = "indv_cic_data_filter",
-                                  IDEAFilter::shiny_data_filter_ui(ns("data_filter"))
+                                  IDEAFilter::IDEAFilter_ui(ns("data_filter"))
                                )
                             )
            ),

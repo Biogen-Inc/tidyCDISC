@@ -11,7 +11,7 @@
 #'
 #'
 #' @import shiny 
-#' @importFrom IDEAFilter shiny_data_filter_ui
+#' @importFrom IDEAFilter shiny_data_filter_ui IDEAFilter_ui
 #' @importFrom tippy tippy
 #' @importFrom gt gt_output
 #' 
@@ -49,7 +49,7 @@ mod_tableGen_ui <- function(id){
                              tags$div(id = 'demo',  class="collapse",
                                       selectInput(ns("filter_df"),"Filter on Variable(s) in a loaded ADaM",
                                                   multiple = TRUE, choices = NULL, selected = NULL),
-                                      IDEAFilter::shiny_data_filter_ui(ns("data_filter"))
+                                      IDEAFilter::IDEAFilter_ui(ns("data_filter"))
                              ))))),
            wellPanel(
              fluidRow(

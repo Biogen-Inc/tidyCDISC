@@ -7,7 +7,7 @@
 #' 
 #' @import shiny
 #' @import dplyr
-#' @importFrom IDEAFilter shiny_data_filter
+#' @importFrom IDEAFilter shiny_data_filter IDEAFilter
 #' @importFrom haven zap_label zap_formats
 #' @importFrom purrr map walk2
 #' @importFrom plotly renderPlotly ggplotly layout
@@ -186,8 +186,8 @@ mod_popExp_server <- function(input, output, session, datafile) {
   })
   
   # Call IDEAFilter Module
-  filters <- callModule(
-    IDEAFilter::shiny_data_filter,
+  filters <- IDEAFilter::IDEAFilter(
+    # IDEAFilter::shiny_data_filter,
     "data_filter",         # whatever you named the widget
     data = reactive(feed_filter()[filter_cols()]),    # the name of your pre-processed data
     verbose = FALSE)
