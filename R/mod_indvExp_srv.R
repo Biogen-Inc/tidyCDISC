@@ -11,7 +11,7 @@
 
 #' @import shiny
 #' @import dplyr
-#' @importFrom IDEAFilter shiny_data_filter
+#' @importFrom IDEAFilter shiny_data_filter IDEAFilter
 #' @importFrom stringr str_detect 
 #' @importFrom purrr map update_list reduce
 #' @importFrom shinyjs show hide
@@ -115,8 +115,8 @@ mod_indvExp_server <- function(input, output, session, datafile){
   
   
   # Feed IDEAFilter! Returns data frame to use down stream... May be filtered or not
-  filtered_data <- callModule(
-    IDEAFilter::shiny_data_filter,     # Module name
+  filtered_data <- IDEAFilter::IDEAFilter(
+    # IDEAFilter::shiny_data_filter,     # Module name
     "data_filter",         # whatever you named the widget
     data = feed_filter,    # the name of your pre-processed data
     verbose = FALSE)
@@ -124,7 +124,7 @@ mod_indvExp_server <- function(input, output, session, datafile){
   
   
   observe({
-    req(!is.null(filtered_data())) # make sure we have an output data frame from IDEAFilter
+    req(filtered_data()) # make sure we have an output data frame from IDEAFilter
     
     subj <- unique(filtered_data()$USUBJID) # get list of unique USUBJIDs
     
