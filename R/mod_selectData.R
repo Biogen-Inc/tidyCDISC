@@ -54,7 +54,7 @@ mod_selectData_server <- function(input, output, session, datafile){
     sasdata <- toupper(names(datafile()))
     
     # Only select data that starts with AD followed by one or more alphanumerics or underscore
-    sasdata <- names(which(sapply(sasdata,function(df) { return(stringr::str_detect(toupper(df),"^AD[A-Z0-9\\_]+")) })))
+    sasdata <- names(which(sapply(sasdata,function(df) { return(stringr::str_detect(toupper(df),"^AD")) })))
     
     # Update the picker input list
     updatePickerInput(

@@ -126,7 +126,7 @@ utils::globalVariables(c(
   "pval_hover", "sort_n", "v", "var", "var_rn", "where", "y",
   "type", "title"
   ,":=",
-  "DATE", "EVENT_TIME", "DATE_ST", "DECODE_ST", "DATE_EN", "DECODE_EN"
+  "DATE", "EVENT_TIME", "DATE_ST", "DECODE_ST", "DATE_EN", "DECODE_EN",
+  "time", "est_ci",
+  "Strata", "0.95LCL", "0.95UCL", "label"
 ))
-
-

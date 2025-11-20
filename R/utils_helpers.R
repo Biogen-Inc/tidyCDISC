@@ -342,19 +342,31 @@ varN_fctr_reorder <- function(data) {
   return(data)
 }
 
+#' Error handler
+#' 
+#' Function to handle errors based on specific method used
+#' 
+#' @param e error message
+#' 
+#' @export
+#' 
+#' @return Error message
 error_handler <- function(e) {
   UseMethod("error_handler")
 }
 
+#' @export
 error_handler.default <- function(e) {
   conditionMessage(e)
 }
 
+#' @export
 error_handler.purrr_error_indexed <-
   `error_handler.dplyr:::mutate_error` <- function(e) {
   e$parent$message
 }
 
+#' @export
 error_handler.rlang_error <- function(e) {
   stringr::str_replace_all(rlang::cnd_message(e), "\n.*? ", " ")
 }
@@ -375,7 +387,12 @@ best_lab <- function(data, var_str) {
   attr(data[[var_str]], "label") %||% var_str
 }
 
-
+#' Dummy function to remove note from R CMD check
+#' @noRd
+dummy <- function() {
+  pkgload::check_dep_version
+  cli::cli_abort
+}
 
 
 
