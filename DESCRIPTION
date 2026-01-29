@@ -38,20 +38,28 @@ BugReports: https://github.com/Biogen-Inc/tidyCDISC/issues
 Depends: 
     R (>= 2.10)
 Imports: 
+    arrow,
+    broom.helpers,
     cicerone,
+    cli,
     config,
     dplyr,
     DT,
+    fs,
     GGally,
     ggcorrplot,
     ggplot2,
+    ggsurvfit,
     glue,
     golem,
     gt,
+    gtsummary,
     haven,
     IDEAFilter,
+    pkgload,
     plotly,
     purrr,
+    readxl,
     rlang,
     rmarkdown,
     shiny,
@@ -60,11 +68,16 @@ Imports:
     sjlabelled,
     stringr,
     survival,
+    tibble,
     tidyr,
+    tidyselect,
     timevis,
-    tippy (== 0.1.0)
+    tippy (== 0.1.0),
+    vroom
 Suggests: 
+    devtools,
     knitr,
+    shinyalert,
     spelling,
     testthat
 VignetteBuilder: 
@@ -72,4 +85,4 @@ VignetteBuilder:
 Encoding: UTF-8
 Language: en-US
 LazyData: true
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.3
