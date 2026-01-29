@@ -36,7 +36,7 @@ License: AGPL (>= 3)
 URL: https://github.com/Biogen-Inc/tidyCDISC/, https://Biogen-Inc.github.io/tidyCDISC/
 BugReports: https://github.com/Biogen-Inc/tidyCDISC/issues
 Depends: 
-    R (>= 2.10)
+    R (>= 4.1)
 Imports: 
     arrow,
     broom.helpers,
