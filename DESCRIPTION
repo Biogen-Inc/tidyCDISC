@@ -85,6 +85,8 @@ Suggests:
     testthat
 VignetteBuilder: 
     knitr
+Config/Needs/website: pkgdown
+Config/Needs/coverage: covr
 Encoding: UTF-8
 Language: en-US
 LazyData: true
