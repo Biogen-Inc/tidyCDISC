@@ -1,5 +1,5 @@
-# Submission of `v0.2.1`
-This is a new CRAN release, it's predecessor being `v0.2.0`. This version fixes some bugs and introduces some minor new features.
+# Submission of `v0.2.2`
+This is a new CRAN release, it's predecessor being `v0.2.1`. This version fixes a small R CMD Check bug that was introduced with the release of `dplyr v1.2.0`, set to release 2026-01-31. 
 
 ## R CMD Check
 0 errors | 0 warnings | 1 note

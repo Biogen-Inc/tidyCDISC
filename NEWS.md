@@ -1,4 +1,8 @@
 
+# tidyCDISC 0.2.2 (CRAN Release)
+
+* Fixes a small R CMD Check bug that was introduced with `dplyr v1.2.0`, released to CRAN 2026-01-31. 
+    
 # tidyCDISC 0.2.1 (CRAN Release)
 
 ### General
