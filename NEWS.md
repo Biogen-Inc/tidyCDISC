@@ -1,5 +1,8 @@
 # tidyCDISC (development version)
 
+* Update wordlist
+* Add Ryan Harrison as author
+
 ### Population Explorer
 * Refactor KM plots from plotly to ggsurvfit
 * Add estimated median table to KM plot
