@@ -29,12 +29,9 @@ jobs:
           use-public-rspm: true
 
       - uses: r-lib/actions/setup-renv@v2
-        with:
-          extra-packages: any::pkgdown, local::.
-          needs: website
           
-      - name: Install specific pkgdown version
-        run: install.packages("remotes") ; remotes::install_version("pkgdown", version = "2.0.3", repos = "cran.rstudio.com", dependencies = FALSE)
+      - name: Install dev dependencies
+        run: install.packages(c("pkgdown", "devtools", "covr"))
         shell: Rscript {0}
         
       - name: Install tidyCDISC
