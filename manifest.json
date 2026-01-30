@@ -11,7 +11,7 @@
   },
   "environment": {
     "r": {
-      "requires": ">= 2.10"
+      "requires": ">= 4.1"
     }
   },
   "packages": {
@@ -672,39 +672,6 @@
         "RemoteRepos": "https://packagemanager.posit.co/cran/latest",
         "RemotePkgPlatform": "source",
         "RemoteSha": "1.0-9"
-      }
-    },
-    "brio": {
-      "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
-      "description": {
-        "Package": "brio",
-        "Title": "Basic R Input Output",
-        "Version": "1.1.5",
-        "Authors@R": "c(\n    person(\"Jim\", \"Hester\", role = \"aut\",\n           comment = c(ORCID = \"0000-0002-2739-7082\")),\n    person(\"Gábor\", \"Csárdi\", , \"csardi.gabor@gmail.com\", role = c(\"aut\", \"cre\")),\n    person(given = \"Posit Software, PBC\", role = c(\"cph\", \"fnd\"))\n  )",
-        "Description": "Functions to handle basic input output, these functions\n    always read and write UTF-8 (8-bit Unicode Transformation Format)\n    files and provide more explicit control over line endings.",
-        "License": "MIT + file LICENSE",
-        "URL": "https://brio.r-lib.org, https://github.com/r-lib/brio",
-        "BugReports": "https://github.com/r-lib/brio/issues",
-        "Depends": "R (>= 3.6)",
-        "Suggests": "covr, testthat (>= 3.0.0)",
-        "Config/Needs/website": "tidyverse/tidytemplate",
-        "Config/testthat/edition": "3",
-        "Encoding": "UTF-8",
-        "RoxygenNote": "7.2.3",
-        "NeedsCompilation": "yes",
-        "Packaged": "2024-04-24 18:51:29 UTC; gaborcsardi",
-        "Author": "Jim Hester [aut] (<https://orcid.org/0000-0002-2739-7082>),\n  Gábor Csárdi [aut, cre],\n  Posit Software, PBC [cph, fnd]",
-        "Maintainer": "Gábor Csárdi <csardi.gabor@gmail.com>",
-        "Repository": "RSPM",
-        "Date/Publication": "2024-04-24 19:20:07 UTC",
-        "Built": "R 4.4.0; x86_64-pc-linux-gnu; 2026-01-29 00:21:41 UTC; unix",
-        "RemoteType": "standard",
-        "RemotePkgRef": "brio",
-        "RemoteRef": "brio",
-        "RemoteRepos": "https://packagemanager.posit.co/cran/latest",
-        "RemotePkgPlatform": "source",
-        "RemoteSha": "1.1.5"
       }
     },
     "broom": {
@@ -1437,43 +1404,6 @@
         "RemoteRepos": "https://packagemanager.posit.co/cran/latest",
         "RemotePkgPlatform": "source",
         "RemoteSha": "1.4.3"
-      }
-    },
-    "diffobj": {
-      "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
-      "description": {
-        "Package": "diffobj",
-        "Type": "Package",
-        "Title": "Diffs for R Objects",
-        "Description": "Generate a colorized diff of two R objects for an intuitive\n    visualization of their differences.",
-        "Version": "0.3.6",
-        "Authors@R": "c(\n    person(\n    \"Brodie\", \"Gaslam\", email=\"brodie.gaslam@yahoo.com\",\n    role=c(\"aut\", \"cre\")),\n    person(\n    \"Michael B.\", \"Allen\", email=\"ioplex@gmail.com\",\n    role=c(\"ctb\", \"cph\"),\n    comment=\"Original C implementation of Myers Diff Algorithm\"))",
-        "Depends": "R (>= 3.1.0)",
-        "License": "GPL-2 | GPL-3",
-        "URL": "https://github.com/brodieG/diffobj",
-        "BugReports": "https://github.com/brodieG/diffobj/issues",
-        "RoxygenNote": "7.2.3",
-        "VignetteBuilder": "knitr",
-        "Encoding": "UTF-8",
-        "Suggests": "knitr, rmarkdown",
-        "Collate": "'capt.R' 'options.R' 'pager.R' 'check.R' 'finalizer.R'\n'misc.R' 'html.R' 'styles.R' 's4.R' 'core.R' 'diff.R' 'get.R'\n'guides.R' 'hunks.R' 'layout.R' 'myerssimple.R' 'rdiff.R'\n'rds.R' 'set.R' 'subset.R' 'summmary.R' 'system.R' 'text.R'\n'tochar.R' 'trim.R' 'word.R'",
-        "Imports": "crayon (>= 1.3.2), tools, methods, utils, stats",
-        "NeedsCompilation": "yes",
-        "Packaged": "2025-04-21 00:11:01 UTC; brodie",
-        "Author": "Brodie Gaslam [aut, cre],\n  Michael B. Allen [ctb, cph] (Original C implementation of Myers Diff\n    Algorithm)",
-        "Maintainer": "Brodie Gaslam <brodie.gaslam@yahoo.com>",
-        "Repository": "RSPM",
-        "Date/Publication": "2025-04-21 08:30:02 UTC",
-        "Built": "R 4.4.0; x86_64-pc-linux-gnu; 2026-01-29 00:22:34 UTC; unix",
-        "RemotePkgRef": "diffobj@0.3.6",
-        "RemoteType": "standard",
-        "RemoteEtag": "\"5d004fc6db519b47aaff1c0175efa8d3\"",
-        "RemotePackaged": "TRUE",
-        "RemoteRef": "diffobj",
-        "RemoteRepos": "https://packagemanager.posit.co/cran/latest",
-        "RemotePkgPlatform": "source",
-        "RemoteSha": "0.3.6"
       }
     },
     "digest": {
@@ -2551,42 +2481,6 @@
         "RemoteSha": "0.2.7"
       }
     },
-    "janitor": {
-      "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
-      "description": {
-        "Package": "janitor",
-        "Title": "Simple Tools for Examining and Cleaning Dirty Data",
-        "Version": "2.2.1",
-        "Authors@R": "c(person(\"Sam\", \"Firke\", email = \"samuel.firke@gmail.com\", role = c(\"aut\", \"cre\")),\n    person(\"Bill\", \"Denney\", email = \"wdenney@humanpredictions.com\", role = \"ctb\"),\n    person(\"Chris\", \"Haid\", email = \"chrishaid@gmail.com\", role = \"ctb\"),\n    person(\"Ryan\", \"Knight\", email = \"ryangknight@gmail.com\", role = \"ctb\"),\n    person(\"Malte\", \"Grosser\", email = \"malte.grosser@gmail.com\", role = \"ctb\"),\n    person(\"Jonathan\", \"Zadra\", email = \"jonathan.zadra@sorensonimpact.com\", role = \"ctb\"))",
-        "Description": "The main janitor functions can: perfectly format data.frame column\n    names; provide quick counts of variable combinations (i.e., frequency\n    tables and crosstabs); and explore duplicate records. Other janitor functions\n    nicely format the tabulation results. These tabulate-and-report functions\n    approximate popular features of SPSS and Microsoft Excel. This package\n    follows the principles of the \"tidyverse\" and works well with the pipe function\n    %>%. janitor was built with beginning-to-intermediate R users in mind and is\n    optimized for user-friendliness.",
-        "URL": "https://github.com/sfirke/janitor,\nhttps://sfirke.github.io/janitor/",
-        "BugReports": "https://github.com/sfirke/janitor/issues",
-        "Depends": "R (>= 3.1.2)",
-        "Imports": "dplyr (>= 1.0.0), hms, lifecycle, lubridate, magrittr, purrr,\nrlang, stringi, stringr, snakecase (>= 0.9.2), tidyselect (>=\n1.0.0), tidyr (>= 0.7.0)",
-        "License": "MIT + file LICENSE",
-        "RoxygenNote": "7.2.3",
-        "Suggests": "dbplyr, knitr, rmarkdown, RSQLite, sf, testthat (>= 3.0.0),\ntibble, tidygraph",
-        "VignetteBuilder": "knitr",
-        "Encoding": "UTF-8",
-        "Config/testthat/edition": "3",
-        "NeedsCompilation": "no",
-        "Packaged": "2024-12-22 15:53:13 UTC; sam",
-        "Author": "Sam Firke [aut, cre],\n  Bill Denney [ctb],\n  Chris Haid [ctb],\n  Ryan Knight [ctb],\n  Malte Grosser [ctb],\n  Jonathan Zadra [ctb]",
-        "Maintainer": "Sam Firke <samuel.firke@gmail.com>",
-        "Repository": "RSPM",
-        "Date/Publication": "2024-12-22 16:30:01 UTC",
-        "Built": "R 4.4.0; ; 2026-01-29 00:27:23 UTC; unix",
-        "RemotePkgRef": "janitor@2.2.1",
-        "RemoteType": "standard",
-        "RemoteEtag": "\"a5a5acb3632b5e24d1cf798a9a8d76f1\"",
-        "RemotePackaged": "TRUE",
-        "RemoteRef": "janitor",
-        "RemoteRepos": "https://packagemanager.posit.co/cran/latest",
-        "RemotePkgPlatform": "source",
-        "RemoteSha": "2.2.1"
-      }
-    },
     "jquerylib": {
       "Source": "CRAN",
       "Repository": "https://packagemanager.posit.co/cran/latest",
@@ -2965,48 +2859,6 @@
         "RemoteRepos": "https://packagemanager.posit.co/cran/latest",
         "RemotePkgPlatform": "source",
         "RemoteSha": "0.7"
-      }
-    },
-    "lubridate": {
-      "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
-      "description": {
-        "Type": "Package",
-        "Package": "lubridate",
-        "Title": "Make Dealing with Dates a Little Easier",
-        "Version": "1.9.4",
-        "Authors@R": "c(\n    person(\"Vitalie\", \"Spinu\", , \"spinuvit@gmail.com\", role = c(\"aut\", \"cre\")),\n    person(\"Garrett\", \"Grolemund\", role = \"aut\"),\n    person(\"Hadley\", \"Wickham\", role = \"aut\"),\n    person(\"Davis\", \"Vaughan\", role = \"ctb\"),\n    person(\"Ian\", \"Lyttle\", role = \"ctb\"),\n    person(\"Imanuel\", \"Costigan\", role = \"ctb\"),\n    person(\"Jason\", \"Law\", role = \"ctb\"),\n    person(\"Doug\", \"Mitarotonda\", role = \"ctb\"),\n    person(\"Joseph\", \"Larmarange\", role = \"ctb\"),\n    person(\"Jonathan\", \"Boiser\", role = \"ctb\"),\n    person(\"Chel Hee\", \"Lee\", role = \"ctb\")\n  )",
-        "Maintainer": "Vitalie Spinu <spinuvit@gmail.com>",
-        "Description": "Functions to work with date-times and time-spans: fast and\n    user friendly parsing of date-time data, extraction and updating of\n    components of a date-time (years, months, days, hours, minutes, and\n    seconds), algebraic manipulation on date-time and time-span objects.\n    The 'lubridate' package has a consistent and memorable syntax that\n    makes working with dates easy and fun.",
-        "License": "GPL (>= 2)",
-        "URL": "https://lubridate.tidyverse.org,\nhttps://github.com/tidyverse/lubridate",
-        "BugReports": "https://github.com/tidyverse/lubridate/issues",
-        "Depends": "methods, R (>= 3.2)",
-        "Imports": "generics, timechange (>= 0.3.0)",
-        "Suggests": "covr, knitr, rmarkdown, testthat (>= 2.1.0), vctrs (>= 0.6.5)",
-        "Enhances": "chron, data.table, timeDate, tis, zoo",
-        "VignetteBuilder": "knitr",
-        "Config/Needs/website": "tidyverse/tidytemplate",
-        "Config/testthat/edition": "3",
-        "Encoding": "UTF-8",
-        "LazyData": "true",
-        "RoxygenNote": "7.2.3",
-        "SystemRequirements": "C++11, A system with zoneinfo data (e.g.\n/usr/share/zoneinfo). On Windows the zoneinfo included with R\nis used.",
-        "Collate": "'Dates.r' 'POSIXt.r' 'util.r' 'parse.r' 'timespans.r'\n'intervals.r' 'difftimes.r' 'durations.r' 'periods.r'\n'accessors-date.R' 'accessors-day.r' 'accessors-dst.r'\n'accessors-hour.r' 'accessors-minute.r' 'accessors-month.r'\n'accessors-quarter.r' 'accessors-second.r' 'accessors-tz.r'\n'accessors-week.r' 'accessors-year.r' 'am-pm.r' 'time-zones.r'\n'numeric.r' 'coercion.r' 'constants.r' 'cyclic_encoding.r'\n'data.r' 'decimal-dates.r' 'deprecated.r' 'format_ISO8601.r'\n'guess.r' 'hidden.r' 'instants.r' 'leap-years.r'\n'ops-addition.r' 'ops-compare.r' 'ops-division.r'\n'ops-integer-division.r' 'ops-m+.r' 'ops-modulo.r'\n'ops-multiplication.r' 'ops-subtraction.r' 'package.r'\n'pretty.r' 'round.r' 'stamp.r' 'tzdir.R' 'update.r' 'vctrs.R'\n'zzz.R'",
-        "NeedsCompilation": "yes",
-        "Packaged": "2024-12-07 23:41:45 UTC; vitalie",
-        "Author": "Vitalie Spinu [aut, cre],\n  Garrett Grolemund [aut],\n  Hadley Wickham [aut],\n  Davis Vaughan [ctb],\n  Ian Lyttle [ctb],\n  Imanuel Costigan [ctb],\n  Jason Law [ctb],\n  Doug Mitarotonda [ctb],\n  Joseph Larmarange [ctb],\n  Jonathan Boiser [ctb],\n  Chel Hee Lee [ctb]",
-        "Repository": "RSPM",
-        "Date/Publication": "2024-12-08 12:10:02 UTC",
-        "Built": "R 4.4.0; x86_64-pc-linux-gnu; 2026-01-29 00:24:25 UTC; unix",
-        "RemotePkgRef": "lubridate@1.9.4",
-        "RemoteType": "standard",
-        "RemoteEtag": "\"891fd9836adc98369eec02b5c61e6bbb\"",
-        "RemotePackaged": "TRUE",
-        "RemoteRef": "lubridate",
-        "RemoteRepos": "https://packagemanager.posit.co/cran/latest",
-        "RemotePkgPlatform": "source",
-        "RemoteSha": "1.9.4"
       }
     },
     "magrittr": {
@@ -3500,36 +3352,6 @@
         "RemoteSha": "1.8.9"
       }
     },
-    "praise": {
-      "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
-      "description": {
-        "Package": "praise",
-        "Title": "Praise Users",
-        "Version": "1.0.0",
-        "Author": "Gabor Csardi, Sindre Sorhus",
-        "Maintainer": "Gabor Csardi <csardi.gabor@gmail.com>",
-        "Description": "Build friendly R packages that\n    praise their users if they have done something\n    good, or they just need it to feel better.",
-        "License": "MIT + file LICENSE",
-        "LazyData": "true",
-        "URL": "https://github.com/gaborcsardi/praise",
-        "BugReports": "https://github.com/gaborcsardi/praise/issues",
-        "Suggests": "testthat",
-        "Collate": "'adjective.R' 'adverb.R' 'exclamation.R' 'verb.R' 'rpackage.R'\n'package.R'",
-        "NeedsCompilation": "no",
-        "Packaged": "2015-08-11 02:01:43 UTC; gaborcsardi",
-        "Repository": "RSPM",
-        "Date/Publication": "2015-08-11 08:22:28",
-        "Encoding": "UTF-8",
-        "Built": "R 4.4.0; ; 2026-01-29 00:21:44 UTC; unix",
-        "RemoteType": "standard",
-        "RemotePkgRef": "praise",
-        "RemoteRef": "praise",
-        "RemoteRepos": "https://packagemanager.posit.co/cran/latest",
-        "RemotePkgPlatform": "source",
-        "RemoteSha": "1.0.0"
-      }
-    },
     "prettyunits": {
       "Source": "CRAN",
       "Repository": "https://packagemanager.posit.co/cran/latest",
@@ -3781,40 +3603,6 @@
         "RemoteRepos": "https://packagemanager.posit.co/cran/latest",
         "RemotePkgPlatform": "source",
         "RemoteSha": "0.3.3"
-      }
-    },
-    "rcmdcheck": {
-      "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
-      "description": {
-        "Package": "rcmdcheck",
-        "Title": "Run 'R CMD check' from 'R' and Capture Results",
-        "Version": "1.4.0",
-        "Authors@R": "\n    person(given = \"Gábor\",\n           family = \"Csárdi\",\n           role = c(\"cre\", \"aut\"),\n           email = \"csardi.gabor@gmail.com\")",
-        "Description": "Run 'R CMD check' from 'R' and capture the results\n    of the individual checks. Supports running checks in the background,\n    timeouts, pretty printing and comparing check results.",
-        "License": "MIT + file LICENSE",
-        "URL": "https://r-lib.github.io/rcmdcheck/,\nhttps://github.com/r-Lib/rcmdcheck#readme",
-        "BugReports": "https://github.com/r-Lib/rcmdcheck/issues",
-        "Imports": "callr (>= 3.1.1.9000), cli (>= 3.0.0), curl, desc (>= 1.2.0),\ndigest, pkgbuild, prettyunits, R6, rprojroot, sessioninfo (>=\n1.1.1), utils, withr, xopen",
-        "Suggests": "covr, knitr, mockery, processx, ps, rmarkdown, svglite,\ntestthat, webfakes",
-        "Encoding": "UTF-8",
-        "RoxygenNote": "7.1.2",
-        "Config/testthat/edition": "3",
-        "NeedsCompilation": "no",
-        "Packaged": "2021-09-23 11:13:42 UTC; gaborcsardi",
-        "Author": "Gábor Csárdi [cre, aut]",
-        "Maintainer": "Gábor Csárdi <csardi.gabor@gmail.com>",
-        "Repository": "RSPM",
-        "Date/Publication": "2021-09-27 15:10:02 UTC",
-        "Built": "R 4.4.0; ; 2026-01-29 00:24:37 UTC; unix",
-        "RemotePkgRef": "rcmdcheck@1.4.0",
-        "RemoteType": "standard",
-        "RemoteEtag": "\"f66a4716c582d8e22bc3aa6285da9315\"",
-        "RemotePackaged": "TRUE",
-        "RemoteRef": "rcmdcheck",
-        "RemoteRepos": "https://packagemanager.posit.co/cran/latest",
-        "RemotePkgPlatform": "source",
-        "RemoteSha": "1.4.0"
       }
     },
     "reactR": {
@@ -4249,41 +4037,6 @@
         "RemoteSha": "1.4.0"
       }
     },
-    "sessioninfo": {
-      "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
-      "description": {
-        "Package": "sessioninfo",
-        "Title": "R Session Information",
-        "Version": "1.2.3",
-        "Authors@R": "c(\n    person(\"Gábor\", \"Csárdi\", , \"csardi.gabor@gmail.com\", role = \"cre\"),\n    person(\"Hadley\", \"Wickham\", role = \"aut\"),\n    person(\"Winston\", \"Chang\", role = \"aut\"),\n    person(\"Robert\", \"Flight\", role = \"aut\"),\n    person(\"Kirill\", \"Müller\", role = \"aut\"),\n    person(\"Jim\", \"Hester\", role = \"aut\"),\n    person(\"R Core team\", role = \"ctb\"),\n    person(\"Posit Software, PBC\", role = c(\"cph\", \"fnd\"))\n  )",
-        "Maintainer": "Gábor Csárdi <csardi.gabor@gmail.com>",
-        "Description": "Query and print information about the current R session.  It\n    is similar to 'utils::sessionInfo()', but includes more information\n    about packages, and where they were installed from.",
-        "License": "GPL-2",
-        "URL": "https://github.com/r-lib/sessioninfo#readme,\nhttps://sessioninfo.r-lib.org",
-        "BugReports": "https://github.com/r-lib/sessioninfo/issues",
-        "Depends": "R (>= 3.4)",
-        "Imports": "cli (>= 3.1.0), tools, utils",
-        "Suggests": "callr, covr, gh, reticulate, rmarkdown, testthat (>= 3.2.0),\nwithr",
-        "Config/Needs/website": "pkgdown, tidyverse/tidytemplate",
-        "Config/testthat/edition": "3",
-        "Config/testthat/parallel": "true",
-        "Encoding": "UTF-8",
-        "RoxygenNote": "7.3.2",
-        "NeedsCompilation": "no",
-        "Packaged": "2025-02-05 12:57:47 UTC; gaborcsardi",
-        "Author": "Gábor Csárdi [cre],\n  Hadley Wickham [aut],\n  Winston Chang [aut],\n  Robert Flight [aut],\n  Kirill Müller [aut],\n  Jim Hester [aut],\n  R Core team [ctb],\n  Posit Software, PBC [cph, fnd]",
-        "Repository": "RSPM",
-        "Date/Publication": "2025-02-05 13:40:02 UTC",
-        "Built": "R 4.4.0; ; 2026-01-29 00:24:07 UTC; unix",
-        "RemoteType": "standard",
-        "RemotePkgRef": "sessioninfo",
-        "RemoteRef": "sessioninfo",
-        "RemoteRepos": "https://packagemanager.posit.co/cran/latest",
-        "RemotePkgPlatform": "source",
-        "RemoteSha": "1.2.3"
-      }
-    },
     "shiny": {
       "Source": "CRAN",
       "Repository": "https://packagemanager.posit.co/cran/latest",
@@ -4462,42 +4215,6 @@
         "RemoteSha": "1.2.0"
       }
     },
-    "snakecase": {
-      "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
-      "description": {
-        "Package": "snakecase",
-        "Version": "0.11.1",
-        "Date": "2023-08-27",
-        "Title": "Convert Strings into any Case",
-        "Description": "A consistent, flexible and easy to use tool to parse and convert strings into cases like snake or camel among others.",
-        "Authors@R": "c(\n    person(\"Malte\", \"Grosser\", , \"malte.grosser@gmail.com\", role = c(\"aut\", \"cre\")))",
-        "Maintainer": "Malte Grosser <malte.grosser@gmail.com>",
-        "Depends": "R (>= 3.2)",
-        "Imports": "stringr, stringi",
-        "Suggests": "testthat, covr, tibble, purrrlyr, knitr, rmarkdown, magrittr",
-        "URL": "https://github.com/Tazinho/snakecase",
-        "BugReports": "https://github.com/Tazinho/snakecase/issues",
-        "Encoding": "UTF-8",
-        "License": "GPL-3",
-        "RoxygenNote": "6.1.1",
-        "VignetteBuilder": "knitr",
-        "NeedsCompilation": "no",
-        "Packaged": "2023-08-27 20:30:20 UTC; malte",
-        "Author": "Malte Grosser [aut, cre]",
-        "Repository": "RSPM",
-        "Date/Publication": "2023-08-27 22:50:09 UTC",
-        "Built": "R 4.4.0; ; 2026-01-29 00:26:47 UTC; unix",
-        "RemotePkgRef": "snakecase@0.11.1",
-        "RemoteType": "standard",
-        "RemoteEtag": "\"458a00820d80ad173590737e6b85cc96\"",
-        "RemotePackaged": "TRUE",
-        "RemoteRef": "snakecase",
-        "RemoteRepos": "https://packagemanager.posit.co/cran/latest",
-        "RemotePkgPlatform": "source",
-        "RemoteSha": "0.11.1"
-      }
-    },
     "sourcetools": {
       "Source": "CRAN",
       "Repository": "https://packagemanager.posit.co/cran/latest",
@@ -4526,6 +4243,40 @@
         "RemoteRepos": "https://packagemanager.posit.co/cran/latest",
         "RemotePkgPlatform": "source",
         "RemoteSha": "0.1.7-1"
+      }
+    },
+    "stringdist": {
+      "Source": "CRAN",
+      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "description": {
+        "Package": "stringdist",
+        "Maintainer": "Mark van der Loo <mark.vanderloo@gmail.com>",
+        "License": "GPL-3",
+        "Title": "Approximate String Matching, Fuzzy Text Search, and String\nDistance Functions",
+        "Type": "Package",
+        "LazyLoad": "yes",
+        "Authors@R": "c( person(\"Mark\", \"van der Loo\", role=c(\"aut\",\"cre\")\n             , email=\"mark.vanderloo@gmail.com\"\n             , comment= c(ORCID=\"0000-0002-9807-4686\"))\n            , person(\"Jan\", \"van der Laan\", role=\"ctb\")\n            , person(\"R Core Team\",\"\"     , role=\"ctb\")\n            , person(\"Nick\",\"Logan\"       , role=\"ctb\")\n            , person(\"Chris\",\"Muir\"       , role=\"ctb\")\n            , person(\"Johannes\", \"Gruber\" , role=\"ctb\")\n            , person(\"Brian\",\"Ripley\"     , role=\"ctb\"))",
+        "Description": "Implements an approximate string matching version of R's native\n    'match' function. Also offers fuzzy text search based on various string\n     distance measures. Can calculate various string distances based on edits\n    (Damerau-Levenshtein, Hamming, Levenshtein, optimal sting alignment), qgrams (q-\n    gram, cosine, jaccard distance) or heuristic metrics (Jaro, Jaro-Winkler). An\n    implementation of soundex is provided as well. Distances can be computed between\n    character vectors while taking proper care of encoding or between integer\n    vectors representing generic sequences. This package is built for speed and\n    runs in parallel by using 'openMP'. An API for C or C++ is exposed as well.\n    Reference: MPJ van der Loo (2014) <doi:10.32614/RJ-2014-011>.",
+        "Version": "0.9.17",
+        "Depends": "R (>= 2.15.3)",
+        "URL": "https://github.com/markvanderloo/stringdist",
+        "BugReports": "https://github.com/markvanderloo/stringdist/issues",
+        "Suggests": "tinytest",
+        "Imports": "parallel",
+        "Encoding": "UTF-8",
+        "RoxygenNote": "7.3.2",
+        "NeedsCompilation": "yes",
+        "Packaged": "2026-01-16 15:16:37 UTC; mark",
+        "Author": "Mark van der Loo [aut, cre] (ORCID:\n    <https://orcid.org/0000-0002-9807-4686>),\n  Jan van der Laan [ctb],\n  R Core Team [ctb],\n  Nick Logan [ctb],\n  Chris Muir [ctb],\n  Johannes Gruber [ctb],\n  Brian Ripley [ctb]",
+        "Repository": "RSPM",
+        "Date/Publication": "2026-01-16 17:00:02 UTC",
+        "Built": "R 4.4.0; x86_64-pc-linux-gnu; 2026-01-30 16:22:00 UTC; unix",
+        "RemoteType": "standard",
+        "RemotePkgRef": "stringdist",
+        "RemoteRef": "stringdist",
+        "RemoteRepos": "https://packagemanager.posit.co/cran/latest",
+        "RemotePkgPlatform": "source",
+        "RemoteSha": "0.9.17"
       }
     },
     "stringi": {
@@ -4670,45 +4421,6 @@
         "RemoteSha": "3.4.3"
       }
     },
-    "testthat": {
-      "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
-      "description": {
-        "Package": "testthat",
-        "Title": "Unit Testing for R",
-        "Version": "3.2.3",
-        "Authors@R": "c(\n    person(\"Hadley\", \"Wickham\", , \"hadley@posit.co\", role = c(\"aut\", \"cre\")),\n    person(\"Posit Software, PBC\", role = c(\"cph\", \"fnd\")),\n    person(\"R Core team\", role = \"ctb\",\n           comment = \"Implementation of utils::recover()\")\n  )",
-        "Description": "Software testing is important, but, in part because it is\n    frustrating and boring, many of us avoid it. 'testthat' is a testing\n    framework for R that is easy to learn and use, and integrates with\n    your existing 'workflow'.",
-        "License": "MIT + file LICENSE",
-        "URL": "https://testthat.r-lib.org, https://github.com/r-lib/testthat",
-        "BugReports": "https://github.com/r-lib/testthat/issues",
-        "Depends": "R (>= 3.6.0)",
-        "Imports": "brio (>= 1.1.3), callr (>= 3.7.3), cli (>= 3.6.1), desc (>=\n1.4.2), digest (>= 0.6.33), evaluate (>= 1.0.1), jsonlite (>=\n1.8.7), lifecycle (>= 1.0.3), magrittr (>= 2.0.3), methods,\npkgload (>= 1.3.2.1), praise (>= 1.0.0), processx (>= 3.8.2),\nps (>= 1.7.5), R6 (>= 2.5.1), rlang (>= 1.1.1), utils, waldo\n(>= 0.6.0), withr (>= 3.0.2)",
-        "Suggests": "covr, curl (>= 0.9.5), diffviewer (>= 0.1.0), knitr,\nrmarkdown, rstudioapi, S7, shiny, usethis, vctrs (>= 0.1.0),\nxml2",
-        "VignetteBuilder": "knitr",
-        "Config/Needs/website": "tidyverse/tidytemplate",
-        "Config/testthat/edition": "3",
-        "Config/testthat/parallel": "true",
-        "Config/testthat/start-first": "watcher, parallel*",
-        "Encoding": "UTF-8",
-        "RoxygenNote": "7.3.2",
-        "NeedsCompilation": "yes",
-        "Packaged": "2025-01-11 00:11:30 UTC; hadleywickham",
-        "Author": "Hadley Wickham [aut, cre],\n  Posit Software, PBC [cph, fnd],\n  R Core team [ctb] (Implementation of utils::recover())",
-        "Maintainer": "Hadley Wickham <hadley@posit.co>",
-        "Repository": "RSPM",
-        "Date/Publication": "2025-01-13 11:20:03 UTC",
-        "Built": "R 4.4.0; x86_64-pc-linux-gnu; 2026-01-29 00:24:44 UTC; unix",
-        "RemotePkgRef": "testthat@3.2.3",
-        "RemoteType": "standard",
-        "RemoteEtag": "\"73ebf2046a1cc0947c306e1929aad83a\"",
-        "RemotePackaged": "TRUE",
-        "RemoteRef": "testthat",
-        "RemoteRepos": "https://packagemanager.posit.co/cran/latest",
-        "RemotePkgPlatform": "source",
-        "RemoteSha": "3.2.3"
-      }
-    },
     "tibble": {
       "Source": "CRAN",
       "Repository": "https://packagemanager.posit.co/cran/latest",
@@ -4824,39 +4536,6 @@
         "RemoteRepos": "https://packagemanager.posit.co/cran/latest",
         "RemotePkgPlatform": "source",
         "RemoteSha": "1.2.1"
-      }
-    },
-    "timechange": {
-      "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
-      "description": {
-        "Package": "timechange",
-        "Title": "Efficient Manipulation of Date-Times",
-        "Version": "0.3.0",
-        "Authors@R": "c(person(\"Vitalie\", \"Spinu\", email = \"spinuvit@gmail.com\", role = c(\"aut\", \"cre\")),\n             person(\"Google Inc.\", role = c(\"ctb\", \"cph\")))",
-        "Description": "Efficient routines for manipulation of date-time objects while\n   accounting for time-zones and daylight saving times. The package includes\n   utilities for updating of date-time components (year, month, day etc.),\n   modification of time-zones, rounding of date-times, period addition and\n   subtraction etc. Parts of the 'CCTZ' source code, released under the Apache\n   2.0 License, are included in this package. See\n   <https://github.com/google/cctz> for more details.",
-        "Depends": "R (>= 3.3)",
-        "License": "GPL (>= 3)",
-        "Encoding": "UTF-8",
-        "LinkingTo": "cpp11 (>= 0.2.7)",
-        "Suggests": "testthat (>= 0.7.1.99), knitr",
-        "SystemRequirements": "A system with zoneinfo data (e.g.\n/usr/share/zoneinfo) as well as a recent-enough C++11 compiler\n(such as g++-4.8 or later). On Windows the zoneinfo included\nwith R is used.",
-        "BugReports": "https://github.com/vspinu/timechange/issues",
-        "URL": "https://github.com/vspinu/timechange/",
-        "RoxygenNote": "7.2.1",
-        "NeedsCompilation": "yes",
-        "Packaged": "2024-01-18 08:57:24 UTC; vspinu",
-        "Author": "Vitalie Spinu [aut, cre],\n  Google Inc. [ctb, cph]",
-        "Maintainer": "Vitalie Spinu <spinuvit@gmail.com>",
-        "Repository": "RSPM",
-        "Date/Publication": "2024-01-18 09:20:02 UTC",
-        "Built": "R 4.4.0; x86_64-pc-linux-gnu; 2026-01-29 00:23:22 UTC; unix",
-        "RemoteType": "standard",
-        "RemotePkgRef": "timechange",
-        "RemoteRef": "timechange",
-        "RemoteRepos": "https://packagemanager.posit.co/cran/latest",
-        "RemotePkgPlatform": "source",
-        "RemoteSha": "0.3.0"
       }
     },
     "timevis": {
@@ -5146,42 +4825,6 @@
         "RemoteSha": "1.6.5"
       }
     },
-    "waldo": {
-      "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
-      "description": {
-        "Package": "waldo",
-        "Title": "Find Differences Between R Objects",
-        "Version": "0.6.1",
-        "Authors@R": "c(\n    person(\"Hadley\", \"Wickham\", , \"hadley@posit.co\", role = c(\"aut\", \"cre\")),\n    person(\"Posit Software, PBC\", role = c(\"cph\", \"fnd\"))\n  )",
-        "Description": "Compare complex R objects and reveal the key differences.\n    Designed particularly for use in testing packages where being able to\n    quickly isolate key differences makes understanding test failures much\n    easier.",
-        "License": "MIT + file LICENSE",
-        "URL": "https://waldo.r-lib.org, https://github.com/r-lib/waldo",
-        "BugReports": "https://github.com/r-lib/waldo/issues",
-        "Depends": "R (>= 4.0)",
-        "Imports": "cli, diffobj (>= 0.3.4), glue, methods, rlang (>= 1.1.0)",
-        "Suggests": "bit64, R6, S7, testthat (>= 3.0.0), withr, xml2",
-        "Config/Needs/website": "tidyverse/tidytemplate",
-        "Config/testthat/edition": "3",
-        "Encoding": "UTF-8",
-        "RoxygenNote": "7.3.2",
-        "NeedsCompilation": "no",
-        "Packaged": "2024-11-07 15:32:32 UTC; hadleywickham",
-        "Author": "Hadley Wickham [aut, cre],\n  Posit Software, PBC [cph, fnd]",
-        "Maintainer": "Hadley Wickham <hadley@posit.co>",
-        "Repository": "RSPM",
-        "Date/Publication": "2024-11-07 20:50:01 UTC",
-        "Built": "R 4.4.0; ; 2026-01-29 00:24:12 UTC; unix",
-        "RemotePkgRef": "waldo@0.6.1",
-        "RemoteType": "standard",
-        "RemoteEtag": "\"e79577c73355a80aedfa32b5e0599f0f\"",
-        "RemotePackaged": "TRUE",
-        "RemoteRef": "waldo",
-        "RemoteRepos": "https://packagemanager.posit.co/cran/latest",
-        "RemotePkgPlatform": "source",
-        "RemoteSha": "0.6.1"
-      }
-    },
     "withr": {
       "Source": "CRAN",
       "Repository": "https://packagemanager.posit.co/cran/latest",
@@ -5293,40 +4936,6 @@
         "RemoteSha": "1.3.8"
       }
     },
-    "xopen": {
-      "Source": "CRAN",
-      "Repository": "https://packagemanager.posit.co/cran/latest",
-      "description": {
-        "Package": "xopen",
-        "Title": "Open System Files, 'URLs', Anything",
-        "Version": "1.0.1",
-        "Authors@R": "c(\n    person(\"Gábor\", \"Csárdi\", , \"csardi.gabor@gmail.com\", role = c(\"aut\", \"cre\")),\n    person(\"Fathi\", \"Boudra\", role = \"aut\"),\n    person(\"Rex\", \"Dieter\", role = \"aut\"),\n    person(\"Kevin\", \"Krammer\", role = \"aut\"),\n    person(\"Jeremy\", \"White\", role = \"aut\"),\n    person(\"Posit Software, PBC\", role = c(\"cph\", \"fnd\"))\n  )",
-        "Description": "Cross platform solution to open files, directories or 'URLs'\n    with their associated programs.",
-        "License": "MIT + file LICENSE",
-        "URL": "https://github.com/r-lib/xopen#readme,\nhttps://r-lib.github.io/xopen/",
-        "BugReports": "https://github.com/r-lib/xopen/issues",
-        "Depends": "R (>= 3.1)",
-        "Imports": "processx",
-        "Suggests": "ps, testthat (>= 3.0.0)",
-        "Config/Needs/website": "tidyverse/tidytemplate",
-        "Config/testthat/edition": "3",
-        "Encoding": "UTF-8",
-        "RoxygenNote": "7.2.3",
-        "NeedsCompilation": "no",
-        "Packaged": "2024-04-25 08:49:03 UTC; gaborcsardi",
-        "Author": "Gábor Csárdi [aut, cre],\n  Fathi Boudra [aut],\n  Rex Dieter [aut],\n  Kevin Krammer [aut],\n  Jeremy White [aut],\n  Posit Software, PBC [cph, fnd]",
-        "Maintainer": "Gábor Csárdi <csardi.gabor@gmail.com>",
-        "Repository": "RSPM",
-        "Date/Publication": "2024-04-25 09:10:02 UTC",
-        "Built": "R 4.4.0; ; 2026-01-29 00:23:14 UTC; unix",
-        "RemoteType": "standard",
-        "RemotePkgRef": "xopen",
-        "RemoteRef": "xopen",
-        "RemoteRepos": "https://packagemanager.posit.co/cran/latest",
-        "RemotePkgPlatform": "source",
-        "RemoteSha": "1.0.1"
-      }
-    },
     "xtable": {
       "Source": "CRAN",
       "Repository": "https://packagemanager.posit.co/cran/latest",
@@ -5415,10 +5024,10 @@
       "checksum": "4c559d4829f2c35e791a5db2281d2c21"
     },
     ".Rbuildignore": {
-      "checksum": "be3db2fc34d8f95c3b20bc6fa6c69ddf"
+      "checksum": "099628a5fd7d45cf3e88dfcae385393e"
     },
     ".Rprofile": {
-      "checksum": "61aaf9699e6c4d3c12f390d47ad28057"
+      "checksum": "d0578fd29879cd0233ca58afeea3276e"
     },
     "app.R": {
       "checksum": "839175779c29638e3a8a3e09ddb59a7a"
@@ -5463,7 +5072,7 @@
       "checksum": "3115c7acf0811519c30b7ba7c97bec8d"
     },
     "data-raw/internal-data.R": {
-      "checksum": "4fe0e45093c82b275b7d835be901a889"
+      "checksum": "2ad7cfcd4fa8f1723a4b890b3064a9cc"
     },
     "data/adae.rda": {
       "checksum": "0595055183f96254824660d9d6e476c1"
@@ -5487,7 +5096,7 @@
       "checksum": "ff7c20bfbd281d79cfb8d038d45eafaf"
     },
     "DESCRIPTION": {
-      "checksum": "5d601b41a18e30883d76586d36c777f6"
+      "checksum": "0a795705a0afaf9fac74b9af92ba5362"
     },
     "dev/01_start.R": {
       "checksum": "e9bef12080fe566347b271f64e90cad6"
@@ -5502,7 +5111,7 @@
       "checksum": "08d70faa4bd5ac1bdf523757e0796b07"
     },
     "dev/renv_setup.R": {
-      "checksum": "dd6924f6803443b7a1794bf9d9a06b83"
+      "checksum": "7ff6864366fbec347c922e4281432c47"
     },
     "dev/run_dev.R": {
       "checksum": "c91e025a750534fe625ce6b799cf47cb"
@@ -5565,7 +5174,7 @@
       "checksum": "f6923ef4c02d4d68cb95bdf2ebd076ce"
     },
     "inst/WORDLIST": {
-      "checksum": "df9db1fa2bf2173bbf606e1cfe63feee"
+      "checksum": "ac11c8a38cd26d0e3feadd3ab4ba526a"
     },
     "LICENSE.md": {
       "checksum": "fb01625ef01973490bcf4efb9ade23ae"
@@ -5599,9 +5208,6 @@
     },
     "man/data_to_use_str.Rd": {
       "checksum": "b76c2e746ee502d0ffaa69f5bd4446d8"
-    },
-    "man/error_handler.Rd": {
-      "checksum": "fa60343014c90cd48f2beb049260cffa"
     },
     "man/example_dat1.Rd": {
       "checksum": "efb355159f80d0e15d1a349cbdd29362"
@@ -5679,10 +5285,10 @@
       "checksum": "1caad9e36c4cd492af353079068aa69d"
     },
     "NAMESPACE": {
-      "checksum": "790e80b7db6c01a2ed47af98acf1964a"
+      "checksum": "0267a599f2bedc32d7e772b6c6dfcb4b"
     },
     "NEWS.md": {
-      "checksum": "eee6e4b0ee1f6d62bd01756d55191c4c"
+      "checksum": "21e0a81e30c07f8434863e1f0ccbc200"
     },
     "R/_disable_autoload.R": {
       "checksum": "1178c335d6c11555fd1c4ec6098dfee6"
@@ -5847,13 +5453,13 @@
       "checksum": "fcee412ca388e3b87e786f4f9ed1bf7b"
     },
     "R/sysdata.rda": {
-      "checksum": "ea494b5c4b1d2691617bf7221c5c63e9"
+      "checksum": "df42104adf43f99bcd54b9ddf1c15e2c"
     },
     "R/utils_adam.R": {
       "checksum": "13a134bef3bc73d65cfbf2f3a14d10a5"
     },
     "R/utils_helpers.R": {
-      "checksum": "798e0f353fc00b91764f0de850fd11bb"
+      "checksum": "4c47b1daea4b3800941b1f9c01467176"
     },
     "R/utils_read_data.R": {
       "checksum": "666b2c7da8d4d95d5ca27f792298a975"
@@ -5874,7 +5480,7 @@
       "checksum": "979f2bc3fc477501565a3d52cb4038a6"
     },
     "renv.lock": {
-      "checksum": "9a1bd473a1c0c59bb92ee63afac9e55f"
+      "checksum": "a4edb4214e400fa55e4840e2f6e75c08"
     },
     "revdep/email.yml": {
       "checksum": "34952a5944548ea4fc132a9899f8e6ab"

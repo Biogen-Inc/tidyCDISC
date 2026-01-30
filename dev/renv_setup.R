@@ -1,9 +1,9 @@
 # Fix renv
-Sys.setenv(RENV_CONFIG_PAK_ENABLED=TRUE)
-Sys.setenv(RENV_CONFIG_PPM_ENABLED=TRUE)
+Sys.setenv(RENV_CONFIG_PAK_ENABLED = TRUE)
+Sys.setenv(RENV_CONFIG_PPM_ENABLED = TRUE)
 
-Sys.setenv(RENV_CONFIG_PAK_ENABLED=FALSE)
-Sys.setenv(RENV_CONFIG_PPM_ENABLED=FALSE)
+Sys.setenv(RENV_CONFIG_PAK_ENABLED = FALSE)
+Sys.setenv(RENV_CONFIG_PPM_ENABLED = FALSE)
 
 renv::init()
 renv::update()
@@ -26,6 +26,7 @@ usethis::use_package("vroom")
 usethis::use_package("tidyselect")
 # usethis::use_package("arcusTStidy")
 usethis::use_package("tibble")
+usethis::use_package("stringdist")
 
 
 renv::snapshot(type = "explicit")
