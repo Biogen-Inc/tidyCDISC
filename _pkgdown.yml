@@ -2,11 +2,6 @@ articles:
 - title: Getting Started
   contents:
   - tidyCDISC
-- title: Blog Posts
-  navbar: ~
-  desc: News and Announcements
-  contents:
-  - Blog
 - title: User Guides
   navbar: User Guides
   desc: Step-by-step tutorials for each module in the application

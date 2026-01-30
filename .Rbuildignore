@@ -31,3 +31,4 @@ vignettes/x0*
 ^scripts$
 \.sass$
 manifest.json
+^\.posit$
