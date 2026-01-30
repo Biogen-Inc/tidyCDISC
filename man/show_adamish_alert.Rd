@@ -14,3 +14,4 @@ show_adamish_alert(validation, session)
 \description{
 Display a shinyalert-style popup based on the results of `validate_adamish()`
 }
+\keyword{internal}

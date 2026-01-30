@@ -6,9 +6,8 @@
 #' @param df A data.frame to evaluate.
 #'
 #' @return A character string fo the most likely domain name (e.g., "ADLB"), or NULL.
-#' @export
+#' @keywords internal
 suggest_adam_domain <- function(df) {
-
   scores <- purrr::map_int(adam_requirements, \(def) {
     sum(def$required %in% names(df))
   })
@@ -36,9 +35,8 @@ suggest_adam_domain <- function(df) {
 #' - `missing_recommended`: character vector
 #' - `error`: character or NULL
 #'
-#' @export
+#' @keywords internal
 validate_adamish <- function(df, domain = NULL) {
-
   if (is.null(domain)) {
     domain <- suggest_adam_domain(df)
   }
@@ -89,7 +87,7 @@ validate_adamish <- function(df, domain = NULL) {
 #' @param input_ids A named list of input IDs corresponding to ADaM variable names (optional)
 #'
 #' @returns A named list with best-guess mappings for missing variables
-#' @export
+#' @keywords internal
 suggest_adam_column_mapping <- function(
   df,
   validation,
@@ -203,7 +201,7 @@ suggest_adam_column_mapping <- function(
 #'
 #' @param validation A list returned from `validate_adamish()`
 #' @param session The Shiny session (typically `session` from server)
-#' @export
+#' @keywords internal
 show_adamish_alert <- function(validation, session) {
   rlang::check_installed("shinyalert", reason = "to use this function.")
 

@@ -29,3 +29,4 @@ A named list with best-guess mappings for missing variables
 \description{
 Based on validation results, attempt to suggest which columns to rename to standard ADaM variable names.
 }
+\keyword{internal}

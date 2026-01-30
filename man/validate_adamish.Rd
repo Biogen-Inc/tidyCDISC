@@ -23,3 +23,4 @@ A list with:
 Validates that a dataset conforms to required variables for a given ADaM domain.
 If no domain is supplied, it will attempt to infer one based on variable names.
 }
+\keyword{internal}

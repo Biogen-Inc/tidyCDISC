@@ -16,3 +16,4 @@ A character string fo the most likely domain name (e.g., "ADLB"), or NULL.
 Heuristically suggests the most likely ADaM domain for a dataset
 based on the presence of required variables.
 }
+\keyword{internal}
