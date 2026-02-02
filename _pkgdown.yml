@@ -2,11 +2,14 @@ articles:
 - title: Getting Started
   contents:
   - tidyCDISC
+  - getting_started
 - title: Blog Posts
   navbar: ~
   desc: News and Announcements
   contents:
   - Blog
+  - announcing-tidycdisc-0-0-1-1
+  - announcing-tidycdisc-0-2-1
 - title: User Guides
   navbar: User Guides
   desc: Step-by-step tutorials for each module in the application

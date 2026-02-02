@@ -24,8 +24,10 @@ jobs:
           use-public-rspm: true
 
       - uses: r-lib/actions/setup-renv@v2
-        with:
-          extra-packages: covr
+
+      - name: Install dev dependencies
+        run: install.packages(c("devtools", "covr"))
+        shell: Rscript {0}
           
       - name: Install tidyCDISC
         shell: bash

@@ -41,7 +41,8 @@ mod_dataUpload_ui <- function(id){
                div(style="display: inline-block; ",h3("Data upload")),
                div(style="display: inline-block; float:right;",mod_dataComplyRules_ui("dataComplyRules_ui_1")),
                HTML("<br>ADSL file is mandatory & BDS/ OCCDS files are optional"),
-               fileInput(ns("file"), "Upload sas7bdat files",accept = c(".sas7bdat"), multiple = TRUE),
+              #  fileInput(ns("file"), "Upload sas7bdat files",accept = c(".sas7bdat"), multiple = TRUE),
+              fileInput(ns("file"), "Upload datasets", accept = c(".txt", ".csv", ".xls", ".xlsx", ".sas7bdat"), multiple = TRUE),
                uiOutput(ns("radio_test"))
              )
       ),
@@ -91,18 +92,25 @@ mod_dataUpload_server <- function(input, output, session){
     data_list <- list()
     
     ## data list
-    for (i in 1:nrow(input$file)){
-      if(length(grep(".sas7bdat", input$file$name[i], ignore.case = TRUE)) > 0){
-        data_list[[i]] <- haven::zap_formats(haven::read_sas(input$file$datapath[i])) %>%
-          dplyr::mutate(dplyr::across(.cols = where(is.character),
-                               .fns = na_if, y = ""))
-      }else{
-        data_list[[i]] <- NULL
-      }
-    }
+    # for (i in 1:nrow(input$file)){
+    #   if(length(grep(".sas7bdat", input$file$name[i], ignore.case = TRUE)) > 0){
+    #     data_list[[i]] <- haven::zap_formats(haven::read_sas(input$file$datapath[i])) %>%
+    #       dplyr::mutate(dplyr::across(.cols = where(is.character),
+    #                            .fns = na_if, y = ""))
+    #   }else{
+    #     data_list[[i]] <- NULL
+    #   }
+    # }
+
+    data_list <- input$file$datapath |> 
+      purrr::map(\(x) {
+        read_data(x)
+      }) |> 
+      purrr::set_names(toupper(tools::file_path_sans_ext(input$file$name)))
+
     
     # names
-    names(data_list) <- toupper(stringr::str_remove(input$file$name, ".sas7bdat"))
+    # names(data_list) <- toupper(stringr::str_remove(input$file$name, ".sas7bdat"))
     
     
     
@@ -111,11 +119,19 @@ mod_dataUpload_server <- function(input, output, session){
                              id = NULL, #"dataComply_ui_1", 
                              datalist = reactive(data_list))
     
-    if(length(names(dl_comply)) > 0){
-      # append to existing reactiveValues list
-      dd$data <-  c(dd$data, dl_comply) # dl_comply #
+    # if(length(names(dl_comply)) > 0){
+    #   # append to existing reactiveValues list
+    #   dd$data <-  c(dd$data, dl_comply) # dl_comply #
       
+    # }
+    if(length(names(dl_comply)) > 0){
+      # Normalize ADaM dataset names based on domain validation
+      dl_normalized <- normalize_adam_datasets(dl_comply)
+      
+      # append to existing reactiveValues list
+      dd$data <-  c(dd$data, dl_normalized)
     }
+
     
     # set dd$current to FALSE for previous & TRUE for current uploads
     dd$current <- c(rep(FALSE, length(dd$current)), rep(TRUE, length(data_list)))

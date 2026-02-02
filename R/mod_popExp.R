@@ -46,7 +46,15 @@ mod_popExp_server <- function(input, output, session, datafile) {
     req(!is.null(datafile()))
     
     # wait until ADSL has been selected
-    req("ADSL" %in% names(datafile()) )
+    adsl_datasets <- names(datafile())[sapply(names(datafile()), \(name) {
+      validation <- validate_adamish(datafile()[[name]])
+      return(validation$domain == "ADSL")
+    })]
+
+    req(length(adsl_datasets) > 0)
+    adsl_name <- adsl_datasets[1]
+    
+    # req("ADSL" %in% names(datafile()) )
     
     #####################################################################    
     # The data used by the population explorer is going to be one of:
@@ -56,13 +64,18 @@ mod_popExp_server <- function(input, output, session, datafile) {
     ######################################################################
 
     # Isolate ADSL 
-    if ("ADSL" %in% names(datafile())) {
-      ADSL <- datafile()$ADSL %>%
+    # if ("ADSL" %in% names(datafile())) {
+    #   ADSL <- datafile()$ADSL %>%
+    #     haven::zap_formats()
+    # }
+    if (length(adsl_datasets) > 0) {
+      ADSL <- datafile()[[adsl_name]] |> 
         haven::zap_formats()
     }
     
     # split the non-ADSL data into those which have a USUBJID or not
-    NOTADSL <- datafile()[names(datafile()) != "ADSL" ]
+    # NOTADSL <- datafile()[names(datafile()) != "ADSL" ]
+    NOTADSL <- datafile()[!names(datafile()) %in% adsl_datasets]
     if (!rlang::is_empty(NOTADSL)) {
       
       # zap formats
@@ -138,7 +151,15 @@ mod_popExp_server <- function(input, output, session, datafile) {
   my_loaded_adams <- reactive({
     req(!is.null(datafile()))
     sasdata0 <- toupper(names(datafile()))
-    sasdata <- names(which(sapply(sasdata0,function(df) { return(stringr::str_detect(toupper(df),"^AD[A-Z0-9\\_]+")) })))
+    sasdata <- names(
+      which(
+        sapply(
+          sasdata0, function(df) { 
+            return(stringr::str_detect(toupper(df),"^AD")) 
+          })
+        )
+      )
+    
     return(sasdata)
   })
   
@@ -151,7 +172,14 @@ mod_popExp_server <- function(input, output, session, datafile) {
   observeEvent(my_loaded_adams(), {
     # req(any(substr(my_loaded_adams(), 1, 4) == "ADTT"))
     # adtt_ <- my_loaded_adams()[substr(my_loaded_adams(), 1, 4) == "ADTT"]
-    req(any(purrr::map_lgl(my_loaded_adams(), ~ "CNSR" %in% colnames(datafile()[[.x]]))))
+    # req(any(purrr::map_lgl(my_loaded_adams(), ~ "CNSR" %in% colnames(datafile()[[.x]]))))
+    tte_datasets <- names(datafile())[sapply(names(datafile()), \(name) {
+      validation <- validate_adamish(datafile()[[name]])
+      return(validation$domain == "ADTTE" || "CNSR" %in% names(datafile()[[name]]))
+    })]
+    
+    req(length(tte_datasets) > 0)
+    
     updateRadioButtons(session, "plot_type",
                        choices = c("Kaplan-Meier Curve",
                                    "Line plot - mean over time",
@@ -272,7 +300,9 @@ mod_popExp_server <- function(input, output, session, datafile) {
   
 
   # use plot output of the module to create the plot 
-  output$plot_output <- renderPlotly({
+  # Interactive plotly plot
+  output$plot_output_plotly <- renderPlotly({
+      req(input$plot_type != "Kaplan-Meier Curve")
         switch(input$plot_type,
          `Scatter Plot` = p_scatter() %>% plotly::ggplotly() %>%
            plotly::layout(title = list(yref = "container", y = .95, yanchor = "bottom")),
@@ -281,20 +311,162 @@ mod_popExp_server <- function(input, output, session, datafile) {
          `Line plot - mean over time` = p_line$plot() %>%
            plotly::ggplotly(tooltip = c("text")) %>%
            plotly::layout(title = list(yref = "container", y = .95, yanchor = "bottom")),
-         `Heatmap - endpoint correlations` = p_heatmap$plot() %>% plotly::ggplotly(tooltip = c("text"))
-         , `Kaplan-Meier Curve` = p_km() %>% plotly::ggplotly()
+         `Heatmap - endpoint correlations` = p_heatmap$plot() %>% plotly::ggplotly(tooltip = c("text"))#,
+         #`Kaplan-Meier Curve` = p_km() %>% plotly::ggplotly(),
+
         ) %>%
-          config(displaylogo = FALSE, 
-                modeBarButtonsToRemove = 
-                  c("zoom2d", "pan2d", "select2d", "lasso2d", "zoomIn2d", "zoomOut2d", "autoScale2d", "resetScale2d",
-                    "hoverClosestCartesian", "hoverCompareCartesian", "zoom3d", "pan3d",
-                     "resetCameraDefault3d", "resetCameraLastSave3d", "hoverClosest3d",
-                    "orbitRotation", "tableRotation", "zoomInGeo", "zoomOutGeo",
-                     "resetGeo", "hoverClosestGeo", "sendDataToCloud","hoverClosestGl2d",
-                    "hoverClosestPie", "toggleHover","resetViews","toggleSpikelines","resetViewMapbox"
-                  # , 'toImage', 'resetScale2d', 'zoomIn2d', 'zoomOut2d','zoom2d', 'pan2d'
-                )
+          config(
+            displaylogo = FALSE,
+            modeBarButtons = list(
+              list("zoom2d"),
+              list("pan2d"),
+              list("toImage")
+            ),
+            toImageButtonOptions = list(
+              format = c("png"),
+              filename = glue::glue("{input$plot_type}_{Sys.Date()}"),
+              width = 1200,
+              height = 800,
+              scale = 2
+            )
           )
+  })
+
+  # Static plots, for ggsurvfit KM plot
+
+  km_result <- reactive({
+    req(input$plot_type == "Kaplan-Meier Curve")
+    p_km()
+  }) 
+  
+  output$plot_output_gg <- renderPlot({
+    km_result()$plot_km
+  })
+  
+  # KM Estimated Median Time table
+  output$km_median_table <- gt::render_gt({
+    df <- km_result()$table_median
+
+    time_cols <- setdiff(names(df), "Strata")
+
+    df |> 
+      gt::gt() |> 
+      gt::tab_options(
+        table.width = gt::px(700),
+        table.font.size = "small"
+      ) |> 
+      gt::cols_label(Strata = "Group") |> 
+      gt::fmt_missing(
+        missing_text = "-"
+      ) |> 
+      gt::cols_align(
+        align = "center",
+        columns = time_cols
+      ) |> 
+      gt::fmt_markdown(columns = everything()) |> 
+      gt::tab_style(
+        locations = list(
+          gt::cells_column_labels(columns = everything()),
+          gt::cells_column_spanners(spanners = everything())
+        ),
+        style = list(
+          gt::cell_borders(sides = "bottom", weight = gt::px(1)),
+          gt::cell_text(weight = "bold")
+        )
+      )
+  })
+
+  # Cox Table
+   output$km_cox_table <- gt::render_gt({
+    df <- km_result()$table_cox
+    if (!rlang::is_null(df)) {
+
+      df <- gtsummary::as_gt(df) |> 
+        gt::cols_hide(columns = c("p.value")) |> 
+        gt::tab_options(
+          table.width = gt::px(700),
+          table.font.size = "small"
+        ) |> 
+        gt::fmt_missing(
+          missing_text = "-"
+        ) |> 
+        gt::cols_align(
+          align = "center",
+          columns = !label
+        ) |> 
+        # gt::fmt_markdown(columns = everything()) |> 
+        gt::tab_style(
+          locations = list(
+            gt::cells_column_labels(columns = everything()),
+            gt::cells_column_spanners(spanners = everything())
+          ),
+          style = list(
+            gt::cell_borders(sides = "bottom", weight = gt::px(1)),
+            gt::cell_text(weight = "bold")
+          )
+        )
+       
+      return(df)
+    }
+
+   })
+  
+    # KM Estimated Survival probability table
+    output$km_est_table <- gt::render_gt({
+    df <- km_result()$table_est
+    
+    time_cols <- setdiff(names(df), "Strata")
+
+    df |> 
+      gt::gt() |> 
+      gt::tab_options(
+        table.width = gt::px(700),
+        table.font.size = "small"
+      ) |> 
+      gt::tab_spanner(
+        label = ("Time"),
+        columns = time_cols
+      ) |> 
+      gt::cols_label(Strata = "Group") |> 
+      gt::fmt_missing(
+        missing_text = "-"
+      ) |> 
+      gt::cols_align(
+        align = "center",
+        columns = time_cols
+      ) |> 
+      gt::fmt_markdown(columns = everything()) |> 
+      gt::tab_style(
+        locations = list(
+          gt::cells_column_labels(columns = everything()),
+          gt::cells_column_spanners(spanners = everything())
+        ),
+        style = list(
+          gt::cell_borders(sides = "bottom", weight = gt::px(1)),
+          gt::cell_text(weight = "bold")
+        )
+      )
+  })
+  
+  # Dynamic UI for plots
+  output$dynamic_plot_ui <- renderUI({
+    if (input$plot_type == "Kaplan-Meier Curve") {
+      req(km_result())
+
+      tagList(
+        plotOutput(ns("plot_output_gg"), height = 700),
+        tags$br(),
+        tags$h4("Estimated Survival Probability (95% CI) over Time"),
+        gt::gt_output(ns("km_est_table")),
+        tags$br(),
+        tags$h4("Median Survival Time (95% CI)"),
+        gt::gt_output(ns("km_median_table")),
+        tags$h4("Hazard Ratios (95% CI)"),
+        gt::gt_output(ns("km_cox_table"))
+      )
+    } else {
+      plotlyOutput(ns("plot_output_plotly"), height = 700)
+    }
   })
   
   # Output text string of what was filtered in IDEAFilter widget/ module

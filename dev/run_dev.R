@@ -1,5 +1,9 @@
 # Sass code compilation
-sass::sass(input = sass::sass_file("inst/app/www/timevis.sass"), output = "inst/app/www/timevis.css", cache = NULL)
+sass::sass(
+  input = sass::sass_file("inst/app/www/timevis.sass"),
+  output = "inst/app/www/timevis.css",
+  cache = NULL
+)
 
 # Set options here
 options(golem.app.prod = FALSE) # TRUE = production mode, FALSE = development mode
@@ -12,11 +16,16 @@ golem::detach_all_attached()
 # Document and reload your package, which runs these three functions...
 golem::document_and_reload()
 
-# Run the application 
-run_app()
+# Run the application
+run_app(launch.browser = TRUE)
 
 # # turn off any options
 # options(shiny.autoload.r=NULL)
 
-
-
+# options(shiny.logLevel = "trace")
+# Profile
+# profvis::profvis({
+#   print(
+#     run_app(launch.browser = TRUE)
+#   )
+# })

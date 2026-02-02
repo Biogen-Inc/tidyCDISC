@@ -81,7 +81,8 @@ mod_popExp_ui <- function(id, label = "Population Explorer"){
            column(width = 9,
                     div(id = "pop_cic_plot", 
                       wellPanel(
-                        plotlyOutput(ns("plot_output"), height = 700),
+                        #plotlyOutput(ns("plot_output_plotly"), height = 700),
+                        uiOutput(ns("dynamic_plot_ui")),
                         div(style = "color: #0275d8; font-size: 12px;", htmlOutput(ns("applied_filters")))
                         , br(), br()
                         ,DT::dataTableOutput(ns("plot_data"))

@@ -30,3 +30,5 @@ vignettes/x0*
 ^CRAN-SUBMISSION$
 ^scripts$
 \.sass$
+manifest.json
+^\.posit$

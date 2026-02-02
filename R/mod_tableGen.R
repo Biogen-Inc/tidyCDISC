@@ -117,7 +117,7 @@ mod_tableGen_server <- function(input, output, session, datafile = reactive(NULL
   my_loaded_adams <- reactive({
     req(!is.null(datafile()))
     sasdata0 <- toupper(names(datafile()))
-    sasdata <- names(which(sapply(sasdata0,function(df) { return(stringr::str_detect(toupper(df),"^AD[A-Z0-9\\_]+")) })))
+    sasdata <- names(which(sapply(sasdata0,function(df) { return(stringr::str_detect(toupper(df),"^AD")) })))
     return(sasdata)
   })
   
