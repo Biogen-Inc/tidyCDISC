@@ -1,4 +1,4 @@
-# tidyCDISC (development version)
+# tidyCDISC 0.2.2
 
 * Update wordlist
 * Add Ryan Harrison as author
