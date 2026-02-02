@@ -1,129 +1,49 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>/404.html</loc>
-  </url>
-  <url>
-    <loc>/CODE_OF_CONDUCT.html</loc>
-  </url>
-  <url>
-    <loc>/LICENSE.html</loc>
-  </url>
-  <url>
-    <loc>/articles/Blog.html</loc>
-  </url>
-  <url>
-    <loc>/articles/announcing-tidycdisc-0-0-1-1.html</loc>
-  </url>
-  <url>
-    <loc>/articles/announcing-tidycdisc-0-2-1.html</loc>
-  </url>
-  <url>
-    <loc>/articles/dev01_Table_Gen.html</loc>
-  </url>
-  <url>
-    <loc>/articles/dev02_Pop_Exp.html</loc>
-  </url>
-  <url>
-    <loc>/articles/dev03_Indv_Expl.html</loc>
-  </url>
-  <url>
-    <loc>/articles/getting_started.html</loc>
-  </url>
-  <url>
-    <loc>/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>/articles/tidyCDISC.html</loc>
-  </url>
-  <url>
-    <loc>/articles/x00_Data_Upload.html</loc>
-  </url>
-  <url>
-    <loc>/articles/x01_Table_Generator.html</loc>
-  </url>
-  <url>
-    <loc>/articles/x02_Pop_Exp.html</loc>
-  </url>
-  <url>
-    <loc>/articles/x03_Indv_Expl.html</loc>
-  </url>
-  <url>
-    <loc>/articles/x04_Filtering.html</loc>
-  </url>
-  <url>
-    <loc>/authors.html</loc>
-  </url>
-  <url>
-    <loc>/index.html</loc>
-  </url>
-  <url>
-    <loc>/news/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/adae.html</loc>
-  </url>
-  <url>
-    <loc>/reference/adlbc.html</loc>
-  </url>
-  <url>
-    <loc>/reference/adsl.html</loc>
-  </url>
-  <url>
-    <loc>/reference/adtte.html</loc>
-  </url>
-  <url>
-    <loc>/reference/advs.html</loc>
-  </url>
-  <url>
-    <loc>/reference/app_methods.html</loc>
-  </url>
-  <url>
-    <loc>/reference/col_for_list_expr.html</loc>
-  </url>
-  <url>
-    <loc>/reference/common_rownames.html</loc>
-  </url>
-  <url>
-    <loc>/reference/data_to_filter.html</loc>
-  </url>
-  <url>
-    <loc>/reference/data_to_use_str.html</loc>
-  </url>
-  <url>
-    <loc>/reference/example_dat1.html</loc>
-  </url>
-  <url>
-    <loc>/reference/example_dat2.html</loc>
-  </url>
-  <url>
-    <loc>/reference/get_levels.html</loc>
-  </url>
-  <url>
-    <loc>/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/prep_adae.html</loc>
-  </url>
-  <url>
-    <loc>/reference/prep_adsl.html</loc>
-  </url>
-  <url>
-    <loc>/reference/prep_bds.html</loc>
-  </url>
-  <url>
-    <loc>/reference/pretty_IDs.html</loc>
-  </url>
-  <url>
-    <loc>/reference/run_app.html</loc>
-  </url>
-  <url>
-    <loc>/reference/std_footnote.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tg_gt.html</loc>
-  </url>
-  <url>
-    <loc>/reference/varN_fctr_reorder.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>/404.html</loc></url>
+<url><loc>/CODE_OF_CONDUCT.html</loc></url>
+<url><loc>/LICENSE.html</loc></url>
+<url><loc>/articles/Blog.html</loc></url>
+<url><loc>/articles/announcing-tidycdisc-0-0-1-1.html</loc></url>
+<url><loc>/articles/announcing-tidycdisc-0-2-1.html</loc></url>
+<url><loc>/articles/dev01_Table_Gen.html</loc></url>
+<url><loc>/articles/dev02_Pop_Exp.html</loc></url>
+<url><loc>/articles/dev03_Indv_Expl.html</loc></url>
+<url><loc>/articles/getting_started.html</loc></url>
+<url><loc>/articles/index.html</loc></url>
+<url><loc>/articles/tidyCDISC.html</loc></url>
+<url><loc>/articles/x00_Data_Upload.html</loc></url>
+<url><loc>/articles/x01_Table_Generator.html</loc></url>
+<url><loc>/articles/x02_Pop_Exp.html</loc></url>
+<url><loc>/articles/x03_Indv_Expl.html</loc></url>
+<url><loc>/articles/x04_Filtering.html</loc></url>
+<url><loc>/authors.html</loc></url>
+<url><loc>/index.html</loc></url>
+<url><loc>/news/index.html</loc></url>
+<url><loc>/reference/adae.html</loc></url>
+<url><loc>/reference/adlbc.html</loc></url>
+<url><loc>/reference/adsl.html</loc></url>
+<url><loc>/reference/adtte.html</loc></url>
+<url><loc>/reference/advs.html</loc></url>
+<url><loc>/reference/app_methods.html</loc></url>
+<url><loc>/reference/col_for_list_expr.html</loc></url>
+<url><loc>/reference/common_rownames.html</loc></url>
+<url><loc>/reference/data_to_filter.html</loc></url>
+<url><loc>/reference/data_to_use_str.html</loc></url>
+<url><loc>/reference/example_dat1.html</loc></url>
+<url><loc>/reference/example_dat2.html</loc></url>
+<url><loc>/reference/get_levels.html</loc></url>
+<url><loc>/reference/index.html</loc></url>
+<url><loc>/reference/prep_adae.html</loc></url>
+<url><loc>/reference/prep_adsl.html</loc></url>
+<url><loc>/reference/prep_bds.html</loc></url>
+<url><loc>/reference/pretty_IDs.html</loc></url>
+<url><loc>/reference/run_app.html</loc></url>
+<url><loc>/reference/show_adamish_alert.html</loc></url>
+<url><loc>/reference/std_footnote.html</loc></url>
+<url><loc>/reference/suggest_adam_column_mapping.html</loc></url>
+<url><loc>/reference/suggest_adam_domain.html</loc></url>
+<url><loc>/reference/tg_gt.html</loc></url>
+<url><loc>/reference/validate_adamish.html</loc></url>
+<url><loc>/reference/varN_fctr_reorder.html</loc></url>
 </urlset>
+

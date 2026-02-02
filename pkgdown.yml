@@ -1,10 +1,10 @@
-pandoc: 2.19.2
-pkgdown: 2.0.3
+pandoc: 3.1.11
+pkgdown: 2.2.0
 pkgdown_sha: ~
 articles:
-  Blog: Blog.html
   announcing-tidycdisc-0-0-1-1: announcing-tidycdisc-0-0-1-1.html
   announcing-tidycdisc-0-2-1: announcing-tidycdisc-0-2-1.html
+  Blog: Blog.html
   dev01_Table_Gen: dev01_Table_Gen.html
   dev02_Pop_Exp: dev02_Pop_Exp.html
   dev03_Indv_Expl: dev03_Indv_Expl.html
@@ -15,5 +15,4 @@ articles:
   x02_Pop_Exp: x02_Pop_Exp.html
   x03_Indv_Expl: x03_Indv_Expl.html
   x04_Filtering: x04_Filtering.html
-last_built: 2023-04-20T17:55Z
-
+last_built: 2026-02-02T16:41Z
