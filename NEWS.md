@@ -1,17 +1,17 @@
 # tidyCDISC 0.2.2
 
-* Update wordlist
-* Add Ryan Harrison as author
-
-### Population Explorer
-* Refactor KM plots from plotly to ggsurvfit
-* Add estimated median table to KM plot
-* Add estimate survival probabilities table to KM plot
-* Add time-axis ticks configuration to KM plot
-* Enable multiple groups to KM plot
-* Add Cox PH Hazard Ratios table to KM plot
+### General
 * Add ADaM validation functions
 * Allow more input file types: csv, parquet, txt, xls, xlsx
+* Add Ryan Harrison as author
+
+### Population Explorer - KM plots
+* Refactor from plotly to ggsurvfit
+* Add estimated median table
+* Add estimate survival probabilities table
+* Add time-axis ticks configuration
+* Enable multiple groups
+* Add Cox PH Hazard Ratios table
 
 # tidyCDISC 0.2.1 (CRAN Release)
 
