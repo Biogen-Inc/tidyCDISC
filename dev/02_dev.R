@@ -274,11 +274,42 @@ urlchecker::url_update()
 
 # check on other distributions
 # _rhub
-first_chk <- devtools::check_rhub()
-cran_chk <- rhub::check_for_cran(check_args = c("--as-cran"))
 
-rhub::check_on_windows(check_args = "--force-multiarch")
-rhub::check_on_solaris()
+# Deprecated:
+# first_chk <- devtools::check_rhub()
+# cran_chk <- rhub::check_for_cran(check_args = c("--as-cran"))
+# rhub::check_on_windows(check_args = "--force-multiarch")
+# rhub::check_on_solaris()
+
+# rhubv2!
+# rhub::rhub_setup()
+# rhub::rhub_doctor()
+rhub::rhub_check() # select linux, macos, and windows
+
+
+# reduce file size of images
+utils::install.packages("imager")
+library(imager)
+
+# Load the image
+image_name <- "./vignettes/cran_figures/t_disp_red.PNG"
+image_name <- "./vignettes/cran_figures/quick_upload_then_tg_tidyCDISC_red.PNG"
+image_name <- "./vignettes/cran_figures/t_disp.PNG"
+image_name <- "./vignettes/cran_figures/line_plot_mean_over_time_breakdown.PNG"
+image_name <- "./vignettes/cran_figures/line_plot_mean_over_time_tidyCDISC.PNG"
+image_name <- "./vignettes/cran_figures/04-diabp_mean.jpeg"
+image_name <- "./vignettes/cran_figures/03-age_mean.PNG"
+image_name <- "./vignettes/cran_figures/drill_down_events.PNG"
+image_name <- "./vignettes/cran_figures/drill_down_visits.PNG"
+
+my_img <- load.image(image_name)
+
+# Save as JPEG (specify quality for JPEG compression)
+save.image(my_img, gsub("PNG", "jpeg", image_name), quality = 0.25) # Quality is a value between 0 and 1
+
+
+
+
 # _win devel
 devtools::check_win_devel()
 

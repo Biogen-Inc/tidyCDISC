@@ -68,7 +68,7 @@ Our first stop will be the table generator!
 <br>
 
 ```{r, echo=FALSE, out.width="95%", fig.align = 'center'}
-knitr::include_graphics("cran_figures/quick_upload_then_tg_tidyCDISC_red.PNG")
+knitr::include_graphics("cran_figures/quick_upload_then_tg_tidyCDISC_red.jpeg")
 ```
 
 <br>
@@ -111,7 +111,7 @@ In order to build a table, we need only drag a variable block to the "Variable" 
 <br>
 
 ```{r, echo=FALSE, out.width="95%", fig.align = 'center'}
-knitr::include_graphics("cran_figures/03-age_mean.PNG")
+knitr::include_graphics("cran_figures/03-age_mean.jpeg")
 ```
 
 <br>
@@ -121,7 +121,7 @@ Similarly, we can drag in `DIABP` from the `ADVS` and use the `MEAN` block to ca
 <br>
 
 ```{r, echo=FALSE, out.width="95%", fig.align = 'center'}
-knitr::include_graphics("cran_figures/04-diabp_mean.PNG")
+knitr::include_graphics("cran_figures/04-diabp_mean.jpeg")
 ```
 
 <br>
@@ -143,7 +143,7 @@ When one of these tables is selected, like disposition (Accounting of Subjects)^
 <br>
 
 ```{r,  echo=FALSE, out.width="95%", fig.align = 'center'}
-knitr::include_graphics("cran_figures/t_disp_red.PNG")
+knitr::include_graphics("cran_figures/t_disp_red.jpeg")
 ```
 
 <br>
@@ -165,7 +165,7 @@ Let's assume a scenario where we want to check on our patients' vital signs thro
 <br>
 
 ```{r,  echo=FALSE, out.width="95%", fig.align = 'center'}
-knitr::include_graphics("cran_figures/line_plot_mean_over_time_tidyCDISC.PNG")
+knitr::include_graphics("cran_figures/line_plot_mean_over_time_tidyCDISC.jpeg")
 ```
 
 <br>
@@ -175,7 +175,7 @@ Using the **"Separate plots by"** drop down list, we select `TRT01A` to investig
 <br>
 
 ```{r,  echo=FALSE, out.width="95%", fig.align = 'center'}
-knitr::include_graphics("cran_figures/line_plot_mean_over_time_breakdown.PNG")
+knitr::include_graphics("cran_figures/line_plot_mean_over_time_breakdown.jpeg")
 ```
 
 <br>
@@ -211,7 +211,7 @@ After selecting a `USUBJID`, we scroll down the page to examine that patient's d
 <br>
 
 ```{r,  echo=FALSE, out.width="95%", fig.align = 'center'}
-knitr::include_graphics("cran_figures/drill_down_events.PNG")
+knitr::include_graphics("cran_figures/drill_down_events.jpeg")
 ```
 
 <br>
@@ -223,7 +223,7 @@ Switching to the "Visits" tab, we can see that this patient did indeed have cons
 <br>
 
 ```{r, echo=FALSE, out.width="95%", fig.align = 'center'}
-knitr::include_graphics("cran_figures/drill_down_visits.PNG")
+knitr::include_graphics("cran_figures/drill_down_visits.jpeg")
 ```
 
 <br>
