@@ -13,16 +13,14 @@ checking package dependencies ... NOTE
   use conditionally.
 ```
 
-To address the note: there have been no additional dependencies introduced to the package since the last CRAN release (`v0.2.0`). For reference, here was my justification for this note previously:
+To address the note, here was my justification for this note in the previous release:
 
 > `tidyCDISC` is (nearly) a "one stop shop" application for clinical reporting in the pharmaceutical space. As such, it leverages many modules to perform many tasks. Many tasks require many packages. While preparing for CRAN submission, we've surgically paired down the dependency list to 37 packages that (I feel) are necessary. These are primarily "mainstream" packages, meaning they are maintained by reputable & well known authors & dev teams in the R community.
 
 ### Test Environments
 
-* Github action performing linux check with old, current, and devel release of R
-* Github action performing windows and macOS check with current R release
+* RHub Github action performing linux, macOS, and Windows R CMD Check
 * Local windows `devtools::check()`
-* RHub Check
 
 ## Downstream dependencies
 There are none.

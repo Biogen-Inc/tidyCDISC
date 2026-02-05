@@ -274,11 +274,19 @@ urlchecker::url_update()
 
 # check on other distributions
 # _rhub
-first_chk <- devtools::check_rhub()
-cran_chk <- rhub::check_for_cran(check_args = c("--as-cran"))
 
-rhub::check_on_windows(check_args = "--force-multiarch")
-rhub::check_on_solaris()
+# Deprecated:
+# first_chk <- devtools::check_rhub()
+# cran_chk <- rhub::check_for_cran(check_args = c("--as-cran"))
+# rhub::check_on_windows(check_args = "--force-multiarch")
+# rhub::check_on_solaris()
+
+# rhubv2!
+# rhub::rhub_setup()
+# rhub::rhub_doctor()
+rhub::rhub_check() # select linux, macos, and windows
+
+
 # _win devel
 devtools::check_win_devel()
 
